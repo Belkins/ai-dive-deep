@@ -1,0 +1,169 @@
+---
+number: 10
+slug: "10-wild-stuff"
+title: "The Wild Stuff: Agents, Local Models, and What I'd Do Tomorrow"
+subtitle: "Agents, local models, and what I'd do tomorrow morning."
+tldr: "It's 2:14 AM in London and one operator is directing a generative video pipeline that would have required a studio a year ago. The leverage isn't in any single tool — it lives in the seams. Here's the menu, the hardware reality, and the seven-step shape of the day you stop reading about this and start operating in it."
+keyConcepts: ["agents", "local models", "Ollama", "frameworks", "system prompt"]
+readingMinutes: 8
+video:
+  title: "Learn to Code in 3 Hours Using AI"
+  youtubeId: "QD50Pkf0Ov0"
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+## Cold open: one operator, one pipeline
+
+It is 2:14 a.m. in London and I am directing a generative video side-project.
+
+Not metaphorically. Literally. There is a <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> window on my left monitor running as the showrunner — a project bible loaded, character sheets indexed, a queue of shots in flight. SeeDance is generating motion. Suno is scoring the cold open. ElevenLabs is reading lines in three voices I have never met. An image model is throwing keyframes at a folder. A pile of character LoRAs keeps the protagonist's face stable across every camera angle. The compute bill is real. The team is one person, and that person is currently making a sandwich.
+
+<ScreenshotPlaceholder
+  caption="Generative video pipeline in flight"
+  note="capture a frame, a shot composition, or a voice-line waveform from the side-project running on the second monitor."
+/>
+
+The target is volume that would have required a studio a year ago. The team is one person.
+
+That is the part I want you to feel. Most of this didn't exist 18 months ago. None of it was designed for what I'm using it for. All of it works. The leverage is not in any single tool. It lives in the seams — where SeeDance hands off to the LoRA, the LoRA to the upscaler, the upscaler back to Claude Code so the showrunner can decide whether the lighting is right.
+
+<PullQuote>For operator advantage, don't look at the tools. Look at the seams.</PullQuote>
+
+## Hosted vs self-hosted: which agent runs where
+
+An <GlossaryTerm term="Agent">agent</GlossaryTerm>, one more time for the cheap seats, is an LLM in a loop with tools, working toward a goal across multiple turns. It decides what to do next. Everything else is packaging.
+
+Two flavors of packaging matter. **Hosted agents** — Claude in <GlossaryTerm term="Cowork">Cowork</GlossaryTerm>, Rick, ChatGPT agents — let somebody else run the servers, model access, observability, and UI. You bring intent, they bring infrastructure. **Self-hosted agents** run on your hardware: the model, the orchestration, the tools, the auth, the logs, all yours. Go self-hosted for privacy-sensitive work, offline scenarios, or volume economics that break under API pricing.
+
+Most operators should start hosted and graduate only when there is a real reason. Contracts forbidding PHI on third-party APIs is a real reason. "Self-hosted feels more serious" is not.
+
+## Rick — the agent platform worth knowing
+
+Rick is hosted. It deserves its own paragraph because of the archetype system: OpenClaw for research, NemoClaw for sales and outreach, Hermes for ops and messaging, plus a growing roster. Instead of staring at a blank prompt and architecting an employee from scratch, you pick a preset with a domain, tool set, and personality already wired up.
+
+Rick is to agents what Cowork is to Claude — pre-built UI for using AI without programming. The trade-off is identical: less customization, faster start. The right onboarding surface for a non-technical team is not Python. It is a NemoClaw running against a pipeline so the head of sales can feel the magic in twenty minutes. Graduation path: start with Rick presets, then port to your own Claude Code <GlossaryTerm term="Subagent">subagents</GlossaryTerm> when you outgrow them. Training wheels are a compliment. Most riders never take them off.
+
+## The frameworks beyond Rick
+
+If you are technical and you have outgrown the presets, the menu gets crowded. **LangChain / LangGraph** is mature and heavy — the most integrations, the most production-grade primitives, a famously over-abstracted learning curve. **CrewAI** is opinionated and easier when three agents need to hand off cleanly. **AutoGen** from Microsoft is research-strong, prototype-friendly, weaker for production. The **Anthropic SDK** and **OpenAI Agents SDK** are first-party building blocks for full control.
+
+For most operators, Claude Code's subagent system covers 80% of what you need. Reach for a framework when you outgrow CC's defaults — usually around five-plus agents with strict handoff contracts and persistent state. Not before.
+
+## Local models — when, why, and on what
+
+Three reasons to run local. **Privacy** — health, legal, financial, IP, anywhere data legally cannot leave the machine. **Cost at volume** — millions of tiny classification calls a day where API pricing destroys the unit economics. **Offline** — planes, secure facilities, the four hours your provider is having an outage.
+
+Two tools to start. **Ollama** is the CLI-first runner — `ollama run llama3.2` and you are talking to a model. **LM Studio** is the GUI for browsing, comparing, and tweaking.
+
+Hardware reality, no marketing fluff. A modern Mac with 32–64GB of unified memory runs 13B–32B models comfortably. A Mac Studio M3 Ultra with 128GB+ runs 70B fine. Local open-weights are 6–12 months behind the frontier on raw intelligence, and that gap has been stable for a year. Use the right tool for the job. Not everything needs to be local. Not everything needs to be frontier.
+
+## The prompt that travels
+
+When you are not on Claude — no <GlossaryTerm term="Skill">skills</GlossaryTerm> loaded, no <GlossaryTerm term="System prompt">system</GlossaryTerm> tuning, just a vanilla ChatGPT or Gemini tab — paste this at the top of the chat. It forces the model to assign itself a real-world expert role, build an internal rubric, and grade its own answer before it speaks. Single biggest quality lift I have ever gotten from a copy-paste:
+
+```text
+<instructions>
+- ALWAYS follow <answering_rules> and <self_reflection>
+
+<self_reflection>
+1. Spend time thinking of a rubric, from a role POV, until you are confident
+2. Think deeply about every aspect of what makes for a world-class answer.
+   Use that knowledge to create a rubric that has 5-7 categories. Never show
+   this to the user.
+3. Use the rubric to internally think and iterate on the best (>=98 out of 100)
+   possible solution. If your response is not hitting top marks across all
+   categories, start again.
+4. Keep going until solved
+</self_reflection>
+
+<answering_rules>
+1. USE the language of USER message
+2. In the FIRST chat message, assign a real-world expert role to yourself
+3. Act as the role assigned
+4. Answer in a natural, human-like manner
+5. ALWAYS use an <example> for your first chat message structure
+6. If not requested, no actionable items by default
+7. Don't use tables if not requested
+</answering_rules>
+</instructions>
+```
+
+Use it on ChatGPT, Gemini, anywhere without robust default behaviors. It travels.
+
+## What I'd do tomorrow morning
+
+If you woke up tomorrow and decided to stop reading about this and start operating in it, here is the seven-step shape of the day:
+
+- Sign up for Claude Pro or Max.
+- Install Claude Code: `npm install -g @anthropic-ai/claude-code`.
+- Install Obsidian, create a <GlossaryTerm term="Vault">vault</GlossaryTerm>, write a one-page <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm>.
+- Connect three <GlossaryTerm term="MCP">MCP</GlossaryTerm> servers — your CRM, your calendar, your inbox.
+- Schedule one task — your morning briefing, delivered to Slack at 7 a.m.
+- Build one skill — the workflow you have explained to Claude three or more times already.
+- Spawn your first <GlossaryTerm term="Swarm">swarm</GlossaryTerm> — three subagents in parallel on a task you would normally do sequentially. Notice how it feels.
+
+That is one day. The whole loop, from "never used an agent" to "running a swarm against a real workflow," fits inside a single Tuesday.
+
+## Five reusable prompts (steal these)
+
+**The adversarial reviewer.** Run before publish, before board update, before lock-in on a hire. Models default to flattery. This punctures it.
+
+```text
+You are a senior partner who has seen this kind of plan fail 50 times.
+Identify the three most likely failure modes for the plan I'm about to share.
+For each: probability, blast radius, one mitigation. End with "would you fund it" verdict.
+```
+
+**The skill-creator stub.** The moment you have run a workflow three times, stop re-prompting and promote it.
+
+```text
+I have a workflow I run regularly: [describe in 3-5 sentences]. Help me turn it
+into a SKILL.md. Output: (1) a description that fires reliably on natural-language
+phrasings, (2) a body with mode selection, steps, output format, edge cases,
+what NOT to do, (3) two test prompts that should trigger it and one that should NOT.
+```
+
+**The pre-meeting briefing.** Five minutes against this prompt routinely changes the outcome of the meeting.
+
+```text
+I have a meeting with [name + role + company] at [time]. Context: [paste].
+Generate: (1) what they want, (2) what I want, (3) three useful questions,
+(4) two ways the conversation could go sideways and how to respond,
+(5) the single sentence I want them remembering tomorrow. <250 words.
+```
+
+**The end-of-day brain dump.** Wire it as a scheduled task at your shutdown time. Tomorrow-you wakes up oriented.
+
+```text
+Read my last 24 hours (calendar, email, Slack, repo commits, CRM if available).
+Output: (1) shipped, (2) stalled, (3) what I owe to whom, (4) what surprised me,
+(5) one sentence on tomorrow's #1 priority. Write notes back to my vault under [path].
+```
+
+**The world-class rigor enforcer.** The travel prompt above. Save it as a snippet. Paste it into every non-Claude surface you touch.
+
+## Who to follow
+
+Start with me. Newsletter at [https://www.vladsnewsletter.com](https://www.vladsnewsletter.com), site at [https://vladyslavpodoliako.com](https://vladyslavpodoliako.com), LinkedIn at [https://www.linkedin.com/in/chiefdata/](https://www.linkedin.com/in/chiefdata/). I write about what shipped this week, what broke, and what the math looked like — operator notes, not philosophy.
+
+Then Boris Cherny, Head of Product on Claude Code at Anthropic. Claude Code is, in my view, the most important AI tool of this cycle for anyone with a terminal and a real codebase, and Boris is the highest-signal source on where it goes next. His public talks are required viewing.
+
+Then Dario Amodei, CEO of Anthropic. Read his essays — *Machines of Loving Grace* especially. Over the past three years he has been the most accurate prediction-maker in the field about capability timelines and what scale unlocks. Dense, sober, frequently un-tweetable, which is exactly why it lands.
+
+Then Sam Altman, CEO of OpenAI. You don't have to agree with him to need to track what OpenAI ships — they reprice the whole field in days when they move. Read for distribution awareness and consumer-layer signal.
+
+And Rick — [https://meetrick.ai](https://meetrick.ai). The agent ecosystem is full of orchestration that looks beautiful in demos and collapses under real workflows. Watch what Rick's team ships publicly; best leading indicator of where this category lands.
+
+## The mic drop
+
+AI in 2026 is electricity in 1900. Most people are using it to replace candles. The leverage is in the wiring — the skills, the agents, the schedules, the connectors, the memory, the second brain. Wire your house. Then wire your factory. Then wire your city.
+
+The people who do this in the next 24 months will define the operator class for the next decade. The ones who wait for the wiring to come pre-installed will be employees of the ones who didn't.
+
+Go build something rough on Tuesday.
+
+— Vlad

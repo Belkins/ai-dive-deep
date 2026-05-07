@@ -1,0 +1,101 @@
+---
+number: 1
+slug: "01-killed-my-tabs"
+title: "The Day I Killed My Tabs"
+subtitle: "A Tuesday morning that changed how I work."
+tldr: "Three instances ran while I slept and dropped a finished morning brief in one Slack channel. The unlock isn't AI doing my work faster — it's AI deleting my context-switching across forty open tabs. Stop visiting a chatbot. Start living inside an OS."
+keyConcepts: ["MCP", "Cowork", "scheduled tasks", "context-switching"]
+readingMinutes: 6
+video:
+  title: "When AIs Act Emotional"
+  youtubeId: "D4XTefP3Lsc"
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+It's 6:47 AM Tuesday. My laptop is closed. Coffee is hot. The dog is unimpressed.
+
+Three things have already happened without me.
+
+A morning briefing landed in Slack at 6:30 — HubSpot deal motion overnight, Gong signal from yesterday's calls, calendar conflicts I need to know about before lunch. My mentee's pre-session prep doc finished generating around 6:15; Mentee A gets an hour of my time on Tuesdays and the prep used to eat a Monday evening. And at 4:02 AM Eastern, a deal-advancement alert fired because someone in the Belkins pipeline went quiet for too long and the system noticed before I did.
+
+<ScreenshotPlaceholder
+  caption="Morning briefing in Slack"
+  note="capture the actual #vlad-ops DM with the 6:30 AM canvas, deal alerts, and prep doc link, so readers see what 'one channel' actually looks like."
+/>
+
+Three instances. Three workflows. Three Slack pings sitting in a single channel called #vlad-ops. I read them with my coffee. By 7:00 AM I know what the day looks like. I know which deal needs a nudge, which mentee needs which pushback, and which thing my leadership team will ask me about first.
+
+I do not open Gmail. I do not open HubSpot. I do not open Slack as twelve workspace tabs across a portfolio of companies. I open one window: <GlossaryTerm term="Cowork">Cowork</GlossaryTerm>.
+
+That's the entire morning. That's the chapter.
+
+AI didn't make me faster. AI killed my tabs.
+
+## The before
+
+Eighteen months ago this same morning would've looked like a punishment.
+
+Open Gmail. Open HubSpot. Open Slack — three workspaces because Belkins, Folderly, and another portfolio company each have their own. Open Notion. Open Calendar. Open Sentry. Open Stripe. Open Ahrefs because I want to know if Folderly moved on a keyword. Open ChatGPT to summarize the inbox I just half-read. Open Linear because someone shipped something I should know about. Ten tabs, twenty minutes, no decisions yet. Just gathering. Just walking the glass tunnel between my own tools, copying numbers in my head, forgetting half of them by the time I get to the next pane.
+
+I run a portfolio of companies including Belkins and Folderly, and we crossed 100 SaaS tools years ago. That's not a flex. That's a tax. Every tool is a login, a context switch, a separate version of "truth," and a permission I forgot to revoke.
+
+The "first 20 minutes of email" trap, multiplied. Three quarters of a year of mornings and you've burned a senior engineer's salary on context-switching. Nobody puts that line item on a P&L. It's distributed across every Tuesday of every operator on the planet.
+
+## What changed (the boring word that runs everything)
+
+One assistant that can read all my systems and tell me the story. That's it. That's the unlock.
+
+The protocol that makes it possible is called <GlossaryTerm term="MCP">MCP</GlossaryTerm> — Model Context Protocol. Anthropic shipped the spec in late 2024 and the rest of the industry is now stapling itself to it. The simplest way I've found to explain MCP at a bar: it's USB-C for AI tools. Before USB-C, every device had its own port and your drawer was full of mystery cables. After USB-C, one cable, every device. MCP does the same thing for software — your Slack, your HubSpot, your Stripe, your Notion all expose themselves as typed functions an AI can call, in the same shape, every time.
+
+So when I say "Claude, what do I need to know today?" — there's no magic. The model has a list of tools. It picks the right ones. It calls hubspot.search_deals, slack.read_channel, gong.get_meeting_summary, stripe.list_payment_intents. It synthesizes. It writes back to me. The thing that used to be ten tabs and twenty minutes is one prompt and forty seconds.
+
+I have roughly twenty MCP servers wired into a single surface. HubSpot, Stripe, Slack, Gmail, Calendar, Notion, Ahrefs, Customer.io, Drive, Vercel, Klaviyo, Fireflies, Intercom, Pendo, Linear, Atlassian, Hex, Amplitude, ElevenLabs. The point isn't the count. It's what it collapses to. The agent walks the tunnel for me. I stay in the room where decisions actually get made.
+
+<ScreenshotPlaceholder
+  caption="Cowork window with scheduled tasks running"
+  note="capture the live sidebar showing morning briefing, friday-wrapup, and deal-advancement-alerts queued or executing, so readers see workers, not chats."
+/>
+
+## The reframe most operators miss
+
+Most people think the win is "AI does my work." It isn't. The win is upstream of that.
+
+The win is: AI deletes my context-switching.
+
+You don't ride the same horse faster. You stop riding entirely and the horse delivers things to your office. The work doesn't get done quicker because I prompt better; the work I used to do — the gathering, the cross-referencing, the squinting between tabs — stops being work I touch at all. It happens in the background, on a schedule, by a worker I don't have to manage, and it lands as a finished artifact in the one channel I actually read.
+
+Think of it like a kitchen brigade. The chef doesn't chop onions faster. The chef stops chopping onions. A line cook does it. The chef tastes, decides, plates. That's the move. The AI is the line cook. You are not promoted. Your job description changed.
+
+<PullQuote>Stop using AI like a chatbot. Start using it like an OS.</PullQuote>
+
+## Friday, 5 PM, no human required
+
+Last Friday at 5 PM, a <GlossaryTerm term="Skill">skill</GlossaryTerm> I built called friday-wrapup fired on its own. It pulled HubSpot pipeline deltas across Belkins and Folderly, Stripe revenue across the portfolio, Ahrefs movement on the keywords that matter, Slack signal from leadership channels, and the calendar archaeology of the week. It compressed all of that into a 700-word Slack canvas and dropped it into the leadership channel. My COO read it Saturday morning over breakfast. I read it Sunday from a beach. Used to be a three-hour Friday ritual that ate into the weekend before it started.
+
+Now: the work happens whether I'm working or not.
+
+## What this actually means
+
+"Stop using AI like a chatbot. Start using it like an OS." Five sentences on what that means, because the line is too clean to leave undefined.
+
+A chatbot is a thing you visit. An OS is a thing you live inside. A chatbot answers when you ask. An OS runs scheduled jobs, holds memory across sessions, dispatches workers, and writes to durable storage on your behalf. A chatbot has one window. An OS has windows, daemons, and <GlossaryTerm term="Cron">cron</GlossaryTerm>. The difference between operators who get 2x out of AI and operators who get 50x is whether they crossed that line in their head. Most haven't. That's the whole opportunity.
+
+I burn between 3 and 10 billion <GlossaryTerm term="Token">tokens</GlossaryTerm> a month across my stack. That sounds insane until you realize it's the receipt for a workforce, not a chat habit. Tokens replace headcount, hours, dashboards, and the dead time between them. The bill is real. So is the line item it deletes.
+
+## The deal
+
+Three things this book promises, and I'll be specific because corporate sign-offs are how courses get returned.
+
+First, by the end you'll have one or two surfaces, not fifty. The portfolio I described — HubSpot, Stripe, Ahrefs, the long list — collapses into Cowork or <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> or whatever client you pick. Tabs go from forty open to three. Your menu bar gets quieter. So does your head.
+
+Second, the work that used to pull you in will start pushing itself to you. Morning briefings. Friday wraps. Deal-advancement alerts at 4 AM. Mentee prep that finishes overnight. The pattern is the same — a small worker, a clear job, a durable output channel. You stop hunting for context. Context arrives.
+
+Third, the thing you do alone today will run as a small <GlossaryTerm term="Swarm">swarm</GlossaryTerm> by next month. Not a metaphor. Fifteen <GlossaryTerm term="Subagent">subagents</GlossaryTerm> in parallel is a normal Tuesday in Claude Code. The <GlossaryTerm term="Instance">instance</GlossaryTerm> you've been treating like a coworker is actually a temp agency, and once you internalize that the ceiling moves about a hundred feet up.
+
+That's the deal. The tabs die. The workers wake up. You go back to making decisions instead of gathering paperwork to make them.
+
+Turn the page.

@@ -1,0 +1,12 @@
+---
+interface Props { attribution?: string; }
+const { attribution } = Astro.props;
+---
+<aside class="container-prose my-10">
+  <div class="border-l-2 pl-6" style="border-color: rgb(var(--accent))">
+    <p class="font-display text-2xl md:text-3xl leading-snug m-0" style="color: rgb(var(--fg))">
+      <slot />
+    </p>
+    {attribution && <div class="mt-3 text-sm" style="color: rgb(var(--muted))">— {attribution}</div>}
+  </div>
+</aside>

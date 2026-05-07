@@ -1,0 +1,95 @@
+---
+number: 3
+slug: "03-temp-agency"
+title: "AI Is A Temp Agency, Not A Genius"
+subtitle: "Why every Claude session is a fresh employee on day one."
+tldr: "The single most expensive cognitive error in modern business is treating AI like a coworker you're slowly training. It isn't. Every session is a fresh temp on day one — sharp, capable, amnesiac. Once that lands, you stop hoarding chat history and start running a workforce."
+keyConcepts: ["Instance", "CLAUDE.md", "Skill", "stateless workers"]
+readingMinutes: 7
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+Last month a friend who runs a fund pinged me, genuinely annoyed. "Vlad, why does Claude forget what we talked about yesterday? It's such a smart model — how can it be this dumb?" He'd had a brilliant late-night conversation about portfolio construction, came back the next morning expecting the AI to pick up where they left off, and was instead greeted by a polite stranger asking how it could help.
+
+I told him: it's not dumb. It's not even one entity. Every conversation you open is a different employee on day one.
+
+He paused. "Wait — what?"
+
+That single misunderstanding is, I'd guess, the most expensive cognitive error in modern business. People treat AI like a coworker they're slowly training. It is not. It is a temp agency. And once you see it that way, everything about how you use it changes.
+
+## The Temp Agency
+
+Here's the model I want stuck in your head for the rest of this book.
+
+Every chat session you open is a temp who walks through the door cold. Sharp suit, fresh haircut, brilliant resume — and zero memory of you, your company, or yesterday's conversation. They've never met you. They don't know what you sell. They don't know what your last hire screwed up. They are, for all practical purposes, a savant with amnesia.
+
+You give them a task. They crush it. End of shift, they walk out the door, and they die. Not metaphorically. The <GlossaryTerm term="Instance">instance</GlossaryTerm> terminates. Everything in their head — every clever connection, every nuance they picked up about your business in that hour — vaporizes.
+
+Tomorrow you open a new chat. New temp. Same suit. No memory.
+
+The model didn't forget. You never gave it a way to remember.
+
+The "memory" you feel — when Claude seems to know your tone, your projects, your team — is not the model. It's the employee handbook you handed the new hire on the way in: a <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm> file, a <GlossaryTerm term="Vault">vault</GlossaryTerm> of notes, a <GlossaryTerm term="System prompt">system prompt</GlossaryTerm>, a <GlossaryTerm term="Skill">skill</GlossaryTerm> bundle. The temp read it in three seconds and now sounds like they've been with you for years. But they haven't. They've been with you for ninety seconds. The handbook is doing all the work.
+
+I'm not being polite about this because I want you to actually feel it. Stop hiring one AI. Start running a workforce.
+
+## Why This Changes How You Build
+
+Three consequences fall out of the temp-agency model, and almost no one operationalizes all three.
+
+Parallelism is free. You can spin up twenty temps at once. There's no shared brain to crowd, no cognitive bandwidth to compete for. Most people use one. They sit in front of one chat window and queue up tasks like they're talking to a single overworked assistant. That's like hiring a temp agency and then only ever asking for one person at a time. You'll see in [Chapter 6](/chapters/06-the-swarm) how I run <GlossaryTerm term="Swarm">swarms</GlossaryTerm> of fifteen <GlossaryTerm term="Subagent">subagents</GlossaryTerm> in parallel — fifteen instances, fifteen focused jobs, fifteen minutes instead of fifteen hours. The constraint is your imagination, not the tool.
+
+State is your job, not theirs. If you want continuity across instances, you write it down. CLAUDE.md at the project root. Vault notes for people, projects, decisions. Memory files. Skill state. Output channels. The model is stateless by design — that's not a bug, that's how you build systems that scale. Stop blaming the temp for not remembering yesterday. Start writing a better handbook.
+
+Identity is a config, not a fact. Same model plus a different system prompt equals a different employee. I run a brand-voice instance that writes like me. I run a sales-intelligence instance that thinks like a pipeline analyst. I run a mentoring-prep instance that knows my mentees by name and history. Same Sonnet underneath all of them. The "personality" is just the prompt plus the skill bundle plus the files it loads on wake-up. You're not picking a coworker. You're casting a role.
+
+## Five Surfaces, Five Instance Shapes
+
+You don't run AI in one place. You run it across surfaces, and each surface produces instances of a different shape.
+
+Web chat is a single human-driven instance with no tools and no memory beyond the current tab. Good for one-off thinking, terrible for anything operational. <GlossaryTerm term="Cowork">Cowork</GlossaryTerm> is a single instance with <GlossaryTerm term="Connector">connectors</GlossaryTerm>, skills, and scheduled tasks attached — one worker, many superpowers, the operator's daily driver. <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> is multi-instance by design: file system access, subagents, swarms. You're a foreman now, not a chatter. API direct is programmatic instances — you control the loop, the prompts, the orchestration, and this is where serious automation lives. Background jobs are scheduled instances that wake up, do their job, deliver to Slack or email or a canvas, and die before you ever see them — the night shift you never have to manage.
+
+Same model under all five. Wildly different operational shapes. Pick the surface that matches the job.
+
+## The Most Expensive Ghost In My Company
+
+Here's a real example from this morning.
+
+At 7:00 AM Eastern, an instance fired. It had no memory of yesterday's instance — that one died eighteen hours earlier. But it had a job description and a skill bundle. It pulled HubSpot deal motion overnight. It read Slack signals from the channels I care about. It grabbed Gong call transcripts from yesterday's calls and pulled the three quotes that mattered. It checked my calendar for the day, flagged conflicts, surfaced one investor I'd forgotten was on the schedule. Then it synthesized everything into a Slack canvas titled Morning Brief — May 7.
+
+Then the instance terminated.
+
+By 7:05 I was reading the canvas with coffee. The instance no longer existed. There was no entity to thank, no coworker to follow up with — the work was just there, and the worker was gone.
+
+<ScreenshotPlaceholder
+  caption="Scheduled instance running in Cowork"
+  note="capture the run with the 7:00 AM timestamp visible, showing the instance start and the 'completed / terminated' state side-by-side so the born/dies rhythm reads at a glance."
+/>
+
+It is the most expensive ghost in my company. Worth every cent.
+
+That same pattern runs my Friday wrap-up, my Belkins sales-intel sweep, my deal-advancement alerts. Each one is a recipe for a temp who shows up, performs a defined job, files the report, and clocks out forever. None of them remember each other. None of them need to.
+
+## How The Magic Of Continuity Actually Works
+
+If instances are stateless and amnesiac, how do I get the feeling of an AI that's been with me for years? Three pillars.
+
+Memory files — CLAUDE.md, vault notes, skill state files. Every new instance reads these on wake-up. The handbook is fat; the temp is fast; the result feels like continuity. Skills — packaged knowledge any instance can load on demand. The instance forgets the second it dies, but the skill persists in your repo. New temp, same skill, same expertise. The org has memory even when the workers don't. Output channels — every instance writes its work to somewhere durable: a Slack canvas, a doc, a vault file, a database row. The next instance reads that as input.
+
+<PullQuote>Continuity is a chain of artifacts, not a chain of brains.</PullQuote>
+
+## The Mental Shift
+
+Stop asking "what can MY AI do."
+
+Start asking: how many specialized temps should I spawn for this job, and what do I need to put in the employee handbook so they can hit the ground running?
+
+That's the entire reframe. Once it lands, you stop building single-threaded chat workflows and start building swarms. You stop hoarding one bloated chat history and start spawning fresh, sharp instances on demand. You stop anthropomorphizing the model and start designing systems around the fact that workers are cheap, stateless, and parallelizable. Every workflow in this book — every script, every skill, every scheduled job — is downstream of this single shift in altitude. Get this right and the rest of the book is mechanics. Get it wrong and you'll keep wondering why your AI "just isn't getting it."
+
+I've written about this at length on the newsletter — it's a recurring theme because it's the load-bearing concept underneath everything else. If it's still settling, slow down on the essays at vladsnewsletter.com.
+
+You're not hiring a genius. You're running a temp agency. Start acting like the foreman.

@@ -1,0 +1,213 @@
+---
+number: 18
+slug: "18-headless-ci"
+title: "Headless, CI, and Claude in Production"
+subtitle: "How to run Claude in production: headless, cron, GitHub Actions, the lot."
+tldr: "The real unlock is `claude --print`. Same binary as the IDE chat, runs as a deploy step, a GitHub Action, a 3 AM cron job. Going from 'I run claude in my terminal' to 'Claude is part of my infrastructure' is one flag — and one mental shift from driving to scheduling."
+keyConcepts: ["headless mode", "GitHub Actions", "cron", "CI/CD", "observability"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+Most CC users only ever run `claude` interactively. They open a terminal, type a prompt, watch the spinner, accept a diff, and call it a day. They've barely scratched the surface.
+
+The real unlock is `claude --print`. <GlossaryTerm term="Headless mode">Headless</GlossaryTerm>. Scriptable. Cron-able. Pipeable. The same binary that runs your IDE-style chat session also runs as a deploy step, a GitHub Action, a cron job at 3 AM while you sleep. The difference between an IDE and a build server is one flag.
+
+This chapter is about flipping that switch. Going from "I run claude in my terminal" to "Claude is part of my infrastructure."
+
+## Headless mode in 60 seconds
+
+The flag is `--print` (or `-p`). It runs <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> without an interactive UI, sends output to stdout, and exits with a meaningful exit code: 0 on success, non-zero on failure.
+
+```bash
+claude --print "Summarize today's PRs in one paragraph."
+```
+
+That's it. No spinner, no UI, no permission prompt waiting for you to come back from lunch. It runs, it answers, it exits. Pipe it. Redirect it. Wrap it in a for loop.
+
+```bash
+echo "Run tests and tell me what broke" | claude --print --output-format json
+```
+
+Stdin is also fair game. You can pipe a diff, a log file, a Slack message — anything — and Claude will treat it as the prompt context.
+
+The mental model: think of `claude --print` as `curl` for reasoning. It's a tool, not an app.
+
+## Output formats — pick the right one for the consumer
+
+Three formats, three audiences:
+
+- `--output-format text` — for humans and Slack. Plain markdown. What you'd see in the interactive UI.
+- `--output-format json` — for downstream automation. Single JSON object at the end.
+- `--output-format stream-json` — for live consumers (dashboards, web UIs). Newline-delimited JSON events as they happen.
+
+The JSON shape you'll parse most often:
+
+```json
+{
+  "type": "result",
+  "result": "...",
+  "session_id": "...",
+  "total_cost_usd": 0.0034,
+  "duration_ms": 1480
+}
+```
+
+That `total_cost_usd` field is the one your finance brain wants. Pipe every CI run's JSON to a metrics dashboard and you'll know your AI spend per workflow within the hour, not at the end of the month.
+
+## Authentication in headless mode
+
+For servers, CI runners, and anything that doesn't have a human at the keyboard, the cleanest auth path is the `ANTHROPIC_API_KEY` environment variable.
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+claude --print "Hello, world."
+```
+
+OAuth (Pro/Max plan login) works for personal scripts on your laptop, but it doesn't suit servers — there's no browser to redirect to, no Mac keychain to store credentials in, and the session can expire while your cron job is mid-loop.
+
+For CI, always use API keys, and always set a budget cap on those keys in the Anthropic console. Treat them like any other production secret — store in your secret manager, rotate on a schedule, never commit.
+
+## The first headless workflow you should ship — daily PR digest
+
+If you're going to learn one pattern from this chapter, learn this one. It's the cheapest, highest-leverage headless workflow in existence: a daily PR digest posted to Slack.
+
+```yaml
+name: Daily PR Digest
+on:
+  schedule:
+    - cron: '0 14 * * 1-5'   # 9 AM ET, weekdays
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install -g @anthropic-ai/claude-code
+      - env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          claude --print "Summarize PRs merged in the last 24h. \
+          Group by repo area. Output as Slack-mrkdwn." \
+          --allowed-tools "Bash(gh*),Read,Grep" > digest.md
+      - run: |
+          curl -s -X POST -H 'Content-type: application/json' \
+            --data "{\"text\": \"$(cat digest.md)\"}" \
+            ${{ secrets.SLACK_WEBHOOK }}
+```
+
+Six steps. Costs a few cents per run. Replaces the manual "what shipped yesterday?" message that someone on the team usually writes by hand at 9 AM. I have versions of this pointed at every Belkins repo, and the team gets a clean Slack post every morning before standup.
+
+Once you ship this one, the next ten ideas write themselves.
+
+## Permissions in CI — the safe defaults
+
+In an interactive session, Claude asks before running tools. In CI, there's no one to ask. So you have two choices: pre-approve everything, or pre-approve a tight allow-list.
+
+```bash
+claude --print "..." \
+  --allowed-tools "Bash(npm test*),Bash(npm run build*),Read,Grep,Edit(src/**)" \
+  --dangerously-skip-permissions
+```
+
+`--allowed-tools` scopes what can run. `--dangerously-skip-permissions` skips the interactive prompt that would otherwise hang the job. The flag name is intentionally scary, and it should be — you only use it when you've already constrained what's possible via the allow-list, or when you're inside an ephemeral container that gets blown away the second the job ends.
+
+Rule of thumb: if your CI runner is a container that exits in 5 minutes, `--dangerously-skip-permissions` is fine. If it's a long-lived VM with access to production secrets, lock down `--allowed-tools` until it screams. See [Chapter 15](/chapters/15-permissions) for the full permissions story.
+
+## The 24/7 monitor pattern
+
+Beyond CI, the next pattern is the long-running agent loop. A "night-shift junior engineer" that watches your error stream and acts on it.
+
+```bash
+while true; do
+  claude --print "Read latest Sentry issues. For any non-trivial bug, \
+    open a PR with a fix. Post a one-liner to Slack #ops." \
+    --allowed-tools "Bash(gh*,sentry-cli*),Edit(src/**)" \
+    --dangerously-skip-permissions
+  sleep 1800   # every 30 minutes
+done
+```
+
+I run this exact pattern against the Belkins error stream. Every 30 minutes, it checks Sentry, picks up anything that looks fixable, opens a PR, and drops a one-liner in Slack. The on-call engineer sees the PR queued by the time they finish their coffee. Some get merged as-is, some get rewritten, some get rejected — all of them save the team the cold-start of figuring out what just broke.
+
+You don't need it perfect. You need it cheap and constantly running.
+
+## GitHub Actions integration — three patterns
+
+Three flavors of GitHub Actions workflow that pay for themselves in the first week:
+
+**PR review bot.** Triggers on `pull_request: opened` (and `synchronize`). Pulls the diff, reads the changed files, and posts a structured review as a PR comment. Catches obvious stuff — missing tests, unhandled errors, naming inconsistencies — before a human eyeball ever sees it. Keeps the human review focused on architecture and intent.
+
+**Doc generator.** Triggers on `push: main`. Looks at what changed in `src/`, regenerates the matching pages in `/docs`, and opens a PR with the doc updates. Solves the eternal problem that docs always lag code. Run this once and your README stops being a museum exhibit.
+
+**Release notes.** Triggers on `release: created`. Reads the commit log between the new tag and the previous one, drafts a changelog grouped by area (features, fixes, infra), and writes it back to the release body. The version of release notes your users actually want, not the auto-generated GitHub list of commit hashes.
+
+## Resume / continue — for stateful workflows
+
+Some workflows are too big for one job. You start a session in CI Job A, do something else, and want to resume in Job B with full context.
+
+```bash
+# Job 1
+SESSION_ID=$(claude --print "Begin migration audit" \
+  --output-format json | jq -r '.session_id')
+echo "$SESSION_ID" > session.txt
+```
+
+```bash
+# Job 2 (later, possibly different runner)
+claude --resume "$(cat session.txt)" --print \
+  "Now apply the migrations to staging."
+```
+
+`--resume <session-id>` reattaches to the prior session with its memory and tool state intact. Useful for multi-stage pipelines: audit → propose → apply → verify, where each stage is a separate job with its own permissions and timeouts.
+
+## Cost discipline at scale
+
+Three concrete moves, in order of leverage:
+
+- Set a daily and monthly budget cap on each API key in the Anthropic console. Hard ceiling — when you're wrong about a prompt, you find out at $20, not $2,000.
+- Use Sonnet by default in CI, reach for Opus only when reasoning is genuinely hard. Most "summarize PRs" or "draft a release note" workflows don't need the bigger model. Default to Sonnet, escalate explicitly with `--model`.
+- Pipe `--output-format json` and parse `total_cost_usd` to a metrics dashboard. You want one chart that shows headless spend per workflow per day. The day a prompt regression doubles your bill, you'll see it in the chart before finance sees it on the invoice.
+
+<ScreenshotPlaceholder
+  caption="A real GitHub Actions log"
+  note="A Claude Code headless run with cost and timing visible."
+/>
+
+## Cron on a server (the non-CI path)
+
+Sometimes you don't want CI. You just want a <GlossaryTerm term="Cron">cron</GlossaryTerm> job on a box.
+
+```bash
+30 7 * * 1-5 ANTHROPIC_API_KEY=... /usr/bin/claude --print \
+   "Run morning-briefing skill" --output-format text \
+   | /usr/local/bin/slack-cli post --channel "#morning-brief"
+```
+
+That single line replaces a recurring "summarize my morning" task. No CI runner, no GitHub Action, no YAML. Just a cron job, an API key, and Slack. The Folderly ops team has half a dozen of these — pure shell, no dependencies, never break.
+
+## Production gotchas
+
+A short paragraph on each of the things that bite, eventually.
+
+**Idempotency.** Design prompts so running them twice produces the same output, or at worst a no-op the second time. The retry button exists. Cron will fire twice on a clock-skew day. Make your prompts handle being run again without doubling output, sending duplicate Slack messages, or re-opening the same PR.
+
+**Quiet failures.** Train scheduled jobs to skip silently when there's nothing useful to say. If the daily PR digest finds zero PRs, post nothing — don't post "no PRs today" every morning for a week and train the team to mute the channel. Silence is a feature.
+
+**Timeouts.** Set a hard timeout on every long run. Agents can occasionally loop, and the difference between a 60-second job and a 60-minute job that loops is a $200 surprise. Wrap every headless call in `timeout 300 claude --print ...` and pick the ceiling that matches the workflow.
+
+**Observability.** Log every run. Capture `total_cost_usd`, `duration_ms`, `session_id`, and the prompt itself. Send those to your metrics stack — Datadog, Honeycomb, even a Postgres table. Alert on anomalies: cost spikes, duration spikes, error rate spikes. Treat your headless Claude jobs like any other production service.
+
+## The mental shift
+
+Interactive Claude Code is a power tool. You hold it, you guide it, you accept its suggestions. You're driving.
+
+Headless Claude Code is an employee. You hand it a job description (the prompt), the tools it needs (`--allowed-tools`), the budget (API key cap), and the schedule (cron or workflow trigger). Then you walk away.
+
+<PullQuote>Same software. Two completely different relationships. The difference is whether you're driving the prompt or scheduling it.</PullQuote>
+
+The teams that figure this out first build the leverage. The ones that don't keep babysitting their terminals.

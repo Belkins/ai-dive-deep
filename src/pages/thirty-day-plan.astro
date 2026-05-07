@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ThirtyDayPlan from '@/widgets/ThirtyDayPlan.tsx';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+---
+<BaseLayout title="30-day plan" description="A custom 30-day path through Ultimate AI Dive Deep. Pick where you are; export markdown or .ics.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Roadmap</div>
+    <h1>Your 30 days.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Pick where you are. Pick how hard you want to push. We'll sequence the chapters and the practical work — read, build, ship, audit. Export to your calendar.</p>
+  </section>
+
+  <ThirtyDayPlan client:load />
+
+  <CommandPaletteMount />
+</BaseLayout>

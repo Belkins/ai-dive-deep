@@ -1,0 +1,30 @@
+---
+interface Props {
+  youtubeId: string;
+  title: string;
+}
+const { youtubeId, title } = Astro.props;
+---
+<div class="container-prose my-10">
+  <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--line))">
+    <div class="px-5 py-3 flex items-center gap-3 text-sm" style="background: rgb(var(--paper));">
+      <span class="inline-flex items-center justify-center h-7 w-7 rounded-full" style="background: rgb(var(--accent)); color: white;">
+        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </span>
+      <div>
+        <div class="text-xs uppercase tracking-wider" style="color: rgb(var(--muted))">Watch alongside</div>
+        <div class="font-medium leading-tight">{title}</div>
+      </div>
+    </div>
+    <div style="aspect-ratio: 16/9; background: black;">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
+        title={title}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        style="width: 100%; height: 100%; border: 0;"
+      ></iframe>
+    </div>
+  </div>
+</div>

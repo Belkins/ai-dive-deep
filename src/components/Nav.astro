@@ -1,0 +1,35 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const path = Astro.url.pathname;
+const isHome = path === base + '/' || path === base || path === '/';
+---
+<header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-ink-900/70 border-b" style="border-color: rgb(var(--line))">
+  <nav class="container-wide flex items-center justify-between h-14">
+    <a href={`${base}/`} class="flex items-center gap-2 group" style="color: rgb(var(--fg))">
+      <span class="font-display text-lg tracking-tight font-medium">Ultimate AI Dive Deep</span>
+      <span class="hidden md:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">Edition 1</span>
+    </a>
+    <div class="flex items-center gap-1 sm:gap-3">
+      <a href={`${base}/chapters/01-killed-my-tabs`} class="hidden sm:inline-flex text-sm px-3 py-1.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Chapters</a>
+      <a href={`${base}/glossary`} class="hidden sm:inline-flex text-sm px-3 py-1.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Glossary</a>
+      <a href={`${base}/resources`} class="hidden sm:inline-flex text-sm px-3 py-1.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Resources</a>
+      <a href={`${base}/tier-list`} class="hidden md:inline-flex text-sm px-3 py-1.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Tier list</a>
+      <button
+        type="button"
+        id="open-palette-btn"
+        class="hidden sm:inline-flex items-center gap-2 text-xs px-2.5 py-1.5 rounded font-mono"
+        style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted))"
+        aria-label="Open command palette"
+      >
+        <span>⌘K</span>
+      </button>
+      <ThemeToggle />
+    </div>
+  </nav>
+</header>
+
+<script>
+  const btn = document.getElementById('open-palette-btn');
+  btn?.addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-palette')));
+</script>

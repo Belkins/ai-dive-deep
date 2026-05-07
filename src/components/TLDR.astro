@@ -1,0 +1,10 @@
+---
+interface Props { text: string; }
+const { text } = Astro.props;
+---
+<aside class="container-prose">
+  <div class="card relative" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent))">
+    <div class="text-xs font-semibold uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent))">TL;DR</div>
+    <p class="text-base leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">{text}</p>
+  </div>
+</aside>

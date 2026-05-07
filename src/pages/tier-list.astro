@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import TierListBuilder from '@/widgets/TierListBuilder.tsx';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+---
+<BaseLayout title="The Tier List" description="Drag-and-drop your own tier list. Share via URL.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Chapter 24</div>
+    <h1>The tier list. Without mercy.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Vlad's picks pre-loaded. Drag tools between tiers. The URL encodes your state — share it.</p>
+  </section>
+
+  <TierListBuilder client:load />
+
+  <CommandPaletteMount />
+</BaseLayout>

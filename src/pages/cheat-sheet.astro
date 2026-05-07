@@ -1,0 +1,144 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+const sections = [
+  {
+    h: 'Daily slash commands',
+    items: [
+      ['/help', 'List everything available'],
+      ['/init', 'Generate starter CLAUDE.md'],
+      ['/clear', 'Reset context, keep session'],
+      ['/compact', 'Summarize history, free space'],
+      ['/cost', 'Running spend this session'],
+      ['/model', 'Switch models mid-session'],
+      ['/agents', 'Manage subagent definitions'],
+      ['/mcp', 'List MCP servers'],
+      ['/hooks', 'See/edit hooks'],
+      ['/plugins', 'Browse plugin marketplace'],
+      ['/install-ide', 'Wire CC into your editor'],
+      ['/resume', 'Pick a past session'],
+      ['/exit', 'Leave session (auto-saved)'],
+    ],
+  },
+  {
+    h: 'CLI flags',
+    items: [
+      ['claude', 'Interactive in current dir'],
+      ['claude --print "..."', 'Headless, prints answer, exits'],
+      ['claude --model opus', 'Pin a model for this session'],
+      ['claude --resume', 'Pick from past sessions'],
+      ['claude --continue', 'Resume most recent session'],
+      ['claude --plan', 'Describe-only mode, no edits'],
+      ['claude --no-update', 'Skip auto-update check'],
+      ['claude --version', 'Sanity check install'],
+      ['claude --output-format json', 'Parse-friendly output'],
+      ['claude --allowed-tools "..."', 'Launch-time allow-list'],
+    ],
+  },
+  {
+    h: 'Settings.json keys',
+    items: [
+      ['model', '"sonnet" | "opus" | "haiku"'],
+      ['theme', '"dark" | "light" | "auto"'],
+      ['telemetry', 'true | false'],
+      ['autoUpdater', '"weekly" | "daily" | "disabled"'],
+      ['permissions.allow', 'glob patterns to auto-approve'],
+      ['permissions.deny', 'glob patterns to block'],
+      ['permissions.disableBypassPermissionsMode', '"disable"'],
+    ],
+  },
+  {
+    h: 'File paths',
+    items: [
+      ['~/.claude/settings.json', 'Global preferences'],
+      ['~/.claude/commands/', 'Custom slash commands'],
+      ['~/.claude/agents/', 'Custom subagent definitions'],
+      ['~/.claude/skills/', 'Personal skills'],
+      ['~/.claude/plugins/', 'Installed plugin bundles'],
+      ['<repo>/CLAUDE.md', 'Project memory, every turn'],
+      ['<repo>/.mcp.json', 'MCP servers (commit it)'],
+      ['<repo>/.claude/settings.json', 'Repo overrides'],
+      ['<repo>/.claude/agents/', 'Repo-shared subagents'],
+      ['<repo>/.claude/skills/', 'Repo-shared skills'],
+    ],
+  },
+  {
+    h: 'Environment vars',
+    items: [
+      ['ANTHROPIC_API_KEY', 'Required for headless / CI'],
+      ['CLAUDE_CONFIG_DIR', 'Relocate ~/.claude (sandboxes)'],
+      ['CLAUDE_MODEL', 'Per-shell default'],
+      ['MCP_SERVER_<NAME>_<KEY>', 'Forwarded into MCP processes'],
+    ],
+  },
+  {
+    h: 'Keyboard shortcuts',
+    items: [
+      ['Ctrl-C', 'Interrupt generation, keep session'],
+      ['Ctrl-D / /exit', 'Leave session'],
+      ['↑', 'Recall last prompt'],
+      ['Esc Esc', 'Undo last input'],
+      ['Shift-Enter', 'Newline without send'],
+      ['Tab', 'Autocomplete file paths'],
+      ['/', 'Slash-command picker'],
+      ['@', 'File-reference picker'],
+      ['# <text>', 'Append to CLAUDE.md inline'],
+    ],
+  },
+  {
+    h: 'Hook events (90% rule)',
+    items: [
+      ['PreToolUse', 'Before tool call. Validate, block.'],
+      ['PostToolUse', 'After success. Format, lint, test.'],
+      ['Stop', 'Turn ends. Commit, ship, notify.'],
+      ['SessionStart', 'Inject context on session boot'],
+      ['UserPromptSubmit', 'Before model sees a prompt'],
+    ],
+  },
+  {
+    h: 'Cron syntax',
+    items: [
+      ['0 7 * * 1-5', '7 AM every weekday'],
+      ['*/15 * * * *', 'Every 15 minutes'],
+      ['0 16 * * 5', '4 PM every Friday'],
+      ['0 9 * * 1', '9 AM every Monday'],
+      ['0 17 * * 1-5', '5 PM ET weekdays (set TZ)'],
+      ['crontab.guru', 'Translate human ↔ cron'],
+    ],
+  },
+];
+---
+<BaseLayout title="Cheat sheet" description="Slash commands, settings, env vars, file paths, keyboard shortcuts. Tape it next to your monitor.">
+  <section class="container-wide pt-12 pb-6 print:pt-2 print:pb-2">
+    <div class="flex items-baseline justify-between gap-4 flex-wrap">
+      <div>
+        <div class="text-xs uppercase tracking-[0.25em] mb-2" style="color: rgb(var(--accent))">Chapter 14</div>
+        <h1 class="font-display text-4xl md:text-5xl m-0">Cheat sheet</h1>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Print it. Tape it next to your monitor. Stop re-googling.</p>
+      </div>
+      <button onclick="window.print()" class="btn-ghost no-print" type="button">Print</button>
+    </div>
+  </section>
+
+  <section class="container-wide pb-24 print:pb-0">
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 print:grid-cols-3 print:gap-2">
+      {sections.map((s) => (
+        <div class="card print:p-3" style="break-inside: avoid;">
+          <h3 class="m-0 font-display text-lg mb-2">{s.h}</h3>
+          <table class="w-full text-xs">
+            <tbody>
+              {s.items.map(([k, v]) => (
+                <tr class="border-b" style="border-color: rgb(var(--line))">
+                  <td class="py-1 pr-2 font-mono align-top" style="color: rgb(var(--accent))">{k}</td>
+                  <td class="py-1 align-top" style="color: rgb(var(--fg) / 0.85)">{v}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

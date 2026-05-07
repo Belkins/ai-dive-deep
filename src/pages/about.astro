@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+---
+<BaseLayout title="About" description="Who wrote this. Why. And how to keep reading.">
+  <section class="container-prose pt-16 pb-16">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">About</div>
+    <h1>One operator. A portfolio of companies. A field manual.</h1>
+
+    <p class="mt-6 text-lg" style="color: rgb(var(--fg) / 0.9)">Vlad Podoliako runs <strong>Belkins</strong>, <strong>Folderly</strong>, <strong>LinguaLive</strong>, <strong>NoCancer AI</strong>, <strong>404 Model Agency</strong>, and a <a href="https://www.vladsnewsletter.com" target="_blank" rel="noopener">newsletter</a> read by 10,000+ operators. Based in the UK. Advisor, mentor, investor.</p>
+
+    <p>This book is the field manual he wishes someone had handed him in 2024 — the one that explains how to actually <em>operate</em> AI instead of just chat with it. Twenty-four chapters. One operator. Belkins, Folderly, the Newsletter, and a portfolio of others. No fluff. Real numbers. Receipts.</p>
+
+    <h2>Where to follow Vlad</h2>
+    <ul>
+      <li><a href="https://www.vladsnewsletter.com" target="_blank" rel="noopener">vladsnewsletter.com</a> — operator playbooks, weekly</li>
+      <li><a href="https://vladyslavpodoliako.com" target="_blank" rel="noopener">vladyslavpodoliako.com</a> — long-form thinking</li>
+      <li><a href="https://www.linkedin.com/in/chiefdata/" target="_blank" rel="noopener">linkedin.com/in/chiefdata</a></li>
+      <li><a href="https://open.spotify.com/artist/48kwMgLHicP6nqaI8Xc3rN" target="_blank" rel="noopener">Spotify (AI-native music side project)</a></li>
+    </ul>
+
+    <h2>About this artifact</h2>
+    <p>The interactive site you're reading was built by a swarm of agents in parallel — content migration, widget builds, design system, deploy pipeline, all of it. The book teaches the technique; the artifact <em>is</em> the technique. <a href="https://github.com/vladpodolyako/ai-dive-deep" target="_blank" rel="noopener">Source on GitHub.</a></p>
+
+    <h2>Edition 1, May 2026</h2>
+    <p>The stack moves. The discipline doesn't. Edition 2 will rewrite the half of the tier list that drifted. Subscribe to the newsletter to be told when it lands.</p>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>
