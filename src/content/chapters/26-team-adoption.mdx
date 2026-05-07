@@ -1,0 +1,120 @@
+---
+number: 26
+slug: "26-team-adoption"
+title: "Getting Twelve People to Use This"
+subtitle: "Single-operator AI is easy. Team AI is a change-management problem dressed up as a tooling problem."
+tldr: "I shipped a Cowork briefing skill to twelve sales reps and by 9:47 AM the rollout had already split into a 4-3-2-2-1 distribution that nobody warns you about. Tools don't adopt themselves and the early adopter is your worst onboarding partner. The team CLAUDE.md, skills as policy, and a 30-day metric that isn't usage."
+keyConcepts: ["CLAUDE.md", "Skill", "team adoption", "Cowork"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+It's 9:03 AM Monday at Belkins. I just shipped a <GlossaryTerm term="Cowork">Cowork</GlossaryTerm> briefing skill to twelve people on the sales floor. By 9:47, four of them are using it, three are asking the four for help, two are pretending it doesn't exist, two emailed me "can you just send me the briefing instead," and one already broke their own <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm> by pasting in 800 lines of prospect notes. The tool works. The adoption is what's broken. Tools don't adopt themselves. Neither do teams.
+
+<ScreenshotPlaceholder
+  caption="The 9:47 AM Slack — twelve people, five reactions"
+  note="screenshot the rollout announcement thread with the actual emoji reaction count, the question replies, and the radio silence — readers should see the distribution before reading about it."
+/>
+
+## The 4-3-2-2-1 distribution
+
+Every team rollout I've done — and I've done eight in the last year across Belkins, Folderly, and a portfolio of advisor companies — splits the same way on day one.
+
+Four people pick it up immediately. They were already power users of something adjacent (ChatGPT Plus, Cursor, Notion AI), they want the tool more than I want to give it to them, and they're talking to each other inside an hour. Three people sit in the middle, watching the four. They'll adopt if the four don't blow themselves up by Friday. Two people pretend it doesn't exist. They saw the announcement, they archived it, they have a quota and they don't have time for another login. Two people email you privately and ask you to do the work for them — "can you just send me the briefing instead." And one person breaks the tool in a creative way that wasn't in any user testing because they used it the way they actually work, not the way the docs assume they work.
+
+That's twelve. That's the rollout. The temptation is to chase the bottom three (the askers and the resisters). Don't. The leverage is in the middle three — they'll convert if the top four stay alive and visible. The bottom three convert later, when the middle three convert, or they self-select out. The one creative breaker is the most valuable signal in the room — they just told you which assumption in your skill was wrong.
+
+I have a screenshot of the Slack channel from that 9:47 AM moment. Four hand-raise emojis, three question marks, two thoughtful-pause emojis, two radio-silent inboxes, one DM that started "I think I broke it." That's not a failure. That's the rollout working exactly as rollouts work.
+
+## The early adopter is your worst onboarding partner
+
+Here's the trap I fall into every single time. I show the new skill to my best AI user first because I want a sanity check. They love it. They give me three feature requests. I implement two. I roll out to twelve.
+
+Then I watch the rollout fail, and the failure mode is the same every time: my early adopter onboarded the skill the way they think, which is not the way the median user thinks. The skill ended up subtly tuned to a power-user mental model. The middle three try it, get confused at the seam where the skill assumes you already know what a <GlossaryTerm term="Skill">Skill</GlossaryTerm> file is, and bounce.
+
+The fix is brutal: never let your power user be the second-to-last reviewer. Let them be the first reviewer (they catch real bugs) and then make them the last reviewer after you've onboarded two median users in person. The median users tell you which sentence in the rollout doc is opaque. The power user can't see it because they've already metabolized the concept. The curse of the power user is that their feedback steers you toward yourself, not toward the team.
+
+I've also stopped letting my early adopters write the rollout doc. They write the version that makes sense to them. The middle three need a different doc. Different anchor metaphors, different examples, fewer flags. Same skill. Different surface.
+
+## The team CLAUDE.md
+
+Belkins runs about thirty people on AI workflows. Each person has a personal CLAUDE.md they own, and there's a team CLAUDE.md that everyone's session reads on top of theirs. The collision rule is simple: the team file owns conventions, the personal file owns context.
+
+Here's the team CLAUDE.md, redacted:
+
+```markdown
+# Belkins — Team Conventions (read by every session)
+
+## Voice
+- Lowercase tendencies, em-dashes welcome, no corporate hedging
+- One operator-grade number per claim — receipts, not vibes
+- Don't sanitize Vlad's voice when generating outbound
+
+## Forbidden actions
+- NEVER write to a closed-lost prospect (skill: no-outbound-to-closed-lost)
+- NEVER push to main without a green CI check
+- NEVER paste a customer email body into a public Slack channel
+- NEVER use the production HubSpot API key in a draft response
+
+## Required behaviors
+- All outbound drafts go to #drafts-review before sending
+- All deal-stage changes get logged in HubSpot, not Slack
+- All skill updates ship behind a 30-minute eval (see chapter 25)
+
+## Boundaries
+- Personal CLAUDE.md owns: your name, your accounts, your tone preferences
+- Team CLAUDE.md owns: company conventions, forbidden actions, shared skills
+- If they conflict, team file wins. No exceptions.
+```
+
+That's the entire file. Ninety lines including the headers. It has prevented at least four "send to a closed-lost" incidents in the last quarter — every one of them caught by the skill the team file references. The personal CLAUDE.md is for context that's actually personal: which accounts you own, your DM tone, your time zone, your preferred working hours.
+
+The collision rule matters because the team file is read every session and the personal file is read every session and without ownership boundaries you get drift, contradictions, and confused output. We learned this the hard way after one rep added "always be aggressive in outbound" to their personal CLAUDE.md and the team file said "match the prospect's energy first." The session split the difference and produced something neither voice would have signed.
+
+If you've never written one, the [Chapter 4](/chapters/04-the-vault) vault patterns translate directly — same shape, different scope.
+
+## Skills as policy
+
+Here's the operator move that changed how I run rollouts: encode policy as a skill, not as a Slack rant.
+
+I had a rule. "No outbound to a closed-lost prospect." I'd announced it three times. People remembered for two weeks and then forgot, especially under quota pressure on a Thursday afternoon. The rule was real but it lived in human memory, which is the worst possible storage layer for a compliance rule.
+
+Now it's a skill. The skill is named `no-outbound-to-closed-lost` and it intercepts any outbound draft, looks up the prospect in HubSpot, checks their stage, and refuses to draft if they're closed-lost. It also writes a one-line note to a Slack thread the rep can read. "Drafted blocked: prospect closed-lost on March 14, reason 'budget,' last touch 41 days ago." The rep can override (we're not the police) but the override is logged and surfaced in the weekly leadership canvas.
+
+The result: the rule is now enforced by software. No one has to remember it. The outbound that gets sent matches policy by default and the team has more cognitive room for the work that actually requires judgment. The rule isn't a meme on Slack anymore. It's a worker on the floor.
+
+This pattern generalizes. Every time you find yourself writing "remember to" or "please don't" in a team Slack channel, ask whether it should be a skill instead. The Slack rant has the half-life of one bad Friday. The skill is permanent until you delete it.
+
+<PullQuote>Adoption isn't a training problem. It's a gravity problem. Make the AI path the path of least resistance, or the team will route around it.</PullQuote>
+
+## The 30-day metric
+
+Here's the metric most rollouts get wrong. Usage. Number of sessions. Number of skill invocations. Number of prompts per rep per week.
+
+Usage tells you nothing. Usage measures button-pressing, not value capture. A rep can run the skill twice a day and still spend their morning context-switching across forty tabs because they didn't change their workflow, they just added a tool to it.
+
+The metric I track instead is tab count. After 30 days, how many browser tabs does the rep have open at 10 AM on a Tuesday? Pre-rollout, the median Belkins SDR had 38. Post-rollout (six months in, voluntary measurement), the median is 9. That's the metric. That's the only metric that matters because that's the metric that shows the AI path actually became the path of least resistance, not just an extra path.
+
+You can't measure tab count via API. You ask people. You ask them on a Tuesday morning. You write the number on a sticky note. You compare in 30 days. If the tab count didn't drop, the rollout didn't take, regardless of what the usage dashboard says.
+
+The first chapter of this book, [Chapter 1](/chapters/01-killed-my-tabs), opens with the same idea — AI didn't make me faster, AI killed my tabs. The team-level version of that promise is the only adoption metric that survives contact with reality. Tab count down means context-switching down means the team's day actually changed shape. Usage up with tab count flat means you sold them a toy.
+
+## When you fire the tool vs the person
+
+This is the rare and uncomfortable part. Most adoption failures are tool failures. The skill was wrong, the rollout doc was opaque, the eval wasn't there, the early adopter mis-tuned the surface — that's all the operator's fault, and you fix the tool.
+
+But sometimes — rarely — the tool isn't the problem. The person is the problem. They don't want to be observed. They don't want their drafts running through a review skill. They don't want their pipeline activity readable by a leadership canvas. They don't want the work to leave their head where they can edit the story.
+
+You can spot this person. They're the one who claims the AI is "too much" while their peers ship 40% more output with the same hours. They're the one whose CLAUDE.md is empty after eight weeks. They're the one who finds a creative reason every Friday for why the eval that flags stale deals doesn't apply to their pipeline.
+
+That signal is a real signal. It's not "they hate AI." It's "they don't want their work observable." That's a leadership question, not a tooling question. The AI didn't fire them. The AI surfaced a thing leadership had been not-quite-seeing for a while. Once you see it you can't unsee it.
+
+This happens rarely. Two cases in eighteen months across thirty-plus rollout participants. But it's real, and it's worth naming, because the other twenty-eight times it's the tool's fault and you should fix the tool.
+
+## The closer
+
+Six months in, eleven of the twelve use it daily. The twelfth left for a competitor. He told his exit interviewer the AI was "too much." It wasn't. He was the one who couldn't be observed. The skill fired me a clean signal four months before HR did.

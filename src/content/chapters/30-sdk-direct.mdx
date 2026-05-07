@@ -1,0 +1,202 @@
+---
+number: 30
+slug: "30-sdk-direct"
+title: "Building With the Anthropic SDK Directly"
+subtitle: "When Claude Code and Cowork stop being the answer and you have to write 30 lines of Python."
+tldr: "A customer asked if the AI feature in their dashboard could run without me opening Claude Code. The honest answer was no — what they saw was a skill in my session, not a feature in their product. I wrote 34 lines of Python against the Anthropic SDK and shipped that afternoon. It's been serving customers for nine months. This chapter is what's inside those 34 lines."
+keyConcepts: ["Anthropic SDK", "tool use", "prompt caching", "Vercel functions"]
+readingMinutes: 10
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+It's 4:09 PM Thursday and a customer is on a Zoom asking me whether the AI feature in their trial dashboard can run without me opening Claude Code. The honest answer is no — what they saw on the screenshot was a <GlossaryTerm term="Skill">skill</GlossaryTerm> running in my session, not a feature in their product. The dishonest answer would've been to build them a thin wrapper that shells out to `claude --print` from a Vercel function and pray it scales past three concurrent users.
+
+I wrote 34 lines of Python against the <GlossaryTerm term="Anthropic SDK">Anthropic SDK</GlossaryTerm> instead. Shipped that afternoon. It's been serving customers for nine months. The 34 lines added prompt caching in month two and a retry block in month four. That's it. That's the whole story.
+
+This chapter is the contents of that file, and the line of thinking that put it there instead of in a Claude Code session.
+
+## The line where the book stops working
+
+The first 28 chapters of this book teach you to live inside <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> and <GlossaryTerm term="Cowork">Cowork</GlossaryTerm>. They are extraordinary working environments. They are not runtimes for product features that strangers will hit while you're asleep.
+
+The distinction nobody draws clearly: Claude Code and Cowork are clients. The Anthropic SDK is the protocol. Your morning briefing skill runs in a client because you're the only user, you're awake when it runs, and the failure mode is "I don't get my brief and I notice." Your customer-facing AI feature has a thousand users, no one is awake on every continent at the same time, and the failure mode is "a paying customer gets a 500 and churns."
+
+When the user is you, use a client. When the users are paying you, use the SDK.
+
+<PullQuote>Cowork is the kitchen you eat in. The SDK is the kitchen you cook for strangers in. Different building codes.</PullQuote>
+
+## Hello world
+
+Before the 34-line file, here's the version that fits on a postcard. Twelve lines, one API key, your first programmatic Claude:
+
+```python
+import os
+import anthropic
+
+client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+
+response = client.messages.create(
+    model="claude-sonnet-4-5",
+    max_tokens=1024,
+    messages=[{"role": "user", "content": "say hello"}]
+)
+
+print(response.content[0].text)
+```
+
+That's it. `pip install anthropic`, drop your key in the env, run the file. You now have a programmatic Claude. Most "AI startup" demos on Twitter are roughly this with a UI bolted on top.
+
+The reason that's not enough for a real product: no caching, no tools, no retries, no streaming. Add those four and you have something you can put in front of customers. That's the file below.
+
+## The 34-line file
+
+This is the one in production. I've changed the variable names and customer-specific bits, but the shape is verbatim:
+
+```python
+import os
+import anthropic
+from anthropic import APIStatusError, APIConnectionError
+
+SYSTEM_PROMPT = """You are a campaign analyzer. Given a campaign brief and a list of audience segments, return a JSON object with: predicted_open_rate, predicted_reply_rate, top_risk, suggested_subject_line. Be concrete, cite specific phrases from the brief."""
+
+TOOLS = [{
+    "name": "lookup_segment_history",
+    "description": "Get historical performance for a named audience segment.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"segment_name": {"type": "string"}},
+        "required": ["segment_name"]
+    }
+}]
+
+client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"], max_retries=3)
+
+def analyze_campaign(brief: str, segments: list[str]) -> dict:
+    user_msg = f"Brief:\n{brief}\n\nSegments: {', '.join(segments)}"
+    try:
+        resp = client.messages.create(
+            model="claude-sonnet-4-5",
+            max_tokens=1024,
+            system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
+            tools=TOOLS,
+            messages=[{"role": "user", "content": user_msg}]
+        )
+        return {"ok": True, "result": resp.content, "usage": resp.usage.model_dump()}
+    except (APIStatusError, APIConnectionError) as e:
+        return {"ok": False, "error": str(e), "retry_safe": True}
+```
+
+Count the lines. Thirty-four including the imports and the blank lines I keep for sanity. That file has been the backbone of a customer-facing feature for nine months serving real traffic. There is no orchestration framework. There is no agent loop wrapper. There is no LangChain. There is one SDK call, one cache breakpoint, one retry config, and one error-handling path.
+
+## Tool use, the same MCP shape, no Cowork wrapping it
+
+Notice the `TOOLS` list. That's the same shape as a <GlossaryTerm term="MCP">MCP</GlossaryTerm> tool definition — a name, a description, an input schema. The model emits a tool-use block when it wants to call one. In Claude Code or Cowork, the client wraps that handshake for you and routes the call to the actual tool. In the SDK, you do that yourself:
+
+```python
+def run_with_tools(brief: str, segments: list[str]) -> dict:
+    messages = [{"role": "user", "content": f"Brief:\n{brief}\nSegments: {segments}"}]
+    while True:
+        resp = client.messages.create(
+            model="claude-sonnet-4-5",
+            max_tokens=1024,
+            system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
+            tools=TOOLS,
+            messages=messages
+        )
+        if resp.stop_reason == "end_turn":
+            return resp.content[0].text
+        if resp.stop_reason == "tool_use":
+            tool_block = next(b for b in resp.content if b.type == "tool_use")
+            tool_result = lookup_segment_history(**tool_block.input)
+            messages.append({"role": "assistant", "content": resp.content})
+            messages.append({"role": "user", "content": [{
+                "type": "tool_result",
+                "tool_use_id": tool_block.id,
+                "content": str(tool_result)
+            }]})
+```
+
+That loop is the entire mechanism behind every "agent" you've heard about. The model says "I want to call this tool." Your code calls it. You append the result to the message history. You call the model again. It either uses the result and answers, or asks for another tool. You stop when `stop_reason == "end_turn"`.
+
+If your "agent framework" is doing more than this, it's probably doing less.
+
+## Prompt caching in code, day one
+
+In the 34-line file, the `cache_control` block on the system prompt is doing the same job it does in [Chapter 29](/chapters/29-cost-economics): drawing a line that says everything before this is stable, cache it. The system prompt for this campaign analyzer is roughly 1,800 tokens. Without the cache block, every call paid full price for those 1,800 tokens. With it, the first call pays a 25% write premium and every subsequent call within five minutes pays roughly 10%.
+
+For a feature serving sustained traffic, the cache hit rate stays high enough that the system-prompt cost drops by close to 90%. On a feature doing tens of thousands of calls a day, that's not a rounding error. That's the difference between a feature that pays for itself and one your CFO asks pointed questions about.
+
+You want this on day one because retrofitting it is awkward. The breakpoint position becomes a load-bearing piece of your prompt structure — moving it later means re-engineering whatever you stuffed in front of it.
+
+## Streaming, retries, backoff
+
+Three things `claude --print` hides from you that you have to deal with in production:
+
+**Retries.** The SDK ships with `max_retries=2` by default. Bump it to 3 or 4 for production. The client handles 429 rate limits and 5xx transient errors with exponential backoff automatically. You don't write the loop, you just set the number.
+
+```python
+client = anthropic.Anthropic(max_retries=4)
+```
+
+**Streaming.** For any user-facing feature with response time over a second, stream. Users tolerate slow output if they can see it happening. They don't tolerate a spinner.
+
+```python
+with client.messages.stream(
+    model="claude-sonnet-4-5",
+    max_tokens=1024,
+    messages=[{"role": "user", "content": prompt}]
+) as stream:
+    for text in stream.text_stream:
+        yield text
+```
+
+That `yield` plays nicely with FastAPI's `StreamingResponse` or Vercel's edge streaming. Same shape, different runtime.
+
+**Backoff for your own queue.** The SDK retries on Anthropic's errors. It does not retry on your own downstream tool failures. If `lookup_segment_history` calls a flaky internal service, wrap that call in your own retry. Don't rely on the SDK to know what's transient in your stack.
+
+## The deploy
+
+Vercel function shape, one file, one secret in env, one rate limit:
+
+```python
+# api/analyze.py
+from http.server import BaseHTTPRequestHandler
+import json
+from analyzer import analyze_campaign  # the 34-line file
+
+class handler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        length = int(self.headers["content-length"])
+        body = json.loads(self.rfile.read(length))
+        result = analyze_campaign(body["brief"], body["segments"])
+        self.send_response(200 if result["ok"] else 502)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(result).encode())
+```
+
+`vercel env add ANTHROPIC_API_KEY production`, push to main, you're live. Add a rate limit at the edge with Vercel's middleware or Upstash Redis (50 requests per minute per IP is a sane starting line for a B2B feature). You now have a production AI endpoint that scales horizontally and costs whatever the underlying token math costs, plus pennies for the function invocation.
+
+There is no AI orchestration platform between you and the model. There is no agent runtime billing you a per-seat fee. There's `pip install anthropic` and a Vercel project and the system prompt you wrote.
+
+<Callout type="tip">
+For longer-running workflows (agent loops with 10+ tool calls, batch jobs, anything over Vercel's 60-second function timeout) push the work to a queue worker. Inngest, Trigger.dev, or a plain Postgres-backed queue all work. The 34-line file doesn't change. Only the runtime around it.
+</Callout>
+
+## What's not in the 34 lines
+
+Worth naming explicitly, because the absence is the lesson:
+
+- No vector database. The campaign analyzer doesn't need <GlossaryTerm term="RAG">retrieval</GlossaryTerm> — the brief fits in context.
+- No fine-tuning. The system prompt does the steering. Fine-tuning is for the next problem, not this one.
+- No prompt-template library. Python f-strings are a prompt-template library.
+- No agent framework. The tool-use loop is twelve lines.
+- No observability platform. The `usage` block on the response and a Postgres insert is enough.
+
+Each of those things has its place. None of them have a place on day one. Adding them before you've shipped is how a 34-line file becomes a 6-month engineering project that ships nothing.
+
+The 34-line Python file is still the 34-line Python file. It got prompt caching added in month two and a retry block in month four. That's it. Most of the "AI startup architecture" diagrams on Twitter are a wrapper around something this small, dressed up to justify a Series A. The wrapper is fine. Knowing what's inside the wrapper is the whole job.

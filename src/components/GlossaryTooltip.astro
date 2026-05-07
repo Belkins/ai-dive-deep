@@ -1,24 +1,8 @@
 ---
-import { glossary } from '@/lib/glossary';
+import GlossaryPopover from '@/widgets/GlossaryPopover.tsx';
 interface Props { term: string; }
 const { term } = Astro.props;
-const entry = glossary[term];
-const def = entry?.definition ?? '';
 ---
-<span class="glossary-term" data-term={term} title={def}>
+<GlossaryPopover term={term} client:visible>
   <slot />
-</span>
-
-<script>
-  // Lightweight popover: on hover/focus, show full definition. Title attr is a graceful fallback.
-  document.querySelectorAll('.glossary-term').forEach((el) => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      const term = (el as HTMLElement).dataset.term;
-      if (term) {
-        const base = document.documentElement.dataset.base || '';
-        window.location.href = `${base}/glossary#${encodeURIComponent(term)}`;
-      }
-    });
-  });
-</script>
+</GlossaryPopover>

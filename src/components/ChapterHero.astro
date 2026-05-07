@@ -12,12 +12,13 @@ const padded = String(number).padStart(2, '0');
 <header class="container-prose pt-16 md:pt-24 pb-10">
   <div class="flex items-baseline gap-6">
     <div class="chapter-num">{padded}</div>
-    <div class="text-xs uppercase tracking-[0.2em]" style="color: rgb(var(--muted))">Chapter {number}</div>
+    <div class="text-xs uppercase tracking-[0.2em]" style="color: rgb(var(--muted))">Chapter {number} · {readingMinutes} min read</div>
   </div>
   <h1 class="mt-6 max-w-[20ch]">{title}</h1>
   <p class="mt-3 text-lg md:text-xl max-w-[42ch]" style="color: rgb(var(--muted))">{subtitle}</p>
-  <div class="mt-6 flex flex-wrap gap-2 items-center">
-    <span class="pill">{readingMinutes} min read</span>
-    {keyConcepts.map((c) => <span class="pill">{c}</span>)}
-  </div>
+  {keyConcepts.length > 0 && (
+    <div class="mt-6 flex flex-wrap gap-2 items-center">
+      {keyConcepts.map((c) => <span class="pill">{c}</span>)}
+    </div>
+  )}
 </header>

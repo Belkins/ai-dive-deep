@@ -1,0 +1,105 @@
+---
+number: 27
+slug: "27-voice-agents"
+title: "Voice Agents, Phone Number to Production"
+subtitle: "Every demo is a lie about latency. The seams are where the deal dies."
+tldr: "A LinguaLive prototype answered an investor call on the third ring and went silent for 1.4 seconds before it spoke. The model wasn't slow — the stack was. Voice agents fail politely, and polite failure is what costs you the deal."
+keyConcepts: ["voice agents", "STT/TTS", "latency budget", "Twilio", "interruption"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+It's 3:18 PM Tuesday. The LinguaLive prototype picks up the test call on the third ring. There's a 1.4-second silence before it speaks — long enough that the investor on the other end of the demo, the one I'd spent three weeks getting to take the call, said the word "uncomfortable" out loud. He was right. He passed the next morning. The agent worked. The seam between the agent and the phone line did not.
+
+The thing that ate the deal wasn't the model. The model was first-token in 380 milliseconds. The thing that ate the deal was four other components stacked behind it, each one adding a few hundred milliseconds of "fine alone" that became "robotic together."
+
+Voice agents are the chapter most builders skip because the chat-agent demos are easy and the voice-agent demos are hostile. The hostility is in the seams.
+
+## The four-component stack nobody draws honestly
+
+A voice agent isn't a model. It's four components and a phone line. Telephony, speech-to-text, the LLM, text-to-speech. Each one has a latency budget. Each one has a vendor. Each one has a way to fail that the demo video doesn't show.
+
+Telephony — Twilio in 95% of stacks I've seen, including ours. PSTN handoff: 200 to 400 ms before your code even sees the audio. Nobody mentions this in the demo videos because the demo videos are a browser tab, not a phone call. A browser tab doesn't have PSTN. A real customer does.
+
+Speech-to-text — <GlossaryTerm term="Inference">streaming inference</GlossaryTerm> on the audio while it's still arriving. Deepgram wins this in our tests, today, by about 180 ms over the next-best at the same accuracy. Whisper-API loses on latency even though it wins on accuracy for accented English. We pay the accent cost because LinguaLive customers are 70% non-native and 100% impatient.
+
+LLM — first-token latency, not full-response latency. The agent doesn't need the whole answer before it starts talking. Sonnet 4.7 first-token in our prod is around 380 ms warm, 800 ms cold. Cold is the killer. Cold means the first call after a quiet stretch, which is also the call that's most likely to be a real customer.
+
+Text-to-speech — ElevenLabs Turbo v2.5 streaming. First-audio in around 250 ms, then incremental chunks. The non-streaming TTS endpoints I tested first added 600 ms of "warmup" that I couldn't engineer out. We rebuilt around streaming end-to-end on the second pass.
+
+Add it up. PSTN 300 + STT 200 + LLM first-token 400 + TTS first-audio 250. That's 1,150 ms before the agent's first phoneme leaves the speaker. Plus jitter. Plus the half-second the human takes to recognize that someone is speaking. The investor heard 1.4 seconds. He was being charitable.
+
+<ScreenshotPlaceholder
+  caption="LinguaLive voice-agent latency waterfall"
+  note="capture the dev-tools waterfall from the rebuild #4 logs showing PSTN, Deepgram first-token, Sonnet first-token, ElevenLabs first-audio summed against the 800ms human-tolerance line."
+/>
+
+## The vendor pairings that work today
+
+I'll save you a quarter of A/B testing. As of this writing, in 2026:
+
+Deepgram for STT, ElevenLabs Turbo for TTS, Sonnet 4.7 for the brain, Twilio for the line. That's the stack. It's not the cheapest stack. It's the stack where each seam is fast enough that the sum is under 1 second on a warm path. Swap any one of these for the cheaper alternative and you'll get a tolerable demo and an intolerable Tuesday at 9 AM.
+
+Caveat the size of a billboard: this changes every quarter. We re-benchmark voice vendors every 90 days. The stack you build on Monday is the stack you re-evaluate Friday.
+
+## Twilio is not optional
+
+Every voice-agent tutorial on YouTube starts with a browser microphone. That's not a voice agent, that's a karaoke app. A voice agent has a phone number. A phone number has the public switched telephone network behind it. The PSTN is sixty years of analog infrastructure with a digital wrapper, and it does not care about your latency budget.
+
+You can self-host SIP. You will regret it. We tried for two weeks. We went back to Twilio and paid the per-minute. The number on Twilio is one API call. The number on a self-hosted SIP gateway is three weeks of rabbit-hole including a vendor in Estonia and a phone call with the FCC about call-spam classification. I am not making this up.
+
+<PullQuote>Chat agents fail loudly — the screen goes blank. Voice agents fail politely — the silence is just slightly too long, and the human hangs up.</PullQuote>
+
+## The interruption problem
+
+Twelve seconds into a real call the human will interrupt. They always do. They have a question, they want to push back, they want to redirect. The bad voice agent finishes its sentence anyway. The customer's brain heard the agent ignore them and the call is over even if it lasts another two minutes.
+
+Real interruption handling means the TTS stream cancels mid-phoneme the moment the STT detects voice activity above a threshold for more than 80 ms. Eighty milliseconds is a tuning parameter — too low and the agent flinches at every breath, too high and it bulldozes the customer. We tune per-language. English: 80 ms. Spanish: 110 because the speech is faster and the false-positive rate spikes if you stay tight.
+
+The architecture move: barge-in handling lives in your audio mixer, not your LLM logic. By the time the LLM knows the user spoke, you've already lost a beat. The mixer kills the outbound stream the instant it sees voice. Then it tells the LLM what happened. Order matters.
+
+This is also where most voice-agent SDKs lie. They expose an "interrupt: true" flag and pretend the heavy lifting is done. The flag is the start of the work, not the end.
+
+## Cost shape: $0.06 to $0.40 per minute
+
+A voice-agent minute, fully loaded, lands somewhere between six cents and forty cents. The 7x spread is entirely about which seam you cheaped out on.
+
+The cheap stack: Twilio at $0.0085/min, an open-source STT on a self-hosted GPU at near zero, Haiku for the brain, an open-source TTS that sounds like a 2019 GPS unit. That's six cents. It also sounds like 2019. Don't ship that to a paying customer.
+
+The premium stack: Twilio + Deepgram Nova at $0.0043/min + ElevenLabs Turbo at $0.10/1k chars (around $0.18/min for normal conversation density) + Sonnet at maybe $0.04/min on a warm cache. That's around 35 to 40 cents a minute. It sounds like a tired junior employee on a Tuesday afternoon. Which is the goal.
+
+The number I watch isn't the per-minute, it's the per-resolution. A voice agent that resolves a tier-1 support ticket in 90 seconds at 40 cents is replacing a $14 human-handled ticket. The math is not subtle. It's also not the math people quote — they quote per-minute and miss that the unit isn't minutes, it's outcomes.
+
+## The single design rule
+
+Never let the model think while the user is listening.
+
+That's the whole rule. Read it twice. Every time the agent goes silent for more than 800 ms while the user is on the line, you are paying for that silence in trust. The agent should be talking, or the agent should be hearing the user talk. Dead air is the failure mode.
+
+In practice this means: the LLM call cannot be on the critical path of "user finishes speaking → agent starts speaking." Either you stream the LLM tokens directly into the TTS as they arrive (you can — both endpoints support it), or you fill dead air with deterministic acknowledgments ("let me check that for you") while the heavy reasoning happens in the background and gets streamed in the next turn.
+
+The acknowledgment trick is what every good human support agent does. It's also the thing every bad voice-agent build leaves out, because the demo videos don't have a 4-second tool call in them and the production system always does.
+
+## The cold-start problem nobody fixes in public
+
+Cold start is the seam I underestimated longest. The first call after fifteen quiet minutes is the call where every component is "warming back up." The LLM session is gone from the provider's hot pool. The TTS voice ID isn't cached on the edge. The STT streaming endpoint has to renegotiate. Each of those costs 200 to 400 ms by itself. Stacked, a cold call is 2.6 seconds before the first phoneme. A warm call is 900 ms.
+
+The customer can't tell which call is which. They just know the first one of the morning sounded broken.
+
+Three things help. First, a heartbeat that fires every 8 minutes during business hours — a tiny synthetic call that touches each component, keeps the hot pool warm, costs roughly $0.02 each fire. Second, pre-instantiated LLM sessions with a stub system prompt sitting idle in a warm pool. We keep four sitting hot. The fifth caller waits — but four concurrent inbound is rare in our traffic. Third, the deterministic acknowledgment trick from the design rule above does double duty here: it covers the cold-start gap with audible activity while the warm path catches up behind it.
+
+None of this is in the SDK. All of it is what separates a demo from a product.
+
+## What the seams actually cost you
+
+The LinguaLive prototype is on its fourth rebuild. Each rebuild is a seam I didn't respect on the previous one. Rebuild one was the LLM — wrong model, fixed. Rebuild two was the TTS — non-streaming, fixed. Rebuild three was the interruption logic — lived in LLM logic, moved to the mixer. Rebuild four is the cold-start problem on the LLM, which we're solving with a warm-pool of pre-instantiated sessions that we keep alive on a heartbeat.
+
+Each rebuild took two weeks. Each rebuild was triggered by a real customer hanging up. The investor demo I lost in March is the cheapest of the four lessons because it didn't churn anyone, it just delayed a round.
+
+The voice agent that closes deals doesn't sound like AI. It sounds like a tired junior on a Tuesday. Tired juniors don't pause for 1.4 seconds. They say "yeah, give me a sec" and keep the line warm. The latency budget isn't a number on a slide. It's the floor of how human your stack is allowed to feel.
+
+That's not a feature list. That's a budget.

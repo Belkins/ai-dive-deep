@@ -1,0 +1,104 @@
+---
+number: 28
+slug: "28-failure-receipts"
+title: "The Receipts I'd Rather Not Show You"
+subtitle: "Six failures, six bills, six things the demo videos won't tell you."
+tldr: "$1,847 in eleven hours from a recursion I didn't catch. A skill that wrote to the wrong vault for nine days. A connector that exfiltrated a customer email. None of these showed up on a tier list. All of them changed how I run things."
+keyConcepts: ["spend caps", "silent failures", "verifier loops", "post-mortems", "operator scars"]
+readingMinutes: 10
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+It's 2:51 AM on a Saturday in March. My phone vibrates. The Anthropic billing alert is pinned to the lockscreen with a number in it I don't believe at first read. $1,847. Eleven hours. The card on file is a personal AmEx because the corporate card had a hold for unrelated reasons and I'd done what every operator who's ever shipped at 11 PM has done — used the personal one to keep the workload moving.
+
+Eleven hours earlier I'd kicked off a small <GlossaryTerm term="Swarm">swarm</GlossaryTerm> and gone to dinner. I didn't add a spend cap because I'd never needed one. Past performance had been, and remained, a poor predictor.
+
+This chapter is six of those. None of them are in the demo videos. All six are in my AmEx statement.
+
+## 1. The $1,847 recursion
+
+The mechanism. A <GlossaryTerm term="Subagent">subagent</GlossaryTerm> in the swarm hit a tool result it found "ambiguous" — its word, in the trace I read at 3 AM. Its decision tree said: re-call the tool with a longer, more specific prompt. The longer prompt produced a longer ambiguous result. The decision tree fired again. Each loop added context, which added input tokens, which added output tokens, which added latency that masked the loop from any of my heartbeat checks.
+
+By the time the billing alert tripped, the agent had made 1,400 calls in a tight cycle, each one a few cents bigger than the last. The dollar amount per call never crossed any threshold I'd thought to set. The aggregate did. The aggregate didn't have a threshold.
+
+The fix. Three things, same morning. First, a hard spend cap at the workspace level — Anthropic supports this, I'd just never set it. Set to $200/day per workspace. Second, a per-task token ceiling enforced in the orchestrator — if a single task crosses 500K tokens, the orchestrator kills it and pages me. Third, a "loop detector" in the subagent prompts — if your last three tool calls had >80% prompt overlap, stop, return what you have, flag it for human review.
+
+The bill never came back. The next time a subagent got "stuck," it stopped at $4 and pinged me. $4 is a number I will trade for sleep.
+
+## 2. The skill that wrote to the wrong vault for nine days
+
+Wednesday morning, two weeks after I'd refactored my <GlossaryTerm term="Vault">vault</GlossaryTerm> structure. I open Obsidian to find a session-prep doc and it's not where I left it. I search. It's not in the new vault. It's in the *old* vault, which I'd renamed but not deleted, sitting at a path my mentoring-prep skill had been writing to for nine straight days.
+
+Nine days of session prep. Three mentees. Eleven docs. All in a folder I'd stopped looking at on day one of the refactor.
+
+Mechanism. The skill's `SKILL.md` had the vault path hardcoded as a literal string from the original install. The refactor moved the vault to a new directory. The skill kept happily writing to the old directory because the old directory still existed — I'd renamed the *parent* but not deleted the inode. Writes succeeded. Reads from the new vault returned empty. Nobody complained because the docs the skill produced were the same ones the skill itself read on the next session, so the skill was self-consistent inside its own broken world.
+
+The fix. Vault paths now live in one place — a single env-loaded config that every skill reads at runtime. No skill has a hardcoded path. Second, every skill that writes a file ends with a verification step that reads the file back and checks the path matches the expected canonical path. Third, weekly "where did things land" cron that diffs expected output paths against actual file landings across the vault.
+
+Nine days of work was retrievable, just embarrassing. The next version of this failure won't be retrievable. That's the one the verifier exists to catch.
+
+## 3. The Cowork connector that exfiltrated a customer email
+
+Thursday afternoon. I'm setting up a new <GlossaryTerm term="Connector">connector</GlossaryTerm> in <GlossaryTerm term="Cowork">Cowork</GlossaryTerm> for a test workspace, the kind I spin up to dogfood new MCP integrations before I trust them on the production workspace. I authorize the Gmail connector against my main account because that's the only Gmail account I have. I think nothing of it. I run a few prompts. I move on.
+
+Two hours later I'm reviewing the test workspace's logs and I see it. A prompt I'd typed read "summarize the last email from this customer." The agent — in the test workspace, with the test workspace's loose permissions and looser logging — had pulled the entire body of a real customer email into the test session's context window and surfaced it in a Slack canvas inside that test workspace, which a teammate had access to.
+
+The teammate is fine. The teammate is trustworthy. The teammate didn't need to see that email. The audit log says they did.
+
+Mechanism. Connectors authenticate per-account, not per-workspace. A test workspace and a prod workspace, sharing the same Gmail OAuth, have functionally identical access to the inbox. Workspace boundaries are a UI fiction over a single underlying credential.
+
+The fix. Test workspaces now authenticate against a dedicated test Google account with its own inbox seeded with synthetic data only. Production credentials never touch a test surface. Took 40 minutes to set up, would have taken ten the first day if I'd known. Anyone running multi-workspace setups should assume the credential is the boundary, not the workspace label.
+
+## 4. The hook that fired on every keystroke
+
+I'd built a <GlossaryTerm term="Hook">hook</GlossaryTerm> — a clever one, I thought — that ran a quick syntax check after every file save, and on file save fired a small subagent to suggest a one-line improvement. Local. Fast. Helpful. Until I opened a 4,000-line file and started typing.
+
+The hook fired on every keystroke that landed in autosave. Autosave fires every 1.5 seconds in my editor. Each fire spawned a subagent. Each subagent took 6 to 8 seconds to run. By minute three I had 90 concurrent subagents trying to do the same syntax check on slightly different versions of the same file, all bottlenecking on disk I/O, all hitting the same API endpoint, all slowly starving my laptop's RAM.
+
+The fan was at 100%. The trackpad lagged behind my finger. Cowork's main session became unresponsive. I forced-quit the editor at minute seven and watched 86 zombie subagents take another two minutes to drain.
+
+Bill: $34, almost rounding error. Time lost: about an hour because I had to figure out *why* my laptop was sick. I genuinely thought it was a malware event for ten minutes.
+
+Mechanism. Hooks fire on the trigger you tell them to. The trigger I told mine — "on file save" — fired more often than I thought because autosave is a save. Hooks have no rate limiter unless you build one in.
+
+The fix. Every hook now has a built-in debouncer — minimum 30 seconds between fires per file path. Every hook also has a kill switch — a file at `~/.claude/hooks/disabled` that, if present, short-circuits all hooks in flight. I check that kill switch is reachable before I ship a hook. I learned that the hard way too.
+
+## 5. The 4.6 → 4.7 migration that broke a shipped skill
+
+Anthropic shipped Claude 4.7. I upgraded my default model in three workspaces over coffee. Twelve people had been using a skill I'd shared a month earlier — a prep-doc generator for mentoring sessions, simple, well-tested. By the next afternoon two of them had pinged me: the skill is "weird now."
+
+Weird meant the prep doc came out 30% shorter and skipped a section. The section it skipped was the most useful one — pattern-flagging, the part that called out behavioral patterns from prior sessions. The skill on 4.7 was deciding the patterns section was "speculative" and silently dropping it.
+
+Mechanism. The 4.7 model is more conservative about claims it can't directly evidence. The pattern section in the original skill prompt was phrased loosely — "note any patterns you see across recent sessions" — and 4.6 happily inferred patterns from context. 4.7 reads the same prompt and decides it doesn't have enough grounding. So it skips. Silently. No warning, no flag. Just a shorter doc.
+
+The fix. The migration broke a contract I hadn't written down. New rule: any skill shared with more than two people gets a regression test that runs on model upgrades — same input, diff the structural shape of the output, alert on missing sections. Took an evening to wire. Should have existed from week one. Doesn't, in most stacks I see.
+
+The deeper fix is humility. A model upgrade is a behavior change. Treat it like a deploy. You wouldn't push a backend change to twelve users without a smoke test. Don't push a model change without one either.
+
+## 6. The "subagent returned OK with no commit" silent failure
+
+Final receipt, the one that hurts most because it's the one that almost shipped to production.
+
+I dispatched four subagents in parallel to refactor four files in a codebase. Each one had a clear scope, a clear file path, a clear instruction to return its commit hash when done. Three returned hashes. The fourth returned the literal string "OK." Not a hash. Not an error. Just OK.
+
+I read four "successes" and moved on. I batched the next wave. The next wave depended on the fourth file being refactored. The next wave failed in ways that took ninety minutes to diagnose because I was looking at the wrong layer — I assumed the refactor had happened and was looking for a bug in the new code, when the bug was that the new code didn't exist.
+
+The fourth subagent had hit a permission prompt mid-task, paused waiting for input, and after a timeout returned "OK" because its prompt didn't say what to return on timeout. It returned the default. The default was the agent's idea of a friendly status word.
+
+Bill: maybe $8 in wasted tokens. Time: 90 minutes plus the cost of the next-wave debugging. Trust: lower in the orchestration layer permanently.
+
+Fix. A `/agent-wave-verify` skill that runs between every wave. Counts files modified by each agent, diffs commit hashes, fails loud if any agent's claimed scope shows zero touched files. I run it now without thinking. The first time I ran it after building it, it caught a different silent failure on the same week. Second time, another. Verifiers earn their keep on the calendar I keep them.
+
+<PullQuote>Every operator running AI seriously has a billing alert with a story behind it. If you don't have that alert yet, you don't have a stack — you have a demo.</PullQuote>
+
+## What none of these are
+
+None of these failures showed up in a tier list. None made a Twitter thread. None of them have a clean before-and-after that fits in a slide. All six changed how I run things.
+
+The polished version of this chapter would sand them off — six lessons, neat bullet points, a confident tone. The polished version would be a lie. The polished version would be the same demo video that put me in the position to lose $1,847 on a Saturday in the first place.
+
+So here they are, with the dollar amounts, with the time stamps, with the names of the things I broke. The demo video for AI in 2026 is sunlit. The receipts are not. Both are real. The receipts are what you operate on.
