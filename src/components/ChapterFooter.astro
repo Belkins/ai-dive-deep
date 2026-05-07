@@ -14,7 +14,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   ) : <div></div>}
   {next ? (
     <a href={`${base}/chapters/${next.slug}`} class="card hover:border-flame transition-colors no-underline text-right" style="color: rgb(var(--fg))">
-      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">Next · Ch {next.number} →</div>
+      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">Most readers go here next · Ch {next.number} →</div>
       <div class="font-display text-lg leading-tight">{next.title}</div>
     </a>
   ) : <div></div>}

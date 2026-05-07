@@ -17,6 +17,16 @@ import {
   PROMPT_SKILL_CREATOR,
   PROMPT_PRE_MEETING,
   PROMPT_EOD,
+  PROMPT_DEAL_POSTMORTEM,
+  PROMPT_HIRE_SCREEN,
+  PROMPT_MODEL_MIGRATION,
+  PROMPT_BOARD_UPDATE,
+  PROMPT_MENTEE_PREP,
+  PROMPT_RFP_TRIAGE,
+  PROMPT_KILL_DECISION,
+  PROMPT_CUSTOMER_SYNTHESIS,
+  PROMPT_WRITING_FILTER,
+  PROMPT_TUESDAY_TRIAGE,
   SETTINGS_JSON_EXAMPLE,
   GITHUB_PR_DIGEST_ACTION,
 } from '@/lib/snippets';
@@ -71,6 +81,49 @@ import {
 
     <h3>End-of-day brain dump</h3>
     <CopyBlock client:visible text={PROMPT_EOD} filename="prompt-eod.txt" />
+
+    <h2>Ten more operator prompts</h2>
+    <p class="text-sm" style="color: rgb(var(--muted))">The five above plus these ten cover ~80% of the prompts I run weekly. Trigger phrases live with each.</p>
+
+    <h3>Deal post-mortem</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "deal post-mortem", "we lost X", "deal autopsy."</p>
+    <CopyBlock client:visible text={PROMPT_DEAL_POSTMORTEM} filename="prompt-deal-postmortem.txt" />
+
+    <h3>Hire screener</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "screen this candidate", "hire screen", "vibe check."</p>
+    <CopyBlock client:visible text={PROMPT_HIRE_SCREEN} filename="prompt-hire-screen.txt" />
+
+    <h3>Model migration audit</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "model migration", "version bump", "upgrade to opus."</p>
+    <CopyBlock client:visible text={PROMPT_MODEL_MIGRATION} filename="prompt-model-migration.txt" />
+
+    <h3>Board update (4 lines)</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "board update", "investor update", "monthly to investors."</p>
+    <CopyBlock client:visible text={PROMPT_BOARD_UPDATE} filename="prompt-board-update.txt" />
+
+    <h3>Mentee prep</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "prep for [name]", "mentee prep", "session prep."</p>
+    <CopyBlock client:visible text={PROMPT_MENTEE_PREP} filename="prompt-mentee-prep.txt" />
+
+    <h3>RFP / partnership triage</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "RFP triage", "partnership response", "should I take this call."</p>
+    <CopyBlock client:visible text={PROMPT_RFP_TRIAGE} filename="prompt-rfp-triage.txt" />
+
+    <h3>Kill decision</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "kill decision", "should we kill X", "is X working."</p>
+    <CopyBlock client:visible text={PROMPT_KILL_DECISION} filename="prompt-kill-decision.txt" />
+
+    <h3>Customer-call synthesis</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "customer call synthesis", "interview readout", "what did we learn."</p>
+    <CopyBlock client:visible text={PROMPT_CUSTOMER_SYNTHESIS} filename="prompt-customer-synthesis.txt" />
+
+    <h3>Should-I-write-this filter</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "should I write about", "newsletter idea check", "is this a post."</p>
+    <CopyBlock client:visible text={PROMPT_WRITING_FILTER} filename="prompt-writing-filter.txt" />
+
+    <h3>Tuesday-9am triage</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "triage my morning", "5-minute version", "what's the one thing."</p>
+    <CopyBlock client:visible text={PROMPT_TUESDAY_TRIAGE} filename="prompt-tuesday-triage.txt" />
 
     <h2>GitHub Action — Daily PR digest</h2>
     <p class="text-sm" style="color: rgb(var(--muted))">The cheapest, highest-leverage headless workflow in existence.</p>

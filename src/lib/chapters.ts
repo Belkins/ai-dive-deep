@@ -31,6 +31,12 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 22, slug: '22-sessions', title: 'Session Management', subtitle: 'Resume, replay, fork — the right way to re-enter work.' },
   { number: 23, slug: '23-vibe-coding', title: 'Vibe Coding', subtitle: 'A real Saturday build, hour by hour, with the misfires kept in.' },
   { number: 24, slug: '24-tier-list', title: 'The Tier List', subtitle: 'Vlad rates every AI tool, connector, and adjacent tool he uses.' },
+  { number: 25, slug: '25-evals-or-hope', title: 'Evals or Hope, Pick One', subtitle: "If you don't have evals, you don't have a workflow — you have a prayer with a Slack channel." },
+  { number: 26, slug: '26-team-adoption', title: 'Getting Twelve People to Use This', subtitle: 'Single-operator AI is easy. Team AI is a change-management problem dressed up as a tooling problem.' },
+  { number: 27, slug: '27-voice-agents', title: 'Voice Agents, Phone Number to Production', subtitle: 'Why every voice-agent demo is a lie about latency and what a real stack costs.' },
+  { number: 28, slug: '28-failure-receipts', title: "The Receipts I'd Rather Not Show You", subtitle: "Six failures, six bills, six things the demo videos won't tell you." },
+  { number: 29, slug: '29-cost-economics', title: 'The Bill, Demystified', subtitle: 'Token math, prompt caching, batch API, model routing — what actually moves your invoice.' },
+  { number: 30, slug: '30-sdk-direct', title: 'Building With the Anthropic SDK Directly', subtitle: 'When Claude Code and Cowork stop being the answer and you have to write 30 lines of Python.' },
 ];
 
 export function getNeighbors(slug: string) {

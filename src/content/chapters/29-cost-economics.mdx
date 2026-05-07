@@ -1,0 +1,148 @@
+---
+number: 29
+slug: "29-cost-economics"
+title: "The Bill, Demystified"
+subtitle: "Token math, prompt caching, batch API, model routing — what actually moves your invoice."
+tldr: "My Anthropic bill went from $1,108 a week to $4,312 a week with zero workload change. The culprit was a 38-line CLAUDE.md edit that voided prompt caching on 60% of my morning briefings. The fix took 12 minutes. Knowing the fix existed took six months. This chapter is so you don't have to wait six months."
+keyConcepts: ["prompt caching", "batch API", "model routing", "token economics"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+It's 8:11 AM Wednesday and I'm staring at a $4,312 Anthropic bill for the prior week. Same workload as the week before, when the bill was $1,108. Nothing in my product code changed. Nothing in the cron schedule changed. The morning briefing still ran at 6:30, the friday-wrapup still fired at 5 PM, the deal-advancement alert still woke up at 4:02 AM Eastern. The numbers were just different by almost 4x.
+
+I spent forty minutes thinking my workers had gone feral and were re-running themselves in some loop I couldn't see. They hadn't. The cron logs were clean. The token counts on each individual run looked roughly normal. The only thing that looked off was the ratio of cached input tokens to fresh input tokens — which had cratered.
+
+The thing that changed was a 38-line edit to my <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm> the prior Saturday. I'd added some new portfolio context and rearranged a section. <GlossaryTerm term="Prompt injection">Innocent</GlossaryTerm> on its face. What I'd actually done was move a paragraph that lived inside the cached prefix to a different position, which meant every morning briefing was now sending a prefix the cache server had never seen, paying full input price on roughly 60,000 tokens of system prompt that used to cost a tenth of that.
+
+Prompt caching isn't a feature you turn on. It's a contract about what changes between calls, and one paragraph of edits voided the contract.
+
+The fix took 12 minutes. I moved the new section to the bottom of CLAUDE.md, behind the cache breakpoint. The bill went back to $1,108 the following week.
+
+## The four costs nobody draws on the same chart
+
+When you look at the Anthropic pricing page you see a per-million-token rate for input and output. That's two numbers. The actual bill has four.
+
+- **Input tokens** — what you send. The system prompt, the user message, prior turns, tool definitions.
+- **Output tokens** — what the model writes back. Almost always 5x the input price.
+- **Cache write tokens** — the first time a prefix is cached, you pay a 25% premium over the input rate. One-time cost.
+- **Cache read tokens** — every subsequent call that hits the same prefix pays roughly 10% of the input rate. Ten times cheaper.
+
+The 10x gap between cache read and full input is the entire game. Every operator-grade Claude workload I run leans on it. A morning briefing that pulls in 40K tokens of portfolio context, MCP tool schemas, and prior week's running summary should pay full price for 40K tokens exactly once a week. The other six mornings, that prefix should be a cache hit costing roughly a tenth of that.
+
+When the cache works you don't think about it. When it breaks you don't see it on the per-call view, you see it on the weekly invoice, which is where I learned this lesson the expensive way.
+
+<PullQuote>Most operators don't have a token problem. They have a cache problem they haven't named yet.</PullQuote>
+
+## Stable prefixes, and what voids the contract
+
+Here's the operator's model of how prompt caching works. The Anthropic SDK lets you mark a point in your prompt with a `cache_control` breakpoint:
+
+```python
+response = client.messages.create(
+    model="claude-sonnet-4-5",
+    max_tokens=2048,
+    system=[
+        {
+            "type": "text",
+            "text": LARGE_SYSTEM_PROMPT,  # 40K tokens of context
+            "cache_control": {"type": "ephemeral"}
+        }
+    ],
+    messages=[{"role": "user", "content": user_message}]
+)
+```
+
+That `cache_control` block draws a line. Everything before it is the cached prefix. The first call writes the prefix to a server-side cache keyed by the exact byte content. The next call within ~5 minutes that sends the same bytes pays the cheap cache-read rate for that section, and full price only for what comes after.
+
+What voids the contract:
+
+- Editing any byte before the breakpoint. Even a typo fix. Cache miss.
+- Reordering paragraphs in your system prompt. Same.
+- Adding new context at the top instead of the bottom. Same.
+- Letting the cache go cold (no requests for 5+ minutes on the ephemeral tier). Cache evicted.
+- Switching models mid-flight. Each model has its own cache.
+
+The mental fix is: treat your system prompt like an append-only log. New stuff goes at the end. The old stuff stays exactly as it was, even if you'd rather rewrite it. Your invoice will thank you.
+
+<Callout type="warn">
+The 5-minute eviction window is real. If your scheduled job fires every 15 minutes and the prefix is 50K tokens, you'll cache-write every single run. Bump the schedule to every 4 minutes or use the 1-hour cache tier (slightly higher write premium, dramatically better hit rate for sparse cron).
+</Callout>
+
+## Batch API — half off if you can wait
+
+Anthropic's <GlossaryTerm term="Inference">Message Batches</GlossaryTerm> API runs the same model at 50% off, with the trade-off that the batch returns within 24 hours instead of within seconds. For interactive workflows this is useless. For asynchronous backfills, evals, content generation, and overnight summarization, it's free money.
+
+Shape of a batch call:
+
+```python
+batch = client.messages.batches.create(
+    requests=[
+        {
+            "custom_id": f"summary-{deal_id}",
+            "params": {
+                "model": "claude-sonnet-4-5",
+                "max_tokens": 1024,
+                "messages": [
+                    {"role": "user", "content": deal_transcript}
+                ]
+            }
+        }
+        for deal_id, deal_transcript in deals.items()
+    ]
+)
+```
+
+You poll the batch ID. When it returns, you pull results by `custom_id`. I run our weekly newsletter draft generation and the bulk Folderly deliverability eval on this. Together they were a $600/week line item at on-demand rates. They're $300/week now, and the only thing that changed is that I submit the batch Friday at 5 PM and pull results Saturday morning.
+
+If you can ask "does this need to be done in the next sixty seconds?" and the answer is no — it's a batch job. Stop paying interactive prices for non-interactive work.
+
+## Haiku for triage, Sonnet for default, Opus when you actually need it
+
+Model routing is the second-biggest lever after caching, and the one most operators get wrong by defaulting to the smartest model for everything.
+
+| Model | Strength | When I use it | $/quality |
+|---|---|---|---|
+| Haiku | Fast, cheap, decent at well-defined tasks | Classifying inbound email intent. Tagging meeting transcripts. Yes/no triage. Routing decisions. | Highest |
+| Sonnet | Default working model. Strong reasoning, tool use, long context. | Morning briefings. Deal summarization. Code reviews on PRs. Skill execution. | Best balance |
+| Opus | Hardest reasoning, longest plans, agentic loops with many steps | Architecture decisions. Multi-step <GlossaryTerm term="Agent">agent</GlossaryTerm> workflows. Anything where a wrong answer costs more than the model run. | Lowest, justifiable when stakes scale |
+
+The honest curve nobody plots: Haiku is roughly 1/15th the price of Sonnet and gets you 80% of the quality on simple, well-bounded tasks. Sonnet is roughly 1/5th the price of Opus and gets you 90% of Opus's quality on the working middle of your workload. Using Opus for everything is the AI equivalent of flying first class to the corner store.
+
+The router config I use looks like this:
+
+```python
+def pick_model(task_type: str) -> str:
+    if task_type in ("triage", "classify", "tag", "extract"):
+        return "claude-haiku-4-5"
+    if task_type in ("agent_loop", "architecture", "complex_plan"):
+        return "claude-opus-4-5"
+    return "claude-sonnet-4-5"  # default
+```
+
+Three lines. It cut my bill by roughly 30% the week I shipped it. Not from any one save — from the long tail of triage tasks that no longer ran on the wrong model.
+
+<ScreenshotPlaceholder
+  caption="Anthropic console weekly cost view"
+  note="capture the actual graph showing the $4,312 spike and the return-to-baseline week, with cached vs fresh input tokens overlaid, so the cache-miss event is visible."
+/>
+
+## The token budget per skill
+
+Once your portfolio of <GlossaryTerm term="Skill">skills</GlossaryTerm> crosses about a dozen, you stop being able to eyeball the bill. I attach a tiny logger to each skill that records `(skill_name, input_tokens, output_tokens, cached_tokens, model, ts)` to a Postgres table. Once a week I look at the top ten by cost. Some weeks the answer is "morning-briefing is doing what it should." Some weeks the answer is "competitive-intel-scan is calling Sonnet 60 times in a row when it should be one Sonnet call orchestrating Haiku tool calls."
+
+You don't tune what you don't measure. The Anthropic dashboard tells you the total. It does not tell you which skill burned it. That's on you.
+
+## The annual math
+
+I burn between 3 and 10 billion tokens a month across my stack. At Sonnet pricing with healthy caching, that's somewhere in the $4,000 to $14,000 a month range depending on the week. Annualized: call it $80K to $150K a year for the entire portfolio.
+
+That number freaks people out until you compare it to what it replaced. Before this stack, the same volume of analytical work — the morning briefings, the Friday wraps, the deal alerts, the mentee prep, the newsletter drafts, the deliverability evals, the competitive scans — was being done by humans I either employed or didn't have. The lower-bound replacement value is a single mid-level analyst. The honest replacement value is closer to a small team. The bill is a rounding error on what it deletes.
+
+The fact that you're being charged at all is a feature, not a bug. It means the unit economics of the work are visible, which means they're tunable. A line item is a thing you can negotiate. A salary is a thing you mostly can't.
+
+The bill went back to $1,108. I didn't optimize harder. I just stopped breaking the thing that was already optimized. Most cost wins look like that. You're not pulling levers. You're putting the levers back where they were before you fiddled.
