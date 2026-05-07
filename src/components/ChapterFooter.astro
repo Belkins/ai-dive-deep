@@ -1,0 +1,21 @@
+---
+import { getNeighbors } from '@/lib/chapters';
+interface Props { slug: string; }
+const { slug } = Astro.props;
+const { prev, next } = getNeighbors(slug);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<nav class="container-prose mt-16 mb-8 grid gap-4 sm:grid-cols-2">
+  {prev ? (
+    <a href={`${base}/chapters/${prev.slug}`} class="card hover:border-flame transition-colors no-underline" style="color: rgb(var(--fg))">
+      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">← Previous · Ch {prev.number}</div>
+      <div class="font-display text-lg leading-tight">{prev.title}</div>
+    </a>
+  ) : <div></div>}
+  {next ? (
+    <a href={`${base}/chapters/${next.slug}`} class="card hover:border-flame transition-colors no-underline text-right" style="color: rgb(var(--fg))">
+      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">Next · Ch {next.number} →</div>
+      <div class="font-display text-lg leading-tight">{next.title}</div>
+    </a>
+  ) : <div></div>}
+</nav>

@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ChapterHero from '@/components/ChapterHero.astro';
+import TLDR from '@/components/TLDR.astro';
+import ChapterFooter from '@/components/ChapterFooter.astro';
+import ProgressBar from '@/components/ProgressBar.astro';
+import VideoEmbed from '@/components/VideoEmbed.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+
+export async function getStaticPaths() {
+  const chapters = await getCollection('chapters');
+  return chapters.map((c) => ({ params: { slug: c.id }, props: { chapter: c } }));
+}
+
+const { chapter } = Astro.props as any;
+const { Content } = await render(chapter);
+const data = chapter.data;
+---
+
+<BaseLayout title={data.title} description={data.tldr}>
+  <ProgressBar slug={data.slug} />
+  <ChapterHero
+    number={data.number}
+    title={data.title}
+    subtitle={data.subtitle}
+    readingMinutes={data.readingMinutes}
+    keyConcepts={data.keyConcepts}
+  />
+
+  <TLDR text={data.tldr} />
+
+  <article class="chapter-body container-prose pt-10 pb-12">
+    <Content />
+  </article>
+
+  {data.video && <VideoEmbed youtubeId={data.video.youtubeId} title={data.video.title} />}
+
+  <ChapterFooter slug={data.slug} />
+  <CommandPaletteMount />
+</BaseLayout>

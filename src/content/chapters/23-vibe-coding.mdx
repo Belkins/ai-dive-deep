@@ -1,0 +1,198 @@
+---
+number: 23
+slug: "23-vibe-coding"
+title: "Vibe Coding — A Saturday Build, Hour By Hour"
+subtitle: "A real Saturday build, hour by hour, with the misfires kept in."
+tldr: "Eight hours, $72 in tokens, six bugs hit and fixed, one shipped pipeline. Hour-by-hour log of a real Saturday build with the misfires kept in — including the rabbit holes the Don'ts list killed before they started."
+keyConcepts: ["one-page PRD", "Don'ts list", "git worktrees", "Plan mode", "shipping discipline"]
+readingMinutes: 10
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+Saturday, 8:42 AM. Coffee on the desk, kids still asleep, kitchen quiet enough that I can hear the fridge. I've been reading my morning brief on my phone for three years and the truth is I never read it on Saturdays — I scroll past it on the walk to the bakery and tell myself I'll catch up later. I want to listen to it instead. That's the whole idea. Eight forty-two AM, idea logged. Let's see how far it gets before lunch.
+
+## Hour 1 — Spec (8:42 – 9:30)
+
+I open <GlossaryTerm term="Cowork">Cowork</GlossaryTerm> in a new window and dump the rough idea into chat: a tool that turns the morning brief I already get in Slack into a 90-second voice memo, drops it in iCloud, and plays through Apple Health on my walk. Cowork's first move is to push back on scope — what's the brief, where does it live, who else uses this. I tell it it's a single-user app for me, the brief is a canvas in #morning-brief that already exists, and there's no second user.
+
+Ten back-and-forth turns later I have a one-page PRD I actually believe in.
+
+```mdx
+# Daily Voice Brief — PRD v0.1
+
+**User:** me, one user, single device
+**Done =** at 7:35 AM weekdays, an MP3 of my brief is in iCloud
+            Drive `/DailyBrief/`, auto-syncs to my phone, plays
+            via Apple Health "audio recorded" import.
+**Stack:** Next.js (TS) on Vercel, ElevenLabs TTS, local cron.
+**Inputs:** the most recent canvas in Slack #morning-brief.
+**Output:** `<YYYY-MM-DD>.mp3`, ~90s, one voice, one tone.
+
+## Not Done (do not build)
+- Multi-voice support
+- A web UI for managing voices
+- A settings page (env vars are fine)
+- An audio history table
+- Multi-user / auth / accounts
+- Analytics
+```
+
+The notable cut: I almost wrote "support multiple voices so I can switch tone day to day" into the spec. Cowork asked a single question — do you have one user with that pain right now? No. I have one user (me) who wants one voice. Cut. That one question saved me probably four hours of voice-config UI later in the day.
+
+<ScreenshotPlaceholder
+  caption="Cowork, refining the PRD"
+  note="The Cowork chat where the PRD got refined — the 'do you have one user with that pain right now?' pushback in the thread."
+/>
+
+## Hour 2 — Repo and skeleton (9:30 – 10:20)
+
+```bash
+npx create-next-app@latest daily-voice-brief --ts --tailwind --app
+cd daily-voice-brief
+npx shadcn@latest init -d
+gh repo create --public --source=. --push
+vercel link && vercel deploy
+```
+
+Four minutes later there's a public URL serving an empty homepage. It does nothing. It counts. Shipping the empty version on hour 2 is the single biggest tell that I'm going to finish — if I haven't deployed by lunch, I usually don't deploy at all.
+
+Then I write the <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm> by hand. Sixty lines: stack, conventions, the routes I expect to add, and — most importantly — I copy the Not Done list from the PRD verbatim into a `## Don'ts` section. That section is the thing <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> reads before every edit. It is the cheapest, highest-leverage 90 seconds of writing in the entire build.
+
+First friction of the day: my Slack workspace's <GlossaryTerm term="MCP">MCP</GlossaryTerm> connection had expired since I last used it. The reauth flow popped a browser tab; I clicked through; two minutes gone. Logged the fix in CLAUDE.md so future-me doesn't burn the same two minutes.
+
+## Hour 3 — Slack pull (10:20 – 11:30)
+
+I open Claude Code in the repo and write the first real prompt of the day:
+
+> Build a Next.js API route at `/api/pull-brief` that reads the latest canvas in #morning-brief from Slack via the Slack MCP. Return the canvas markdown as JSON. No auth — this is single-user.
+
+Claude Code's first response is a question: the Slack MCP isn't configured in `.mcp.json`. Add it? I say yes, paste my workspace details, it writes the config and restarts. Test prompt: fetch the most recent canvas in #morning-brief. It works first try.
+
+The route file Claude Code wrote, almost verbatim:
+
+```ts
+// app/api/pull-brief/route.ts
+import { NextResponse } from "next/server";
+import { getLatestCanvas } from "@/lib/slack";
+
+export const runtime = "nodejs";
+
+export async function GET() {
+  try {
+    const canvas = await getLatestCanvas("morning-brief");
+    if (!canvas) {
+      return NextResponse.json({ error: "no canvas" }, { status: 404 });
+    }
+    return NextResponse.json({
+      title: canvas.title,
+      markdown: canvas.markdown,
+      updatedAt: canvas.updatedAt,
+    });
+  } catch (err) {
+    console.error("pull-brief failed", err);
+    return NextResponse.json({ error: "slack_error" }, { status: 500 });
+  }
+}
+```
+
+Time check: 11:14. Fifty-two minutes from "open Claude Code" to "first working endpoint, deployed, returning real data." I curl the production URL, get back the actual markdown of today's brief, and feel that particular flavor of dopamine that comes from the first round-trip.
+
+## Hour 4 — TTS bridge (11:30 – 12:30)
+
+Lunch first. Eggs, toast, half a coffee.
+
+Back at the desk. Second tmux pane, fresh `claude` session, new git <GlossaryTerm term="Worktree">worktree</GlossaryTerm> on a `tts` branch — I want the Slack work and the TTS work isolated so I can keep both context windows clean. (See hour-7 takeaways. I should have done this from minute one.)
+
+Prompt:
+
+> Add a route at `/api/tts` that takes JSON `{text}` and returns an MP3 generated by ElevenLabs. Use the API directly — no MCP. Cache the audio in `/tmp` keyed by SHA-256 of the text.
+
+Claude Code writes it in about ninety seconds. First run errors out:
+
+```
+ElevenLabsError: voice_id "Rachel" not found for this account
+```
+
+Wrong voice ID — I'd given it a placeholder. I update the env var to a real voice from my account. Second run works. I curl the route with a paragraph of the brief, get an MP3 back, play it. It's fine. The voice is a little chirpy, a little podcast-host. I switch the voice ID one more time to a deeper one I'd auditioned a month ago. That one's right. Three voice tests, twelve minutes, done.
+
+The misfire here was small but instructive: the first ElevenLabs error wasn't a code bug, it was a config bug. Claude Code couldn't have known my actual voice IDs. The lesson — for me and for anyone copying this — is that env vars and account-bound IDs eat 30% of the misfires in any vibe-coded build. Keep them in a single `.env.example` from minute one.
+
+## Hour 5 — The orchestrator (12:30 – 1:45)
+
+Now I need the glue: a script that pulls → TTSes → writes to iCloud Drive on my Mac.
+
+Prompt:
+
+> Write a Node script `scripts/morning-run.ts` that calls `/api/pull-brief` then `/api/tts` then writes the MP3 to `~/Library/Mobile Documents/com~apple~CloudDocs/DailyBrief/<YYYY-MM-DD>.mp3`. Single shot, no daemon.
+
+Claude Code writes it. I run it. It fails — the iCloud path on my Mac has a slightly different folder name than I'd assumed (turns out my iCloud Drive uses a localized folder, and `DailyBrief/` doesn't exist yet so the write fails on `ENOENT`). I correct the path, add a `mkdir -p` step, run again. MP3 lands in iCloud. iCloud sync starts. Phone buzzes thirty seconds later — the file is on the device.
+
+Now scheduling. Two options: Vercel cron + webhook to my Mac, or local <GlossaryTerm term="Cron">cron</GlossaryTerm> on the Mac. Vercel cron is the "right" pattern for production multi-user apps. This is a one-user app. I pick local cron and don't apologize for it:
+
+```bash
+35 7 * * 1-5  cd ~/code/daily-voice-brief && /usr/local/bin/npx tsx scripts/morning-run.ts >> ~/Library/Logs/daily-brief.log 2>&1
+```
+
+One line. Logs to a file. Done. An hour and fifteen minutes after I started this hour, the whole pipeline runs end-to-end on a manual trigger.
+
+## Hour 6 — The "you're done" gate (1:45 – 2:30)
+
+The only test that matters: tomorrow morning at 7:35, will an MP3 appear?
+
+I cheat the test. I set the cron schedule to fire one minute from now, walk away, come back. Fires. MP3 in iCloud. iCloud syncs to phone. I open Apple Health — yes, Apple Health auto-imports audio files from iCloud's "Voice Memos / DailyBrief" path on my setup — and the file is there. I press play.
+
+A voice that is not mine reads me my own brief. Ninety-three seconds. I take a screenshot of the playing audio because this is the moment, and I want to remember it.
+
+<ScreenshotPlaceholder
+  caption="The MP3 playing on the phone"
+  note="Phone screen showing the MP3 playing — file name visible as `2026-05-09.mp3` or the iCloud Drive folder showing the freshly synced file."
+/>
+
+## Hour 7 — Polish I'm allowed and polish I'm not (2:30 – 4:00)
+
+Cut list, in the order I almost did each one and stopped:
+
+- A web UI for managing voices. No second user. Cut.
+- A settings page. Env vars work. Cut.
+- Analytics. I'll know it's broken when the phone is silent. Cut.
+- A Postgres schema for an audio history table. I genuinely caught myself starting this. There is no audio history requirement in the PRD. The Don'ts list saved me. Cut.
+
+Kept list:
+
+- A 30-line update to CLAUDE.md so future-me knows what this is and why local cron, not Vercel cron.
+- A tiny `README.md`: what it does, how to run it, where the cron lives. Two minutes of writing.
+- An emergency manual trigger: `npm run brief-now`. For travel days when I want it on demand.
+
+## Final state, end-of-Saturday
+
+- Working pipeline: Slack canvas → ElevenLabs MP3 → iCloud Drive → Apple Health on the phone.
+- Total <GlossaryTerm term="Token">tokens</GlossaryTerm>: ~4.8M (Claude Code + Cowork combined). Cost: ~$72. Sonnet for everything except one gnarly TypeScript inference error at hour 4 where I burned about 90 seconds of Opus to unblock.
+- Total clock time: 8h42m, including lunch and an unscheduled walk with my daughter.
+- Total focused time: ~4h.
+- Total bugs hit and fixed: six (Slack auth expired, wrong voice ID, iCloud folder localization, an env-var quoting issue with a `$` in the API key, an unused-import lint error, and one race condition between cron firing and iCloud sync that I didn't notice until Sunday morning when the file was 8 seconds late).
+- Total things I shipped: one — the pipeline. Zero of everything else.
+
+<ScreenshotPlaceholder
+  caption="GitHub commit graph"
+  note="GitHub commit graph for the day — 12 to 18 commits in a tight Saturday cluster, then nothing the rest of the week."
+/>
+
+## What I actually learned
+
+**Two Claude Code sessions on the same repo, two worktrees.** I tried sharing one CC session across the Slack-pull work and the TTS work in hour 3. The context got muddy fast — CC kept proposing edits to one file based on what it remembered from the other. I forked into two worktrees by hour 3 and should have done it from hour zero. Cheap split, huge clarity.
+
+**Plan mode would have saved an hour at hour 5.** The orchestrator script touched four files (the script, two routes, and the `package.json`). I let Claude Code work interactively and approved each edit one at a time. About thirty individual approvals. Plan mode would have shown me the full plan before any edits, I would have caught the iCloud path mistake on the diff instead of at runtime, and I'd have been done with hour 5 in forty minutes instead of seventy-five.
+
+**The PRD's "Not Done" section was the single most valuable thing I wrote all day.** It killed three rabbit holes before they started — multi-voice, settings UI, audio history. It is twice as valuable as the "Done =" line, because "Done =" tells you when to stop building, but "Not Done" tells you when to stop thinking about building. The thinking is what eats Saturdays.
+
+## The compounding observation
+
+Last year this would have been a four-day project — half a day specing, two days plumbing the Slack and ElevenLabs APIs by hand, half a day debugging iCloud and cron, a final day on polish I'd later regret. Two years ago, a two-week project. Five years ago, a weekend with a junior developer I'd have to onboard, brief, and review. One Saturday. Eighty-one dollars including infra. One walk with the audio playing in my ears the next morning.
+
+That's the new baseline. Get used to it. Then build the next thing.
+
+Vibe coding isn't lazy. It's a discipline that swaps planning friction for shipping friction — and the trade only works if you keep the Don'ts list as sharp as the Dos list. The chapter on cron lives next door. Go schedule the brief to fire automatically. By Monday, you'll have used the thing you built three times.

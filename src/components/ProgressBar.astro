@@ -1,0 +1,29 @@
+---
+interface Props { slug: string; }
+const { slug } = Astro.props;
+---
+<div id="cc-progress" class="fixed top-14 left-0 right-0 h-0.5 z-30 pointer-events-none">
+  <div id="cc-progress-bar" class="h-full transition-[width] duration-100 ease-out" style="width: 0%; background: rgb(var(--accent));"></div>
+</div>
+
+<script define:vars={{ slug }}>
+  const bar = document.getElementById('cc-progress-bar');
+  const article = document.querySelector('article.chapter-body');
+  if (bar && article) {
+    const update = () => {
+      const rect = article.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const scrolled = Math.min(Math.max(-rect.top, 0), total);
+      const pct = total > 0 ? (scrolled / total) * 100 : 0;
+      bar.style.width = pct + '%';
+      try {
+        const data = JSON.parse(localStorage.getItem('cc-progress') || '{}');
+        data[slug] = Math.max(data[slug] || 0, Math.round(pct));
+        localStorage.setItem('cc-progress', JSON.stringify(data));
+      } catch (e) {}
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+  }
+</script>

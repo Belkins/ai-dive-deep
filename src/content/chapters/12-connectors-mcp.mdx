@@ -1,0 +1,237 @@
+---
+number: 12
+slug: "12-connectors-mcp"
+title: "Connectors and MCP — Types, Install, and Build Your Own"
+subtitle: "Types of connectors, how to install, and how to write your own."
+tldr: "An AI agent without connectors is a chef with no kitchen — it can describe a meal but can't cook. MCP is the USB-C of AI tools: one port, every device. Here's the full taxonomy, the install path for Cowork and Claude Code, and the 50-line custom server you can write in an evening."
+keyConcepts: ["MCP", "connectors", "stdio", "OAuth", "custom servers"]
+readingMinutes: 9
+video:
+  title: "Your Tools Are Now Interactive in Claude"
+  youtubeId: "bluAmTHoEow"
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+import ConnectorMap from '@/widgets/ConnectorMap.tsx';
+
+Last Tuesday I asked my <GlossaryTerm term="Agent">agent</GlossaryTerm> to write a one-page summary of yesterday's deals. Beautiful prompt. Crisp instructions. The agent gave me a beautifully written paragraph about absolutely nothing, because it could not see my CRM. No HubSpot connector wired in. No deals to read. Just vibes.
+
+That is the gap. An AI agent without <GlossaryTerm term="Connector">connectors</GlossaryTerm> is a chef with no kitchen. It can describe a meal, sketch a menu, narrate the process. It cannot cook. The moment you wire in Slack, HubSpot, Google Calendar, your file system, your GitHub repo, your design tool, your billing system, your error logs, and your knowledge base, the same model goes from chatbot to coworker. The connector is the difference. Everything else in this book — the prompts, the agents, the orchestration — runs on top of this layer.
+
+This chapter goes to the metal. What MCP actually is, what categories of connectors exist, how to install them in <GlossaryTerm term="Cowork">Cowork</GlossaryTerm> and in <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm>, and how to write a custom MCP server in an evening when no public connector exists for the system you need.
+
+## MCP in one paragraph
+
+The <GlossaryTerm term="MCP">Model Context Protocol</GlossaryTerm> is an open standard Anthropic released in November 2024. Three roles: the **host** is the AI app you talk to (Claude desktop, Cowork, Claude Code), the **client** is the bridge inside the host that speaks the protocol, and the **server** is the tool — the thing that exposes Slack messages or Stripe charges or your filesystem. Same JSON-RPC contract everywhere, regardless of which app and which tool. Think USB-C for AI tools. One port, every device. Spec lives at modelcontextprotocol.io. Moving on.
+
+## Connector vs MCP server
+
+This trips up everyone. "Connector" is the friendly UI label for an MCP server inside consumer products like Cowork or Claude.ai. When you click "Install Slack connector" in Cowork, you are authenticating against an MCP server that someone — Anthropic, the vendor, or a third party — hosts for you. Underneath, it is the same protocol. When you write a custom MCP server, you are building the thing that, in another product's UI, would be labeled a connector. The two words point at the same object from different sides.
+
+## The three transport types
+
+**stdio.** The server runs as a local subprocess. The client pipes JSON-RPC over stdin and stdout. Best for filesystem access, local databases, anything that runs on your machine. Zero network exposure.
+
+**HTTP / streamable-http.** The server is an HTTP endpoint. The client makes long-poll or streaming requests. Best for hosted SaaS connectors — Slack, HubSpot, Stripe, the public registry stuff. This is the modern transport for anything not on your laptop.
+
+**SSE (legacy).** Older streaming variant from the early MCP days. Being phased out in favor of streamable-http. If you see it in old docs, mentally replace it. New servers should not ship SSE.
+
+## The connector taxonomy
+
+Here is the map I keep in my head, organized by category. For each, a one-line role and a handful of specific connectors I have either run myself or seen run reliably.
+
+**Productivity and storage.** Files, docs, the substrate of work. Filesystem, Google Drive, Box, Dropbox, OneDrive, Notion, Obsidian (community-built). For the Newsletter I run Notion as the canonical store; everything else is a mirror.
+
+**Communication.** Where humans actually live. Slack, Gmail, Microsoft 365 / Outlook, Discord (read-only is the safer default). Belkins runs Slack and Gmail; reading is fine, writing requires a confirmation step or it gets weird fast.
+
+**Sales and CRM.** The pipeline source of truth. HubSpot, Salesforce, Close, Pipedrive. Belkins runs HubSpot — the agent reads deals, contacts, companies, and writes notes back. No autoclose without human-in-the-loop.
+
+**Billing and finance.** Stripe, QuickBooks, Ramp, Brex. Folderly runs Stripe directly so I can ask "what was MRR last week" and get a real number, not a vibe.
+
+**Engineering.** GitHub, GitLab, Linear, Jira / Atlassian, Sentry, Vercel, Cloudflare. I run GitHub, Vercel, and Sentry across every codebase. The full registry of reference servers is at github.com/modelcontextprotocol/servers.
+
+**Data and analytics.** BigQuery, Snowflake, Postgres, Hex, Amplitude, Mixpanel, PostHog, Google Search Console, Ahrefs, Windsor.ai. The agent that can write SQL against your warehouse is a different animal from the one that cannot.
+
+**Marketing.** Customer.io, Klaviyo, Canva, Similarweb, Ahrefs. For the Newsletter I lean on Ahrefs and Customer.io; for Folderly the marketing stack lives mostly inside HubSpot plus the warehouse.
+
+**Voice and AV.** ElevenLabs, Whisper, Cartesia. ElevenLabs runs anywhere I need synthesized voice — newsletter audio, internal walkthroughs.
+
+**Browser and web.** Puppeteer, Playwright, Claude in Chrome. The "let the agent click buttons on a webpage" layer. Useful, slightly scary, lock it down.
+
+**<GlossaryTerm term="Vault">Vault</GlossaryTerm> and knowledge.** Guru, Confluence, Egnyte. Internal SOPs, playbooks, legal templates.
+
+**Calendar and scheduling.** Google Calendar, Outlook, Calendly. Belkins runs Google Calendar — the agent can answer "when am I free Thursday" without me opening a tab.
+
+**Meeting transcripts.** Fireflies, Granola, Gong (read-only by default). Belkins runs Gong and Fireflies; the agent reads call transcripts to build deal summaries and follow-up drafts. See "Your tools are now interactive in Claude" for the demo of this style of workflow.
+
+That is roughly the universe. New ones ship every week. Treat the registry as a living document, not a finished list.
+
+<ConnectorMap client:visible />
+
+## How to install a connector — Cowork path
+
+This is the no-code path. Five steps.
+
+- Open Cowork and go to Settings → Connectors.
+- Browse the registry. Click the connector you want.
+- Walk through the OAuth flow. Read-only scopes first, always. Expand later when you actually need write.
+- Test in chat with a low-stakes question: "list my last 5 emails" or "what deals are in Stage 4?"
+- If it works, you are done. Cowork stores the auth in the OS keychain integration.
+
+<ScreenshotPlaceholder
+  caption="Cowork Connectors panel"
+  note='shows the registry browse view with several installed connectors (HubSpot, Slack, GitHub, Calendar) and the "Add connector" button highlighted.'
+/>
+
+## How to install a connector — Claude Code path
+
+This is the developer path. Configuration lives in a file you commit to the repo, so the whole team gets the same connector set.
+
+- Edit `<repo>/.mcp.json` at the root of your project. Commit it.
+- Add server entries. Real example with two servers — local filesystem and GitHub:
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem",
+               "/Users/vlad/Vlad-Brain"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_TOKEN": "ghp_***" }
+    }
+  }
+}
+```
+
+- Restart `claude` in your repo. Run `/mcp` to list active servers and confirm they connected.
+- Test in session. Ask the agent to list files in your vault, or open issue #42 in your repo. If both return real data, you are wired.
+
+<ScreenshotPlaceholder
+  caption="A real .mcp.json open in the editor with three connectors configured (filesystem, github, postgres) and the /mcp command output in a split pane showing them as connected."
+  note="capture the on-disk config and the live connection state side by side."
+/>
+
+## Auth patterns — what to expect
+
+**OAuth.** Most hosted SaaS connectors — Slack, HubSpot, Google Calendar, Stripe. You click through a consent screen, the connector receives a token, tokens auto-refresh. This is the cleanest pattern. If a vendor offers OAuth, take it.
+
+**API key in env var.** Common for self-hosted servers and developer-tool connectors — GitHub, OpenAI, ElevenLabs, Stripe in dev mode. Put the key in a local `.env` file or in the `env` block of `.mcp.json` for that server only. Never commit raw keys. If you absolutely must reference them in `.mcp.json`, use environment variable interpolation and keep the actual values in `.env`.
+
+**No auth.** Local servers like filesystem, sqlite, or anything that runs entirely on your machine. Just declare the path or DB file. The trust boundary is your laptop.
+
+## Build your own MCP server — the 50-line version
+
+When no public connector exists for the system you need, write one. It is genuinely an evening project. Here is a working server that exposes a single tool, `get_weather(city)`, in TypeScript.
+
+```ts
+// server.ts
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+
+const server = new McpServer({
+  name: "weather-demo",
+  version: "1.0.0",
+});
+
+server.tool(
+  "get_weather",
+  "Get current weather for a city",
+  { city: z.string().describe("City name, e.g. London") },
+  async ({ city }) => {
+    const r = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`);
+    const data = await r.json();
+    const c = data.current_condition[0];
+    return {
+      content: [{
+        type: "text",
+        text: `${city}: ${c.temp_C}°C, ${c.weatherDesc[0].value}`,
+      }],
+    };
+  }
+);
+
+const transport = new StdioServerTransport();
+await server.connect(transport);
+```
+
+Setup and run:
+
+```bash
+npm init -y
+npm i @modelcontextprotocol/sdk zod
+npm i -D typescript tsx
+npx tsx server.ts   # run it
+```
+
+Then register the server in `.mcp.json` so Claude Code or Cowork will spawn it:
+
+```json
+{
+  "mcpServers": {
+    "weather": {
+      "command": "npx",
+      "args": ["tsx", "/path/to/server.ts"]
+    }
+  }
+}
+```
+
+Restart your client, run `/mcp`, and ask the agent: "what is the weather in London?" The agent will call `get_weather`, your server will hit wttr.in, and you will get a real answer. That is the whole loop. Now imagine the same skeleton pointed at your internal API instead of a weather endpoint, and you understand why custom servers are not exotic. They are the standard pattern.
+
+## Build your own MCP server — Python version
+
+If your team lives in Python, the FastMCP wrapper makes the same server even shorter:
+
+```py
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("weather-demo")
+
+@mcp.tool()
+def get_weather(city: str) -> str:
+    """Get current weather for a city"""
+    import httpx
+    r = httpx.get(f"https://wttr.in/{city}?format=j1").json()
+    c = r["current_condition"][0]
+    return f"{city}: {c['temp_C']}°C, {c['weatherDesc'][0]['value']}"
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+Install with `pip install mcp` and register in `.mcp.json` with `"command": "python", "args": ["server.py"]`. Same protocol on the wire, just a different host language.
+
+## When to write your own server
+
+You write your own when:
+
+- An internal tool has no public connector and never will.
+- A legacy system (mainframe, ancient ERP, in-house CRM from 2009) is in your stack and the vendor is not shipping MCP anytime this decade.
+- Your data warehouse has custom auth — SSO with a quirky IdP, mTLS, signed JWTs — that the off-the-shelf connector cannot speak.
+- You need to bridge two systems where the existing connectors do not compose well, and a thin wrapper server gives you a cleaner tool surface.
+
+Most operators overestimate the difficulty. After your first server, every subsequent one is twenty minutes of boilerplate plus whatever the underlying API actually requires.
+
+## Best practices at production scale
+
+- **Read-only first.** Always. Expand permissions only when an actual workflow needs write.
+- **Scope tightly.** Single repo, single workspace, single resource. Do not hand the agent the keys to the kingdom because it was easier than scoping.
+- **Audit logs on.** Every tool call gets logged. Anomaly = breach until proven otherwise.
+- **Rotate creds on a schedule.** OAuth refresh handles itself; API keys do not. Ninety-day rotation, written down somewhere.
+- **Pin SDK versions** in `package.json` and `requirements.txt`. MCP is moving fast and a breaking change in a minor release will ruin your Tuesday.
+
+## My active connector set
+
+For Belkins I run HubSpot, Slack, Google Calendar, Gmail, Gong, and Fireflies. For Folderly I run Stripe and our deliverability data warehouse. For the Newsletter I run Notion and the Substack feed via RSS. Across everything I run Filesystem, GitHub, Vercel, Sentry, ElevenLabs, and Ahrefs.
+
+The pattern: one CRM, one inbox, one calendar, one knowledge store, one analytics suite per company. No duplicates. The minute you have two CRMs wired in, the agent gets confused about which is canonical, and so do you. Pick one source of truth per category, wire it tight, expand only when a real workflow demands it.
+
+<PullQuote>Connectors are not a feature. They are the difference between a chatbot and an operator. Wire them tight, audit them ruthlessly, and build the missing ones in a single evening.</PullQuote>

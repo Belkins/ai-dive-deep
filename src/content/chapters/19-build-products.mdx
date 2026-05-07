@@ -1,0 +1,187 @@
+---
+number: 19
+slug: "19-build-products"
+title: "How to Build Products With AI"
+subtitle: "From idea to deployed URL in a single Saturday."
+tldr: "One operator ships a real, deployed voice-brief product in a single Saturday — four hours of hands-on work, $80 in tokens, zero salary. The compounding doesn't show up in the spend column. It shows up in the calendar."
+keyConcepts: ["AI-native PRD", "swarm decomposition", "happy path MVP", "build-buy-skill", "shipping discipline"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+It's Saturday, 9:14 AM. Coffee's still steaming. The kids are watching cartoons. I've had this idea grinding in the back of my head for three weeks: every morning my team drops a Slack briefing into a canvas — five bullets on Belkins pipeline, two on Folderly, one stray "you should look at this." I read it on my phone in bed. I want to listen to it on my walk instead, like a podcast where the host is my own company.
+
+Twenty hours of clock time later — most of it spent at brunch, on a walk, asleep — it ships. Sunday night, 9:43 PM, I press play on my phone and hear a 90-second voice memo of Monday's brief. Real URL. Real <GlossaryTerm term="Cron">cron</GlossaryTerm>. Real audio file in iCloud.
+
+Cost: roughly four hours of actual hands-on work, $80 in API tokens, zero dollars in salary. A senior engineer would have charged me $2,000 for the same scope and shipped it in a week. That's the gap. That's the chapter.
+
+The AI-native product cycle isn't faster software. It's a different shape of work.
+
+## The shape of the loop
+
+Every product I ship now passes through five stages, and the speed at which I move through them determines whether the thing exists by Sunday or dies in a Notion doc.
+
+- Hour 0 — Problem statement. One paragraph in plain English.
+- Hour 1 — Spec. A one-page PRD. No ceremony.
+- Hour 2 — Repo + skeleton. Auth, deploy, env. URL exists.
+- Hours 3–6 — MVP. Just the happy path. Nothing more.
+- Hour 7 — Ship. Real URL, real users — even if "users" is just me.
+
+You compress months into a day by refusing to leave the happy path until users force you off it. Every detour you take before hour 7 is a detour you're taking on imagination, not data. Imagination is a terrible product manager.
+
+## Hour 0 — Define the problem in human terms
+
+Most founders open a doc and write "I want to build an app that uses AI to convert Slack messages into voice content." That's a solution masquerading as a problem. You haven't named the pain — you've named a feature.
+
+Try this instead: "Every Saturday morning my brain dumps the same five things and I want my coffee to read them to me." Now the solution has nowhere to hide. It falls out of the problem. TTS. Slack pull. MP3 in a folder my phone reads. There's no clever architecture decision left to make.
+
+I drop the rough idea into <GlossaryTerm term="Cowork">Cowork</GlossaryTerm> as a sparring partner before I write a single line. Tighten this. Pressure-test it. Tell me what I'm assuming that I shouldn't be. The agent comes back with three questions I hadn't thought of — do you want it on weekends? do you want a queue of past briefs? do you want a voice you'll still like in week three? — and within ten minutes I've got the problem stated honestly enough to spec it.
+
+## Hour 1 — Spec, the AI-native PRD
+
+The PRD is one page. Anything longer is procrastination.
+
+```mdx
+# Daily Voice Brief
+
+## Problem
+I read my morning Slack briefing on a screen. I want to listen to it on my walk.
+
+## User
+Me. Possibly other operators with the same workflow.
+
+## Smallest valuable slice
+1. Pull my morning briefing canvas from Slack
+2. Convert to a 90-second voice memo via ElevenLabs
+3. Drop the MP3 in iCloud where Apple Health reads it
+
+## Done =
+I press play and hear my brief at 7:35 AM tomorrow without doing anything.
+
+## Not done =
+No multi-tenant. No login. No mobile app. No analytics. No "AI features".
+```
+
+Three things make this PRD work. First, ruthless scope — the Smallest Valuable Slice is three steps, not ten. Second, the Not done section is bigger than the Done section, which is a sign you've thought hard enough about what to cut. Third, the success criterion is measurable in physical reality: I press play and hear my brief. Not "the user can." Not "the system will." I press play. I hear it. Or I don't.
+
+A PRD that takes longer than fifteen minutes to write usually means you don't yet know what you're building. Go back to Hour 0.
+
+## Hour 2 — Repo, skeleton, deploy in 30 minutes
+
+Here's the opinionated stack I use to ship in a day. Not the best stack. The fastest.
+
+- Frontend: Next.js on Vercel, or just a Cloudflare Worker for headless jobs.
+- DB: Supabase or Neon. Postgres in 30 seconds.
+- Auth: Clerk if I need it. Skip auth entirely for v0.
+- Background jobs: Inngest or Vercel cron.
+- Style: Tailwind, shadcn/ui, period.
+- Deploy: Vercel from day one. Push to main, see your URL update. No staging environment until somebody pays me.
+
+The CLI walkthrough is genuinely this short:
+
+```bash
+npx create-next-app@latest daily-brief --ts --tailwind --app
+cd daily-brief
+gh repo create --public --source=. --push
+vercel link && vercel deploy
+# 8 minutes later, I have a URL.
+```
+
+Eight minutes. The URL is ugly — `daily-brief-xyz.vercel.app` — but it's real. Real means it shows up in DNS. Real means I can text it to myself. Real means the project has crossed the line from "idea" to "thing that exists." That psychological flip matters more than people admit.
+
+<ScreenshotPlaceholder
+  caption="Vercel dashboard"
+  note="daily-brief project showing first deployment URL and green checkmark on initial commit."
+/>
+
+## Hour 3–6 — Build the MVP with Claude Code, swarm-style
+
+This is where the leverage shows up, and it shows up in a way that surprises operators who haven't done it.
+
+I open <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> in the repo. Before I ask it to write a single line, I write a tight <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm> — twenty lines, max. Stack. Conventions. Don't-touch zones. The file is for the agent, not for me. It's a <GlossaryTerm term="System prompt">system prompt</GlossaryTerm> with project-specific scaffolding.
+
+```mdx
+# CLAUDE.md
+Stack: Next.js 14 app router, TypeScript, Tailwind, shadcn/ui.
+Style: server components by default. No useState unless interactive.
+Env vars live in .env.local. Never commit them.
+Don't touch /lib/audio — that's the ElevenLabs adapter, hand-tuned.
+Tests: vitest. One file per route.
+Commits: Conventional Commits, one logical change per commit.
+```
+
+For a non-trivial MVP I decompose before I spawn. A 4-agent <GlossaryTerm term="Swarm">swarm</GlossaryTerm> on a vague brief produces 4 different shapes that don't fit. A 4-agent swarm on a tight brief produces 4 puzzle pieces that snap.
+
+Spawn three <GlossaryTerm term="Subagent">subagents</GlossaryTerm>.
+
+- Build the Slack pull. One route, `/api/slack-fetch`. One file. Returns the canvas markdown.
+- Build the ElevenLabs TTS bridge. One route, `/api/synthesize`. One file. Markdown in, MP3 buffer out.
+- Build the iCloud drop. A script in `/jobs/cron-daily.ts` that runs on Vercel cron, calls 1, calls 2, writes the MP3.
+- Each writes only to its own file. I'll wire them after.
+
+They run concurrently. Claude Code does most of the typing. I review diffs, approve, run tests. The agent writes the code; I make the calls. By 1 PM Saturday, three files exist, each works in isolation, none of them know about the others. Wiring takes me another twenty minutes.
+
+The trick that took me a year to learn: the agent is good at writing the code, terrible at deciding what code should exist. Decomposition is human work. Implementation is agent work. Mix those up and you'll spend Saturday debugging instead of walking.
+
+## Hour 7 — Ship even when you don't want to
+
+The single most important rule: deploy at hour 7 even if it's ugly, even if there's a known bug, even if you're "almost done."
+
+Shipping creates information that planning can't. The user with the bug tells you what matters. The user without a bug tells you that you wasted three hours polishing the wrong thing. Every minute past hour 7 spent on the closed loop of me + my code + my taste is a minute spent on the wrong inputs.
+
+My Saturday version had a bug — the cron fired in UTC, not ET, so the first brief landed at 1 AM. I knew about it. I shipped anyway. I fixed it Sunday morning in eleven minutes because I had real evidence of what time the audio actually appeared on my phone, which is more useful than my Saturday-night theory of what time it should appear.
+
+<ScreenshotPlaceholder
+  caption="Phone screen showing the deployed URL"
+  note="Phone screen showing the deployed URL playing a generated voice memo, timestamp visible."
+/>
+
+## The five rules of AI-native building
+
+These are the rules I wish someone had written on the wall the first time I tried to build a product with agents.
+
+- **Decompose ruthlessly before you spawn.** A 4-agent swarm on a vague brief produces 4 different shapes that don't fit together. A 4-agent swarm on a tight brief produces 4 puzzle pieces. Spend ten minutes decomposing before you spend an hour generating.
+- **Keep CLAUDE.md tighter than your README.** The README is for humans who'll read it once and skim. CLAUDE.md is for an agent who'll re-read it on every prompt. They have different needs. Don't conflate them. CLAUDE.md is conventions, constraints, and the tribal knowledge a new engineer would learn in their first week.
+- **Auto-format on save with a <GlossaryTerm term="Hook">hook</GlossaryTerm>.** Don't waste a single prompt explaining your style guide. Set the PostToolUse hook once — Prettier, ESLint, whatever — and forget it. Style is a solved problem; you should never spend an agent <GlossaryTerm term="Token">token</GlossaryTerm> on it.
+- **Branch early, branch often.** Every meaningful experiment in its own git <GlossaryTerm term="Worktree">worktree</GlossaryTerm>. Disposable. Low-cost to discard. The agent will write three implementations of the same feature in the time it takes you to debate which one is right. Branches make that cheap.
+- **Commit messages are journal entries.** Don't auto-write them. The friction of writing one good commit message is the discipline that prevents your repo from rotting into a pile of "wip" and "fix stuff." If you can't summarize what changed in one sentence, the change is too big.
+
+## What you don't build matters more than what you do
+
+The 80% rule. Cut auth. Cut the admin panel. Cut analytics. Cut the API docs. Cut the second tier of pricing. Cut the third feature. Ship the 20% that's the actual value.
+
+The other 80% gets built when a real user demands it — and most of it never does. The auth you built for "future users" who never showed up is dead code that breaks when you upgrade Next.js. The admin panel you built for the team you don't have yet is a security surface for an attacker you do have.
+
+Saturday's project had no auth, no DB, no UI. Just a cron and three files. The day I share it with someone else, I'll add auth. Not before.
+
+## The build/buy/skill matrix
+
+When you hit a feature choice, walk down the ladder before you write code:
+
+- **Can a <GlossaryTerm term="Skill">skill</GlossaryTerm> do it?** Cheapest. A 200-line markdown file plus an agent.
+- **Can a 50-line <GlossaryTerm term="MCP">MCP</GlossaryTerm> server do it?** Next cheapest. Composable, reusable across projects.
+- **Can an existing SaaS do it?** Buy. ElevenLabs for voice. Clerk for auth. Stripe for billing. You're not in the voice-synthesis business. Don't pretend you are.
+- **Do I really need to build it?** Last resort. If you're building it, the answer should survive a hostile cross-examination.
+
+Most "I need to build X" turns out to be a skill, an MCP server, or a $20/month SaaS. The first instinct of a former-engineer founder is to build. The right instinct of an operator is to buy until buying breaks.
+
+## Real spend math
+
+Saturday's project, line by line:
+
+- Tokens: ~$80. Sonnet for the bulk of the work, Opus for two gnarly bugs.
+- Compute: $0. Vercel free tier.
+- Database: $0. No DB needed.
+- Voice: $1.10. ElevenLabs per-character pricing.
+- Storage: $0. iCloud is already paid for.
+- Total: ~$81.
+
+A senior engineer at $200/hour, working a clean 40 hours, would have charged $8,000 to spec, build, deploy and document the same thing. Even at startup rates — ten hours, $1,500 — the math is brutal. I shipped for 5% of the floor price.
+
+That's not the headline. The headline is: I shipped on Saturday. The engineer ships next Friday. By next Friday I've already learned the cron-timezone bug, fixed it, added a second voice, and started thinking about whether other operators want this. The compounding doesn't happen in the spend column. It happens in the calendar.
+
+The price of an MVP fell ten years ago when SaaS commoditized infrastructure. It fell again last week when AI commoditized the build. The bottleneck is no longer money or time. The bottleneck is taste — knowing what to build.

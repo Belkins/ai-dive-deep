@@ -1,0 +1,81 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CopyBlock from '@/widgets/CopyBlock.tsx';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import {
+  CLAUDE_MD_SKELETON,
+  MCP_JSON_EXAMPLE,
+  HOOK_FORMAT_ON_SAVE,
+  HOOK_BLOCK_PUSH_TO_MAIN,
+  HOOK_TEST_ON_WRITE,
+  HOOK_SLACK_NOTIFY_LONG_TASK,
+  SKILL_LIFECYCLE,
+  SKILL_AGGREGATOR,
+  SKILL_VOICE,
+  PROMPT_RIGOR_ENFORCER,
+  PROMPT_ADVERSARIAL,
+  PROMPT_SKILL_CREATOR,
+  PROMPT_PRE_MEETING,
+  PROMPT_EOD,
+  SETTINGS_JSON_EXAMPLE,
+  GITHUB_PR_DIGEST_ACTION,
+} from '@/lib/snippets';
+---
+<BaseLayout title="Resources" description="Copy-paste vault library: CLAUDE.md skeleton, .mcp.json templates, hook scripts, SKILL.md templates, prompts that travel.">
+  <section class="container-prose pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Resources</div>
+    <h1>Copy. Paste. Ship.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Every artifact referenced in the book, in one place. Click to copy. Click to download.</p>
+  </section>
+
+  <section class="container-prose pb-16">
+    <h2>Working memory</h2>
+    <p class="text-sm" style="color: rgb(var(--muted))">The single page Claude reads on every session. Keep yours under ~100 lines.</p>
+    <CopyBlock client:visible text={CLAUDE_MD_SKELETON} filename="CLAUDE.md" language="markdown" />
+
+    <h2>Connectors / MCP</h2>
+    <p class="text-sm" style="color: rgb(var(--muted))">Drop this in your repo as <code>.mcp.json</code>. Restart claude. Run <code>/mcp</code> to verify.</p>
+    <CopyBlock client:visible text={MCP_JSON_EXAMPLE} filename=".mcp.json" language="json" />
+
+    <h2>Permissions</h2>
+    <p class="text-sm" style="color: rgb(var(--muted))">Sane <code>~/.claude/settings.json</code> permission rules. Allow narrow, deny broad.</p>
+    <CopyBlock client:visible text={SETTINGS_JSON_EXAMPLE} filename="settings.json" language="json" />
+
+    <h2>Hooks</h2>
+    <p class="text-sm" style="color: rgb(var(--muted))">Stop typing the same correction 50 times. Drop into <code>.claude/settings.json</code>.</p>
+    <CopyBlock client:visible text={HOOK_FORMAT_ON_SAVE} filename="hook-format-on-save.json" language="json" />
+    <CopyBlock client:visible text={HOOK_TEST_ON_WRITE} filename="hook-test-on-write.json" language="json" />
+    <CopyBlock client:visible text={HOOK_BLOCK_PUSH_TO_MAIN} filename="hook-block-push-main.json" language="json" />
+    <CopyBlock client:visible text={HOOK_SLACK_NOTIFY_LONG_TASK} filename="hook-slack-notify-long.json" language="json" />
+
+    <h2>SKILL.md templates</h2>
+    <p class="text-sm" style="color: rgb(var(--muted))">Three real shapes from Vlad's stack. Adapt to your workflow.</p>
+    <CopyBlock client:visible text={SKILL_LIFECYCLE} filename="mentoring-lifecycle/SKILL.md" language="markdown" />
+    <CopyBlock client:visible text={SKILL_AGGREGATOR} filename="friday-wrapup/SKILL.md" language="markdown" />
+    <CopyBlock client:visible text={SKILL_VOICE} filename="vlads-newsletter/SKILL.md" language="markdown" />
+
+    <h2>Five reusable prompts</h2>
+    <p class="text-sm" style="color: rgb(var(--muted))">Steal these. They travel across surfaces.</p>
+    <h3>The world-class rigor enforcer</h3>
+    <p class="text-sm" style="color: rgb(var(--muted))">Use on ChatGPT, Gemini, anywhere without robust default behaviors. Single biggest quality lift from copy-paste.</p>
+    <CopyBlock client:visible text={PROMPT_RIGOR_ENFORCER} filename="prompt-rigor-enforcer.txt" />
+
+    <h3>Adversarial reviewer</h3>
+    <CopyBlock client:visible text={PROMPT_ADVERSARIAL} filename="prompt-adversarial-reviewer.txt" />
+
+    <h3>Skill-creator stub</h3>
+    <CopyBlock client:visible text={PROMPT_SKILL_CREATOR} filename="prompt-skill-creator.txt" />
+
+    <h3>Pre-meeting briefing</h3>
+    <CopyBlock client:visible text={PROMPT_PRE_MEETING} filename="prompt-pre-meeting.txt" />
+
+    <h3>End-of-day brain dump</h3>
+    <CopyBlock client:visible text={PROMPT_EOD} filename="prompt-eod.txt" />
+
+    <h2>GitHub Action — Daily PR digest</h2>
+    <p class="text-sm" style="color: rgb(var(--muted))">The cheapest, highest-leverage headless workflow in existence.</p>
+    <CopyBlock client:visible text={GITHUB_PR_DIGEST_ACTION} filename="pr-digest.yml" language="yaml" />
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

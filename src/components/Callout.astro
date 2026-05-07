@@ -1,0 +1,24 @@
+---
+interface Props {
+  type?: 'note' | 'warn' | 'tip' | 'watch';
+  title?: string;
+}
+const { type = 'note', title } = Astro.props;
+const styles: Record<string, { color: string; label: string }> = {
+  note:  { color: 'var(--muted)', label: 'Note' },
+  warn:  { color: 'var(--accent)', label: 'Warning' },
+  tip:   { color: 'var(--accent-2)', label: 'Tip' },
+  watch: { color: 'var(--accent)', label: 'Watch alongside' },
+};
+const cfg = styles[type];
+---
+<aside class="container-prose my-8">
+  <div class="rounded-lg p-5" style={`background: rgb(var(--paper)); border-left: 3px solid rgb(${cfg.color});`}>
+    <div class="text-xs font-semibold uppercase tracking-wider mb-2" style={`color: rgb(${cfg.color});`}>
+      {title ?? cfg.label}
+    </div>
+    <div class="leading-relaxed">
+      <slot />
+    </div>
+  </div>
+</aside>

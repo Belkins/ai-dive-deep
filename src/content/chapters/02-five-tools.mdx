@@ -1,0 +1,111 @@
+---
+number: 2
+slug: "02-five-tools"
+title: "Five Tools, Not Fifty — My Actual Stack"
+subtitle: "Five tools, eighty percent of my output. The kitchen brigade."
+tldr: "I get asked once a week what's in my stack. People want a list of thirty. The honest answer is five. Each tool plays one role — head chef, sous chef, walk-in fridge, mobile cook, voice — and the discipline is refusing to blur them. Surface area is the enemy."
+keyConcepts: ["Claude Code", "Cowork", "stack discipline", "routing rules"]
+readingMinutes: 8
+video:
+  title: "Why AI Models Are Biased"
+  youtubeId: "RnOWJoHU_NY"
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+import StackSelector from '@/widgets/StackSelector.tsx';
+
+I get asked once a week — usually by someone who wants me to validate their twelve-tab Chrome window — what's your stack, Vlad? They want a list of thirty. They want a Notion template. They want to feel like they're doing it right.
+
+Truth that disappoints them: I use five tools. Maybe six on a generous day. The rest is noise dressed up as productivity.
+
+I run a portfolio of companies including Belkins and Folderly on a stack you could write on a napkin. Not because I'm late to the AI party — because I got there early enough to learn that surface area is the enemy.
+
+Think of a kitchen brigade. Not the home cook with twenty knives in a drawer. A real brigade — the one that pushes 400 covers a Saturday night without the line collapsing. Head chef decides what gets plated. Sous chef executes. A line cook runs one specialized station. A walk-in fridge holds bulk product. And a voice calls the orders and answers the customer.
+
+Five roles. That's my AI stack. Each tool plays one role. I don't let them blur.
+
+## The Four That Actually Run the Kitchen
+
+Claude — <GlossaryTerm term="Cowork">Cowork</GlossaryTerm> and <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> (head chef and sous chef). About 80% of my <GlossaryTerm term="Token">tokens</GlossaryTerm> — and I burn 3 to 10 billion of them a month — flow through Claude. Cowork is where I think with my data: ops, briefings, scheduled tasks, long-running work where context lives across sessions. Claude Code is where I ship: agent <GlossaryTerm term="Swarm">swarms</GlossaryTerm>, real engineering, multi-step builds that loop two hundred times before they're done. I default to Claude over GPT for three reasons that have nothing to do with benchmark Twitter. The skills ecosystem is real — per-company <GlossaryTerm term="Skill">skills</GlossaryTerm> calibrated to each business, so I'm not retraining context every morning. It's <GlossaryTerm term="MCP">MCP</GlossaryTerm>-native, which means it plugs into the rest of my world without duct tape. And it pushes back when I'm wrong. GPT will helpfully ship the bad idea you asked for. Claude will ask if you really want that.
+
+<ScreenshotPlaceholder
+  caption="Cowork connectors panel"
+  note="capture your Cowork window with the five connectors enabled so readers see the per-company skill setup."
+/>
+
+Google AI Studio — Gemini (the walk-in fridge). About 10%. The bulk-storage specialist. When I need to feed 500 pages of PDF, compare videos frame-by-frame, or rip through a competitor's full Substack archive in one shot, Gemini's million-token <GlossaryTerm term="Context window">context window</GlossaryTerm> wins and nothing else is close. Last quarter I dumped a competitor's entire two-year newsletter into a single prompt: what are they selling, what are they avoiding, where are the gaps? That answer would have cost me an analyst a week. Gemini did it in four minutes. Not a daily driver. Walk into the fridge, grab bulk product, walk out.
+
+OpenAI — ChatGPT and Codex (mobile cook and night-shift cook). About 7%, split into two very different jobs. ChatGPT is my phone. It's what I open while walking, in the back of an Uber, when I want a fast take with no setup. OpenAI's consumer polish is still the best. Codex is the opposite of casual — running 24/7 against my Sentry feeds, GitHub repos, and error logs across the portfolio. The line cook on graveyard shift while I'm asleep. At 3 AM a few weeks back, a Stripe webhook regression slipped into a pipeline. Codex caught it, isolated the failing handler, opened a PR with the fix, and tagged the on-call engineer before I'd had coffee.
+
+ElevenLabs — voice (the voice of the dish). Maybe 3%, but irreplaceable. Text-to-speech for the audio version of my Newsletter. Voice cloning for prototypes. Voice agents for product experiments at Company C and Company A. There is no second place in voice right now. Don't waste a week pretending otherwise.
+
+## The Token Math, in English
+
+3 to 10 billion tokens a month sounds insane until you do the arithmetic. It isn't. It's the cheapest senior hire I've ever made.
+
+A full-time mid-senior US employee runs me roughly $120K a year fully loaded. At Sonnet input pricing, that same money buys around 24 billion tokens. Even at the high end of my burn — call it 120B tokens a year — the AI is doing 5 to 10 times the volume of work for the same dollar. Not a slide-deck flex. Actual ratio. The leverage shows up when you let the stack run jobs in parallel while you sleep, not when you use it as autocomplete during your 9-to-5.
+
+If you're under 100M tokens a month and you feel productive, you haven't unlocked the swarm yet. You're typing prompts. You're not running a kitchen.
+
+<ScreenshotPlaceholder
+  caption="Anthropic billing dashboard"
+  note="capture your token usage chart for the current month so the reader sees what 3-10B tokens looks like on a real invoice."
+/>
+
+## The Routing Rules
+
+Memorize. No sixth lane:
+
+- Code, repo, swarm, real engineering → Claude Code.
+- Document, deck, briefing, scheduled task, anything touching my data → Cowork.
+- Long video, massive PDF, multi-hour transcript → Gemini.
+- Phone, walking, casual, no project context → ChatGPT.
+- 24/7 bug, log, Sentry monitoring → Codex.
+- Voice agent, podcast, newsletter audio → ElevenLabs.
+
+That's the entire decision tree. If a request doesn't fit a lane, the request is the problem, not the stack.
+
+<StackSelector client:visible />
+
+## The Side-Project Four (Where the Future Lives)
+
+The production stack pays the bills. The creative stack keeps me close to where the field is going — creative tools are usually six months ahead of operational ones.
+
+Suno. I make music. Spotify artist link: https://open.spotify.com/artist/48kwMgLHicP6nqaI8Xc3rN — listen if you've never heard AI-native music in 2026.
+
+Nano Banana. Google's image model — best price-to-quality ratio for bulk generation. Newsletter visuals, social posts, prototype mockups. Hundreds a week, the bill barely registers.
+
+SeeDance. Current frontier for character-consistent video. Character consistency across shots is the hard problem, and SeeDance is the only one that doesn't drift halfway through a scene. I'm running a generative video side-project to see how far the pipeline can stretch.
+
+The wild idea is wiring it all together. SeeDance for video. Suno for soundtrack. ElevenLabs for character voice. Custom LoRAs for visual consistency. Claude Code as the showrunner agent stitching it into episodes. No team. One operator and a compute bill. Not science fiction in 2026. That's a Tuesday.
+
+## What I Deliberately Don't Use
+
+Tab-trash AI tools. Otter, Fathom, Notion AI, the dozen lookalikes on every productivity influencer's feed. Most duplicate something my Cowork stack already does — with worse memory, fragmented context, another login. Every extra AI tab is an admission that your main stack didn't do the job. Fix the main stack instead.
+
+AI wrappers I can build in 50 lines. If a $30-a-month AI tool is just a system prompt and an API call dressed up in a logo, I write the skill in an afternoon and own it forever. Cost of building: one evening. Cost of integrating yet another vendor: permanent.
+
+Per-team AI tools. I want one stack across the whole portfolio, not a fragmented one per company. Claude skills give me per-company specialization without per-company tools — Belkins has its own skill, Folderly has its own, Company A has its own, all sharing one underlying stack. Stack hygiene is the unglamorous discipline that separates operators from collectors.
+
+## The Discipline Rule
+
+<PullQuote>Stack envy is the new tab-trash.</PullQuote>
+
+Don't switch from Claude to Gemini because your Twitter feed says the new Gemini is genuinely incredible this week. It probably is. Doesn't matter. Switching costs are huge and almost nobody talks about them honestly — skills are stack-specific, memory is stack-specific, prompts are stack-specific, muscle memory is stack-specific. Rebuilding takes weeks. The 8% capability bump you chased will be reversed by the next release in six weeks anyway.
+
+Pick a primary surface. Live in it for six months. Add tools only when you can name the specific job-to-be-done they own. Kill them the moment another tool covers that job. Depth before breadth. Always.
+
+## The Two Sites I Actually Trust
+
+Before I'd add a sixth tool, I check two places. Not benchmark Twitter, not LinkedIn launch posts, not founder demo videos. These two:
+
+OpenRouter LLM Rankings shows what real users are actually paying to use, broken down by prompt category — coding, roleplay, marketing, technical. Revealed preference beats self-reported benchmarks every time.
+
+Artificial Analysis Leaderboards plots quality, price, and speed in one chart so you can see the Pareto frontier without doing the math. Bookmark it. Check it before any new build — the obvious choice from three months ago is rarely the best one today.
+
+Between those two, you'll spot real shifts within a week of them happening — and know whether to actually rotate a tool or keep your head down and keep cooking.
+
+The brigade gets bigger when the restaurant gets bigger. Not when the menu gets longer.

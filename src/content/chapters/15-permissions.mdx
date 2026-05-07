@@ -1,0 +1,200 @@
+---
+number: 15
+slug: "15-permissions"
+title: "Permissions, Sandboxes, and the Sharp Edges"
+subtitle: "Permissions, sandboxes, and the foot-gun named --dangerously-skip-permissions."
+tldr: "There's a flag called --dangerously-skip-permissions. The name is the warning label. People still type it on their main machine, watch their .env get rewritten, and learn the hard way. This chapter is so you don't."
+keyConcepts: ["permissions", "sandbox", "plan mode", "audit logs", "devcontainer"]
+readingMinutes: 8
+video:
+  title: "Prompts for Hardening & Security"
+  youtubeId: "0SgCiUfoYo8"
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+import PermissionSimulator from '@/widgets/PermissionSimulator.tsx';
+
+There's a flag called `--dangerously-skip-permissions`. The name is the warning label. People still type it on their main machine, watch their `.env` get rewritten, and learn the hard way. This chapter is so you don't.
+
+I've watched smart engineers turn a perfectly fine afternoon into a recovery operation because they wanted to "just let it run." The agent is fast. Fast agents on unprotected filesystems is how you discover, in real time, which of your repos still had a hardcoded production token from 2024.
+
+Permissions are not bureaucracy. They are the steering column collapse zone of agentic coding. You build them once, and then you can drive at speed.
+
+## The permission model in 60 seconds
+
+By default, every tool call that touches the world — Edit, Write, Bash, WebFetch, <GlossaryTerm term="MCP">MCP</GlossaryTerm> tools — shows a diff or command preview and asks `approve?` before executing. You get four choices:
+
+- Approve once.
+- Approve always for this exact pattern, this session only.
+- Approve always for this pattern, permanently (writes a rule into `settings.json`).
+- Reject.
+
+The model never silently writes to disk in default mode. Every destructive thing is gated. Reads of files inside your working directory are not gated, but anything that mutates state is. That's the contract. Memorize it.
+
+When you pick option 3, you're teaching your future self to trust this pattern. Pick carefully. "Always allow `Bash(rm -rf*)`" is the kind of muscle-memory mistake that ends weekends.
+
+<ScreenshotPlaceholder
+  caption="The permission prompt"
+  note="`Bash(npm test)` with the 'always allow' options visible."
+/>
+
+## Permission granularity — what you can scope
+
+Settings live at three levels: managed (org), user (`~/.claude/settings.json`), and project (`.claude/settings.json` checked into the repo). Rules are evaluated `deny -> ask -> allow`. Deny always wins. The first matching rule resolves the question.
+
+The pattern syntax looks like this:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test*)",
+      "Bash(npm run build*)",
+      "Edit(src/**/*)",
+      "Read(/etc/hosts)"
+    ],
+    "deny": [
+      "Bash(rm -rf*)",
+      "Bash(git push origin main)",
+      "WebFetch",
+      "Edit(.env*)"
+    ]
+  }
+}
+```
+
+A few things that bite people the first week:
+
+- Tool names are case-sensitive. `bash(...)` does nothing. It's `Bash`.
+- Glob patterns work inside the parens. `Edit(src/**/*)` is a real rule, `Edit(src)` matches a single literal file named "src".
+- A bare tool name like `WebFetch` matches every invocation of that tool.
+- Symlinks are checked twice — both the link and what it resolves to. A deny rule on `~/.ssh/**` blocks a symlink in your repo pointing at `id_rsa`. That's by design.
+
+Order matters across files too. If your org's managed settings deny `Bash(git push*)`, your project settings cannot allow it. Deny is sticky upward.
+
+<PermissionSimulator client:visible />
+
+## --dangerously-skip-permissions — what it actually does
+
+The flag (sometimes surfaced as "bypass mode") disables every gate. Edit, Write, Bash, WebFetch, MCP — everything runs without asking. The model can still refuse on its own judgment, but the safety layer between model and your filesystem is off.
+
+The use case Anthropic intended is narrow: ephemeral, sandboxed environments where the cost of "agent did something stupid" is "rebuild the container." Docker, GitHub Codespace, throwaway VM, CI runner with no secrets. Places where the blast radius is small and reversible.
+
+When you should not use it:
+
+- On your main laptop.
+- On any machine with production credentials sitting in `~/.aws`, `~/.config/gcloud`, `~/.kube`, or anywhere shell-discoverable.
+- In a repo with secrets in `.env`, even if `.env` is gitignored — gitignore doesn't stop `cat`.
+- Anywhere your agent has filesystem write access to anything you'd cry about losing.
+- "Just for this one task." Especially that one.
+
+There's a sibling setting, `permissions.disableBypassPermissionsMode: "disable"`, that locks the flag out at the user or managed-settings level. If you run a team, set it in managed settings and stop having the argument.
+
+## The right way to use it (when you must)
+
+The pattern is: spin up a <GlossaryTerm term="Sandbox">sandbox</GlossaryTerm> first, then let the agent off the leash inside it.
+
+```bash
+# Option 1: Docker, no network, working dir mounted read-write
+docker run --rm -it -v "$(pwd):/work" -w /work \
+  --network none \
+  node:20 bash -c "npm i -g @anthropic-ai/claude-code && claude --dangerously-skip-permissions"
+
+# Option 2: GitHub Codespaces, e2b, Daytona, or any prebuilt cloud sandbox
+# Option 3: A dedicated VM where prod credentials have been revoked and rotated
+```
+
+Rules of the sandbox:
+
+- No network egress to prod. `--network none` if you can get away with it, allowlisted hosts if you can't.
+- No real keys. Test keys, test accounts, test data. If a key shouldn't appear in a screenshot, it shouldn't be in the sandbox.
+- Mount only what the agent needs. Mounting your whole `$HOME` defeats the point.
+
+That's the whole recipe. The cost of doing this once and templating it is one afternoon. The cost of not doing it is a story you'll tell at conferences.
+
+## Plan mode — preview without execution
+
+`claude --plan` (or the in-session toggle) makes the agent describe what it would do without doing it. No Edit, no Write, no Bash side effects. It reads, it thinks, it tells you the plan.
+
+I use plan mode for:
+
+- Any refactor touching more than five files.
+- Anything in a Folderly or Belkins production repo on the first run.
+- Anything where I want to skim the agent's intent before it commits to it.
+
+It's the closest thing to "show me the diff for the whole job before you start." Read it, push back where it's wrong, then run for real.
+
+## Tool allow-lists in CI
+
+In a GitHub Action you don't have a human approving every step. So you scope at launch:
+
+```yaml
+- name: Auto-fix tests
+  run: |
+    export ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+    claude --print "Run npm test, fix any failing tests, commit, push" \
+      --allowed-tools "Bash(npm test*),Bash(git*),Edit(src/**/*)" \
+      --disallowed-tools "Bash(rm*),WebFetch,Edit(.env*)"
+```
+
+Pair `--allowed-tools` (the launch-time allowlist) with deny rules in `~/.claude/settings.json` or a checked-in `.claude/settings.json`. Belt and suspenders. The CLI flags scope a single run; the settings files are the floor that no run can sink below.
+
+## Devcontainer recipe
+
+Anthropic publishes a devcontainer config for safe agent execution. Minimal version:
+
+```json
+{
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code",
+  "containerEnv": {
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "remoteUser": "node"
+}
+```
+
+Open in VS Code, "Reopen in Container," and run `claude --dangerously-skip-permissions` inside. The container is the blast wall. Your laptop never sees the agent's file operations.
+
+For my own newsletter publishing pipeline I run a near-identical setup — the devcontainer has scoped credentials for the publishing API and nothing else. If the agent loses its mind, the worst it can do is mangle drafts.
+
+## What about Cowork?
+
+<GlossaryTerm term="Cowork">Cowork</GlossaryTerm>'s sandbox is enforced by default. Bash runs in a managed Linux VM, no host filesystem access except folders you explicitly attach, allowlisted network. You don't need a `--dangerously-skip-permissions` equivalent because the surface is already isolated.
+
+The price you pay: the agent can't reach into your laptop's file system unless you mount a folder explicitly. That's not a bug, that's the contract. If you wanted host access, you wanted Claude Code locally.
+
+## Common permission patterns by job
+
+**Greenfield repo.** Allow `Edit(**)`, allow `Bash(npm*)` and `Bash(git*)` minus `git push*`, deny `WebFetch` unless you actually need it. Let the agent fly inside the box. Don't let it leave.
+
+**Production-adjacent repo.** Deny `Edit(.env*)`, deny `Edit(**/secrets/**)`, deny `Bash(rm*)`, deny `Bash(curl*)` and `WebFetch`. Allow only the test runner, the linter, and reads. The agent can analyze, suggest, and prepare PRs; it cannot reach out to the world or rewrite credentials.
+
+**Documentation-only repo.** Allow `Edit(*.md)`, `Edit(*.mdx)`, `Edit(docs/**)`. Deny everything else. Boring repos deserve boring permissions. The agent has no reason to run Bash in a docs repo.
+
+**Codex-style 24/7 monitor.** Runs in a container with `--dangerously-skip-permissions`, mounted read-only on the production data, outbound network restricted to the SaaS APIs it actually needs (Stripe, the CRM, the analytics warehouse). Belt, suspenders, parachute. The flag is fine here because the container is the cage.
+
+<ScreenshotPlaceholder
+  caption="A real `~/.claude/settings.json` permissions block from my main machine"
+  note="Names redacted as needed."
+/>
+
+## Audit logs — your seatbelt
+
+Every tool call is logged. Default location is `~/.claude/logs/` (with subdirectories per project). When something feels off — "did the agent really push to main?" — the audit log answers it before your blood pressure does.
+
+Grep the logs the same way you grep anything else. If a CLI subcommand like `claude logs` is exposed in your version, use it; otherwise the raw files are fine. Look for `Bash(`, `Edit(`, `WebFetch(` and the timestamp on the call you're worried about. The log has the exact arguments, exit code, and which session it came from.
+
+I check logs about once a week on machines where I've allowed broad permissions. Five minutes, no surprises, peace of mind. If you ever do see a surprise, that's your signal to tighten a rule and move it from `allow` to `ask`.
+
+## The closing rule
+
+On your main machine, never skip permissions. In a sandbox, you don't need to ask. The line between the two is a checklist, not a vibe. Write the checklist down. Tape it to the monitor if you need to. I'd rather you look paranoid than rebuild your dotfiles from a backup that's three weeks stale.
+
+<PullQuote>The agent is fast. Make the cage as fast as the agent.</PullQuote>

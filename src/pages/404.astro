@@ -1,0 +1,15 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="Lost the page" description="404 — that page doesn't exist.">
+  <section class="container-prose py-32 text-center">
+    <div class="font-display chapter-num">404</div>
+    <h1 class="mt-2">That page died with its instance.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">No memory between sessions. Try going home and starting a new one.</p>
+    <div class="mt-8 flex flex-wrap gap-3 justify-center">
+      <a href={`${base}/`} class="btn-flame">Home</a>
+      <a href={`${base}/chapters/01-killed-my-tabs`} class="btn-ghost">Start at chapter 1</a>
+    </div>
+  </section>
+</BaseLayout>

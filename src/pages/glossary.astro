@@ -1,0 +1,33 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { glossary } from '@/lib/glossary';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+const entries = Object.values(glossary).sort((a, b) => a.term.localeCompare(b.term));
+---
+<BaseLayout title="Glossary" description="Vocabulary you'll need across the book — agent, MCP, skill, swarm, vault, and more.">
+  <section class="container-prose pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Glossary</div>
+    <h1>Vocabulary you'll need.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">{entries.length} terms. Linked from inside the chapters. Search Cmd-K from anywhere.</p>
+  </section>
+
+  <section class="container-prose pb-24">
+    <dl class="space-y-6">
+      {entries.map((e) => (
+        <div id={e.term} class="rounded-lg p-5 scroll-mt-20" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+          <dt class="font-display text-2xl">{e.term}</dt>
+          <dd class="mt-2 leading-relaxed" set:html={e.definition} />
+          {e.related && e.related.length > 0 && (
+            <div class="mt-3 text-sm flex items-center gap-2 flex-wrap">
+              <span class="text-xs uppercase tracking-wider" style="color: rgb(var(--muted))">Related</span>
+              {e.related.map((r) => (
+                <a href={`#${r}`} class="pill no-underline">{r}</a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </dl>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>
