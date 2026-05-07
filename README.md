@@ -12,7 +12,7 @@ infrastructure — vault, skills, swarms, schedules, connectors, sandboxes. The 
 reading is built the same way the book describes: parallel agents, MDX content, static deploy,
 zero server.
 
-Live: **https://vladpodolyako.github.io/ai-dive-deep/**
+Live: **https://belkins.github.io/ai-dive-deep/**
 
 ## What's inside
 
@@ -50,7 +50,7 @@ Pushes to `main` ship to GitHub Pages via `.github/workflows/deploy.yml`.
 
 To deploy:
 
-1. `gh repo create vladpodolyako/ai-dive-deep --public --source=. --push`
+1. `gh repo create Belkins/ai-dive-deep --public --source=. --push`
 2. **Settings → Pages → Build & deployment**: source = `GitHub Actions`.
 3. The workflow runs on push and deploys the `dist/` build.
 

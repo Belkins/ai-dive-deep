@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://vladpodolyako.github.io',
+  site: 'https://belkins.github.io',
   base: '/ai-dive-deep',
   trailingSlash: 'ignore',
   integrations: [
