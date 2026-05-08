@@ -24,14 +24,17 @@ export default function CommandPalette() {
       keywords: `${c.title} ${c.subtitle}`.toLowerCase(),
     }));
     const pages: Item[] = [
-      { type: 'page', title: 'Day zero',         href: `${base}/day-zero`,         subtitle: 'First 30 minutes — start here' },
-      { type: 'page', title: 'Sections',         href: `${base}/sections`,         subtitle: '36 chapters by theme' },
-      { type: 'page', title: 'Glossary',         href: `${base}/glossary`,         subtitle: '30+ terms you need' },
-      { type: 'page', title: 'Resources',        href: `${base}/resources`,        subtitle: '15 prompts + templates + hooks' },
-      { type: 'page', title: 'Tier list',        href: `${base}/tier-list`,        subtitle: 'Drag-and-drop yours' },
-      { type: 'page', title: 'Cheat sheet',      href: `${base}/cheat-sheet`,      subtitle: 'Print + tape it up' },
-      { type: 'page', title: '30-day plan',      href: `${base}/thirty-day-plan`,  subtitle: 'Custom roadmap' },
-      { type: 'page', title: 'About',            href: `${base}/about`,            subtitle: 'Vlad + portfolio + newsletter' },
+      { type: 'page', title: 'How to read this book', href: `${base}/how-to-read`,     subtitle: 'The prologue — start here if new' },
+      { type: 'page', title: 'Day zero',              href: `${base}/day-zero`,        subtitle: 'First 30 minutes, 12 steps' },
+      { type: 'page', title: 'The journey',           href: `${base}/journey`,         subtitle: 'Six parts. One arc.' },
+      { type: 'page', title: 'Questions people ask',  href: `${base}/questions`,       subtitle: "Top questions from Vlad's inbox" },
+      { type: 'page', title: 'Sections',              href: `${base}/sections`,        subtitle: 'Chapters by theme' },
+      { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: '30+ terms you need' },
+      { type: 'page', title: 'Resources',             href: `${base}/resources`,       subtitle: '15 prompts + templates + hooks' },
+      { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours' },
+      { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up' },
+      { type: 'page', title: '30-day plan',           href: `${base}/thirty-day-plan`, subtitle: 'Custom roadmap' },
+      { type: 'page', title: 'About',                 href: `${base}/about`,           subtitle: 'Vlad + portfolio + newsletter' },
     ];
     const glossaryItems: Item[] = Object.keys(glossary).map((term) => ({
       type: 'glossary',

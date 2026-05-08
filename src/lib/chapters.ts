@@ -45,6 +45,64 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 36, slug: '36-frameworks-beyond', title: 'Frameworks Beyond Claude Code', subtitle: "When CC's subagent system stops being the answer and you have to architect a graph." },
 ];
 
+// Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
+// Parts tell a story: reframe → memory → workshop → building → frontier → tier.
+export type PartKey = 'I' | 'II' | 'III' | 'IV' | 'V' | 'VI';
+
+export const PARTS: { key: PartKey; label: string; tagline: string; intro: string; slugs: string[] }[] = [
+  {
+    key: 'I',
+    label: 'Part I — The Reframe',
+    tagline: 'Stop using AI like a chatbot. Start using it like an OS.',
+    intro: "Three chapters that change the question. The tabs die. The temp agency replaces the genius. The tool count drops from fifty to five. Read these in order; everything after assumes you've crossed this line in your head.",
+    slugs: ['01-killed-my-tabs', '02-five-tools', '03-temp-agency'],
+  },
+  {
+    key: 'II',
+    label: 'Part II — Working Memory',
+    tagline: 'The handbook every new instance reads on wake-up.',
+    intro: 'The model is the genius with amnesia. The vault is the journal you hand it every morning. Skills are the recipe cards. Connectors are the kitchen. Without these four, every session starts from zero.',
+    slugs: ['04-the-vault', '05-skills', '11-build-a-skill', '12-connectors-mcp'],
+  },
+  {
+    key: 'III',
+    label: 'Part III — The Workshop',
+    tagline: 'Three doors, one swarm, the modes that own you.',
+    intro: "Where the work actually happens. Pick the right surface (Chat / Cowork / Code), pick the right mode (Interactive / Plan / Auto), spawn a swarm when one thread isn't enough. This is the chapter range you'll re-read at hour 200.",
+    slugs: ['08-three-doors', '13-quickstart', '14-cheat-sheet', '06-the-swarm', '21-three-modes', '22-sessions', '20-terminal-windows', '17-tips-tricks'],
+  },
+  {
+    key: 'IV',
+    label: 'Part IV — Policy and Discipline',
+    tagline: 'Hooks turn ad-hoc prompting into policy. Permissions turn speed into safety.',
+    intro: "Don't get owned. Don't skip the gates. Don't let the agent off the leash on your main machine. This part is the one most operators skim and most postmortems start with.",
+    slugs: ['09-dont-get-owned', '15-permissions', '16-hooks-subagents'],
+  },
+  {
+    key: 'V',
+    label: 'Part V — The Building Site',
+    tagline: 'From Saturday idea to deployed URL with receipts.',
+    intro: "Six stages: ideation → foundation → creation → polishing → security → deploy. Plus cron, headless, vibe coding, evals, the bill. This is the part that turns reading into shipping.",
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct'],
+  },
+  {
+    key: 'VI',
+    label: 'Part VI — The Frontier and the Tier',
+    tagline: 'Agents that talk, write, browse, and the honest tier list.',
+    intro: 'Voice, browser, persona, archetype agents. Two-agent infrastructure. Frameworks beyond Claude Code. Team adoption when twelve people need to use it. Failure stories with dollar amounts. The tier list, ranked without diplomatic phrasing.',
+    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '36-frameworks-beyond', '26-team-adoption', '28-failure-receipts', '24-tier-list'],
+  },
+];
+
+// Map: slug -> part metadata for hero pills.
+const _partBySlug: Record<string, { key: PartKey; label: string }> = {};
+for (const p of PARTS) {
+  for (const s of p.slugs) _partBySlug[s] = { key: p.key, label: p.label };
+}
+export function getPart(slug: string): { key: PartKey; label: string } | null {
+  return _partBySlug[slug] ?? null;
+}
+
 export type SectionKey = 'general' | 'claude' | 'security' | 'agents' | 'building' | 'resources';
 
 export const SECTIONS: { key: SectionKey; label: string; description: string; slugs: string[] }[] = [

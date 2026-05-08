@@ -1,9 +1,16 @@
 ---
-import { getNeighbors } from '@/lib/chapters';
+import { getNeighbors, getPart, PARTS } from '@/lib/chapters';
 interface Props { slug: string; }
 const { slug } = Astro.props;
 const { prev, next } = getNeighbors(slug);
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// If this chapter is the last one in its part, the next chapter is in a new part.
+// Surface that as "Next part" copy.
+const currentPart = getPart(slug);
+const nextPart = next ? getPart(next.slug) : null;
+const crossingPart = currentPart && nextPart && currentPart.key !== nextPart.key;
+const partInfo = nextPart ? PARTS.find((p) => p.key === nextPart.key) : null;
 ---
 <nav class="container-prose mt-16 mb-8 grid gap-4 sm:grid-cols-2">
   {prev ? (
@@ -11,11 +18,26 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">← Previous · Ch {prev.number}</div>
       <div class="font-display text-lg leading-tight">{prev.title}</div>
     </a>
-  ) : <div></div>}
+  ) : (
+    <a href={`${base}/how-to-read`} class="card hover:border-flame transition-colors no-underline" style="color: rgb(var(--fg))">
+      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">← Prologue</div>
+      <div class="font-display text-lg leading-tight">How to read this book</div>
+    </a>
+  )}
   {next ? (
     <a href={`${base}/chapters/${next.slug}`} class="card hover:border-flame transition-colors no-underline text-right" style="color: rgb(var(--fg))">
-      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">Most readers go here next · Ch {next.number} →</div>
+      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent))">
+        {crossingPart && partInfo ? `Next: ${partInfo.label.replace('Part ', 'Part ')} →` : `Most readers go here next · Ch ${next.number} →`}
+      </div>
       <div class="font-display text-lg leading-tight">{next.title}</div>
+      {crossingPart && partInfo && (
+        <p class="text-xs mt-2 italic m-0" style="color: rgb(var(--muted))">{partInfo.tagline}</p>
+      )}
     </a>
-  ) : <div></div>}
+  ) : (
+    <a href={`${base}/journey`} class="card hover:border-flame transition-colors no-underline text-right" style="color: rgb(var(--fg))">
+      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent))">You finished the book →</div>
+      <div class="font-display text-lg leading-tight">See the full journey</div>
+    </a>
+  )}
 </nav>
