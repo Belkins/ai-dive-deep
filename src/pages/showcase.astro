@@ -7,7 +7,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout title="Vlad's actual setup" description="Sixty-two skills, thirty-two custom agents, twelve plugins. Live snapshot of Vlad's working Claude Code environment.">
   <section class="container-prose pt-16 pb-4">
-    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">The setup</div>
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">The setup · Claude Code half</div>
     <h1>Vlad's actual Claude Code, snapshotted.</h1>
     <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
       Chapter 5 explains skills as a concept. Chapter 11 walks through building one. This page is the receipts — the {SETUP_STATS.skills} skills, {SETUP_STATS.agents} custom agents, and {SETUP_STATS.plugins} plugins running live in Vlad's <code>~/.claude/</code> right now. Auto-generated from the actual filesystem; updates as the stack evolves.
@@ -24,14 +24,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <span><span style="color: rgb(var(--accent))">{SETUP_STATS.plugins}</span> plugins</span>
     </div>
 
-    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+    <div class="mt-6 grid gap-3 sm:grid-cols-3">
       <a href={`${base}/chapters/05-skills`} class="card no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Why skills</div>
-        <div class="font-display text-base">Ch 5 — Recipes the chef reads before cooking</div>
+        <div class="font-display text-base">Ch 5 — Recipes the chef reads</div>
       </a>
       <a href={`${base}/chapters/11-build-a-skill`} class="card no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">How to build one</div>
         <div class="font-display text-base">Ch 11 — Build a skill end-to-end</div>
+      </a>
+      <a href={`${base}/cowork-setup`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent-2))">Sister page</div>
+        <div class="font-display text-base">Cowork setup (sanitized) →</div>
       </a>
     </div>
   </section>
