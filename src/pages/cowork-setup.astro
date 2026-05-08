@@ -1,0 +1,148 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import { COWORK_CONNECTORS, COWORK_SCHEDULES, COWORK_DAY, COWORK_STATS } from '@/lib/cowork';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const tierColor = { S: '#FF6B2C', A: '#FF8E54', B: '#FFB48C' } as const;
+const modeColor = { read: 'rgb(var(--accent-2))', 'read-write': 'rgb(var(--accent))' } as const;
+const catColor: Record<string, string> = {
+  briefing: '#FF6B2C',
+  sync:     '#22D3A0',
+  alert:    '#FFAA00',
+  wrap:     '#FF8E54',
+  meta:     '#8C897C',
+  meeting:  '#22D3A0',
+};
+---
+<BaseLayout title="Vlad's Cowork — sanitized" description="Connector taxonomy, scheduled-task patterns, and day shape from Vlad's published Cowork setup. No workspace names, no contacts, no account IDs.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Cowork setup</div>
+    <h1>The Cowork operating layer.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      Cowork is where the daily ops happen. Connectors talk to {COWORK_STATS.connectorCategories} categories of tools. {COWORK_STATS.scheduledTasks} scheduled tasks fire while Vlad's away from the keyboard. This page is the public-safe version of that — task <em>shapes</em>, connector <em>categories</em>, service names — never workspace IDs, contacts, or account-level data.
+    </p>
+
+    <div class="mt-6 rounded-lg p-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent-2))">Why this is sanitized</div>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">
+        Cowork's local app data contains live OAuth tokens, channel IDs, mentee names, deal names, customer emails, vault paths. Surfacing any of that is one screenshot from a leak. This page works backwards instead — it shows the <strong>shape</strong> of the setup, derived from Vlad's published chapters (<a href={`${base}/chapters/07-cron`}>Ch 7</a>, <a href={`${base}/chapters/12-connectors-mcp`}>Ch 12</a>, <a href={`${base}/chapters/24-tier-list`}>Ch 24</a>). Same teaching value, zero surface area.
+      </p>
+    </div>
+
+    <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-mono" style="color: rgb(var(--muted))">
+      <span><span style="color: rgb(var(--accent))">{COWORK_STATS.connectorCategories}</span> categories</span>
+      <span style="opacity: 0.4">·</span>
+      <span><span style="color: rgb(var(--accent))">{COWORK_STATS.servicesWired}</span> services</span>
+      <span style="opacity: 0.4">·</span>
+      <span><span style="color: rgb(var(--accent))">{COWORK_STATS.scheduledTasks}</span> scheduled tasks</span>
+      <span style="opacity: 0.4">·</span>
+      <span><span style="color: rgb(var(--accent))">$0</span> manual triage</span>
+    </div>
+  </section>
+
+  <!-- Day-shape timeline -->
+  <section class="container-wide pt-12 pb-12">
+    <div class="container-prose px-0">
+      <h2 class="m-0">A Cowork day, in shape</h2>
+      <p class="mt-2" style="color: rgb(var(--muted))">
+        What fires when. Most of these run without Vlad opening Cowork. The Slack channel is the consumer.
+      </p>
+    </div>
+
+    <ol class="mt-6 list-none p-0 m-0 grid gap-2 max-w-4xl mx-auto">
+      {COWORK_DAY.map((slot, i) => (
+        <li class="m-0">
+          <div class="rounded-md p-3 grid grid-cols-[110px_1fr_1fr] gap-3 items-center" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+            <div class="font-mono text-xs" style="color: rgb(var(--accent))">{slot.time}</div>
+            <div class="text-sm" style="color: rgb(var(--fg))">{slot.what}</div>
+            <div class="text-xs italic" style="color: rgb(var(--muted))">→ {slot.output}</div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- Connectors -->
+  <section class="container-wide pt-8 pb-12">
+    <div class="container-prose px-0">
+      <h2 class="m-0">Connectors by category</h2>
+      <p class="mt-2" style="color: rgb(var(--muted))">
+        Twelve categories. One source of truth per category. Read-only by default; write-access only where a workflow demands it. The S/A/B tags mirror the chapter 24 taxonomy.
+      </p>
+    </div>
+
+    <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {COWORK_CONNECTORS.map((cat) => (
+        <div class="card" style="background: rgb(var(--paper));">
+          <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--muted))">{cat.category}</div>
+          <ul class="space-y-2.5 list-none p-0 m-0">
+            {cat.services.map((svc) => (
+              <li class="m-0">
+                <div class="flex items-baseline justify-between gap-2 mb-0.5">
+                  <span class="font-medium text-sm" style="color: rgb(var(--fg))">{svc.name}</span>
+                  <span class="flex items-center gap-1.5 flex-shrink-0">
+                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded" style={`background: ${tierColor[svc.tier]}; color: ${svc.tier === 'B' ? '#0E0F11' : 'white'};`}>{svc.tier}</span>
+                    <span class="text-[10px] font-mono uppercase tracking-wider" style={`color: ${modeColor[svc.mode]};`}>{svc.mode}</span>
+                  </span>
+                </div>
+                {svc.note && <div class="text-xs leading-snug" style="color: rgb(var(--muted))">{svc.note}</div>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Scheduled tasks -->
+  <section class="container-wide pt-8 pb-16">
+    <div class="container-prose px-0">
+      <h2 class="m-0">Scheduled tasks</h2>
+      <p class="mt-2" style="color: rgb(var(--muted))">
+        Cron expression on the left, task on the right. None of these names a deal, person, channel, or workspace. The shape is portable — copy any pattern, swap your own inputs, ship.
+      </p>
+    </div>
+
+    <div class="mt-6 grid gap-3">
+      {COWORK_SCHEDULES.map((s) => (
+        <div class="card grid gap-3 sm:grid-cols-[280px_1fr] items-start" style="background: rgb(var(--paper));">
+          <div>
+            <div class="font-mono text-sm" style={`color: ${catColor[s.category]};`}>{s.cron}</div>
+            <div class="text-xs mt-1" style="color: rgb(var(--muted))">{s.cronHuman}</div>
+            <div class="text-[10px] uppercase tracking-wider mt-2" style={`color: ${catColor[s.category]};`}>{s.category}</div>
+          </div>
+          <div>
+            <div class="font-display text-base">{s.task}</div>
+            <p class="text-sm mt-1 m-0" style="color: rgb(var(--fg) / 0.9)">{s.description}</p>
+            <div class="text-xs mt-2" style="color: rgb(var(--muted))">→ delivers as <span class="font-mono" style="color: rgb(var(--accent-2))">{s.delivery}</span></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Footer / context -->
+  <section class="container-prose pb-24">
+    <div class="grid sm:grid-cols-2 gap-3">
+      <a href={`${base}/chapters/07-cron`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Why scheduled tasks</div>
+        <div class="font-display text-base">Ch 7 — Cron, while you sleep</div>
+      </a>
+      <a href={`${base}/chapters/12-connectors-mcp`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">How connectors work</div>
+        <div class="font-display text-base">Ch 12 — Connectors and MCP</div>
+      </a>
+    </div>
+
+    <div class="mt-6 rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--muted));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">A note on what's missing</div>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">
+        This page deliberately does not show: workspace IDs, OAuth scopes per integration, channel names, contact lists, deal pipelines, mentee names, account-level configurations, or any vault path beyond <code>~/Vault/</code>. If the question is "which exact Slack channel does the morning briefing land in," the answer is "not on this page, by design." The book teaches the pattern; the pattern is enough.
+      </p>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
