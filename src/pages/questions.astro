@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import QuestionsBoard from '@/widgets/QuestionsBoard.tsx';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+---
+<BaseLayout title="Questions people ask me" description="The questions I answer most weeks. Each one mapped to the chapter that goes deep.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">From the inbox</div>
+    <h1>Questions people ask me.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      Every week, by Slack DM, by LinkedIn message, by the inbox at vladsnewsletter.com. The same dozen questions show up. Here are the answers in one place — short version, longer version, and the chapter that goes deep.
+    </p>
+    <p class="mt-3 text-base" style="color: rgb(var(--muted))">
+      Type your question, or browse by category. If a question's not here that should be, the inbox is open.
+    </p>
+  </section>
+
+  <QuestionsBoard client:load />
+
+  <CommandPaletteMount />
+</BaseLayout>

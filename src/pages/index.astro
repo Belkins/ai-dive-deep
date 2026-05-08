@@ -33,9 +33,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
 
     <div class="mt-10 flex flex-wrap gap-3">
-      <a href={`${base}/day-zero`} class="btn-flame">Start here · Day zero →</a>
-      <a href={`${base}/sections`} class="btn-ghost">Browse by section</a>
-      <a href={`${base}/chapters/01-killed-my-tabs`} class="btn-ghost">Read chapter 1</a>
+      <a href={`${base}/how-to-read`} class="btn-flame">Read the prologue first →</a>
+      <a href={`${base}/day-zero`} class="btn-ghost">Day zero (operator path)</a>
+      <a href={`${base}/journey`} class="btn-ghost">The journey (reader path)</a>
+      <a href={`${base}/questions`} class="btn-ghost">Questions people ask me</a>
     </div>
 
     <ResumeReading client:load />

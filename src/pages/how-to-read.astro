@@ -1,0 +1,107 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="How to read this book" description="The prologue. What this book is, who it's for, and how to actually use it.">
+  <section class="container-prose pt-16 pb-12">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Prologue</div>
+    <h1 class="max-w-[20ch]">How to read this book.</h1>
+
+    <p class="mt-6 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      It's 6:47 AM Tuesday somewhere. Coffee hot. Laptop closed. You're reading this on a phone, or a screen, or a printed page someone else printed for you. Three things have already happened this morning without me — and by the time you finish this prologue, the same will be possible for you.
+    </p>
+
+    <p>
+      I'm Vlad. I run a portfolio of companies — Belkins, Folderly, LinguaLive, NoCancer AI, 404 Model Agency, plus a newsletter that goes to 10K+ operators every week. I burn 3 to 10 billion tokens a month across those businesses. Not as a flex — as the receipt for a workforce that runs while I sleep, takes Saturdays off, and ships things on Tuesdays. This book is what I'd hand a smart friend who said "Vlad, where do I even start with this AI stuff?"
+    </p>
+
+    <h2>Who this is for</h2>
+
+    <p>
+      Operators. Founders. Anyone who runs more than one business or more than one team and feels the weight of that on a Tuesday morning. If you've ever opened ten browser tabs to put together one decision, this is for you. If you've used ChatGPT and felt underwhelmed, definitely for you — you've been driving a Ferrari with no keys. The book is the keys.
+    </p>
+
+    <p>
+      Not for: people who want a list of thirty tools. People who want me to predict 2027. People who think "AI agent" is a marketing word. There are other places for those conversations.
+    </p>
+
+    <h2>The reframe everything else hangs on</h2>
+
+    <p>
+      Most people use AI as a chatbot. A thing you visit. You walk up, ask, get an answer, leave. The whole book is downstream of one mental shift: <strong>stop using AI like a chatbot. Start using it like an OS.</strong>
+    </p>
+
+    <p>
+      An OS runs scheduled jobs while you sleep. Holds memory across sessions. Dispatches workers. Writes to durable storage on your behalf. A chatbot has one window. An OS has windows, daemons, and cron. The difference between operators who get 2x out of AI and operators who get 50x is whether they crossed that line in their head. Most haven't. That's the whole opportunity.
+    </p>
+
+    <h2>The journey, in six parts</h2>
+
+    <p>
+      Thirty-six chapters, grouped into six parts. You can read straight through. You can also jump anywhere — every chapter stands alone. But there's an arc underneath, and once you see it, the chapters click into place.
+    </p>
+
+    <ul>
+      <li><strong>Part I — The Reframe.</strong> Three chapters that change the question. Tabs die. Temp agency replaces genius. Five tools replace fifty.</li>
+      <li><strong>Part II — Working Memory.</strong> The vault. Skills. Connectors. The handbook every new instance reads on wake-up.</li>
+      <li><strong>Part III — The Workshop.</strong> Three doors to Claude. Quickstart. Cheat sheet. Swarms. The modes. Sessions. tmux. The 25 tips.</li>
+      <li><strong>Part IV — Policy and Discipline.</strong> Don't get owned. Permissions. Hooks. The chapters most operators skim and most postmortems start with.</li>
+      <li><strong>Part V — The Building Site.</strong> Six stages of shipping. Cron. Headless. Vibe coding. Evals. The bill, demystified. SDK direct.</li>
+      <li><strong>Part VI — The Frontier and the Tier.</strong> Voice agents. Browser agents. Persona agents. Rick archetypes. Codex × CC. Frameworks beyond. Team adoption. Failure receipts. The honest tier list.</li>
+    </ul>
+
+    <p>
+      <a href={`${base}/journey`}>The journey page</a> shows the full map.
+    </p>
+
+    <h2>Three ways to use this book</h2>
+
+    <p>
+      <strong>If you've never run an AI agent before:</strong> start at <a href={`${base}/day-zero`}>day zero</a>. Twelve concrete steps from clean machine to first scheduled task. Tick the boxes. Each step links to the chapter that goes deep. You'll have something running in your name by the time you've made coffee.
+    </p>
+
+    <p>
+      <strong>If you have a specific question:</strong> open <a href={`${base}/questions`}>the questions page</a>. The dozen-or-so things people ask me most often, mapped to chapters. Or hit Cmd-K from anywhere on the site and search.
+    </p>
+
+    <p>
+      <strong>If you want the long form:</strong> read straight from chapter 1. The voice is mine. The receipts are mine. The misfires are kept in. By the time you finish chapter 36, you will have made some of the same mistakes I did — through the page, not through your bank account.
+    </p>
+
+    <h2>What this book is not</h2>
+
+    <p>
+      It's not a course you buy. It's not a paywall. There's no upsell, no cohort, no Discord I'll spam you to join. It's a public artifact at a free URL, source on GitHub, content under CC BY-NC-SA. Steal anything. Fork the repo. Send me a PR if I got something wrong.
+    </p>
+
+    <p>
+      I do have <a href="https://www.vladsnewsletter.com" target="_blank" rel="noopener">a newsletter</a>. If this lands, subscribe — that's how you'll know when Edition 4 ships. The footer has the form. No backend on this site, no email tracking, no marketing automation. Just markdown shipped to a static host and an iframe to Substack.
+    </p>
+
+    <h2>One last thing before you start</h2>
+
+    <p>
+      The stack will move. By the time you read this, half the tools in chapter 24 will have changed tiers. The discipline won't. The mental models — temp agency, vault, swarm, hook, eval, blast radius — those compound. Pick a stack you can defend to your future self in October. By April, half of it will have moved. Keep moving with it. The list will rewrite itself. The voice won't.
+    </p>
+
+    <p>
+      Turn the page.
+    </p>
+
+    <div class="mt-12 grid sm:grid-cols-2 gap-4">
+      <a href={`${base}/day-zero`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent))">Operator path</div>
+        <div class="font-display text-lg">Start at day zero →</div>
+        <p class="text-sm mt-1 m-0" style="color: rgb(var(--muted))">First 30 minutes, twelve steps, ticking saves locally.</p>
+      </a>
+      <a href={`${base}/chapters/01-killed-my-tabs`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent))">Reader path</div>
+        <div class="font-display text-lg">Start at chapter 1 →</div>
+        <p class="text-sm mt-1 m-0" style="color: rgb(var(--muted))">Read straight through. The whole arc. Six hours total.</p>
+      </a>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
