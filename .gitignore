@@ -5,5 +5,25 @@ dist
 .env
 .env.*
 !.env.example
+
+# secrets / credentials — paranoia layer
+*.pem
+*.key
+*.p12
+*.pfx
+.aws/
+.kube/
+.config/
+secrets/
+private/
+
+# logs / editor / OS
 *.log
 .vscode
+.idea
+.cache
+Thumbs.db
+
+# vercel
+.vercel
+.turbo

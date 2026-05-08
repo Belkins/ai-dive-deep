@@ -6,10 +6,14 @@ import tailwind from '@astrojs/tailwind';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
+// Choose deploy target via env: DEPLOY_TARGET=vercel | gh-pages (default)
+const target = process.env.DEPLOY_TARGET || 'gh-pages';
+const isVercel = target === 'vercel';
+
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://belkins.github.io',
-  base: '/ai-dive-deep',
+  site: isVercel ? (process.env.SITE_URL || 'https://ai-dive-deep.vercel.app') : 'https://belkins.github.io',
+  base: isVercel ? '/' : '/ai-dive-deep',
   trailingSlash: 'ignore',
   integrations: [
     mdx(),
