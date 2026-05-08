@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SetupShowcase from '@/widgets/SetupShowcase.tsx';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import { SETUP_STATS } from '@/lib/setup';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="Vlad's actual setup" description="Sixty-two skills, thirty-two custom agents, twelve plugins. Live snapshot of Vlad's working Claude Code environment.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">The setup</div>
+    <h1>Vlad's actual Claude Code, snapshotted.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      Chapter 5 explains skills as a concept. Chapter 11 walks through building one. This page is the receipts — the {SETUP_STATS.skills} skills, {SETUP_STATS.agents} custom agents, and {SETUP_STATS.plugins} plugins running live in Vlad's <code>~/.claude/</code> right now. Auto-generated from the actual filesystem; updates as the stack evolves.
+    </p>
+    <p class="mt-3 text-base" style="color: rgb(var(--muted))">
+      The point isn't that you should install all of these. The point is that this is what an operator's library looks like at hour two thousand. Steal anything. Skip anything. Build your own.
+    </p>
+
+    <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-mono" style="color: rgb(var(--muted))">
+      <span><span style="color: rgb(var(--accent))">{SETUP_STATS.skills}</span> skills</span>
+      <span style="opacity: 0.4">·</span>
+      <span><span style="color: rgb(var(--accent-2))">{SETUP_STATS.agents}</span> custom agents</span>
+      <span style="opacity: 0.4">·</span>
+      <span><span style="color: rgb(var(--accent))">{SETUP_STATS.plugins}</span> plugins</span>
+    </div>
+
+    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+      <a href={`${base}/chapters/05-skills`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Why skills</div>
+        <div class="font-display text-base">Ch 5 — Recipes the chef reads before cooking</div>
+      </a>
+      <a href={`${base}/chapters/11-build-a-skill`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">How to build one</div>
+        <div class="font-display text-base">Ch 11 — Build a skill end-to-end</div>
+      </a>
+    </div>
+  </section>
+
+  <SetupShowcase client:load />
+
+  <section class="container-prose pb-24">
+    <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent)); border-top: 1px solid rgb(var(--line)); border-right: 1px solid rgb(var(--line)); border-bottom: 1px solid rgb(var(--line));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">How to read this list</div>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+        Most operators discover skills by need. They explain a workflow to Claude three times, write a SKILL.md, drop it in <code>~/.claude/skills/</code>, and never explain it again. That's how the list above grew. Every line in it started as a paragraph Vlad got tired of retyping.
+      </p>
+      <p class="text-sm leading-relaxed mt-3 m-0" style="color: rgb(var(--fg) / 0.92)">
+        The custom agents in <code>~/.claude/agents/</code> serve a different job — they're specialized subagents you spawn from a main session. <code>code-reviewer</code> reviews code. <code>tdd-guide</code> enforces test-first. <code>pc-api-lead</code> owns the Partner Connector backend. Pick read-only tools for the agents that should never edit; broader tool surfaces for the ones that ship.
+      </p>
+      <p class="text-sm leading-relaxed mt-3 m-0" style="color: rgb(var(--fg) / 0.92)">
+        Plugins are bundles — skills + agents + slash commands + MCP servers, distributed as one. Browse the marketplace inside Claude Code with <code>/plugins</code>.
+      </p>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
