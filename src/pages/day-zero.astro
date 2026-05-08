@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import DayZeroChecklist from '@/widgets/DayZeroChecklist.tsx';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+---
+<BaseLayout title="Day zero" description="The literal first 30 minutes. Twelve concrete steps from clean machine to first scheduled task.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Day zero</div>
+    <h1>The first 30 minutes.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Twelve concrete steps. Each one links to the chapter that goes deep. Tick the boxes — your progress saves locally and waits for you when you come back tomorrow.</p>
+  </section>
+
+  <DayZeroChecklist client:load />
+
+  <CommandPaletteMount />
+</BaseLayout>

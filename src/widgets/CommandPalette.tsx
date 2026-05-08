@@ -24,6 +24,8 @@ export default function CommandPalette() {
       keywords: `${c.title} ${c.subtitle}`.toLowerCase(),
     }));
     const pages: Item[] = [
+      { type: 'page', title: 'Day zero',         href: `${base}/day-zero`,         subtitle: 'First 30 minutes — start here' },
+      { type: 'page', title: 'Sections',         href: `${base}/sections`,         subtitle: '36 chapters by theme' },
       { type: 'page', title: 'Glossary',         href: `${base}/glossary`,         subtitle: '30+ terms you need' },
       { type: 'page', title: 'Resources',        href: `${base}/resources`,        subtitle: '15 prompts + templates + hooks' },
       { type: 'page', title: 'Tier list',        href: `${base}/tier-list`,        subtitle: 'Drag-and-drop yours' },

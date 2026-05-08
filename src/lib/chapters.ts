@@ -37,6 +37,53 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 28, slug: '28-failure-receipts', title: "The Receipts I'd Rather Not Show You", subtitle: "Six failures, six bills, six things the demo videos won't tell you." },
   { number: 29, slug: '29-cost-economics', title: 'The Bill, Demystified', subtitle: 'Token math, prompt caching, batch API, model routing — what actually moves your invoice.' },
   { number: 30, slug: '30-sdk-direct', title: 'Building With the Anthropic SDK Directly', subtitle: 'When Claude Code and Cowork stop being the answer and you have to write 30 lines of Python.' },
+  { number: 31, slug: '31-stages', title: 'The Stages: Ideation to Deploy', subtitle: 'Six stages. One Saturday. The order matters more than the speed.' },
+  { number: 32, slug: '32-archetypes-rick', title: 'How to Build Rick', subtitle: 'OpenClaw, NemoClaw, Hermes — pick a preset, the agent shows up dressed for the job.' },
+  { number: 33, slug: '33-browser-agents', title: 'Browser Agents: Login, Click, Scrape, Post', subtitle: "When the connector doesn't exist and the workflow lives on a webpage." },
+  { number: 34, slug: '34-write-on-behalf', title: 'Writing On Your Behalf, Without Becoming a Bot', subtitle: 'Voice clones, persona agents, and the four lines you should never let an agent cross.' },
+  { number: 35, slug: '35-codex-and-cc', title: 'Codex × Claude Code', subtitle: "They're not competing. They're shifts." },
+  { number: 36, slug: '36-frameworks-beyond', title: 'Frameworks Beyond Claude Code', subtitle: "When CC's subagent system stops being the answer and you have to architect a graph." },
+];
+
+export type SectionKey = 'general' | 'claude' | 'security' | 'agents' | 'building' | 'resources';
+
+export const SECTIONS: { key: SectionKey; label: string; description: string; slugs: string[] }[] = [
+  {
+    key: 'general',
+    label: 'General',
+    description: "Mental models. The temp-agency frame. Five tools, not fifty. The vault that makes any model durable.",
+    slugs: ['01-killed-my-tabs', '02-five-tools', '03-temp-agency', '04-the-vault', '05-skills', '17-tips-tricks'],
+  },
+  {
+    key: 'claude',
+    label: 'Claude',
+    description: 'Three doors (Chat / Cowork / Code), the swarm, the modes, sessions, the cheat sheet.',
+    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp'],
+  },
+  {
+    key: 'security',
+    label: 'Security',
+    description: "Don't get owned. Permissions. Sandboxes. The 11-minute leak. Real failures with receipts.",
+    slugs: ['09-dont-get-owned', '15-permissions', '28-failure-receipts'],
+  },
+  {
+    key: 'agents',
+    label: 'AI Agents',
+    description: 'The wild stuff. Rick archetypes. Browser agents. Persona agents. Frameworks beyond Claude Code.',
+    slugs: ['10-wild-stuff', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '36-frameworks-beyond', '35-codex-and-cc', '27-voice-agents'],
+  },
+  {
+    key: 'building',
+    label: 'Building Products',
+    description: "From Saturday idea to deployed URL. Six stages. Cron. Headless. Vibe coding. The bill, demystified.",
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct'],
+  },
+  {
+    key: 'resources',
+    label: 'Team + Tier',
+    description: "Get twelve people to use this. Rate every tool without diplomatic phrasing.",
+    slugs: ['26-team-adoption', '24-tier-list'],
+  },
 ];
 
 export function getNeighbors(slug: string) {

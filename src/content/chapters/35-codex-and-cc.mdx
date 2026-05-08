@@ -1,0 +1,117 @@
+---
+number: 35
+slug: "35-codex-and-cc"
+title: "Codex × Claude Code"
+subtitle: "They're not competing. They're shifts."
+tldr: "Codex opens a PR at 3 AM against the Belkins Sentry stream. I review and merge it in Claude Code at 9. Same repo, same .mcp.json, same CLAUDE.md — two agents, two contracts, one shift hand-off. The hard part isn't picking a model; it's keeping the night shift and the day shift from stepping on each other."
+keyConcepts: ["night shift", "shared .mcp.json", "dual-agent CI", "branch protection", "shift hand-off"]
+readingMinutes: 8
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+3:04 AM London. Sentry fires on the Belkins partner-portal — a null-pointer on the deal-sync worker, twelve events in eight minutes, same stack trace, same customer cohort. Codex is awake. It reads the Sentry event via <GlossaryTerm term="MCP">MCP</GlossaryTerm>, pulls the offending file, traces the null back to a missing optional chain on a HubSpot field that started arriving as `undefined` after a property rename last week. It opens PR #4471 against `main`, branch `codex/sentry-4471-deal-sync-null`, three files touched, ninety-one lines of diff, one new test that would have caught this. Commit message ends with `Fixes ENG-1842`. Slack posts a one-line summary into `#eng-incidents` with the PR link. Then it goes back to watching the queue.
+
+8:58 AM, my coffee is hot. I open <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> in the same repo. The PR is sitting there, CI green, the test Codex added is meaningful, the optional-chain fix is the right shape. I leave one inline comment — "rename the field constant to match the new HubSpot property name, otherwise the next person hits this again" — Codex amends the commit, I merge. Total of three commits on that branch: the original fix, the test, the rename. Total human time: under four minutes. The deal-sync worker stopped throwing at 3:09 AM because Codex had also pushed a hotfix to a feature flag that bypassed the broken path while the PR was being written.
+
+That's the shift hand-off. Codex worked the night. I work the day. Same repo, same context, two contracts.
+
+## Day shift, night shift
+
+Stop thinking of Codex and Claude Code as competing models. They're not. They're shifts.
+
+Codex is the night shift — it watches Sentry, GitHub issues, the Slack `#eng-incidents` channel, the cron failures, the dependency-bot pings. It runs against bugs and signals 24/7. It doesn't get tired, it doesn't context-switch, it doesn't have an opinion on architecture. When something breaks at 3 AM, it picks up the trace, opens a PR, posts a summary, and goes back to watching. The work it does is the work no human should have to do — the small, the repetitive, the "could have been a regex" tier of fixes.
+
+Claude Code is the day driver. That's where I ship features, redesign flows, write the gnarly migration, argue with the agent about whether the abstraction earns its weight. CC is the place where I bring opinion. It's where the swarm runs — see [Chapter 6](/chapters/06-the-swarm) for the four parallel-agent patterns I lean on — and it's where headless mode runs my CI builds, see [Chapter 18](/chapters/18-headless-ci).
+
+The mental model that finally clicked: a 24-hour engineering org has two shifts. Day shift makes the calls. Night shift keeps the lights on. Trying to make one agent do both is the same mistake as trying to make one human do both. They burn out, or they get sloppy at the thing they're worst at.
+
+<PullQuote>Two agents, two contracts, one repo. The shift hand-off is the hard part.</PullQuote>
+
+## What Codex is great at
+
+The list is narrower than the marketing makes it look, and that's a feature, not a bug.
+
+Codex is great at **incident response from logs**. Sentry event lands, Codex reads the trace, finds the file, writes a fix that's local to the trace, opens a PR with a test. Fifteen of these last month across the Belkins stack — needs Vlad's exact number, but it's somewhere between 12 and 20. Most are merged with one round of comments. None of them needed a feature flag, an architecture call, or a conversation.
+
+It's great at **regression catching**. When a test starts flaking on `main`, Codex opens an issue, runs the test ten times, captures the variance, and either pins it (slow CI runner, retry the network call) or roots it (a real race the original test didn't catch). The PR title is always specific — `flake: deal-sync.spec.ts hits Stripe rate limit on parallel run` — never generic.
+
+It's great at **doc updates that lag the code**. README out of date, CHANGELOG missing the last release, OpenAPI schema doesn't match the route. Codex reads the diff between the doc and the code, updates the doc, opens a PR. These are the PRs you merge without reading because the diff is mechanical.
+
+It's great at **simple fixes from logs** — the dependency bumped, the env var renamed, the type narrowed. The kind of fix where the right answer is "do the obvious thing, write the test that proves it, ship it."
+
+<Callout type="tip">
+The pattern across all four is the same — the work has a tight scope, a clear signal, and a deterministic test. Codex is at its best when the contract is "given this trace, produce this diff." It's at its worst the moment the contract gets fuzzy.
+</Callout>
+
+## What Codex is bad at
+
+Anything that needs a strong opinion. Codex will not push back when you ask it to add a third caching layer to a system that already has two. It will add the third layer. It will add a test for the third layer. It will not say "the right move is to delete one of the existing two." That's the day driver's job.
+
+Anything that touches more than three files. The 90% confidence drops fast as the diff widens. A four-file PR from Codex is fine. A nine-file PR is a re-architecture wearing a fix's clothes. I close those without reading and re-open them in CC where I can argue with the agent.
+
+Anything that needs to push back on the prompt itself. If I tell CC "add a retry loop here," CC will sometimes say "you don't need a retry loop, the underlying call is already idempotent and the rate limit is per-second, not per-request — what you actually need is a token bucket." Codex will add the retry loop. Both responses are useful, but only one of them is the response you wanted on the redesign.
+
+Anything where the fix requires reading a customer thread, a Loom, or a Notion doc. Codex can read those — the MCPs are wired — but it doesn't ask the right questions of them. It treats them as context, not as evidence. The day driver treats them as evidence.
+
+## Shared infrastructure — what they actually share
+
+Both agents read the same `.mcp.json`. Both agents read the same `CLAUDE.md`. Both agents write to the same repo. That's the thing that makes the shift hand-off work — there's no second source of truth to drift, no second config to maintain, no "Codex's view of HubSpot" vs "CC's view of HubSpot."
+
+The `.mcp.json` at the root of the Belkins partner-portal repo:
+
+```json
+{
+  "mcpServers": {
+    "hubspot": { "command": "npx", "args": ["-y", "@hubspot/mcp-server"], "env": { "HUBSPOT_TOKEN": "${HUBSPOT_TOKEN}" } },
+    "stripe": { "command": "npx", "args": ["-y", "@stripe/mcp"], "env": { "STRIPE_KEY": "${STRIPE_KEY}" } },
+    "sentry": { "command": "npx", "args": ["-y", "@sentry/mcp-server"], "env": { "SENTRY_AUTH": "${SENTRY_AUTH}" } },
+    "github": { "command": "npx", "args": ["-y", "@github/mcp-server"], "env": { "GITHUB_TOKEN": "${GITHUB_TOKEN}" } },
+    "slack": { "command": "npx", "args": ["-y", "@slack/mcp-server"], "env": { "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}" } }
+  }
+}
+```
+
+Five servers, one file, both agents. Codex reads it when it boots in the cloud sandbox. CC reads it when I open the repo locally. Same servers. Same shape. Same auth.
+
+The `CLAUDE.md` is the contract. It's where I tell both agents the rules of this repo — file ownership, commit message shape, test requirements, what "done" means. See [Chapter 16](/chapters/16-hooks-subagents) for how `CLAUDE.md` becomes the policy file that <GlossaryTerm term="Subagent">subagents</GlossaryTerm> inherit. The Belkins partner-portal `CLAUDE.md` is 240 lines. About a third of it is the section called "Codex never pushes to main."
+
+<ScreenshotPlaceholder
+  caption=".mcp.json + CLAUDE.md side by side"
+  note="capture the repo root with both files open in the editor — the shared shape is the point. Five MCP servers above, the policy file below."
+/>
+
+## Cost per agent per month
+
+The dollar figures move every quarter, so anchor on shape, not exact numbers — verify on openai.com/pricing and anthropic.com/pricing before you commit a line item.
+
+Codex on a hosted plan, the way most teams start, runs in the low-three-figures per seat per month — call it $200 to $300 per developer for the all-you-can-eat tier as of early 2026, but verify on openai.com/pricing. Codex on a private box (a self-hosted runner with API tokens billed against your OpenAI org) is harder to forecast — the bill scales with how busy the night shift is. My Belkins partner-portal Codex spent roughly $180 in API tokens last month against the night-shift workload of about 30 PRs and 60 Sentry triages. Verify against your own usage; this is one repo, one cohort.
+
+Claude Code is the API tokens plus the seat. The seat is in the same shape range as Codex. The tokens land where your <GlossaryTerm term="Context window">context window</GlossaryTerm> spend lands — for me, across the portfolio, between 3 and 10 billion tokens a month, see [Chapter 1](/chapters/01-killed-my-tabs).
+
+The honest take: if you run both, the second seat is the cheap one. The expensive one is whichever shift you ramp first, and the second is incremental — same repo, same MCPs, the marginal cost is the model bill, not the tooling.
+
+<Callout type="warn">
+Don't let the seat math drive the architecture choice. The reason to run both isn't cost — it's that the night shift and the day shift are different jobs. If you only need one shift, run one agent. If your Sentry never fires at 3 AM, you don't need Codex. The portfolio that needs Codex is the one that has 24/7 customer impact.
+</Callout>
+
+## Keeping them from stepping on each other
+
+Three rules, and the third one is the one that actually matters.
+
+**One: branch protection on `main`.** Codex never pushes to `main`. Codex pushes to `codex/<issue-id>-<slug>` and opens a PR. CI must pass. One human review required. This is enforced at the GitHub branch-protection level, not the social level — the social rule will fail the first time Codex tries to "fix" a merge conflict at 4 AM.
+
+**Two: file-ownership conventions in `CLAUDE.md`.** Codex owns `src/server/jobs/`, `src/server/workers/`, `tests/regression/`. Day driver owns `src/app/`, `src/components/`, `prisma/schema.prisma`. The schema is the line in the sand — Codex never touches the schema, because schema changes need a migration plan and a rollback story, and that's a day-driver call. Both agents read the convention from `CLAUDE.md` on every session. It's not a hope; it's a contract the agent reads before its first tool call.
+
+**Three: the "Codex never pushes to main" rule applies socially too.** Codex doesn't merge its own PRs. Codex doesn't approve PRs from CC sessions. Codex doesn't close issues without a human ack. The agent has all the GitHub permissions — it could do those things — and the rule is that it doesn't, because every shift hand-off needs a moment of human attention. That moment is the only thing standing between "the night shift caught a real bug" and "the night shift quietly merged a regression while you were asleep."
+
+I learned this one the hard way. Codex auto-merged a "fix" against the Folderly inbox-warmup repo last March because I'd given it merge perms during a maintenance push and forgot to revoke them. The "fix" was a one-line change that suppressed an exception. The exception was the only thing telling us a customer's SMTP creds had rotated. Took eleven days to notice, two days to find, the customer churned. Branch protection isn't paranoia, it's the cheapest insurance you'll ever buy.
+
+The agent doesn't get the muscle memory you get from being burned. You have to encode the muscle memory into the rules.
+
+---
+
+The thing nobody talks about with dual-agent setups is that the two agents will eventually diverge in how they interpret the same `CLAUDE.md`. Codex reads it through the lens of "what's the minimal compliant action," CC reads it through the lens of "what's the right move here." That divergence is fine — that's what makes them different shifts. The work is to keep the divergence productive, not to flatten it. The day shift catches what the night shift missed; the night shift catches what the day shift slept through. The repo is the thing they share. The rest is contract design.
