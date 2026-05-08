@@ -1,0 +1,179 @@
+---
+number: 36
+slug: "36-frameworks-beyond"
+title: "Frameworks Beyond Claude Code"
+subtitle: "When CC's subagent system stops being the answer and you have to architect a graph."
+tldr: "Five Claude Code subagents kept stepping on each other in a deal-research workflow because they all wrote to the same scratchpad. CrewAI cracked it with explicit handoff contracts. LangGraph cracked the next one with explicit state. The graduation from CC to a framework isn't about power — it's about contracts the orchestrator enforces instead of you."
+keyConcepts: ["CrewAI", "LangGraph", "state machine", "handoff contracts", "graduation pattern"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+Tuesday afternoon, the Belkins deal-research workflow finally cracked. Five <GlossaryTerm term="Subagent">subagents</GlossaryTerm> in CrewAI: researcher pulls company signal, qualifier scores it against ICP, drafter writes the outreach, reviewer rewrites the second paragraph in Vlad's voice, sender queues it through Customer.io with a Tuesday-morning send window. End-to-end runtime, eleven minutes, twelve prospects in the batch, zero step-on-each-other failures. The week before, the same workflow as a CC <GlossaryTerm term="Swarm">swarm</GlossaryTerm> — five subagents in parallel against `.claude/scratch/` — had a 40% race-condition rate. Two agents would write to `qualified.md` at the same time, last-write-wins, half the prospects vanished from the queue. Same prompts, same model, same MCPs. The difference was orchestration.
+
+CC's subagent system is built for one repo, one task, one human supervising. The moment you need five agents with strict handoff contracts running on a cron, you're not in a swarm anymore — you're in a graph. The graph wants a framework. That's the chapter.
+
+## The threshold — when to leave CC
+
+Three signals. If you hit one, look at a framework. If you hit two, you're already late.
+
+**Signal one: five-plus agents with strict handoff contracts.** Up to four agents, CC's pattern of "each subagent writes to its own file, the parent reads them all" is fine. Past that, the contention isn't a hypothetical — it's a Tuesday. The deal-research workflow above hit this; the Belkins onboarding pipeline hit it before that. Five is the hinge.
+
+**Signal two: persistent state across days.** A CC session is a process. It dies when the terminal closes. If your workflow needs to remember that prospect #47 was qualified on Tuesday, drafted on Wednesday, reviewed Thursday, sent Friday — and if the Wednesday step depends on Tuesday's output existing somewhere durable — CC isn't the right shape. You need a state store the agents read from and write to, and you need an orchestrator that survives `Ctrl-C`.
+
+**Signal three: deterministic orchestration that survives a process restart.** Cron fires at 3 AM, the runner crashes at 3:04, you come in at 9 — what happens? In CC, the answer is "you start over." In a framework with a state machine and a checkpoint, the answer is "the workflow resumes at the last completed node." That's not a luxury when you're running customer-facing work overnight; that's the whole reason you're doing this.
+
+When you hit two of three, stop adding agents to CC and start drawing the graph.
+
+<Callout type="note">
+The graduation isn't a rejection of CC. CC is still where you prototype the agents, still where you test prompts, still where you ship the day-driver work in the same repo. The framework is what runs the production graph after CC has helped you design it. Most of my workflows live their first week in CC, then move to CrewAI or LangGraph when the contract gets sharp enough to encode.
+</Callout>
+
+## CrewAI — the handoff pattern
+
+CrewAI is what I reach for when the workflow shape is "team of specialists, each with one job, results passed down a chain." It's good at sequential and hierarchical patterns, weaker at branching state machines. The mental model is a relay race — each agent runs its leg, hands the baton, sits down.
+
+The deal-research workflow, in roughly forty lines:
+
+```py
+from crewai import Agent, Task, Crew, Process
+
+researcher = Agent(
+    role="Company researcher",
+    goal="Pull recent funding, hiring, and product signal for the target company",
+    backstory="You read Crunchbase, the company blog, and recent LinkedIn posts.",
+    tools=[crunchbase_tool, linkedin_tool, blog_scraper_tool],
+)
+
+qualifier = Agent(
+    role="ICP qualifier",
+    goal="Score the company against the Belkins ICP and decide go/no-go",
+    backstory="You know the ICP cold — 50-500 employees, B2B SaaS, US/UK, post-Series-A.",
+    tools=[icp_scorer_tool],
+)
+
+drafter = Agent(
+    role="Outreach drafter",
+    goal="Write a 3-paragraph outreach email tied to the research signal",
+    backstory="You write in Vlad's voice — punchy, lowercase, no corporate hedging.",
+)
+
+reviewer = Agent(
+    role="Voice reviewer",
+    goal="Rewrite paragraph 2 of the draft to land sharper, kill any adverbs",
+)
+
+sender = Agent(
+    role="Send orchestrator",
+    goal="Queue the approved email through Customer.io with a Tuesday 9 AM send",
+    tools=[customerio_tool],
+)
+
+research_task = Task(description="Research {company}", agent=researcher, expected_output="3-bullet signal brief")
+qualify_task = Task(description="Qualify against ICP", agent=qualifier, context=[research_task])
+draft_task = Task(description="Draft email", agent=drafter, context=[qualify_task, research_task])
+review_task = Task(description="Sharpen voice", agent=reviewer, context=[draft_task])
+send_task = Task(description="Queue send", agent=sender, context=[review_task])
+
+crew = Crew(
+    agents=[researcher, qualifier, drafter, reviewer, sender],
+    tasks=[research_task, qualify_task, draft_task, review_task, send_task],
+    process=Process.sequential,
+)
+
+result = crew.kickoff(inputs={"company": "Acme Corp"})
+```
+
+The `context=[...]` parameter is the whole game. Each task declares what it depends on. The framework wires the handoff. There's no shared scratch file because there's no shared scratch file — the researcher's output gets passed to the qualifier's prompt as a structured field, not as a file the qualifier has to remember to read. That's the contract CC's subagent system doesn't enforce.
+
+What CrewAI is bad at: anything with a loop ("review until score > 8"), anything with conditional branching ("if qualified, draft; if not, log and skip"), anything where the same agent runs multiple times against different inputs in the same workflow. The moment you need that, you're in LangGraph territory.
+
+## LangGraph — the state machine pattern
+
+LangGraph is what I reach for when the workflow has branches, loops, or conditional routing. It's a state graph — nodes are agents (or pure functions), edges are transitions, the state is a typed object every node reads and writes. Verbose, more boilerplate, but it survives complex shapes.
+
+The Folderly deliverability-triage workflow, sketched in about thirty lines:
+
+```py
+from typing import TypedDict, Literal
+from langgraph.graph import StateGraph, END
+
+class TriageState(TypedDict):
+    domain: str
+    spam_score: float
+    blacklist_hits: list[str]
+    fix_plan: str
+    severity: Literal["low", "medium", "high"]
+
+def measure_spam(state: TriageState) -> TriageState:
+    state["spam_score"] = call_postmark_score(state["domain"])
+    return state
+
+def check_blacklists(state: TriageState) -> TriageState:
+    state["blacklist_hits"] = call_blacklist_scanner(state["domain"])
+    return state
+
+def classify_severity(state: TriageState) -> TriageState:
+    state["severity"] = "high" if state["spam_score"] > 7 or len(state["blacklist_hits"]) > 2 else "medium" if state["spam_score"] > 4 else "low"
+    return state
+
+def draft_fix_plan(state: TriageState) -> TriageState:
+    state["fix_plan"] = call_claude_with_state(state)
+    return state
+
+graph = StateGraph(TriageState)
+graph.add_node("measure", measure_spam)
+graph.add_node("blacklist", check_blacklists)
+graph.add_node("classify", classify_severity)
+graph.add_node("plan", draft_fix_plan)
+
+graph.set_entry_point("measure")
+graph.add_edge("measure", "blacklist")
+graph.add_edge("blacklist", "classify")
+graph.add_conditional_edges(
+    "classify",
+    lambda s: "plan" if s["severity"] != "low" else END,
+)
+graph.add_edge("plan", END)
+
+app = graph.compile()
+result = app.invoke({"domain": "acme.com", "spam_score": 0, "blacklist_hits": [], "fix_plan": "", "severity": "low"})
+```
+
+The `add_conditional_edges` line is the move. If severity classifies as `low`, the graph terminates without burning a draft step. If `medium` or `high`, it routes to the planner. That conditional is impossible to express cleanly in CrewAI's sequential or hierarchical shape — you'd end up with a wrapper script that calls the crew twice with different configs, and now you're maintaining a wrapper script.
+
+The state object is the second move. Every node sees the same `TriageState`. There's no implicit context being passed along — every field is typed and visible. When something breaks at 3 AM, the state object is the first thing you log, and it tells you exactly where the workflow was. That's the durability story CC subagents can't tell.
+
+<PullQuote>The orchestration menu is a graduation pattern. Start in CC, leave for CrewAI when the contract sharpens, leave for LangGraph when the graph branches.</PullQuote>
+
+## The Anthropic SDK as the floor
+
+Underneath all of this is the SDK. CrewAI calls the model. LangGraph calls the model. CC calls the model. The model is talking to `anthropic.messages.create` or `openai.chat.completions.create` no matter what wraps it. The frameworks are buying you orchestration, not inference.
+
+When the framework gets in the way — when CrewAI's abstractions don't fit your shape, when LangGraph's verbosity costs more than it saves — drop to the SDK direct. See [Chapter 30](/chapters/30-sdk-direct) for the deep dive on `anthropic` SDK direct, where the patterns and the receipts live. The SDK is the floor. Everything else is a building you put on top of it.
+
+I drop to the SDK about 20% of the time. The other 80% the frameworks are worth their weight, but the 20% is the workflows that didn't fit any framework's mental model and were cheaper to write as 200 lines of explicit Python than to bend a framework around.
+
+## AutoGen — research-strong, prototype-friendly
+
+One paragraph because that's what AutoGen earns at this point. Microsoft Research's framework, conversational multi-agent shape, strong for prototypes and research demos, weaker for production. It has some of the best abstractions for "agents talking to each other in a structured conversation" — agent-to-agent debate, tool-use loops with human-in-the-loop checkpoints — but I haven't shipped a customer-facing AutoGen workflow that survived more than a month. The patterns drift, the API churns, the docs lag. Useful as a thinking tool. Reach for CrewAI or LangGraph when you ship.
+
+## Build-vs-buy table
+
+| Framework | What it's worth | What it costs you | When to leave |
+|---|---|---|---|
+| **Claude Code subagents** | One repo, one task, fast prototype, day-driver work | Filesystem races at 5+ agents, no persistence across sessions | Five-plus agents with handoffs, or persistent state |
+| **CrewAI** | Sequential/hierarchical teams, clean handoff contracts, fast to write | No conditional branching, no loops, weak state model | Workflow has branches, loops, or restart needs |
+| **LangGraph** | State machines, branches, durable workflows, restart-safe | Verbose, more boilerplate, steeper ramp | Graph becomes a DAG-of-DAGs, or you need cross-runtime orchestration |
+| **AutoGen** | Research, prototypes, agent-to-agent conversation patterns | API churn, weak prod story, hard to operate | Anywhere you ship to customers |
+| **Anthropic SDK direct** | Full control, no abstraction tax, easiest to debug | You write the orchestration yourself | Pattern is repeatable enough that a framework saves real lines |
+
+The graduation pattern is the move. Don't pick the framework on day one. Prototype in CC. Promote to CrewAI when the handoff contracts sharpen. Promote to LangGraph when the graph branches. Drop to the SDK when the framework fights the workflow. Each promotion costs roughly a day of refactor — the prompts and the agents survive the transition; the orchestration layer is what gets rewritten. That's a fair trade because the orchestration layer is the thing you're optimizing.
+
+---
+
+The mistake I see most often — and made myself, twice — is picking the heaviest framework on day one because it'll "scale later." LangGraph for a three-agent linear workflow is a punishment. CrewAI for a single-agent script is a punishment. Claude Code for a five-agent stateful pipeline running on a cron is a punishment. The right framework is the one that matches the shape of the work today, with a one-day promotion path to the next one when the shape changes. The orchestrator you don't have to maintain is the orchestrator the framework gives you. The orchestrator you wrote yourself is the one you'll be debugging on a Saturday.

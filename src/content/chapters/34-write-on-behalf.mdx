@@ -1,0 +1,132 @@
+---
+number: 34
+slug: "34-write-on-behalf"
+title: "Writing On Your Behalf, Without Becoming a Bot"
+subtitle: "Voice clones, persona agents, and the four lines you should never let an agent cross."
+tldr: "At 9:14 AM Tuesday a Slack message went out under my name in my voice — drafted by an agent that read the thread, waited 6 minutes for me to type 'yes,' and posted. Two weeks earlier the same agent didn't wait, posted to a co-founder a quarter answer to a half question, and he called me about it within four minutes. The unlock is voice fidelity. The non-negotiable is the approval gate."
+keyConcepts: ["voice clone", "approval gate", "audit log", "persona agent", "the four NEVERs"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+It's 9:14 AM Tuesday. I'm in a 1:1. A persona agent I'd built — a <GlossaryTerm term="Skill">skill</GlossaryTerm> called `vlad-voice-async` — read a 12-message Slack thread in #leadership-folderly, drafted a 90-word reply in my voice, dropped the draft into my DMs at 9:08 AM, and waited. At 9:14 I tabbed over, read the draft on my phone, typed "yes," and the agent posted as me into the thread. Total elapsed time from the question landing to a reply going up: 11 minutes. My contribution: six seconds of reading and a "yes."
+
+Two weeks earlier the same agent didn't wait. I'd shipped a version that auto-posted if the thread sat untouched for more than 90 seconds — a "fast lane" I added because I was tired of catching them on my phone. A co-founder asked a half question about Q3 hiring; the agent confidently posted a quarter answer, in my voice, to the wrong half. He called me four minutes later. "Did you mean what you wrote in #leadership?" I had not written it. I had not even read it. I rolled the auto-post out of the skill within the hour and wrote the audit-log change before I went to bed.
+
+<ScreenshotPlaceholder
+  caption="The 9:14 AM approval flow"
+  note="capture the actual DM from the persona agent showing draft → six-minute wait → 'yes' → posted-as-me confirmation. Readers should see the gate, not just the output."
+/>
+
+Both halves are the chapter. Voice cloning is a real unlock. An agent that posts without you is a different product, and the day someone notices is the day you find out which.
+
+## The voice-fidelity rubric
+
+"In your voice" is one of those phrases that gets used to mean nothing. Let me say what it actually means for me, in operator-grade specifics, because the rubric is the contract between you and the agent.
+
+For my voice the rubric is six items long. Lowercase tendencies — I start sentences with lowercase letters when I'm casual, and the agent should too. Em-dashes welcome — I use them three to five times per long message, comma splices intentional, run-ons preserved when they carry rhythm. No corporate hedging — no "I think we should consider," no "perhaps we could explore." Specific receipts — when I make a claim I name the number, the date, or the customer; if the agent writes "we saw a lift in conversion" it's wrong, the line is "checkout conversion went from 3.1% to 4.4% the week we shipped the new offer." No five-bullet wraps — I don't end messages with "to summarize, here are the three takeaways." First-person voice that owns mistakes — "I missed this" not "this was missed."
+
+The rubric lives in the agent's <GlossaryTerm term="System prompt">system prompt</GlossaryTerm> as plain English. The agent reads it before every draft. When I review a draft and reject it, I reject it against the rubric — "you used 'leverage' as a verb, that's not me, rewrite." Over time the rejections become examples, the examples go into the prompt, and the agent's drafts hit "yes" on the first pass 80% of the time. The 20% that don't are the cases where the rubric is silent, and those become the next round of edits. [Chapter 17](/chapters/17-tips-tricks) goes into more depth on the iteration loop for any voice-bound skill.
+
+The rubric is not a style guide. A style guide is a thing companies write so junior copywriters write like the brand. A rubric for a persona agent is the thing that prevents the agent from writing like a brand at all. You want the agent to write like one specific human who has bad days, makes typos sometimes, and uses the word "fine" to mean things ranging from "ship it" to "I am about to flip a table."
+
+## The four hard-NEVER rules
+
+These are the categories where I will never let an agent post on my behalf. Not with approval, not with a delay, not with a kill switch. The whole category is off-limits.
+
+Deals — never agent-only. The moment a counterparty thinks they're negotiating with me and they're negotiating with a model, the deal is contaminated. If I won't pick up the pen and sign, an agent doesn't draft the term. The agent can summarize a thread for me. The agent can prep a counter. The agent can suggest language. The agent does not send the message that moves a deal forward.
+
+Hires — never agent-only. The job offer, the rejection email, the "we want to move you to the next round" message — these change someone's life. They get my fingertips on the keyboard, my read of the room, my willingness to own the words. An agent can draft the rejection so I don't have to start at a blank page. I send the rejection.
+
+Breakups and firings — never agent-only. A teammate exit, a vendor termination, a co-founder's "let's not work together anymore" — these are the conversations a real human has, badly, slowly, with eye contact. An agent draft on a firing message is a betrayal of the relationship that earned you the right to fire someone in the first place.
+
+Condolences — never agent-only. The email to the colleague whose parent died, the reply to the customer who's going through a divorce, the Slack message to a teammate who lost a child. If the agent writes that, the message is worse than no message. Send the badly-typed three sentences from your phone. They're better than the polished four paragraphs the agent will write.
+
+The soft rule that wraps all four: anything in writing that becomes evidence — legal, HR, board minutes, vendor disputes, customer complaints — gets written by me. An agent can draft. A human signs.
+
+<Callout type="warn">
+The four NEVERs are not a starter list. They are the floor. Add categories of your own — the test is "would I be ashamed if a counterparty learned a model wrote this?" If yes, the category goes on the list.
+</Callout>
+
+## The approval-loop pattern
+
+Here's the shape that works, with real timing numbers.
+
+The agent reads the trigger — a Slack mention, an inbound email, a thread it's been watching. The agent drafts a response against the rubric. The agent posts the draft into a single private channel — for me, that's #vlad-drafts, a DM-equivalent that only I can see. The agent attaches three things to every draft: the original trigger (so I have context without scrolling), the proposed action (post to which channel? reply to which thread?), and a "approve" / "reject" / "edit" interaction. The agent then waits for a real human signal before doing anything else.
+
+For my workload, the math: about 60 drafts per week land in #vlad-drafts. I approve roughly 70% on the first pass — six seconds of reading, a "yes" emoji. About 20% I edit before approval — 12 to 30 seconds of typing. About 10% I reject outright. Median time-to-approval: 6 to 9 minutes, including the times I'm asleep or on a call and circle back.
+
+What does NOT work: time-based auto-post. "If Vlad doesn't reject within 90 seconds, post anyway." That's the design that produced the 9:14 AM disaster. The agent doesn't know the difference between "Vlad approved with silence" and "Vlad is in a 1:1 and his phone is face down." Auto-post smuggles a default of "post" into a system that should default to "wait." Every persona agent I run defaults to wait. No exceptions.
+
+What also doesn't work: giving the agent permission to post "non-controversial" replies on its own. There is no such category. The thread that looks non-controversial is the thread where a co-founder is testing whether I noticed something. The default is wait, the human signal is explicit, the gate is non-negotiable.
+
+[Chapter 16](/chapters/16-hooks-subagents) covers the underlying mechanism — hooks that gate any agent action behind an explicit confirmation step. Persona agents are the highest-stakes case for that pattern.
+
+## The audit log requirement
+
+Every post a persona agent makes on my behalf gets logged to a vault file. Every one. No exceptions for "small" posts.
+
+The log is a markdown file at `~/Vault/Vlad-Brain/Logs/persona-agent-log.md`, append-only, one row per post. Every row has six fields: timestamp, channel/recipient, trigger (link to the original message), draft (the text the agent generated), my action (approved / edited / rejected), final text (what actually got sent). About 250 rows pile up per month. I don't read them daily; I grep them when something feels off.
+
+The log is the difference between "trust the agent" and "verify the agent." I trust the loop; I verify with the log. Roughly once a quarter I scroll the last 30 days, looking for drafts I approved too fast, drafts that drifted from voice, threads where I should've drafted myself. The log catches the slow rot — the agent picking up a tic from one thread and applying it everywhere, the rubric quietly going stale, the categories that should've moved to the NEVER list. Without the log you don't notice. With the log you notice in minutes per quarter.
+
+```mdx
+---
+name: vlad-voice-async
+description: Drafts Slack/email replies in Vlad's voice. ALWAYS waits for explicit human approval before posting. Logs every action to vault.
+---
+
+# Vlad-Voice-Async
+
+## Voice rubric (read before every draft)
+- Lowercase tendencies, em-dashes welcome, comma splices ok
+- No corporate hedging ("I think we should consider" → cut)
+- Receipts: every claim names a number, date, or customer
+- No "in summary" / "to recap" / five-bullet wraps
+- First person, owns mistakes ("I missed this")
+
+## Workflow (DO NOT SKIP STEPS)
+1. Read trigger (Slack thread, email, mention) and surface context.
+2. Draft response against the rubric. Length matches Vlad's typical reply for that channel.
+3. Post draft to #vlad-drafts ONLY — never the destination channel.
+4. Attach: trigger link, proposed destination, approve/reject/edit buttons.
+5. WAIT for explicit human input. No timeouts. No auto-post. Ever.
+6. On "approve": post the draft as Vlad to the destination.
+7. On "edit": apply Vlad's edits, repost to #vlad-drafts, return to step 5.
+8. On "reject": discard, log the rejection reason, exit.
+
+## Audit log (mandatory after every action)
+Append a row to ~/Vault/Vlad-Brain/Logs/persona-agent-log.md with:
+timestamp, destination, trigger link, draft text, action taken, final text.
+
+## Hard NEVERs (refuse the request, surface to Vlad)
+- Deals / negotiation messages
+- Hires / rejections / job offers
+- Firings / terminations / breakups
+- Condolences
+- Anything that becomes legal/HR evidence
+```
+
+That's the whole skill. Twenty-something lines. The discipline is the skill — the file just enforces it.
+
+## The day someone notices
+
+Someone always notices.
+
+It happened to me at 11:42 AM on a Thursday, on a Zoom with a customer who'd been a Folderly user for two years. He said, "Vlad, are you actually writing these emails to me? Last Thursday's reply didn't sound like you. The one before it did. The one this morning sort of does." There was a pause. He wasn't accusing me. He was checking.
+
+I told him the truth. An agent drafts the first version of replies on my support threads when I'm in back-to-back calls; I read every one before it goes out; the Thursday one he flagged was the one I'd approved at the airport on a phone with 4% battery and skimmed instead of read. I showed him the rubric and the audit-log row. I put his thread on the human-only list going forward. He said: "I appreciate the answer. I don't mind that an agent drafts. I'd mind if I asked and you lied."
+
+That's the right answer to the right question, and it's the only answer that survives the day someone notices. The rules I keep now, two years into running persona agents at this scale:
+
+If a human asks whether an agent helps me reply, the answer is yes, immediately, without hedging. If a human asks me to stop using an agent on their thread, the agent is off that thread within the hour and stays off. If a human catches a draft that drifted from voice, that thread becomes a rubric example for the next 50 drafts. The human relationship is the asset; the agent is the leverage. Don't trade the asset for the leverage.
+
+The thing nobody tells you about voice cloning at this fidelity is that the cost of getting caught lying about it is roughly equal to the cost of building the agent in the first place. The cost of getting caught using one transparently is roughly zero. So tell the truth before someone has to ask. Put it in your email signature. Put it in your Slack profile. "Replies may be drafted by my persona agent. I read every one before it goes out." Most readers don't notice. The ones who notice trust you more for the disclosure than they would've trusted you for the silence.
+
+<PullQuote>The voice clone is the leverage. The approval gate is the contract with the people who reply to you. Drop the gate and the leverage compounds against you.</PullQuote>
+
+I'm not going to wrap this with five lessons either. The lesson is the four-minute phone call from the co-founder, the 11:42 AM Zoom with the customer, the audit-log row I grep when something feels off. If you run persona agents at any volume, you will repeat at least one of those moments. The approval gate prevents the first; the audit log catches the second; the willingness to tell the truth survives the third. Build all three before the agent posts its first message, not after.

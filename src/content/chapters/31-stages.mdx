@@ -1,0 +1,97 @@
+---
+number: 31
+slug: "31-stages"
+title: "The Stages: Ideation to Deploy"
+subtitle: "Six stages. One Saturday. The order matters more than the speed."
+tldr: "I caught myself painting trim before the foundation was poured, on a Saturday, on my own time, on a project I cared about. Six stages — Ideation, Foundation, Creation, Polishing, Security, Deploy — and the order is the whole game. Skip one and the Saturday dies."
+keyConcepts: ["stages", "foundation-first", "polishing trap", "deploy gate", "weekend builds"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+import StagesFlow from '@/widgets/StagesFlow.tsx';
+
+Saturday. 8:42 AM. Idea logged in Apple Notes — "daily voice brief, audio version of the morning Slack canvas, plays in AirPods while I make coffee, twelve minutes max." Coffee not yet poured. Dog still asleep. I felt clever.
+
+By 9:15 AM I had ElevenLabs voices auditioned, three of them, side by side in a comparison doc. I had picked a tone. I had a Notion page titled "Daily Brief — Voice Identity v1" with bullet points about cadence, breath pacing, and when to laugh. I had not yet written a single line that fetched the brief content. I had no schema for what a "daily brief" payload even looked like. I was decorating a room I hadn't built.
+
+By 9:48 AM I had to stop and admit it. I was Polishing. I had skipped Foundation. I was four stages ahead of where I actually was, on a hobby project, on my one good Saturday this month.
+
+I closed the Notion page. I poured the coffee. I went back to Stage 2 and wrote the data contract: what the morning brief is, where it comes from, what shape it lands in, what failure looks like. Forty minutes. Then Stage 3 — the actual generation pipeline. Then, only then, Polishing — the voice picking, the cadence tuning, the bit where I laughed at my own jokes through Cat's voice clone. By 4:20 PM the daily voice brief was running on a <GlossaryTerm term="Cron">cron</GlossaryTerm> and shipping into a private podcast feed.
+
+The lesson wasn't "I worked hard." The lesson was: the order saved my Saturday. Skipping stages is faster on the way out and cataclysmic on the way back.
+
+<StagesFlow client:visible />
+
+## Stage 1 — Ideation
+
+What gets produced: one paragraph, written somewhere durable, that says what the thing is, who it's for, and why now. Not a PRD. Not a Notion database. A paragraph. If you can't write the paragraph in five minutes, the idea isn't ready — it's a vibe.
+
+The test that says you're ready for Foundation: you can read the paragraph to a smart friend and they don't ask "wait, what does it actually do?" If they ask that, you're still in Ideation. Go back. Get specific.
+
+The failure mode if you skip it: you build for three hours and discover at hour four that you've solved the wrong problem. Or worse — there is no problem, you just liked the idea of building. I've shipped beautiful tools that nobody used, including me, and every single one had a missing or hand-wavy paragraph at Stage 1.
+
+Concrete example: the daily voice brief paragraph said "audio version of my morning Slack canvas, generated nightly, lands in a private podcast feed I subscribe to in Apple Podcasts, plays in my AirPods while I walk the dog at 7 AM." Specific input. Specific delivery channel. Specific moment of consumption. That paragraph killed three of my own follow-up questions before they cost me an hour each.
+
+## Stage 2 — Foundation
+
+What gets produced: the data contract and the runtime contract. What goes in. What comes out. Where it runs. What it talks to. No UI. No prompts. No prettiness. The plumbing schematic on graph paper, in the language of types and endpoints.
+
+The test that says you're ready for Creation: you can draw the system on a napkin in under sixty seconds and a backend engineer wouldn't laugh at you. If you can't draw it, you don't know what you're building yet — you're going to discover the architecture during construction, which is the most expensive way to discover anything.
+
+The failure mode if you skip it: you write the prompt before you know what data the prompt needs. You wire the UI before you know what state the UI represents. You ship something that works in the demo and breaks the second a real input arrives. This is the stage that separates weekend toys from things that survive Monday morning.
+
+Concrete example: friday-wrapup needed a Foundation pass before any prompt got written. What sources? HubSpot pipeline deltas, Stripe revenue, Ahrefs keyword movement, Slack signal from leadership channels, calendar archaeology. What output? A Slack canvas, 700 words, dropped in #leadership at 5 PM Friday. What runtime? A scheduled task on the Cowork side, not a Claude Code job. What failure mode? Source down, partial data, fall back to "skipped this section" copy rather than crash. Forty minutes of Foundation prevented six hours of debugging the wrong prompt later.
+
+## Stage 3 — Creation
+
+What gets produced: the working core. The thing that does the thing. Ugly, wired, end-to-end. It runs. It produces something. It is not pretty. It is not safe. It is not deployed. It works once, on your laptop, with your fingers on the keyboard.
+
+The test that says you're ready for Polishing: you ran it twice in a row and got two reasonable outputs. Not identical — reasonable. The pipeline holds shape under a real input and a slightly different real input.
+
+The failure mode if you skip it: you optimize before you have the thing. Premature abstraction. Premature framework choice. Premature monorepo. You build the cathedral around a chapel that doesn't exist yet. The first version of every working system I've ever built was embarrassing. The embarrassing version is the unlock.
+
+Concrete example: the morning briefing's Creation stage was 180 lines of TypeScript that hard-coded my user ID, hit four MCP servers in sequence, dumped the output to stdout, and looked like a college freshman wrote it. It worked. I ran it three times. It produced a usable brief each time. That was the gate. Everything else came after.
+
+<PullQuote>Skipping stages is faster. Skipping stages is also how Saturdays die.</PullQuote>
+
+## Stage 4 — Polishing
+
+What gets produced: the version a person who isn't you can read, run, or look at without flinching. Voice tuned. Output formatted. Edge cases handled. The "Slack-canvas-pretty" version. The "I'd actually paste this in front of my COO" version.
+
+The test that says you're ready for Security: a teammate ran it once, with no instructions from you, and produced a result that didn't make them ask follow-up questions. Or, the output landed in the channel it was supposed to land in and nobody DM'd you to ask what it was.
+
+The failure mode if you skip it: the tool works for you and only you. You become the bottleneck. You can't hand it off. You can't scale it. You ship a private skill instead of a shared one and you're the one paged when it misbehaves at 4 AM.
+
+Concrete example: the daily voice brief's Polishing stage was two and a half hours of voice-pacing tuning, intro/outro snippets, and adding the line "and that's the brief — go drink water" because every brief without a sign-off felt clipped. None of that work was Foundation. None of it would have made sense before Stage 3. But once Stage 3 was running, every minute of Polishing compounded.
+
+## Stage 5 — Security
+
+What gets produced: the version that doesn't get you fired. Secrets in env vars, not in source. <GlossaryTerm term="Permissions">Permission</GlossaryTerm> scopes pulled tight. <GlossaryTerm term="Prompt injection">Prompt injection</GlossaryTerm> surface mapped. Inputs validated. Outputs inspected before they hit a public channel. Logs that don't leak the customer data the agent just read.
+
+The test that says you're ready for Deploy: you handed the spec to a security-minded teammate and they didn't immediately point at three things. Or, you ran the threat-model exercise from [Chapter 9](/chapters/09-dont-get-owned) and the answers didn't make you sweat.
+
+The failure mode if you skip it: you ship a Saturday tool to a Tuesday environment and the first prompt-injection test from a curious coworker exfiltrates your HubSpot pipeline. Or your <GlossaryTerm term="Cron">scheduled task</GlossaryTerm> writes to a public channel something it should have written to a private one. Both of these have happened to me. I will not tell you when.
+
+Concrete example: friday-wrapup's Security stage was a thirty-minute pass — Slack token scoped to read leadership channels and write to one specific channel, no broader. Stripe key was a restricted key, read-only, no write paths. The output was reviewed by Claude itself with a "does this contain anything I shouldn't be sending to a 14-person Slack channel?" pass before posting. Cheap. Fast. Saved me the worst case.
+
+<Callout type="warn">Security isn't the last stage because it's optional. It's the last stage because it's the gate to Deploy. A tool that fails Stage 5 doesn't ship — it goes back to Stage 4 with a list of fixes. There's no "ship now, secure later" lane. The lane doesn't exist; it's the lane to a Slack thread you never want to read.</Callout>
+
+## Stage 6 — Deploy
+
+What gets produced: the thing runs without you. Cron'd. Hosted. Logged. Monitored. It produces output on its own schedule, in the channel it's supposed to land in, with you reading it as a consumer rather than babysitting it as a creator.
+
+The test that says you're done: you didn't touch it for seven days and it kept working. Or it broke once, alerted you, and the alert told you exactly what broke. Either is acceptable. Both are graduation.
+
+The failure mode if you skip it: the tool exists only when you're at your laptop. It's not a system, it's a habit. The minute you take a Saturday off, the brief doesn't generate, the wrap-up doesn't fire, the alert doesn't ring. You built a worker and then chained it to your shoulder.
+
+Concrete example: the morning briefing was deployed as a scheduled task at 5:30 AM ET, output to one Slack DM, with a fallback that posts "morning brief delayed, check upstream" if the run errors. I read the brief at 6:30 over coffee. I haven't touched the code in eleven weeks. That's Deploy. That's the finish line.
+
+## The order is the whole product
+
+Every time I skip a stage, I pay the bill in the wrong currency. Skip Ideation, I pay in built-but-pointless. Skip Foundation, I pay in rewrites. Skip Creation, I pay in over-engineered emptiness. Skip Polishing, I pay in won't-hand-off. Skip Security, I pay in the worst kind of incident. Skip Deploy, I pay in a habit that masquerades as a system. The Saturday doesn't fail because I worked too slowly. The Saturday fails because I worked the wrong shape.
+
+I'm not going to give you a five-bullet checklist. The shape is the point. Six stages, in order, every time, even on a hobby project, even on a Saturday, even when you feel clever and the Notion page is calling and the voice picker is right there. Build the foundation. Pour it before you paint the trim. The trim will still be there in two hours, and the wall will hold.

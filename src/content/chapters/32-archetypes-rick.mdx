@@ -1,0 +1,87 @@
+---
+number: 32
+slug: "32-archetypes-rick"
+title: "How to Build Rick"
+subtitle: "OpenClaw, NemoClaw, Hermes — pick a preset, the agent shows up dressed for the job."
+tldr: "I onboarded a Belkins SDR onto a NemoClaw in three days — prior baseline was eleven. Rick is the archetype layer: pre-shaped agents that show up knowing what kind of job they're for. Pick the preset, plug in your accounts, ship. Graduate to a custom subagent later, when the preset starts costing you more than it saves."
+keyConcepts: ["archetypes", "OpenClaw", "NemoClaw", "Hermes", "Rick presets"]
+readingMinutes: 9
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+import ArchetypePicker from '@/widgets/ArchetypePicker.tsx';
+
+Tuesday, 2:14 PM. New SDR at Belkins, day three. She'd been onboarded onto a NemoClaw — a Rick preset, sales-flavored, pre-wired to our Apollo, Gmail, HubSpot, and the company's voice doc. Slack DM lands in my inbox: "Hey, this is going to sound dumb, but I think it's working. I'm not asking it how to prompt anymore. I'm just asking it to do things and it's doing them."
+
+That message is the whole chapter.
+
+Prior baseline for SDR onboarding at Belkins was eleven days from "first login" to "sending sequences without a manager in the loop." Three days, with a NemoClaw, gets you to the same place. The number isn't the unlock — the unlock is what she stopped doing. She stopped asking how to talk to the agent. She started talking to it like a coworker who already knew the job.
+
+That's what archetypes are for. They are the difference between handing someone a Swiss Army knife and handing them a screwdriver labeled "for screws." Both work. One requires a tutorial. One does not.
+
+## The archetype taxonomy
+
+Rick ships a small number of named archetypes. Each one is a pre-shaped <GlossaryTerm term="Subagent">subagent</GlossaryTerm> with a system prompt, a tool allowlist, and a small set of skills baked in. You don't write any of it. You pick the archetype, connect your accounts, you're moving.
+
+**OpenClaw.** Research and synthesis. Reads broadly, summarizes, cites, compares. What it's for: market scans, competitive intel, "what's everyone saying about X this week," desk research that used to eat half a Tuesday. What it's NOT for: writing in your voice, sending things to customers, anything that touches a CRM. Give an OpenClaw write access to HubSpot and you'll regret it by Thursday.
+
+**NemoClaw.** Sales and outreach. Sequences, personalization, reply triage, deal-stage hygiene. What it's for: the SDR job, the AE follow-up, the "we lost touch with this account, get me back in" workflow. What it's NOT for: deep technical research, code review, anything where the answer needs to be defensible in front of an engineer. NemoClaws are calibrated to ship, not to think.
+
+**Hermes.** Ops and messaging. Internal Slack, status updates, briefings, scheduling negotiations, the connective tissue work. What it's for: the morning brief, the "tell the leadership team I'm running late and reschedule the 2 PM," the day-to-day messaging routing that lives between humans. What it's NOT for: anything customer-facing, anything in your voice for external audiences.
+
+There are a few smaller archetypes — Atlas for project management, Pixel for design and marketing assets, Ledger for finance reads — and the catalog grows. Pattern is the same in every case: pre-shaped, opinionated, narrow on purpose. You don't get one tool that does everything. You get the right tool, named.
+
+## The install path
+
+You go to **meetrick.ai/install**. You click the archetype you want. You authenticate the connectors it asks for — that's the OAuth dance, three or four screens, scoped permissions you can review before you accept. NemoClaw asks for Gmail, Apollo, HubSpot. OpenClaw asks for Drive and a search provider. Hermes asks for Slack and Calendar. Each archetype's permission list is short on purpose; if it asked for everything, it'd be a Swiss Army knife again.
+
+Click through. Two minutes. The first prompt is already written for you — "what would you like me to do today?" — but you don't have to use it. You can ignore the chat entirely and just let the archetype's <GlossaryTerm term="Cron">scheduled tasks</GlossaryTerm> start firing. NemoClaw starts triaging your inbox at 7 AM. OpenClaw drops a competitive scan in your DMs every Monday. Hermes posts a morning brief at 6:30. None of those required a prompt. They came pre-wired.
+
+The first time I installed a NemoClaw on my own laptop, I installed it at 11:47 AM, ran my first real sequence by 12:08 PM, and had a reply in by 1:02 PM. Twenty-one minutes from "click" to "first useful output." The previous record on my own custom-built sales agent was a weekend.
+
+<ArchetypePicker client:visible />
+
+## The graduation pattern
+
+Rick is training wheels. That's not a knock — training wheels are how most riders learn to ride. The honest move is acknowledging it.
+
+You start with a NemoClaw because it works on day one. You stop being amazed by it around week three. By week six you've found three things you wish it did differently — your voice, your specific objection-handling pattern, your particular way of qualifying. Around then you graduate. You build a custom <GlossaryTerm term="Subagent">subagent</GlossaryTerm> in <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> using the patterns from [Chapter 16](/chapters/16-hooks-subagents). You port your NemoClaw's behavior, plus the three deltas, plus a hook or two. You've gone from preset to custom. The training wheels come off.
+
+Most riders never take them off.
+
+That's not a failure. That's the right answer for most people. The cost of running a NemoClaw is lower than the cost of building and maintaining a custom subagent for most teams, most of the time. The graduation pattern is "available, not mandatory." You only build custom when the preset starts costing you more than it saves — usually because your workflow has a specific edge the preset can't reach, or because you're scaling past the preset's pricing tier.
+
+<PullQuote>Rick is training wheels. Most riders never take them off, and that's the right answer for most of them.</PullQuote>
+
+## Cost model
+
+Realistic monthly cost bands, in the order you should think about them. Verify on **meetrick.ai/pricing** because these tiers move and I am not going to print numbers that go stale on you.
+
+Rick Pro tier sits in the low-three-figures-per-seat-per-month range for a single archetype with reasonable usage caps. Multi-archetype bundles run higher. Enterprise tier with custom connectors and SSO sits where you'd expect — talk to sales, but it's the right number for what it does.
+
+Now compare. **Hiring an SDR**: a junior SDR in the US, fully loaded with benefits and tooling, runs $80K-$120K a year. That's $6,600 to $10,000 a month. A NemoClaw at Pro tier is roughly 2-4% of that cost, with no ramp-up time, no PTO, no context loss when they leave. That's not a replacement for hiring — a NemoClaw doesn't make calls, doesn't go to dinner with prospects, doesn't read a room. It's a force-multiplier on the SDR you do hire. One human SDR plus one NemoClaw outperforms two human SDRs in the workflows where the NemoClaw is calibrated.
+
+**Running raw API calls** for the same use case, building the equivalent agent from scratch on top of the Anthropic API: you'll pay less in pure inference cost, maybe a third of the Pro tier, but you'll spend the difference and more on the engineer who builds and maintains it. I burn between 3 and 10 billion <GlossaryTerm term="Token">tokens</GlossaryTerm> a month across my whole stack and the math still favors letting Rick handle the archetypes I don't want to babysit. Build custom for the things that are core. Buy the preset for the things that are necessary.
+
+<Callout type="tip">If you're a team of one or two, default to Rick. If you're a team of fifty, run a portfolio — Rick presets for the long tail of workflows, custom subagents for the three or four workflows that are core to your competitive moat. The middle case — team of ten — is where the math gets interesting and you should pilot both for a quarter before deciding.</Callout>
+
+## When NOT to use Rick
+
+Three cases, and they're the ones that bite hardest if you ignore them.
+
+**Narrow scope, deep weirdness.** If your workflow is one specific niche thing — a regulatory filing pipeline for a Canadian crypto exchange, a contract-clause-redlining flow for German maritime law, a translation QA loop for a single vertical — the archetype shape is going to fight you. The preset's opinions will be wrong for your edge case. Build custom from the start. The training wheels don't fit.
+
+**Custom auth, non-standard data flow.** Rick's connectors cover the long tail of common SaaS — HubSpot, Salesforce, Apollo, Gmail, Slack, Drive, Notion, Stripe, the usual two dozen. If your stack runs on a homegrown CRM, an internal tool with no public API, or a SOC2-mandated middleware layer that nothing else integrates with — Rick will look at you and shrug. Build custom. Use the patterns from [Chapter 12](/chapters/12-connectors-mcp) on <GlossaryTerm term="MCP">MCP</GlossaryTerm> connectors and ship your own.
+
+**Proprietary data flow, regulatory ceiling.** Anything where the data leaving your infrastructure is itself the risk — patient records, classified work, M&A communications, anything under attorney-client privilege. The Rick architecture is fine for most enterprise security postures, but if you have a "data does not leave the building" rule, the right answer is a self-hosted custom agent, not a managed preset. The cost-benefit math changes when the cost includes "the compliance officer asks you a question you can't answer."
+
+For everything else — the sales motion, the research, the ops messaging, the morning brief, the marketing-asset generation, the project status updates — the preset is the move. The NemoClaw doesn't have your company's exact voice. You'll tune it. The OpenClaw doesn't read your specific tier of competitive intel sources. You'll add them. The defaults are not the destination. They're the runway.
+
+## What three days bought
+
+The Belkins SDR who DM'd me on day three didn't ship more sequences than her predecessor. She didn't write better copy than her predecessor. She was three days in. What she had was a clean handle. The agent showed up wearing the right uniform and she could see, immediately, what it was for and what it wasn't. Her first day wasn't spent learning the tool. It was spent doing the job. Her second day wasn't spent rewatching a Loom on prompt engineering. It was spent reading replies and running a follow-up cadence. The shape of the agent did the teaching the tutorial would have done, except the shape was free and the tutorial would have cost her two days of focus.
+
+That's the whole pitch. The archetypes are not magic. They're a uniform. Pick the archetype that fits the work. Run it. Tune it. Outgrow it. Maybe build the custom version someday. Maybe never. The riders who keep the training wheels on aren't worse riders. They're riders who decided the wheels weren't slowing them down. That's a math problem, not a pride problem, and the math is mostly on the side of the preset.
