@@ -1,0 +1,127 @@
+// Edition timeline. Update when shipping a new edition.
+
+export type ChangelogEntry = {
+  edition: string;
+  date: string;        // ISO yyyy-mm-dd
+  tagline: string;
+  shipped: string[];
+  receipts?: { label: string; value: string }[];
+};
+
+export const CHANGELOG: ChangelogEntry[] = [
+  {
+    edition: 'Edition 4',
+    date: '2026-05-11',
+    tagline: 'Retitled for navigation. Voice survived.',
+    shipped: [
+      'All 36 chapter titles rewritten — topical-primary, with question form on 9 chapters where intent shape beats subject shape',
+      'Old hype titles preserved as subtitles ("The Day I Killed My Tabs" now sits below "AI as an Operating System")',
+      'Cmd-K resolves "cron" → Scheduled Tasks, "browser" → Browser Agents with Playwright, "permissions" → When to Skip Permissions',
+      'scripts/apply-titles.py — atomic re-runnable rewrite of all 36 frontmatters + chapters.ts. Re-run any time the map changes.',
+    ],
+    receipts: [
+      { label: 'Chapters retitled', value: '36' },
+      { label: 'Time to scan TOC', value: '~6s → ~2s' },
+      { label: 'Voice lines lost', value: '0' },
+    ],
+  },
+  {
+    edition: 'Edition 3.5',
+    date: '2026-05-09',
+    tagline: "Repo flipped private. Site stayed public.",
+    shipped: [
+      'Repo visibility flipped to PRIVATE (Belkins on GH Pro tier)',
+      'Issues, Wiki, Projects, Discussions disabled — attack surface reduced',
+      'SECURITY.md committed with vulnerability reporting + ops rules',
+      '.gitignore hardened — .pem, .key, .aws/, .kube/, secrets/, .vercel',
+      'Vercel fallback config committed — dual-target astro.config.mjs reads DEPLOY_TARGET env',
+      'Vercel security headers baked (HSTS, X-Frame-Options DENY, X-Content-Type-Options, Permissions-Policy)',
+    ],
+    receipts: [
+      { label: 'Repo visibility', value: 'PUBLIC → PRIVATE' },
+      { label: 'Site downtime during flip', value: '~3 min (Pages re-enable required)' },
+      { label: 'Surfaces disabled', value: '4' },
+    ],
+  },
+  {
+    edition: 'Edition 3',
+    date: '2026-05-07',
+    tagline: 'Closed the original brief. Six new chapters, two new pages.',
+    shipped: [
+      'Ch 31 — The Stages: Ideation → Foundation → Creation → Polishing → Security → Deploy',
+      'Ch 32 — How to Build Rick (OpenClaw, NemoClaw, Hermes archetypes)',
+      'Ch 33 — Browser Agents with Playwright (login, click, scrape, post)',
+      'Ch 34 — Persona Agents and the Four NEVERs',
+      'Ch 35 — Codex × Claude Code (day shift, night shift)',
+      'Ch 36 — Beyond Claude Code (CrewAI, LangGraph, SDK)',
+      'StagesFlow widget (Ch 31) — six clickable stages with artifact + ready test + failure mode',
+      'ArchetypePicker widget (Ch 32) — 3-question intake → recommended Rick archetype + install command',
+      '/day-zero — literal first 30 minutes with 12 localStorage-persisted checkboxes',
+      '/sections — chapters grouped by General / Claude / Security / AI Agents / Building / Team+Tier',
+    ],
+    receipts: [
+      { label: 'Chapters added', value: '+6 (30 → 36)' },
+      { label: 'Widgets added', value: '+2 (12 → 14)' },
+      { label: 'New pages', value: '+2 (/day-zero, /sections)' },
+    ],
+  },
+  {
+    edition: 'Storytelling layer',
+    date: '2026-05-08',
+    tagline: '36 islands became one six-act journey.',
+    shipped: [
+      '/how-to-read — ~1,100-word prologue. Who this is for, the reframe, the journey, three ways to use the book.',
+      '/journey — 6-part narrative arc (Reframe → Memory → Workshop → Discipline → Building → Frontier)',
+      '/questions — 18 questions Vlad answers most weeks, each with short answer + chapter pointers',
+      'Part pill on every chapter hero — readers know where they are in the arc',
+      'Chapter footer transitions detect part boundaries: "Next: Part III — The Workshop →"',
+      '/showcase — auto-extracted from ~/.claude/: 62 skills + 32 custom agents + 12 plugins, categorized + searchable',
+      '/cowork-setup — sanitized: 12 connector categories + 8 scheduled-task patterns + day-shape timeline. Zero local-data scan.',
+    ],
+    receipts: [
+      { label: 'Reader-facing pages added', value: '+5' },
+      { label: 'Skills surfaced', value: '62' },
+      { label: 'Sensitive paths read', value: '0 (Cowork showcase derived from published chapters)' },
+    ],
+  },
+  {
+    edition: 'Edition 2',
+    date: '2026-05-07',
+    tagline: 'Fixed the muscles. Wrote the spine.',
+    shipped: [
+      '6 new chapters (Ch 25-30): Evals, Team Adoption, Voice Agents, Failure Receipts, Cost Economics, Anthropic SDK Direct',
+      '4 new widgets: TokenBurnCalculator (Ch 2/29), TempAgencyLoop (Ch 3), VaultGraphPreview (Ch 4), HookEventTimeline (Ch 16)',
+      '12 a11y + UX patches: glossary popovers via Radix (no more navigate-away mid-read), focus rings, skip-to-content, paper contrast fix, 17px body on ≥640px, anchor links on H2/H3, print stylesheet',
+      '10 new operator prompts added to /resources: deal post-mortem, hire screen, model migration, board update, mentee prep, RFP triage, kill decision, customer-call synthesis, writing-filter, Tuesday-9am triage',
+      'ResumeReading pill on landing (localStorage-driven)',
+      'Substack subscribe iframe in footer',
+      'Sharper "Most readers go here next" copy in chapter footer',
+    ],
+    receipts: [
+      { label: 'Chapters', value: '24 → 30' },
+      { label: 'Widgets', value: '8 → 12' },
+      { label: 'Pages', value: '32 → 38' },
+    ],
+  },
+  {
+    edition: 'Edition 1',
+    date: '2026-05-07',
+    tagline: 'The book became an artifact.',
+    shipped: [
+      '24 chapters migrated from .docx into MDX (4 parallel agents, partitioned by chapter range)',
+      '8 interactive widgets: StackSelector, SwarmVisualizer, CronBuilder, ModePicker, SkillComposer, ConnectorMap, PermissionSimulator, TierListBuilder',
+      'Cmd-K command palette + dark theme + view transitions + reading progress bar',
+      'Resources page with copy-paste vault library: CLAUDE.md skeleton, .mcp.json examples, hook scripts, SKILL templates, 5 reusable prompts',
+      'Printable cheat sheet (Ch 14, @media print styled)',
+      '30-day plan generator (3 intake questions → custom 30-day calendar, .ics + markdown export)',
+      'Drag-and-drop tier list builder with shareable URL hash',
+      'GitHub Pages deployment via Actions; live in ~50s per push',
+    ],
+    receipts: [
+      { label: 'Source words migrated', value: '~43,000' },
+      { label: 'Parallel agents in chapter migration', value: '4' },
+      { label: 'Wall-clock for full Edition 1 build', value: '~3 hours' },
+      { label: 'Dist size', value: '1.4 MB / 32 pages' },
+    ],
+  },
+];
