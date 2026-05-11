@@ -37,6 +37,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up' },
       { type: 'page', title: '30-day plan',           href: `${base}/thirty-day-plan`, subtitle: 'Custom roadmap' },
       { type: 'page', title: 'About',                 href: `${base}/about`,           subtitle: 'Vlad + portfolio + newsletter' },
+      { type: 'page', title: 'Changelog',             href: `${base}/changelog`,       subtitle: "What's new in each edition" },
     ];
     const glossaryItems: Item[] = Object.keys(glossary).map((term) => ({
       type: 'glossary',
