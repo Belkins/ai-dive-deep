@@ -1,0 +1,49 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import StarterSkillCard from '@/widgets/StarterSkillCard.tsx';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import { STARTER_SKILLS } from '@/lib/starter-skills';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="Six skills you can drop in tonight" description="Six ready-to-paste SKILL.md files in Vlad's voice. Open, copy, save to ~/.claude/skills/. Operating an OS in 8 minutes.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Starter skills</div>
+    <h1>Six skills you can drop in tonight.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      The book teaches you to <em>write</em> skills. This page hands you six <strong>working</strong> ones. Open, copy, save to <code>~/.claude/skills/&lt;name&gt;/SKILL.md</code>, and they fire on day one. By the time you finish a coffee you're operating an OS.
+    </p>
+    <p class="mt-3 text-base" style="color: rgb(var(--muted))">
+      These are the skills I actually run across Belkins, Folderly, and the newsletter. Voice-locked. Anti-patterns included. Don't run them all on Monday — pick the one that hurts most this week.
+    </p>
+
+    <div class="mt-6 rounded-lg p-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent-2))">The shortest path</div>
+      <ol class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92); padding-left: 1.25rem;">
+        <li>Pick one (start with <code>process-miner</code> if you don't know where to start — it'll tell you).</li>
+        <li>Click "Copy SKILL.md".</li>
+        <li>Run <code>mkdir -p ~/.claude/skills/&lt;name&gt;/ && pbpaste &gt; ~/.claude/skills/&lt;name&gt;/SKILL.md</code></li>
+        <li>Open Claude Code or Cowork, say the trigger phrase. It fires.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="container-wide pb-16">
+    <div class="grid gap-5 max-w-3xl mx-auto">
+      {STARTER_SKILLS.map((s) => (
+        <StarterSkillCard skill={s} baseUrl={base} client:visible />
+      ))}
+    </div>
+  </section>
+
+  <section class="container-prose pb-24">
+    <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--muted)); color: rgb(var(--fg) / 0.92);">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">When these six aren't enough</div>
+      <p class="text-sm leading-relaxed m-0">
+        These six cover ~80% of the operator-shape workflows. When you need #7, read <a href={`${base}/chapters/11-build-a-skill`}>Chapter 11 — Build a Skill in 30 Minutes</a>. When you don't know what #7 should be, run <code>process-miner</code> next Monday and let it tell you.
+      </p>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
