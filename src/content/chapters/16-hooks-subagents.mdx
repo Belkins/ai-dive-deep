@@ -178,9 +178,9 @@ Claude Code ships with built-ins. The names you'll see:
 - `Plan` — software-architect mode, no edits, returns a plan only. Pair with `general-purpose` for execution.
 
 <ScreenshotPlaceholder
+  id="16-hooks-subagents-1"
   caption="Three-subagent fan-out"
-  note="Main CC session dispatching general-purpose, Explore, and Plan in a single Agent batch, with three result summaries returning in parallel."
-/>
+  note="Main CC session dispatching general-purpose, Explore, and Plan in a single Agent batch, with three result summaries returning in parallel."/>
 
 ---
 
@@ -261,6 +261,7 @@ Now wire them together. Concrete example, from my own setup, for a release flow 
 That's a real system. The agent does the boring work. The hooks enforce the rules. The subagents keep the context clean. And the human (me) only shows up at the one moment where judgment matters: the push to main.
 
 <ScreenshotPlaceholder
+  id="16-hooks-subagents-2"
   caption="Hooks plus subagents — a real release flow"
   note="A `.claude/settings.json` open on the left showing the three hooks, and a `.claude/agents/` directory listing on the right with `code-reviewer.md`, `changelog-writer.md`, `version-bumper.md`, and `smoke-test-runner.md`."
 />

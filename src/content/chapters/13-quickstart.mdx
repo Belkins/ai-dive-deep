@@ -102,9 +102,9 @@ Claude reads the directory, opens the files it thinks matter, sometimes runs a t
 When you're ready to ask for an actual change — "add a comment to the top of `index.ts` explaining what this file does" — Claude will draft the edit and show you a diff preview before touching disk. You see the exact lines being added, the exact lines being removed, and a prompt: approve, reject, or modify.
 
 <ScreenshotPlaceholder
+  id="13-quickstart-1"
   caption="First useful task"
-  note="Show Claude Code reading files and summarizing the repo, with the diff preview visible."
-/>
+  note="Show Claude Code reading files and summarizing the repo, with the diff preview visible."/>
 
 This is the loop. Read, propose, approve, write. Repeat.
 
@@ -153,6 +153,7 @@ Inside Claude Code, type `/mcp`. You should see filesystem listed and connected.
 This same pattern — one entry in `.mcp.json`, restart, `/mcp` to verify — works for every MCP server you'll ever install. Belkins runs HubSpot and Slack through MCP. The Newsletter pulls Substack stats and Ahrefs through MCP. Folderly's email infra is wired up the same way. The protocol is the same; only the server changes.
 
 <ScreenshotPlaceholder
+  id="13-quickstart-2"
   caption="The 10-minute end-state"
   note="`claude` running with CLAUDE.md visible and `/mcp` showing your server."
 />
