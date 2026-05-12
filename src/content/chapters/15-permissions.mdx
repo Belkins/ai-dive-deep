@@ -37,9 +37,9 @@ The model never silently writes to disk in default mode. Every destructive thing
 When you pick option 3, you're teaching your future self to trust this pattern. Pick carefully. "Always allow `Bash(rm -rf*)`" is the kind of muscle-memory mistake that ends weekends.
 
 <ScreenshotPlaceholder
+  id="15-permissions-1"
   caption="The permission prompt"
-  note="`Bash(npm test)` with the 'always allow' options visible."
-/>
+  note="`Bash(npm test)` with the 'always allow' options visible."/>
 
 ## Permission granularity — what you can scope
 
@@ -181,6 +181,7 @@ The price you pay: the agent can't reach into your laptop's file system unless y
 **Codex-style 24/7 monitor.** Runs in a container with `--dangerously-skip-permissions`, mounted read-only on the production data, outbound network restricted to the SaaS APIs it actually needs (Stripe, the CRM, the analytics warehouse). Belt, suspenders, parachute. The flag is fine here because the container is the cage.
 
 <ScreenshotPlaceholder
+  id="15-permissions-2"
   caption="A real `~/.claude/settings.json` permissions block from my main machine"
   note="Names redacted as needed."
 />

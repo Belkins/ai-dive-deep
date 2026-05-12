@@ -4,11 +4,14 @@
   "version": "1.0.0",
   "description": "ULTIMATE AI DIVE DEEP — interactive field manual by Vlad Podoliako",
   "scripts": {
+    "prebuild": "python3 scripts/scan-screenshots.py",
+    "predev": "python3 scripts/scan-screenshots.py",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "screens": "python3 scripts/scan-screenshots.py"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
