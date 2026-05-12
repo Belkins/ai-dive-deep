@@ -1,16 +1,32 @@
 ---
-import { getNeighbors, getPart, PARTS } from '@/lib/chapters';
+import { getNeighbors, getPart, PARTS, CHAPTERS } from '@/lib/chapters';
 interface Props { slug: string; }
 const { slug } = Astro.props;
 const { prev, next } = getNeighbors(slug);
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-// If this chapter is the last one in its part, the next chapter is in a new part.
-// Surface that as "Next part" copy.
 const currentPart = getPart(slug);
 const nextPart = next ? getPart(next.slug) : null;
 const crossingPart = currentPart && nextPart && currentPart.key !== nextPart.key;
 const partInfo = nextPart ? PARTS.find((p) => p.key === nextPart.key) : null;
+
+// Feedback mailto — pre-filled with chapter context so Vlad's inbox stays organized.
+const thisChapter = CHAPTERS.find((c) => c.slug === slug);
+const chNum = thisChapter ? String(thisChapter.number).padStart(2, '0') : '??';
+const chTitle = thisChapter?.title ?? 'Untitled';
+const chUrl = `https://belkins.github.io/ai-dive-deep/chapters/${slug}/`;
+const fbSubject = encodeURIComponent(`Feedback · Ch ${chNum} — ${chTitle}`);
+const fbBody = encodeURIComponent(
+  `URL: ${chUrl}\n` +
+  `Chapter: Ch ${chNum} — ${chTitle}\n` +
+  `\n` +
+  `What's wrong / what could be sharper:\n` +
+  `\n` +
+  `\n` +
+  `What landed well (optional):\n` +
+  `\n`
+);
+const fbHref = `mailto:vladislav@belkins.io?subject=${fbSubject}&body=${fbBody}`;
 ---
 <nav class="container-prose mt-16 mb-8 grid gap-4 sm:grid-cols-2">
   {prev ? (
@@ -41,3 +57,10 @@ const partInfo = nextPart ? PARTS.find((p) => p.key === nextPart.key) : null;
     </a>
   )}
 </nav>
+
+<div class="container-prose mt-2 mb-12 text-center text-sm" style="color: rgb(var(--muted))">
+  Spotted something wrong, missing, or sharper?
+  <a href={fbHref} class="ml-1 inline-flex items-center gap-1" style="color: rgb(var(--accent))">
+    Email Vlad with feedback on this chapter →
+  </a>
+</div>
