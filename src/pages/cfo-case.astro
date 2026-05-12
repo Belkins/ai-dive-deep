@@ -1,0 +1,107 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="The case for the AI spend" description="600 words for your CFO. Forward in Slack. Defend the spend. Unblock the budget.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">For your CFO / boss / board</div>
+    <h1>The case for the AI spend.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      You read the book. You know what to build. Now you need to defend $300-3,000/month in tokens to someone whose job is to make sure that number stays small. Forward this page in Slack. Don't write the case yourself.
+    </p>
+
+    <div class="mt-3 flex flex-wrap gap-2">
+      <a href="mailto:?subject=The%20case%20for%20our%20AI%20spend&body=I%20want%20to%20expand%20our%20AI%20tooling%20budget.%20Here%27s%20the%20case%20in%20600%20words%3A%0A%0Ahttps%3A%2F%2Fbelkins.github.io%2Fai-dive-deep%2Fcfo-case%2F%0A%0AThe%20short%20version%3A%20one%20mid-senior%20engineer%20costs%20%24120K%2Fyear%20fully%20loaded.%20At%20Sonnet%20pricing%2C%20that%20same%20money%20buys%20~24%20billion%20tokens.%20Even%20at%20heavy%20use%2C%20the%20AI%20does%205-10x%20the%20volume%20for%20the%20same%20dollar.%20Math%20%2B%20receipts%20at%20the%20link." class="btn-flame text-sm">Send via email →</a>
+      <a href="https://www.linkedin.com/messaging/" target="_blank" rel="noopener" class="btn-ghost text-sm">Open LinkedIn DM</a>
+      <button onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Link copied'; setTimeout(()=>this.textContent='Copy link',1500)" class="btn-ghost text-sm" type="button">Copy link</button>
+    </div>
+  </section>
+
+  <article class="container-prose chapter-body pb-12">
+
+    <h2>The short version</h2>
+
+    <p>One mid-senior engineer in the US costs <strong>~$120,000 a year fully loaded</strong>. Salary plus benefits, taxes, equipment, the all-in number your finance team will recognize.</p>
+
+    <p>At today's Anthropic pricing — roughly <strong>$3 per million input tokens for Sonnet, $15 per million output</strong>, with prompt caching dropping input to ~$0.30 — that same $120K buys somewhere in the band of <strong>20-30 billion tokens a year</strong>, depending on cache hit rates and model mix.</p>
+
+    <p>At our actual burn rate of 3-10 billion tokens a month — which sounds insane until you do the math — we're spending the cost of <strong>one to four engineers</strong> on AI that does the work of a small team running 24/7. Not a flex. Actual ratio.</p>
+
+    <h2>What we're buying, in plain English</h2>
+
+    <p>This isn't ChatGPT-for-everyone. It's not a "let's give Sales a copilot" line item. It's an <strong>operating layer</strong> that runs <em>between</em> the tools the company already pays for.</p>
+
+    <p>Concrete: every weekday morning at 7:30 AM, an agent reads our calendar, the overnight Slack signal, HubSpot deal motion, and posts a 250-word canvas to my DM. The team gets the same brief in their channels. Total cost: <strong>~$40/month</strong>. Replaces 20 minutes of triage per operator per morning.</p>
+
+    <p>Multiply across the team. <strong>The morning briefing alone, deployed to 8 operators, saves ~50 hours of human triage per week</strong>. At a $150/hour operator rate, that's $30K/month in opportunity cost reclaimed, for a $40 line item. The ROI isn't 10x. It isn't 100x. It's the kind of ratio that breaks spreadsheets.</p>
+
+    <h2>The receipts</h2>
+
+    <div class="my-6 rounded-lg overflow-hidden" style="border: 1px solid rgb(var(--line));">
+      <table class="w-full text-sm m-0">
+        <thead style="background: rgb(var(--paper));">
+          <tr>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Workflow</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Monthly cost</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Human equivalent</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Morning briefing × 8 ops</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">~$40</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">~50 hr/week of triage</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent-2));">~750x</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Deal post-mortems (per quarter)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">~$15</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">~12 hr of sales-leadership review</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent-2));">~120x</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Codex 24/7 bug watcher</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">~$200</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">~0.25 of an on-call eng</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent-2));">~50x</td>
+          </tr>
+          <tr>
+            <td class="p-3">Friday weekly synthesis</td>
+            <td class="p-3 font-mono" style="color: rgb(var(--accent));">~$25</td>
+            <td class="p-3">~3 hr of operator time / week</td>
+            <td class="p-3 font-mono" style="color: rgb(var(--accent-2));">~150x</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>None of these numbers come from a vendor deck. They come from running this stack across a portfolio for 18 months. The bills are real. The hours saved are observable in calendar archaeology.</p>
+
+    <h2>The two questions a CFO actually asks</h2>
+
+    <h3>"Why not just give the team ChatGPT Plus?"</h3>
+
+    <p>ChatGPT Plus is $20 per seat per month. It's a chat window. It doesn't run on a schedule. It doesn't talk to our CRM. It doesn't remember what we decided last Tuesday. Fifty seats of ChatGPT Plus is $1,000/month for fifty operators each individually re-typing the morning briefing context every day. The AI operating layer is one budget line that delivers a finished canvas to all of them, every morning, before they open Slack. <strong>Same cost, 50x the output, zero training</strong>.</p>
+
+    <h3>"Why both Codex AND Claude Code?"</h3>
+
+    <p>They're not competing — they're shifts. Codex runs against Sentry and GitHub 24/7, catching regressions and drafting fixes overnight. Claude Code is the day driver where humans ship features. Together they cost less than half an engineer's salary and they cover both shifts. <strong>Cutting one to save $200/month forfeits coverage that costs $60K to replace with a human</strong>.</p>
+
+    <h2>The verdict</h2>
+
+    <p>Every dollar in this category should clear two bars before it ships: <strong>(1) measurable hours reclaimed</strong>, and <strong>(2) a kill criterion at 60 days</strong>. We don't do open-ended AI spend. Every line item has a "what stops this" rule. That's why our footprint is operator-grade, not hype-grade.</p>
+
+    <p>If the answer to "is this worth it" isn't obvious from the receipts above, we shouldn't be spending. But it is. Approve the line.</p>
+
+    <hr class="my-12" style="border-color: rgb(var(--line));" />
+
+    <p class="italic text-sm" style="color: rgb(var(--muted))">
+      Excerpted and condensed from <a href={`${base}/`}>Ultimate AI Dive Deep</a> — Vlad Podoliako's field manual for operators. Specifically: <a href={`${base}/chapters/02-five-tools`}>Ch 2 — The Five-Tool Stack</a>, <a href={`${base}/chapters/29-cost-economics`}>Ch 29 — Why Is My Bill So High?</a>, and <a href={`${base}/chapters/35-codex-and-cc`}>Ch 35 — Codex or Claude Code — or Both?</a>. If your finance person wants to argue the numbers, point them at those.
+    </p>
+  </article>
+
+  <CommandPaletteMount />
+</BaseLayout>

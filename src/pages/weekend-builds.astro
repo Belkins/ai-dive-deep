@@ -1,0 +1,149 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import { WEEKEND_BUILDS, BUILD_WARNINGS } from '@/lib/builds';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="Weekend builds" description="Eight Saturday-ship recipes. Problem, time, token cost, chapter pointers, ship gate, anti-pattern. Pick one, ship it.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Weekend builds</div>
+    <h1>Ship something this Saturday.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      Eight named projects, each shippable in 1 Saturday by 1 operator. Each one earns its slot within 7 days or dies on day 14. Voice-locked. Receipts included.
+    </p>
+    <p class="mt-3 text-base" style="color: rgb(var(--muted))">
+      Synthesized from three parallel AI passes — wide ideation, PRD shaping, adversarial rubric. The rubric killed five "obvious" picks and pushed one boring one to the top. The trap pick is called out below; build any of the eight before you build that one.
+    </p>
+
+    <div class="mt-6 grid sm:grid-cols-2 gap-3">
+      <a href={`${base}/chapters/19-build-products`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">The framework</div>
+        <div class="font-display text-base">Ch 19 — How to build products with AI</div>
+      </a>
+      <a href={`${base}/chapters/31-stages`} class="card no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">The stages</div>
+        <div class="font-display text-base">Ch 31 — Six stages from idea to deploy</div>
+      </a>
+    </div>
+  </section>
+
+  <section class="container-wide pb-12">
+    <div class="max-w-3xl mx-auto space-y-10">
+      {WEEKEND_BUILDS.map((b) => (
+        <article id={`build-${b.rank}`} class="rounded-xl overflow-hidden scroll-mt-20" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+          <header class="p-5 border-b" style="border-color: rgb(var(--line));">
+            <div class="flex items-baseline gap-3 flex-wrap">
+              <span class="font-display text-3xl tabular-nums" style="color: rgb(var(--accent))">{String(b.rank).padStart(2, '0')}</span>
+              <h2 class="m-0 font-display text-2xl md:text-3xl">{b.name}</h2>
+            </div>
+            <p class="mt-2 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.92)">{b.problem}</p>
+          </header>
+
+          <div class="p-5 grid gap-4">
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div class="rounded-md p-3" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line));">
+                <div class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted))">Who it's for</div>
+                <div class="text-sm leading-snug mt-0.5" style="color: rgb(var(--fg) / 0.92)">{b.whoFor}</div>
+              </div>
+              <div class="rounded-md p-3" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line));">
+                <div class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted))">Time</div>
+                <div class="text-sm leading-snug mt-0.5" style="color: rgb(var(--fg) / 0.92)">{b.time}</div>
+              </div>
+              <div class="rounded-md p-3" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line));">
+                <div class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted))">Token cost</div>
+                <div class="text-sm leading-snug mt-0.5" style="color: rgb(var(--fg) / 0.92)">{b.tokenCost}</div>
+              </div>
+              <div class="rounded-md p-3" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--accent));">
+                <div class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--accent))">Earns its slot by</div>
+                <div class="text-sm leading-snug mt-0.5" style="color: rgb(var(--fg) / 0.92)">{b.earnsItsSlotBy}</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-[10px] uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">Prereqs</div>
+              <ul class="m-0 p-0 list-none space-y-0.5">
+                {b.prereqs.map((p) => (
+                  <li class="text-sm leading-snug flex items-start gap-2" style="color: rgb(var(--fg) / 0.85)"><span style="color: rgb(var(--accent-2))">›</span>{p}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div class="text-[10px] uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">Chapters that teach the bits</div>
+              <div class="flex flex-wrap gap-1.5">
+                {b.chapters.map((c) => (
+                  <a href={`${base}/chapters/${c.slug}`} class="text-xs px-2 py-0.5 rounded no-underline" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line)); color: rgb(var(--accent));">
+                    {c.ref}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div class="text-[10px] uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">The shape</div>
+              <ol class="m-0 pl-5 space-y-1 list-decimal">
+                {b.shape.map((s) => (
+                  <li class="text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.9)">{s}</li>
+                ))}
+              </ol>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-2 mt-2">
+              <div class="rounded-md p-3" style="background: rgb(var(--bg)); border-left: 3px solid rgb(var(--accent-2));">
+                <div class="text-[10px] uppercase tracking-wider mb-1" style="color: rgb(var(--accent-2))">Ship gate</div>
+                <p class="text-sm leading-snug m-0" style="color: rgb(var(--fg) / 0.92)">{b.shipGate}</p>
+              </div>
+              <div class="rounded-md p-3" style="background: rgb(var(--bg)); border-left: 3px solid rgb(var(--accent));">
+                <div class="text-[10px] uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Anti-pattern</div>
+                <p class="text-sm leading-snug m-0" style="color: rgb(var(--fg) / 0.92)">{b.antiPattern}</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-prose pb-12">
+    <h2>Before you build any of the above — read this.</h2>
+
+    <div class="rounded-lg p-5 mb-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">The trap pick</div>
+      <div class="font-display text-lg mb-2">{BUILD_WARNINGS.trap.name}</div>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">{BUILD_WARNINGS.trap.why}</p>
+      <p class="text-sm leading-relaxed mt-3 m-0" style="color: rgb(var(--accent-2));"><strong>Build instead:</strong> {BUILD_WARNINGS.trap.instead}</p>
+    </div>
+
+    <div class="rounded-lg p-5 mb-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">The contrarian push</div>
+      <div class="font-display text-lg mb-2">{BUILD_WARNINGS.contrarian.name}</div>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">{BUILD_WARNINGS.contrarian.why}</p>
+    </div>
+
+    <h3>Five builds the rubric killed</h3>
+    <p style="color: rgb(var(--muted))">If one of these is the build you were about to ship, read the reason and pick from the eight above instead.</p>
+    <ul class="space-y-2 list-none p-0">
+      {BUILD_WARNINGS.skipped.map((s) => (
+        <li class="rounded-md p-3 m-0" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+          <div class="font-medium text-sm">{s.name}</div>
+          <div class="text-xs mt-0.5" style="color: rgb(var(--muted))">{s.why}</div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container-prose pb-24">
+    <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--muted));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">How to pick one</div>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+        If you have no recurring async pain, build nothing. If you have one Tuesday-morning ritual you hate, build the one that fixes it. The other seven will still be here next Saturday.
+      </p>
+      <p class="text-sm leading-relaxed mt-3 m-0" style="color: rgb(var(--fg) / 0.92)">
+        Don't know which one? Drop the <code>process-miner</code> skill from <a href={`${base}/starter-skills`}>/starter-skills</a> into <code>~/.claude/skills/</code> and run it Monday morning. It'll tell you which workflow you've been doing manually 5+ times this week — that's your Saturday.
+      </p>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
