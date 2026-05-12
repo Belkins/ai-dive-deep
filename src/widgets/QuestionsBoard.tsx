@@ -173,6 +173,19 @@ const QUESTIONS: Q[] = [
     category: 'security',
   },
 
+  // Drift / research-shaped
+  {
+    q: "Why does my agent corrupt the document after I delegate 20 edits in a row?",
+    short: "Bursty drift — invisible to vibes, visible only to a content-diff eval.",
+    answer: "Microsoft Research's OPS-204 (May 2026) ran 19 frontier models across 52 domains and found the top three corrupt ~25% of a document after 20 sequential edits; the average across all 19 is ~50%. Losses are bursty: ~80% come from rare single-step drops of 10-30%. Plugging in tools (search/code-exec/file-edit) makes it ~6% worse on average. Python is the safe domain; prose, recipes, music, financial reports are the worst. Operator move: break long edit chains into shorter sessions, run a content-checksum eval on cron, and don't reach for agentic tools by default in editing workflows.",
+    chapters: [
+      { slug: '25-evals-or-hope', label: 'Ch 25 — Evals, smoke / regression / golden' },
+      { slug: '22-sessions', label: 'Ch 22 — Resume, replay, fork' },
+      { slug: '28-failure-receipts', label: 'Ch 28 — Six failures, six bills' },
+    ],
+    category: 'security',
+  },
+
   // Team
   {
     q: "How do I get my team to actually use this?",

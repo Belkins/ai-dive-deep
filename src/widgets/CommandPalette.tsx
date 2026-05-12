@@ -29,6 +29,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Starter skills',         href: `${base}/starter-skills`,  subtitle: 'Six drop-in SKILL.md files' },
       { type: 'page', title: 'Weekend builds',         href: `${base}/weekend-builds`,  subtitle: '8 Saturday-ship recipes + the trap pick' },
       { type: 'page', title: 'For your CFO',           href: `${base}/cfo-case`,        subtitle: '600 words. Defend the spend.' },
+      { type: 'page', title: 'Research notes',         href: `${base}/research-notes`,  subtitle: 'External findings that shift what to do Monday' },
       { type: 'page', title: 'The journey',           href: `${base}/journey`,         subtitle: 'Six parts. One arc.' },
       { type: 'page', title: 'Questions people ask',  href: `${base}/questions`,       subtitle: "Top questions from Vlad's inbox" },
       { type: 'page', title: "Vlad's CC setup",        href: `${base}/showcase`,        subtitle: '62 skills + 32 agents + 12 plugins' },
