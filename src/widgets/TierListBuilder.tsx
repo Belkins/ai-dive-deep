@@ -105,11 +105,21 @@ export default function TierListBuilder() {
     return out;
   }, [placements]);
 
+  // Share URLs route through the OG sidecar (Vercel project ai-dive-deep-og).
+  // The sidecar serves an HTML page with a dynamic og:image rendered from the
+  // base64 payload, then JS-redirects humans to the canonical page (where the
+  // same payload is loaded via #tl= hash). Twitter/LinkedIn unfurl bots scrape
+  // the OG meta on the sidecar page before any redirect, so every share's
+  // unfurl shows the recipient's actual tier list.
+  // When Vlad maps og.vladyslavpodoliako.com → cname.vercel-dns.com, flip
+  // OG_HOST to https://og.vladyslavpodoliako.com.
+  const OG_HOST = 'https://ai-dive-deep-og.vercel.app';
+
   const shareUrl = useMemo(() => {
     if (typeof window === 'undefined') return '';
     try {
       const data = btoa(JSON.stringify(placements));
-      return `${window.location.origin}${window.location.pathname}#tl=${encodeURIComponent(data)}`;
+      return `${OG_HOST}/s/${encodeURIComponent(data)}`;
     } catch {
       return '';
     }

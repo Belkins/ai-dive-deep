@@ -1,7 +1,10 @@
 export const config = { runtime: 'edge' };
 
 const CANONICAL = 'https://dive.vladyslavpodoliako.com/tier-list/';
-const OG_ORIGIN = 'https://og.vladyslavpodoliako.com';
+// OG_ORIGIN: where the dynamic OG image lives. Currently the Vercel-provided
+// alias. When Vlad adds a CNAME for og.vladyslavpodoliako.com → cname.vercel-
+// dns.com and the cert is issued, flip this to https://og.vladyslavpodoliako.com.
+const OG_ORIGIN = 'https://ai-dive-deep-og.vercel.app';
 
 // Loose base64 validator (URL-safe variants tolerated).
 // Allows A-Z, a-z, 0-9, +, /, -, _, = padding. Length >= 4.
