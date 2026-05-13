@@ -25,12 +25,17 @@ const year = new Date().getFullYear();
 <footer class="border-t" style="border-color: rgb(var(--line))">
   <div class="container-wide py-12 grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
     <div>
-      <div class="font-display text-2xl font-medium">Ultimate AI Dive Deep</div>
+      <div class="font-display text-2xl font-medium">Vlad's Ultimate AI Dive Deep</div>
       <p class="mt-2 text-sm leading-relaxed" style="color: rgb(var(--muted))">
         A field manual for operators who want to stop juggling tabs and start running AI like an OS.
-        Twenty-four chapters. One operator. Belkins, Folderly, the Newsletter, and a portfolio of others.
+        Thirty-six chapters. One operator. Belkins, Folderly, the Newsletter, and a portfolio of others.
       </p>
       <p class="mt-4 text-xs" style="color: rgb(var(--muted))">Edition 1 · {year} · Built by 25+ agents in parallel.</p>
+      <p class="mt-3 text-xs" style="color: rgb(var(--muted))">
+        <button type="button" id="reset-progress" class="underline-offset-2 hover:underline" style="color: rgb(var(--muted)); background: none; border: 0; padding: 0; font: inherit; cursor: pointer;">
+          Reset reading history
+        </button>
+      </p>
     </div>
 
     <div>
@@ -68,8 +73,19 @@ const year = new Date().getFullYear();
         <li><a href="https://www.vladsnewsletter.com" target="_blank" rel="noopener">Newsletter</a></li>
         <li><a href="https://vladyslavpodoliako.com" target="_blank" rel="noopener">Site</a></li>
         <li><a href="https://www.linkedin.com/in/chiefdata/" target="_blank" rel="noopener">LinkedIn</a></li>
-        <li><a href="mailto:vladislav@belkins.io?subject=Feedback%20on%20Ultimate%20AI%20Dive%20Deep&body=What%20worked%20%2F%20what%20didn%27t%3A%0A%0A">Email feedback</a></li>
+        <li><a href="mailto:v@vladyslavpodoliako.com?subject=Feedback%20on%20Ultimate%20AI%20Dive%20Deep&body=What%20worked%20%2F%20what%20didn%27t%3A%0A%0A">Email feedback</a></li>
       </ul>
     </div>
   </div>
 </footer>
+
+<script>
+  const resetBtn = document.getElementById('reset-progress');
+  resetBtn?.addEventListener('click', () => {
+    if (!confirm('Reset reading history? This clears which chapters you\'ve read and your resume-reading state. Locally only — nothing is sent anywhere.')) return;
+    try {
+      localStorage.removeItem('cc-progress');
+      window.dispatchEvent(new CustomEvent('cc-progress-changed'));
+    } catch {}
+  });
+</script>

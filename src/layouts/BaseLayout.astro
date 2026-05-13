@@ -12,8 +12,8 @@ interface Props {
 }
 
 const { title, description, ogImage, noNav } = Astro.props;
-const fullTitle = title === 'Ultimate AI Dive Deep' ? title : `${title} — Ultimate AI Dive Deep`;
-const desc = description ?? 'Twenty-four chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.';
+const fullTitle = title === "Vlad's Ultimate AI Dive Deep" ? title : `${title} — Vlad's Ultimate AI Dive Deep`;
+const desc = description ?? 'Thirty-six chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.';
 const og = ogImage ?? `${import.meta.env.BASE_URL.replace(/\/$/, '')}/og-default.svg`;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
@@ -34,7 +34,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:description" content={desc} />
     <meta property="og:image" content={og} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="Ultimate AI Dive Deep" />
+    <meta property="og:site_name" content="Vlad's Ultimate AI Dive Deep" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={desc} />

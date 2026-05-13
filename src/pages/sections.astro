@@ -30,12 +30,15 @@ const bySlug = Object.fromEntries(CHAPTERS.map((c) => [c.slug, c]));
             if (!c) return null;
             return (
               <li class="m-0">
-                <a href={`${base}/chapters/${c.slug}`} class="block card hover:border-flame transition-colors no-underline h-full" style="color: rgb(var(--fg))">
+                <a href={`${base}/chapters/${c.slug}`} data-chapter-slug={c.slug} class="chapter-card block card hover:border-flame transition-colors no-underline h-full relative" style="color: rgb(var(--fg))">
                   <div class="flex items-baseline gap-3">
                     <span class="font-display text-2xl tabular-nums" style="color: rgb(var(--accent))">{String(c.number).padStart(2, '0')}</span>
                     <span class="font-display text-lg leading-tight">{c.title}</span>
                   </div>
                   <p class="mt-2 text-sm leading-snug" style="color: rgb(var(--muted))">{c.subtitle}</p>
+                  <span class="read-check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
                 </a>
               </li>
             );

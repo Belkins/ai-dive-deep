@@ -14,7 +14,7 @@ const partInfo = nextPart ? PARTS.find((p) => p.key === nextPart.key) : null;
 const thisChapter = CHAPTERS.find((c) => c.slug === slug);
 const chNum = thisChapter ? String(thisChapter.number).padStart(2, '0') : '??';
 const chTitle = thisChapter?.title ?? 'Untitled';
-const chUrl = `https://belkins.github.io/ai-dive-deep/chapters/${slug}/`;
+const chUrl = `https://dive.vladyslavpodoliako.com/chapters/${slug}/`;
 const fbSubject = encodeURIComponent(`Feedback · Ch ${chNum} — ${chTitle}`);
 const fbBody = encodeURIComponent(
   `URL: ${chUrl}\n` +
@@ -26,7 +26,7 @@ const fbBody = encodeURIComponent(
   `What landed well (optional):\n` +
   `\n`
 );
-const fbHref = `mailto:vladislav@belkins.io?subject=${fbSubject}&body=${fbBody}`;
+const fbHref = `mailto:v@vladyslavpodoliako.com?subject=${fbSubject}&body=${fbBody}`;
 ---
 <nav class="container-prose mt-16 mb-8 grid gap-4 sm:grid-cols-2">
   {prev ? (
