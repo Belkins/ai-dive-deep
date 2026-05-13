@@ -23,6 +23,71 @@ Four out of six broken on first invocation. From repos with combined 60k+ stars.
 
 This chapter is what I wish someone had handed me before I opened those six tabs.
 
+## Quickstart: install your first community skill in ten minutes
+
+Three commands, two files to read, one habit that keeps your vault intact.
+
+**Step 1 — clone (60 seconds).** Skills live at `~/.claude/skills/`. Pick one library from the tier list. Clone into a named subdirectory:
+
+```bash
+git clone https://github.com/garrytan/gstack ~/.claude/skills/gstack
+```
+
+That's the install. No package manager, no registry, no `npm install`. Claude Code scans `~/.claude/skills/**/SKILL.md` on session start.
+
+**Step 2 — read SKILL.md before activation (3 minutes).** Open the SKILL.md of the first skill you plan to use. Four lines decide whether it fires safely:
+
+- **`description:`** — should read like a search query, not marketing copy. If under 20 words or zero trigger phrases (*"use when the user says X"*), the matcher won't fire reliably. Skip it.
+- **`allowed-tools:`** — the security line. `["Bash", "Read", "Write"]` is normal. `["*"]` is `chmod 777`. Don't install wildcard tool access from a maintainer you don't trust.
+- **`version:`** — present means maintained. Missing means one-shot. Treat one-shots as suspect.
+- **Body structure.** Look for code blocks and named sections. A wall of prose can't be parsed into an imperative — Claude won't extract the action.
+
+**Step 3 — smoke-test (3 minutes).** Restart your Claude Code session so the new skill registers. Run one prompt that matches the description's trigger phrase verbatim. Watch the response: does it use the skill's structure (named sections, expected output shape), or fall back to generic prose? Generic prose means the matcher missed — the description needs a trigger-phrase edit or the skill is broken.
+
+**Step 4 — if it misfires.** Move it out of the active path: `mv ~/.claude/skills/<library>/<broken-skill>/ ~/.claude/skills-archive/`. Don't `rm` — the SKILL.md might be a useful starting point for your own version. The audit habit: read every imported SKILL.md before the next session start. Eight seconds per skill. Saves the Saturday I had.
+
+Pair a vetted skill install with [Ch 38](/chapters/38-run-until-done) — `/goal` style runs let the skill compose into autonomous loops.
+
+### First 10 minutes — bootstrap script
+
+A reader who finishes this chapter should be able to run this and have a working skill library by minute 11.
+
+```bash
+#!/usr/bin/env bash
+# first-10-minutes.sh — bootstrap a clean claude-code skill library
+# read every line before running. this clones four repos and copies
+# selected skills into ~/.claude/skills/.
+
+set -euo pipefail
+
+SKILLS_DIR="$HOME/.claude/skills"
+STAGING="$(mktemp -d)"
+mkdir -p "$SKILLS_DIR"
+
+# 1. clone the four S/A-tier libraries at a known SHA each
+git clone --depth 1 https://github.com/anthropics/skills "$STAGING/anthropics"
+git clone --depth 1 https://github.com/garrytan/gstack    "$STAGING/gstack"
+git clone --depth 1 https://github.com/trailofbits/skills "$STAGING/trailofbits"
+git clone --depth 1 https://github.com/alirezarezvani/claude-skills "$STAGING/rezvani"
+
+# 2. record the SHAs so you can pin / diff later
+(cd "$STAGING/anthropics"  && git rev-parse HEAD) > "$STAGING/sha.anthropics"
+(cd "$STAGING/gstack"      && git rev-parse HEAD) > "$STAGING/sha.gstack"
+(cd "$STAGING/trailofbits" && git rev-parse HEAD) > "$STAGING/sha.trailofbits"
+(cd "$STAGING/rezvani"     && git rev-parse HEAD) > "$STAGING/sha.rezvani"
+
+# 3. scan for the wildcard pattern before any copy happens
+echo "=== skills with allowed-tools: \"*\" — DO NOT INSTALL ==="
+grep -rln 'allowed-tools: *\["\*"\]' "$STAGING" || echo "none found, proceed."
+
+# 4. operator decides which to copy. nothing is auto-installed.
+echo "=== staged at $STAGING ==="
+echo "review SKILL.md by hand, then: cp -r $STAGING/<lib>/<skill> $SKILLS_DIR/"
+echo "SHAs recorded in $STAGING/sha.* — paste into your skill-pin manifest."
+```
+
+The chapter implies "read every line before activation" but the literal `grep` in step 3 is the one-line defense against the Saturday-morning vault-deletion story.
+
 ## The 73% problem
 
 On March 26, 2026, an auditor publishing as `@thestack_ai` on dev.to ran 214 community skills through a quality scorer built against the SKILL.md spec — description length, trigger-phrase quality, version field, allowed-tools posture, body structure, examples present. The headline: **73% scored below 60 out of 100**.
@@ -45,7 +110,40 @@ The cadence here matches [Chapter 24's](/chapters/24-tier-list) tier list, narro
 ### S — install the whole thing, prune to what fires
 
 - **`anthropics/skills`** — 134k stars. [github.com/anthropics/skills](https://github.com/anthropics/skills). The reference implementation of the SKILL.md spec, four buckets (creative/design, dev/technical, enterprise/comms, docs), plus the `/spec` and `/template` directories that define the contract. If a community skill doesn't match what's in `/spec`, treat it as suspect. Polished, generic-corporate — useful as a reference, not as direct voice inspiration.
+
+  **Walkthrough — anthropics/skills.** The reference implementation. Install:
+
+  ```bash
+  git clone https://github.com/anthropics/skills ~/.claude/skills/anthropic
+  ```
+
+  Restart your Claude Code session. The skills register on session start via filesystem scan — no installer, no package manager.
+
+  Three to try first:
+
+  1. **`/spec`** — not a runnable skill, the SKILL.md contract itself. Open `~/.claude/skills/anthropic/spec/SKILL.md` and read it once. Every community skill you install later is graded against this file.
+  2. **`pdf-form-fill`** (dev/technical bucket) — practical, narrow, fires reliably. Smoke-test: drop any blank PDF form in your working directory, then prompt *"fill out this PDF using the info in my resume.md"*. If it doesn't fire, the description-matcher is the issue and the skill needs a trigger phrase edit.
+  3. **`brand-guidelines`** (creative/design) — useful if you maintain a style sheet. Smoke-test: create a `brand.md` with three rules, then prompt *"check this draft against my brand guidelines"*. Watch for the skill picking up the file by name.
+
+  Known gotcha: Anthropic's repo updates frequently. If you cloned into `~/.claude/skills/anthropic/` and skills stop firing after a Claude Code update, `cd` in and `git pull` — the SKILL.md frontmatter spec evolves and stale skills miss the new matcher fields. Pin to a tag if you want stability over freshness.
+
 - **`garrytan/gstack`** — 95.7k stars. [github.com/garrytan/gstack](https://github.com/garrytan/gstack). One operator's complete Claude Code setup, MIT-licensed. Twenty-three specialist skills plus ~14 power tools — `/office-hours`, `/plan-ceo-review`, `/qa`, `/ship`, `/canary`, `/retro`, `/careful`, `/guard`. Largely co-authored with Claude itself. The highest-credibility single-author skill stack in the ecosystem and the one most operators should start from.
+
+  **Walkthrough — garrytan/gstack.** One operator's full Claude Code setup. MIT-licensed, ~37 skills + power tools.
+
+  ```bash
+  git clone https://github.com/garrytan/gstack ~/.claude/skills/gstack
+  ```
+
+  Restart Claude Code.
+
+  Two to try first:
+
+  1. **`/office-hours`** — the CEO-mode skill, six forcing questions on any new product idea (demand reality, status quo, desperate specificity, narrowest wedge, observation, future-fit). Smoke-test: prompt *"office hours on this idea — a Slack bot that posts our team's weekly retro to a public channel"*. The skill should run the six questions in sequence, not generic advice. If it produces bullet-point "considerations," it didn't fire.
+  2. **`/review`** — pre-landing PR review with SQL safety + LLM trust-boundary checks. Operator-relevant for anyone shipping code, even if you're not the engineer. Smoke-test: in any repo with an open PR, prompt *"/review this PR against main"*. Expect a structured diff analysis with severity tags, not free-form prose.
+
+  Known gotcha: gstack ships ~37 skills. After install, ~12 will be irrelevant to your work (e.g., `/canary` if you don't deploy production services, `/ship-ios` if you're not on iOS). Prune them — `rm -rf ~/.claude/skills/gstack/<unused-skill>/` — because every loaded skill costs context budget on session start, and a skill that never fires is dead weight in the matcher.
+
 - **`hesreallyhim/awesome-claude-code`** — 43.6k stars. [github.com/hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code). The flagship community index — skills, hooks, slash-commands, agent orchestrators, applications, plugins. Currently mid-restructure because the original TOC outgrew itself. The default discovery layer, not an opinion.
 
 ### A — wire these into the discovery loop
@@ -59,6 +157,18 @@ The cadence here matches [Chapter 24's](/chapters/24-tier-list) tier list, narro
 - **`alirezarezvani/claude-skills`** — 14.7k stars. [github.com/alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills). 268 production skills across 9 domains including C-Level Advisory, Growth Marketer, Solo Founder persona presets. Ships a "Skill Security Auditor" for pre-install vetting. Closest in shape to operator/founder workflow rather than dev-only. Single-maintainer discipline.
 - **`travisvn/awesome-claude-skills`** — 12.5k stars. [github.com/travisvn/awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills). Curation list with a comparison framework — skills vs prompts vs subagents vs MCP. Includes the security guidance line every primer should have: *"skills can execute arbitrary code, review before installing."* Slightly stale (last update Feb 2026) but the best primer for someone new.
 - **`trailofbits/skills`** — 5.2k stars. [github.com/trailofbits/skills](https://github.com/trailofbits/skills). Graded B for star count, A+ for the pattern. The first credible vendor-published narrow-vertical skill repo — smart-contract audit, semgrep rule creation, supply-chain risk, YARA authoring, constant-time analysis. "We already do this for paying clients, here's the skill version." More on this pattern in a minute.
+
+  **Walkthrough — trailofbits/skills.** Security-vertical example — the model to copy when publishing your own vertical.
+
+  ```bash
+  git clone https://github.com/trailofbits/skills ~/.claude/skills/trailofbits
+  ```
+
+  Why this is the template: Trail of Bits already audits smart contracts and writes Semgrep rules for paying clients. The repo is the skill version of work they bill for. The publishing thesis: *"this is a credible vertical, here's the skill bundle, our audience is now indexed against our brand."* That's the move for any operator with a defensible vertical — sales-ops, content-ops, deliverability, mentoring. Read their `README.md` and the structure of any one SKILL.md inside, then mirror the shape.
+
+  One specific skill: `semgrep-rule-creator`. Generates a custom Semgrep rule from a natural-language description of a code anti-pattern you want to catch. Smoke-test: prompt *"write me a Semgrep rule that flags any `eval()` call inside a route handler"*. The skill should produce a ready-to-paste YAML rule with `pattern:` + `message:` + `severity:`. If you get prose explaining what Semgrep is, the skill misfired.
+
+  The lesson is structural: one repo, ten skills, all derived from real client work. Star count (5.2k) is irrelevant. The pattern is the asset.
 
 <Callout type="warn">
 Star count measures intent to install, not fire reliability. Treat every library above as a *menu*, not a *meal*. Install gstack, then prune to the eight or twelve that match your actual work. The other fifteen are noise weighing down your context.

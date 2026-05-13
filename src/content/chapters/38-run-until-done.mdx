@@ -41,6 +41,8 @@ That last property is the trap most operators hit on day one. The condition has 
 
 <Callout type="warn">If your <GlossaryTerm term="Hook">hooks</GlossaryTerm> are locked down with `disableAllHooks` or `allowManagedHooksOnly`, `/goal` is unavailable and tells you why. The evaluator is part of the hooks system. Enterprises that lock hooks lose this command.</Callout>
 
+`/goal` isn't only for code. Anywhere "done" is measurable in transcript — a memo with three receipts, a triage list with 12 verdicts, a prep doc with four sections — `/goal` works. You don't need a repo. You need a condition you could grep for. The CFO defense, the proposal triage, and the mentee prep examples later in this chapter are the operator-shaped versions; the engineering scenes are the same primitive with a different surface.
+
 ## The three autonomous-loop primitives
 
 The autonomous-work surface in Claude Code now reads as a clean three-way. Each primitive answers a different question.
@@ -49,7 +51,7 @@ The autonomous-work surface in Claude Code now reads as a clean three-way. Each 
 
 **`/loop [interval] [prompt]` — interval-driven.** "Run this prompt every N minutes." No evaluator. Claude executes the prompt, sleeps, executes again. Use it for polling — `/loop 5m check if the deploy finished` is the canonical example. Pre-2026 you'd have rigged this with [cron](/chapters/07-cron); now it's a slash command.
 
-**Stop hooks — custom-logic-driven.** Live in `settings.json`. Run a deterministic shell script (or HTTP endpoint, or short LLM prompt) when the agent's turn finishes. Exit code 0 means done; non-zero means keep going with the stderr surfaced back into context. Use this when you want determinism — "stop when this script returns 0" — rather than a model judging the transcript. Covered in detail in [Ch 16](/chapters/16-hooks-subagents).
+**Stop hooks — custom-logic-driven.** The engineer-flavored version — covered in detail in [Ch 16](/chapters/16-hooks-subagents). Use when you want determinism — "stop when this script returns 0" — rather than a model judging the transcript. For curated community skills and the install audit pattern, see [Ch 39](/chapters/39-skills-you-should-steal).
 
 | | `/goal` | `/loop` | Stop hook |
 |---|---|---|---|
@@ -63,6 +65,36 @@ The autonomous-work surface in Claude Code now reads as a clean three-way. Each 
 
 The three compose. A `/goal` session can have Stop hooks firing alongside it — the goal evaluator decides whether to take another turn, the Stop hook still runs after each turn and can format files, post Slack, draft commit messages, whatever. They're orthogonal layers, not competitors.
 
+## Which primitive when?
+
+The table proves the primitives are different. This is the literal "I'm at the terminal — what do I type" flow. Five yes/no questions, each one collapses the surface.
+
+```text
+start here ↓
+
+1. is the finish line a thing claude's own transcript can prove?
+   ├── yes → continue to 2
+   └── no  → Stop hook with a real script. determinism beats vibes.
+
+2. can you write a grep that returns 0/1 on "done"?
+   ├── yes → continue to 3
+   └── no  → rewrite the condition until you can, or pick Stop hook.
+
+3. is the work driven by elapsed time, not by a stop condition?
+   ├── yes → /loop [interval] [prompt]. polling, not running until done.
+   └── no  → continue to 4
+
+4. is the stop condition reusable across every future session?
+   ├── yes → Stop hook in settings.json. session-scoped is the wrong scope.
+   └── no  → continue to 5
+
+5. is the condition cheap to check in transcript output?
+   ├── yes → /goal <condition>, with an "or stop after N turns" tail.
+   └── no  → split it. compound conditions get ambiguous; eval picks wrong.
+
+default if you're not sure: /goal with a turn cap of 20.
+```
+
 ## The stack — Plan → Auto → /goal
 
 Read `/goal` as the third rung of an autonomy ladder — that framing isn't Anthropic's wording verbatim, but the per-prompt pairing they describe in the docs is exactly the same shape: each rung removes a class of operator approval.
@@ -75,9 +107,26 @@ The three stack. Plan mode shows me the work. Auto mode does the work without as
 
 That's the behavioral shift. The ladder isn't a choice — it's a sequence. Ch 21 was titled "Which Mode Right Now?" when there were three modes. There are four now, and `/goal` is the one that changes what you're approving, not just how often.
 
-## Six operator scenes
+### Sidebar — what this looks like outside the IDE (mentee pre-session prep)
 
-The trick to a useful `/goal` is the same as the trick to a useful <GlossaryTerm term="Eval">eval</GlossaryTerm>: the condition has to be cheap to check, demonstrable in transcript, and measurable. Six scenes I actually use.
+```text
+/goal pre-session doc for Chris on May 20 is drafted with
+(1) his three commitments from last session, (2) this week's
+WhatsApp messages summarized into wins + blockers, (3) the
+one open question I owe him a referral on, (4) my top 3
+talking points ranked by Tier 1 cash impact, or stop after
+5 turns
+```
+
+Monday, 6:30 PM, day before the session. I used to do this prep cold at 12:55 PM Tuesday and it showed — I'd forget what we'd agreed last time, scroll WhatsApp mid-call, miss the through-line. Ran the goal with last session's transcript, this week's WhatsApp export, and the action tracker pasted in. Four turns. Haiku rejected turn 2 because the "wins + blockers" section was generic ("Chris is busy"). Turn 4 was specific: "Chris closed 2 a staffing partner placements but is blocked on attorney response re: licensing." Cleared.
+
+Receipt: session next day ran 11 minutes shorter and we hit all three priority items. Chris flagged later in WhatsApp that "this was the tightest one." Saved: 45 min of in-call drift, plus the implicit cost of looking like the mentor who forgot what we agreed last week.
+
+The brittle line: `/goal` can only see what you paste. If WhatsApp export is incomplete or the action tracker is stale (it usually is by Friday), the doc is confident and wrong — which is worse than no doc. The 5-minute cost is keeping the action tracker current. If you don't pay that cost, this use case is a fancy way to lie to yourself.
+
+## Eight operator scenes
+
+The trick to a useful `/goal` is the same as the trick to a useful <GlossaryTerm term="Eval">eval</GlossaryTerm>: the condition has to be cheap to check, demonstrable in transcript, and measurable. Eight scenes I actually use.
 
 ### 1. CI loop — tests pass
 
@@ -98,7 +147,24 @@ list each with URL + publish date, or stop after 15 turns
 
 Eval counts the URL list in transcript. Cheap to check. The agent keeps searching until the count hits five. Pairs well with WebFetch + WebSearch in auto mode.
 
-### 3. Content loop — anti-takeaway closer lands
+### 3. Proposal pipeline triage — go / no-go / follow-up
+
+```text
+/goal triage these 12 inbound proposal threads — for each,
+assign go / no-go / follow-up using the 5-question filter
+(budget named? decision-maker on thread? timeline under 90d?
+fit with our 3 ICPs? response within 48h?), output one row
+per thread with the verdict and the failing question if no-go,
+or stop after 1 turn per thread (max 12)
+```
+
+Wednesday, 7:02 AM. Twelve threads in the proposal inbox from the week. Usually I triage these over coffee and it eats an hour. Dropped the thread exports into a folder, ran the goal. Haiku evaluator was tight here — the condition was "12 rows present, each with verdict + failing question." Three turns in, Claude tried to skip threads where decision-maker wasn't clear. Evaluator rejected: "row 4 has no verdict." Back to work. Turn 9 cleared with all 12 rows.
+
+Receipt: 7 no-go (4 failed on budget, 2 on decision-maker, 1 on ICP fit), 3 follow-up (timeline soft), 2 go — which I personally replied to within 20 minutes. Usually those two would've been buried until Friday. Saved: ~50 minutes of triage, and the two go's got same-day replies, which our last sales data says doubles close rate.
+
+The brittle line: the 5-question filter is mine — if your filter is fuzzy, `/goal` can't help you. "Good fit" isn't a question. "Budget over $5k stated in thread" is. `/goal` exposes whether your sales process is actually a process or whether it's been vibes the whole time.
+
+### 4. Content loop — anti-takeaway closer lands
 
 ```text
 /goal the draft of chapter 38 contains a final paragraph
@@ -109,7 +175,7 @@ exactly once, and ships under 150 words, or stop after 8 turns
 
 Eval greps the transcript for the closer block. This is the chapter you're reading. Eight turns. Five drafts.
 
-### 4. Refactor loop — file size
+### 5. Refactor loop — file size
 
 ```text
 /goal no file in src/ exceeds 500 lines, find -name '*.ts'
@@ -119,7 +185,7 @@ existing tests still pass, or stop after 25 turns
 
 Eval reads the `wc -l` output Claude pastes. Forces the agent to split files until the count falls. Boring work, mechanical receipt, exactly the shape `/goal` was built for.
 
-### 5. Multi-condition stop
+### 6. Multi-condition stop
 
 ```text
 /goal pnpm test passes AND eslint is clean AND the fix
@@ -130,13 +196,29 @@ or stop after 30 turns
 
 Compound conditions work. The Haiku evaluator handles "all of A, B, C, D" fine. The risk isn't expressiveness — it's that an ambiguous compound condition can have multiple "done" interpretations and the evaluator picks the wrong one. Be precise on each clause.
 
-### 6. The trap — open-ended
+### 7. The trap — open-ended
 
 ```text
 /goal investigate until you find the cause
 ```
 
 Don't. The next section is about this.
+
+### 8. CFO defense — the AI bill
+
+```text
+/goal a 600-word memo defending this month's Anthropic spend
+is drafted with 3 specific labor-replacement receipts
+(role, hours saved, dollars), a quote from the CFO's own
+last objection, and a closing ask of "keep the line item"
+or stop after 8 turns
+```
+
+Tuesday, 9:14 AM. Anthropic bill landed at $847 for the month. CFO emailed "what is this and why is it growing." I had a board call at 11. I typed the goal, fed Claude my Customer.io usage report, the last three CFO emails, and a list of three tasks Claude actually did this month (CSV cleanup that would've been a $40/hr VA, a proposal draft that would've been 4 hours of mine, a research pass that replaced a $200 Fiverr gig). Six turns. The Haiku evaluator kept rejecting drafts that had generic "AI is the future" lines — turn 4's reject reason was "no dollar receipt for claim 2." Good. Turn 6 cleared. Memo was 612 words, three receipts named, CFO's "we need to justify every SaaS line" line quoted back at her.
+
+Receipt: memo sent at 9:41. CFO replied "fine, but cap at $1k." Line item survived. Saved: roughly 90 minutes of writing + the 11 AM board prep I would've cannibalized.
+
+The brittle line: if you don't have receipts before you start, `/goal` makes them up. It'll happily invent a "VA replaced at $40/hr × 12 hours" if you don't paste the actual usage data first. The goal forces structure, not honesty. Honesty is upstream.
 
 <ScreenshotPlaceholder
   id="38-run-until-done-1"

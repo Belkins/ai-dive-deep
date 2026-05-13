@@ -31,6 +31,7 @@ export const RESEARCH_NOTES: ResearchNote[] = [
     receipts: [
       { label: 'Mythos SWE-bench Verified', value: '93.9% (vs Opus 4.7 trailing)' },
       { label: 'Mythos SWE-bench Pro', value: '77.8% (the honest coding benchmark)' },
+      { label: 'Mythos OSWorld', value: '81% (vs Sonnet 4.6 at 72.5%, ~human baseline)' },
       { label: 'Release status', value: 'Explicitly withheld — Glasswing shipped instead' },
       { label: 'First disclosure', value: 'Fortune leak Mar 2026, then red.anthropic.com' },
       { label: 'Deprecation cliff', value: 'June 15, 2026 (claude-sonnet-4 / claude-opus-4)' },
