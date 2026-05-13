@@ -4,6 +4,346 @@ import SetupShowcase from '@/widgets/SetupShowcase.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import { SETUP_STATS } from '@/lib/setup';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const swarmCompositions = [
+  {
+    name: 'Strategic-plan swarm',
+    why: 'Greenfield venture — go from one paragraph of intent to a 25-document strategic plan before lunch.',
+    trigger: "manual · Vlad says \"draft me plans for [new venture]\" → /swarm-strategic-plan fires",
+    waves: [
+      { label: 'Wave 1 — foundation', detail: '4 agents in parallel: VISION, BUSINESS-MODEL, MONETIZATION, MARKET. Read/Write/WebSearch each. Each writes one master doc.' },
+      { label: 'Wave 2 — ops', detail: '4 agents: ROADMAP, GTM, OPERATIONS, RISK. Read the Wave-1 outputs as context, write their own.' },
+      { label: 'Wave 3 — brand + voice', detail: '4 agents: BRAND-IDENTITY, MESSAGING, CONTENT-PILLARS, VOICE-GUIDE.' },
+      { label: 'Wave 4 — revenue', detail: '4 agents: PRICING, REVENUE-MODEL, SALES-PLAYBOOK, RETENTION.' },
+      { label: 'Wave 5 — tech + personas', detail: '4 agents: ARCHITECTURE, STACK, 4 buyer personas. Final synthesis writes the BRIEF.md tying all 20+ docs together.' },
+    ],
+    receipt: 'Fired this for the 10k MRR ideas portfolio scaffolding — 25 docs in ~14 min wall-clock, ~$8 of tokens. Saved the week of "where do I even start" that kills every greenfield idea.',
+    antiPattern: "Don't use this for a feature inside an existing product — the 5-wave depth is overkill and the docs won't fit the repo's existing voice.",
+    chapterLink: { href: '06-the-swarm', label: 'Ch 6 — The swarm' },
+  },
+  {
+    name: '6-agent codebase audit',
+    why: 'Pre-PR or pre-investor-demo sweep on a repo nobody has audited end-to-end in months.',
+    trigger: 'manual · /audit on the repo root',
+    waves: [
+      { label: 'Wave 1 — 6 parallel reviewers', detail: 'security · types · performance · dependencies · test coverage · dead code. Each gets Read + Grep + Glob (read-only). Each returns findings as file:line with severity.' },
+      { label: 'Wave 2 — synthesis (mine)', detail: 'I dedupe overlapping findings, prioritize by blast radius × fix cost, write the fix order. Subagents do not edit — the main session applies fixes in one pass.' },
+    ],
+    receipt: 'Partner Connector pre-launch audit: 10+ real bugs surfaced per pass — 3 NestJS injection footguns, a BSON cast that nuked auth on a specific email shape, two dead workspace routes. Wall-clock ~9 min vs. half a day of manual grep.',
+    antiPattern: "Don't run this on a 200-line repo — the per-agent overhead dwarfs the work. Use bughunter solo under ~500 LOC.",
+    chapterLink: { href: '16-hooks-subagents', label: 'Ch 16 — Hooks + subagents' },
+  },
+  {
+    name: 'Editorial swarm',
+    why: 'Naming the chapter, the product, the tier — anywhere a single answer would mask the decision.',
+    trigger: 'manual · "give me 3 editorial takes on this"',
+    waves: [
+      { label: 'Wave 1 — 3 framings in parallel', detail: 'Agent A: topical (lead with the noun). Agent B: action (lead with the verb). Agent C: question (lead with the reader\'s objection). Same brief, same data, three philosophies.' },
+      { label: 'Wave 2 — pick or hybridize (mine)', detail: 'The output is a decision surface, not a single answer. I usually steal the verb from B and the noun phrase from A.' },
+    ],
+    receipt: 'Retitled all 36 chapters of this book for Edition 4 — 3 candidates per chapter, kept ~60% topical-primary, ~30% action-primary, ~10% question. Topical won on SEO + scannability.',
+    antiPattern: "Don't use this for technical accuracy questions — three opinions on a fact is just three guesses. Reserve for style, voice, framing.",
+    chapterLink: { href: '06-the-swarm', label: 'Ch 6 — The swarm' },
+  },
+  {
+    name: 'Design-variant swarm',
+    why: '"Redesign this page" — when one aesthetic answer hides the better one.',
+    trigger: 'manual · "give me 3 design variants of this section"',
+    waves: [
+      { label: 'Wave 1 — 3 designers in parallel', detail: 'Same data inlined into each prompt (never read from disk — variance kills comparison). Agent A: Bold. Agent B: Editorial. Agent C: Dashboard. Each gets Read + Write + a self-contained design brief from the 11-brief reference library.' },
+      { label: 'Wave 2 — comparison (mine)', detail: 'View the three variants side-by-side, pick one, or fuse (Bold typography + Editorial spacing is a common steal).' },
+    ],
+    receipt: '404 Model Agency proposal page: spawned Bold/Editorial/Brutalist variants in one wave. Editorial won the agency vote, Bold won the client click-through, shipped the hybrid. Each variant cost ~$0.40 in tokens.',
+    antiPattern: "Don't use this when you already know the constraint (e.g. \"must match Belkins brand\"). Variant swarms are for exploring — not for executing.",
+    chapterLink: { href: '06-the-swarm', label: 'Ch 6 — The swarm' },
+  },
+  {
+    name: 'Pre-flight external-deps swarm',
+    why: 'Before writing a single line of code that depends on 5+ external APIs — verify each is still alive in 2026.',
+    trigger: 'manual · /preflight-external-deps at the start of any integration-heavy project',
+    waves: [
+      { label: 'Wave 1 — N agents, one per dependency', detail: 'One agent per named API/data source. WebSearch + WebFetch. Each verifies: still active? rate limits changed? auth flow same? pricing tier still affordable? 2026 deprecation notes? Returns a one-page viability card.' },
+      { label: 'Wave 2 — go/no-go matrix (mine)', detail: 'Tabulate viability. Anything yellow gets a fallback plan documented before the first commit. Anything red kills the dep or the project.' },
+    ],
+    receipt: '10k MRR ideas portfolio pre-flight: 6 show-stoppers caught in one ~15-min pass — a deprecated TikTok endpoint, a Stripe Tax country gap, an Apify actor that 403\'d on the listed plan. Saved 2-3 weeks of scaffolding against a dead dep.',
+    antiPattern: "Don't use this for a project with 1-2 well-known deps you've used this quarter. The swarm overhead beats a single WebSearch only when N ≥ 4.",
+    chapterLink: { href: '16-hooks-subagents', label: 'Ch 16 — Hooks + subagents' },
+  },
+  {
+    name: 'Multi-AI weekend-build swarm',
+    why: "Saturday-ship project where you want to know which AI provider's vibe wins on the same brief.",
+    trigger: 'manual · Saturday morning, one PRD, three providers',
+    waves: [
+      { label: 'Wave 1 — same brief, 3 providers', detail: 'Claude (architecture-first), GPT (feature-completeness-first), Gemini (UI-polish-first). Each gets the same one-page PRD, the same target stack, the same 4-hour budget. Each ships to its own branch.' },
+      { label: 'Wave 2 — adversarial review (mine)', detail: 'Compare the three branches: which one merges cleanest? which has tests? which UI ships without 5 more hours? Cherry-pick across — Claude\'s server logic + Gemini\'s components is a frequent merge.' },
+    ],
+    receipt: 'Weekend-builds page synthesis: three parallel passes (wide ideation, PRD shaping, adversarial rubric) — the rubric killed five "obvious" picks and pushed one boring one to the top. Shipped in one Saturday.',
+    antiPattern: "Don't use this for production code on the critical path — three half-finished branches is worse than one finished branch. Reserve for greenfield Saturday builds where exploration is the point.",
+    chapterLink: { href: '06-the-swarm', label: 'Ch 6 — The swarm' },
+  },
+];
+
+const skillChains = [
+  {
+    when: 'Tuesday 06:35 ET',
+    title: 'The deal-pipeline tuesday',
+    skills: [
+      "deal-watcher — twice-daily HubSpot sweep that flags stalls (4+ days quiet) and surges (2+ stage jumps in 48h) per-deal, not as a digest",
+      "friday-wrapup — last Friday's aggregator memo still pinned in #pipeline-watch, carries the \"deals to revisit Tue\" list",
+      "belkins-sales-intelligence — joins HubSpot stage data with Gong transcript signals + calendar moves",
+    ],
+    scene: '06:35. Coffee on, kid still asleep. Slack opens to two deal-watcher pings from the 04:00 scheduled tick — Acme Corp $42k quiet 5 days in proposal, Northwind $18k advanced two stages overnight (good news, but a last-mile slip risk). Below those, friday-wrapup from Apr 26 still pinned: "Tuesday revisit — three deals from last week\'s calls had no follow-up touch." belkins-sales-intelligence had already cross-referenced the Gong transcripts: two of the three had verbal commitments that never made it to HubSpot notes. Vlad reads for 7 minutes, fires 4 outbound DMs to Kate and the AEs at 06:48. Acme replies at 09:12, deal closed Apr 30.',
+    receipt: '$42k deal recovered from the silent-dead window. 7 minutes of operator attention vs. the old 45-minute "read the dashboard, decide" Tuesday ritual.',
+    brittle: 'deal-watcher posts per-deal pings; on a 12-flag morning the channel becomes a wall and the operator skims. If flag count > 6, the chain needs a fallback digest mode — currently absent.',
+  },
+  {
+    when: 'Wednesday 14:00 ET',
+    title: 'The newsletter ship loop',
+    skills: [
+      "vlads-newsletter — drafts in Vlad's voice from vault sources (Vlad-Brain/Drafts/, recent retros, last week's calls)",
+      "voice-calibration — pulls 3 sample paragraphs from the published archive, scores the draft against them on cadence + sentence-length variance",
+      "rigor-enforcer-gate — kills \"Key takeaways\" lists, numberless claims (\"many users…\"), and the four banned superlatives",
+    ],
+    scene: '14:00, draft prompt opens with "newsletter on why CFOs are mispricing AI tokens." vlads-newsletter pulls three angle candidates from the vault, picks the one with the strongest opening hook (the Folderly $9k/mo bill conversation from Apr 11), drafts 1,150 words in 8 minutes. voice-calibration runs at 14:12 — flags two paragraphs as "too LinkedIn thinkfluencer", suggests cuts. rigor-enforcer-gate runs at 14:25 — catches one "studies show" claim with no link, one "Key Takeaways" closer, three em-dash overdoses (rare for the gate to fire on em-dashes since Vlad likes them, but the threshold is 11 per piece). Vlad hand-edits for 22 minutes. Published draft in Substack at 14:47.',
+    receipt: '47-minute cycle from idea → published draft. Old cycle was 4 hours including the "wait, this sounds AI-written" rewrite pass. 1,150 words shipped at vladsnewsletter.com.',
+    brittle: 'voice-calibration scores on syntax, not argument shape. A draft can pass voice and still be a topical retread of last month\'s piece — the chain needs a "have I shipped this argument before" check that doesn\'t exist yet.',
+  },
+  {
+    when: 'Tuesday 12:30 ET (30 min before the 13:00 Chris call)',
+    title: 'The mentee tuesday prep',
+    skills: [
+      "mentoring-lifecycle — pre-session mode: loads Session History + Action Tracker + Patterns file + last Session Prep for Chris Laverdure",
+      "friday-wrapup — pulls any Belkins/Folderly cross-portfolio context Chris should know (e.g., Folderly upsell warm lead Chris flagged in Session 3)",
+      "vault-note — writes the 1-page prep into Vlad-Brain/Projects/Active/Mentoring/Chris Laverdure - Session Prep 5.md with proper frontmatter + wikilinks",
+    ],
+    scene: '12:30. Chris call at 13:00 ET. mentoring-lifecycle fires in pre-session mode, loads four files from the vault: Mentoring.md (session history table), Action Tracker (3 commitments overdue 2.5 weeks from Vlad — GTM referrals), Patterns.md (Chris\'s "result is attached to me, my identity" emotional pattern), Session Prep 4 (the legal bottleneck discovery). friday-wrapup adds the Folderly upsell warm lead status — Chris had mentioned inbox issues, the Folderly team had been pinged but no follow-up yet. vault-note writes the prep at 12:38. Vlad reads for 6 minutes, walks into the call at 12:58 knowing the attorney status is the load-bearing question.',
+    receipt: '1-page prep doc written in 8 minutes vs. the old 35-minute scramble through vault files. Chris\'s $2,375/mo retainer kept defensible because the session opens on his actual question, not Vlad\'s last-mentee context bleeding through.',
+    brittle: "mentoring-lifecycle assumes the vault paths are stable. When Cowork's bindfs mirror got re-synced on May 9 the chain returned an empty Patterns.md for 18 minutes — verify-file-durability now runs as a pre-check, but the chain doesn't fail loudly when a source file is silently empty.",
+  },
+  {
+    when: 'Friday 16:45 ET',
+    title: 'The CFO defense friday',
+    skills: [
+      "billing-alert-template — already flagged the Anthropic spend spike Tuesday morning, $9,240 month-to-date vs. $5,800 budget",
+      "cfo-case — defense generator, builds the \"what this spend bought\" memo from git activity + shipped artifacts + revenue-attached outcomes",
+      "model-comparison — pulls Claude Opus 4.7 vs. GPT-5 cost-per-task on the actual prompts Vlad ran that month",
+    ],
+    scene: '16:45. Slack DM from Maria (Belkins CFO): "Vlad, the Anthropic bill is up 59% this month, can you justify before the board on Monday?" billing-alert-template had already pinged Tuesday — Vlad had ignored it because the spike was a swarm-strategic-plan run for a new portfolio venture, deliberate. cfo-case fires at 16:48: pulls git activity across 4 repos (Partner Connector ships, ai-dive-deep edition 4, belkins.app hub, LinguaLive), maps Claude usage to specific outcomes ($28k Folderly upsell recovered Tuesday, 36-chapter book shipped May 11, 18 Stripe Payment Links live). model-comparison runs at 16:55: same prompts on GPT-5 would have cost $14,100 with worse output on the long-context chapter drafts.',
+    receipt: '4-paragraph response to Maria at 17:08, board memo attached. $9,240 bill defended with $74k of attached deal-and-shipped-product outcomes. 23 minutes total vs. the old "spend Saturday reconstructing what the money bought" pattern.',
+    brittle: "cfo-case maps spend to git activity, but a third of Vlad's Claude usage is conversational (mentoring prep, strategic thinking) with no git trail. The defense undercounts the actual value — currently the chain reports the floor, not the truth.",
+  },
+  {
+    when: 'Saturday 10:00 ET, day before any public artifact ships',
+    title: 'The pre-launch sweep',
+    skills: [
+      "preflight-external-deps — spawns parallel research agents to verify every external API/data source is still alive and rate-limit-shaped as documented",
+      "cross-trio-audit — reads landing + day-1 fulfillment page + welcome email side-by-side, catches tier/price/refund/cadence drift",
+      "rigor-enforcer-gate — voice check + claim check on every customer-facing string before money moves",
+    ],
+    scene: "Saturday 10:00, the day before the 10k MRR Ideas demand-test decision (May 18 noon). preflight-external-deps spawns 4 parallel agents at 10:02 — one per external dep: Formspark (lead capture), Stripe Payment Links (18 of them), Resend (welcome email infra), Mailgun (Belkins sender for follow-ups). Wave returns at 10:14: Formspark's free-tier monthly cap was 250 submissions, the hub had logged 312 — silent throttle starting in 6 days. cross-trio-audit runs at 10:18 across the 10 subdomains: catches that 2 of them had a stale $19/mo tier on the landing while the welcome email quoted $29/mo. rigor-enforcer-gate runs at 10:32 on every customer-facing string — flags 3 \"we'll get back to you soon\" hedges that should name the actual SLA.",
+    receipt: '3 launch-killing drifts caught before the May 18 decision. Form provider swapped to a $9/mo tier by 11:00. Saved roughly 2-3 weeks of "why aren\'t leads coming in" debugging on a portfolio of 10 day-1 pages.',
+    brittle: "preflight-external-deps only checks deps that the operator named in the brief. If a dep is implicit (Vercel's Edge Config quietly underpins the redirect map) the chain misses it. Implicit-dep discovery is still a manual eye.",
+  },
+  {
+    when: 'Wednesday 11:15 ET, week 2 of SDR onboarding',
+    title: 'The sales-team adoption loop',
+    skills: [
+      "mentoring-lifecycle — SDR-onboarding variant, loads the new hire's first-week artifacts (sent emails, recorded discoveries, HubSpot notes)",
+      "email-deliverability-eval — gate before any SDR's first owned campaign — runs SPF/DKIM/DMARC + Postmaster reputation check",
+      "customer-call-truth-extractor — Belkins SDR's first prompt — strips marketing hedge language out of discovery call summaries",
+    ],
+    scene: "11:15. Belkins onboarded 3 new SDRs on May 1. mentoring-lifecycle (SDR variant) loads their week-1 artifacts at 11:17 — reads 47 sent emails, 6 Gong-recorded discoveries, HubSpot deal notes. One SDR (Jamie) had been writing notes like \"buyer seems excited, likely close Q3\" — empty signal. customer-call-truth-extractor flagged 9 instances of marketing-hedge language across her notes, suggested rewrites (\"buyer named budget $40k, named decision date May 30, named blocker = legal review\"). email-deliverability-eval ran on jamie's new sender domain before her first owned send Tuesday — caught a missing DKIM selector, fixed in 4 minutes before the 8AM send window.",
+    receipt: '3 SDRs in week 2, customer-call-truth-extractor stuck (used 38 times across the team that week), email-deliverability-eval caught the DKIM miss that would have torched a 2,400-message send. Week-2 patterns memo written for the next cohort.',
+    brittle: 'the SDR-onboarding variant of mentoring-lifecycle exists as a mode toggle, not a separate skill — and the trigger phrases between mentee-prep and SDR-onboarding overlap. Wrong mode fires roughly 1 in 7 invocations; the operator catches it because the prep doc lands in the wrong vault folder.',
+  },
+  {
+    when: 'Saturday 09:00 → 15:00 ET',
+    title: 'The saturday product build',
+    skills: [
+      "gstack-office-hours — builder mode, six forcing questions on whether the idea is worth the Saturday",
+      "swarm-strategic-plan — 5-wave × 4-agent scaffold if the idea survives office hours",
+      "agent-wave-verify — between-wave audit, catches silent agent failures + scope drift before wave N+1 fires",
+      "pitch-html — single-file interactive artifact, email-attachable, no build step",
+    ],
+    scene: 'Saturday 09:00. Idea: a "deal-cause-of-death autopsy" tool for outbound agencies — given a lost deal, generate the autopsy. gstack-office-hours runs at 09:05: six questions kill the "everyone wants this" assumption, narrows wedge to "Belkins-internal first, 30 lost deals/month, 15-min autopsy each." Survives. swarm-strategic-plan fires at 09:25, wave 1 (BRIEF + MARKET + PROBLEM + PERSONA) returns at 09:48. agent-wave-verify at 09:50 — wave 1 clean. Waves 2-5 fire across the morning with audits in between. agent-wave-verify catches wave 3 at 12:14: the monetization agent silently wrote to the wrong folder, scope-drift on positioning. Re-run wave 3 with corrected scope at 12:20. pitch-html runs at 14:30 with the BRIEF + MONETIZATION + REVENUE-MODEL + BRAND-IDENTITY → single .html file at 14:51. Sent to two Belkins ops leads at 15:00.',
+    receipt: '6 hours from idea → 20 strategic docs + 1 shippable HTML pitch. Wave-3 silent failure caught by audit before it cascaded into 4 downstream wave-4 docs writing against bad positioning. Roughly 3 hours of rework avoided.',
+    brittle: "swarm-strategic-plan assumes 4-agent parallelism stays under the empirical ceiling. Saturday morning's API load is low, but if a Saturday build coincides with a Belkins prod incident also burning agent budget, wave-2 agents start returning 429 — the chain doesn't backoff gracefully.",
+  },
+  {
+    when: 'Monday 08:30 ET',
+    title: 'The cross-portfolio hygiene check',
+    skills: [
+      "friday-wrapup — Friday's aggregated state across Belkins / Folderly / LinguaLive / 404 Model Agency / NoCancer AI",
+      "cross-portfolio-check — runs context-leak detection: did a Belkins-flavored prompt accidentally reach a Folderly customer-facing draft, and vice versa",
+      "claude-md-portfolio — verifies the portfolio CLAUDE.md instructions haven't drifted from the actual project state",
+    ],
+    scene: "Monday 08:30. friday-wrapup memo from Apr 26 still pinned, summarizes the 5 portfolio cos at end-of-week. cross-portfolio-check fires at 08:32, reads through draft Slack messages, draft emails, draft newsletter pieces from the weekend — flags one: Vlad's weekend draft for a Folderly partner outreach quoted a Belkins-internal closed-won number that's confidential. claude-md-portfolio at 08:45 — checks the per-project CLAUDE.md files against current state: catches that LinguaLive's CLAUDE.md still references the old payment provider (swapped to Stripe Connect on May 4), Partner Connector's still says \"v10.46.12\" when prod is on 10.47.8.",
+    receipt: '1 confidential-number leak caught before send — would have been a Monday-morning lawyer email otherwise. 2 stale CLAUDE.md drifts fixed in 11 minutes. Cross-portfolio hygiene done before 09:00, instead of being the thing Vlad notices Wednesday when something has already shipped.',
+    brittle: 'cross-portfolio-check matches on entity names (Belkins, Folderly, etc.) but doesn\'t catch paraphrased leaks — "an agency client of mine closed $X" reads as generic, fails the regex, ships. The chain catches the obvious leaks; the lawyer-grade ones still need a human eye.',
+  },
+];
+
+const swarmDeepDives = [
+  {
+    title: 'Pattern 1: the strategic-plan swarm',
+    whenToUse: "you have a greenfield venture — a name, a hunch, maybe a sentence — and you need 25 documents (vision, market, monetization, ops, brand, tech, legal, persona pool) before you'll know whether it's worth a weekend.",
+    waves: [
+      { label: 'Wave 1 — Foundation (4 agents, parallel)', detail: 'Agent 1 (vision-architect): writes VISION.md — what this is, what it isn\'t, the one-sentence positioning. Agent 2 (business-modeler): writes BUSINESS-MODEL.md — value chain, unit economics frame, who pays whom. Agent 3 (monetization-strategist): writes MONETIZATION.md — pricing tiers, take rate, expansion vectors. Agent 4 (market-analyst): writes MARKET.md — TAM/SAM/SOM, 3 incumbents, the wedge.' },
+      { label: 'Wave 2 — Operations (4 agents)', detail: 'ops-playbook + sourcing-strategy + house-rules + legal-frame.' },
+      { label: 'Wave 3 — Brand + Access (4 agents)', detail: 'brand-identity + marketing-channels + access-model + atmosphere-design.' },
+      { label: 'Wave 4 — Revenue surfaces (4 agents)', detail: 'revenue-streams + sponsorship-deck + streaming-rights + merch-line.' },
+      { label: 'Wave 5 — Build + community (4 agents)', detail: 'tech-stack + persona-pool + community-loops + investor-deck.' },
+      { label: 'Synthesis (1 agent, runs last)', detail: 'reads all 20 docs, produces TOP-INSIGHTS.md (5 cross-cutting themes the individual specialists couldn\'t see) and a brainstorming-personas.md (8 voices to pressure-test the plan in subsequent sessions).' },
+    ],
+    waveNote: "each wave waits for the prior to finish — wave 2's ops doc references wave 1's monetization assumptions, so foundation has to set before operations can build. within a wave, 4 agents max. that's the contention ceiling. if you try to do 6 ops specialists in wave 2, two of them will both try to edit ROADMAP.md and one will lose silently.",
+    template: `/swarm-strategic-plan [VENTURE-NAME]
+
+Context: [one paragraph — what the venture is, who it serves, what makes it
+different]. Stack assumption: [Next.js + Postgres / Notion-native / physical
+space / etc.]. Scope: 25 documents, 5 waves of 4 specialists + synthesis.
+Output folder: notes/strategic-plans/[venture-name]/.
+
+Constraints: real numbers per claim, lowercase tolerant, em-dashes welcome,
+no "amazing/powerful". Each doc 800-1500 words. Cross-link by relative path.`,
+    receipt: "ran this on 2026-04-22 for a hypothetical members-only ops salon — 20 docs in 11 minutes wall-clock, $6.20 total. synthesis caught that the brand doc's \"exclusive\" framing contradicted the monetization doc's volume assumption — would have been a month of confused positioning if i'd written them sequentially.",
+    antiPattern: "the venture has fewer than three real questions in it. if you can write the plan in one tab in 90 minutes, 20 specialists will produce 19 docs of filler around the one doc you needed. swarm cost > thinking-clearly cost.",
+    crossLinks: [
+      { href: '06-the-swarm', label: 'Chapter 6 — The Swarm' },
+      { href: 'showcase', label: '/showcase swarm receipts gallery', external: true },
+    ],
+  },
+  {
+    title: 'Pattern 2: the 6-agent codebase audit',
+    whenToUse: "you have a diff (or a whole repo) and you need to know what's wrong with it across six dimensions before merging — and a single reviewer agent will read 9,000 lines and miss half.",
+    waves: [
+      { label: 'Wave 1 — Domain reviewers (6 agents, parallel, read-only)', detail: 'Agent 1 (security-reviewer): tools Read/Grep/Glob. Hunts secrets, injection sinks, missing auth checks, unvalidated input. Agent 2 (types-reviewer): hunts any, untyped returns, missing zod, prisma type drift. Agent 3 (performance-reviewer): hunts N+1 queries, sync work in hot paths, unbounded loops, missing indexes. Agent 4 (deps-reviewer): hunts deprecated packages, vulnerable versions, unused imports, version-skew between workspace packages. Agent 5 (test-gap-reviewer): hunts untested branches, missing edge cases, mocked-but-uncalled assertions. Agent 6 (dead-code-reviewer): hunts unreachable code, unused exports, orphan files, stale feature flags.' },
+      { label: 'Wave 2 — Synthesis (1 agent)', detail: 'reads all 6 reports, dedupes overlapping findings (a security issue is often also a types issue), ranks by severity × confidence, writes AUDIT.md with file:line citations and a top-10 fix list.' },
+    ],
+    waveNote: 'i know i broke my own rule with 6 in one wave. exception is legal here because each reviewer reads the diff and writes to its own report file (audit-security.md, audit-types.md, etc.) — no write contention. the synthesis agent in wave 2 reads all six and merges. if you tried 6 agents all editing the same audit file, you\'d hit the contention ceiling instantly.',
+    template: `/audit [DIFF or PATH]
+
+Spawn 6 read-only review subagents in parallel against [PATH]:
+  - security-reviewer → notes/audit/security.md
+  - types-reviewer → notes/audit/types.md
+  - performance-reviewer → notes/audit/performance.md
+  - deps-reviewer → notes/audit/deps.md
+  - test-gap-reviewer → notes/audit/tests.md
+  - dead-code-reviewer → notes/audit/dead-code.md
+
+Each returns findings as: file:line | severity (P0/P1/P2) | description |
+suggested fix. No edits. Read-only tools only (Read, Grep, Glob).
+
+After all 6 return, spawn one synthesis agent to dedupe + rank + write
+notes/audit/AUDIT.md with top-10 fix list.`,
+    receipt: 'ran on partner-connector pre-release branch 2026-04-09 — 6 reviewers returned 47 raw findings, synthesis dedupe collapsed to 12 unique issues, 4 were P0 (one missing auth check, two N+1s, one vulnerable dep). that single pass caught more than two human reviewers had in the prior week.',
+    antiPattern: "the diff is under 200 lines or single-file. overhead of spawning 6 agents costs more than reading it yourself. swarm pays off when the diff is across 10+ files or you're auditing a repo you didn't write.",
+    crossLinks: [
+      { href: '25-evals', label: 'Chapter 25 — Evals and Audits' },
+      { href: '16-hooks-subagents', label: 'Chapter 16 — Hooks and Subagents' },
+    ],
+  },
+  {
+    title: 'Pattern 3: the 3-agent perspectival editorial swarm',
+    whenToUse: "titling, voice calibration, slug-picking, headline copy. one agent will hand you a single answer. you don't want a single answer — you want a decision surface so you can pick by ear.",
+    waves: [
+      { label: 'Wave 1 — Three philosophical stances (3 agents, parallel)', detail: 'Agent A (topical-declarative): writes 10 candidates in topical-declarative form — "The N-Agent Codebase Audit," "Parallel Subagents and Fan-Out." Topic-led, no verb. Agent B (action-verb): writes 10 candidates in action-verb form — "Audit Your Repo with 6 Agents," "Spawn Six Reviewers, Merge One Report." Imperative, the reader is the subject. Agent C (question-form): writes 10 candidates in question form — "What If Six Reviewers Read Your Diff in Parallel?" "Why Does One Reviewer Always Miss the N+1?" Curiosity gap, no answer until the click.' },
+      { label: 'Wave 2 — Decision step (you, 90 seconds)', detail: 'read the 30 candidates side-by-side. pick by ear. there is no synthesis agent here — the value is the comparison, not the merge.' },
+    ],
+    waveNote: '3 agents is the floor for this pattern, not the ceiling — 2 perspectives is a coin flip, 4+ stances dilute distinctiveness. 3 is the empirical sweet spot for editorial choice. (the contention ceiling doesn\'t bind here because each agent writes its own candidate list to its own file.)',
+    template: `Spawn 3 editorial subagents in parallel for [PIECE]:
+
+Agent A — topical-declarative voice. Write 10 candidate titles in noun-led,
+declarative form. No verbs in title. Examples: "The Swarm." "Hooks and
+Subagents." Save to notes/titles/A-topical.md.
+
+Agent B — action-verb voice. Write 10 candidate titles starting with an
+imperative verb addressed to the reader. Examples: "Spawn 6 Reviewers."
+"Stop Talking to Claude." Save to notes/titles/B-action.md.
+
+Agent C — question-form voice. Write 10 candidates phrased as a question
+that creates a curiosity gap. Examples: "What if six agents read your diff?"
+Save to notes/titles/C-question.md.
+
+Subject: [topic]. Audience: [who reads this]. Word budget: 4-9 words per
+candidate. Return file paths only.`,
+    receipt: "used this on 2026-05-09 retitling all 36 chapters of this book. 3 agents × 10 candidates × 36 chapters = 1,080 options, generated in ~7 minutes. final picks were a mix: 22 topical, 9 action, 5 question. doing this with one agent would have produced 36 topical titles (the default voice for LLMs) and i'd never have seen the action-form variants that worked better for the operator chapters.",
+    antiPattern: 'when the constraint is hard. if the SEO target keyword has to be in the title and in a specific position, you don\'t need 3 perspectives — you need one agent slotting the keyword into 5 templates. perspectival swarm is for subjective decisions where ear matters more than rules.',
+    crossLinks: [
+      { href: '14-newsletters', label: 'Chapter 14 — Newsletters and Voice' },
+      { href: 'weekend-builds', label: '/weekend-builds for the 3-agent variant pattern applied to layout', external: true },
+    ],
+  },
+  {
+    title: 'Pattern 4: the pre-flight external-dependencies swarm',
+    whenToUse: "before you scaffold any project that depends on external sources or APIs. you've listed 5-10 third-party deps in your plan doc. before you write a line of code, you need to know which of them silently changed policy in 2026.",
+    waves: [
+      { label: 'Wave 1 — One agent per dependency (3-4 agents, parallel)', detail: 'Agent 1: audits dep A — current rate limits, deprecation notices, breaking changes since your last known version, 2026 policy shifts. Returns: status (green/yellow/red) + 1-paragraph what-changed. Agents 2-4: same shape against deps B/C/D.' },
+      { label: 'Wave 2 — Continue if >4 deps', detail: 'spawn next batch of 3-4. do not exceed 4 per wave — each agent runs WebFetch + reads provider docs + maybe hits a sandbox endpoint. file-system writes are cheap here, but rate-limit collisions on the provider side aren\'t (two agents WebFetching the same OpenAI docs page within 100ms gets one of them a 429).' },
+      { label: 'Wave 3 — Synthesis (1 agent)', detail: 'reads all dep reports, produces GO-NO-GO.md — list of green deps to scaffold against, yellow deps requiring fallback path, red deps to remove from the plan before they cost you a sprint.' },
+    ],
+    waveNote: 'remember: 3-4 agents per wave is the empirical sweet spot; 5+ invites filesystem contention AND rate-limit collisions on the upstream APIs you\'re researching. budget waves accordingly.',
+    template: `/preflight-external-deps [PROJECT-NAME]
+
+Audit these external deps before scaffolding [PROJECT]:
+  1. [dep-1] — current docs: [url]
+  2. [dep-2] — current docs: [url]
+  3. [dep-3] — current docs: [url]
+  4. [dep-4] — current docs: [url]
+
+Spawn 4 parallel research subagents (one per dep). Each agent:
+  - WebFetch provider docs + changelog + status page
+  - Verify: rate limits as of [today], deprecation notices, 2026 policy
+    shifts, auth-flow changes since [last-known-version]
+  - Return: status (green/yellow/red) + what changed + replacement
+    candidate if red
+
+Save each agent's report to notes/preflight/[dep-name].md. After all 4
+return, spawn one synthesis agent to produce notes/preflight/GO-NO-GO.md
+with traffic-light table.
+
+If >4 deps: run in sequential waves of 4.`,
+    receipt: 'ran on a content-aggregator side project 2026-03-28 — 8 deps audited in 2 waves. caught 6 show-stoppers in one session: Twitter API v2 free tier killed for write, Reddit API now $0.24/1K calls (was free), LinkedIn dropping non-partner access in Q3, two RSS providers consolidated, one OG-image service deprecated their v1 endpoint. would have been 2-3 weeks of scaffolding against dead pipes before discovery.',
+    antiPattern: "the project depends only on stable, first-party infrastructure (your own Postgres + your own Vercel + Anthropic API). preflight pays off when the dep is a third-party data feed, a partner API, or anything where the provider's business model could shift under you. don't audit your own database.",
+    crossLinks: [
+      { href: '11-building', label: 'Chapter 11 — Building Without Breaking' },
+      { href: 'research-notes', label: '/research-notes for the catalog of deps i\'ve burned on', external: true },
+    ],
+  },
+  {
+    title: 'Pattern 5: the launch swarm',
+    whenToUse: "you're shipping a real launch — book, product, post, campaign — and you need a multi-channel sequence designed by specialists, not by you-at-2am the night before.",
+    waves: [
+      { label: 'Wave 1 — Three launch dimensions (3 agents, parallel)', detail: 'Agent 1 (distribution-sequencer, marketing-strategist subagent): designs the day-by-day plan across HN, X, LinkedIn, newsletter, subreddits, cold-side. Outputs notes/launch/distribution.md — 14-day plan with expected impressions per channel, swing variables, mitigation if HN flops. Agent 2 (viral-mechanics-auditor, general-purpose): reads the product itself, surfaces shareable artifacts (a tier list, a CFO defense, a side-by-side comparison) that have post-able life independent of the launch announcement. Outputs notes/launch/shareable-surfaces.md. Agent 3 (hook-and-messaging-auditor, general-purpose): pressure-tests the lead message across three audiences (operators, builders, executives). Identifies which framing converts which audience. Outputs notes/launch/hook-audit.md.' },
+      { label: 'Wave 2 — Synthesis (1 agent)', detail: 'reads all 3 reports, writes SYNTHESIS.md — single integrated launch doc with the day-by-day plan annotated by which shareable surface anchors each post and which hook lands per channel.' },
+    ],
+    waveNote: 'three is the floor here too. one launch strategist gives you a single plan with no audit on its assumptions; two gives you debate without arbitration; three (distribute / what-to-distribute / how-to-frame) covers the orthogonal dimensions and the synthesis step does the arbitration.',
+    template: `Spawn 3 launch-design subagents in parallel for [PROJECT]:
+
+Agent 1 (marketing-strategist) — distribution sequence. Design day-by-day
+launch plan across HN, X, LinkedIn, newsletter, subreddits, cold-side
+amplifiers. Real impression estimates. Swing variables. Mitigation paths.
+Save to notes/launch/distribution.md.
+
+Agent 2 (general-purpose) — viral-mechanics audit. Read [PROJECT URL or
+PATH]. Identify 3-5 shareable artifacts inside the product that have
+independent post-able life. Each artifact: one-line description, target
+channel, expected engagement floor. Save to notes/launch/shareable-surfaces.md.
+
+Agent 3 (general-purpose) — hook + messaging audit. Pressure-test the lead
+message against [3 audience segments]. For each segment: which framing
+converts, which framing reads as funnel-bait, the one-line opener that lands.
+Save to notes/launch/hook-audit.md.
+
+After all 3 return, synthesis agent reads all three + writes
+notes/launch/SYNTHESIS.md — integrated 14-day plan annotated by anchor
+artifact + segment-specific hook per channel.`,
+    receipt: "this is exactly the swarm that produced the launch plan for the book you're reading. 3 agents fired 2026-05-10, returned in 4 minutes. synthesis caught that the X thread's launch-announcement framing would have suppressed reach — distribution agent had pencilled in \"thread #1: I shipped a book\" and the hook-audit agent flagged it as the lowest-engagement opener for the operator audience. final thread led with the LMArena disagreement instead. that single catch was probably 50K impressions of difference.",
+    antiPattern: "the launch is a Tuesday-quiet post to your own list. you don't need 3 strategists for a 400-word email. swarm pays off when the launch has 5+ surfaces and the cost of a wrong hook is > 30 minutes of swarm time.",
+    crossLinks: [
+      { href: '22-distribution', label: 'Chapter 22 — Distribution' },
+    ],
+  },
+];
 ---
 <BaseLayout title="Vlad's actual setup" description="Sixty-two skills, thirty-two custom agents, twelve plugins. Live snapshot of Vlad's working Claude Code environment.">
   <section class="container-prose pt-16 pb-4">
@@ -13,7 +353,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       Chapter 5 explains skills as a concept. Chapter 11 walks through building one. This page is the receipts — the {SETUP_STATS.skills} skills, {SETUP_STATS.agents} custom agents, and {SETUP_STATS.plugins} plugins running live in Vlad's <code>~/.claude/</code> right now. Auto-generated from the actual filesystem; updates as the stack evolves.
     </p>
     <p class="mt-3 text-base" style="color: rgb(var(--muted))">
-      The point isn't that you should install all of these. The point is that this is what an operator's library looks like at hour two thousand. Steal anything. Skip anything. Build your own.
+      The point isn't that you should install all of these. The point is that this is what an operator's library looks like at hour two thousand. Steal anything. Skip anything. Build your own. The auto-extracted list is just names — scroll past it to the <a href="#swarm-compositions" style="color: rgb(var(--accent))">six swarm compositions</a> first to see how the pieces actually chain together.
     </p>
 
     <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-mono" style="color: rgb(var(--muted))">
@@ -37,6 +377,171 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent-2))">Sister page</div>
         <div class="font-display text-base">Cowork setup (sanitized) →</div>
       </a>
+    </div>
+  </section>
+
+  <section id="swarm-compositions" class="container-wide pt-8 pb-12 scroll-mt-20">
+    <div class="container-prose px-0">
+      <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent-2))">Compositions · how the pieces chain</div>
+      <h2 class="font-display text-3xl md:text-4xl m-0">Six swarm compositions Vlad actually runs</h2>
+      <p class="mt-4 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+        The names in the list below are inert until you wire them into a Wave-1 / Wave-2 / synthesis pattern. These are the six chains that earn their rent — each one a real workflow with real receipts, not a marketing diagram. Read Ch 6 for the swarm philosophy and Ch 16 for the hooks + subagents wiring.
+      </p>
+    </div>
+
+    <div class="mt-8 grid gap-5 md:grid-cols-2">
+      {swarmCompositions.map((c) => (
+        <article class="rounded-xl p-5 transition-colors" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+          <h3 class="font-display text-xl md:text-2xl m-0" style="color: rgb(var(--fg))">{c.name}</h3>
+          <p class="mt-2 text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">{c.why}</p>
+
+          <div class="mt-3 text-xs font-mono" style="color: rgb(var(--muted))">
+            <span class="uppercase tracking-wider" style="color: rgb(var(--accent))">Trigger</span> · {c.trigger}
+          </div>
+
+          <ol class="mt-4 space-y-2 list-none p-0 m-0">
+            {c.waves.map((w) => (
+              <li class="rounded-md p-3 text-sm leading-snug" style="background: rgb(var(--bg)); border-left: 2px solid rgb(var(--accent-2));">
+                <div class="text-[11px] uppercase tracking-wider font-semibold" style="color: rgb(var(--accent-2))">{w.label}</div>
+                <div class="mt-1" style="color: rgb(var(--fg) / 0.92)">{w.detail}</div>
+              </li>
+            ))}
+          </ol>
+
+          <p class="mt-4 text-sm italic leading-relaxed m-0" style="color: rgb(var(--muted))">
+            <span class="not-italic font-semibold" style="color: rgb(var(--accent))">Receipt · </span>{c.receipt}
+          </p>
+
+          <div class="mt-3 rounded-md p-3 text-xs leading-snug" style="background: rgb(var(--bg)); border: 1px dashed rgb(var(--line)); color: rgb(var(--fg) / 0.85)">
+            <span class="font-semibold uppercase tracking-wider text-[10px]" style="color: rgb(var(--muted))">Don't use this for · </span>{c.antiPattern}
+          </div>
+
+          <div class="mt-3">
+            <a href={`${base}/chapters/${c.chapterLink.href}`} class="text-xs no-underline inline-flex items-center gap-1" style="color: rgb(var(--accent))">
+              → {c.chapterLink.label}
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="container-prose px-0 mt-8">
+      <p class="text-sm leading-relaxed" style="color: rgb(var(--muted))">
+        Six compositions, not sixty. The other patterns Vlad runs (memory-consolidation triplets, adversarial proposer/critic/arbiter trios, map-reduce email classifiers) are variants of these — once you can see the Wave-N shape, you stop counting agents and start counting outcomes.
+      </p>
+    </div>
+  </section>
+
+  <!-- Eight skill chains -->
+  <section id="skill-chains" class="container-wide pt-8 pb-12 scroll-mt-20">
+    <div class="container-prose px-0">
+      <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Chains · skills in sequence</div>
+      <h2 class="font-display text-3xl md:text-4xl m-0">Eight skill chains Vlad runs</h2>
+      <p class="mt-4 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+        A skill on its own is a recipe card. A chain is a service ticket — three recipe cards pinned in the right order, fired by one phrase, finished before the operator's coffee cools. These eight scenarios show what actually happens on a Tuesday morning when the library is doing the work and the operator is just reading Slack. Real portfolios, real numbers, real failure surfaces.
+      </p>
+    </div>
+
+    <div class="mt-8 grid gap-5 md:grid-cols-2">
+      {skillChains.map((chain) => (
+        <article class="card" style="background: rgb(var(--paper));">
+          <div class="text-xs font-mono uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">{chain.when}</div>
+          <h3 class="font-display text-xl md:text-2xl m-0" style="color: rgb(var(--fg))">{chain.title}</h3>
+
+          <div class="mt-4">
+            <div class="text-[11px] uppercase tracking-wider font-semibold mb-2" style="color: rgb(var(--accent-2))">Skills that fire (in order)</div>
+            <ol class="space-y-1.5 list-decimal pl-5 m-0 text-sm" style="color: rgb(var(--fg) / 0.92)">
+              {chain.skills.map((s) => (
+                <li class="leading-snug">{s}</li>
+              ))}
+            </ol>
+          </div>
+
+          <p class="mt-4 text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+            <span class="font-semibold uppercase tracking-wider text-[11px]" style="color: rgb(var(--accent-2))">The scene · </span>{chain.scene}
+          </p>
+
+          <p class="mt-4 text-sm italic leading-relaxed m-0" style="color: rgb(var(--muted))">
+            <span class="not-italic font-semibold" style="color: rgb(var(--accent))">Receipt · </span>{chain.receipt}
+          </p>
+
+          <div class="mt-3 rounded-md p-3 text-xs leading-snug" style="background: rgb(var(--bg)); border: 1px dashed rgb(var(--line)); color: rgb(var(--fg) / 0.85)">
+            <span class="font-semibold uppercase tracking-wider text-[10px]" style="color: rgb(var(--muted))">Where it's brittle · </span>{chain.brittle}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Five swarm deep-dives -->
+  <section id="swarm-deep-dives" class="container-wide pt-8 pb-12 scroll-mt-20">
+    <div class="container-prose px-0">
+      <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent-2))">Deep-dives · the spawn templates</div>
+      <h2 class="font-display text-3xl md:text-4xl m-0">Five swarm deep-dives</h2>
+      <p class="mt-4 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+        These five patterns are the ones I keep reaching for when the work doesn't fit in one context window. Each one has a real receipt — a moment it fired, what it produced, and what it would have cost to do the slow way. The spawn templates are mealy usable: paste, swap the bracketed names, send.
+      </p>
+      <p class="mt-3 text-sm leading-relaxed" style="color: rgb(var(--muted))">
+        One rule under all of them: <strong style="color: rgb(var(--fg))">3-4 agents per wave is the empirical sweet spot. 5+ invites filesystem contention.</strong> More agents in one wave doesn't mean more output — it means two agents writing to the same file, one agent silently winning, and you discovering it three hours later in a diff. Respect the ceiling.
+      </p>
+    </div>
+
+    <div class="mt-8 grid gap-6">
+      {swarmDeepDives.map((p) => (
+        <article class="card" style="background: rgb(var(--paper));">
+          <h3 class="font-display text-2xl md:text-3xl m-0" style="color: rgb(var(--fg))">{p.title}</h3>
+
+          <p class="mt-3 text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+            <span class="font-semibold uppercase tracking-wider text-[11px]" style="color: rgb(var(--accent))">When to use · </span>{p.whenToUse}
+          </p>
+
+          <div class="mt-4">
+            <div class="text-[11px] uppercase tracking-wider font-semibold mb-2" style="color: rgb(var(--accent-2))">Wave shape</div>
+            <ol class="space-y-2 list-none p-0 m-0">
+              {p.waves.map((w) => (
+                <li class="rounded-md p-3 text-sm leading-snug" style="background: rgb(var(--bg)); border-left: 2px solid rgb(var(--accent-2));">
+                  <div class="text-[11px] uppercase tracking-wider font-semibold" style="color: rgb(var(--accent-2))">{w.label}</div>
+                  <div class="mt-1" style="color: rgb(var(--fg) / 0.92)">{w.detail}</div>
+                </li>
+              ))}
+            </ol>
+            <p class="mt-3 text-xs italic leading-relaxed m-0" style="color: rgb(var(--muted))">{p.waveNote}</p>
+          </div>
+
+          <div class="mt-4">
+            <div class="text-[11px] uppercase tracking-wider font-semibold mb-2" style="color: rgb(var(--accent))">Spawn template (paste into Claude Code)</div>
+            <pre class="m-0" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line)); padding: 1rem; overflow-x: auto; font-size: 0.8em; line-height: 1.5; border-radius: 6px;"><code style="color: rgb(var(--fg) / 0.9); font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">{p.template}</code></pre>
+          </div>
+
+          <p class="mt-4 text-sm italic leading-relaxed m-0" style="color: rgb(var(--muted))">
+            <span class="not-italic font-semibold" style="color: rgb(var(--accent))">Receipt · </span>{p.receipt}
+          </p>
+
+          <div class="mt-3 rounded-md p-3 text-xs leading-snug" style="background: rgb(var(--bg)); border: 1px dashed rgb(var(--line)); color: rgb(var(--fg) / 0.85)">
+            <span class="font-semibold uppercase tracking-wider text-[10px]" style="color: rgb(var(--muted))">Anti-pattern (when NOT to use) · </span>{p.antiPattern}
+          </div>
+
+          <div class="mt-3 flex flex-wrap gap-3">
+            {p.crossLinks.map((link) => (
+              <a href={link.external ? `${base}/${link.href}` : `${base}/chapters/${link.href}`} class="text-xs no-underline inline-flex items-center gap-1" style="color: rgb(var(--accent))">
+                → {link.label}
+              </a>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="container-prose px-0 mt-8">
+      <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
+        <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">The meta-rule under all 5</div>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          If there's one line to walk away with: <strong>dispatch in one message, not five.</strong> The swarm only works when the parent session sends all wave-1 agents in a single tool batch — that's what makes them parallel. If you send them one at a time, you've just built a sequential chain in agent costumes and you'll wait 4× as long for the same answer.
+        </p>
+        <p class="text-sm leading-relaxed mt-3 m-0" style="color: rgb(var(--fg) / 0.92)">
+          Paste a spawn template, swap the brackets, send. If it stalls past 8 minutes, the wave is too big — split into two waves of 3-4 and run them sequentially. 3-4 is the empirical sweet spot. Respect the ceiling.
+        </p>
+      </div>
     </div>
   </section>
 
