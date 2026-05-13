@@ -44,6 +44,8 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 35, slug: '35-codex-and-cc', title: 'Codex or Claude Code — or Both?', subtitle: 'Day Shift, Night Shift' },
   { number: 36, slug: '36-frameworks-beyond', title: 'When Do I Outgrow Claude Code?', subtitle: 'Beyond CC — CrewAI, LangGraph, SDK' },
   { number: 37, slug: '37-context-files', title: 'Context Files — CLAUDE.md, memory, skills', subtitle: 'Where Conventions Live, Where They Die' },
+  { number: 38, slug: '38-run-until-done', title: 'Run Until Done', subtitle: 'Goals, Loops, and the Evaluator That Tells the Agent to Stop' },
+  { number: 39, slug: '39-skills-you-should-steal', title: 'Skills You Should Steal', subtitle: 'A tour of the 1M-skill ecosystem, the 73% that\'s broken, and the gaps an operator can fill' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -84,14 +86,14 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part V — The Building Site',
     tagline: 'From Saturday idea to deployed URL with receipts.',
     intro: "Six stages: ideation → foundation → creation → polishing → security → deploy. Plus cron, headless, vibe coding, evals, the bill. This is the part that turns reading into shipping.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done'],
   },
   {
     key: 'VI',
     label: 'Part VI — The Frontier and the Tier',
     tagline: 'Agents that talk, write, browse, and the honest tier list.',
-    intro: 'Voice, browser, persona, archetype agents. Two-agent infrastructure. Frameworks beyond Claude Code. Team adoption when twelve people need to use it. Failure stories with dollar amounts. The tier list, ranked without diplomatic phrasing.',
-    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '36-frameworks-beyond', '26-team-adoption', '28-failure-receipts', '24-tier-list'],
+    intro: 'Voice, browser, persona, archetype agents. Two-agent infrastructure. Frameworks beyond Claude Code. Team adoption when twelve people need to use it. Failure stories with dollar amounts. The tier list, ranked without diplomatic phrasing. Plus the community skill ecosystem — what to steal and what to publish.',
+    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '36-frameworks-beyond', '39-skills-you-should-steal', '26-team-adoption', '28-failure-receipts', '24-tier-list'],
   },
 ];
 
@@ -117,7 +119,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'claude',
     label: 'Claude',
     description: 'Three doors (Chat / Cowork / Code), the swarm, the modes, sessions, the cheat sheet.',
-    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp', '37-context-files'],
+    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp', '37-context-files', '38-run-until-done'],
   },
   {
     key: 'security',
@@ -129,7 +131,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'agents',
     label: 'AI Agents',
     description: 'The wild stuff. Rick archetypes. Browser agents. Persona agents. Frameworks beyond Claude Code.',
-    slugs: ['10-wild-stuff', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '36-frameworks-beyond', '35-codex-and-cc', '27-voice-agents'],
+    slugs: ['10-wild-stuff', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '36-frameworks-beyond', '35-codex-and-cc', '27-voice-agents', '39-skills-you-should-steal'],
   },
   {
     key: 'building',

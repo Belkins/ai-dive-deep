@@ -174,6 +174,46 @@ One paragraph because that's what AutoGen earns at this point. Microsoft Researc
 
 The graduation pattern is the move. Don't pick the framework on day one. Prototype in CC. Promote to CrewAI when the handoff contracts sharpen. Promote to LangGraph when the graph branches. Drop to the SDK when the framework fights the workflow. Each promotion costs roughly a day of refactor — the prompts and the agents survive the transition; the orchestration layer is what gets rewritten. That's a fair trade because the orchestration layer is the thing you're optimizing.
 
+## Update — May 2026
+
+This chapter shipped six months before this update and every framework version in it is stale. Here's what moved, what's new, and what's actually worth picking up.
+
+**AutoGen → Microsoft Agent Framework 1.0 GA.** Microsoft shipped MAF 1.0 on **2026-04-03** and explicitly migrated AutoGen + Semantic Kernel users to it. AutoGen the original repo is now in maintenance mode. The "research-strong, prototype-friendly" paragraph above still describes a useful tool — but if you're starting today, start on MAF, not AutoGen. **The trap to flag up front:** MAF is worth adopting if you're a .NET shop, an Azure shop, or already invested in Semantic Kernel. For everyone else — TypeScript teams, Python teams not on Azure, Anthropic-platform operators — the gravitational pull of MAF will burn weeks on Azure-specific patterns that don't transfer back to your stack. Skip it. The Anthropic-stack-direct path from [Chapter 30](/chapters/30-sdk-direct) is still the highest leverage per line of code.
+
+**OpenAI Agents SDK 0.14** (released **2026-04-15**) added a model-native sandbox and a model-native harness — the agent loop moved closer to the model. Subagents and code-mode are documented as coming soon (verify against your version/source). This is OpenAI converging toward the same shape Anthropic has been shipping, which means the SDK-direct thesis in [Chapter 30](/chapters/30-sdk-direct) gets a free second confirmation.
+
+**Anthropic Managed Agents** went into public beta on **2026-04-08**. Anthropic hosts the runtime, error recovery, and execution; you keep writing against the standard `anthropic` SDK. **Memory files** followed on **2026-04-23** — persistent memory mounted as `/mnt/memory/` inside the agent's container, readable and writable with the bash + file tools the agent already has, exportable and editable in Console. That solves the "stateless agent" problem for Anthropic-platform shops without bringing in a framework. Pair with **adaptive thinking** on Opus 4.6 / Sonnet 4.6 (and Mythos, when it ships) — `budget_tokens` is deprecated; the model decides when and how much to think, with interleaved thinking enabled by default and preserved across turns. The Anthropic stack in May 2026 is materially more capable than the version this chapter described in November.
+
+**Vercel AI SDK 6** is the other entry that didn't exist when I wrote this chapter. **20M+ monthly downloads** — that's not a startup framework; that's infrastructure. The new piece worth knowing is **Workflow DevKit** with `DurableAgent` — a drop-in replacement for the `Agent` class that gives you pause/resume, crash-safe execution, retries, and step-based observability. For TypeScript product teams running agents inside a Next app, this is the cleanest "agent that survives a process restart" story available. Closer in shape to LangGraph than to CrewAI, but lives natively in a Vercel-shaped deployment.
+
+**Mastra 1.0** hit **January 2026** — entirely new entry, didn't exist when the chapter shipped. **22k GitHub stars, ~300k weekly npm downloads, YC W25 graduate.** TypeScript-only, agents + workflows + RAG in one stack. The Mastra sweet spot is "TS team that wants the LangGraph state-machine model without the Python ergonomics." Worth a real look if your team has already standardized on TS and you want one framework instead of three. The reason it earned a row above CrewAI for some teams: opinionated single-language footprint, less abstraction sprawl.
+
+**Inngest AgentKit** deserves a mention for one specific shape — event-driven shops who already run Inngest for durable jobs and want deterministic agent routing on top. If you're already on Inngest, the migration cost is near zero. If you're not, this isn't the reason to adopt Inngest.
+
+### The orchestration consensus
+
+The hardest-won lesson of the May 2026 ecosystem isn't a framework choice — it's a topology choice. **Hub-and-spoke wins production, roughly 70% of deployments** per multiple framework docs and case studies (Microsoft's MAF guidance, Anthropic's research-style multi-agent system, the gurusup orchestration writeup, augmentcode's guide). Swarm patterns win demos and Twitter threads. Hub-and-spoke wins customer-facing work.
+
+The shape: one orchestrator decomposes the task and dispatches to specialist workers; workers don't talk to each other; one verifier/critic checks the output before it ships. The reason it wins is debuggability — one control flow to trace, one place where the state lives, one log to read at 3 AM. Microsoft's own migration guide spells it out: **start centralized, decentralize only when a concrete scalability bottleneck appears.** Swarm-style peer-to-peer handoff (the OpenAI Swarm pattern, now folded into Agents SDK 0.14) is powerful for parallelism but observability is brutal. My own portfolio rule — 3 to 4 parallel agents per wave, 5+ invites filesystem contention — is the operator-scale version of the same lesson.
+
+### Updated framework count
+
+This chapter previously walked through roughly five frameworks. The May 2026 menu, with what's actually worth knowing per use case:
+
+| Framework | Best for | Headline number |
+|---|---|---|
+| **Anthropic Claude Agent SDK + Managed Agents** | Anthropic-platform builds, agents that need memory and adaptive thinking | Vlad's primary platform; Memory files GA-beta 2026-04-23 |
+| **CrewAI** | Role-based sequential or hierarchical teams; fastest path from idea to shipped crew | ~47.8k GitHub stars, 12M daily executions, 150+ enterprise customers |
+| **LangGraph** | Known DAGs, durable state, branches and loops, restart-safe production | 1.1.10 + prebuilt 1.0.12 as of April 2026; Klarna, Replit, LinkedIn in prod |
+| **OpenAI Agents SDK** | OpenAI-native code agents with sandbox + native harness | 0.14 released 2026-04-15 |
+| **Microsoft Agent Framework** | .NET / Azure shops, Semantic Kernel and AutoGen migrators | 1.0 GA 2026-04-03 — trap for non-.NET teams |
+| **Vercel AI SDK 6 + Workflow DevKit** | TS product teams running agents inside a Next app | 20M+ monthly downloads, DurableAgent drop-in |
+| **Mastra** | TS-only teams wanting agents + workflows + RAG in one stack | 22k stars, 300k weekly npm, YC W25 |
+| **Inngest AgentKit** | Event-driven shops already on Inngest | Built on durable Inngest infra |
+| **Anthropic SDK direct** | Everything that doesn't earn the framework tax | Still the floor — [Chapter 30](/chapters/30-sdk-direct) |
+
+The graduation pattern at the top of this chapter still holds — start in CC, leave for CrewAI or Mastra when the contract sharpens, leave for LangGraph or Workflow DevKit when the graph branches, drop to the SDK when the framework fights the workflow. The menu just got longer. Most operators only need three of these in their head: Anthropic SDK direct as the floor, CrewAI for fast crews, LangGraph or Workflow DevKit for state-machines that survive restarts. See the [Mythos entry in /research-notes](/research-notes) for why the SDK-direct floor matters more, not less, as the next model wave hits.
+
 ---
 
 The mistake I see most often — and made myself, twice — is picking the heaviest framework on day one because it'll "scale later." LangGraph for a three-agent linear workflow is a punishment. CrewAI for a single-agent script is a punishment. Claude Code for a five-agent stateful pipeline running on a cron is a punishment. The right framework is the one that matches the shape of the work today, with a one-day promotion path to the next one when the shape changes. The orchestrator you don't have to maintain is the orchestrator the framework gives you. The orchestrator you wrote yourself is the one you'll be debugging on a Saturday.

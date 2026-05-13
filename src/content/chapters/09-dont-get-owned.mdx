@@ -85,6 +85,16 @@ Where to run risky agents, in order of preference: a local Docker container with
 
 Bank account numbers. Social security numbers. Passport numbers. Full credit card numbers. Other people's PII without their explicit consent. Production credentials of any kind. Customer data when you don't have explicit data-handling permission. Even if your AI vendor's privacy policy is excellent, prompts get logged, screenshots get saved, and habits compound. Train yourself to redact before you paste. The discipline takes a week to install and a career to forget.
 
+## The MCP supply chain — CVE-2026-30623
+
+Here's the receipt that changes the threat model. In April 2026, OX Security disclosed CVE-2026-30623 — command injection via the MCP SDK's STDIO interface. Blast radius: roughly 200,000 publicly accessible MCP servers. Nine out of eleven public MCP registries accepted OX's malicious test package without review. Anthropic's response was the part operators need to absorb: by design, fix-at-registry, sanitization is the developer's responsibility. Translation — there is no upstream patch coming. The transport layer behaves exactly as specified. Treat third-party MCP servers like you'd treat an npm dependency in 2018: assume nothing, audit something.
+
+The operator move is concrete. Pin every <GlossaryTerm term="Skill">skill</GlossaryTerm> install to a git SHA, not a tag and not a branch — tags get rewritten, branches drift, SHAs don't. Audit `.mcp.json` server configs the same way you'd audit `package.json` dependencies: who's the maintainer, when was the last commit, what does the server actually have access to. Don't `npx <random-mcp-server>` from an author you wouldn't hire. For portfolio companies, the cleaner play is mirroring the official MCP registry internally — Anthropic designed the new registry preview to be mirror-able for exactly this reason. Run an allow-list, not a hope.
+
+The ledger shifted. Skill installs and MCP wiring are supply-chain operations now, not feature toggles. The same care you take with `package.json` is the floor — the ceiling is treating every connector as a contractor with your keys.
+
+See the research notes for the full CVE timeline and the 9-of-11 registry breakdown.
+
 ## When a key leaks — the 30-minute incident response
 
 It will happen. Plan now, panic less later.

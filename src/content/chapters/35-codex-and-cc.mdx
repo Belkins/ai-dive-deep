@@ -112,6 +112,16 @@ I learned this one the hard way. Codex auto-merged a "fix" against the Folderly 
 
 The agent doesn't get the muscle memory you get from being burned. You have to encode the muscle memory into the rules.
 
+## May 2026 update — SKILL.md goes cross-vendor
+
+Two things shifted under this chapter since it shipped, and both make the dual-shift setup cheaper to run, not more expensive.
+
+The first: **OpenAI Agents SDK 0.14** dropped on April 15, 2026. The headline features for this chapter are a model-native sandbox and a model-native harness — the agent loop now lives closer to the model instead of in a framework on top, which is the same direction Anthropic's Agent SDK has been moving for a year. Subagents and code-mode are documented as "coming soon" (verify against your version/source). For the night shift, that means Codex sessions get sandbox isolation by default and the harness handles tool-call retries without me writing the loop. The 3 AM Sentry triage that opens PR #4471 in the cold open of this chapter is the kind of work that benefits most from a sandboxed runtime — it's reading production logs and writing code; the blast radius of a bad run should be containable.
+
+The second is the bigger shift, and it's quiet enough that most teams haven't noticed yet. **Codex CLI now uses the same SKILL.md format as Claude Code.** Same frontmatter, same trigger phrases, same directory layout. The same `.claude/skills/<name>/SKILL.md` file that fires a workflow in CC can fire the same workflow in Codex — no rewrite, no second skill library, no "Codex version of mentoring-lifecycle." Skills became a cross-vendor portable artifact in May 2026, which is the biggest shift this chapter's underlying premise has absorbed since it shipped.
+
+The receipt I can give you from the Belkins repo: a deal-watcher skill — single SKILL.md, around 90 lines, MCP server config, three trigger phrases, one Stop hook — runs from Codex at 3 AM when a Sentry event hits the deal-sync queue, and the same skill runs from my Claude Code session at 9 AM when I'm reviewing the PR. One file, two CLIs, two shifts. The day-shift / night-shift framing in this chapter still holds. What changed is that the SKILL.md library doesn't have to be duplicated — write skills once, use across both runtimes. See [Chapter 39](/chapters/39-skills-you-should-steal) for the community side of this — once the format is cross-vendor, the marketplace grows faster, and the skills you steal stop caring which agent runs them. Receipts in [/research-notes](/research-notes).
+
 ---
 
 The thing nobody talks about with dual-agent setups is that the two agents will eventually diverge in how they interpret the same `CLAUDE.md`. Codex reads it through the lens of "what's the minimal compliant action," CC reads it through the lens of "what's the right move here." That divergence is fine — that's what makes them different shifts. The work is to keep the divergence productive, not to flatten it. The day shift catches what the night shift missed; the night shift catches what the day shift slept through. The repo is the thing they share. The rest is contract design.
