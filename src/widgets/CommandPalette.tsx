@@ -27,6 +27,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'How to read this book', href: `${base}/how-to-read`,     subtitle: 'The prologue — start here if new' },
       { type: 'page', title: 'Day zero',              href: `${base}/day-zero`,        subtitle: 'First 30 minutes, 12 steps' },
       { type: 'page', title: 'Starter skills',         href: `${base}/starter-skills`,  subtitle: 'Six drop-in SKILL.md files' },
+      { type: 'page', title: 'Vault starter',          href: `${base}/vault-starter`,   subtitle: 'PARA vs 7 others. Project-as-entity. Working vault to clone.' },
       { type: 'page', title: 'Weekend builds',         href: `${base}/weekend-builds`,  subtitle: '8 Saturday-ship recipes + the trap pick' },
       { type: 'page', title: 'For your CFO',           href: `${base}/cfo-case`,        subtitle: '600 words. Defend the spend.' },
       { type: 'page', title: 'Research notes',         href: `${base}/research-notes`,  subtitle: 'External findings that shift what to do Monday' },

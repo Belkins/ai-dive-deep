@@ -1,0 +1,375 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const methods = [
+  { name: 'PARA',                   tier: 'B', verdict: 'ships fast, breaks at scale around 15 active projects' },
+  { name: 'Zettelkasten',           tier: 'C', verdict: 'breaks below 500 notes and above 5,000 — keep as a sidecar' },
+  { name: 'Johnny Decimal',         tier: 'B', verdict: 'great for static reference, terrible whole-vault' },
+  { name: 'LATCH / CABO',           tier: 'A', verdict: 'theory not method — diagnostic for why folders feel wrong' },
+  { name: 'GTD-based vault',        tier: 'D', verdict: 'tasks belong in a tasks tool, not your vault' },
+  { name: 'ACCESS / PPV / hybrids', tier: 'C', verdict: 'steal MOCs and pipelines, skip the framework' },
+  { name: 'Bullet Journal (digital)', tier: 'C', verdict: 'daily-note rhythm survives, the discipline doesnt translate' },
+  { name: 'Project-as-entity',      tier: 'S', verdict: "Vlad's pattern — the only one built for portfolio operators + AI agents" },
+];
+
+const plugins = [
+  { name: 'Templater', why: 'dynamic templates with JS. auto-date, auto-fill, auto-link.', critical: true },
+  { name: 'Dataview', why: 'query your vault like a database. live tables in any note.', critical: true },
+  { name: 'Tag Wrangler', why: 'rename / merge tags safely across the whole vault.', critical: false },
+  { name: 'Tasks', why: 'checkbox tasks with metadata, queryable across notes.', critical: false },
+  { name: 'Calendar', why: 'sidebar calendar — click a day, open or create that note.', critical: false },
+  { name: 'Periodic Notes', why: 'scaffolds daily/weekly/monthly/quarterly templates.', critical: false },
+  { name: 'Excalidraw', why: 'sketch diagrams inline, stored as .md.', critical: false },
+  { name: 'Advanced Tables', why: 'keyboard-friendly markdown tables.', critical: false },
+];
+
+const avoid = [
+  { name: 'Kanban', why: 'looks cool, becomes tech debt. use Linear or Notion.' },
+  { name: 'Mind Maps', why: 'all implementations clunky — use Whimsical or Excalidraw full canvas.' },
+  { name: 'Sliding Panes', why: 'visual chaos past 3 panes. built-in tabs win.' },
+];
+---
+<BaseLayout title="Vault starter — Obsidian for AI-native operators" description="Full guide. PARA, Zettelkasten, Johnny Decimal compared. Vlad's project-as-entity reframe. Working vault you can clone. From Apple Notes to neuron-firing brain in 4 weeks.">
+
+  <!-- HERO -->
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Vault starter</div>
+    <h1>Obsidian as working memory.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      The full guide. PARA vs Zettelkasten vs Johnny Decimal vs five others — compared honestly with operator-grade verdicts. Vlad's <strong>project-as-entity</strong> reframe (the only method built for portfolio operators + AI agents). The neuron logic. The import workflow that turns Apple Notes + email into a firing brain. A working vault you can clone tonight.
+    </p>
+    <p class="mt-3 text-base" style="color: rgb(var(--muted))">
+      Companion to <a href={`${base}/chapters/04-the-vault`}>Ch 4 — Obsidian as Working Memory</a>. Built from three parallel AI research passes (methods comparison, Obsidian mechanics, Vlad's specific pattern), synthesized in his voice. Read in any order; everything stands alone.
+    </p>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a href="https://github.com/Belkins/ai-dive-deep/tree/main/vault-starter" target="_blank" rel="noopener" class="btn-flame">Clone the working vault →</a>
+      <a href="#install" class="btn-ghost">15-min install</a>
+      <a href="#import" class="btn-ghost">Import from Apple Notes</a>
+    </div>
+  </section>
+
+  <!-- TLDR / philosophy -->
+  <section class="container-prose pt-8 pb-8">
+    <Callout type="tip" title="The whole pitch in three sentences">
+      Most PKM methods were designed for one human reading one folder tree. They were not designed for an operator running five companies, a paid mentee, a newsletter, and three agents reading the vault at the same time. The only method that survives at portfolio scale + AI integration is <strong>project-as-entity</strong> — treat anything with state and a lifecycle as a project, regardless of whether Tiago Forte would call it one.
+    </Callout>
+  </section>
+
+  <!-- 1 — WHY OBSIDIAN -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="why-obsidian">Why Obsidian wins for AI-native operators</h2>
+
+    <p>Four reasons, in order of how much they matter when AI agents are first-class readers.</p>
+
+    <p><strong>Local-first.</strong> Your vault is a folder of <code>.md</code> files on your machine. Not in someone else's basement. You can <code>ls</code> it, <code>grep</code> it, rsync it to a backup drive. If Obsidian the company disappears tomorrow, the files still open in any text editor for the next 40 years. Notion can't say that. Reflect can't say that. Mem definitely can't.</p>
+
+    <p><strong>Markdown native.</strong> Every model — Claude, GPT, Gemini, the open-weights you'll be running in 2027 — reads markdown natively. Zero parsing layer between your notes and an LLM. Point a filesystem MCP at the folder and the agent just <em>reads</em>. Notion requires an API token, scoped permissions, page-by-page sync, and rate limits that bite at the worst time. Obsidian gives the bytes directly.</p>
+
+    <p><strong>Bidirectional links.</strong> Mention <code>[[Mentee A]]</code> in a session note and the link is alive in both directions. The backlink panel on <code>Mentee A</code> shows every note that references them. That's the neuron — one node activates the network. Notion has page links but they're not symmetric. Roam had this and got it right, then ran out of runway.</p>
+
+    <p><strong>Plugin ecosystem.</strong> ~1,500 community plugins, open source, two-click install. When you need a thing, someone's built it. When nobody's built it, Templater lets you script in plain JavaScript. You don't wait for a roadmap.</p>
+
+    <p>Free. Optional sync at $8/mo. iCloud or Dropbox for $0. Mobile apps are decent — phone is for capture, desktop is for synthesis.</p>
+
+    <PullQuote>The vault is the moat. The AI is the rented intelligence on top.</PullQuote>
+  </section>
+
+  <!-- 2 — METHODS COMPARED -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="methods">Eight methods compared, honestly</h2>
+
+    <p>Before structure: ask which axis you're committing to. <strong>LATCH</strong> (Richard Saul Wurman's claim from <em>Information Anxiety</em>) says there are only five ways to organize anything — Location, Alphabet, Time, Category, Hierarchy. Every folder structure you've ever built is a mix of these axes, usually badly. If your vault feels wrong, it's almost always because you mixed axes at the same level. LATCH is theory, not method — read it once, internalize, don't try to "implement" it.</p>
+
+    <div class="my-6 rounded-lg overflow-hidden" style="border: 1px solid rgb(var(--line));">
+      <table class="w-full text-sm m-0">
+        <thead style="background: rgb(var(--paper));">
+          <tr>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Method</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Tier</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          {methods.map((m) => (
+            <tr>
+              <td class="p-3" style="border-bottom: 1px solid rgb(var(--line)); font-weight: 500;">{m.name}</td>
+              <td class="p-3 font-mono" style={`border-bottom: 1px solid rgb(var(--line)); color: ${m.tier === 'S' || m.tier === 'A' ? 'rgb(var(--accent-2))' : m.tier === 'B' ? 'rgb(var(--accent))' : 'rgb(var(--muted))'};`}>{m.tier}</td>
+              <td class="p-3 text-sm" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--fg) / 0.85);">{m.verdict}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h3>PARA — Projects / Areas / Resources / Archive</h3>
+    <p>Tiago Forte's framework. Four buckets, every note lives in exactly one. <strong>Projects</strong> have outcomes and deadlines. <strong>Areas</strong> have standards but no end date (a company you own, your health). <strong>Resources</strong> are reference material on topics. <strong>Archive</strong> is dead projects and outdated reference. The logic: file by how actionable, not what topic. When a project ends, the doc moves to archive or gets promoted to a resource.</p>
+    <p><strong>Where it shines:</strong> solo founders with 3-7 active projects. Consultants. Writers shipping one book. PARA is the best method for someone whose job is "produce deliverables."</p>
+    <p><strong>Where it breaks:</strong> five companies, twelve quarterly initiatives, two mentees, a newsletter, an investor pipeline does not fit "projects vs areas." Everything you touch is both — a company is an Area (ongoing standard) AND a stream of Projects (Q2 hire, fundraise, ship product). Forte says: nest projects inside areas. But that defeats the premise. And relationships, deals, mentees, songs — they're entities with state, and PARA has no slot.</p>
+
+    <h3>Zettelkasten</h3>
+    <p>Niklas Luhmann's method, 90,000 index cards in a wooden cabinet. Digital version: atomic notes, unique IDs, mandatory linking, three intake stages (fleeting → literature → permanent). Value: stop organizing by folder, start organizing by connection. Every note is a node, every link an edge, structure emerges from the graph.</p>
+    <p><strong>Breaks below 500 notes</strong> (graph too sparse for serendipity), <strong>breaks above 5,000</strong> (graph becomes a hairball). Breaks for operators because Zettelkasten has no concept of state. "Ship v2" is not a Zettelkasten note. "Meeting Chris next Tuesday" is not a Zettelkasten note. It's a method for thinking, not for running things.</p>
+    <p><strong>Verdict:</strong> keep a small Zettelkasten subfolder for ideas you'll cite ten times. Don't run your whole vault on it.</p>
+
+    <h3>Johnny Decimal</h3>
+    <p>Numeric prefixes — 10-19 areas, 11.01 / 11.02 / 11.03 items. Filing-cabinet brain. Find anything by reciting the path: "Q2 board deck — 30 finance, 32 board, 32.04."</p>
+    <p><strong>Shines</strong> for static reference (contracts, financial docs, legal). <strong>Breaks</strong> the moment you have an 11th category in an area. Doesn't handle entities-with-lifecycles. AI agents don't care about your numbers.</p>
+    <p><strong>Verdict:</strong> great for the 10% of your vault that's static reference. Terrible as a whole-vault method.</p>
+
+    <h3>GTD-based vault</h3>
+    <p>David Allen's framework adapted to Obsidian. Top level: Inbox / Next Actions / Waiting / Someday / Projects / Reference. Genius for tasks. Disastrous for knowledge — forces every note into the to-do shape, your vault becomes a guilt machine.</p>
+    <p><strong>Verdict:</strong> run GTD in a tasks tool (Linear, Todoist, Things). Let your vault be a vault.</p>
+
+    <h3>Bullet Journal applied to digital</h3>
+    <p>Ryder Carroll's analog method. The daily-note rhythm and the weekly migration ritual survive the digital conversion. The bullet symbols and the manual index don't. The whole point of BuJo is the friction — rewriting a task tomorrow forces "is this still worth doing?" Digital has no friction.</p>
+    <p><strong>Verdict:</strong> steal the daily-note + weekly-review rituals. Skip the symbols.</p>
+
+    <h3 id="project-as-entity">Project-as-entity (Vlad's twist) — the method that actually works at portfolio scale</h3>
+
+    <p>Forte defines a project as "an active outcome with a deadline." Too narrow for anyone running more than one thing. The right primitive for portfolio operators is broader:</p>
+
+    <PullQuote>A project is anything with state and a lifecycle. If it changes over time, if you make decisions about it, if it has a history worth remembering, it's a project.</PullQuote>
+
+    <p>Under that definition:</p>
+
+    <ul>
+      <li><strong>A company</strong> is a project. Belkins has state (MRR, headcount, runway), a lifecycle (founded → growth → exit), decisions, history. It's not just an "area" — it's an entity you actively shape.</li>
+      <li><strong>A person</strong> is a project. A mentee has state (mentoring phase, current homework, last session date), a lifecycle (intake → growth → graduation), decisions, history. Treating them as a "resource" loses the entity-ness.</li>
+      <li><strong>A deal</strong> is a project. Stages, decisions, a clock, a history.</li>
+      <li><strong>A quarterly initiative</strong> is a project — classic Forte definition.</li>
+      <li><strong>A song, a book, a talk, a furniture build</strong> — projects, even without formal deadlines.</li>
+      <li><strong>A relationship</strong> is a project. Controversial framing but accurate — state, decisions, history, deserves the same structural respect as a company.</li>
+    </ul>
+
+    <p>Top-level structure becomes entity-typed, not action-typed:</p>
+
+    <pre><code>Vault/
+├── 00-Inbox/        (capture zone)
+├── 01-Daily/        (time-indexed)
+├── 02-Projects/
+│   └── Active/      (entities with state)
+├── 03-People/       (one file per recurring human)
+├── 04-Companies/    (portfolio entities)
+├── 05-Newsletter/   (publishing pipeline)
+├── 06-References/   (evergreen, non-entity)
+└── 99-Templates/</code></pre>
+
+    <p><strong>Why this works for AI agents:</strong> when an agent reads your vault, the most useful question is "what's the current state of X?" Entity-typed folders make that a one-path lookup. PARA forces the agent to guess whether X is currently a Project or an Area, and the answer depends on time. Project-as-entity is a stable mapping. An agent reading <code>03-People/Mentee A/</code> finds the hub note, the action tracker, the session log, the patterns file — and can answer any question without crawling six folders.</p>
+
+    <p><strong>Why it scales past PARA's ceiling:</strong> PARA breaks at ~15 active projects because the Projects folder becomes a list you can't visually scan. Entity-typed folders break at ~50 entities per type, which for most operators is years away. When an entity goes dormant (a deal dies, a relationship fades), it migrates to that entity's archive subfolder, not to a global archive that mixes everything.</p>
+
+    <p><strong>The catch:</strong> requires committing to entity types up front. Add a new top-level type and you're moving folders. Pick 6-8 types and stick with them.</p>
+  </section>
+
+  <!-- 3 — INSTALL -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="install">The 15-minute install</h2>
+
+    <ol>
+      <li><strong>Download Obsidian</strong> — <a href="https://obsidian.md" target="_blank" rel="noopener">obsidian.md</a>. Free. Mac, Windows, Linux. ~80MB.</li>
+      <li><strong>Create a vault folder.</strong> I do <code>~/Desktop/Obsidian/Vlad-Brain/</code>. On the desktop because you want it visible, not in a path with a space (some scripts choke on spaces). Pick a brain name. Mine is "Vlad-Brain." Sounds dumb. Works.</li>
+      <li><strong>Point Obsidian at the folder.</strong> Obsidian → Open folder as vault → select the folder.</li>
+      <li><strong>Sync.</strong> Three options:
+        <ul>
+          <li><strong>iCloud</strong> — free, encrypted at rest, Mac+iPad only. Vault goes inside <code>~/Library/Mobile Documents/iCloud~md~obsidian/Documents/</code>.</li>
+          <li><strong>Dropbox</strong> — free, cross-platform, NOT end-to-end encrypted. Dealbreaker if your vault has client PII.</li>
+          <li><strong>Obsidian Sync ($8/mo)</strong> — end-to-end encrypted, native, instant. If your vault has anything sensitive, this is the path.</li>
+        </ul>
+      </li>
+      <li><strong>Mobile.</strong> Install on iOS/Android, point at the same vault folder, you're synced.</li>
+    </ol>
+
+    <p>First 5 minutes of use: create a note <code>00-home.md</code>. Type a sentence. Cmd+E to toggle preview. Close Obsidian, open the same file in TextEdit — same content. Nothing is locked inside the app.</p>
+  </section>
+
+  <!-- 4 — PLUGINS -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="plugins">The 8 plugins, the 3 to avoid</h2>
+
+    <p>Settings → Community plugins → enable → Browse → install each.</p>
+
+    <div class="my-5 grid gap-3 sm:grid-cols-2">
+      {plugins.map((p) => (
+        <div class="rounded-md p-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+          <div class="flex items-baseline justify-between gap-2 mb-1">
+            <strong class="text-sm">{p.name}</strong>
+            {p.critical && <span class="text-[10px] font-mono px-1.5 py-0.5 rounded" style="background: rgb(var(--accent)); color: white;">CRITICAL</span>}
+          </div>
+          <p class="text-xs leading-relaxed m-0" style="color: rgb(var(--fg) / 0.85)">{p.why}</p>
+        </div>
+      ))}
+    </div>
+
+    <h3>Three to avoid (the trap plugins)</h3>
+    <ul>
+      {avoid.map((a) => (
+        <li><strong>{a.name}</strong> — {a.why}</li>
+      ))}
+    </ul>
+
+    <p><em>Install plugins that disappear into the workflow. Avoid plugins that ARE the workflow.</em></p>
+  </section>
+
+  <!-- 5 — NEURON LOGIC -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="neuron-logic">Neuron logic — how the graph becomes a brain</h2>
+
+    <p>Most people see the graph view as a pretty picture. That's the screenshot version. The graph as a diagnostic tool is what makes it worth the discipline.</p>
+
+    <p>Look for four patterns:</p>
+
+    <ul>
+      <li><strong>Dense central cluster</strong> = your daily-driver themes. The things you think about every week. <em>Good.</em> This is the brain firing.</li>
+      <li><strong>Hub nodes</strong> = key entities with many threads (a company, a mentee, a long-running project). Click one, the whole context activates. <em>Good — your themes are deepening.</em></li>
+      <li><strong>Radial outer ring of orphan dots</strong> = one-shot captures that never got linked back. <em>Warning sign.</em> Either link them or archive them.</li>
+      <li><strong>Floating clusters disconnected from the center</strong> = entire themes you've stopped engaging with. <em>Decide:</em> revive or archive.</li>
+    </ul>
+
+    <p>The neuron-firing pattern: click <code>[[Mentee A]]</code> → activate all session notes, action items, patterns, strategic map. <strong>One click reveals the entire relationship context.</strong> Compare to Notion's database row: same data, no firing pattern. The graph IS the firing pattern.</p>
+
+    <p>This is why AI integration works. An agent reading a hub node gets the whole context in one read. An agent reading a Notion database has to do N queries.</p>
+
+    <p><em>Every two weeks, scan the graph for new orphans (red flag), new hubs (good — themes deepening), and dense clusters that should be split into multiple entities.</em></p>
+  </section>
+
+  <!-- 6 — IMPORT WORKFLOW -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="import">Import workflow — from Apple Notes + email to a firing brain</h2>
+
+    <p>I did this. Uploaded every Apple Note + key emails into <code>00-Inbox</code>, mapped from there. Took ~4 weeks to feel real. Here's the playbook:</p>
+
+    <h3>Step 1 — Export Apple Notes</h3>
+    <p>Notes app → File → Export, or third-party tools like <strong>Exporter</strong> (Mac App Store) or the <strong>notes-to-markdown</strong> CLI. Result: a folder of <code>.md</code> files, one per note. Lossy formatting on tables, embedded sketches, voice memos — accept the loss, archive the lossy bits, move on.</p>
+
+    <h3>Step 2 — Export key emails</h3>
+    <p>Use Mimestream / Apple Mail's "Save As" or Gmail Takeout. <strong>Don't import everything.</strong> Import: client emails, mentee threads, investor updates, key decisions. Skip: receipts, marketing, newsletters. The 80/20: probably 200-500 emails matter from your last 3 years. Save each thread as a single <code>.md</code> with subject + participants + date in frontmatter.</p>
+
+    <h3>Step 3 — Drop everything into 00-Inbox/</h3>
+    <p>Don't try to organize during import. Inbox is the dump zone by design. After Step 2 you might have 2,000 notes — that's the raw matter stage.</p>
+
+    <h3>Step 4 — Bulk-link the obvious entities</h3>
+    <p>For each note, identify the 1-3 main entities mentioned (company names, people names, projects). Use Templater + a regex pass — or Cowork with filesystem MCP — to auto-add <code>[[Entity]]</code> links where names appear. This is where the graph starts firing. Even rough links create the network.</p>
+
+    <h3>Step 5 — Promote Inbox → permanent home</h3>
+    <p>For each Inbox item, decide:</p>
+    <ul>
+      <li>Daily note? → <code>01-Daily/YYYY-MM-DD.md</code></li>
+      <li>Project artifact? → <code>02-Projects/Active/&lt;Project&gt;/</code></li>
+      <li>About a person? → merge into <code>03-People/&lt;Name&gt;.md</code></li>
+      <li>Reference? → <code>06-References/</code></li>
+      <li>Trash? → delete</li>
+    </ul>
+    <p>Most notes find a home in 1-2 minutes. Some Inbox items spawn new projects ("oh, this whole Apple Note IS the Mentee A project").</p>
+
+    <h3>Step 6 — Week-2 audit</h3>
+    <p>Run the graph view. Dense clusters (good), orphan rings (need linking), disconnected clusters (themes you forgot about). Pick the top 3 hub candidates → turn them into proper Project notes with metadata frontmatter (status, last_updated, owner, open_threads).</p>
+
+    <h3>Step 7 — Daily capture from here forward</h3>
+    <p>00-Inbox stays the dump zone. Daily note fires from Calendar plugin. Weekly 20-min review empties Inbox, archives stale projects.</p>
+
+    <Callout type="warn" title="Four failure modes during import">
+      <ul class="m-0">
+        <li><strong>Importing too much</strong> (200 receipts as Inbox noise)</li>
+        <li><strong>Trying to perfectly organize during import</strong> — you'll never finish. Inbox is FINE as a holding zone.</li>
+        <li><strong>Skipping the link-everything pass</strong> — without links, the graph never fires, the vault stays a filing cabinet</li>
+        <li><strong>Quitting at week 2</strong> because it doesn't feel transformational — compounding happens at month 3, not week 2</li>
+      </ul>
+    </Callout>
+
+    <PullQuote>The brain you build in week 1 isn't the brain you'll have in year 1. But year-1 brain is impossible without week-1 import.</PullQuote>
+  </section>
+
+  <!-- 7 — AI INTEGRATION -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="ai">Wiring Claude Code and Cowork to the vault</h2>
+
+    <p>The filesystem MCP server points at the vault folder. The agent reads your vault as text.</p>
+
+    <pre><code>{`{
+  "mcpServers": {
+    "vault": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/<you>/Desktop/Obsidian/<Brain>"]
+    }
+  }
+}`}</code></pre>
+
+    <p>Drop that in <code>~/.mcp.json</code> (Claude Code) or wire it via Cowork's Connectors panel. Restart, run <code>/mcp</code>, ask: "Read CLAUDE.md and tell me what's on my plate today." First useful answer in ~10 seconds.</p>
+
+    <p><strong>Read-only by default.</strong> The agent should be able to read your vault but not arbitrarily write to it. Wire write access only when a skill genuinely needs it (the morning-briefing canvas writes to a specific output file; the mentee fan-out writes to a specific tracker — both narrow scopes).</p>
+
+    <p>The <code>CLAUDE.md</code> at the vault root is read on every session. Keep it under 100 lines. <a href={`${base}/chapters/04-the-vault`}>Ch 4</a> covers this; the working starter is in the clonable repo (link at top).</p>
+  </section>
+
+  <!-- 8 — MAINTENANCE -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="maintenance">The loop that keeps it alive</h2>
+
+    <p>A vault that doesn't get written to is a vault that rots. Without maintenance your "second brain" becomes a graveyard.</p>
+
+    <ul>
+      <li><strong>Daily — 5 min.</strong> Write today's daily note. Anything that crossed your mind that isn't tied to a project goes in 00-Inbox. Don't organize. Don't link. Just capture.</li>
+      <li><strong>Weekly — 20 min (Fri afternoon or Sun night).</strong> Empty 00-Inbox into permanent homes. Archive stale projects. Update CLAUDE.md if focus shifted.</li>
+      <li><strong>Biweekly — graph scan.</strong> Look for orphan rings + disconnected clusters + hubs growing too dense (split into sub-notes).</li>
+      <li><strong>Monthly — consolidate.</strong> Merge duplicates. Prune dead notes. Fix broken links.</li>
+      <li><strong>Quarterly — vault audit.</strong> Does the structure still match how you work?</li>
+    </ul>
+
+    <p><em>Year 1 feels like overhead. Year 2 you have an orchard. Every AI instance you spawn benefits from years of accumulated decisions, conversations, patterns, mistakes.</em></p>
+  </section>
+
+  <!-- 9 — COMMON FAILURE MODES -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="failures">Five vault failure modes (skip if you've already lived them)</h2>
+
+    <ol>
+      <li><strong>Starting with 12 top-level folders.</strong> If your root is wider than 8, you don't have a structure — you have a pile.</li>
+      <li><strong>Using tags AND folders for the same hierarchy.</strong> Pick one axis per question. Don't tag <code>#client</code> if you fold by client.</li>
+      <li><strong>Making Obsidian your task manager.</strong> It isn't one. Tasks live in a tool that pings you. Notes live in a tool that doesn't.</li>
+      <li><strong>Renaming a person note when their title changes.</strong> Breaks all backlinks. Update frontmatter, leave the filename.</li>
+      <li><strong>Refactoring more than twice a year.</strong> Every refactor breaks links, breaks muscle memory, breaks the agents reading the vault. Pick a structure, live with its weaknesses.</li>
+    </ol>
+  </section>
+
+  <!-- 10 — DECISION TREE -->
+  <section class="container-prose pt-4 pb-4">
+    <h2 id="which-method">Which method, by shape</h2>
+
+    <ul>
+      <li><strong>Solo founder shipping one product</strong> → PARA. Ship by Friday, refactor in six months.</li>
+      <li><strong>Multi-company CEO (3+ portfolio)</strong> → project-as-entity with PARA nested inside each entity. PARA alone collapses by month 8.</li>
+      <li><strong>Paid mentor</strong> → each mentee gets their own entity folder under <code>03-People/</code> with hub note + action tracker + session log + patterns file.</li>
+      <li><strong>Newsletter operator</strong> → PARA for active issues + a small Zettelkasten subfolder for evergreen claims you'll cite repeatedly.</li>
+      <li><strong>Researcher / essayist</strong> → Zettelkasten as primary, PARA as a thin top layer for active deliverables.</li>
+      <li><strong>Freelancer with rotating clients</strong> → PARA wins. Clients are projects, skill areas are areas.</li>
+      <li><strong>Content creator (video / podcast / social)</strong> → project-as-entity with <code>Episodes/</code> or <code>Videos/</code> as a type.</li>
+    </ul>
+  </section>
+
+  <!-- CTA / CLONE -->
+  <section class="container-prose pt-8 pb-24">
+    <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Clone the working vault</div>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+        A working Obsidian vault sits in the repo at <code>vault-starter/</code> — CLAUDE.md, 7 folder tree, 7 Templater templates (daily, weekly, person, company, project, meeting, newsletter), 5 Dataview queries, 6 sample notes, the memory-hygiene runbook. Plus a README walking through the install. Clone, point Obsidian at the folder, install the 8 plugins, edit CLAUDE.md, run for two weeks. By month three the graph fires.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <a href="https://github.com/Belkins/ai-dive-deep/tree/main/vault-starter" target="_blank" rel="noopener" class="btn-flame text-sm">View vault-starter/ on GitHub →</a>
+        <a href={`${base}/chapters/04-the-vault`} class="btn-ghost text-sm">Read Ch 4 first</a>
+        <a href={`${base}/day-zero`} class="btn-ghost text-sm">Wire it into Day Zero</a>
+      </div>
+    </div>
+
+    <p class="mt-10 italic text-sm" style="color: rgb(var(--muted))">
+      The methods change. The discipline doesn't. Pick a structure you can defend to your future self in October. By April, half the tools above will have shifted tiers. Your folder tree won't.
+    </p>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
