@@ -40,7 +40,7 @@ import anthropic
 client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 response = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[{"role": "user", "content": "say hello"}]
 )
@@ -79,7 +79,7 @@ def analyze_campaign(brief: str, segments: list[str]) -> dict:
     user_msg = f"Brief:\n{brief}\n\nSegments: {', '.join(segments)}"
     try:
         resp = client.messages.create(
-            model="claude-sonnet-4-5",
+            model="claude-sonnet-4-6",
             max_tokens=1024,
             system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
             tools=TOOLS,
@@ -101,7 +101,7 @@ def run_with_tools(brief: str, segments: list[str]) -> dict:
     messages = [{"role": "user", "content": f"Brief:\n{brief}\nSegments: {segments}"}]
     while True:
         resp = client.messages.create(
-            model="claude-sonnet-4-5",
+            model="claude-sonnet-4-6",
             max_tokens=1024,
             system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
             tools=TOOLS,
@@ -146,7 +146,7 @@ client = anthropic.Anthropic(max_retries=4)
 
 ```python
 with client.messages.stream(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[{"role": "user", "content": prompt}]
 ) as stream:
