@@ -15,9 +15,9 @@ import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
 ## Tuesday, May 12, 8:47 AM
 
-Claude Code 2.1.139 had been out for less than 24 hours. I had a migration I'd been putting off for a week — sweeping `claude-3-5-sonnet` references out of two repos before the June 15 deprecation deadline. Mechanical work. Boring work. The kind I usually start, get bored of at file 4, and walk away from until the deadline hisses.
+Claude Code 2.1.139 had been out for less than 24 hours. I had a migration I'd been putting off for a week — sweeping `claude-sonnet-4` references out of two repos before the June 15 deprecation deadline. Mechanical work. Boring work. The kind I usually start, get bored of at file 4, and walk away from until the deadline hisses.
 
-I typed `/goal all references to claude-3-5-sonnet in this repo are replaced with claude-opus-4-7, tests pass, the diff lives on a branch named model-bump, or stop after 30 turns`. Hit return. The overlay panel appeared — `◎ /goal active`, elapsed timer, turn counter, token meter. I went and made coffee.
+I typed `/goal all references to claude-sonnet-4 in this repo are replaced with claude-opus-4-7, tests pass, the diff lives on a branch named model-bump, or stop after 30 turns`. Hit return. The overlay panel appeared — `◎ /goal active`, elapsed timer, turn counter, token meter. I went and made coffee.
 
 When I came back the goal had cleared itself. Twelve turns. Eighteen minutes. Branch pushed. Tests green. Total Haiku evaluator spend: $0.04. Total Opus spend on the main turns: $3.12.
 
@@ -29,7 +29,7 @@ That's the chapter. The evaluator is the goal. The goal is the evaluator. If you
 
 `/goal <condition>` shipped in **Claude Code v2.1.139 on May 11, 2026**, with a v2.1.140 hotfix the next day for a silent-hang case under certain hook configurations. The docs page at [code.claude.com/docs/en/goal](https://code.claude.com/docs/en/goal) is short and exact about what it does.
 
-It's a session-scoped wrapper around a prompt-based <GlossaryTerm term="Stop hook">Stop hook</GlossaryTerm>. After every turn, a small fast model — Haiku 4.5 by default per `/en/model-config` — inspects the conversation transcript and judges whether the condition holds. If it does, the goal clears. If it doesn't, Claude takes another turn instead of returning control to you.
+It's a session-scoped wrapper around a prompt-based <GlossaryTerm term="Hook">Stop hook</GlossaryTerm>. After every turn, a small fast model — Haiku 4.5 by default per `/en/model-config` — inspects the conversation transcript and judges whether the condition holds. If it does, the goal clears. If it doesn't, Claude takes another turn instead of returning control to you.
 
 Three properties matter:
 
@@ -65,7 +65,7 @@ The three compose. A `/goal` session can have Stop hooks firing alongside it —
 
 ## The stack — Plan → Auto → /goal
 
-Anthropic's docs frame `/goal` as the third rung of an autonomy ladder, and it's worth reading the framing literally. Each rung removes a class of operator approval.
+Read `/goal` as the third rung of an autonomy ladder — that framing isn't Anthropic's wording verbatim, but the per-prompt pairing they describe in the docs is exactly the same shape: each rung removes a class of operator approval.
 
 - **Plan mode** removes per-step uncertainty. You approve a plan, not each diff. Covered in [Ch 21](/chapters/21-three-modes).
 - **Auto mode** removes per-tool prompts. You stop saying "yes, run that bash, yes, write that file." The turn still has to end and return to you.
@@ -145,11 +145,11 @@ Don't. The next section is about this.
 
 ## The Haiku-as-evaluator pattern
 
-The evaluator defaults to Haiku for a reason that becomes obvious the first time you do the math. A single Opus 4.7 turn on a real coding task — read files, think, write, run tests — runs roughly $0.45. A Haiku 4.5 evaluator pass on the same transcript runs roughly $0.003. Two orders of magnitude.
+The evaluator defaults to Haiku for a reason that becomes obvious the first time you do the math. A single Opus 4.7 turn on a real coding task — read files, think, write, run tests — runs on the order of cents-to-dimes per turn. A Haiku 4.5 evaluator pass on the same transcript runs roughly two orders of magnitude cheaper. The per-turn ratio is what matters, not the exact dollar figure — check your own pricing page before you reason about it.
 
-If you ran the evaluator on Opus, a 30-turn `/goal` session would add $13.50 in eval cost on top of the $13.50 in main-turn cost. The productivity gain — fire and forget while you make coffee — gets eaten by the evaluator's overhead. The whole pattern only pencils because Haiku is cheap enough to run after every turn without anyone noticing.
+If you ran the evaluator on Opus, a 30-turn `/goal` session roughly doubles your cost — eval overhead becomes its own line item. The productivity gain — fire and forget while you make coffee — gets eaten by the evaluator's overhead. The whole pattern only pencils because Haiku is cheap enough to run after every turn without anyone noticing.
 
-The first day I had `/goal`, I tried to force the evaluator to Opus through a custom hook config (I will not explain how — it was a bad idea). A 47-turn session that should have cost $20 cost $42 because the evaluator was as expensive as the worker. The fix was reverting to default. The lesson was that the cheap evaluator isn't a cost-cutting move — it's the move that makes the primitive viable at all.
+The first day I had `/goal`, I tried to force the evaluator to Opus through a custom hook config (I will not explain how — it was a bad idea). A 47-turn session ran roughly 2× the expected cost because the evaluator was as expensive as the worker. The fix was reverting to default. The lesson was that the cheap evaluator isn't a cost-cutting move — it's the move that makes the primitive viable at all.
 
 The same logic applies if you build a custom Stop hook with an LLM-as-judge: judge cheap or don't judge at all. Use Haiku 4.5 or Sonnet 4.6 for the eval step. Save Opus for the work.
 
