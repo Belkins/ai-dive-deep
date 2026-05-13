@@ -16,6 +16,47 @@ const fullTitle = title === "Vlad's Ultimate AI Dive Deep" ? title : `${title} â
 const desc = description ?? 'Thirty-six chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.';
 const og = ogImage ?? `${import.meta.env.BASE_URL.replace(/\/$/, '')}/og-default.svg`;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+
+// JSON-LD: emit Article on chapter pages, Book on root, WebPage elsewhere.
+// LLMs and search engines read this for citation-grade structured data.
+const isChapter = Astro.url.pathname.startsWith('/chapters/');
+const isRoot = Astro.url.pathname === '/' || Astro.url.pathname === '';
+const jsonLd: Record<string, unknown> = isChapter
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description: desc,
+      author: { '@type': 'Person', name: 'Vlad Podoliako', url: 'https://www.vladsnewsletter.com' },
+      publisher: { '@type': 'Organization', name: "Vlad's Ultimate AI Dive Deep", url: 'https://dive.vladyslavpodoliako.com' },
+      image: og,
+      url: canonical,
+      isPartOf: { '@type': 'Book', name: "Vlad's Ultimate AI Dive Deep", url: 'https://dive.vladyslavpodoliako.com' },
+      inLanguage: 'en',
+    }
+  : isRoot
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Book',
+        name: "Vlad's Ultimate AI Dive Deep",
+        author: { '@type': 'Person', name: 'Vlad Podoliako', url: 'https://www.vladsnewsletter.com' },
+        url: 'https://dive.vladyslavpodoliako.com',
+        description: desc,
+        image: og,
+        bookFormat: 'EBook',
+        numberOfPages: 36,
+        inLanguage: 'en',
+        license: 'https://dive.vladyslavpodoliako.com/llms.txt',
+      }
+    : {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: title,
+        description: desc,
+        url: canonical,
+        isPartOf: { '@type': 'Book', name: "Vlad's Ultimate AI Dive Deep", url: 'https://dive.vladyslavpodoliako.com' },
+        inLanguage: 'en',
+      };
 ---
 
 <!doctype html>
@@ -39,6 +80,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={desc} />
     <meta name="twitter:image" content={og} />
+
+    <link rel="alternate" type="application/json" href="https://dive.vladyslavpodoliako.com/chapters.json" title="Chapters JSON index" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
