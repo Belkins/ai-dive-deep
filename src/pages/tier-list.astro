@@ -3,14 +3,52 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import TierListBuilder from '@/widgets/TierListBuilder.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 ---
-<BaseLayout title="The Tier List" description="Drag-and-drop your own tier list. Share via URL.">
+<BaseLayout title="The Tier List" description="Drag-and-drop your own AI tools tier list. Share via URL. Public benchmarks vs operator usefulness, side by side.">
   <section class="container-prose pt-16 pb-4">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Chapter 24</div>
     <h1>The tier list. Without mercy.</h1>
-    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Vlad's picks pre-loaded. Drag tools between tiers. The URL encodes your state — share it.</p>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Public leaderboards rank capability. Operators rank usefulness. Below: the public benchmark, then Vlad's actual stack — and a builder you can drag, share, and argue about.</p>
+  </section>
+
+  <section class="container-prose pt-6 pb-2">
+    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the public says</div>
+    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">LMArena public leaderboard</h2>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://lmarena.ai/" target="_blank" rel="noopener" style="color: rgb(var(--accent))">lmarena.ai</a>. This is the canonical "which model is better at benchmark tasks" public ranking. It's the right answer to one specific question — and the wrong answer to the question you actually care about as an operator.</p>
+  </section>
+
+  <section class="container-wide pt-4 pb-2">
+    <div class="rounded-xl overflow-hidden" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+      <iframe
+        src="https://lmarena-ai-arena-leaderboard.hf.space"
+        title="LMArena public leaderboard — head-to-head model votes"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads"
+        style="width: 100%; height: 760px; border: 0; display: block; background: rgb(var(--bg));"
+      ></iframe>
+    </div>
+    <p class="container-prose mt-3 text-xs" style="color: rgb(var(--muted))">
+      Iframe served from <code style="background: rgb(var(--paper)); padding: 0.1rem 0.4rem; border-radius: 4px;">lmarena-ai-arena-leaderboard.hf.space</code> (Hugging Face Space). If it doesn't load,
+      <a href="https://huggingface.co/spaces/lmarena-ai/arena-leaderboard" target="_blank" rel="noopener" style="color: rgb(var(--accent))">open the full leaderboard in a new tab</a>.
+    </p>
+  </section>
+
+  <section class="container-prose pt-12 pb-2">
+    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent))">What an operator actually uses</div>
+    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Vlad's tier list</h2>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">
+      The arena measures capability head-to-head on neutral prompts. This list measures what runs Vlad's portfolio on a Tuesday at 11am. They disagree more than you'd expect — Claude Code and Cowork don't appear on the arena at all, Perplexity loses head-to-head but is S-tier here because it answers the actual question 90% of the time. Drag tools, build your own, share the URL.
+    </p>
   </section>
 
   <TierListBuilder client:load />
+
+  <section class="container-prose pt-8 pb-16">
+    <div class="rounded-lg p-5 text-sm leading-relaxed" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2)); color: rgb(var(--fg) / 0.9)">
+      <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">The argument</div>
+      <p class="m-0">Benchmarks reward the model that beats other models. Operators reward the tool that doesn't break the workflow. The most useful tool you own is rarely the most capable one — it's the one with the lowest activation energy on a Tuesday morning when you have nineteen other problems. That's why Claude Code is S-tier in this list and not even ranked on LMArena. Different question. Different answer.</p>
+    </div>
+  </section>
 
   <CommandPaletteMount />
 </BaseLayout>
