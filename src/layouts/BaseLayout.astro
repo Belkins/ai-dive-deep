@@ -13,7 +13,7 @@ interface Props {
 
 const { title, description, ogImage, noNav } = Astro.props;
 const fullTitle = title === "Vlad's Ultimate AI Dive Deep" ? title : `${title} — Vlad's Ultimate AI Dive Deep`;
-const desc = description ?? 'Thirty-six chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.';
+const desc = description ?? 'Thirty-seven chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.';
 const og = ogImage ?? `${import.meta.env.BASE_URL.replace(/\/$/, '')}/og-default.svg`;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 
@@ -44,7 +44,7 @@ const jsonLd: Record<string, unknown> = isChapter
         description: desc,
         image: og,
         bookFormat: 'EBook',
-        numberOfPages: 36,
+        numberOfPages: 37,
         inLanguage: 'en',
         license: 'https://dive.vladyslavpodoliako.com/llms.txt',
       }

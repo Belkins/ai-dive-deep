@@ -15,6 +15,29 @@ export type ResearchNote = {
 
 export const RESEARCH_NOTES: ResearchNote[] = [
   {
+    title: "When operators ask: can the agent do performance reviews?",
+    source: 'Internal — surfaced May 2026 from leadership conversations + journalist HARO request (Cezara Orbu, Apr 2, 2026)',
+    date: '2026-05-13',
+    tagline: 'Aggregation yes, evaluation no — and why the line matters.',
+    takeaway:
+      "Two signals converged in the same week. A Vlad/Olexandra leadership sync floated using an AI agent to analyze Slack and email and generate monthly performance reports off KPIs and 1-on-1 notes. A journalist HARO from Cezara Orbu asked whether C-suite leaders are shifting AI from a productivity tool to an executive decision-support system. Same question, two surfaces. The answer that holds up under both legal review and team trust: aggregation is fine, evaluation isn't. The agent can roll up KPIs, count missed deadlines, flag deals gone quiet, gather the receipts a human review needs. The agent does not write review prose, does not generate ratings, does not surface synthesized 'is this person on track' judgments. Three gates govern the line — legal (Slack data leaving Slack is a privacy boundary), reliability (Anthropic 81k put unreliability at 26.7%, the worst possible failure mode for people decisions), and trust (the moment the team knows the agent is writing reviews, they stop being themselves on Slack, and the data underneath goes poisoned). Run the legal review before the first prompt. Hardcode an evaluative-language refusal into the SKILL.md. The leader still reviews the human.",
+    implications: [
+      "Before any people-data workflow ships: legal review of Slack/email/HRIS data leaving its system of record. If GC hasn't cleared the destination context, the workflow isn't ready, no matter how good the prompt is.",
+      "Hardcode an evaluative-language refusal into any people-aggregation SKILL.md. Sample line: 'this skill does not generate evaluative language, ratings, recommendations, or review prose; return underlying numbers only.' Eval the refusal quarterly.",
+      "Aggregation skills (KPI rollups, missed-deadline counts, deal-quiet flags) are safe to ship. They collapse gathering, the same as every other operator workflow in this book. Just don't let them cross into synthesis.",
+      "If your team learns the agent is writing reviews, the Slack signal underneath corrupts within weeks — people start performing for the agent, not communicating with peers. That alone makes the workflow more expensive than the time saved.",
+    ],
+    receipts: [
+      { label: 'Anthropic 81k — unreliability concern', value: '26.7% (#1 concern in study)' },
+      { label: "Vlad's rule", value: 'aggregation OK, evaluation NOT' },
+    ],
+    chapters: [
+      { slug: '26-team-adoption', ref: 'Ch 26', why: 'where the line lives — aggregation vs evaluation, the guardrail SKILL.md pattern, the trust gate' },
+      { slug: '25-evals-or-hope', ref: 'Ch 25', why: 'unreliability at 26.7% is exactly why people-decision workflows need the strictest eval bar, not the loosest' },
+      { slug: '09-dont-get-owned', ref: 'Ch 9', why: 'Slack/HRIS data leaving its system of record is the privacy boundary GC has to clear before the first prompt' },
+    ],
+  },
+  {
     title: "Anthropic's 81k interviews — what 80,508 Claude users in 159 countries actually want from AI",
     source: 'Anthropic · 80,508-respondent qualitative study · Dec 2024 fieldwork · Huang et al., 2026',
     date: '2026-05-13',

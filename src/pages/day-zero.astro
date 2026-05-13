@@ -2,12 +2,38 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import DayZeroChecklist from '@/widgets/DayZeroChecklist.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout title="Day zero" description="The literal first 30 minutes. Twelve concrete steps from clean machine to first scheduled task.">
   <section class="container-prose pt-16 pb-4">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Day zero</div>
     <h1>The first 30 minutes.</h1>
     <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Twelve concrete steps. Each one links to the chapter that goes deep. Tick the boxes — your progress saves locally and waits for you when you come back tomorrow.</p>
+  </section>
+
+  <section class="container-prose pt-2 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Before step 1</div>
+    <h2>Where projects live (folder hygiene that survives 30 days).</h2>
+
+    <p>
+      The first question most non-technical operators ask after installing Claude Code isn't "what does it do." It's some version of "where do I keep my projects so this isn't a mess in 30 days." Nobody covers this. Then on day 31 you have eleven half-named folders on your Desktop, three of them have a <code>.claude/</code> inside, two of them are actually the same project, and you can't remember which one Claude is reading from. Decide the structure now. Five minutes here saves a Saturday in June.
+    </p>
+
+    <p>
+      Here's mine, in three lines. Code projects live at <code>~/Desktop/&lt;project-or-company&gt;/</code> — one folder per repo, folder name matches the GitHub repo name matches the <code>.claude/</code> scope. The Obsidian vault lives at <code>~/Desktop/Obsidian/&lt;vault-name&gt;/</code> — separate top-level home, never inside a code repo. Nothing else lives on the Desktop. No "AI Stuff." No "experiments." No "temp." If it's a project, it gets its own folder at the right level. If it's not a project yet, it sits in your vault inbox until it earns one.
+    </p>
+
+    <p>
+      The rule is one folder, one project, one <code>CLAUDE.md</code>. The <code>CLAUDE.md</code> at the repo root is the handbook every new session reads on wake-up — see <a href={`${base}/chapters/04-the-vault`}>Ch 4 — the vault</a> for the same pattern at the vault level, and the day-zero step "Drop a CLAUDE.md at your repo root" below for the file itself. Per-project context stays inside that folder. Personal context (you, your accounts, your tone) stays at <code>~/.claude/CLAUDE.md</code>. They compose. They don't collide.
+    </p>
+
+    <p>
+      Two anti-patterns that bite operators about three weeks in. First: putting your Obsidian vault inside a code repo. It sounds tidy. It ruins both — git starts tracking thousands of markdown files, Obsidian sync fights with git, and Claude reads notes that belong to a different mental scope when you're trying to ship code. Second: the "AI Stuff" mega-folder. One folder, six projects, four abandoned, two active, all sharing one <code>CLAUDE.md</code> that contradicts itself. The agent reads context that's 70% irrelevant and you wonder why the outputs feel scrambled. Don't do this. One project per folder. Always.
+    </p>
+
+    <p>
+      If your machine is already messy: don't reorganize the world today. Pick the one or two projects you're actually working on this week, <code>mv</code> them into the structure above, drop a <code>CLAUDE.md</code> at the root of each, and leave the rest of the mess where it is. The unused folders aren't hurting you — they're just clutter. You can sweep them on a Sunday. Day zero is for the projects that matter this week.
+    </p>
   </section>
 
   <DayZeroChecklist client:load />

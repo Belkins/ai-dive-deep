@@ -115,6 +115,16 @@ That signal is a real signal. It's not "they hate AI." It's "they don't want the
 
 This happens rarely. Two cases in eighteen months across thirty-plus rollout participants. But it's real, and it's worth naming, because the other twenty-eight times it's the tool's fault and you should fix the tool.
 
+## When the agent reviews the human
+
+The most-asked question from operators once a rollout sticks: can the agent do performance reviews? It already reads the Slack, the deal motion, the calendar. Couldn't it write the monthly one-on-one prep, the quarterly review, the PIP memo? You can already feel the temptation. You can also feel why it's wrong.
+
+Here's the line I hold. Aggregation, yes. Evaluation, no. The agent can roll up KPIs, flag missed-deadline patterns, count how many Friday wraps a rep shipped on time, surface the deals that went quiet on whose desk. That's gathering — the same kind of context-collapsing that runs every other workflow in this book. The agent does not write the review prose. The agent does not synthesize "is this person on track." The agent does not surface a recommendation, a rating, or a paragraph that ends up in someone's HR file. That synthesis is the leader's job and stays the leader's job. Forever.
+
+Three reasons the line matters. First, the Anthropic 81k-interviews study put unreliability at 26.7% — the single largest concern in the whole dataset. Unreliable models making people decisions is the worst possible application surface. A bursty content drop in a recipe is annoying. A bursty content drop in a review memo costs someone their career. Second, the legal gate. The moment Slack data, 1-on-1 notes, or KPI roll-ups leave Slack and enter an external LLM context, you've crossed a privacy boundary your General Counsel needs to clear before the first prompt. Run the legal review or don't ship the workflow. Third, the trust gate — once your team knows the agent is writing reviews, they stop being themselves on Slack. That alone is more expensive than the workflow saved.
+
+The guardrail I use: every aggregation skill that touches people data has a hardcoded refusal in the SKILL.md — "this skill does not generate evaluative language, ratings, recommendations, or review prose; if asked, return the underlying numbers only." Tested. Eval'd. Reviewed quarterly. The agent rolls up. The leader reviews. That's the deal.
+
 ## The closer
 
 Six months in, eleven of the twelve use it daily. The twelfth left for a competitor. He told his exit interviewer the AI was "too much." It wasn't. He was the one who couldn't be observed. The skill fired me a clean signal four months before HR did.

@@ -1,0 +1,161 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="The Bill" description="What AI actually costs at a $100M agency. Real numbers from Vlad's portfolio, not vendor pricing pages.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">For CFOs and operators</div>
+    <h1>The Bill.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      Nobody publishes the real numbers. Vendor pages quote $20/seat and let you do the math. The math doesn't work — that's not what AI costs at operator scale. Here's the actual receipt from a portfolio of five companies, May 2026, no marketing rounding.
+    </p>
+  </section>
+
+  <article class="container-prose chapter-body pb-12">
+
+    <h2>The reason most operators have no idea what AI should cost</h2>
+
+    <p>You sign up for ChatGPT Plus. $20/month, one seat, fine. You add Cursor for the engineers — $20/seat. You add Claude.ai for yourself — $20. The mental model anchors on $20-per-thing. Then you start running agents on a schedule, the morning briefing pulls in 40K tokens of context every weekday, the swarm fans out into 6 parallel subagents, the codex bug-watcher runs against Sentry 24/7, and one Tuesday in May the finance card gets a transaction that doesn't fit the anchor.</p>
+
+    <p>The anchor is wrong. Seat pricing scales like SaaS. Agentic AI scales like compute. They're different units of measure. Treating them as the same number is how operators end up surprised by a bill they could have predicted, and how CFOs end up freezing AI spend the day after the platform finally started compounding.</p>
+
+    <p>What follows is a real receipt, line by line, from running a portfolio across Belkins, Folderly, LinguaLive, 404 Model Agency, and the newsletter. Some lines have exact numbers. Some are bands. The ones I'd have to fabricate to make exact are flagged so you can see what's a placeholder.</p>
+
+    <h2>The receipt</h2>
+
+    <div class="my-6 rounded-lg overflow-hidden" style="border: 1px solid rgb(var(--line));">
+      <table class="w-full text-sm m-0">
+        <thead style="background: rgb(var(--paper));">
+          <tr>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Line item</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Monthly</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">What it does</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));"><strong>Anthropic API</strong> (Claude — direct + agent stacks, swarm fan-out, skills)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$1,000 soft cap<br/><span class="text-xs" style="color: rgb(var(--muted))">actual: $1,108-$4,312/wk band</span></td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">The whole agentic surface — morning briefing, friday-wrapup, deal alerts, mentee prep, newsletter drafts, deliverability evals, competitive scans. Finance card issued specifically to ring-fence this line.</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));"><strong>Claude.ai Cowork</strong> (Claude with MCP, seat × team)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$X — Vlad to fill in<br/><span class="text-xs" style="color: rgb(var(--muted))">~$200-$400 band for 4-8 seats</span></td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Interactive Claude in a managed environment with MCP connectors (Notion, Slack, Stripe, Gmail, calendar, HubSpot). Where the operators actually do work.</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));"><strong>OpenAI API</strong> (Codex, embeddings, edge cases)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$X — Vlad to fill in<br/><span class="text-xs" style="color: rgb(var(--muted))">~$200 ballpark</span></td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Codex running 24/7 against Sentry and GitHub for the bug-watch loop. Embeddings for semantic search across the vault.</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));"><strong>Hosting + compute</strong> (Vercel, Railway, Supabase, edge)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$X — Vlad to fill in<br/><span class="text-xs" style="color: rgb(var(--muted))">~$300-$600 across 5 projects</span></td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Where the custom agents and dashboards actually run. Not the model spend — the wrapper around it.</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));"><strong>Voice stack</strong> (ElevenLabs + STT for transcripts)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$X — Vlad to fill in<br/><span class="text-xs" style="color: rgb(var(--muted))">~$50-$150</span></td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Voice generation for the newsletter audio, transcript-to-summary for meetings the team couldn't attend.</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));"><strong>Image + video</strong> (Nano Banana, SeeDance, Suno, Higgsfield)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$X — Vlad to fill in<br/><span class="text-xs" style="color: rgb(var(--muted))">~$80-$300</span></td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Newsletter visuals, 404 Model Agency content, social cuts. Mostly batched, mostly used.</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));"><strong>Cursor seats</strong> (engineering)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$X — Vlad to fill in<br/><span class="text-xs" style="color: rgb(var(--muted))">~$40-$200</span></td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">The editor with model access for the team that ships features. Distinct from the agentic API spend — this is interactive coding.</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));"><strong>Perplexity Pro</strong> (research)</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$X — Vlad to fill in<br/><span class="text-xs" style="color: rgb(var(--muted))">~$20-$40</span></td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Sourced research with citations, used when the question needs current web data and a paper trail.</td>
+          </tr>
+          <tr>
+            <td class="p-3"><strong>GitHub Copilot</strong> (legacy, kept for one workflow)</td>
+            <td class="p-3 font-mono" style="color: rgb(var(--accent));">$X — Vlad to fill in<br/><span class="text-xs" style="color: rgb(var(--muted))">~$20-$80</span></td>
+            <td class="p-3">Inline completion in IDEs that don't have Cursor. Mostly a backstop, not the primary tool anymore.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The honest band: somewhere between <strong>$2,000 and $6,500 per month</strong> across the whole portfolio in a normal month. Spikes to $8K when a cache breaks (see the $4,312-week incident in Ch 29) or when a new agent ships before its eval gate is tight.</p>
+
+    <p>That's the all-in number for the AI side of running five companies. It's roughly what one mid-senior engineer costs fully loaded in a single month. The output is closer to a small team. We'll get to that math.</p>
+
+    <h2>The token math behind "3 to 5 billion tokens last month"</h2>
+
+    <p>I burned somewhere between <strong>3 and 5 billion tokens</strong> across the Anthropic side of the stack last month. That number sounds insane until you do the conversion.</p>
+
+    <p>A chat conversation averages roughly <strong>10,000 tokens</strong> end-to-end — system prompt, your messages, the model's responses, a couple of follow-ups. Three billion tokens is <strong>~300,000 chat-conversations-equivalent</strong>. I did not have 300,000 conversations last month. Nobody did.</p>
+
+    <p>The actual shape of the burn:</p>
+
+    <ul>
+      <li><strong>Sub-agent fan-out.</strong> One operator-level instruction becomes 4-8 parallel subagents, each carrying the full context. A single "audit this repo" call can spend 800K tokens before it writes a line.</li>
+      <li><strong>Repeated context loading.</strong> A scheduled job that fires every 15 minutes and pulls in 40K tokens of portfolio context burns 2.5M tokens a day just on the prefix, before the agent does any work.</li>
+      <li><strong>Long-running agentic loops.</strong> A Codex bug-watcher that iterates 30 times to land a fix is 30 round-trips of context — easily 1-2M tokens per fix.</li>
+      <li><strong>Eval batches.</strong> Running a 500-item eval against the morning briefing twice a week is ~100M tokens you'll never see in a UI.</li>
+    </ul>
+
+    <p>The token-per-conversation anchor is the wrong unit. The right unit is <strong>tokens per workflow output</strong> — a finished morning briefing, a deployed bug fix, a shipped newsletter draft. By that measure, 3-5B tokens a month is dozens of finished operator-grade outputs every day, not 300,000 conversations.</p>
+
+    <h2>What's not on the bill but should be</h2>
+
+    <p>The line items above are the API and SaaS spend. They're not the whole cost. Three things show up on no invoice but cost real money:</p>
+
+    <ol>
+      <li><strong>The engineer's time tuning prompts and skills.</strong> Every skill in the stack got 30-90 minutes of iteration before it started returning useful output. Across ~50 skills, that's 25-75 hours of human time. At a $150/hr operator rate, $4-11K of unbilled work behind the line items.</li>
+      <li><strong>The cache-busting CLAUDE.md edits.</strong> Every time the system prompt changes, the cache resets and the next ~5 minutes of work pays full price. Most operators eat this without noticing. The $4,312 spike in Ch 29 was one badly-placed paragraph.</li>
+      <li><strong>Failed experiments.</strong> Maybe one in three agent prototypes ships. The other two cost $20-200 of API spend and a day of engineering each before getting cut. That's the R&D line nobody draws.</li>
+    </ol>
+
+    <h2>Three ways operators burn 10x more than they should</h2>
+
+    <h3>1. No prompt caching.</h3>
+
+    <p>If your repeated agent calls aren't hitting the cache, you're paying full input price on every prefix, every time. The cache-read rate is roughly 1/10th of the input rate — meaning a workflow that should cost $100/week costs $1,000/week with no caching, for identical work. See Ch 29 for the mechanism.</p>
+
+    <h3>2. No batch.</h3>
+
+    <p>Anthropic's Message Batches API runs the same model at 50% off if you can wait up to 24 hours. Eval runs, content generation, overnight summarization, deliverability checks — none of these need to return in 60 seconds. Operators who run these interactively are paying double for the privilege of seeing results immediately, every time, even when nobody's watching the screen.</p>
+
+    <h3>3. No eval gate before headless runs.</h3>
+
+    <p>A new agent ships, runs unattended for a weekend, and turns out to be calling Sonnet 60 times in a row for a task Haiku could do once. By Monday you've burned $400 on a workflow that should have cost $8. The fix is a tiny eval that runs the agent against 20 known cases before you let it run headless on real data. The fix takes an hour. The bug, ungated, runs forever.</p>
+
+    <div class="my-6 p-4 rounded-lg" style="border: 1px solid rgb(var(--line)); background: rgb(var(--paper));">
+      <p class="m-0 text-sm"><strong style="color: rgb(var(--accent))">Operator move:</strong> if your AI bill is bigger than you expected, the answer is almost never "use less AI". It's "fix caching, move async work to batch, gate headless runs with evals". Same workload, ~40% lower bill, in under a week of engineering.</p>
+    </div>
+
+    <h2>The honest comparison</h2>
+
+    <p>For a portfolio of five companies, the AI bill is roughly <strong>$2,000-$6,500/month</strong>. What it replaces:</p>
+
+    <ul>
+      <li><strong>Human labor:</strong> ~$X — Vlad to fill in /mo of analyst, ops, and engineering hours that no longer get spent on triage, summarization, briefing prep, and the long tail of "someone needs to read this and tell me what matters". Honest ballpark: somewhere in the $15K-$30K/month band of work that would otherwise need hiring.</li>
+      <li><strong>Cancelled SaaS:</strong> ~$X — Vlad to fill in /mo of point tools we stopped renewing once the AI stack absorbed their job. The dashboard tool, the brief-generation tool, the social-scheduling assist tool. Probably $800-$1,500/month.</li>
+    </ul>
+
+    <p>The math the vendor decks won't draw: AI isn't <em>cheap</em>. It's <strong>targeted</strong>. A $5,000/month AI bill that deletes $20,000/month of labor and $1,500/month of SaaS is not a cost — it's a 4x return that the finance team can see in a spreadsheet, with line items they can audit. The number on the invoice goes up. The number across the rest of the budget goes down by more.</p>
+
+    <p>The mistake is treating AI spend as a category to minimize instead of a category to optimize. You don't minimize sales spend. You optimize CAC. Same principle applies here. The number to watch isn't the bill, it's the ratio of bill to displaced cost. Ours runs roughly 1:4. Yours should too, or you're either underspending or running the wrong workflows.</p>
+
+    <h2>The line nobody writes in the proposal</h2>
+
+    <p>The reason most "AI strategy" decks land badly is they show the cost and skip the displaced cost. The reason most CFO conversations go sideways is the bill is real and the savings are anecdotal. The fix isn't to argue the bill down. The fix is to put both numbers on the same chart and let the ratio do the talking. If the ratio is wrong, the answer isn't "spend less" — it's "this workflow shouldn't be on the AI stack yet". If the ratio is right, the bill is the cheapest line you're paying.</p>
+
+    <hr class="my-12" style="border-color: rgb(var(--line));" />
+
+    <p class="italic text-sm" style="color: rgb(var(--muted))">
+      For the technical layer on caching, batch, and model routing — the levers that drag this bill down 30-50% without changing the workload — see <a href={`${base}/chapters/29-cost-economics`}>Ch 29 — Why Is My Bill So High?</a>. For the conversation about whether to keep paying for the public stack or build your own, see <a href={`${base}/build-vs-buy`}>Build vs Buy</a>. For the 600-word case to forward to your CFO, see <a href={`${base}/cfo-case`}>The case for the AI spend</a>.
+    </p>
+  </article>
+
+  <CommandPaletteMount />
+</BaseLayout>

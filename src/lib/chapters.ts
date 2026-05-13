@@ -43,6 +43,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 34, slug: '34-write-on-behalf', title: 'Persona Agents and the Four NEVERs', subtitle: 'Writing on Your Behalf Without Becoming a Bot' },
   { number: 35, slug: '35-codex-and-cc', title: 'Codex or Claude Code — or Both?', subtitle: 'Day Shift, Night Shift' },
   { number: 36, slug: '36-frameworks-beyond', title: 'When Do I Outgrow Claude Code?', subtitle: 'Beyond CC — CrewAI, LangGraph, SDK' },
+  { number: 37, slug: '37-context-files', title: 'Context Files — CLAUDE.md, memory, skills', subtitle: 'Where Conventions Live, Where They Die' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -76,7 +77,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part IV — Policy and Discipline',
     tagline: 'Hooks turn ad-hoc prompting into policy. Permissions turn speed into safety.',
     intro: "Don't get owned. Don't skip the gates. Don't let the agent off the leash on your main machine. This part is the one most operators skim and most postmortems start with.",
-    slugs: ['09-dont-get-owned', '15-permissions', '16-hooks-subagents'],
+    slugs: ['09-dont-get-owned', '15-permissions', '16-hooks-subagents', '37-context-files'],
   },
   {
     key: 'V',
@@ -110,13 +111,13 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'general',
     label: 'General',
     description: "Mental models. The temp-agency frame. Five tools, not fifty. The vault that makes any model durable.",
-    slugs: ['01-killed-my-tabs', '02-five-tools', '03-temp-agency', '04-the-vault', '05-skills', '17-tips-tricks'],
+    slugs: ['01-killed-my-tabs', '02-five-tools', '03-temp-agency', '04-the-vault', '05-skills', '37-context-files', '17-tips-tricks'],
   },
   {
     key: 'claude',
     label: 'Claude',
     description: 'Three doors (Chat / Cowork / Code), the swarm, the modes, sessions, the cheat sheet.',
-    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp'],
+    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp', '37-context-files'],
   },
   {
     key: 'security',

@@ -6,11 +6,11 @@ import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const bySlug = Object.fromEntries(CHAPTERS.map((c) => [c.slug, c]));
 ---
-<BaseLayout title="Sections" description="The 36 chapters grouped by section: General, Claude, Security, AI Agents, Building, Team + Tier.">
+<BaseLayout title="Sections" description="The 37 chapters grouped by section: General, Claude, Security, AI Agents, Building, Team + Tier.">
   <section class="container-wide pt-16 pb-8">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Sections</div>
     <h1 class="font-display text-4xl md:text-5xl m-0">Read by section.</h1>
-    <p class="mt-3 text-lg max-w-[55ch]" style="color: rgb(var(--muted))">36 chapters grouped by what you're trying to do. Pick a section, read in order, build the muscle.</p>
+    <p class="mt-3 text-lg max-w-[55ch]" style="color: rgb(var(--muted))">37 chapters grouped by what you're trying to do. Pick a section, read in order, build the muscle.</p>
   </section>
 
   <section class="container-wide pb-24 space-y-12">
