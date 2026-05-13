@@ -19,7 +19,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     react(),
-    sitemap(),
+    sitemap({ filter: (page) => !page.includes('/the-bill') }),
     tailwind({ applyBaseStyles: false }),
   ],
   markdown: {
