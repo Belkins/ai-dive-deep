@@ -30,6 +30,8 @@ export default function CommandPalette() {
       { type: 'page', title: 'Vault starter',          href: `${base}/vault-starter`,   subtitle: 'PARA vs 7 others. Project-as-entity. Working vault to clone.' },
       { type: 'page', title: 'Weekend builds',         href: `${base}/weekend-builds`,  subtitle: '8 Saturday-ship recipes + the trap pick' },
       { type: 'page', title: 'For your CFO',           href: `${base}/cfo-case`,        subtitle: '600 words. Defend the spend.' },
+      { type: 'page', title: 'Build vs Buy',           href: `${base}/build-vs-buy`,    subtitle: 'Sequencing wedge + cost ladder + 5-question matrix' },
+      { type: 'page', title: 'The bill',               href: `${base}/the-bill`,        subtitle: 'What AI actually costs at a $100M agency' },
       { type: 'page', title: 'Research notes',         href: `${base}/research-notes`,  subtitle: 'External findings that shift what to do Monday' },
       { type: 'page', title: 'The journey',           href: `${base}/journey`,         subtitle: 'Six parts. One arc.' },
       { type: 'page', title: 'Questions people ask',  href: `${base}/questions`,       subtitle: "Top questions from Vlad's inbox" },

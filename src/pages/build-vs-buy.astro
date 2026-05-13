@@ -1,0 +1,185 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="Build vs Buy" description="When you build your own AI platform, when you buy public tools, and the sequencing question that decides both. With the real cost ladder.">
+  <section class="container-prose pt-16 pb-4">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">For CEOs, boards, fractional CIOs</div>
+    <h1>Build vs Buy.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      Most build-vs-buy debates miss the actual question. It's not "ChatGPT or our own platform" — it's <em>which one teaches you the moat fastest</em>. Buy first, see what compounds, build the part you can't get from a vendor. The sequence matters more than the answer.
+    </p>
+  </section>
+
+  <article class="container-prose chapter-body pb-12">
+
+    <h2>The wedge nobody draws</h2>
+
+    <p>You're in a board meeting. Someone — usually the most expensive person in the room — asks whether you should build your own AI platform instead of "just paying OpenAI". Someone else says public tools are a data security risk. A third person mentions a vendor pitch they saw last week. The room collapses into a binary and you walk out with a $50K-$70K project on the slate that nobody has stress-tested.</p>
+
+    <p>The framing is wrong. Build vs buy isn't a one-time decision, it's a sequence. Buy first to find the workflow that has actual gravity. Watch it for six months. <strong>Then</strong> build the thin layer of moat around the thing the public stack can't give you. Anyone who tells you to skip step one and start building is selling something — usually their consulting hours.</p>
+
+    <p>I've watched four portfolio CEOs spend $200K+ building a custom platform that re-implemented 80% of what ChatGPT Teams already did, then quietly shelved it. Every one of them would have caught the mistake in week three of buy-first, because the operator using the public tool would have told them "this works, I just wish I could do X". X is the thing worth building. Everything else is reinvention with extra steps.</p>
+
+    <h2>Three signals that say "stop buying, start building"</h2>
+
+    <h3>1. Data you legally can't send out.</h3>
+
+    <p>Specific shapes, not vague gestures at "privacy". <strong>Health</strong> (HIPAA PHI, patient charts, anything that touches a covered entity). <strong>Legal</strong> (privileged communications, sealed records, attorney-client work product). <strong>Security</strong> (incident response intel, threat models, anything that becomes a weapon if it leaks). <strong>Customer PII at scale</strong> — not "we have emails", but "we have 4M customer records and a regulator who reads our data processing agreements".</p>
+
+    <p>If your data isn't on this list, the data-security argument is decoration. Most companies don't have data they can't send to Claude or GPT — they have data they're <em>worried</em> about, which is different. The fix for "worried" is a DPA, an enterprise contract with a no-training clause, and SOC2 evidence. The fix for "legally cannot" is a private deployment, which is what you actually build.</p>
+
+    <h3>2. A workflow you've already de-risked.</h3>
+
+    <p>Six months minimum on the public stack. You know exactly what the agent does, what it costs per run, where it fails, what the human does to catch the failure, what the operator wishes were different. If you can't answer those four questions in two sentences each, you don't have a workflow — you have a wish. Building on top of a wish is how $55K MVPs become $200K post-MVPs that still don't ship.</p>
+
+    <p>The shape of a de-risked workflow: someone on your team is annoyed every day that the public tool can't do <em>that one thing</em>, and the annoyance is worth more than $5K/month to fix. That's the brief for the build. Less specific than that, you're not ready.</p>
+
+    <h3>3. A moat that only exists if you own the stack.</h3>
+
+    <p>This is the one most boards skip. The point of building isn't to save money — public tools are almost always cheaper at year one. The point is to compound something the vendor will never compound for you. <strong>Knowledge retention</strong> (your fine-tune learns from every closed deal and your competitor's doesn't). <strong>Custom UI</strong> (your operators move 3x faster because the interface is shaped to their workflow, not OpenAI's). <strong>Embedded product</strong> (you ship AI features to customers and the platform <em>is</em> the product, not a tool you use internally).</p>
+
+    <p>If none of those apply, you don't have a moat — you have a vendor dependency you're choosing to absorb. Absorbing a vendor doesn't make you faster. It usually makes you slower with more headcount.</p>
+
+    <div class="my-6 p-4 rounded-lg" style="border: 1px solid rgb(var(--line)); background: rgb(var(--paper));">
+      <p class="m-0 text-sm"><strong style="color: rgb(var(--accent))">Heuristic:</strong> if you can't name the specific moat in one sentence — not "competitive advantage", not "differentiation", the actual mechanism — you're not ready to build. Go back to buying. Watch for another quarter.</p>
+    </div>
+
+    <h2>The cost ladder you're actually staring at</h2>
+
+    <p>Here are the numbers from a real custom-platform proposal one of my portfolio companies received last week. They're typical for a US-based shop building a focused operator platform with one to two senior engineers. They're not theoretical.</p>
+
+    <div class="my-6 rounded-lg overflow-hidden" style="border: 1px solid rgb(var(--line));">
+      <table class="w-full text-sm m-0">
+        <thead style="background: rgb(var(--paper));">
+          <tr>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Phase</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">What you actually buy</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Discovery</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">2-3 weeks of an engineer + a product person mapping the workflow, shaping the data model, killing 60% of the original scope</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">~$4,500</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">MVP</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">4-8 weeks, 1-2 engineers, single workflow end-to-end. Real users on it, not a demo.</td>
+            <td class="p-3 font-mono" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--accent));">$45,000-$55,000</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Post-MVP (year one)</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Ongoing dev, infra, model spend, the second workflow, the third. The thing that actually compounds.</td>
+            <td class="p-3 font-mono" style="color: rgb(var(--accent));">$60,000-$70,000+</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>So the napkin number for "we built our own thing" is roughly <strong>$110K to $130K all-in for year one</strong>, assuming the MVP ships on schedule and the post-MVP scope doesn't bloat. Both of those assumptions are wrong about half the time.</p>
+
+    <p>The numbers nobody puts on the slide:</p>
+
+    <ul>
+      <li><strong>Maintenance.</strong> Year two isn't $0 — it's roughly 60-70% of year-one post-MVP spend, every year, forever. You're now running a software product.</li>
+      <li><strong>The engineer who leaves.</strong> The one who built it. Their replacement spends 2-3 months reverse-engineering the codebase before they can ship a single feature. Budget the gap.</li>
+      <li><strong>Model deprecation.</strong> Whichever model you fine-tuned on gets retired in 18 months. You're now paying for a migration you didn't plan, or running on a model the vendor has stopped patching.</li>
+      <li><strong>The API change that breaks staging.</strong> Anthropic or OpenAI ships a breaking change in a minor version. Your platform is down for a day. The on-call cost is real.</li>
+    </ul>
+
+    <p>None of these are deal-killers. They're just the part of the bill that doesn't appear in the proposal and shows up in year two.</p>
+
+    <h2>The ROI defense (the honest version)</h2>
+
+    <p>The pitch in every custom-platform proposal sounds the same: <em>"this will let you reduce a 5-person team to 3, plus knowledge retention, plus scalability."</em> I've heard it four times this quarter. It's <strong>directionally true and quantitatively overstated</strong>.</p>
+
+    <p>The 5-to-3 claim has been oversold across the industry. The honest number, based on what I've actually watched happen in portfolio companies that did the build: <strong>roughly 5-to-4, with throughput up 30-50%</strong>. You don't replace a person — you give four people the capacity of six. The headcount line doesn't drop as much as the pitch says. The output line goes up more than the pitch credits.</p>
+
+    <p>The soft benefits the CFO didn't ask about, in descending order of how much they actually matter:</p>
+
+    <ol>
+      <li><strong>Knowledge retention.</strong> Every closed deal, support ticket, and meeting transcript becomes training signal for next quarter. The vendor stack throws this away. You don't. Over two years this is the moat that compounds the hardest.</li>
+      <li><strong>IP ownership.</strong> The prompts, the fine-tunes, the eval harness — these are assets. On a vendor stack they're a config file. On your stack they're on your balance sheet.</li>
+      <li><strong>Scalability.</strong> Not the one in the slide deck. The real one: you can ship a fifth workflow in a month instead of negotiating a new vendor contract for two.</li>
+    </ol>
+
+    <p>Note what's not on this list: cost savings. Building your own platform is not cheaper than buying. It's <em>different</em>. If your case rests on "we'll save money", the case is weak. If it rests on "we'll own something that compounds", the case is strong.</p>
+
+    <h2>The buy-side that often wins</h2>
+
+    <p>The unfashionable truth: for most companies under $50M revenue, the right answer is buy. Not because building is bad — because the moat from <strong>using public tools better than your competitors</strong> is real, and it's available next week instead of next year.</p>
+
+    <p>Everyone in your category has access to the same Claude and the same GPT. The differentiator is the operator who knows where to point them, the prompt library that's been tuned for 90 days, the cron schedule that wakes them up at 4 AM Eastern, the eval harness that catches drift before it ships. None of that is on a vendor's website. All of it is yours to build on top of the public stack, for ~$1-3K/month in API spend instead of $110K+ in custom build.</p>
+
+    <p>If your operators can articulate what makes them better at running the public stack than the team next door — that's the moat. The platform underneath is the boring part.</p>
+
+    <h2>A decision matrix that's not from a McKinsey deck</h2>
+
+    <p>Score each question 1-5, where 1 means "definitely not us" and 5 means "this is exactly us". Sum the score.</p>
+
+    <div class="my-6 rounded-lg overflow-hidden" style="border: 1px solid rgb(var(--line));">
+      <table class="w-full text-sm m-0">
+        <thead style="background: rgb(var(--paper));">
+          <tr>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">Question</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">1 = no</th>
+            <th class="text-left p-3" style="border-bottom: 1px solid rgb(var(--line));">5 = yes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Do we have data we legally cannot send to a public API?</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">"It's just emails"</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">PHI / privileged / regulated PII</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Has the target workflow run on the public stack for 6+ months?</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">"We're going to start with the build"</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">We've operated it daily, we know exactly where it fails</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Can we name the moat in one specific sentence?</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">"Competitive advantage"</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Fine-tune on every closed deal so accuracy beats GPT-5 within 4 months</td>
+          </tr>
+          <tr>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Do we have an engineer who will still be here in 2 years?</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">"We'll hire one"</td>
+            <td class="p-3" style="border-bottom: 1px solid rgb(var(--line));">Named individual, equity, multi-year</td>
+          </tr>
+          <tr>
+            <td class="p-3">Will the AI feature ship to <em>customers</em>, not just internal users?</td>
+            <td class="p-3">Internal only</td>
+            <td class="p-3">Embedded in the product we sell</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Score &gt; 18:</strong> build. You have legal pressure, operational clarity, a moat you can articulate, the team to maintain it, and a place to ship it. Approve discovery this week.</p>
+
+    <p><strong>Score &lt; 12:</strong> buy. Sharpen the operators on the public stack. Spend the $110K you'd have spent on the build on hiring one more operator and tripling your prompt library. You'll be ahead in nine months either way.</p>
+
+    <p><strong>Score 12-18:</strong> buy-now-build-the-moat-you-find. Run the public stack hard for two quarters with explicit "what would we build" tracking. At the end of Q2 either the score is &gt; 18 with a concrete brief, or it's settled below 12 because the public stack handled it. Don't decide today.</p>
+
+    <div class="my-6 p-4 rounded-lg" style="border: 1px solid rgb(var(--accent)); background: rgb(var(--paper));">
+      <p class="m-0 text-sm"><strong style="color: rgb(var(--accent))">The contrarian read:</strong> the highest-ROI moves I've seen in the last 18 months were almost all on the buy side. Not because building doesn't work — it does. Because the operator gap between "we have ChatGPT" and "we use ChatGPT like Vlad does" is bigger than the gap between "we use ChatGPT" and "we built our own thing". Close the first gap before you go shopping for the second.</p>
+    </div>
+
+    <h2>What the wrong question costs you</h2>
+
+    <p>The wrong question is build or buy. The right question is which one teaches you the moat fastest. Buy is faster to learn. Build is slower to learn but lets you keep what you learned. The sequence — buy, learn, then build the specific thing the learning surfaced — is almost always cheaper than committing to either in isolation. The companies that get this wrong are the ones who treated it as a one-time vote instead of a two-step play.</p>
+
+    <hr class="my-12" style="border-color: rgb(var(--line));" />
+
+    <p class="italic text-sm" style="color: rgb(var(--muted))">
+      Companion piece: <a href={`${base}/cfo-case`}>The case for the AI spend</a> — 600 words you can forward when the finance side of this conversation gets stuck. For the technical layer on what AI actually costs once you've decided to run it, see <a href={`${base}/chapters/29-cost-economics`}>Ch 29 — Why Is My Bill So High?</a>
+    </p>
+  </article>
+
+  <CommandPaletteMount />
+</BaseLayout>
