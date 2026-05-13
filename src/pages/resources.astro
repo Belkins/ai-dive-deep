@@ -4,14 +4,28 @@ import CopyBlock from '@/widgets/CopyBlock.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import {
   CLAUDE_MD_SKELETON,
+  CLAUDE_MD_SOLO,
+  CLAUDE_MD_B2B_SALES,
+  CLAUDE_MD_NEWSLETTER,
+  CLAUDE_MD_PORTFOLIO_CEO,
   MCP_JSON_EXAMPLE,
   HOOK_FORMAT_ON_SAVE,
   HOOK_BLOCK_PUSH_TO_MAIN,
   HOOK_TEST_ON_WRITE,
   HOOK_SLACK_NOTIFY_LONG_TASK,
+  HOOK_SECRETS_SCAN,
+  HOOK_CLAUDE_MD_SIZE,
+  HOOK_PROMPT_CACHE_GUARD,
+  HOOK_AGENT_WATCHDOG,
+  HOOK_COMMIT_MSG_ENFORCER,
   SKILL_LIFECYCLE,
   SKILL_AGGREGATOR,
   SKILL_VOICE,
+  SKILL_DEAL_WATCHER,
+  SKILL_EMAIL_DELIVERABILITY,
+  SKILL_SUBAGENT_WATCHDOG,
+  SKILL_RIGOR_ENFORCER,
+  SKILL_BILLING_ALERT,
   PROMPT_RIGOR_ENFORCER,
   PROMPT_ADVERSARIAL,
   PROMPT_SKILL_CREATOR,
@@ -27,108 +41,351 @@ import {
   PROMPT_CUSTOMER_SYNTHESIS,
   PROMPT_WRITING_FILTER,
   PROMPT_TUESDAY_TRIAGE,
+  PROMPT_CFO_DEFENSE,
+  PROMPT_DOC_CORRUPTION_EVAL,
+  PROMPT_SKILL_SMOKE_EVAL,
+  PROMPT_TUESDAY_BRIEF,
+  PROMPT_CONVENTIONAL_COMMITS,
+  PROMPT_SHOULD_BUILD,
+  PROMPT_WEEK_DISTILL,
+  PROMPT_TRUTH_EXTRACT,
   SETTINGS_JSON_EXAMPLE,
   GITHUB_PR_DIGEST_ACTION,
 } from '@/lib/snippets';
+
+const toc = [
+  { id: 'working-memory', label: 'Working memory' },
+  { id: 'connectors-mcp', label: 'Connectors / MCP' },
+  { id: 'permissions', label: 'Permissions' },
+  { id: 'hooks', label: 'Hooks' },
+  { id: 'skill-md-templates', label: 'SKILL.md templates' },
+  { id: 'five-reusable-prompts', label: 'Five reusable prompts' },
+  { id: 'ten-more-operator-prompts', label: 'Eighteen more operator prompts' },
+  { id: 'github-action', label: 'GitHub Action' },
+];
 ---
 <BaseLayout title="Resources" description="Copy-paste vault library: CLAUDE.md skeleton, .mcp.json templates, hook scripts, SKILL.md templates, prompts that travel.">
-  <section class="container-prose pt-16 pb-8">
+  <section class="container-wide pt-16 pb-8">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Resources</div>
     <h1>Copy. Paste. Ship.</h1>
     <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Every artifact referenced in the book, in one place. Click to copy. Click to download.</p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Jump anywhere — sidebar tracks where you are.</p>
   </section>
 
-  <section class="container-prose pb-16">
-    <h2>Working memory</h2>
-    <p class="text-sm" style="color: rgb(var(--muted))">The single page Claude reads on every session. Keep yours under ~100 lines.</p>
-    <CopyBlock client:visible text={CLAUDE_MD_SKELETON} filename="CLAUDE.md" language="markdown" />
+  <section class="container-wide pb-16">
+    <!-- Mobile TOC: collapsible details, < 1024px -->
+    <details class="lg:hidden mb-6 rounded-lg border" style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
+      <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between text-sm font-medium select-none">
+        <span>Jump to section</span>
+        <span class="text-xs" style="color: rgb(var(--muted))">tap to open</span>
+      </summary>
+      <nav class="px-2 pb-3">
+        <ol class="space-y-1 text-sm">
+          {toc.map((s, i) => (
+            <li>
+              <a
+                href={`#${s.id}`}
+                data-toc-link={s.id}
+                class="block px-3 py-2 rounded transition"
+                style="color: rgb(var(--fg) / 0.85)"
+              >
+                <span class="font-mono text-xs mr-2" style="color: rgb(var(--muted))">{String(i + 1).padStart(2, '0')}</span>
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </details>
 
-    <h2>Connectors / MCP</h2>
-    <p class="text-sm" style="color: rgb(var(--muted))">Drop this in your repo as <code>.mcp.json</code>. Restart claude. Run <code>/mcp</code> to verify.</p>
-    <CopyBlock client:visible text={MCP_JSON_EXAMPLE} filename=".mcp.json" language="json" />
+    <div class="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
+      <!-- Sticky sidebar: ≥ 1024px -->
+      <aside class="hidden lg:block">
+        <nav class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2">
+          <div class="text-xs uppercase tracking-[0.2em] mb-3" style="color: rgb(var(--muted))">On this page</div>
+          <ol class="space-y-0.5 text-sm">
+            {toc.map((s, i) => (
+              <li>
+                <a
+                  href={`#${s.id}`}
+                  data-toc-link={s.id}
+                  class="toc-link block pl-3 pr-2 py-1.5 border-l-2 transition"
+                  style="border-color: rgb(var(--line)); color: rgb(var(--fg) / 0.75)"
+                >
+                  <span class="font-mono text-[0.7rem] mr-2" style="color: rgb(var(--muted))">{String(i + 1).padStart(2, '0')}</span>
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </aside>
 
-    <h2>Permissions</h2>
-    <p class="text-sm" style="color: rgb(var(--muted))">Sane <code>~/.claude/settings.json</code> permission rules. Allow narrow, deny broad.</p>
-    <CopyBlock client:visible text={SETTINGS_JSON_EXAMPLE} filename="settings.json" language="json" />
+      <!-- Content column -->
+      <div class="min-w-0 chapter-body">
+        <h2 id="working-memory">Working memory</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">The single page Claude reads on every session. Keep yours under ~100 lines.</p>
+        <CopyBlock client:visible text={CLAUDE_MD_SKELETON} filename="CLAUDE.md" language="markdown" />
 
-    <h2>Hooks</h2>
-    <p class="text-sm" style="color: rgb(var(--muted))">Stop typing the same correction 50 times. Drop into <code>.claude/settings.json</code>.</p>
-    <CopyBlock client:visible text={HOOK_FORMAT_ON_SAVE} filename="hook-format-on-save.json" language="json" />
-    <CopyBlock client:visible text={HOOK_TEST_ON_WRITE} filename="hook-test-on-write.json" language="json" />
-    <CopyBlock client:visible text={HOOK_BLOCK_PUSH_TO_MAIN} filename="hook-block-push-main.json" language="json" />
-    <CopyBlock client:visible text={HOOK_SLACK_NOTIFY_LONG_TASK} filename="hook-slack-notify-long.json" language="json" />
+        <h3>Role-specific CLAUDE.md skeletons</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">The generic skeleton teaches the shape. These four teach the shape under load — what changes when the operator is a solo shop, a sales lead, a writer, or a portfolio CEO. Pick the one that matches the seat you actually sit in — don't paste two on top of each other.</p>
 
-    <h2>SKILL.md templates</h2>
-    <p class="text-sm" style="color: rgb(var(--muted))">Three real shapes from Vlad's stack. Adapt to your workflow.</p>
-    <CopyBlock client:visible text={SKILL_LIFECYCLE} filename="mentoring-lifecycle/SKILL.md" language="markdown" />
-    <CopyBlock client:visible text={SKILL_AGGREGATOR} filename="friday-wrapup/SKILL.md" language="markdown" />
-    <CopyBlock client:visible text={SKILL_VOICE} filename="vlads-newsletter/SKILL.md" language="markdown" />
+        <h3>Solo operator</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">One person, four workstreams, no buffer — the job is sequencing, not perfection. Drafts ship; second drafts come from the comment thread.</p>
+        <CopyBlock client:visible text={CLAUDE_MD_SOLO} filename="CLAUDE.md.solo" language="markdown" />
 
-    <h2>Five reusable prompts</h2>
-    <p class="text-sm" style="color: rgb(var(--muted))">Steal these. They travel across surfaces.</p>
-    <h3>The world-class rigor enforcer</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Use on ChatGPT, Gemini, anywhere without robust default behaviors. Single biggest quality lift from copy-paste.</p>
-    <CopyBlock client:visible text={PROMPT_RIGOR_ENFORCER} filename="prompt-rigor-enforcer.txt" />
+        <h3>B2B sales lead (Belkins-shape)</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">10-30 SDRs, one pipeline number, deliverability that pays the bills. AI aggregates, humans evaluate, prospects see zero auto-replies.</p>
+        <CopyBlock client:visible text={CLAUDE_MD_B2B_SALES} filename="CLAUDE.md.b2b-sales" language="markdown" />
 
-    <h3>Adversarial reviewer</h3>
-    <CopyBlock client:visible text={PROMPT_ADVERSARIAL} filename="prompt-adversarial-reviewer.txt" />
+        <h3>Content / newsletter operator</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">One writer, one voice, one publish slot per week. AI assists with structure and source-hunting — AI does not write the voice.</p>
+        <CopyBlock client:visible text={CLAUDE_MD_NEWSLETTER} filename="CLAUDE.md.newsletter" language="markdown" />
 
-    <h3>Skill-creator stub</h3>
-    <CopyBlock client:visible text={PROMPT_SKILL_CREATOR} filename="prompt-skill-creator.txt" />
+        <h3>Portfolio CEO</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Multiple companies, one head, zero tolerance for cross-portfolio data leak. The job is allocation and sequencing — not running any one company.</p>
+        <CopyBlock client:visible text={CLAUDE_MD_PORTFOLIO_CEO} filename="CLAUDE.md.portfolio-ceo" language="markdown" />
 
-    <h3>Pre-meeting briefing</h3>
-    <CopyBlock client:visible text={PROMPT_PRE_MEETING} filename="prompt-pre-meeting.txt" />
+        <h2 id="connectors-mcp">Connectors / MCP</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">Drop this in your repo as <code>.mcp.json</code>. Restart claude. Run <code>/mcp</code> to verify.</p>
+        <CopyBlock client:visible text={MCP_JSON_EXAMPLE} filename=".mcp.json" language="json" />
 
-    <h3>End-of-day brain dump</h3>
-    <CopyBlock client:visible text={PROMPT_EOD} filename="prompt-eod.txt" />
+        <h2 id="permissions">Permissions</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">Sane <code>~/.claude/settings.json</code> permission rules. Allow narrow, deny broad.</p>
+        <CopyBlock client:visible text={SETTINGS_JSON_EXAMPLE} filename="settings.json" language="json" />
 
-    <h2>Ten more operator prompts</h2>
-    <p class="text-sm" style="color: rgb(var(--muted))">The five above plus these ten cover ~80% of the prompts I run weekly. Trigger phrases live with each.</p>
+        <h2 id="hooks">Hooks</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">Stop typing the same correction 50 times. Drop into <code>.claude/settings.json</code>.</p>
+        <CopyBlock client:visible text={HOOK_FORMAT_ON_SAVE} filename="hook-format-on-save.json" language="json" />
+        <CopyBlock client:visible text={HOOK_TEST_ON_WRITE} filename="hook-test-on-write.json" language="json" />
+        <CopyBlock client:visible text={HOOK_BLOCK_PUSH_TO_MAIN} filename="hook-block-push-main.json" language="json" />
+        <CopyBlock client:visible text={HOOK_SLACK_NOTIFY_LONG_TASK} filename="hook-slack-notify-long.json" language="json" />
 
-    <h3>Deal post-mortem</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "deal post-mortem", "we lost X", "deal autopsy."</p>
-    <CopyBlock client:visible text={PROMPT_DEAL_POSTMORTEM} filename="prompt-deal-postmortem.txt" />
+        <h3>secrets-scan</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Caught an Anthropic key a subagent helpfully "moved into the example" two weeks ago — five seconds of grep is cheaper than rotating a key across four projects. PreToolUse on Write|Edit, blocks the write before the file lands on disk.</p>
+        <CopyBlock client:visible text={HOOK_SECRETS_SCAN} filename="secrets-scan.sh" language="bash" />
 
-    <h3>Hire screener</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "screen this candidate", "hire screen", "vibe check."</p>
-    <CopyBlock client:visible text={PROMPT_HIRE_SCREEN} filename="prompt-hire-screen.txt" />
+        <h3>claude-md-size-guard</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">A 340-line CLAUDE.md in one project doubled the token bill in a week before I caught it — the file reads on every turn. Warn-only at the 300-line line, since sometimes you genuinely need the bulk.</p>
+        <CopyBlock client:visible text={HOOK_CLAUDE_MD_SIZE} filename="claude-md-size-guard.sh" language="bash" />
 
-    <h3>Model migration audit</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "model migration", "version bump", "upgrade to opus."</p>
-    <CopyBlock client:visible text={PROMPT_MODEL_MIGRATION} filename="prompt-model-migration.txt" />
+        <h3>prompt-cache-guard</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Edit one line of CLAUDE.md and the 5-minute cache TTL resets across every active conversation — on a bad day that's 3-5x the expected cost from a "quick tweak." Heuristic warn-only, batches related edits into one window instead of three.</p>
+        <CopyBlock client:visible text={HOOK_PROMPT_CACHE_GUARD} filename="prompt-cache-guard.sh" language="bash" />
 
-    <h3>Board update (4 lines)</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "board update", "investor update", "monthly to investors."</p>
-    <CopyBlock client:visible text={PROMPT_BOARD_UPDATE} filename="prompt-board-update.txt" />
+        <h3>agent-watchdog-stall-detect</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Subagents reliably stall around 600s — they die right before writing the deliverable, and from the parent it looks alive. The hook appends a JSONL row per spawn; an external watcher reads the file and alerts.</p>
+        <CopyBlock client:visible text={HOOK_AGENT_WATCHDOG} filename="agent-watchdog-stall-detect.sh" language="bash" />
 
-    <h3>Mentee prep</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "prep for [name]", "mentee prep", "session prep."</p>
-    <CopyBlock client:visible text={PROMPT_MENTEE_PREP} filename="prompt-mentee-prep.txt" />
+        <h3>commit-msg-enforcer</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Half my "chore: fix" commits come from sessions where Claude defaulted to something useless — three months later <code>git log --oneline</code> is a wall of noise. Stop hook, warn-only — force-blocking a Stop is rude.</p>
+        <CopyBlock client:visible text={HOOK_COMMIT_MSG_ENFORCER} filename="commit-msg-enforcer.sh" language="bash" />
 
-    <h3>RFP / partnership triage</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "RFP triage", "partnership response", "should I take this call."</p>
-    <CopyBlock client:visible text={PROMPT_RFP_TRIAGE} filename="prompt-rfp-triage.txt" />
+        <h2 id="skill-md-templates">SKILL.md templates</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">Eight real shapes from Vlad's stack. Adapt to your workflow.</p>
+        <CopyBlock client:visible text={SKILL_LIFECYCLE} filename="mentoring-lifecycle/SKILL.md" language="markdown" />
+        <CopyBlock client:visible text={SKILL_AGGREGATOR} filename="friday-wrapup/SKILL.md" language="markdown" />
+        <CopyBlock client:visible text={SKILL_VOICE} filename="vlads-newsletter/SKILL.md" language="markdown" />
 
-    <h3>Kill decision</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "kill decision", "should we kill X", "is X working."</p>
-    <CopyBlock client:visible text={PROMPT_KILL_DECISION} filename="prompt-kill-decision.txt" />
+        <h3>deal-watcher</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Lost a \$42k deal because the AE updated stage on a Tuesday and the buyer ghosted — nobody noticed until day 19, past the discount window. This skill watches the wire, not the dashboard.</p>
+        <CopyBlock client:visible text={SKILL_DEAL_WATCHER} filename="deal-watcher/SKILL.md" language="markdown" />
 
-    <h3>Customer-call synthesis</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "customer call synthesis", "interview readout", "what did we learn."</p>
-    <CopyBlock client:visible text={PROMPT_CUSTOMER_SYNTHESIS} filename="prompt-customer-synthesis.txt" />
+        <h3>email-deliverability-eval</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Belkins sent 12,000 messages on a domain whose DMARC had silently broken three weeks earlier — reply rate fell to 0.4% from 3.1% before anyone noticed. SPF/DKIM/DMARC + Postmaster reputation check before the campaign ships, not after.</p>
+        <CopyBlock client:visible text={SKILL_EMAIL_DELIVERABILITY} filename="email-deliverability-eval/SKILL.md" language="markdown" />
 
-    <h3>Should-I-write-this filter</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "should I write about", "newsletter idea check", "is this a post."</p>
-    <CopyBlock client:visible text={PROMPT_WRITING_FILTER} filename="prompt-writing-filter.txt" />
+        <h3>sub-agent-watchdog</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Four times in March a general-purpose agent died right before writing the deliverable — the spinner kept spinning, the file never appeared. Detect stall early, decide deliberately: kill, or take over in the main context.</p>
+        <CopyBlock client:visible text={SKILL_SUBAGENT_WATCHDOG} filename="sub-agent-watchdog/SKILL.md" language="markdown" />
 
-    <h3>Tuesday-9am triage</h3>
-    <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "triage my morning", "5-minute version", "what's the one thing."</p>
-    <CopyBlock client:visible text={PROMPT_TUESDAY_TRIAGE} filename="prompt-tuesday-triage.txt" />
+        <h3>rigor-enforcer-gate</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Edition 3 shipped with "powerful" used twice and a "most teams" claim with no number — both got caught by readers, both banned by the project's own rules. Refuse to ship until the voice contract holds.</p>
+        <CopyBlock client:visible text={SKILL_RIGOR_ENFORCER} filename="rigor-enforcer-gate/SKILL.md" language="markdown" />
 
-    <h2>GitHub Action — Daily PR digest</h2>
-    <p class="text-sm" style="color: rgb(var(--muted))">The cheapest, highest-leverage headless workflow in existence.</p>
-    <CopyBlock client:visible text={GITHUB_PR_DIGEST_ACTION} filename="pr-digest.yml" language="yaml" />
+        <h3>billing-alert-template</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Anthropic billing ran from \$14/day to \$186/day inside one week without anyone noticing — cost is the boiling-frog metric in this stack. One alert with three concrete moves saves the daily check-in.</p>
+        <CopyBlock client:visible text={SKILL_BILLING_ALERT} filename="billing-alert-template/SKILL.md" language="markdown" />
+
+        <h2 id="five-reusable-prompts">Five reusable prompts</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">Steal these. They travel across surfaces.</p>
+        <h3>The world-class rigor enforcer</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Use on ChatGPT, Gemini, anywhere without robust default behaviors. Single biggest quality lift from copy-paste.</p>
+        <CopyBlock client:visible text={PROMPT_RIGOR_ENFORCER} filename="prompt-rigor-enforcer.txt" />
+
+        <h3>Adversarial reviewer</h3>
+        <CopyBlock client:visible text={PROMPT_ADVERSARIAL} filename="prompt-adversarial-reviewer.txt" />
+
+        <h3>Skill-creator stub</h3>
+        <CopyBlock client:visible text={PROMPT_SKILL_CREATOR} filename="prompt-skill-creator.txt" />
+
+        <h3>Pre-meeting briefing</h3>
+        <CopyBlock client:visible text={PROMPT_PRE_MEETING} filename="prompt-pre-meeting.txt" />
+
+        <h3>End-of-day brain dump</h3>
+        <CopyBlock client:visible text={PROMPT_EOD} filename="prompt-eod.txt" />
+
+        <h2 id="ten-more-operator-prompts">Eighteen more operator prompts</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">The five above plus these eighteen cover ~80% of the prompts I run weekly. Trigger phrases live with each.</p>
+
+        <h3>Deal post-mortem</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "deal post-mortem", "we lost X", "deal autopsy."</p>
+        <CopyBlock client:visible text={PROMPT_DEAL_POSTMORTEM} filename="prompt-deal-postmortem.txt" />
+
+        <h3>Hire screener</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "screen this candidate", "hire screen", "vibe check."</p>
+        <CopyBlock client:visible text={PROMPT_HIRE_SCREEN} filename="prompt-hire-screen.txt" />
+
+        <h3>Model migration audit</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "model migration", "version bump", "upgrade to opus."</p>
+        <CopyBlock client:visible text={PROMPT_MODEL_MIGRATION} filename="prompt-model-migration.txt" />
+
+        <h3>Board update (4 lines)</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "board update", "investor update", "monthly to investors."</p>
+        <CopyBlock client:visible text={PROMPT_BOARD_UPDATE} filename="prompt-board-update.txt" />
+
+        <h3>Mentee prep</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "prep for [name]", "mentee prep", "session prep."</p>
+        <CopyBlock client:visible text={PROMPT_MENTEE_PREP} filename="prompt-mentee-prep.txt" />
+
+        <h3>RFP / partnership triage</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "RFP triage", "partnership response", "should I take this call."</p>
+        <CopyBlock client:visible text={PROMPT_RFP_TRIAGE} filename="prompt-rfp-triage.txt" />
+
+        <h3>Kill decision</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "kill decision", "should we kill X", "is X working."</p>
+        <CopyBlock client:visible text={PROMPT_KILL_DECISION} filename="prompt-kill-decision.txt" />
+
+        <h3>Customer-call synthesis</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "customer call synthesis", "interview readout", "what did we learn."</p>
+        <CopyBlock client:visible text={PROMPT_CUSTOMER_SYNTHESIS} filename="prompt-customer-synthesis.txt" />
+
+        <h3>Should-I-write-this filter</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "should I write about", "newsletter idea check", "is this a post."</p>
+        <CopyBlock client:visible text={PROMPT_WRITING_FILTER} filename="prompt-writing-filter.txt" />
+
+        <h3>Tuesday-9am triage</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "triage my morning", "5-minute version", "what's the one thing."</p>
+        <CopyBlock client:visible text={PROMPT_TUESDAY_TRIAGE} filename="prompt-tuesday-triage.txt" />
+
+        <h3>CFO defense generator</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "CFO pushback on AI spend", "$4K/mo is too rich", "defend the AI line item." Reframes Claude as a labor line, not a SaaS line.</p>
+        <CopyBlock client:visible text={PROMPT_CFO_DEFENSE} filename="prompt-cfo-defense.txt" />
+
+        <h3>Doc-corruption smoke eval</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "did this drift", "compare to snapshot", "check for sycophancy drift." Catches silent edits after ~10 ops on a long-form doc.</p>
+        <CopyBlock client:visible text={PROMPT_DOC_CORRUPTION_EVAL} filename="prompt-doc-corruption-eval.txt" />
+
+        <h3>Skill smoke eval writer</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "smoke test this skill", "write the eval", "will this fire next month." Generates the 3-line test file that survives a model version bump.</p>
+        <CopyBlock client:visible text={PROMPT_SKILL_SMOKE_EVAL} filename="prompt-skill-smoke-eval.txt" />
+
+        <h3>Tuesday-morning briefing</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "morning brief", "06:30 cron", "what do I need to know before 9am." Not a triage filter — a generated brief, ~150 words, Slack-mrkdwn.</p>
+        <CopyBlock client:visible text={PROMPT_TUESDAY_BRIEF} filename="prompt-tuesday-brief.txt" />
+
+        <h3>Conventional-commits enforcer</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "rewrite this commit", "wip → conventional", "split this commit." Either reshapes the message or splits the diff into two with explicit unstaging commands.</p>
+        <CopyBlock client:visible text={PROMPT_CONVENTIONAL_COMMITS} filename="prompt-conventional-commits.txt" />
+
+        <h3>Should we even build this</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "should we build this", "feature idea check", "five-question filter." Kills 70% of "wouldn't it be cool if" before they touch the roadmap.</p>
+        <CopyBlock client:visible text={PROMPT_SHOULD_BUILD} filename="prompt-should-build.txt" />
+
+        <h3>Week-in-review distiller</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "weekly review", "Sunday distill", "four bullets for the vault." Reads the trail, distills shipped / stalled / bill spiked / defend.</p>
+        <CopyBlock client:visible text={PROMPT_WEEK_DISTILL} filename="prompt-week-distill.txt" />
+
+        <h3>Customer-call truth-extractor</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">Trigger: "strip the diplomacy", "what did they actually say", "Fathom truth check." Three lines — actual objection, actual ask, actual blocker — each with a cited timestamp.</p>
+        <CopyBlock client:visible text={PROMPT_TRUTH_EXTRACT} filename="prompt-truth-extract.txt" />
+
+        <h2 id="github-action">GitHub Action — Daily PR digest</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">The cheapest, highest-leverage headless workflow in existence.</p>
+        <CopyBlock client:visible text={GITHUB_PR_DIGEST_ACTION} filename="pr-digest.yml" language="yaml" />
+      </div>
+    </div>
   </section>
 
   <CommandPaletteMount />
+
+  <style>
+    /* TOC link hover + active states */
+    .toc-link:hover {
+      color: rgb(var(--fg));
+      border-color: rgb(var(--accent-2) / 0.5);
+      background: rgb(var(--accent-2) / 0.04);
+    }
+    .toc-link[data-active="true"] {
+      color: rgb(var(--accent-2));
+      border-color: rgb(var(--accent-2));
+      background: rgb(var(--accent-2) / 0.08);
+      font-weight: 500;
+    }
+    /* Mobile drawer links: subtle hover */
+    details a[data-toc-link]:hover {
+      background: rgb(var(--line) / 0.5);
+      color: rgb(var(--fg));
+    }
+    details a[data-toc-link][data-active="true"] {
+      color: rgb(var(--accent-2));
+      background: rgb(var(--accent-2) / 0.08);
+    }
+    /* Scroll-margin so the sticky site header doesn't eat the anchor target */
+    h2[id] { scroll-margin-top: 5rem; }
+  </style>
+
+  <script>
+    // Active-section highlighting via IntersectionObserver.
+    // Trigger when H2 sits in the upper third of the viewport.
+    const headings = document.querySelectorAll<HTMLHeadingElement>('h2[id]');
+    const links = document.querySelectorAll<HTMLAnchorElement>('a[data-toc-link]');
+
+    if (headings.length && links.length && 'IntersectionObserver' in window) {
+      const setActive = (id: string) => {
+        links.forEach((a) => {
+          if (a.getAttribute('data-toc-link') === id) a.setAttribute('data-active', 'true');
+          else a.removeAttribute('data-active');
+        });
+      };
+
+      // Track visibility per section; pick the topmost visible one.
+      const visible = new Map<string, number>();
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            const id = (e.target as HTMLElement).id;
+            if (e.isIntersecting) visible.set(id, e.intersectionRatio);
+            else visible.delete(id);
+          }
+          if (visible.size === 0) return;
+          // Choose the section nearest the top of the viewport.
+          let topId: string | null = null;
+          let topY = Infinity;
+          for (const id of visible.keys()) {
+            const el = document.getElementById(id);
+            if (!el) continue;
+            const y = el.getBoundingClientRect().top;
+            if (y < topY) { topY = y; topId = id; }
+          }
+          if (topId) setActive(topId);
+        },
+        { rootMargin: '-30% 0px -65% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+      );
+
+      headings.forEach((h) => io.observe(h));
+
+      // Initial state: first heading.
+      const first = headings[0]?.id;
+      if (first) setActive(first);
+
+      // Close the mobile drawer after a tap.
+      const drawer = document.querySelector<HTMLDetailsElement>('details');
+      document.querySelectorAll('details a[data-toc-link]').forEach((a) => {
+        a.addEventListener('click', () => {
+          if (drawer) drawer.open = false;
+        });
+      });
+    }
+  </script>
 </BaseLayout>

@@ -7,6 +7,234 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const tierColor = { S: '#FF6B2C', A: '#FF8E54', B: '#FFB48C' } as const;
 const modeColor = { read: 'rgb(var(--accent-2))', 'read-write': 'rgb(var(--accent))' } as const;
+
+const connectorDeepDives = [
+  {
+    name: 'filesystem',
+    mode: 'read-write' as const,
+    tier: 'S' as const,
+    tierNote: 'load-bearing',
+    wires: "The agent's hands. Every vault read, every skill write, every plan file lives here. End-of-day vault sync (7 PM) reads what shipped today and writes back so tomorrow's instance starts smart. Process-mining scan (Monday 9 AM) writes candidate-skill files. Without filesystem, none of the other connectors compose — Slack output has nowhere to land, Gong transcripts have nowhere to cache.",
+    config: `{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/vlad/Vlad-Brain",
+        "/Users/vlad/Desktop/AI Products"
+      ]
+    }
+  }
+}`,
+    gotcha: 'Filesystem scope is the entire blast radius of the agent. Point it at / and an agent that goes wrong can rm-rf your laptop — point it at one vault and one project root and the worst-case is a noisy git diff. Two explicit paths, never the home directory.',
+    notWire: 'Never not. But never wire it at ~/ — always at the narrowest folder the workflow actually needs.',
+    crossLink: 'Ch 12 (transport: stdio), Ch 9 (don\'t get owned — filesystem is the most-abused vector in compromised agents).',
+  },
+  {
+    name: 'slack',
+    mode: 'read-write' as const,
+    tier: 'S' as const,
+    tierNote: 'load-bearing',
+    wires: "Output channel for everything. Morning briefing (7:30 AM weekdays) lands as DM. Deal-advancement alerts (5 PM ET) post to leadership canvas. Friday wrap-up cross-system synthesis lands Saturday-morning canvas. Reads everything — channels, threads, DMs — for context. Writes go through a confirmation step, because an agent that posts to #general without a gate is one bad cron away from a Monday-morning HR conversation.",
+    config: `{
+  "mcpServers": {
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "xoxb-***",
+        "SLACK_TEAM_ID": "T***",
+        "SLACK_CHANNEL_IDS": "C0123,C0456"
+      }
+    }
+  }
+}`,
+    gotcha: 'chat:write lets the agent post as the bot user in any channel it has been invited to. Restrict the bot\'s channel membership at the Slack-admin layer, not at the prompt layer — prompts are advisory, channel ACLs are enforced.',
+    notWire: 'Agencies and shared workspaces where one wrong message blows up client trust. Stay read-only and use a separate webhook for outbound.',
+    crossLink: 'Ch 12 (Communication category), Ch 7 (scheduled tasks all terminate at Slack).',
+  },
+  {
+    name: 'gmail',
+    mode: 'read' as const,
+    tier: 'A' as const,
+    tierNote: 'high-value',
+    wires: 'Inbox = highest-ROI connector after filesystem. Morning briefing pulls overnight thread context. Pre-meeting prep (30 min before each meeting) pulls last interaction with the attendees. Cross-references HubSpot contact email to build deal summaries — the inbox-CRM join is where most "what\'s going on with this account" questions actually get answered.',
+    config: `{
+  "mcpServers": {
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gmail"],
+      "env": {
+        "GMAIL_OAUTH_CLIENT_ID": "***.apps.googleusercontent.com",
+        "GMAIL_OAUTH_CLIENT_SECRET": "***",
+        "GMAIL_OAUTH_SCOPES": "gmail.readonly,gmail.labels"
+      }
+    }
+  }
+}`,
+    gotcha: 'gmail.send means the agent can email anyone in your contact graph as you — including your investors, your bank, and your in-laws. Gate sends with a hook that requires explicit human confirmation per message, or stay on gmail.readonly and draft-only via the Drafts API. Never grant full mailbox scope on a fresh setup.',
+    notWire: 'Until you have a confirmation hook tested in a sandbox account. Sent emails do not unsend.',
+    crossLink: 'Ch 12 (OAuth scopes section), Ch 9 (impersonation risk).',
+  },
+  {
+    name: 'hubspot',
+    mode: 'read-write' as const,
+    tier: 'A' as const,
+    tierNote: 'high-value',
+    wires: 'Sales pipeline ticker (9 AM weekdays) pulls overnight deal motion — what advanced, what stalled, what went dark. Deal-advancement alerts (5 PM) read stage changes since 5 PM yesterday and write one paragraph each, "why this matters," back to a leadership Slack canvas. Writes are scoped to notes and tasks — never deal-stage changes, never close-won, never amount edits.',
+    config: `{
+  "mcpServers": {
+    "hubspot": {
+      "command": "npx",
+      "args": ["-y", "@hubspot/mcp-server"],
+      "env": {
+        "HUBSPOT_ACCESS_TOKEN": "pat-na1-***",
+        "HUBSPOT_ALLOWED_OPERATIONS": "deals.read,contacts.read,notes.write,tasks.write"
+      }
+    }
+  }
+}`,
+    gotcha: 'deals.write means the agent can shift a deal to Closed-Won, which fires commission calculations, attribution reports, and downstream notifications. No autoclose without human-in-the-loop. Whitelist write operations explicitly — notes and tasks are safe, stage and amount are not.',
+    notWire: 'Anywhere commission or forecasting depends on stage accuracy. Read-only until you have a smoke-eval suite for every write path.',
+    crossLink: 'Ch 12 (Sales and CRM), Ch 7 (pipeline ticker).',
+  },
+  {
+    name: 'stripe',
+    mode: 'read' as const,
+    tier: 'A' as const,
+    tierNote: 'high-value',
+    wires: "Folderly's MRR motion, dispute trends, churn signals. \"What was MRR last week\" returns a real number, not a vibe. Friday wrap-up pulls week-over-week revenue delta for the Saturday-morning canvas. Read-only, full stop — billing is the one place where a hallucinated tool call has direct cash-impact downside.",
+    config: `{
+  "mcpServers": {
+    "stripe": {
+      "command": "npx",
+      "args": ["-y", "@stripe/mcp-server"],
+      "env": {
+        "STRIPE_API_KEY": "rk_live_***",
+        "STRIPE_MODE": "read-only"
+      }
+    }
+  }
+}`,
+    gotcha: 'Use a restricted key (rk_live_*) with read-only resource scopes — never a secret key (sk_live_*). Stripe MCP blocks webhook and event endpoints by default, but a full secret key gives the agent refund + payout authority. One bad agent call against a sk_live_* key is a real-money incident.',
+    notWire: 'Always. Charges, refunds, payouts — keep them in a separate human-only surface. The agent reads; humans transact.',
+    crossLink: 'Ch 12 (Billing and finance), feedback_stripe_mcp_capability_matrix.md for what MCP exposes vs. blocks.',
+  },
+  {
+    name: 'github',
+    mode: 'read-write' as const,
+    tier: 'S' as const,
+    tierNote: 'load-bearing',
+    wires: 'Hourly Sentry watcher fires Codex-style auto-PRs for non-trivial bugs — reviewed like junior-engineer work, never auto-merged. Friday wrap-up pulls repo health (open PRs, stale branches, failing builds) across every codebase. Reads issues for triage context, writes commits and PR descriptions through scoped fine-grained tokens.',
+    config: `{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "github_pat_***",
+        "GITHUB_ALLOWED_REPOS": "Belkins/linkagent,Belkins/folderly"
+      }
+    }
+  }
+}`,
+    gotcha: 'A classic ghp_* token has org-wide blast radius — any repo you can see, the agent can touch. Use a fine-grained PAT scoped to specific repos + specific permissions (contents:write, pull-requests:write, issues:write). Never give an agent admin:org or delete_repo. Branch protection on main is non-negotiable.',
+    notWire: 'Repos with auto-deploy on push and no human review gate. The combination of agent-writes + auto-deploy is how production goes down on a Sunday.',
+    crossLink: 'Ch 12 (Engineering), Ch 7 (Sentry watcher cron).',
+  },
+  {
+    name: 'google calendar',
+    mode: 'read' as const,
+    tier: 'A' as const,
+    tierNote: 'high-value',
+    wires: 'Half the questions an agent gets need calendar context — "when am I free Thursday," "who am I meeting with at 2," "what\'s on the day shape." Morning briefing pulls today + tomorrow. Pre-meeting prep (30 min before each meeting) joins the attendee list against HubSpot contacts and Gmail thread history. Read-only is enough for 95% of workflows — time-block suggestions get drafted, not booked.',
+    config: `{
+  "mcpServers": {
+    "gcal": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-google-calendar"],
+      "env": {
+        "GOOGLE_OAUTH_CLIENT_ID": "***.apps.googleusercontent.com",
+        "GOOGLE_OAUTH_CLIENT_SECRET": "***",
+        "GOOGLE_OAUTH_SCOPES": "calendar.readonly,calendar.events.readonly"
+      }
+    }
+  }
+}`,
+    gotcha: 'calendar.events write scope lets the agent create, modify, and delete events — including dialing into other people\'s meetings as a guest. An agent that misparses a reschedule and deletes a board meeting is a real story. Stay on calendar.readonly until you have a confirmed write workflow.',
+    notWire: 'Calendars that include external attendees. Internal-only calendars are a safer first write target.',
+    crossLink: 'Ch 12 (Calendar and scheduling), Ch 7 (pre-meeting prep event trigger).',
+  },
+  {
+    name: 'notion',
+    mode: 'read' as const,
+    tier: 'A' as const,
+    tierNote: 'high-value',
+    wires: "Newsletter canonical store — everything else is a mirror. Vault sync (7 PM) doesn't write to Notion directly; it writes to the Obsidian vault, and Notion stays the human-curated surface. Reads page content, database queries, and comments to ground responses in the team's actual docs. For Belkins, Notion is read-only context; for the Newsletter, it's the source of truth.",
+    config: `{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/mcp-server"],
+      "env": {
+        "NOTION_INTEGRATION_TOKEN": "ntn_***",
+        "NOTION_ALLOWED_DATABASES": "db-id-1,db-id-2"
+      }
+    }
+  }
+}`,
+    gotcha: 'A Notion integration token grants access to every page the integration is connected to — and "connected to" is set page-by-page in the Notion UI, not in your .mcp.json. Audit which pages the integration sees inside Notion itself; a misconfigured share extends the agent\'s read scope to every child page, including HR docs and legal templates.',
+    notWire: 'Teams where doc structure has political meaning. An agent that reorganizes a wiki without consent loses trust fast.',
+    crossLink: 'Ch 12 (Vault and knowledge), obsidian_vault_reference.md for the mirror pattern.',
+  },
+  {
+    name: 'gong',
+    mode: 'read' as const,
+    tier: 'B' as const,
+    tierNote: 'situational',
+    wires: 'Call transcript ingestion for deal summaries and follow-up drafts. Sales pipeline ticker joins Gong transcripts to HubSpot deal state — "deal advanced, here\'s the moment in the call that moved it." Pre-meeting prep pulls the last call transcript with the same buyer so the next conversation doesn\'t repeat ground. Pick ONE transcriber — Gong, Fireflies, or Granola — not three. The agent gets confused when the same call appears in two systems with two summaries.',
+    config: `{
+  "mcpServers": {
+    "gong": {
+      "command": "npx",
+      "args": ["-y", "@gong/mcp-server"],
+      "env": {
+        "GONG_ACCESS_KEY": "***",
+        "GONG_ACCESS_KEY_SECRET": "***",
+        "GONG_ALLOWED_OPERATIONS": "calls.read,transcripts.read"
+      }
+    }
+  }
+}`,
+    gotcha: "Gong transcripts contain customer PII, pricing discussions, and competitive intel. The MCP server returns full transcript text — anything that hits the agent's context window is now in your AI vendor's logs. Confirm your AI vendor's data retention policy before wiring Gong, and never pipe transcripts through a third-party model proxy.",
+    notWire: 'Regulated industries (healthcare, finance) where call recordings have explicit retention rules. The compliance overhead outweighs the agent uplift.',
+    crossLink: 'Ch 12 (Meeting transcripts — pick ONE), Ch 7 (deal-advancement alerts).',
+  },
+  {
+    name: 'ahrefs',
+    mode: 'read' as const,
+    tier: 'B' as const,
+    tierNote: 'situational',
+    wires: 'Newsletter SEO motion. Keyword volume checks inline ("does this title have search demand"), backlink data for outreach targeting, competitor organic-keyword overlap for editorial planning. Friday wrap-up pulls week-over-week SEO movement across vladsnewsletter.com. Read-only by definition — Ahrefs doesn\'t expose write endpoints.',
+    config: `{
+  "mcpServers": {
+    "ahrefs": {
+      "command": "npx",
+      "args": ["-y", "@ahrefs/mcp-server"],
+      "env": {
+        "AHREFS_API_TOKEN": "***",
+        "AHREFS_DEFAULT_TARGET": "vladsnewsletter.com"
+      }
+    }
+  }
+}`,
+    gotcha: 'API units burn fast. A single keywords-explorer-overview call costs ~50 units minimum; a serp-overview is variable; site-explorer-organic-keywords starts at 25 and scales. An agent in a loop hits the monthly quota before you notice. Preflight every batch with a subscription-info-limits-and-usage check — the ahrefs-budget-check skill exists for exactly this.',
+    notWire: 'Companies without organic SEO motion. The unit cost isn\'t worth the marginal value if no one acts on the data.',
+    crossLink: 'Ch 12 (Data and analytics), ahrefs-budget-check skill.',
+  },
+];
 const catColor: Record<string, string> = {
   briefing: '#FF6B2C',
   sync:     '#22D3A0',
@@ -96,6 +324,66 @@ const catColor: Record<string, string> = {
     </div>
   </section>
 
+  <!-- 10 connector deep-dives -->
+  <section id="connector-deep-dives" class="container-wide pt-8 pb-12 scroll-mt-20">
+    <div class="container-prose px-0">
+      <h2 class="m-0">Ten connector deep-dives</h2>
+      <p class="mt-2" style="color: rgb(var(--muted))">
+        The Cowork stack lives or dies on its connector list. Ten of the fifteen services wired across the categories carry the load. Each one written for an operator who is about to wire their own and wants the failure mode in advance.
+      </p>
+      <p class="mt-2 text-sm" style="color: rgb(var(--muted))">
+        Reference voice: chapter 12. Pattern: one CRM, one inbox, one calendar, one knowledge store per company — no duplicates. Read-only first, expand when a workflow demands it.
+      </p>
+    </div>
+
+    <div class="mt-6 grid gap-4 md:grid-cols-2">
+      {connectorDeepDives.map((c) => (
+        <article class="card" style="background: rgb(var(--paper));">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <h3 class="m-0 font-display text-xl" style="color: rgb(var(--fg))">{c.name}</h3>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded" style={`background: ${tierColor[c.tier]}; color: ${c.tier === 'B' ? '#0E0F11' : 'white'};`}>{c.tier}</span>
+              <span class="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded" style={`color: ${modeColor[c.mode]}; border: 1px solid ${modeColor[c.mode]};`}>{c.mode}</span>
+            </div>
+          </div>
+          <div class="text-[10px] uppercase tracking-wider mb-3" style="color: rgb(var(--muted))">tier {c.tier} · {c.tierNote}</div>
+
+          <div class="mb-3">
+            <div class="text-[11px] uppercase tracking-wider font-semibold mb-1" style="color: rgb(var(--accent-2))">What Vlad wires through it</div>
+            <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">{c.wires}</p>
+          </div>
+
+          <div class="mb-3">
+            <div class="text-[11px] uppercase tracking-wider font-semibold mb-1" style="color: rgb(var(--accent))">.mcp.json / Cowork config</div>
+            <pre class="m-0" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line)); padding: 0.75rem; overflow-x: auto; font-size: 0.75em; line-height: 1.5; border-radius: 6px;"><code style="color: rgb(var(--fg) / 0.9); font-family: ui-monospace, SFMono-Regular, Menlo, monospace;">{c.config}</code></pre>
+          </div>
+
+          <div class="rounded-md p-3 mb-3" style="background: rgb(var(--bg)); border-left: 3px solid #FFAA00;">
+            <div class="text-[10px] uppercase tracking-wider font-semibold mb-1" style="color: #FFAA00;">The security gotcha</div>
+            <p class="text-xs leading-snug m-0" style="color: rgb(var(--fg) / 0.9)">{c.gotcha}</p>
+          </div>
+
+          <p class="text-xs italic leading-snug m-0" style="color: rgb(var(--muted))">
+            <span class="not-italic font-semibold uppercase tracking-wider text-[10px]" style="color: rgb(var(--muted))">When NOT to wire this · </span>{c.notWire}
+          </p>
+
+          <div class="mt-3 text-xs" style="color: rgb(var(--muted))">
+            <span class="font-semibold uppercase tracking-wider text-[10px]" style="color: rgb(var(--accent))">Cross-link · </span>{c.crossLink}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="container-prose px-0 mt-8">
+      <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
+        <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Wiring order</div>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          If you're starting fresh, wire in this order: filesystem, slack, gmail, calendar, hubspot, github, stripe, notion, gong, ahrefs. The first four cover 80% of daily-driver use. The next three add operating context. The last three are situational — wire them only when a real workflow demands it. One source of truth per category. No duplicates.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- Scheduled tasks -->
   <section class="container-wide pt-8 pb-16">
     <div class="container-prose px-0">
@@ -120,6 +408,110 @@ const catColor: Record<string, string> = {
           </div>
         </div>
       ))}
+    </div>
+  </section>
+
+  <!-- 10 specific workflows -->
+  <section class="container-wide pt-8 pb-12">
+    <div class="container-prose px-0">
+      <h2 class="m-0">10 specific workflows</h2>
+      <p class="mt-2" style="color: rgb(var(--muted))">
+        Concrete scenes — what fired, what landed, what would have been lost without it. Time-stamps are real; numbers are real; channel names are not. Read these as patterns to copy, not configs to clone.
+      </p>
+    </div>
+
+    <div class="mt-6 grid gap-3 md:grid-cols-2">
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">06:30 Tuesday</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The morning brief</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          Coffee hot. dog unimpressed. cron fires at 06:30. instance pulls HubSpot deal motion from the last 12 hours, Gong call signals from yesterday's three sales calls, and Google Calendar conflicts before noon. synthesizes into 420 words, lands as a single Slack DM in #ops. by 06:47 I've read it on my phone, in bed, and I know which of yesterday's $48K deals needs a nudge before stand-up.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: open six tabs, copy four numbers into my head, lose half of them by tab seven. 25 minutes before first decision.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">4:02 AM ET</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The deal-quiet alert</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          event-triggered, not cron. HubSpot connector notices a stage-3 deal worth $62K has had zero activity for 4 days, 6 hours. fires an alert into Slack with the last touch summary, the AE owner, and a suggested re-engage line lifted from the previous winning thread. AE sees it before the standup. deal moved to stage 4 by EOD.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: dead deal noticed at Friday pipeline review, three days too late, after the buyer's already gone cold.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Friday 16:00</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The wrap-up aggregator</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          one cron, five companies. pulls Stripe MRR deltas, HubSpot pipeline movement, GitHub shipped PRs, Slack leadership signal, and Google Calendar archaeology across the week. runtime: 28 minutes. output: a 412-word Slack canvas in the leadership channel by 16:30 Friday. COO reads it Saturday morning over breakfast. I read it Sunday from a beach. Monday priorities are pre-ranked.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: three hours of Friday-afternoon ritual, half the week unremembered by Sunday, no one else has the synthesis until Monday standup.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Thursday 17:45</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The post-call debrief</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          sales call ends 17:30. Gong webhook fires. instance reads the transcript, strips the politeness layer, returns three lines: the actual objection (price, not features), the actual ask (a 60-day pilot, not the annual), the actual blocker (their CFO, who wasn't on the call). lands in Slack DM at 17:45. AE re-frames the follow-up before they close their laptop. 240 words in, 60 words out.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: the AE writes a summary from memory two days later, anchors on what they wanted to hear, ships the wrong follow-up.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Monday 10:00</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The mentee pre-session prep</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          24 hours before a paid mentoring call. instance pulls the last session's notes from Obsidian, scans WhatsApp for inbound async messages since, and grabs one metric the mentee committed to (placements count, MRR, hire status). produces a 1-page Obsidian note: what they said they'd do, what they actually did, the one question to open with. 7 minutes of prep instead of a Monday evening.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: 45 minutes of scrolling vault files and WhatsApp, half of it forgotten by call time anyway.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Sunday 19:00</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The newsletter idea harvester</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          weekly cron, Sunday evening. instance skims 7 days of Obsidian vault notes via the community connector, scores recurring themes against the last 12 newsletter issues for novelty. surfaces the top 3 candidate angles for next Tuesday's issue — each with a hook line, a number that anchors it, and the chapter or memo it traces back to. lands as a vault file. I pick one by Monday morning.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: blank-page panic at 09:00 Tuesday, two hours of grasping, ship the third-best idea because it was the one I could remember.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">First Monday 08:00</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The board-update generator</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          monthly cron. pulls Stripe MRR plus delta vs prior month, HubSpot pipeline weighted forecast, GitHub shipped feature count, and headcount from the people-ops vault note. compresses into a 4-line update — MRR, pipeline, ship velocity, hire status. lands in a vault file at 08:00 first Monday of the month. I edit it for context for 6 minutes, paste into the board email, send by 09:00. used to be a 90-minute exercise.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: that monthly update slips by a week, board chair asks twice, the narrative ships under pressure instead of with care.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Wednesday 14:20</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The customer-call truth extractor</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          customer success call ends 14:00. Fireflies transcript syncs at 14:15. instance reads it, strips hedging language, returns the no-politeness version: what the customer actually likes (one feature, not three), what they actually hate (the onboarding sequence, not the pricing), what they'll churn over (the missing Salesforce sync). 22-minute call collapses to 130 words. CSM acts on it the same day.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: the AE's optimistic recap goes into the CRM, the actual signal dies in the transcript no one re-reads.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Any time, T+8 min</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The agent-stall watchdog</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          a background instance hits 8 minutes wall-clock. watchdog cron polls every minute; once the threshold trips, fires a Slack DM with the instance name, the last tool call, and a one-line "kill or wait" prompt. lessons learned the hard way — general-purpose agents stall right before writing the deliverable. 8 minutes is the empirical line; past it, recovery cost > restart cost.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: the agent dies at 14 minutes, I notice at 30, the deliverable is gone, the context is cold.</p>
+      </div>
+
+      <div class="card" style="background: rgb(var(--paper));">
+        <div class="font-mono text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Daily 09:00</div>
+        <h3 class="m-0 mb-2 font-display text-lg">The CFO bill audit</h3>
+        <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
+          daily cron reads the Anthropic API spend dashboard via the engineering connector layer. yesterday's burn against a $380 daily threshold. if over, the instance runs three checks — cache hit rate (target >70%), unattended headless runs in flight, eval gate pass rate. produces a 3-line Slack DM with the specific lever to pull. one Tuesday last month it caught a runaway swarm at $612 before lunch.
+        </p>
+        <p class="text-xs italic mt-3 m-0" style="color: rgb(var(--muted))">Without Cowork: the bill arrives at month-end, the swarm has been bleeding for 19 days, the CFO finds it before I do.</p>
+      </div>
+
     </div>
   </section>
 
