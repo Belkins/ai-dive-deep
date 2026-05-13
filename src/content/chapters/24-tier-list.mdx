@@ -25,6 +25,17 @@ One rule for reading this chapter: tiers are a snapshot. The tools move. The rea
   caption="My actual desktop"
   note="My actual desktop — show the dock and the apps I have open at 9 AM on a Tuesday. The S-tier reveals itself."/>
 
+## Tier list addendum — May 2026
+
+The lists below were ranked at first writing. Four changes since then are big enough that I'd rewrite the entries inline if I weren't trying to preserve the receipt. Read these before the tables — they change how to read the placements.
+
+- **Operator (OpenAI) is out.** OpenAI shut Operator down on 2025-08-31. Any S- or A-tier mention is dead weight. The replacement is Anthropic's computer-use feature, which moved to production-tier availability on Pro and Max plans in 2026 — same job, different surface, doesn't require a separate subscription. If you were paying for Operator, that line stops; if you were waiting for the Operator replacement, it shipped and you didn't have to wait.
+- **Mythos is pending.** At Code with Claude 2026, Anthropic publicly conceded that an internal unreleased model called Mythos beats Opus 4.7 across the benchmarks they ran. Release window: "soon." Translation — the S-tier model line is queued for a flip. Build code that doesn't pin to a specific Opus version and the upgrade is a one-line change. Pin to `claude-opus-4-7` literally and you're rewriting in three months. Anthropic is also deprecating `claude-sonnet-4` and `claude-opus-4` before June 15, 2026, so anything still on those names needs a sweep regardless.
+- **AutoGen → Microsoft Agent Framework.** AutoGen graduated to Microsoft Agent Framework 1.0 GA on 2026-04-03. AutoGen itself is now in maintenance mode. If you have AutoGen in a tier above F, you're ranking a deprecated runtime. The framework chapter treats this fully; the tier list just needs to know that the AutoGen line moved.
+- **The model floor moved.** Sonnet 4.6 ($3/$15 per million tokens) shipped 2026-02-17. Opus 4.7 ($5/$25) shipped 2026-04-16 with new `effort` and `task budget` parameters — the actionable cost lever you didn't have before. Haiku 4.5 ($1/$5) remains the workhorse for cheap-eval loops and is what powers `/goal`'s evaluator. The price-per-intelligence improved across the board; lower-tier wrappers are competing against a moving floor.
+
+The tier-list widget at the bottom of this chapter (`/tier-list`) is the live version — it gets updated independently as the landscape shifts. Treat the tables below as the May 2026 snapshot; the widget is the receipt for whatever month you're reading this in. The Mythos entry will move when it ships — see [/research-notes](/research-notes) for the running ledger.
+
 ## Tier List 1 — AI Tools and Surfaces
 
 This is the core. The models, the chat surfaces, the coding agents, the creative gen tools. Where I spend the bulk of my AI hours.

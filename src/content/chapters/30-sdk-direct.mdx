@@ -200,3 +200,19 @@ Worth naming explicitly, because the absence is the lesson:
 Each of those things has its place. None of them have a place on day one. Adding them before you've shipped is how a 34-line file becomes a 6-month engineering project that ships nothing.
 
 The 34-line Python file is still the 34-line Python file. It got prompt caching added in month two and a retry block in month four. That's it. Most of the "AI startup architecture" diagrams on Twitter are a wrapper around something this small, dressed up to justify a Series A. The wrapper is fine. Knowing what's inside the wrapper is the whole job.
+
+## The Mythos test — model upgrades that land in one line
+
+The chapter's thesis got a free receipt at Code with Claude 2026 in May. Anthropic publicly conceded that an internal unreleased model — codename **Mythos** — beats Opus 4.7 on every benchmark they ran, including an **81% score on OSWorld** (versus Sonnet 4.6's 72.5%, itself at human baseline). The release window they gave was "soon," with no firm date (verify against your version/source when you read this).
+
+Here's what the 34-line file does the day Mythos drops. One change:
+
+```py
+model="claude-mythos-1"  # was claude-sonnet-4-5
+```
+
+That's it. The cache control still works. The tool schema still works. The retry config still works. The prompt still works. The feature gets smarter overnight without a redesign — because the SDK is the floor and the model is the swap.
+
+Now consider what the same upgrade looks like for a workflow built on a framework. CrewAI, LangGraph, the new Microsoft Agent Framework — every framework-shaped path waits 2 to 6 weeks for the framework to publish support for the new model: provider config, tool-use adapter updates, retry semantics for any new error modes, sometimes a whole new abstraction for new features (the way adaptive thinking forced shape changes when it landed). You don't get Mythos the day it ships. You get Mythos the day your framework gets around to it.
+
+The operator move is to keep at least one SDK-direct path for every high-value workflow. The framework path can exist for orchestration ergonomics — see [Chapter 36](/chapters/36-frameworks-beyond) — but the critical-revenue feature, the one whose token math your CFO watches, stays SDK-direct so the next model upgrade lands on the day Anthropic ships, not the week the framework catches up. The [Mythos entry in /research-notes](/research-notes) has the receipts.

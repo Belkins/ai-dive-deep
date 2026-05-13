@@ -2,10 +2,10 @@
 number: 21
 slug: "21-three-modes"
 title: "Which Mode Right Now?"
-subtitle: "Interactive, Plan, Auto"
-tldr: "Three modes, one tool, three completely different relationships with the agent. Most operators run Claude Code in the wrong mode for the job and lose either time or money. Pick the mode that matches the cost of a wrong action — not the urgency."
-keyConcepts: ["Interactive mode", "Plan mode", "Auto mode", "permissions", "blast radius"]
-readingMinutes: 9
+subtitle: "Plan, Interactive, Auto, /goal"
+tldr: "Four modes now, one tool, four completely different relationships with the agent. Plan → Interactive → Auto was the stack; /goal added a fourth in May 2026 that removes per-turn approval the way Auto removed per-tool approval. Most operators run Claude Code in the wrong mode for the job and lose either time or money. Pick the mode that matches the cost of a wrong action — not the urgency."
+keyConcepts: ["Interactive mode", "Plan mode", "Auto mode", "goal mode", "permissions", "blast radius"]
+readingMinutes: 10
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
@@ -147,4 +147,14 @@ Different threat model, different default. On Cowork you can be more aggressive 
 
 On your main machine: live in Interactive, dip into Plan when the change is big, escape to Auto only when the environment can't hurt you. The environment determines the mode, not the urgency. Whenever you're tempted to skip permissions, ask whether you're skipping because it's safe — or because you're tired. If it's the second one, close the laptop.
 
-<PullQuote>Interactive is the apprentice. Plan is the architect. Auto is the night-shift worker. Hire the right one for the job. They cost the same. They protect you differently.</PullQuote>
+## Mode 4 — `/goal`
+
+The fourth mode shipped May 11, 2026 in Claude Code v2.1.139, and it's a different category of move than the first three. Plan removes the surprise — you see what's coming. Auto removes the per-tool approval — you don't gate every Edit. `/goal` removes the per-turn approval — you don't end the turn. Anthropic's own framing in the docs is the clean version: "auto mode removes per-tool prompts, and `/goal` removes per-turn prompts." That's a stack, not a choice. Plan → approve the plan → Auto → don't approve each tool → `/goal` → don't approve each turn.
+
+How it actually works. You type `/goal <condition up to 4,000 chars>`. Claude takes a turn. After the turn, a small fast model (Haiku 4.5 by default) reads the transcript and judges whether the condition holds. If not, Claude starts another turn instead of returning control. The goal clears automatically once the condition is met. A live overlay labeled `◎ /goal active` shows elapsed time, turns evaluated, tokens spent. One goal per session. Setting a new one replaces the old. `/goal clear` (aliases `stop`, `off`, `reset`, `cancel`) kills it.
+
+The killer scene: `/goal deploy until tests pass`. The evaluator's signal is the test runner's exit code Claude already had to print. Roughly 12 turns on a real refactor, fire-and-forget. Same shape for "all P0 issues labeled `auth` are closed" or "the auth migration in `src/auth/*` compiles under strict tsc, and no file outside `src/auth/` has been modified."
+
+The new failure mode is the one you have to name out loud. Open-ended `/goal` conditions create vibe-eval loops — "make the code better" never converges, "the docs are good" is interpretation, and Haiku will happily decide "not yet" forever while burning your budget. The eval has to be one Claude's own output can demonstrate in the transcript. If the test runs in a subprocess whose stdout doesn't bubble back, the evaluator never sees pass/fail and you loop forever. Put a stop clause in the condition itself — `or stop after 20 turns` — and watch the first run before you trust it overnight. See [Chapter 38](/chapters/38-run-until-done) for the autonomous-loop deep dive: `/goal`, `/loop`, and Stop hooks as the three primitives.
+
+<PullQuote>Plan is the architect. Interactive is the apprentice. Auto is the night-shift worker. `/goal` is the contractor who locks the door when the job is done. Hire the right one. They cost the same. They protect you differently.</PullQuote>

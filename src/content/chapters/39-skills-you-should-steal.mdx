@@ -1,0 +1,168 @@
+---
+number: 39
+slug: "39-skills-you-should-steal"
+title: "Skills You Should Steal (and the Three You Should Write Yourself)"
+subtitle: "A tour of the 1M-skill ecosystem, the 73% that's broken, and the gaps an operator can fill"
+tldr: "By May 2026 the public skills ecosystem crossed a million entries — and a dev.to audit found 73% of them silently broken. The fix isn't installing more, it's knowing which nine libraries to steal from and which three gap-filling skills no one's written yet. Star count is not a security signal."
+keyConcepts: ["community skills", "gstack", "73% problem", "vertical skill library", "publishing gap-filling skills"]
+readingMinutes: 8
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+## Saturday, 10:42 AM, six tabs
+
+It's Saturday morning, May 9, 2026. Coffee on the desk, no calls until Monday, and I'm doing the thing I told myself I'd do for a month — sit down and audit the community <GlossaryTerm term="Skill">skills</GlossaryTerm> ecosystem I'd been hearing about every other podcast. Six tabs open. Six skills installed back-to-back from repos with five-figure star counts. I picked them by reputation, not by reading the file.
+
+The first one — a "weekly retro" skill from a 12k-star library — fires but produces nothing. The description is fourteen words of marketing copy. The trigger phrases don't match how anyone actually talks. Two of the six install but never fire on their stated invocation. One fires when I didn't want it to, mid-newsletter draft, and rewrites three paragraphs into a generic LinkedIn voice. Another has `allowed-tools: ["*"]` in its frontmatter and I notice that line about ninety seconds too late — more on that at the end of this chapter.
+
+Four out of six broken on first invocation. From repos with combined 60k+ stars. That ratio matched a number I'd been carrying around in my head for two months: a dev.to audit from March that put a hard receipt on what every operator suspected. The 73% problem.
+
+This chapter is what I wish someone had handed me before I opened those six tabs.
+
+## The 73% problem
+
+On March 26, 2026, an auditor publishing as `@thestack_ai` on dev.to ran 214 community skills through a quality scorer built against the SKILL.md spec — description length, trigger-phrase quality, version field, allowed-tools posture, body structure, examples present. The headline: **73% scored below 60 out of 100**.
+
+The failure modes converged:
+- **Vague descriptions.** Sub-20-word descriptions failed in 41% of audited skills. "Helps with engineering" doesn't fire — the matcher needs *"use when the user says 'review my PR'"*.
+- **No trigger phrases.** Description as marketing copy, not as a search query against intent.
+- **No version field.** 62% omitted it. Signal: the author treated the skill as a one-shot, not a maintained artifact.
+- **Wall-of-text bodies.** 55% had zero code blocks. Claude can't extract an imperative from prose.
+- **Over-permissive allowed-tools.** Skills run with the same permissions as the surface that invokes them. A skill with `allowed-tools: ["*"]` is a credential exfil vector in a wrapper.
+
+<PullQuote>A skill is a contract with future-you. Seventy-three percent of public skills break the contract on read one.</PullQuote>
+
+The audit gave the ecosystem its first quality benchmark. It also gave operators a reason to stop treating star count as a signal. Star count measures how many people clicked "I want this." It does not measure whether the thing fires.
+
+## Tier list — May 2026 community libraries
+
+The cadence here matches [Chapter 24's](/chapters/24-tier-list) tier list, narrowed to one domain: where to actually steal from. All star counts are verbatim from the survey pulled May 14, 2026.
+
+### S — install the whole thing, prune to what fires
+
+- **`anthropics/skills`** — 134k stars. [github.com/anthropics/skills](https://github.com/anthropics/skills). The reference implementation of the SKILL.md spec, four buckets (creative/design, dev/technical, enterprise/comms, docs), plus the `/spec` and `/template` directories that define the contract. If a community skill doesn't match what's in `/spec`, treat it as suspect. Polished, generic-corporate — useful as a reference, not as direct voice inspiration.
+- **`garrytan/gstack`** — 95.7k stars. [github.com/garrytan/gstack](https://github.com/garrytan/gstack). One operator's complete Claude Code setup, MIT-licensed. Twenty-three specialist skills plus ~14 power tools — `/office-hours`, `/plan-ceo-review`, `/qa`, `/ship`, `/canary`, `/retro`, `/careful`, `/guard`. Largely co-authored with Claude itself. The highest-credibility single-author skill stack in the ecosystem and the one most operators should start from.
+- **`hesreallyhim/awesome-claude-code`** — 43.6k stars. [github.com/hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code). The flagship community index — skills, hooks, slash-commands, agent orchestrators, applications, plugins. Currently mid-restructure because the original TOC outgrew itself. The default discovery layer, not an opinion.
+
+### A — wire these into the discovery loop
+
+- **`ComposioHQ/awesome-claude-skills`** — 59.6k stars. [github.com/ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills). Vendor-owned aggregator with 1000+ skills, biased toward SaaS-app integration through Composio's own platform. Quality is high on the Composio-integrated ones and neutral elsewhere. Worth watching for "skill paired with SaaS tool" patterns.
+- **`sickn33/antigravity-awesome-skills`** — 37.4k stars. [github.com/sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills). 1,459+ skills, role-based bundles, installer CLI, web catalog, multi-platform (Claude Code, Cursor, Codex CLI, Gemini, Antigravity, Kiro, OpenCode, Copilot). Biggest by quantity — also the strongest example of why quantity-over-quality is the failure mode the dev.to audit named.
+- **`VoltAgent/awesome-agent-skills`** — 21.6k stars. [github.com/VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills). 1,100+ skills, positioned explicitly as "real-world Agent Skills created by actual engineering teams, not mass AI-generated stuff." Companion site does 300k monthly views. The positioning itself is a tell — the ecosystem is now self-aware about AI-slop skills.
+
+### B — narrow but worth knowing
+
+- **`alirezarezvani/claude-skills`** — 14.7k stars. [github.com/alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills). 268 production skills across 9 domains including C-Level Advisory, Growth Marketer, Solo Founder persona presets. Ships a "Skill Security Auditor" for pre-install vetting. Closest in shape to operator/founder workflow rather than dev-only. Single-maintainer discipline.
+- **`travisvn/awesome-claude-skills`** — 12.5k stars. [github.com/travisvn/awesome-claude-skills](https://github.com/travisvn/awesome-claude-skills). Curation list with a comparison framework — skills vs prompts vs subagents vs MCP. Includes the security guidance line every primer should have: *"skills can execute arbitrary code, review before installing."* Slightly stale (last update Feb 2026) but the best primer for someone new.
+- **`trailofbits/skills`** — 5.2k stars. [github.com/trailofbits/skills](https://github.com/trailofbits/skills). Graded B for star count, A+ for the pattern. The first credible vendor-published narrow-vertical skill repo — smart-contract audit, semgrep rule creation, supply-chain risk, YARA authoring, constant-time analysis. "We already do this for paying clients, here's the skill version." More on this pattern in a minute.
+
+<Callout type="warn">
+Star count measures intent to install, not fire reliability. Treat every library above as a *menu*, not a *meal*. Install gstack, then prune to the eight or twelve that match your actual work. The other fifteen are noise weighing down your context.
+</Callout>
+
+## Operators worth following
+
+Five people doing the curation work, plus one auditor:
+
+- **Garry Tan** — [@garrytan](https://github.com/garrytan/gstack) on X and GitHub. YC president, gstack maintainer, daily output claims that read like LinkedIn bait but are partially backed by the public repo. The most-cited single operator in this space.
+- **Alireza Rezvani** — [@alirezarezvani](https://github.com/alirezarezvani/claude-skills) on GitHub. Building the most disciplined large-scale skill library with security tooling and persona presets. Closer to operator audience than gstack.
+- **Ruben Hassid** — [@ruben](https://ruben.substack.com) on Substack, runs makemyskill.com. Non-developer voice — skills for LinkedIn posts, contracts, weekly reports. Audience profile = "I use AI daily, I'm not a coder." Closest published voice to where this book lives.
+- **Frank Andrade** — [@thepycoach](https://artificialcorner.com/p/best-claude-skills), runs the "We Built 70+ Claude Skills" piece on Artificial Corner with seven co-writers. The strongest signal of small-collective curation rather than one-author or mega-aggregator.
+- **Koen Stam** — GTMcraft Substack ([koenstam.substack.com](https://koenstam.substack.com/p/what-100-operators-get-wrong-about)). Operator-as-infrastructure framing — "what 100+ operators get wrong about running Claude as infrastructure" maps directly to the vocabulary I use.
+
+Bonus: **`@thestack_ai`** on dev.to — author of the 214-skill audit and the MIT-licensed `pulser` CLI that scores skills against the spec. The reason any of us have a number to put on the broken-skills problem at all.
+
+## Over-saturated — skip these, write something else
+
+Six categories where the bar to publish is now so high you should not bother:
+
+- **Commit-message and PR-description generators.** Every aggregator has one. gstack's `/review` covers the higher-value end. Adding another is shelf clutter.
+- **Generic code-review skills.** At least six different "code review" skills across the top four libraries. Trail of Bits' security review is the only one with credibility-by-publisher.
+- **Doc writers and README generators.** Commoditized in `anthropics/skills` document family plus fifty community variants.
+- **Test runners and scaffolders.** Jeffallan and gstack both ship strong versions. The bar is high.
+- **Viral-tweet / X-thread writers.** At least four "viral thread" skills indexed across the awesome repos. All formulaic.
+- **HN post optimizers.** Even this niche is filled — JanBussieck's `hn-skill` built on five years of front-page data plus 157k Show HN analysis. Don't compete here.
+
+The opportunity cost is real. Every hour spent publishing a seventh commit-message generator is an hour not spent publishing the skill nobody else has written. Which brings us to:
+
+## The three under-served gaps — write these yourself
+
+I run each of these privately. None of them exist in the public ecosystem in May 2026.
+
+### Gap 1 — Portfolio-CEO daily briefing
+
+The setup: I run five companies. Every morning, I want one Slack DM that pulls HubSpot deal motion across all five, Gong signals from yesterday's calls, calendar conflicts for today, Stripe anomalies overnight, and any Sentry / Vercel deploy receipts that drifted red. Not a generic standup. A *portfolio-shaped* read.
+
+My private version stitches `health-pulse` + `daily` + `closeday` against MCP connectors. The SKILL.md sketch:
+
+```yaml
+name: portfolio-daily-briefing
+description: Morning brief across N companies — pulls HubSpot deal stage
+  changes, Gong call signals, calendar conflicts, Stripe MRR motion, and
+  CI/deploy health. Outputs ONE Slack DM, not a dashboard. Use when user
+  says 'morning brief', 'daily', 'how does today look across the portfolio'.
+version: 1.0.0
+allowed-tools: ["mcp__hubspot__*", "mcp__gong__*", "mcp__stripe__list_*",
+                "mcp__slack__slack_send_message"]
+```
+
+Operator profile: portfolio CEO, holding-company operator, multi-product founder. The closest public analogs (SyncGTM, Summit53) are CRM-only and assume one company. The portfolio shape is the gap.
+
+### Gap 2 — Mentoring lifecycle
+
+The setup: I run a paid mentorship cadence weekly. Each session has pre-session prep (last week's notes, action tracker, patterns file, agenda generation), during-session capture (structured notes against a four-frame template), post-session fan-out (summary, action tracker update, patterns refresh, next session scheduled). One skill, four modes selected by context.
+
+Public ecosystem coverage of this: zero. The mentoring-lifecycle pattern referenced in [Chapter 5](/chapters/05-skills) has no installable counterpart on any of the top six libraries I surveyed. Mentees, coaches, advisors, agencies — anyone running a recurring 1:1 against an evolving file set — would install this immediately.
+
+Why nobody's filled it: the developer-shaped majority of skill authors don't run paid coaching practices. The shape of the workflow is invisible to them.
+
+### Gap 3 — Cross-trio audit
+
+The setup: every paid product I ship has three customer-touching surfaces — the landing page (where money moves), the day-one fulfillment page (what they see after purchase), the welcome email (what hits their inbox). These three drift constantly. Tier names rename, prices update on the landing page but not the email, refund windows say 14 days on one and 7 on another. I built a private skill to read all three side-by-side and catch contradictions before any preorder Stripe link goes live.
+
+Public versions: none. Functional audits and value audits each look at one artifact at a time. Cross-trio drift only surfaces when you read all three together.
+
+```yaml
+name: cross-trio-audit
+description: Audit consistency across landing page + day-1 fulfillment page
+  + welcome email before a paid product ships. Catches tier-name, price,
+  refund-window, cadence drift. Use when user says 'audit the trio',
+  'pre-launch check', 'check before the Stripe link goes live'.
+version: 1.0.0
+```
+
+Why nobody's filled it: the shape is launch-ops, not engineering. Developer skill authors don't think in terms of "the three documents a buyer touches." Operators do.
+
+## The Trail of Bits vertical pattern
+
+The most underrated repo on the tier list above is `trailofbits/skills` at 5.2k stars — an order of magnitude below the aggregators. The reason it earns a B-tier spot anyway: it's the first credible vendor-vertical skill library. Ten skills, all security-research-shaped, all derived from work the firm already does for paying clients. Smart-contract audit. Semgrep rule creation. Differential review. YARA authoring.
+
+The lesson is the publishing model, not the topic. *"We already do this professionally. Here's the skill version."* That's the move the rest of the ecosystem has not yet copied.
+
+Operator-vertical libraries that don't exist yet but could:
+- A sales-ops vertical (call review + objection map + sequence audit + ICP-fit scoring)
+- A content-ops vertical (idea bank → draft → fact-check → repurpose → schedule)
+- A fundraising-ops vertical (deck pass + investor-update generator + diligence-room audit)
+- A deliverability-audit vertical (the Folderly motion, as a skill bundle — not a product)
+
+The publisher wins inbound from a focused audience. The audience gets a library shaped to their actual workflow rather than another generic kitchen sink.
+
+## What this Saturday cost me
+
+Back to the cold open. Of the six skills I installed that Saturday morning, one had `allowed-tools: ["*"]` in its frontmatter — wildcard tool access, the default-permit posture. I missed it on the install. Two prompts later, in a session where I'd asked Claude to clean up some scratch files, the skill fired against a phrase that wasn't in its description, picked up a `Bash(rm)` it had no reason to invoke, and ran it against a path inside my Obsidian vault before I caught it on the receipts. Two markdown files gone. Vault git history saved them.
+
+The lesson lives in [Chapter 9](/chapters/09-dont-get-owned) but it deserves to land here too: every imported skill gets read line-by-line before activation. The frontmatter especially. `allowed-tools: ["*"]` is the same energy as `chmod 777` — you don't ship it, you don't install it, you don't trust the maintainer who did. Star count is not a security signal. A 95k-star repo and a 95-star repo both run with your permissions once they fire.
+
+<ScreenshotPlaceholder
+  id="39-skills-you-should-steal-1"
+  caption="The audit move: opening SKILL.md in the terminal before installing"
+  note="terminal screenshot — `cat` of a SKILL.md frontmatter block, with allowed-tools and version field highlighted. Two-column compare ideal: a 'good' frontmatter next to a wildcarded one."
+/>
+
+If you want the build-side of the workflow, [Chapter 11](/chapters/11-build-a-skill) walks the morning-briefing skill end-to-end. If you want the tier-list cadence applied to tools and connectors rather than libraries, [Chapter 24](/chapters/24-tier-list) is the sibling. This chapter is just the curation receipt — the nine libraries to steal from, the three gaps to fill, the one audit habit that keeps your vault intact.
+
+The ecosystem will look different in six months. Half the star counts above will move. Two of these libraries will be acquired or stop maintaining. Some operator I've never heard of will publish the portfolio-CEO briefing skill and I'll install it before I finish mine. The receipts will update. The audit habit won't.

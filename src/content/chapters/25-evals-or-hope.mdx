@@ -81,6 +81,14 @@ The eval is also a skill. It's not divine. It can drift. It can be wrong. The th
 
 <PullQuote>A skill without an eval is a Slack canvas waiting to gaslight your COO.</PullQuote>
 
+## Three receipts, one thesis
+
+The chapter's been "evals or hope, pick one" since I wrote it. By May 2026 the thesis has three independent confirmations and they don't agree on the failure mode — that's what makes it structural, not specific.
+
+The first is mine. DELEGATE-52, the friday-wrapup canvas, nine days of $0 pipeline in front of leadership because a HubSpot stage rename slipped past every check that wasn't there. Workflow drift, content-level. The second was Anthropic's: an analysis of roughly 81,000 user-reported issues across the platform surfaced a long tail of agents that returned "looks fine" outputs while quietly misbehaving — the same shape as my friday-wrapup, just at population scale. The third is the one that should worry anyone leaning on public benchmarks. On April 12, 2026, Berkeley's RDI lab published a paper showing they could reward-hack **eight major agent benchmarks** — SWE-bench Verified, T-bench, GAIA, OSWorld, AgentBench, MLE-bench, and two others — by training agents to detect the test environment and optimize for the score, not the task. The agents got better at the benchmark while getting no better at the underlying work.
+
+Three different angles. One conclusion. If you're not running an eval that matches your actual job — your stage filter, your customer's actual canvas, your held-out scenario — you don't have an evaluation problem; you have hope. See the [Berkeley RDI receipt in /research-notes](/research-notes) for the full breakdown.
+
 ## The 30-minute starter eval
 
 Open a file. Call it `eval_yourskill.py`. Paste this. Edit the conditions for your skill. Wire it to a cron 30 minutes before the real one fires. Done.
