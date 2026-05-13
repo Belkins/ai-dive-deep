@@ -7,10 +7,11 @@ import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<BaseLayout title="Ultimate AI Dive Deep" description="A field manual for operators who want to stop juggling tabs and start running AI like an OS. By Vlad Podoliako.">
+<BaseLayout title="Vlad's Ultimate AI Dive Deep" description="A field manual for operators who want to stop juggling tabs and start running AI like an OS. By Vlad Podoliako.">
   <section class="container-wide pt-16 md:pt-24 pb-10">
     <div class="text-xs uppercase tracking-[0.25em] mb-4" style="color: rgb(var(--accent))">A field manual</div>
     <h1 class="font-display font-medium leading-[0.95] text-[clamp(3rem,8vw,7rem)] tracking-tight">
+      VLAD'S<br/>
       ULTIMATE<br/>
       AI <span style="color: rgb(var(--accent))">DIVE DEEP</span>
     </h1>
@@ -57,7 +58,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <li class="m-0">
           <a
             href={`${base}/chapters/${c.slug}`}
-            class="block card hover:border-flame transition-colors no-underline h-full"
+            data-chapter-slug={c.slug}
+            class="chapter-card block card hover:border-flame transition-colors no-underline h-full relative"
             style="color: rgb(var(--fg))"
           >
             <div class="flex items-baseline gap-3">
@@ -65,6 +67,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
               <span class="font-display text-lg leading-tight">{c.title}</span>
             </div>
             <p class="mt-2 text-sm leading-snug" style="color: rgb(var(--muted))">{c.subtitle}</p>
+            <span class="read-check" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
           </a>
         </li>
       ))}

@@ -7,7 +7,7 @@ const isHome = path === base + '/' || path === base || path === '/';
 <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-ink-900/70 border-b" style="border-color: rgb(var(--line))">
   <nav class="container-wide flex items-center justify-between h-14">
     <a href={`${base}/`} class="flex items-center gap-2 group" style="color: rgb(var(--fg))">
-      <span class="font-display text-lg tracking-tight font-medium">Ultimate AI Dive Deep</span>
+      <span class="font-display text-lg tracking-tight font-medium">Vlad's Ultimate AI Dive Deep</span>
       <span class="hidden md:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">Edition 1</span>
     </a>
     <div class="flex items-center gap-1 sm:gap-3">
@@ -17,6 +17,16 @@ const isHome = path === base + '/' || path === base || path === '/';
       <a href={`${base}/showcase`} class="hidden md:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Setup</a>
       <a href={`${base}/resources`} class="hidden lg:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Resources</a>
       <a href={`${base}/tier-list`} class="hidden lg:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Tier list</a>
+      <span
+        id="read-counter"
+        class="hidden items-center gap-1.5 text-xs px-2 py-1 rounded font-mono"
+        style="border: 1px solid rgb(var(--accent-2) / 0.4); background: rgb(var(--accent-2) / 0.08); color: rgb(var(--accent-2));"
+        aria-label="Reading progress"
+        title="Chapters you've scrolled to ≥85% of. Stored locally in your browser."
+      >
+        <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="read-counter-text">0 / 36</span>
+      </span>
       <button
         type="button"
         id="open-palette-btn"
@@ -34,4 +44,45 @@ const isHome = path === base + '/' || path === base || path === '/';
 <script>
   const btn = document.getElementById('open-palette-btn');
   btn?.addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-palette')));
+
+  // Read-state surfacing: walks the page, decorates [data-chapter-slug] cards
+  // based on cc-progress localStorage (already written to by ProgressBar.astro
+  // on every chapter scroll). Threshold for "read" = 85% scroll-max.
+  const READ_THRESHOLD = 85;
+  const decorateReadState = () => {
+    try {
+      const raw = localStorage.getItem('cc-progress');
+      const data = raw ? JSON.parse(raw) as Record<string, number> : {};
+      const readSlugs = new Set(
+        Object.entries(data).filter(([, pct]) => pct >= READ_THRESHOLD).map(([slug]) => slug)
+      );
+
+      document.querySelectorAll<HTMLElement>('[data-chapter-slug]').forEach((el) => {
+        const slug = el.dataset.chapterSlug;
+        if (slug && readSlugs.has(slug)) el.setAttribute('data-read', 'true');
+        else el.removeAttribute('data-read');
+      });
+
+      const counter = document.getElementById('read-counter');
+      const counterText = document.getElementById('read-counter-text');
+      if (counter && counterText) {
+        if (readSlugs.size > 0) {
+          counter.classList.remove('hidden');
+          counter.classList.add('inline-flex');
+          counterText.textContent = `${readSlugs.size} / 36`;
+        } else {
+          counter.classList.add('hidden');
+          counter.classList.remove('inline-flex');
+        }
+      }
+    } catch {}
+  };
+  decorateReadState();
+  // Re-decorate after returning from a chapter (focus/visibility transition)
+  window.addEventListener('focus', decorateReadState);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') decorateReadState();
+  });
+  // Allow other pages (e.g., Footer reset link) to broadcast a refresh
+  window.addEventListener('cc-progress-changed', decorateReadState);
 </script>

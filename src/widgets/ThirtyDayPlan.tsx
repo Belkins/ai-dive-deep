@@ -14,7 +14,7 @@ export default function ThirtyDayPlan() {
   const days = useMemo(() => buildPlan(stack, cadence, focus), [stack, cadence, focus]);
 
   const exportMarkdown = () => {
-    const md = ['# 30-day plan — Ultimate AI Dive Deep', '',
+    const md = ["# 30-day plan — Vlad's Ultimate AI Dive Deep", '',
       `Stack: ${stack} · Cadence: ${cadence} · Focus: ${focus}`, ''].concat(
       days.flatMap((d) => [`## Day ${d.day} — ${d.theme}`, '', ...d.tasks.map((t) => `- ${t}`), '']),
     ).join('\n');
