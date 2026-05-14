@@ -18,18 +18,17 @@ import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 
   <section class="container-wide pt-4 pb-2">
     <div class="rounded-xl overflow-hidden" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
-      <iframe
-        src="https://lmarena-ai-arena-leaderboard.static.hf.space/index.html"
-        title="LMArena public leaderboard — head-to-head model votes"
-        loading="lazy"
-        referrerpolicy="strict-origin-when-cross-origin"
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads"
-        style="width: 100%; height: 760px; border: 0; display: block; background: rgb(var(--bg));"
-      ></iframe>
+      <a href="https://arena.ai/leaderboard" target="_blank" rel="noopener" style="display: block;">
+        <img
+          src="/screens/24-lmarena-snapshot.svg"
+          alt="LMArena top-10 overall leaderboard snapshot, 2026-05-14. Anthropic owns 4 of the top 10."
+          loading="lazy"
+          style="width: 100%; height: auto; display: block; background: rgb(var(--bg));"
+        />
+      </a>
     </div>
     <p class="container-prose mt-3 text-xs" style="color: rgb(var(--muted))">
-      Iframe served from <code style="background: rgb(var(--paper)); padding: 0.1rem 0.4rem; border-radius: 4px;">lmarena-ai-arena-leaderboard.static.hf.space</code> (Hugging Face static Space). If it doesn't load,
-      <a href="https://huggingface.co/spaces/lmarena-ai/arena-leaderboard" target="_blank" rel="noopener" style="color: rgb(var(--accent))">open the full leaderboard in a new tab</a>.
+      Static snapshot captured 2026-05-14 from <a href="https://arena.ai/leaderboard" target="_blank" rel="noopener" style="color: rgb(var(--accent))">arena.ai/leaderboard</a> (the page itself blocks iframe embedding). Tap the table to open the live, current ranking in a new tab.
     </p>
   </section>
 
