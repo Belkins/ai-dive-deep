@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="90" fill="#FF6B2C" font-size="18" letter-spacing="6" font-weight="500">THE EVAL GAP · THREE INDEPENDENT CONFIRMATIONS</text>
+  <text x="80" y="160" fill="#FAFAF7" font-size="56" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Three methods, one answer</text>
+  <text x="80" y="200" fill="#AAA79A" font-size="20">technical · qualitative · benchmark — same eval gap from three angles</text>
+
+  <!-- Three columns -->
+  <g transform="translate(80, 280)">
+
+    <!-- DELEGATE-52 -->
+    <g>
+      <rect x="0" y="0" width="460" height="460" fill="#161B1F" stroke="#FF6B2C" stroke-width="1.5" rx="10"/>
+      <text x="30" y="40" fill="#FF6B2C" font-size="12" letter-spacing="2">METHOD 1 · TECHNICAL</text>
+      <text x="30" y="84" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">DELEGATE-52</text>
+      <text x="30" y="112" fill="#AAA79A" font-size="14">Microsoft Research · 2026</text>
+      <line x1="30" y1="135" x2="430" y2="135" stroke="#26251F"/>
+      <text x="30" y="180" fill="#AAA79A" font-size="14">The receipt:</text>
+      <text x="30" y="218" fill="#FF6B2C" font-size="42" font-weight="600" font-family="Source Serif 4, Georgia, serif">~25%</text>
+      <text x="30" y="248" fill="#FAFAF7" font-size="15">of a document corrupted after</text>
+      <text x="30" y="270" fill="#FAFAF7" font-size="15">20 sequential edits</text>
+      <text x="30" y="300" fill="#71717A" font-size="13">top 3 models · 19 tested</text>
+      <text x="30" y="320" fill="#71717A" font-size="13">average across all 19: ~50%</text>
+      <text x="30" y="360" fill="#22D3A0" font-size="14">The eval gap from:</text>
+      <text x="30" y="386" fill="#FAFAF7" font-size="15">content drift</text>
+      <text x="30" y="420" fill="#71717A" font-size="13" font-style="italic">long edit chains lose content</text>
+      <text x="30" y="440" fill="#71717A" font-size="13" font-style="italic">silently · bursty, not gradual</text>
+    </g>
+
+    <!-- 81k interviews -->
+    <g transform="translate(490, 0)">
+      <rect x="0" y="0" width="460" height="460" fill="#161B1F" stroke="#FF8E54" stroke-width="1.5" rx="10"/>
+      <text x="30" y="40" fill="#FF8E54" font-size="12" letter-spacing="2">METHOD 2 · QUALITATIVE</text>
+      <text x="30" y="84" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">Anthropic 81k</text>
+      <text x="30" y="112" fill="#AAA79A" font-size="14">Huang et al. · n = 80,508 · 159 countries</text>
+      <line x1="30" y1="135" x2="430" y2="135" stroke="#26251F"/>
+      <text x="30" y="180" fill="#AAA79A" font-size="14">The receipt:</text>
+      <text x="30" y="218" fill="#FF8E54" font-size="42" font-weight="600" font-family="Source Serif 4, Georgia, serif">26.7%</text>
+      <text x="30" y="248" fill="#FAFAF7" font-size="15">named unreliability as their</text>
+      <text x="30" y="270" fill="#FAFAF7" font-size="15">#1 concern with AI</text>
+      <text x="30" y="300" fill="#71717A" font-size="13">highest single number in the study</text>
+      <text x="30" y="320" fill="#71717A" font-size="13">only tension where harm &gt; benefit</text>
+      <text x="30" y="360" fill="#22D3A0" font-size="14">The eval gap from:</text>
+      <text x="30" y="386" fill="#FAFAF7" font-size="15">user-reported failures</text>
+      <text x="30" y="420" fill="#71717A" font-size="13" font-style="italic">users hit it in actual workflows</text>
+      <text x="30" y="440" fill="#71717A" font-size="13" font-style="italic">"people are afraid they're the horses"</text>
+    </g>
+
+    <!-- Berkeley RDI -->
+    <g transform="translate(980, 0)">
+      <rect x="0" y="0" width="460" height="460" fill="#161B1F" stroke="#22D3A0" stroke-width="1.5" rx="10"/>
+      <text x="30" y="40" fill="#22D3A0" font-size="12" letter-spacing="2">METHOD 3 · BENCHMARK</text>
+      <text x="30" y="84" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">Berkeley RDI</text>
+      <text x="30" y="112" fill="#AAA79A" font-size="14">paper · 2026-04-12</text>
+      <line x1="30" y1="135" x2="430" y2="135" stroke="#26251F"/>
+      <text x="30" y="180" fill="#AAA79A" font-size="14">The receipt:</text>
+      <text x="30" y="218" fill="#22D3A0" font-size="42" font-weight="600" font-family="Source Serif 4, Georgia, serif">8 of 8</text>
+      <text x="30" y="248" fill="#FAFAF7" font-size="15">major agent benchmarks broken</text>
+      <text x="30" y="270" fill="#FAFAF7" font-size="15">via reward-hacking</text>
+      <text x="30" y="300" fill="#71717A" font-size="13">SWE-bench Verified + Pro · OSWorld</text>
+      <text x="30" y="320" fill="#71717A" font-size="13">GAIA · WebArena · Terminal-Bench · +2</text>
+      <text x="30" y="360" fill="#22D3A0" font-size="14">The eval gap from:</text>
+      <text x="30" y="386" fill="#FAFAF7" font-size="15">benchmark gaming</text>
+      <text x="30" y="420" fill="#71717A" font-size="13" font-style="italic">agents detect the test environment</text>
+      <text x="30" y="440" fill="#71717A" font-size="13" font-style="italic">optimize for score, not task</text>
+    </g>
+  </g>
+
+  <!-- Bottom conclusion -->
+  <g transform="translate(80, 770)">
+    <rect x="0" y="0" width="1440" height="60" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="1.5" rx="10"/>
+    <text x="720" y="38" fill="#FAFAF7" font-size="20" font-weight="500" text-anchor="middle" font-family="Source Serif 4, Georgia, serif">evals or hope · pick one</text>
+  </g>
+
+  <text x="1520" y="870" fill="#3F3F46" font-size="12" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 25</text>
+</svg>

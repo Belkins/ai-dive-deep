@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="90" fill="#FF6B2C" font-size="18" letter-spacing="6" font-weight="500">FOUR MODES</text>
+  <text x="80" y="160" fill="#FAFAF7" font-size="56" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Plan · Interactive · Auto · /goal</text>
+  <text x="80" y="200" fill="#AAA79A" font-size="20">each mode removes a class of operator question</text>
+
+  <!-- 4 mode cards side by side -->
+  <g transform="translate(80, 280)">
+    <!-- Mode 1: Plan -->
+    <g>
+      <rect x="0" y="0" width="340" height="500" fill="#161B1F" stroke="#56544B" stroke-width="1.5" rx="10"/>
+      <text x="20" y="40" fill="#56544B" font-size="14" letter-spacing="2">MODE 1</text>
+      <text x="20" y="100" fill="#FAFAF7" font-size="36" font-weight="500" font-family="Source Serif 4, Georgia, serif">Plan</text>
+      <line x1="20" y1="125" x2="320" y2="125" stroke="#26251F"/>
+      <text x="20" y="160" fill="#AAA79A" font-size="14">operator question removed:</text>
+      <text x="20" y="186" fill="#FAFAF7" font-size="16" font-weight="500">"is the work itself OK?"</text>
+      <text x="20" y="232" fill="#AAA79A" font-size="14">approve cadence:</text>
+      <text x="20" y="258" fill="#FAFAF7" font-size="16">before the plan runs</text>
+      <text x="20" y="304" fill="#AAA79A" font-size="14">best for:</text>
+      <text x="20" y="330" fill="#FAFAF7" font-size="15">refactors that touch &gt;5 files</text>
+      <text x="20" y="354" fill="#FAFAF7" font-size="15">migration sweeps</text>
+      <text x="20" y="378" fill="#FAFAF7" font-size="15">irreversible operations</text>
+      <text x="20" y="450" fill="#71717A" font-size="13" font-style="italic">"show me the work"</text>
+    </g>
+
+    <!-- Mode 2: Interactive -->
+    <g transform="translate(360, 0)">
+      <rect x="0" y="0" width="340" height="500" fill="#161B1F" stroke="#FFB48C" stroke-width="1.5" rx="10"/>
+      <text x="20" y="40" fill="#FFB48C" font-size="14" letter-spacing="2">MODE 2</text>
+      <text x="20" y="100" fill="#FAFAF7" font-size="36" font-weight="500" font-family="Source Serif 4, Georgia, serif">Interactive</text>
+      <line x1="20" y1="125" x2="320" y2="125" stroke="#26251F"/>
+      <text x="20" y="160" fill="#AAA79A" font-size="14">operator question removed:</text>
+      <text x="20" y="186" fill="#FAFAF7" font-size="16" font-weight="500">none — the default</text>
+      <text x="20" y="232" fill="#AAA79A" font-size="14">approve cadence:</text>
+      <text x="20" y="258" fill="#FAFAF7" font-size="16">every tool call</text>
+      <text x="20" y="304" fill="#AAA79A" font-size="14">best for:</text>
+      <text x="20" y="330" fill="#FAFAF7" font-size="15">first-time workflows</text>
+      <text x="20" y="354" fill="#FAFAF7" font-size="15">debugging</text>
+      <text x="20" y="378" fill="#FAFAF7" font-size="15">untrusted skill installs</text>
+      <text x="20" y="450" fill="#71717A" font-size="13" font-style="italic">"ask before every move"</text>
+    </g>
+
+    <!-- Mode 3: Auto -->
+    <g transform="translate(720, 0)">
+      <rect x="0" y="0" width="340" height="500" fill="#161B1F" stroke="#FF8E54" stroke-width="1.5" rx="10"/>
+      <text x="20" y="40" fill="#FF8E54" font-size="14" letter-spacing="2">MODE 3</text>
+      <text x="20" y="100" fill="#FAFAF7" font-size="36" font-weight="500" font-family="Source Serif 4, Georgia, serif">Auto</text>
+      <line x1="20" y1="125" x2="320" y2="125" stroke="#26251F"/>
+      <text x="20" y="160" fill="#AAA79A" font-size="14">operator question removed:</text>
+      <text x="20" y="186" fill="#FAFAF7" font-size="16" font-weight="500">"can it call this tool?"</text>
+      <text x="20" y="232" fill="#AAA79A" font-size="14">approve cadence:</text>
+      <text x="20" y="258" fill="#FAFAF7" font-size="16">per-turn (still asks)</text>
+      <text x="20" y="304" fill="#AAA79A" font-size="14">best for:</text>
+      <text x="20" y="330" fill="#FAFAF7" font-size="15">trusted skill loops</text>
+      <text x="20" y="354" fill="#FAFAF7" font-size="15">batch operations</text>
+      <text x="20" y="378" fill="#FAFAF7" font-size="15">cron-like workflows</text>
+      <text x="20" y="450" fill="#71717A" font-size="13" font-style="italic">"don't ask per tool"</text>
+    </g>
+
+    <!-- Mode 4: /goal (new) -->
+    <g transform="translate(1080, 0)">
+      <rect x="0" y="0" width="340" height="500" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="2.5" rx="10"/>
+      <text x="20" y="40" fill="#FF6B2C" font-size="14" letter-spacing="2">MODE 4 — NEW</text>
+      <text x="20" y="100" fill="#FAFAF7" font-size="36" font-weight="600" font-family="Source Serif 4, Georgia, serif">/goal</text>
+      <line x1="20" y1="125" x2="320" y2="125" stroke="#FF6B2C" stroke-opacity="0.3"/>
+      <text x="20" y="160" fill="#AAA79A" font-size="14">operator question removed:</text>
+      <text x="20" y="186" fill="#FAFAF7" font-size="16" font-weight="500">"is this turn going well?"</text>
+      <text x="20" y="232" fill="#AAA79A" font-size="14">approve cadence:</text>
+      <text x="20" y="258" fill="#FAFAF7" font-size="16">once · the finish line</text>
+      <text x="20" y="304" fill="#AAA79A" font-size="14">best for:</text>
+      <text x="20" y="330" fill="#FAFAF7" font-size="15">condition-checkable work</text>
+      <text x="20" y="354" fill="#FAFAF7" font-size="15">migrations · sweeps</text>
+      <text x="20" y="378" fill="#FAFAF7" font-size="15">overnight CI loops</text>
+      <text x="20" y="450" fill="#71717A" font-size="13" font-style="italic">"run until done"</text>
+    </g>
+  </g>
+
+  <text x="800" y="830" fill="#22D3A0" font-size="15" text-anchor="middle">read this as a stack, not a choice — each mode removes the question the previous mode still asked</text>
+  <text x="1520" y="870" fill="#3F3F46" font-size="12" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 21</text>
+</svg>

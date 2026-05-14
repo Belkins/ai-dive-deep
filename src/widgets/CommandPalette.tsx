@@ -39,6 +39,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Sections',              href: `${base}/sections`,        subtitle: 'Chapters by theme' },
       { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: '30+ terms you need' },
       { type: 'page', title: 'Resources',             href: `${base}/resources`,       subtitle: '15 prompts + templates + hooks' },
+      { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up' },
       { type: 'page', title: '30-day plan',           href: `${base}/thirty-day-plan`, subtitle: 'Custom roadmap' },

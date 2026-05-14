@@ -15,6 +15,34 @@ export type ResearchNote = {
 
 export const RESEARCH_NOTES: ResearchNote[] = [
   {
+    title: "Karpathy's CLAUDE.md — 4 rules cut Claude mistakes from 41% to 11%",
+    source: 'Public post + community replication · 30-codebase informal study',
+    date: '2026-05-14',
+    tagline: 'Four rules at 11%, twelve at 3%. The rest is operator overlay.',
+    takeaway:
+      "A public post from Andrej Karpathy circulated in May 2026 with a single CLAUDE.md framing: four rules — Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution — and a claim that across 30 codebases over six weeks, mistake rates dropped from 41% to 11%. Eight more rules added by community operators (Use the model only for judgment calls, Token budgets are not advisory, Surface conflicts don't average them, Read before you write, Tests verify intent not just behavior, Checkpoint after every significant step, Match the codebase's conventions, Fail loud) pushed mistakes from 11% to 3%. These are community claims, not a first-party Anthropic study — treat the 41% → 11% → 3% numbers as informal evidence, not as a benchmark. The operator implication is sharper than the headline though: Karpathy's original four were autocomplete-flavored single-shot rules — they assumed a one-turn completion where the model writes some code and a human reviews. The eight added rules cover what operators actually run — agent loops, multi-step refactors, silent failures, token-budget exhaustion, codebase-convention drift. That's not a slight on the original four; it's the difference between IDE-assisted coding and full-loop delegation. If you're running Plan → Auto → /goal (Ch 38), you need all twelve. If you're hitting tab-tab autocomplete, four will hold. The new /claude-md-rules page lays each rule out with a Vlad-specific receipt for where it earned its slot — pasting rules without the receipts is how they rot.",
+    implications: [
+      'Adopt the 12 rules as a CLAUDE.md baseline. Read each rule\'s receipt before pasting — the rules without a receipt you\'ve personally seen rot fastest. The rules are a starting line, not a finish line.',
+      'Lead with Rule 8 (read before write), Rule 12 (fail loud), Rule 4 (goal-driven). The other 9 amplify if these 3 land. Rule 8 fixes ~50% of regression-class bugs Vlad has seen across portfolio repos; Rule 12 saves the silent-failure category entirely (Ch 25, Ch 28); Rule 4 pairs with /goal in Ch 38 — same primitive, different surface.',
+      'Layer with role-specific overrides (CLAUDE_MD_SOLO / CLAUDE_MD_B2B_SALES / CLAUDE_MD_NEWSLETTER / CLAUDE_MD_PORTFOLIO_CEO in /resources). The 12 rules are universal; the role skeletons are what makes them load-bearing for your specific work.',
+      'Cross-link this with Ch 25 (Rule 9 + Rule 12 — tests verify intent, fail loud are evals-or-hope at the rule-file layer) and Ch 38 (Rule 4 + Rule 10 — goal-driven + checkpoint after every step is the autonomous-loop primitive in CLAUDE.md form).',
+      'Pair with /llms.txt + JSON-LD work — your CLAUDE.md is one of the operator surfaces, the structured-data dump is the other. Both are read-on-demand context surfaces for agents; both should be short, scannable, and grounded in receipts you can defend.',
+    ],
+    receipts: [
+      { label: 'Mistake rate, 4 rules', value: '41% → 11%' },
+      { label: 'Mistake rate, 12 rules', value: '11% → 3%' },
+      { label: 'Codebases tested (community claim)', value: '30' },
+      { label: 'Source confidence', value: 'medium (public post, not first-party study)' },
+      { label: "Vlad's lead-with-3 picks", value: 'Rule 8 (read before write), Rule 12 (fail loud), Rule 4 (goal-driven)' },
+    ],
+    chapters: [
+      { slug: '37-context-files', ref: 'Ch 37', why: 'CLAUDE.md is the layer the 12 rules live in — Ch 37 explains why and where; this note explains what to paste' },
+      { slug: '25-evals-or-hope', ref: 'Ch 25', why: 'Rule 9 (tests verify intent) and Rule 12 (fail loud) are the eval thesis applied to the rule-file layer' },
+      { slug: '38-run-until-done', ref: 'Ch 38', why: 'Rule 4 (goal-driven) and Rule 10 (checkpoint) are /goal in CLAUDE.md form — same primitive, different surface' },
+      { slug: '26-team-adoption', ref: 'Ch 26', why: "Rule 11 (match the codebase's conventions, even if you disagree) is the team-adoption problem at the rule-file layer" },
+    ],
+  },
+  {
     title: 'Mythos — the model Anthropic disclosed and then explicitly withheld',
     source: 'Anthropic safety disclosures · red.anthropic.com · Mar-May 2026',
     date: '2026-05-06',

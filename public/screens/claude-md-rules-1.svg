@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="90" fill="#FF6B2C" font-size="18" letter-spacing="6" font-weight="500">THE 12-RULE CLAUDE.md</text>
+  <text x="80" y="160" fill="#FAFAF7" font-size="52" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">41% → 11% → 3%</text>
+  <text x="80" y="200" fill="#AAA79A" font-size="20">Karpathy's 4 rules cut mistakes to 11%. 8 more rules get to 3%.</text>
+
+  <!-- Two columns: Karpathy's 4 (left) + The 8 added (right) -->
+  <!-- Left column: Karpathy's 4 -->
+  <g transform="translate(80, 260)">
+    <text x="0" y="0" fill="#FF8E54" font-size="13" letter-spacing="2">KARPATHY'S ORIGINAL 4 · TO 11%</text>
+
+    <!-- Rule 1 -->
+    <g transform="translate(0, 30)">
+      <rect x="0" y="0" width="700" height="120" fill="#161B1F" stroke="#FF8E54" stroke-width="1" rx="8"/>
+      <text x="20" y="38" fill="#FF8E54" font-size="36" font-weight="500" font-family="Source Serif 4, Georgia, serif">1</text>
+      <text x="70" y="42" fill="#FAFAF7" font-size="20" font-weight="500">Think Before Coding</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="14">state assumptions · ask not guess</text>
+      <text x="20" y="102" fill="#71717A" font-size="13" font-style="italic">"push back when a simpler approach exists"</text>
+    </g>
+
+    <!-- Rule 2 -->
+    <g transform="translate(0, 160)">
+      <rect x="0" y="0" width="700" height="120" fill="#161B1F" stroke="#FF8E54" stroke-width="1" rx="8"/>
+      <text x="20" y="38" fill="#FF8E54" font-size="36" font-weight="500" font-family="Source Serif 4, Georgia, serif">2</text>
+      <text x="70" y="42" fill="#FAFAF7" font-size="20" font-weight="500">Simplicity First</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="14">minimum code · nothing speculative</text>
+      <text x="20" y="102" fill="#71717A" font-size="13" font-style="italic">"no abstractions for single-use code"</text>
+    </g>
+
+    <!-- Rule 3 -->
+    <g transform="translate(0, 290)">
+      <rect x="0" y="0" width="700" height="120" fill="#161B1F" stroke="#FF8E54" stroke-width="1" rx="8"/>
+      <text x="20" y="38" fill="#FF8E54" font-size="36" font-weight="500" font-family="Source Serif 4, Georgia, serif">3</text>
+      <text x="70" y="42" fill="#FAFAF7" font-size="20" font-weight="500">Surgical Changes</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="14">touch only what you must · match existing style</text>
+      <text x="20" y="102" fill="#71717A" font-size="13" font-style="italic">"don't refactor what isn't broken"</text>
+    </g>
+
+    <!-- Rule 4 -->
+    <g transform="translate(0, 420)">
+      <rect x="0" y="0" width="700" height="120" fill="#161B1F" stroke="#FF8E54" stroke-width="1" rx="8"/>
+      <text x="20" y="38" fill="#FF8E54" font-size="36" font-weight="500" font-family="Source Serif 4, Georgia, serif">4</text>
+      <text x="70" y="42" fill="#FAFAF7" font-size="20" font-weight="500">Goal-Driven Execution</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="14">define success criteria · loop until verified</text>
+      <text x="20" y="102" fill="#71717A" font-size="13" font-style="italic">"pairs with /goal in Ch 38"</text>
+    </g>
+  </g>
+
+  <!-- Right column: The 8 added (operator overlay) -->
+  <g transform="translate(820, 260)">
+    <text x="0" y="0" fill="#FF6B2C" font-size="13" letter-spacing="2">+8 OPERATOR ADDITIONS · TO 3%</text>
+
+    <!-- Rules 5-12 in compact form -->
+    <g transform="translate(0, 30)">
+      <rect x="0" y="0" width="700" height="510" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="1.5" rx="8"/>
+
+      <!-- Rule 5 -->
+      <text x="20" y="40" fill="#FF6B2C" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">5</text>
+      <text x="60" y="38" fill="#FAFAF7" font-size="16" font-weight="500">Model for judgment, not deterministic transforms</text>
+      <text x="60" y="58" fill="#71717A" font-size="12" font-style="italic">if code can answer, code answers</text>
+
+      <!-- Rule 6 -->
+      <text x="20" y="98" fill="#FF6B2C" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">6</text>
+      <text x="60" y="96" fill="#FAFAF7" font-size="16" font-weight="500">Token budgets are not advisory</text>
+      <text x="60" y="116" fill="#71717A" font-size="12" font-style="italic">surface the breach · do not silently overrun</text>
+
+      <!-- Rule 7 -->
+      <text x="20" y="156" fill="#FF6B2C" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">7</text>
+      <text x="60" y="154" fill="#FAFAF7" font-size="16" font-weight="500">Surface conflicts, don't average them</text>
+      <text x="60" y="174" fill="#71717A" font-size="12" font-style="italic">pick one · explain why · flag the other</text>
+
+      <!-- Rule 8 -->
+      <text x="20" y="214" fill="#FF6B2C" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">8</text>
+      <text x="60" y="212" fill="#FAFAF7" font-size="16" font-weight="500">Read before you write</text>
+      <text x="60" y="232" fill="#71717A" font-size="12" font-style="italic">exports · immediate callers · shared utilities</text>
+
+      <!-- Rule 9 -->
+      <text x="20" y="272" fill="#FF6B2C" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">9</text>
+      <text x="60" y="270" fill="#FAFAF7" font-size="16" font-weight="500">Tests verify intent, not just behavior</text>
+      <text x="60" y="290" fill="#71717A" font-size="12" font-style="italic">a test that can't fail on logic change is wrong</text>
+
+      <!-- Rule 10 -->
+      <text x="20" y="330" fill="#FF6B2C" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">10</text>
+      <text x="60" y="328" fill="#FAFAF7" font-size="16" font-weight="500">Checkpoint after every significant step</text>
+      <text x="60" y="348" fill="#71717A" font-size="12" font-style="italic">don't continue from a state you can't describe</text>
+
+      <!-- Rule 11 -->
+      <text x="20" y="388" fill="#FF6B2C" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">11</text>
+      <text x="60" y="386" fill="#FAFAF7" font-size="16" font-weight="500">Match the codebase's conventions</text>
+      <text x="60" y="406" fill="#71717A" font-size="12" font-style="italic">conformance &gt; taste · surface, don't fork</text>
+
+      <!-- Rule 12 -->
+      <text x="20" y="446" fill="#FF6B2C" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">12</text>
+      <text x="60" y="444" fill="#FAFAF7" font-size="16" font-weight="500">Fail loud</text>
+      <text x="60" y="464" fill="#71717A" font-size="12" font-style="italic">"completed" is wrong if anything was skipped</text>
+    </g>
+  </g>
+
+  <!-- Footer: 3 rules to lead with -->
+  <g transform="translate(80, 820)">
+    <text x="0" y="0" fill="#22D3A0" font-size="14" letter-spacing="1">If you paste only three: Rule 8 (read before write) · Rule 12 (fail loud) · Rule 4 (goal-driven). The other 9 amplify if these 3 land.</text>
+  </g>
+  <text x="1520" y="870" fill="#3F3F46" font-size="12" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · /claude-md-rules</text>
+</svg>

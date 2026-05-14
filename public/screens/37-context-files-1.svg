@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="90" fill="#FF6B2C" font-size="18" letter-spacing="6" font-weight="500">CONTEXT FILE ARCHITECTURE</text>
+  <text x="80" y="160" fill="#FAFAF7" font-size="56" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Four layers, one hierarchy</text>
+  <text x="80" y="200" fill="#AAA79A" font-size="20">where conventions live · which one wins when they disagree</text>
+
+  <!-- Layer 1: Session-scoped (top of authority hierarchy) -->
+  <g transform="translate(80, 280)">
+    <rect x="0" y="0" width="1440" height="90" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="2" rx="10"/>
+    <text x="30" y="34" fill="#FF6B2C" font-size="12" letter-spacing="2">LAYER 1 — HIGHEST AUTHORITY</text>
+    <text x="30" y="70" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">Explicit user message in chat</text>
+    <text x="700" y="44" fill="#AAA79A" font-size="14">scope: this turn</text>
+    <text x="700" y="68" fill="#71717A" font-size="13" font-style="italic">"actually, do X instead" — wins over everything below</text>
+  </g>
+
+  <!-- Layer 2: Skill instruction -->
+  <g transform="translate(80, 390)">
+    <rect x="0" y="0" width="1440" height="90" fill="#161B1F" stroke="#FF8E54" stroke-width="1.5" rx="10"/>
+    <text x="30" y="34" fill="#FF8E54" font-size="12" letter-spacing="2">LAYER 2</text>
+    <text x="30" y="70" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">Skill instructions (`~/.claude/skills/&lt;name&gt;.md`)</text>
+    <text x="700" y="44" fill="#AAA79A" font-size="14">scope: when the skill is invoked</text>
+    <text x="700" y="68" fill="#71717A" font-size="13" font-style="italic">recipes the chef reads before cooking</text>
+  </g>
+
+  <!-- Layer 3: CLAUDE.md (the famous one) -->
+  <g transform="translate(80, 500)">
+    <rect x="0" y="0" width="1440" height="90" fill="#1A1B1F" stroke="#FFB48C" stroke-width="1.5" rx="10"/>
+    <text x="30" y="34" fill="#FFB48C" font-size="12" letter-spacing="2">LAYER 3 — THE FAMOUS ONE</text>
+    <text x="30" y="70" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">CLAUDE.md (project + ~/.claude/CLAUDE.md)</text>
+    <text x="700" y="44" fill="#AAA79A" font-size="14">scope: project + global</text>
+    <text x="700" y="68" fill="#71717A" font-size="13" font-style="italic">kitchen rules taped to the wall</text>
+  </g>
+
+  <!-- Layer 4: memory/ -->
+  <g transform="translate(80, 610)">
+    <rect x="0" y="0" width="1440" height="90" fill="#161B1F" stroke="#22D3A0" stroke-width="1.5" rx="10"/>
+    <text x="30" y="34" fill="#22D3A0" font-size="12" letter-spacing="2">LAYER 4</text>
+    <text x="30" y="70" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">memory/ (auto-written by the agent)</text>
+    <text x="700" y="44" fill="#AAA79A" font-size="14">scope: across all future sessions</text>
+    <text x="700" y="68" fill="#71717A" font-size="13" font-style="italic">user facts · project state · feedback · refs</text>
+  </g>
+
+  <!-- Layer 5: Model default -->
+  <g transform="translate(80, 720)">
+    <rect x="0" y="0" width="1440" height="60" fill="#161B1F" stroke="#56544B" stroke-width="1" rx="10"/>
+    <text x="30" y="36" fill="#56544B" font-size="12" letter-spacing="2">LAYER 5 — LOWEST</text>
+    <text x="200" y="40" fill="#71717A" font-size="16" font-style="italic">model default behavior · what falls out when no layer above says anything</text>
+  </g>
+
+  <!-- Side: hierarchy arrow -->
+  <g transform="translate(40, 280)">
+    <line x1="0" y1="0" x2="0" y2="500" stroke="#FF6B2C" stroke-width="2"/>
+    <text x="-20" y="20" fill="#FF6B2C" font-size="11" font-family="JetBrains Mono, monospace" transform="rotate(-90, -20, 20)">HIGHEST</text>
+    <text x="-20" y="500" fill="#56544B" font-size="11" font-family="JetBrains Mono, monospace" transform="rotate(-90, -20, 500)">LOWEST</text>
+  </g>
+
+  <text x="80" y="830" fill="#FF8E54" font-size="14" letter-spacing="1">When conventions disagree, the higher-authority layer wins. Most operators get this backwards.</text>
+  <text x="1520" y="870" fill="#3F3F46" font-size="12" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 37</text>
+</svg>

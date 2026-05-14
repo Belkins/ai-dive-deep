@@ -2,7 +2,7 @@
 """Scan public/screens/ and generate src/lib/screenshots.ts with the set of
 available screenshot IDs. Run before build (already hooked via npm prebuild).
 
-ID = filename without extension. Supported: .png, .jpg, .jpeg, .webp.
+ID = filename without extension. Supported: .png, .jpg, .jpeg, .webp, .gif, .avif, .svg.
 
 If you drop a new file into public/screens/, re-run `npm run build` and the
 ScreenshotPlaceholder component with the matching `id` will swap from
@@ -14,7 +14,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCREENS_DIR = os.path.join(REPO_ROOT, 'public', 'screens')
 OUT_TS = os.path.join(REPO_ROOT, 'src', 'lib', 'screenshots.ts')
 
-EXTS = {'.png', '.jpg', '.jpeg', '.webp', '.gif', '.avif'}
+EXTS = {'.png', '.jpg', '.jpeg', '.webp', '.gif', '.avif', '.svg'}
 
 def main():
     os.makedirs(SCREENS_DIR, exist_ok=True)
