@@ -1,4 +1,4 @@
-SCREENSHOTS — what's still needed (updated 2026-05-14)
+SCREENSHOTS — what's still needed (updated 2026-05-14 PM)
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
@@ -24,14 +24,16 @@ claude-md-rules-1        12-rule infographic (for /claude-md-rules page)
 04-the-vault-1           Vlad's real Obsidian vault graph (Vlad capture)
 04-the-vault-rick        Rick AI-agent vault — pattern generalizes (Vlad capture)
 04-the-vault-rick-2      Rick agent's daily note (Vlad capture)
+24-tier-list-1           Proper tier-image SVG (6 tiers, 28 tools, May 2026 loadout)
+24-lmarena-snapshot      LMArena top-10 snapshot SVG (replaces broken HF iframe on /tier-list)
+15-yolo-decision-1       4-gate decision tree for --dangerously-skip-permissions (ch 15 deep-dive)
 
 ────────────────────────────────────────────
-STILL NEEDED — 29 real captures
+STILL NEEDED — 28 real captures
 ────────────────────────────────────────────
 
-★ TIER S — book-defining shots (do these first, 20 min total)
+★ TIER S — book-defining shots (do these first, ~10 min total)
 
-   24-tier-list-1                 Your tier list as rendered on /tier-list
    29-cost-economics-1            Anthropic console — weekly cost view, full month
 
 ★ TIER A — high-leverage receipts and surfaces (1 hour)

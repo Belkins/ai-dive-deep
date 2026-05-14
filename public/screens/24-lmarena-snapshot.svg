@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Header -->
+  <text x="80" y="80" fill="#6EE7B7" font-size="16" letter-spacing="6" font-weight="500">CHAPTER 24 · WHAT THE PUBLIC SAYS</text>
+  <text x="80" y="146" fill="#FAFAF7" font-size="54" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1.2">LMArena: head-to-head, scored.</text>
+  <text x="80" y="184" fill="#AAA79A" font-size="19">Crowdsourced model votes — the canonical public ranking. Snapshot 2026-05-14, overall category.</text>
+  <text x="1520" y="80" fill="#71717A" font-size="12" letter-spacing="3" text-anchor="end">LIVE · ARENA.AI/LEADERBOARD</text>
+
+  <!-- Column header strip -->
+  <g transform="translate(80, 232)">
+    <text x="0" y="0" fill="#71717A" font-size="11" letter-spacing="2.4" font-weight="600">RANK</text>
+    <text x="120" y="0" fill="#71717A" font-size="11" letter-spacing="2.4" font-weight="600">PROVIDER</text>
+    <text x="320" y="0" fill="#71717A" font-size="11" letter-spacing="2.4" font-weight="600">MODEL</text>
+    <text x="950" y="0" fill="#71717A" font-size="11" letter-spacing="2.4" font-weight="600">ELO RANGE 1479 → 1502</text>
+    <text x="1440" y="0" fill="#71717A" font-size="11" letter-spacing="2.4" font-weight="600" text-anchor="end">SCORE</text>
+  </g>
+
+  <!-- Bar normalization: min=1475, max=1505, span=30, full bar 480px wide starting x=950 -->
+  <!-- score → width = (score - 1475) / 30 * 480 -->
+
+  <!-- ============== ROW 1 — claude-opus-4-6-thinking · 1502 ============== -->
+  <g transform="translate(80, 256)">
+    <!-- Provider color stripe -->
+    <rect x="0" y="0" width="4" height="48" fill="#FF6B2C" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">1</text>
+    <text x="120" y="22" fill="#FF6B2C" font-size="10" letter-spacing="2" font-weight="600">ANTHROPIC</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">claude.ai</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">claude-opus-4-6-thinking</text>
+    <!-- bar -->
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="432" height="6" fill="#FF6B2C" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1502</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 2 — claude-opus-4-7-thinking · 1500 ============== -->
+  <g transform="translate(80, 312)">
+    <rect x="0" y="0" width="4" height="48" fill="#FF6B2C" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">2</text>
+    <text x="120" y="22" fill="#FF6B2C" font-size="10" letter-spacing="2" font-weight="600">ANTHROPIC</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">claude.ai</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">claude-opus-4-7-thinking</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="400" height="6" fill="#FF6B2C" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1500</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 3 — claude-opus-4-6 · 1498 ============== -->
+  <g transform="translate(80, 368)">
+    <rect x="0" y="0" width="4" height="48" fill="#FF6B2C" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">3</text>
+    <text x="120" y="22" fill="#FF6B2C" font-size="10" letter-spacing="2" font-weight="600">ANTHROPIC</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">claude.ai</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">claude-opus-4-6</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="368" height="6" fill="#FF6B2C" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1498</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 4 — claude-opus-4-7 · 1492 ============== -->
+  <g transform="translate(80, 424)">
+    <rect x="0" y="0" width="4" height="48" fill="#FF6B2C" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">4</text>
+    <text x="120" y="22" fill="#FF6B2C" font-size="10" letter-spacing="2" font-weight="600">ANTHROPIC</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">claude.ai</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">claude-opus-4-7</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="272" height="6" fill="#FF6B2C" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1492</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 5 — muse-spark · 1490 (Meta) ============== -->
+  <g transform="translate(80, 480)">
+    <rect x="0" y="0" width="4" height="48" fill="#4A6EE5" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">5</text>
+    <text x="120" y="22" fill="#4A6EE5" font-size="10" letter-spacing="2" font-weight="600">META</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">ai.meta.com</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">muse-spark</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="240" height="6" fill="#4A6EE5" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1490</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 6 — gemini-3.1-pro-preview · 1489 ============== -->
+  <g transform="translate(80, 536)">
+    <rect x="0" y="0" width="4" height="48" fill="#5B8DEF" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">6</text>
+    <text x="120" y="22" fill="#5B8DEF" font-size="10" letter-spacing="2" font-weight="600">GOOGLE</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">gemini.google</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">gemini-3.1-pro-preview</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="224" height="6" fill="#5B8DEF" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1489</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 7 — gemini-3-pro · 1486 ============== -->
+  <g transform="translate(80, 592)">
+    <rect x="0" y="0" width="4" height="48" fill="#5B8DEF" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">7</text>
+    <text x="120" y="22" fill="#5B8DEF" font-size="10" letter-spacing="2" font-weight="600">GOOGLE</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">gemini.google</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">gemini-3-pro</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="176" height="6" fill="#5B8DEF" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1486</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 8 — gpt-5.5-high · 1484 ============== -->
+  <g transform="translate(80, 648)">
+    <rect x="0" y="0" width="4" height="48" fill="#2E9D7A" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">8</text>
+    <text x="120" y="22" fill="#2E9D7A" font-size="10" letter-spacing="2" font-weight="600">OPENAI</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">chatgpt.com</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">gpt-5.5-high</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="144" height="6" fill="#2E9D7A" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1484</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 9 — gpt-5.4-high · 1479 ============== -->
+  <g transform="translate(80, 704)">
+    <rect x="0" y="0" width="4" height="48" fill="#2E9D7A" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">9</text>
+    <text x="120" y="22" fill="#2E9D7A" font-size="10" letter-spacing="2" font-weight="600">OPENAI</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">chatgpt.com</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">gpt-5.4-high</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="64" height="6" fill="#2E9D7A" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1479</text>
+    <line x1="0" y1="48" x2="1440" y2="48" stroke="#1A1F24" stroke-width="1"/>
+  </g>
+
+  <!-- ============== ROW 10 — grok-4.20-beta1 · 1479 ============== -->
+  <g transform="translate(80, 760)">
+    <rect x="0" y="0" width="4" height="48" fill="#9CA3AF" rx="2"/>
+    <text x="20" y="32" fill="#FAFAF7" font-size="22" font-family="Source Serif 4, Georgia, serif" font-weight="500">10</text>
+    <text x="120" y="22" fill="#9CA3AF" font-size="10" letter-spacing="2" font-weight="600">xAI</text>
+    <text x="120" y="40" fill="#71717A" font-size="11">x.ai</text>
+    <text x="320" y="33" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">grok-4.20-beta1</text>
+    <rect x="950" y="22" width="480" height="6" fill="#161B1F" rx="3"/>
+    <rect x="950" y="22" width="64" height="6" fill="#9CA3AF" rx="3"/>
+    <text x="1440" y="33" fill="#FAFAF7" font-size="22" font-weight="500" text-anchor="end" font-family="JetBrains Mono, monospace">1479</text>
+  </g>
+
+  <!-- Callout strip -->
+  <g transform="translate(80, 836)">
+    <rect x="0" y="0" width="1440" height="44" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="20" y="20" fill="#6EE7B7" font-size="10" letter-spacing="2" font-weight="600">THE PATTERN</text>
+    <text x="20" y="38" fill="#AAA79A" font-size="14"><tspan fill="#FAFAF7" font-weight="500">Anthropic owns 4 of the top 10.</tspan> The Elo spread is 23 points across the whole top 10 — operators won't feel that. <tspan fill="#FAFAF7">Claude Code isn't ranked here.</tspan></text>
+  </g>
+</svg>
