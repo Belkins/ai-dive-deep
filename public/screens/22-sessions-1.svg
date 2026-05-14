@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Window chrome -->
+  <rect x="60" y="40" width="1480" height="820" fill="#161B1F" stroke="#26251F" stroke-width="1" rx="10"/>
+  <rect x="60" y="40" width="1480" height="44" fill="#1A1B1F" rx="10"/>
+  <rect x="60" y="70" width="1480" height="14" fill="#1A1B1F"/>
+  <circle cx="84" cy="62" r="6" fill="#FF5F57"/>
+  <circle cx="104" cy="62" r="6" fill="#FEBC2E"/>
+  <circle cx="124" cy="62" r="6" fill="#28C840"/>
+  <text x="760" y="66" fill="#71717A" font-size="13" text-anchor="middle" font-family="JetBrains Mono, monospace">~/belkins-ops — claude — 120×34</text>
+
+  <!-- Command -->
+  <text x="100" y="120" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">$ claude --resume</text>
+
+  <!-- Prompt -->
+  <text x="100" y="160" fill="#FAFAF7" font-size="15" font-family="JetBrains Mono, monospace">Resume which session?</text>
+  <text x="100" y="184" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">↑/↓ to navigate · / to filter · enter to resume · esc to start fresh</text>
+
+  <!-- Sessions list -->
+  <g transform="translate(100, 220)">
+    <!-- Header -->
+    <text x="0" y="0" fill="#71717A" font-size="11" letter-spacing="2" font-family="JetBrains Mono, monospace">RECENT SESSIONS · across all projects · last 30 days</text>
+
+    <!-- Session 1 — currently selected (highlight) -->
+    <rect x="-10" y="20" width="1410" height="56" fill="#FF6B2C" fill-opacity="0.08" stroke="#FF6B2C" stroke-width="1" rx="4"/>
+    <text x="0" y="46" fill="#FF6B2C" font-size="13" font-family="JetBrains Mono, monospace">▸</text>
+    <text x="30" y="46" fill="#FAFAF7" font-size="13" font-weight="500" font-family="JetBrains Mono, monospace">2 hours ago</text>
+    <text x="200" y="46" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">~/belkins-ops</text>
+    <text x="380" y="46" fill="#FAFAF7" font-size="13" font-family="JetBrains Mono, monospace">"audit the SDR ramp dashboard for the week-2 cohort..."</text>
+    <text x="0" y="66" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace">          47 turns  ·  142.3k tokens  ·  /goal cleared  ·  branch: sdr-ramp-audit</text>
+
+    <!-- Session 2 -->
+    <text x="0" y="116" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">○</text>
+    <text x="30" y="116" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">yesterday 18:42</text>
+    <text x="200" y="116" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">~/folderly-deliv</text>
+    <text x="380" y="116" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">"why is the DKIM check failing for 3 customer domains..."</text>
+    <text x="0" y="134" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace">          23 turns  ·  68.7k tokens  ·  ended cleanly  ·  no branch</text>
+
+    <!-- Session 3 -->
+    <text x="0" y="174" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">○</text>
+    <text x="30" y="174" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">yesterday 09:15</text>
+    <text x="200" y="174" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">~/ai-dive-deep</text>
+    <text x="380" y="174" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">"write Ch 38 — the autonomous-loop chapter, /goal + /loop..."</text>
+    <text x="0" y="192" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace">          89 turns  ·  287.4k tokens  ·  4 subagents · 2 commits</text>
+
+    <!-- Session 4 -->
+    <text x="0" y="232" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">○</text>
+    <text x="30" y="232" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">3 days ago 14:08</text>
+    <text x="200" y="232" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">~/nocancer-grants</text>
+    <text x="380" y="232" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">"compare grant vendors A and B for the foundation app..."</text>
+    <text x="0" y="250" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace">          18 turns  ·  52.1k tokens  ·  ctrl-c · resume to continue</text>
+
+    <!-- Session 5 -->
+    <text x="0" y="290" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">○</text>
+    <text x="30" y="290" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">3 days ago 11:30</text>
+    <text x="200" y="290" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">~/belkins-ops</text>
+    <text x="380" y="290" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">"Tekpon partnership pitch — draft the TNW pre-meeting brief..."</text>
+    <text x="0" y="308" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace">          12 turns  ·  34.2k tokens  ·  ended cleanly  ·  no branch</text>
+
+    <!-- Session 6 -->
+    <text x="0" y="348" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">○</text>
+    <text x="30" y="348" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">4 days ago 19:55</text>
+    <text x="200" y="348" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">~/ai-dive-deep</text>
+    <text x="380" y="348" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">"design 8 SVG diagrams for the chapters that work as flows..."</text>
+    <text x="0" y="366" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace">          156 turns  ·  398.1k tokens  ·  5 subagents · 6 commits</text>
+
+    <!-- Session 7 -->
+    <text x="0" y="406" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">○</text>
+    <text x="30" y="406" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">5 days ago 07:12</text>
+    <text x="200" y="406" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">~/belkins-ops</text>
+    <text x="380" y="406" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">"morning brief skill — make it pick up Gong call signals..."</text>
+    <text x="0" y="424" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace">          31 turns  ·  87.6k tokens  ·  ended cleanly  ·  1 commit</text>
+
+    <!-- Session 8 -->
+    <text x="0" y="464" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">○</text>
+    <text x="30" y="464" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">1 week ago</text>
+    <text x="200" y="464" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">~/404-agency</text>
+    <text x="380" y="464" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">"telegram bot — add the memory-sync cron for Friday digest..."</text>
+    <text x="0" y="482" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace">          42 turns  ·  119.3k tokens  ·  /goal cleared  ·  3 commits</text>
+  </g>
+
+  <!-- Side note -->
+  <g transform="translate(100, 780)">
+    <text x="0" y="0" fill="#22D3A0" font-size="13" font-family="JetBrains Mono, monospace">⁂ Sessions are filesystem, not memory.</text>
+    <text x="0" y="22" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">  The session remembers this morning. The vault (~/Desktop/Obsidian/) remembers your career. Don't confuse them.</text>
+  </g>
+
+  <text x="1520" y="880" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 22 · resume picker · sanitized example</text>
+</svg>

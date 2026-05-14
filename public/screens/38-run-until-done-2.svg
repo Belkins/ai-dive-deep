@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Window chrome -->
+  <rect x="60" y="40" width="1480" height="820" fill="#161B1F" stroke="#26251F" stroke-width="1" rx="10"/>
+  <rect x="60" y="40" width="1480" height="44" fill="#1A1B1F" rx="10"/>
+  <rect x="60" y="70" width="1480" height="14" fill="#1A1B1F"/>
+  <circle cx="84" cy="62" r="6" fill="#FF5F57"/>
+  <circle cx="104" cy="62" r="6" fill="#FEBC2E"/>
+  <circle cx="124" cy="62" r="6" fill="#28C840"/>
+  <text x="760" y="66" fill="#71717A" font-size="13" text-anchor="middle" font-family="JetBrains Mono, monospace">model-migration — claude — 120×34 · Opus (1M)</text>
+
+  <!-- The /goal invocation at top -->
+  <text x="100" y="120" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">$ claude</text>
+  <text x="100" y="146" fill="#FAFAF7" font-size="13" font-family="JetBrains Mono, monospace">&gt; /goal all references to claude-sonnet-4 in this repo are replaced with claude-opus-4-7, tests pass, diff lives on a branch named</text>
+  <text x="100" y="166" fill="#FAFAF7" font-size="13" font-family="JetBrains Mono, monospace">  model-bump, or stop after 30 turns</text>
+
+  <!-- Confirmation -->
+  <text x="100" y="200" fill="#22D3A0" font-size="13" font-family="JetBrains Mono, monospace">✓ Goal set. Haiku 4.5 will evaluate the transcript after every turn.</text>
+
+  <!-- Turn log: condensed history of the run -->
+  <g transform="translate(100, 240)">
+    <text x="0" y="0" fill="#71717A" font-size="11" letter-spacing="1.5" font-family="JetBrains Mono, monospace">TURN HISTORY</text>
+
+    <!-- Turn 1 -->
+    <text x="0" y="30" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">turn 1 · grep -r "claude-sonnet-4" — found 14 references across 6 files</text>
+    <text x="0" y="50" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">          eval: not yet — diff hasn't moved · continue</text>
+
+    <!-- Turn 2 -->
+    <text x="0" y="80" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">turn 2 · git checkout -b model-bump</text>
+    <text x="0" y="100" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">          eval: not yet — replacements not made · continue</text>
+
+    <!-- Turn 3-8 collapsed -->
+    <text x="0" y="130" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">turn 3-8 · sed sweep across src/lib/, src/skills/, scripts/, tests/ · 14 lines changed</text>
+    <text x="0" y="150" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">          eval: not yet — tests not run · continue</text>
+
+    <!-- Turn 9 -->
+    <text x="0" y="180" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">turn 9 · pnpm test &amp;&amp; pnpm typecheck</text>
+    <text x="0" y="200" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">          eval: 2 type errors in tests/migrations.test.ts · continue</text>
+
+    <!-- Turn 10 -->
+    <text x="0" y="230" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">turn 10 · fix imports on tests/migrations.test.ts — strict mode required model id refresh</text>
+    <text x="0" y="250" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">          eval: not yet — re-run tests · continue</text>
+
+    <!-- Turn 11 -->
+    <text x="0" y="280" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">turn 11 · pnpm test → all 47 pass · pnpm typecheck → clean · git add . &amp;&amp; git commit -m "..."</text>
+    <text x="0" y="300" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">          eval: not yet — branch state · continue</text>
+
+    <!-- Turn 12 — DONE -->
+    <text x="0" y="330" fill="#22D3A0" font-size="13" font-family="JetBrains Mono, monospace">turn 12 · git push -u origin model-bump · branch live · 14 lines · tests green · typecheck clean</text>
+    <text x="0" y="350" fill="#22D3A0" font-size="13" font-weight="600" font-family="JetBrains Mono, monospace">          eval: ✓ all conditions met → /goal cleared</text>
+  </g>
+
+  <!-- Live overlay panel at bottom — the marquee element -->
+  <g transform="translate(100, 670)">
+    <rect x="0" y="0" width="1400" height="130" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="2" rx="8"/>
+
+    <!-- Status -->
+    <circle cx="30" cy="40" r="6" fill="#22D3A0"/>
+    <text x="50" y="44" fill="#FF6B2C" font-size="14" font-weight="600" font-family="JetBrains Mono, monospace">◎  /goal cleared</text>
+    <text x="270" y="44" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">·  evaluator: Haiku 4.5  ·  scope: session</text>
+
+    <!-- Stats row -->
+    <text x="30" y="80" fill="#AAA79A" font-size="11" letter-spacing="1.5" font-family="JetBrains Mono, monospace">ELAPSED</text>
+    <text x="30" y="106" fill="#FAFAF7" font-size="20" font-weight="600" font-family="JetBrains Mono, monospace">18m 24s</text>
+
+    <text x="220" y="80" fill="#AAA79A" font-size="11" letter-spacing="1.5" font-family="JetBrains Mono, monospace">TURNS</text>
+    <text x="220" y="106" fill="#FAFAF7" font-size="20" font-weight="600" font-family="JetBrains Mono, monospace">12 / 30</text>
+
+    <text x="410" y="80" fill="#AAA79A" font-size="11" letter-spacing="1.5" font-family="JetBrains Mono, monospace">MAIN-MODEL SPEND</text>
+    <text x="410" y="106" fill="#FAFAF7" font-size="20" font-weight="600" font-family="JetBrains Mono, monospace">$3.12</text>
+
+    <text x="610" y="80" fill="#AAA79A" font-size="11" letter-spacing="1.5" font-family="JetBrains Mono, monospace">EVAL SPEND (Haiku)</text>
+    <text x="610" y="106" fill="#22D3A0" font-size="20" font-weight="600" font-family="JetBrains Mono, monospace">$0.04</text>
+
+    <text x="820" y="80" fill="#AAA79A" font-size="11" letter-spacing="1.5" font-family="JetBrains Mono, monospace">TOTAL TOKENS</text>
+    <text x="820" y="106" fill="#FAFAF7" font-size="20" font-weight="600" font-family="JetBrains Mono, monospace">412.8k</text>
+
+    <!-- Right side: clear/abort -->
+    <text x="1370" y="44" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace" text-anchor="end">aliases: stop · off · reset · none · cancel</text>
+    <text x="1370" y="106" fill="#71717A" font-size="11" font-family="JetBrains Mono, monospace" text-anchor="end">ctrl-c to abort · /goal &lt;condition&gt; to set new</text>
+  </g>
+
+  <text x="1520" y="880" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 38 · /goal overlay · sanitized example</text>
+</svg>
