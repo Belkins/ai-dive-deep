@@ -38,5 +38,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <DayZeroChecklist client:load />
 
+  <section class="container-prose pt-8 pb-24">
+    <div class="rounded-lg p-5 flex items-start gap-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
+      <div class="text-2xl" aria-hidden="true">🎵</div>
+      <div class="flex-1">
+        <div class="text-[10px] uppercase tracking-wider mb-1" style="color: rgb(var(--accent-2))">Optional · set the soundtrack</div>
+        <h3 class="m-0 font-display text-xl leading-tight" style="color: rgb(var(--fg))">Claude FM — music for thinking and building</h3>
+        <p class="mt-2 text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.85)">
+          Operator move that doesn't fit the checklist but earns its slot — pick a soundtrack you can loop without thinking about it. <a href="https://youtu.be/YmQ7jRgf4f0" target="_blank" rel="noopener" style="color: rgb(var(--accent))">Claude FM</a> is a Vlad-curated mix for building / writing / cron-checking. Long, instrumental, low context-switch cost.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <CommandPaletteMount />
 </BaseLayout>
