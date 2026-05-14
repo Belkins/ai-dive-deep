@@ -6,15 +6,19 @@ export const SCREENSHOTS: Record<string, string> = {
   "01-killed-my-tabs-1": "01-killed-my-tabs-1.svg",
   "01-killed-my-tabs-2": "01-killed-my-tabs-2.svg",
   "06-the-swarm-1": "06-the-swarm-1.svg",
+  "07-cron-1": "07-cron-1.svg",
   "08-three-doors-1": "08-three-doors-1.svg",
+  "13-quickstart-1": "13-quickstart-1.svg",
   "16-hooks-subagents-1": "16-hooks-subagents-1.svg",
   "21-three-modes-1": "21-three-modes-1.svg",
+  "22-sessions-1": "22-sessions-1.svg",
   "25-evals-or-hope-1": "25-evals-or-hope-1.svg",
   "31-stages-1": "31-stages-1.svg",
   "37-context-files-1": "37-context-files-1.svg",
   "38-run-until-done-1": "38-run-until-done-1.svg",
+  "38-run-until-done-2": "38-run-until-done-2.svg",
   "39-skills-you-should-steal-1": "39-skills-you-should-steal-1.svg",
   "claude-md-rules-1": "claude-md-rules-1.svg"
 };
 
-export const SCREENSHOT_COUNT = 12;
+export const SCREENSHOT_COUNT = 16;
