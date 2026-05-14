@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="90" fill="#FF6B2C" font-size="18" letter-spacing="6" font-weight="500">HOOKS + SUBAGENTS</text>
+  <text x="80" y="160" fill="#FAFAF7" font-size="56" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">From autocomplete to coworker</text>
+  <text x="80" y="200" fill="#AAA79A" font-size="20">a turn fires a hook · the hook spawns three subagents · they return, parent synthesizes</text>
+
+  <!-- Top: User input -->
+  <g transform="translate(700, 260)">
+    <rect x="0" y="0" width="200" height="60" fill="#161B1F" stroke="#26251F" stroke-width="1" rx="6"/>
+    <text x="100" y="38" fill="#FAFAF7" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">user prompt submit</text>
+  </g>
+
+  <!-- Arrow down -->
+  <line x1="800" y1="320" x2="800" y2="370" stroke="#56544B" stroke-width="1.5" marker-end="url(#arrow1)"/>
+  <defs><marker id="arrow1" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#56544B"/></marker></defs>
+
+  <!-- Hook layer -->
+  <g transform="translate(550, 380)">
+    <rect x="0" y="0" width="500" height="80" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="2" rx="8"/>
+    <text x="20" y="32" fill="#FF6B2C" font-size="12" letter-spacing="2">HOOK · UserPromptSubmit</text>
+    <text x="20" y="60" fill="#FAFAF7" font-size="16" font-family="JetBrains Mono, monospace">~/.claude/hooks/spawn-research-swarm.sh</text>
+  </g>
+
+  <!-- 3 fan-out lines -->
+  <line x1="650" y1="460" x2="280" y2="540" stroke="#FF8E54" stroke-width="1.5"/>
+  <line x1="800" y1="460" x2="800" y2="540" stroke="#FF8E54" stroke-width="1.5"/>
+  <line x1="950" y1="460" x2="1320" y2="540" stroke="#FF8E54" stroke-width="1.5"/>
+
+  <!-- 3 subagents -->
+  <g transform="translate(180, 540)">
+    <rect x="0" y="0" width="200" height="120" fill="#161B1F" stroke="#FF8E54" stroke-width="1.5" rx="8"/>
+    <text x="100" y="30" fill="#FF8E54" font-size="11" letter-spacing="2" text-anchor="middle">SUBAGENT 1</text>
+    <text x="100" y="60" fill="#FAFAF7" font-size="16" font-weight="500" text-anchor="middle">code reviewer</text>
+    <text x="100" y="84" fill="#AAA79A" font-size="13" text-anchor="middle">Read · Grep · Glob</text>
+    <text x="100" y="104" fill="#71717A" font-size="11" text-anchor="middle" font-style="italic">isolated context</text>
+  </g>
+
+  <g transform="translate(700, 540)">
+    <rect x="0" y="0" width="200" height="120" fill="#161B1F" stroke="#FF8E54" stroke-width="1.5" rx="8"/>
+    <text x="100" y="30" fill="#FF8E54" font-size="11" letter-spacing="2" text-anchor="middle">SUBAGENT 2</text>
+    <text x="100" y="60" fill="#FAFAF7" font-size="16" font-weight="500" text-anchor="middle">security auditor</text>
+    <text x="100" y="84" fill="#AAA79A" font-size="13" text-anchor="middle">Read · Bash</text>
+    <text x="100" y="104" fill="#71717A" font-size="11" text-anchor="middle" font-style="italic">isolated context</text>
+  </g>
+
+  <g transform="translate(1220, 540)">
+    <rect x="0" y="0" width="200" height="120" fill="#161B1F" stroke="#FF8E54" stroke-width="1.5" rx="8"/>
+    <text x="100" y="30" fill="#FF8E54" font-size="11" letter-spacing="2" text-anchor="middle">SUBAGENT 3</text>
+    <text x="100" y="60" fill="#FAFAF7" font-size="16" font-weight="500" text-anchor="middle">test-coverage scanner</text>
+    <text x="100" y="84" fill="#AAA79A" font-size="13" text-anchor="middle">Read · Bash</text>
+    <text x="100" y="104" fill="#71717A" font-size="11" text-anchor="middle" font-style="italic">isolated context</text>
+  </g>
+
+  <!-- Arrows back up -->
+  <line x1="280" y1="660" x2="800" y2="740" stroke="#22D3A0" stroke-width="1.5"/>
+  <line x1="800" y1="660" x2="800" y2="740" stroke="#22D3A0" stroke-width="1.5"/>
+  <line x1="1320" y1="660" x2="800" y2="740" stroke="#22D3A0" stroke-width="1.5"/>
+
+  <!-- Synthesis: parent -->
+  <g transform="translate(600, 740)">
+    <rect x="0" y="0" width="400" height="80" fill="#1A1B1F" stroke="#22D3A0" stroke-width="2" rx="8"/>
+    <text x="20" y="32" fill="#22D3A0" font-size="12" letter-spacing="2">PARENT · SYNTHESIZES</text>
+    <text x="200" y="62" fill="#FAFAF7" font-size="18" font-weight="500" text-anchor="middle">single coherent answer</text>
+  </g>
+
+  <text x="800" y="860" fill="#AAA79A" font-size="13" text-anchor="middle">each subagent has its own context window — they don't pollute each other · synthesis owns the dedup</text>
+  <text x="1520" y="880" fill="#3F3F46" font-size="12" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 16</text>
+</svg>
