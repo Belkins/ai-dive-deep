@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Window chrome -->
+  <rect x="60" y="40" width="1480" height="820" fill="#161B1F" stroke="#26251F" stroke-width="1" rx="10"/>
+  <rect x="60" y="40" width="1480" height="44" fill="#1A1B1F" rx="10"/>
+  <rect x="60" y="70" width="1480" height="14" fill="#1A1B1F"/>
+  <circle cx="84" cy="62" r="6" fill="#FF5F57"/>
+  <circle cx="104" cy="62" r="6" fill="#FEBC2E"/>
+  <circle cx="124" cy="62" r="6" fill="#28C840"/>
+  <text x="760" y="66" fill="#71717A" font-size="13" text-anchor="middle" font-family="JetBrains Mono, monospace">Cowork · Scheduled Tasks</text>
+
+  <!-- Title -->
+  <text x="100" y="130" fill="#FAFAF7" font-size="28" font-weight="500" font-family="Source Serif 4, Georgia, serif">Scheduled tasks — what runs while I sleep</text>
+  <text x="100" y="160" fill="#AAA79A" font-size="14">Cron-style cards. Each one is a SKILL.md invoked at a fixed cadence. The output lands in #ops.</text>
+
+  <!-- 4 columns × 3 rows = 12 cards. Card: 330 wide × 175 tall, gap 30 -->
+  <!-- Total width: 4×330 + 3×30 = 1410. Margin 95 each side, 95+1410+95=1600 ✓ -->
+  <!-- Total height (with header at 200): 200 + 3×175 + 2×30 = 785. Fits. -->
+
+  <g transform="translate(95, 200)">
+    <!-- ROW 1 -->
+    <!-- Card 1: Portfolio daily briefing -->
+    <g>
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Portfolio daily briefing</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Belkins · Folderly · LinguaLive · 404 ·</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">NoCancer AI. Each company gets a 4-bullet</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">summary — pipeline / burn / wins / fires.</text>
+      <rect x="20" y="125" width="125" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="83" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Weekdays · 7:00 ET</text>
+    </g>
+
+    <!-- Card 2: Belkins pipeline heartbeat -->
+    <g transform="translate(360, 0)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Belkins pipeline heartbeat</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">HubSpot deal motion + Gong call signals →</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">flags deals quiet &gt;4 days at stage 3+.</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">SDR ramp progress vs week-2 cohort.</text>
+      <rect x="20" y="125" width="115" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="78" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Daily · 7:30 ET</text>
+    </g>
+
+    <!-- Card 3: Folderly Stripe revenue -->
+    <g transform="translate(720, 0)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Folderly Stripe revenue</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">MRR delta vs last week. New signups,</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">churned accounts (with reason if logged),</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">deliverability eval flags from skill suite.</text>
+      <rect x="20" y="125" width="115" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="78" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Mon &amp; Thu · 8:00</text>
+    </g>
+
+    <!-- Card 4: Mentee Tuesday prep -->
+    <g transform="translate(1080, 0)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="1.5" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Mentee Tuesday prep</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Loads last session notes + this week's</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">commits + 1 metric to update. Drafts the</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">1-page prep doc 24h before the call.</text>
+      <rect x="20" y="125" width="125" height="22" rx="11" fill="#FF6B2C" fill-opacity="0.15" stroke="#FF6B2C" stroke-width="1"/>
+      <text x="83" y="141" fill="#FF6B2C" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Tuesdays · 12:00 ET</text>
+    </g>
+
+    <!-- ROW 2 -->
+    <!-- Card 5: 404 Agency memory sync -->
+    <g transform="translate(0, 205)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">404 Agency memory sync</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Weekly digest from Telegram chat logs.</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">Writes to vault. Surfaces new model</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">requests + SociaVault scrape anomalies.</text>
+      <rect x="20" y="125" width="120" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="80" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Fridays · 8:00 PM</text>
+    </g>
+
+    <!-- Card 6: Friday wrapup -->
+    <g transform="translate(360, 205)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Friday wrapup</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Portfolio-wide weekly reflection. Aggregates</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">Mon-Fri across 5 companies. ~400 words,</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">drops in #ops as a single canvas.</text>
+      <rect x="20" y="125" width="120" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="80" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Fridays · 5:00 PM</text>
+    </g>
+
+    <!-- Card 7: Competitive intel scan -->
+    <g transform="translate(720, 205)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Competitive intel scan</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Belkins (B2B lead-gen) + Folderly</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">(deliverability). Tracks pricing pages, blog</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">cadence, hiring signals on top 8 competitors.</text>
+      <rect x="20" y="125" width="120" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="80" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Sundays · 6:00 PM</text>
+    </g>
+
+    <!-- Card 8: Newsletter idea harvester -->
+    <g transform="translate(1080, 205)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Newsletter idea harvester</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Scans 7 days of vault notes + Slack rants</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">+ Substack drafts. Surfaces top 3 ideas for</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">next issue, ranked by recurrence.</text>
+      <rect x="20" y="125" width="120" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="80" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Sundays · 7:00 PM</text>
+    </g>
+
+    <!-- ROW 3 -->
+    <!-- Card 9: Follow-up reminder -->
+    <g transform="translate(0, 410)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Follow-up reminder</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Daily scan of Slack DMs, Calendar, HubSpot,</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">email for open commitments. Surfaces what</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">slipped, what's due in 48h. Output: this column.</text>
+      <rect x="20" y="125" width="125" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="83" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Weekdays · 8:00 ET</text>
+    </g>
+
+    <!-- Card 10: Folderly cron health -->
+    <g transform="translate(360, 410)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Folderly cron health</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Pings the deliverability eval skill across 6</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">customer domains. Flags SPF/DKIM/DMARC drift</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">before the next cadence fires.</text>
+      <rect x="20" y="125" width="120" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="80" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Daily · 6:30 AM</text>
+    </g>
+
+    <!-- Card 11: Mentee Tuesday follow-up -->
+    <g transform="translate(720, 410)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="1.5" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Mentee Tuesday follow-up</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Post-session capture. Drafts the WhatsApp</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">recap + commitments log, fans out to vault,</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">queues GTM-referral pings I owe.</text>
+      <rect x="20" y="125" width="135" height="22" rx="11" fill="#FF6B2C" fill-opacity="0.15" stroke="#FF6B2C" stroke-width="1"/>
+      <text x="88" y="141" fill="#FF6B2C" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Tuesdays · 8:00 PM ET</text>
+    </g>
+
+    <!-- Card 12: Anthropic billing watch -->
+    <g transform="translate(1080, 410)">
+      <rect x="0" y="0" width="330" height="175" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
+      <text x="20" y="32" fill="#FAFAF7" font-size="16" font-weight="500">Anthropic billing watch</text>
+      <text x="20" y="60" fill="#AAA79A" font-size="12">Daily spend &gt; $80 OR 2.5× median triggers a</text>
+      <text x="20" y="78" fill="#AAA79A" font-size="12">Slack ping with the 3 most-likely culprits</text>
+      <text x="20" y="96" fill="#AAA79A" font-size="12">(cache hit rate, headless run, eval gate).</text>
+      <rect x="20" y="125" width="115" height="22" rx="11" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+      <text x="78" y="141" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Daily · 9:00 ET</text>
+    </g>
+  </g>
+
+  <text x="1520" y="880" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 1 · sanitized example · orange border = mentorship workflow</text>
+</svg>

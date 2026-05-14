@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Window chrome -->
+  <rect x="60" y="40" width="1480" height="820" fill="#161B1F" stroke="#26251F" stroke-width="1" rx="10"/>
+  <!-- Window header bar -->
+  <rect x="60" y="40" width="1480" height="44" fill="#1A1B1F" rx="10"/>
+  <rect x="60" y="70" width="1480" height="14" fill="#1A1B1F"/>
+  <!-- macOS-style window dots -->
+  <circle cx="84" cy="62" r="6" fill="#FF5F57"/>
+  <circle cx="104" cy="62" r="6" fill="#FEBC2E"/>
+  <circle cx="124" cy="62" r="6" fill="#28C840"/>
+  <text x="760" y="66" fill="#71717A" font-size="13" text-anchor="middle" font-family="JetBrains Mono, monospace">#ops · Cowork — Tue Jan 21, 6:30 AM ET</text>
+
+  <!-- Title block inside window -->
+  <text x="100" y="130" fill="#FAFAF7" font-size="28" font-weight="500" font-family="Source Serif 4, Georgia, serif">Follow-Up Accountability — open loops</text>
+  <text x="100" y="160" fill="#AAA79A" font-size="14">Scanned Slack, Calendar &amp; HubSpot — covers last 48h</text>
+
+  <!-- 3 columns: OVERDUE | DUE TODAY | UPCOMING -->
+
+  <!-- Column 1: OVERDUE -->
+  <g transform="translate(100, 200)">
+    <!-- Badge -->
+    <rect x="0" y="0" width="92" height="26" rx="13" fill="#FF6B2C" fill-opacity="0.15" stroke="#FF6B2C" stroke-width="1"/>
+    <text x="46" y="18" fill="#FF6B2C" font-size="11" font-weight="600" text-anchor="middle" letter-spacing="1">OVERDUE</text>
+    <text x="100" y="18" fill="#FAFAF7" font-size="14" font-weight="500">people owe you / you owe and slipped</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(0, 50)">
+      <text x="0" y="0" fill="#FAFAF7" font-size="14" font-weight="500">You → John A. — 2.5 weeks overdue</text>
+      <text x="0" y="22" fill="#AAA79A" font-size="12">Slack follow-up + GTM referrals from Session #3.</text>
+      <text x="0" y="40" fill="#AAA79A" font-size="12">Risk: erodes paid-mentee trust.</text>
+      <text x="0" y="62" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Source: vault → John A — Mentoring.md</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(0, 145)">
+      <line x1="0" y1="-12" x2="380" y2="-12" stroke="#26251F"/>
+      <text x="0" y="0" fill="#FAFAF7" font-size="14" font-weight="500">You → Finance (Belkins finance)</text>
+      <text x="0" y="22" fill="#AAA79A" font-size="12">Sarah pinged yesterday 7:09 PM to review Google</text>
+      <text x="0" y="40" fill="#AAA79A" font-size="12">Ads expenses ($1.5M lifetime). No action logged.</text>
+      <text x="0" y="62" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Slack DM · expense sheet</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(0, 240)">
+      <line x1="0" y1="-12" x2="380" y2="-12" stroke="#26251F"/>
+      <text x="0" y="0" fill="#FAFAF7" font-size="14" font-weight="500">James K. → You + Maya R. (legal)</text>
+      <text x="0" y="22" fill="#AAA79A" font-size="12">Contract rewrite "not signable in current form" —</text>
+      <text x="0" y="40" fill="#AAA79A" font-size="12">handoff lands <tspan font-weight="600" fill="#FAFAF7">today</tspan>. No new draft yet.</text>
+      <text x="0" y="62" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Slack thread</text>
+    </g>
+  </g>
+
+  <!-- Vertical divider 1 -->
+  <line x1="555" y1="195" x2="555" y2="820" stroke="#26251F" stroke-width="1"/>
+
+  <!-- Column 2: DUE TODAY / TOMORROW -->
+  <g transform="translate(595, 200)">
+    <!-- Badge -->
+    <rect x="0" y="0" width="170" height="26" rx="13" fill="#FF8E54" fill-opacity="0.15" stroke="#FF8E54" stroke-width="1"/>
+    <text x="85" y="18" fill="#FF8E54" font-size="11" font-weight="600" text-anchor="middle" letter-spacing="1">DUE TODAY / TOMORROW</text>
+    <text x="180" y="18" fill="#FAFAF7" font-size="14" font-weight="500">you owe others</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(0, 50)">
+      <text x="0" y="0" fill="#FAFAF7" font-size="14" font-weight="500">You → Maya R. — foundation grant call</text>
+      <text x="0" y="22" fill="#AAA79A" font-size="12">Friday Meet to decide vendor A (cheaper, EU</text>
+      <text x="0" y="40" fill="#AAA79A" font-size="12">grants +$3k) vs vendor B ($8k+/app, higher prep).</text>
+      <text x="0" y="62" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Slack DM · decision frame needed</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(0, 145)">
+      <line x1="0" y1="-12" x2="380" y2="-12" stroke="#26251F"/>
+      <text x="0" y="0" fill="#FAFAF7" font-size="14" font-weight="500">You → John A. — Folderly warm upsell</text>
+      <text x="0" y="22" fill="#AAA79A" font-size="12">John mentioned inbox/deliverability issues on</text>
+      <text x="0" y="40" fill="#AAA79A" font-size="12">Session #3. Logged as warm lead — no outreach</text>
+      <text x="0" y="58" fill="#AAA79A" font-size="12">yet. Easiest deal in the pipeline right now.</text>
+      <text x="0" y="80" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Source: John A — Mentoring.md</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(0, 260)">
+      <line x1="0" y1="-12" x2="380" y2="-12" stroke="#26251F"/>
+      <text x="0" y="0" fill="#FAFAF7" font-size="14" font-weight="500">Heads-up — an engineer sick day</text>
+      <text x="0" y="22" fill="#AAA79A" font-size="12">Flagged at 12:00 ET that she's taking tomorrow</text>
+      <text x="0" y="40" fill="#AAA79A" font-size="12">off. Adjust expectations on anything routed</text>
+      <text x="0" y="58" fill="#AAA79A" font-size="12">through her Friday.</text>
+      <text x="0" y="80" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Slack DM</text>
+    </g>
+  </g>
+
+  <!-- Vertical divider 2 -->
+  <line x1="1050" y1="195" x2="1050" y2="820" stroke="#26251F" stroke-width="1"/>
+
+  <!-- Column 3: UPCOMING -->
+  <g transform="translate(1090, 200)">
+    <!-- Badge -->
+    <rect x="0" y="0" width="160" height="26" rx="13" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
+    <text x="80" y="18" fill="#22D3A0" font-size="11" font-weight="600" text-anchor="middle" letter-spacing="1">UPCOMING · 2-3 DAYS</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(0, 50)">
+      <text x="0" y="0" fill="#FAFAF7" font-size="13" font-weight="500">Today 11:30 ET — Belkins × a partner (TNW prep)</text>
+      <text x="0" y="20" fill="#AAA79A" font-size="11">Maya set this up with Alex + Cristian. Likely</text>
+      <text x="0" y="36" fill="#AAA79A" font-size="11">action items on partnership exposure at TNW.</text>
+      <text x="0" y="56" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Calendar</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(0, 130)">
+      <line x1="0" y1="-12" x2="400" y2="-12" stroke="#26251F"/>
+      <text x="0" y="0" fill="#FAFAF7" font-size="13" font-weight="500">Today 12:40 PT — Speaker call · Unleash AI</text>
+      <text x="0" y="20" fill="#AAA79A" font-size="11">Topics submitted: AI for sales &amp; marketing,</text>
+      <text x="0" y="36" fill="#AAA79A" font-size="11">scaling with AI. CFP deadline expected.</text>
+      <text x="0" y="56" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Calendar</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(0, 210)">
+      <line x1="0" y1="-12" x2="400" y2="-12" stroke="#26251F"/>
+      <text x="0" y="0" fill="#FAFAF7" font-size="13" font-weight="500">Tomorrow 9:00 PT — Training w/ Rep A</text>
+      <text x="0" y="20" fill="#AAA79A" font-size="11">Sam (Belkins SDR onboarding) started May 1.</text>
+      <text x="0" y="36" fill="#AAA79A" font-size="11">Validate ramp + tee up a staffing partner solo-LO handoff.</text>
+      <text x="0" y="56" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Calendar</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(0, 290)">
+      <line x1="0" y1="-12" x2="400" y2="-12" stroke="#26251F"/>
+      <text x="0" y="0" fill="#FAFAF7" font-size="13" font-weight="500">Tomorrow 1:00 PM ET — Podcast w/ Dan P.</text>
+      <text x="0" y="20" fill="#AAA79A" font-size="11">Prep block scheduled 12:00 ET. Don't skip —</text>
+      <text x="0" y="36" fill="#AAA79A" font-size="11">Maya routed the booking.</text>
+      <text x="0" y="56" fill="#71717A" font-size="10" font-family="JetBrains Mono, monospace">Calendar</text>
+    </g>
+  </g>
+
+  <text x="1520" y="880" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 1 · sanitized example</text>
+</svg>
