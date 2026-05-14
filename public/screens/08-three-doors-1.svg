@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="90" fill="#FF6B2C" font-size="18" letter-spacing="6" font-weight="500">THREE DOORS</text>
+  <text x="80" y="160" fill="#FAFAF7" font-size="56" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Chat · Cowork · Code</text>
+  <text x="80" y="200" fill="#AAA79A" font-size="20">same model · three surfaces · different operator jobs</text>
+
+  <!-- Three columns -->
+  <g transform="translate(80, 260)">
+
+    <!-- Door 1: Chat -->
+    <g>
+      <rect x="0" y="0" width="460" height="560" fill="#161B1F" stroke="#FFB48C" stroke-width="1.5" rx="10"/>
+      <text x="30" y="40" fill="#FFB48C" font-size="14" letter-spacing="2">DOOR 1</text>
+      <text x="30" y="90" fill="#FAFAF7" font-size="32" font-weight="500" font-family="Source Serif 4, Georgia, serif">claude.ai chat</text>
+      <text x="30" y="118" fill="#AAA79A" font-size="14">browser tab · no integrations</text>
+      <line x1="30" y1="142" x2="430" y2="142" stroke="#26251F"/>
+
+      <text x="30" y="180" fill="#AAA79A" font-size="14" letter-spacing="2">WHEN TO USE</text>
+      <text x="30" y="210" fill="#FAFAF7" font-size="15">one-off questions</text>
+      <text x="30" y="234" fill="#FAFAF7" font-size="15">research without context</text>
+      <text x="30" y="258" fill="#FAFAF7" font-size="15">draft a paragraph fast</text>
+
+      <text x="30" y="306" fill="#AAA79A" font-size="14" letter-spacing="2">CONTEXT IT SEES</text>
+      <text x="30" y="336" fill="#FAFAF7" font-size="15">just the conversation</text>
+      <text x="30" y="360" fill="#FAFAF7" font-size="15">files you upload manually</text>
+      <text x="30" y="384" fill="#FAFAF7" font-size="15">no memory across chats</text>
+
+      <text x="30" y="432" fill="#AAA79A" font-size="14" letter-spacing="2">DON'T USE FOR</text>
+      <text x="30" y="462" fill="#71717A" font-size="14" font-style="italic">workflows that repeat</text>
+      <text x="30" y="486" fill="#71717A" font-size="14" font-style="italic">data that's load-bearing</text>
+      <text x="30" y="510" fill="#71717A" font-size="14" font-style="italic">production features</text>
+    </g>
+
+    <!-- Door 2: Cowork -->
+    <g transform="translate(490, 0)">
+      <rect x="0" y="0" width="460" height="560" fill="#161B1F" stroke="#FF8E54" stroke-width="1.5" rx="10"/>
+      <text x="30" y="40" fill="#FF8E54" font-size="14" letter-spacing="2">DOOR 2</text>
+      <text x="30" y="90" fill="#FAFAF7" font-size="32" font-weight="500" font-family="Source Serif 4, Georgia, serif">Cowork</text>
+      <text x="30" y="118" fill="#AAA79A" font-size="14">claude.ai with MCP · desktop app</text>
+      <line x1="30" y1="142" x2="430" y2="142" stroke="#26251F"/>
+
+      <text x="30" y="180" fill="#AAA79A" font-size="14" letter-spacing="2">WHEN TO USE</text>
+      <text x="30" y="210" fill="#FAFAF7" font-size="15">connector-driven workflows</text>
+      <text x="30" y="234" fill="#FAFAF7" font-size="15">scheduled tasks</text>
+      <text x="30" y="258" fill="#FAFAF7" font-size="15">cross-tool orchestration</text>
+
+      <text x="30" y="306" fill="#AAA79A" font-size="14" letter-spacing="2">CONTEXT IT SEES</text>
+      <text x="30" y="336" fill="#FAFAF7" font-size="15">connectors (HubSpot, Gmail,</text>
+      <text x="30" y="360" fill="#FAFAF7" font-size="15">Slack, Calendar, Gong, etc.)</text>
+      <text x="30" y="384" fill="#FAFAF7" font-size="15">memory across sessions</text>
+
+      <text x="30" y="432" fill="#AAA79A" font-size="14" letter-spacing="2">DON'T USE FOR</text>
+      <text x="30" y="462" fill="#71717A" font-size="14" font-style="italic">code-write loops</text>
+      <text x="30" y="486" fill="#71717A" font-size="14" font-style="italic">work that needs subagents</text>
+      <text x="30" y="510" fill="#71717A" font-size="14" font-style="italic">CLI-flavored tasks</text>
+    </g>
+
+    <!-- Door 3: Code -->
+    <g transform="translate(980, 0)">
+      <rect x="0" y="0" width="460" height="560" fill="#1A1B1F" stroke="#FF6B2C" stroke-width="2.5" rx="10"/>
+      <text x="30" y="40" fill="#FF6B2C" font-size="14" letter-spacing="2">DOOR 3 — THE OPERATOR DOOR</text>
+      <text x="30" y="90" fill="#FAFAF7" font-size="32" font-weight="600" font-family="Source Serif 4, Georgia, serif">Claude Code</text>
+      <text x="30" y="118" fill="#AAA79A" font-size="14">terminal · filesystem · subagents</text>
+      <line x1="30" y1="142" x2="430" y2="142" stroke="#FF6B2C" stroke-opacity="0.3"/>
+
+      <text x="30" y="180" fill="#AAA79A" font-size="14" letter-spacing="2">WHEN TO USE</text>
+      <text x="30" y="210" fill="#FAFAF7" font-size="15">build · refactor · ship code</text>
+      <text x="30" y="234" fill="#FAFAF7" font-size="15">parallel subagents (swarm)</text>
+      <text x="30" y="258" fill="#FAFAF7" font-size="15">/goal / /loop autonomous runs</text>
+
+      <text x="30" y="306" fill="#AAA79A" font-size="14" letter-spacing="2">CONTEXT IT SEES</text>
+      <text x="30" y="336" fill="#FAFAF7" font-size="15">files, git, shell, hooks</text>
+      <text x="30" y="360" fill="#FAFAF7" font-size="15">CLAUDE.md · memory/ · skills/</text>
+      <text x="30" y="384" fill="#FAFAF7" font-size="15">spawnable subagents</text>
+
+      <text x="30" y="432" fill="#AAA79A" font-size="14" letter-spacing="2">DON'T USE FOR</text>
+      <text x="30" y="462" fill="#71717A" font-size="14" font-style="italic">one-shot questions</text>
+      <text x="30" y="486" fill="#71717A" font-size="14" font-style="italic">tasks that don't touch files</text>
+      <text x="30" y="510" fill="#71717A" font-size="14" font-style="italic">non-engineering operators</text>
+    </g>
+  </g>
+
+  <text x="800" y="850" fill="#22D3A0" font-size="15" text-anchor="middle">three doors, one model · pick by the job, not by the habit</text>
+  <text x="1520" y="870" fill="#3F3F46" font-size="12" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 8</text>
+</svg>

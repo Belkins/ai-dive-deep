@@ -4,6 +4,8 @@
 // id (basename without extension) -> filename with extension
 export const SCREENSHOTS: Record<string, string> = {
   "06-the-swarm-1": "06-the-swarm-1.svg",
+  "08-three-doors-1": "08-three-doors-1.svg",
+  "16-hooks-subagents-1": "16-hooks-subagents-1.svg",
   "21-three-modes-1": "21-three-modes-1.svg",
   "25-evals-or-hope-1": "25-evals-or-hope-1.svg",
   "31-stages-1": "31-stages-1.svg",
@@ -13,4 +15,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "claude-md-rules-1": "claude-md-rules-1.svg"
 };
 
-export const SCREENSHOT_COUNT = 8;
+export const SCREENSHOT_COUNT = 10;
