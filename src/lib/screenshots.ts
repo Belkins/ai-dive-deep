@@ -2,6 +2,15 @@
 // Re-run via `npm run build` (prebuild hook) when files in public/screens/ change.
 
 // id (basename without extension) -> filename with extension
-export const SCREENSHOTS: Record<string, string> = {};
+export const SCREENSHOTS: Record<string, string> = {
+  "06-the-swarm-1": "06-the-swarm-1.svg",
+  "21-three-modes-1": "21-three-modes-1.svg",
+  "25-evals-or-hope-1": "25-evals-or-hope-1.svg",
+  "31-stages-1": "31-stages-1.svg",
+  "37-context-files-1": "37-context-files-1.svg",
+  "38-run-until-done-1": "38-run-until-done-1.svg",
+  "39-skills-you-should-steal-1": "39-skills-you-should-steal-1.svg",
+  "claude-md-rules-1": "claude-md-rules-1.svg"
+};
 
-export const SCREENSHOT_COUNT = 0;
+export const SCREENSHOT_COUNT = 8;
