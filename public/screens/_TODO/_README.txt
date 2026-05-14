@@ -1,42 +1,48 @@
-SCREENSHOTS — what's still needed (updated 2026-05-14 PM)
+SCREENSHOTS — what's still needed (updated 2026-05-14 PM, post-ch15 deep-dive)
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
-────────────────────────────────────────────
-DONE — 16 SVG diagrams in public/screens/
-────────────────────────────────────────────
-01-killed-my-tabs-1      Follow-up accountability brief (sanitized)
-01-killed-my-tabs-2      Scheduled tasks panel (sanitized)
-06-the-swarm-1           6-agent swarm in flight (terminal output)
-07-cron-1                Scheduled task detail view
-08-three-doors-1         Chat / Cowork / Code comparison
-13-quickstart-1          First useful task in Claude Code
-16-hooks-subagents-1     Subagent fan-out flow
-21-three-modes-1         Plan / Interactive / Auto / /goal
-22-sessions-1            claude --resume picker
-25-evals-or-hope-1       Three-receipt eval thesis
-31-stages-1              Six stages flow (also rendered by StagesFlow widget)
-37-context-files-1       Four-layer context-file authority hierarchy
-38-run-until-done-1      Autonomy ladder (Plan → Auto → /goal)
-38-run-until-done-2      /goal overlay panel (marquee shot for Ch 38)
-39-skills-you-should-steal-1   9-library star bar chart
-claude-md-rules-1        12-rule infographic (for /claude-md-rules page)
-04-the-vault-1           Vlad's real Obsidian vault graph (Vlad capture)
-04-the-vault-rick        Rick AI-agent vault — pattern generalizes (Vlad capture)
-04-the-vault-rick-2      Rick agent's daily note (Vlad capture)
-24-tier-list-1           Proper tier-image SVG (6 tiers, 28 tools, May 2026 loadout)
-24-lmarena-snapshot      LMArena top-10 snapshot SVG (replaces broken HF iframe on /tier-list)
-15-yolo-decision-1       4-gate decision tree for --dangerously-skip-permissions (ch 15 deep-dive)
+Current state: 22 visual artifacts done · 31 captures still needed · 49 chapter references total.
 
 ────────────────────────────────────────────
-STILL NEEDED — 28 real captures
+DONE — 22 visual artifacts
+────────────────────────────────────────────
+
+SVG diagrams (18):
+  01-killed-my-tabs-1            Follow-up accountability brief (sanitized)
+  01-killed-my-tabs-2            Scheduled tasks panel (sanitized)
+  06-the-swarm-1                 6-agent swarm in flight (terminal output)
+  07-cron-1                      Scheduled task detail view
+  08-three-doors-1               Chat / Cowork / Code comparison
+  13-quickstart-1                First useful task in Claude Code
+  15-yolo-decision-1             4-gate decision tree for --dangerously-skip-permissions ← NEW
+  16-hooks-subagents-1           Subagent fan-out flow
+  21-three-modes-1               Plan / Interactive / Auto / /goal
+  22-sessions-1                  claude --resume picker
+  24-tier-list-1                 Proper tier-image SVG (6 tiers, 28 tools, May 2026 loadout) ← NEW
+  24-lmarena-snapshot            LMArena top-10 snapshot (replaces broken HF iframe on /tier-list) ← NEW
+  25-evals-or-hope-1             Three-receipt eval thesis
+  31-stages-1                    Six stages flow (also rendered by StagesFlow widget)
+  37-context-files-1             Four-layer context-file authority hierarchy
+  38-run-until-done-1            Autonomy ladder (Plan → Auto → /goal)
+  38-run-until-done-2            /goal overlay panel (marquee shot for Ch 38)
+  39-skills-you-should-steal-1   9-library star bar chart
+  claude-md-rules-1              12-rule infographic (for /claude-md-rules page)
+
+Real PNG captures (3):
+  04-the-vault-1                 Vlad's real Obsidian vault graph
+  04-the-vault-rick              Rick AI-agent vault (pattern generalizes)
+  04-the-vault-rick-2            Rick agent's daily note
+
+────────────────────────────────────────────
+STILL NEEDED — 31 real captures
 ────────────────────────────────────────────
 
 ★ TIER S — book-defining shots (do these first, ~10 min total)
 
    29-cost-economics-1            Anthropic console — weekly cost view, full month
 
-★ TIER A — high-leverage receipts and surfaces (1 hour)
+★ TIER A — high-leverage receipts and surfaces (~1 hour, 9 shots)
 
    02-five-tools-1                Cowork connectors panel (sanitized)
    02-five-tools-2                Anthropic billing dashboard
@@ -44,13 +50,14 @@ STILL NEEDED — 28 real captures
    05-skills-1                    ~/.claude/skills/ folder listing
    12-connectors-mcp-1            Cowork Connectors panel (full view)
    12-connectors-mcp-2            Real .mcp.json open in editor + /mcp output in split pane
-   13-quickstart-2                The 10-minute end-state (Claude Code with a CLAUDE.md, a skill, /agents)
+   13-quickstart-2                The 10-minute end-state (CC with a CLAUDE.md, a skill, /agents)
    14-cheat-sheet-1               Your real ~/.claude/settings.json with preferences
    26-team-adoption-1             Slack — 12 people, 5 reactions on a Claude-produced canvas
 
-★ TIER B — supporting / nice-to-have (no urgency)
+★ TIER B — supporting / nice-to-have (no urgency, 21 shots)
 
    03-temp-agency-1               Scheduled instance running in Cowork
+   06-the-swarm-2                 Repo's .claude/agents/ folder + .mcp.json in a file tree ← NEW
    09-dont-get-owned-1            Secret manager vault (1Password or similar)
    10-wild-stuff-1                Generative video pipeline (Higgsfield/Suno workflow)
    11-build-a-skill-1             ~/.claude/skills/morning-briefing/ expanded in Finder
@@ -75,7 +82,7 @@ STILL NEEDED — 28 real captures
 HOW TO DROP A SHOT
 ────────────────────────────────────────────
 1. Take screenshot (⌘⇧4 for area, ⌘⇧5 for window with selection)
-2. Rename to the exact ID + extension. Example: 04-the-vault-1.png
+2. Rename to the exact ID + extension. Example: 04-the-vault-2.png
 3. Drag from Desktop directly into public/screens/ (NOT inside _TODO/)
 4. Run `npm run build` OR push to main. Done.
 
@@ -97,6 +104,10 @@ SANITIZATION CHECKLIST (before saving)
 ────────────────────────────────────────────
 THE LINE
 ────────────────────────────────────────────
-Ship Tier S + Tier A (11 shots, ~80 minutes) and the artifact crosses
+Ship Tier S + Tier A (10 shots, ~70 minutes) and the artifact crosses
 the "feels visually complete" line. Tier B is icing — most chapters
 read fine with the cards + pull-quotes carrying the visual weight.
+
+Tier A is where the operator-flavor lives: real CLAUDE.md, real settings.json,
+real billing dashboard, real Cowork connectors. These can't be illustrated;
+they have to be photographed.
