@@ -21,14 +21,16 @@ DONE — 16 SVG diagrams in public/screens/
 38-run-until-done-2      /goal overlay panel (marquee shot for Ch 38)
 39-skills-you-should-steal-1   9-library star bar chart
 claude-md-rules-1        12-rule infographic (for /claude-md-rules page)
+04-the-vault-1           Vlad's real Obsidian vault graph (Vlad capture)
+04-the-vault-rick        Rick AI-agent vault — pattern generalizes (Vlad capture)
+04-the-vault-rick-2      Rick agent's daily note (Vlad capture)
 
 ────────────────────────────────────────────
-STILL NEEDED — 30 real captures
+STILL NEEDED — 29 real captures
 ────────────────────────────────────────────
 
-★ TIER S — book-defining shots (do these first, 30 min total)
+★ TIER S — book-defining shots (do these first, 20 min total)
 
-   04-the-vault-1                 Obsidian vault graph view (the neuron-network framing)
    24-tier-list-1                 Your tier list as rendered on /tier-list
    29-cost-economics-1            Anthropic console — weekly cost view, full month
 
@@ -93,6 +95,6 @@ SANITIZATION CHECKLIST (before saving)
 ────────────────────────────────────────────
 THE LINE
 ────────────────────────────────────────────
-Ship Tier S + Tier A (12 shots, ~90 minutes) and the artifact crosses
+Ship Tier S + Tier A (11 shots, ~80 minutes) and the artifact crosses
 the "feels visually complete" line. Tier B is icing — most chapters
 read fine with the cards + pull-quotes carrying the visual weight.

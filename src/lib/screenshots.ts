@@ -5,6 +5,9 @@
 export const SCREENSHOTS: Record<string, string> = {
   "01-killed-my-tabs-1": "01-killed-my-tabs-1.svg",
   "01-killed-my-tabs-2": "01-killed-my-tabs-2.svg",
+  "04-the-vault-1": "04-the-vault-1.png",
+  "04-the-vault-rick-2": "04-the-vault-rick-2.png",
+  "04-the-vault-rick": "04-the-vault-rick.png",
   "06-the-swarm-1": "06-the-swarm-1.svg",
   "07-cron-1": "07-cron-1.svg",
   "08-three-doors-1": "08-three-doors-1.svg",
@@ -21,4 +24,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "claude-md-rules-1": "claude-md-rules-1.svg"
 };
 
-export const SCREENSHOT_COUNT = 16;
+export const SCREENSHOT_COUNT = 19;
