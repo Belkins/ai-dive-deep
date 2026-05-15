@@ -2,13 +2,13 @@ SCREENSHOTS — what's still needed (updated 2026-05-15, post-SMB-connectors sec
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
-Current state: 38 visual artifacts done · 27 captures still needed · 61 chapter references total.
+Current state: 43 visual artifacts done · 22 captures still needed · 61 chapter references total.
 
 ────────────────────────────────────────────
-DONE — 38 visual artifacts
+DONE — 43 visual artifacts
 ────────────────────────────────────────────
 
-SVG diagrams (20):
+SVG diagrams (25):
   01-killed-my-tabs-1            Follow-up accountability brief (sanitized)
   01-killed-my-tabs-2            Scheduled tasks panel (sanitized)
   06-the-swarm-1                 6-agent swarm in flight (terminal output)
@@ -30,6 +30,11 @@ SVG diagrams (20):
   claude-md-rules-1              12-rule infographic (for /claude-md-rules page)
   04-the-vault-2                 Sanitized CLAUDE.md system map — copyable template ← NEW
   05-skills-1                    67-skill library by category — sanitized ← NEW
+  02-five-tools-2                Anthropic invoice — $2,216 / ~2.2B tokens ← NEW
+  12-connectors-mcp-2            .mcp.json + /mcp split (config → live state) ← NEW
+  13-quickstart-2                The 10-minute end-state terminal ← NEW
+  14-cheat-sheet-1               settings.json annotated (sanitized) ← NEW
+  26-team-adoption-1             The 9:47 AM Slack — 4-3-2-2-1 distribution ← NEW
 
 Real PNG captures (17):
   02-five-tools-1                Vlad's connected Cowork connector stack + Gmail tool permissions ← NEW
@@ -51,18 +56,13 @@ Real PNG captures (17):
   29-cost-economics-8            May direct-API token cost — $556 MTD (~half April) ← NEW
 
 ────────────────────────────────────────────
-STILL NEEDED — 27 real captures
+STILL NEEDED — 22 real captures (all TIER B — optional icing)
 ────────────────────────────────────────────
 
 ★ TIER S — CLEARED ✓ (all book-defining shots captured)
 
-★ TIER A — high-leverage receipts and surfaces (~30 min, 5 shots)
+★ TIER A — CLEARED ✓ (all 5 rendered as sanitized SVGs)
 
-   02-five-tools-2                Anthropic billing dashboard
-   12-connectors-mcp-2            Real .mcp.json open in editor + /mcp output in split pane
-   13-quickstart-2                The 10-minute end-state (CC with a CLAUDE.md, a skill, /agents)
-   14-cheat-sheet-1               Your real ~/.claude/settings.json with preferences
-   26-team-adoption-1             Slack — 12 people, 5 reactions on a Claude-produced canvas
 
 ★ TIER B — supporting / nice-to-have (no urgency, 22 shots)
 
@@ -115,8 +115,8 @@ SANITIZATION CHECKLIST (before saving)
 ────────────────────────────────────────────
 THE LINE
 ────────────────────────────────────────────
-Ship Tier A (5 shots, ~30 minutes) and the artifact crosses
-the "feels visually complete" line. Tier B is icing — most chapters
+Tier S + Tier A are CLEARED — the artifact is visually complete.
+The 22 remaining are all Tier B icing — most chapters
 read fine with the cards + pull-quotes carrying the visual weight.
 
 Tier A is where the operator-flavor lives: real CLAUDE.md, real settings.json,

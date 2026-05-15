@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 2 · THE TOKEN MATH</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">What a 2.2-billion-token month costs</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">A real Anthropic invoice: billions of tokens, a four-figure total. The cheapest senior hire I've ever made.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">ANTHROPIC CONSOLE · APRIL 2026</text>
+
+  <!-- Metric cards -->
+  <g transform="translate(80, 196)">
+    <rect x="0" y="0" width="345" height="118" fill="#161B1F" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="22" y="34" fill="#71717A" font-size="12" letter-spacing="2">TOTAL TOKEN COST</text>
+    <text x="22" y="84" fill="#FAFAF7" font-size="44" font-weight="500" font-family="Source Serif 4, Georgia, serif">$2,216.00</text>
+
+    <rect x="365" y="0" width="345" height="118" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="387" y="34" fill="#71717A" font-size="12" letter-spacing="2">TOKENS IN (MONTH)</text>
+    <text x="387" y="84" fill="#FAFAF7" font-size="44" font-weight="500" font-family="Source Serif 4, Georgia, serif">~2.2B</text>
+
+    <rect x="730" y="0" width="345" height="118" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="752" y="34" fill="#71717A" font-size="12" letter-spacing="2">WEB · CODE · SESSION</text>
+    <text x="752" y="84" fill="#FAFAF7" font-size="44" font-weight="500" font-family="Source Serif 4, Georgia, serif">$0.00</text>
+
+    <rect x="1095" y="0" width="345" height="118" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="1117" y="34" fill="#6EE7B7" font-size="12" letter-spacing="2">VS A $120K/YR HIRE</text>
+    <text x="1117" y="78" fill="#FAFAF7" font-size="30" font-weight="500" font-family="Source Serif 4, Georgia, serif">5–10× the work</text>
+  </g>
+
+  <!-- Daily cost bar chart -->
+  <text x="80" y="368" fill="#6EE7B7" font-size="11" letter-spacing="2.4" font-weight="600">DAILY TOKEN COST · DECAYING AS OPTIMIZATION LANDS (~$220 → ~$50)</text>
+  <line x1="80" y1="800" x2="1520" y2="800" stroke="#2A3138" stroke-width="1"/>
+  <g fill="#FF6B2C">
+    <rect x="90"  y="596" width="52" height="204" rx="2"/>
+    <rect x="162" y="615" width="52" height="185" rx="2"/>
+    <rect x="234" y="605" width="52" height="195" rx="2"/>
+    <rect x="306" y="638" width="52" height="162" rx="2"/>
+    <rect x="378" y="629" width="52" height="171" rx="2"/>
+    <rect x="450" y="657" width="52" height="143" rx="2"/>
+    <rect x="522" y="648" width="52" height="152" rx="2"/>
+    <rect x="594" y="672" width="52" height="128" rx="2"/>
+    <rect x="666" y="686" width="52" height="114" rx="2"/>
+    <rect x="738" y="676" width="52" height="124" rx="2"/>
+    <rect x="810" y="700" width="52" height="100" rx="2"/>
+    <rect x="882" y="695" width="52" height="105" rx="2"/>
+    <rect x="954" y="714" width="52" height="86"  rx="2"/>
+    <rect x="1026" y="710" width="52" height="90" rx="2"/>
+    <rect x="1098" y="724" width="52" height="76" rx="2"/>
+    <rect x="1170" y="719" width="52" height="81" rx="2"/>
+    <rect x="1242" y="735" width="52" height="65" rx="2"/>
+    <rect x="1314" y="728" width="52" height="72" rx="2"/>
+    <rect x="1386" y="745" width="52" height="55" rx="2"/>
+    <rect x="1458" y="750" width="52" height="50" rx="2"/>
+  </g>
+  <text x="90" y="824" fill="#71717A" font-size="12">Apr 01</text>
+  <text x="760" y="824" fill="#71717A" font-size="12">Apr 15</text>
+  <text x="1470" y="824" fill="#71717A" font-size="12" text-anchor="end">Apr 30</text>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">A $120K/yr engineer buys ~24B Sonnet-input tokens. This month ran 2.2B for <tspan fill="#FAFAF7">$2,216</tspan> — and ran the swarm while you slept.</text>
+</svg>

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 14 · THE CHEAT SHEET</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">~/.claude/settings.json, annotated</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Global preferences: default model, theme, telemetry — and the permission floor no run can sink below.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">SANITIZED · COPY FREELY</text>
+
+  <!-- Editor -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="920" height="620" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="920" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="920" height="22" fill="#1A1F24"/>
+    <circle cx="24" cy="22" r="6" fill="#FF6B5C"/><circle cx="46" cy="22" r="6" fill="#F5C24A"/><circle cx="68" cy="22" r="6" fill="#6EE7B7"/>
+    <text x="460" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">~/.claude/settings.json</text>
+    <g font-family="JetBrains Mono, monospace" font-size="16">
+      <text x="28" y="84"  fill="#3F4651">1</text><text x="68" y="84"  fill="#E5E5E5">{</text>
+      <text x="28" y="112" fill="#3F4651">2</text><text x="88" y="112" fill="#FF8E54">"model"</text><text x="188" y="112" fill="#E5E5E5">: </text><text x="210" y="112" fill="#6EE7B7">"sonnet"</text><text x="310" y="112" fill="#E5E5E5">,</text>
+      <text x="28" y="140" fill="#3F4651">3</text><text x="88" y="140" fill="#FF8E54">"theme"</text><text x="188" y="140" fill="#E5E5E5">: </text><text x="210" y="140" fill="#6EE7B7">"dark"</text><text x="280" y="140" fill="#E5E5E5">,</text>
+      <text x="28" y="168" fill="#3F4651">4</text><text x="88" y="168" fill="#FF8E54">"env"</text><text x="148" y="168" fill="#E5E5E5">: { </text><text x="188" y="168" fill="#FF8E54">"DISABLE_TELEMETRY"</text><text x="455" y="168" fill="#E5E5E5">: </text><text x="478" y="168" fill="#6EE7B7">"1"</text><text x="510" y="168" fill="#E5E5E5"> },</text>
+      <text x="28" y="196" fill="#3F4651">5</text><text x="88" y="196" fill="#FF8E54">"permissions"</text><text x="268" y="196" fill="#E5E5E5">: {</text>
+      <text x="28" y="224" fill="#3F4651">6</text><text x="108" y="224" fill="#FF8E54">"defaultMode"</text><text x="288" y="224" fill="#E5E5E5">: </text><text x="310" y="224" fill="#6EE7B7">"auto"</text><text x="380" y="224" fill="#E5E5E5">,</text>
+      <text x="28" y="252" fill="#3F4651">7</text><text x="108" y="252" fill="#FF8E54">"allow"</text><text x="208" y="252" fill="#E5E5E5">: [</text>
+      <text x="28" y="280" fill="#3F4651">8</text><text x="128" y="280" fill="#6EE7B7">"Bash(npm test:*)"</text><text x="388" y="280" fill="#E5E5E5">, </text><text x="408" y="280" fill="#6EE7B7">"Bash(git commit:*)"</text><text x="690" y="280" fill="#E5E5E5">,</text>
+      <text x="28" y="308" fill="#3F4651">9</text><text x="128" y="308" fill="#6EE7B7">"Bash(npm run build:*)"</text><text x="450" y="308" fill="#E5E5E5">, </text><text x="470" y="308" fill="#6EE7B7">"WebSearch"</text>
+      <text x="22" y="336" fill="#3F4651">10</text><text x="108" y="336" fill="#E5E5E5">],</text>
+      <text x="22" y="364" fill="#3F4651">11</text><text x="108" y="364" fill="#FF8E54">"deny"</text><text x="190" y="364" fill="#E5E5E5">: [</text>
+      <text x="22" y="392" fill="#3F4651">12</text><text x="128" y="392" fill="#6EE7B7">"Read(.env*)"</text><text x="308" y="392" fill="#E5E5E5">, </text><text x="328" y="392" fill="#6EE7B7">"Edit(.env*)"</text><text x="508" y="392" fill="#E5E5E5">,</text>
+      <text x="22" y="420" fill="#3F4651">13</text><text x="128" y="420" fill="#6EE7B7">"Read(**/secrets/**)"</text><text x="430" y="420" fill="#E5E5E5">, </text><text x="450" y="420" fill="#6EE7B7">"Bash(rm -rf /*)"</text><text x="690" y="420" fill="#E5E5E5">,</text>
+      <text x="22" y="448" fill="#3F4651">14</text><text x="128" y="448" fill="#6EE7B7">"Bash(git push --force*)"</text>
+      <text x="22" y="476" fill="#3F4651">15</text><text x="108" y="476" fill="#E5E5E5">]</text>
+      <text x="22" y="504" fill="#3F4651">16</text><text x="88" y="504" fill="#E5E5E5">},</text>
+      <text x="22" y="532" fill="#3F4651">17</text><text x="88" y="532" fill="#FF8E54">"hooks"</text><text x="178" y="532" fill="#E5E5E5">: { </text><text x="218" y="532" fill="#FF8E54">"PostToolUse"</text><text x="398" y="532" fill="#E5E5E5">: [ typecheck </text><text x="610" y="532" fill="#FF8E54">"Edit|Write"</text><text x="770" y="532" fill="#E5E5E5"> ] }</text>
+      <text x="22" y="560" fill="#3F4651">18</text><text x="68" y="560" fill="#E5E5E5">}</text>
+    </g>
+    <text x="28" y="600" fill="#71717A" font-size="13">No tokens, no absolute paths. Patterns, not exact strings — note the <tspan fill="#E5E5E5">:*</tspan> wildcards.</text>
+  </g>
+
+  <!-- Callouts -->
+  <g transform="translate(1040, 200)">
+    <rect x="0" y="8" width="480" height="118" fill="#161B1F" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="22" y="38" fill="#FF6B2C" font-size="12" letter-spacing="2" font-weight="600">defaultMode — THE MASTER SWITCH</text>
+    <text x="22" y="68" fill="#AAA79A" font-size="13.5">"auto" lets the agent act without per-action</text>
+    <text x="22" y="90" fill="#AAA79A" font-size="13.5">prompts. Safe only because the deny list</text>
+    <text x="22" y="112" fill="#AAA79A" font-size="13.5">below is the floor it can't cross.</text>
+
+    <rect x="0" y="146" width="480" height="140" fill="#161B1F" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="22" y="176" fill="#FF6B2C" font-size="12" letter-spacing="2" font-weight="600">deny — THE SAFETY FLOOR</text>
+    <text x="22" y="206" fill="#AAA79A" font-size="13.5">The single most important block. Even in</text>
+    <text x="22" y="228" fill="#AAA79A" font-size="13.5">auto mode these are never allowed:</text>
+    <text x="22" y="250" fill="#FAFAF7" font-size="13.5">secrets, credential dirs, rm -rf /,</text>
+    <text x="22" y="272" fill="#FAFAF7" font-size="13.5">force-push. Get this right first.</text>
+
+    <rect x="0" y="306" width="480" height="118" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="22" y="336" fill="#FF8E54" font-size="12" letter-spacing="2" font-weight="600">allow — PRE-APPROVED LOOPS</text>
+    <text x="22" y="366" fill="#AAA79A" font-size="13.5">Build / test / commit run uninterrupted.</text>
+    <text x="22" y="388" fill="#AAA79A" font-size="13.5">Patterns with wildcards, not exact</text>
+    <text x="22" y="410" fill="#AAA79A" font-size="13.5">strings — scope tight, expand on need.</text>
+
+    <rect x="0" y="444" width="480" height="118" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="22" y="474" fill="#FF8E54" font-size="12" letter-spacing="2" font-weight="600">hooks — DETERMINISTIC AUTOMATION</text>
+    <text x="22" y="504" fill="#AAA79A" font-size="13.5">Code, not model judgment. Auto-typecheck</text>
+    <text x="22" y="526" fill="#AAA79A" font-size="13.5">after every .ts/.tsx edit; a PreToolUse</text>
+    <text x="22" y="548" fill="#AAA79A" font-size="13.5">guard can block destructive Bash.</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">Four files matter: this one (global), <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">&lt;repo&gt;/CLAUDE.md</tspan>, <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">&lt;repo&gt;/.claude/settings.json</tspan>, <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">&lt;repo&gt;/.mcp.json</tspan>.</text>
+</svg>
