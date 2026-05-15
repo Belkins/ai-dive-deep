@@ -4,8 +4,8 @@ slug: "35-codex-and-cc"
 title: "Codex or Claude Code — or Both?"
 subtitle: "Day Shift, Night Shift"
 tldr: "Codex opens a PR at 3 AM against the Belkins Sentry stream. I review and merge it in Claude Code at 9. Same repo, same .mcp.json, same CLAUDE.md — two agents, two contracts, one shift hand-off. The hard part isn't picking a model; it's keeping the night shift and the day shift from stepping on each other."
-keyConcepts: ["night shift", "shared .mcp.json", "dual-agent CI", "branch protection", "shift hand-off"]
-readingMinutes: 8
+keyConcepts: ["night shift", "shared .mcp.json", "dual-agent CI", "branch protection", "shift hand-off", "AI Studio", "Gemini ideation"]
+readingMinutes: 10
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
@@ -56,6 +56,37 @@ Anything that touches more than three files. The 90% confidence drops fast as th
 Anything that needs to push back on the prompt itself. If I tell CC "add a retry loop here," CC will sometimes say "you don't need a retry loop, the underlying call is already idempotent and the rate limit is per-second, not per-request — what you actually need is a token bucket." Codex will add the retry loop. Both responses are useful, but only one of them is the response you wanted on the redesign.
 
 Anything where the fix requires reading a customer thread, a Loom, or a Notion doc. Codex can read those — the MCPs are wired — but it doesn't ask the right questions of them. It treats them as context, not as evidence. The day driver treats them as evidence.
+
+## The third instrument — Gemini in AI Studio for the idea, not the build
+
+A Tuesday, 7 AM, before the portfolio wakes up. I have a vague want: a landing page for a new LinguaLive sub-brand that feels like motion without being a 2019 parallax cliché. I don't have a design. I don't have a brief tight enough to hand Claude. I have a feeling and a reference I can't articulate. This is the exact state where Claude Code is the wrong tool — CC wants a spec, and I don't have one yet. So I open `aistudio.google.com`, Build mode, and type one bad sentence: "modern editorial landing page, scroll-driven motion, dark, serif headlines, one product shot." Gemini 3 Pro returns a working React + Tailwind page in the preview pane in under a minute. It's wrong. It's the *useful* kind of wrong — a concrete thing to react to instead of a blank canvas.
+
+Then the loop. Not a prose loop — a pointing loop. AI Studio's **annotation mode** lets me highlight the hero section directly and say "this, but the headline reveals on scroll, not on load" and "kill the gradient, it's cheap." Somewhere north of twenty iterations later I have three distinct directions, none of which I could have written as a prompt at 7 AM because I didn't know they were what I wanted until I saw the wrong version first. I screenshot the one that clicks. I do not export the code. The code was never the point.
+
+**What it is.** Google AI Studio (`aistudio.google.com`) is the free playground for Google's flagship models — Gemini 3 Pro for reasoning, Gemini 3 Flash for speed, Nano Banana Pro for images, Veo for video. The piece that matters here is Build mode: describe an app in plain English, the Antigravity Agent generates a full React + Tailwind project, and you get a three-pane view — chat, code, live preview. You iterate by talking to it, or by annotation mode: click the rendered element and describe the change. Pointing beats describing. That's the whole unlock. There's also an "I'm Feeling Lucky" button that generates a starting concept when you have nothing but a cold start and need something to push against.
+
+**Why it's a third instrument, not a third shift.** Codex ships fixes. Claude Code ships features. Neither is good at the part *before* you know what to build — and that's not a criticism, it's a different job. Codex and CC are at their best with a contract: given this trace, this spec, this issue, produce this diff. AI Studio Build mode is at its best with no contract at all: given this vague feeling, produce twenty things to react to. The output of an AI Studio session is not a codebase. It's a direction — a screenshot, a scroll behavior, a layout I can now describe to Claude Code in one tight paragraph *because I've seen it*. It deliberately does not share your repo, your `.mcp.json`, or your `CLAUDE.md`, and that's correct. The whole value is a sandbox with no blast radius and no contract. You throw the code away. You keep the idea.
+
+**The part that earns it a slot in this chapter.** Run the same one-line brief through Claude and through Gemini in AI Studio and you get two genuinely different aesthetics, because the models carry different priors from different training. Claude's default UI sense skews one way; Gemini's skews another. Neither is "right." The value is the *delta*. When I'm stuck, the move isn't a better prompt — it's a second model with a different bias rendering the same brief, so I have a comparison surface instead of a single opinion to accept or reject. Two wrong answers from two different priors triangulate the right one faster than ten iterations against a single model that keeps converging on its own taste. Same argument as the [design-variant swarm](/chapters/06-the-swarm) — but the second prior comes from a different vendor, not a different agent of the same one.
+
+<Callout type="tip">
+The discipline: AI Studio is upstream of the build, never the build. The moment you're exporting the ZIP and wiring it into a real repo, stop — you've crossed from ideation into shipping, and shipping is Claude Code's job, on a spec, in a repo with a `CLAUDE.md`. The artifact you carry forward is the screenshot and the one-paragraph description, not the code.
+</Callout>
+
+The loop that works, compressed:
+
+1. **Bad one-sentence prompt** into Build mode. Don't overthink it. The first render is supposed to be wrong.
+2. **React, don't re-prompt.** Use annotation mode — point at the thing, say what's wrong. Pointing is faster and more honest than re-describing.
+3. **Fork the direction, not the detail.** When something clicks, push it three iterations further; when it doesn't, abandon it — don't repair it.
+4. **Stop at "I can describe this now."** That's the exit condition. The deliverable is a sharp brief, not a finished page.
+5. **Hand the brief plus the screenshot to Claude Code.** Build it for real, on a spec, in the repo.
+
+<ScreenshotPlaceholder
+  id="35-codex-and-cc-2"
+  caption="AI Studio Build mode mid-iteration"
+  note="Three-pane view — chat left, generated code center, live preview right — with annotation mode active on a hero section. The 'wrong but useful' first render is the point."/>
+
+<PullQuote>Codex and Claude Code need a contract. AI Studio is where you go to find out what the contract should say.</PullQuote>
 
 ## Shared infrastructure — what they actually share
 

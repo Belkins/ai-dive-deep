@@ -1,8 +1,8 @@
-SCREENSHOTS — what's still needed (updated 2026-05-14 PM, post-ch15 deep-dive)
+SCREENSHOTS — what's still needed (updated 2026-05-15, post-AI-Studio section)
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
-Current state: 22 visual artifacts done · 31 captures still needed · 49 chapter references total.
+Current state: 22 visual artifacts done · 32 captures still needed · 50 chapter references total.
 
 ────────────────────────────────────────────
 DONE — 22 visual artifacts
@@ -35,7 +35,7 @@ Real PNG captures (3):
   04-the-vault-rick-2            Rick agent's daily note
 
 ────────────────────────────────────────────
-STILL NEEDED — 31 real captures
+STILL NEEDED — 32 real captures
 ────────────────────────────────────────────
 
 ★ TIER S — book-defining shots (do these first, ~10 min total)
@@ -54,7 +54,7 @@ STILL NEEDED — 31 real captures
    14-cheat-sheet-1               Your real ~/.claude/settings.json with preferences
    26-team-adoption-1             Slack — 12 people, 5 reactions on a Claude-produced canvas
 
-★ TIER B — supporting / nice-to-have (no urgency, 21 shots)
+★ TIER B — supporting / nice-to-have (no urgency, 22 shots)
 
    03-temp-agency-1               Scheduled instance running in Cowork
    06-the-swarm-2                 Repo's .claude/agents/ folder + .mcp.json in a file tree ← NEW
@@ -77,6 +77,7 @@ STILL NEEDED — 31 real captures
    33-browser-agents-1            Slack post from pricing-watch browser agent
    34-write-on-behalf-1           The 9:14 AM approval flow
    35-codex-and-cc-1              .mcp.json + CLAUDE.md side by side
+   35-codex-and-cc-2              AI Studio Build mode mid-iteration (3-pane + annotation) ← NEW
 
 ────────────────────────────────────────────
 HOW TO DROP A SHOT
