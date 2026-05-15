@@ -4,8 +4,8 @@ slug: "16-hooks-subagents"
 title: "Hooks and Custom Subagents"
 subtitle: "From Autocomplete to Coworker"
 tldr: "Hooks turn ad-hoc prompting into policy. Subagents turn one model into a team. Together, they're how you stop talking to Claude and start operating it."
-keyConcepts: ["hooks", "subagents", "PostToolUse", "parallel dispatch", "policy"]
-readingMinutes: 8
+keyConcepts: ["hooks", "subagents", "PostToolUse", "parallel dispatch", "policy", "exploration split", "LSP"]
+readingMinutes: 10
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
@@ -222,6 +222,26 @@ In your main session, you say (or the model decides on its own):
 The orchestrator dispatches all three in one tool batch. Each runs in its own context, reads its slice, and returns a summary. The orchestrator merges them. You get the union of three focused reviews in roughly the time of one — and your main context isn't polluted with three full diffs.
 
 This is the move. Three reviewers in parallel beats one reviewer reading 9,000 lines, every time.
+
+---
+
+## The exploration/editing split
+
+There's a second subagent move that matters more in a large codebase than the parallel-review one, and Anthropic [calls it out explicitly](https://claude.com/blog/how-claude-code-works-in-large-codebases-best-practices-and-where-to-start) as a recommended pattern: don't explore and edit in the same session.
+
+The shape:
+
+1. Spin up a **read-only** subagent with its own context window. Its only job: map the subsystem. How does auth flow through this service? Where does the retry logic live? What calls what?
+2. The subagent writes its findings to a file — `.claude/scratch/auth-map.md` — not back into the orchestrator's context.
+3. The main agent reads that file and does the edit with the full picture, on a context window that never got burned by the 40 files the explorer had to open to produce the map.
+
+Why this beats "just let the one agent figure it out": exploration is expensive and messy. It opens dead ends, reads files it won't touch, follows imports that don't matter. If that all happens in your editing session, the editing context is polluted with exploration noise by the time the model starts writing code. The split keeps the cost where it belongs. The explorer pays it; the editor inherits a clean summary.
+
+<Callout type="note" title="LSP is the other half of this">
+The blog's other large-codebase lever: wire up a Language Server Protocol server. Symbol-level navigation — "go to definition," "find all references" — instead of `grep` on a string. The win isn't speed, it's precision: LSP returns only the references that point to the *same* symbol, so the filtering happens before Claude reads anything. In a monorepo with three `handleRequest` functions in three languages, grep gives the agent all three and a guess. LSP gives it the one. Install the code-intelligence plugin plus the language-server binary for each language. It is not automatic — most people assume it is, and it isn't.
+</Callout>
+
+The explorer-writes-to-disk, editor-reads-from-disk handoff is the same disk-handoff discipline from the anti-patterns section below, applied to the highest-value case. Treat `.claude/scratch/` like a message queue and the pattern composes with everything else in this chapter.
 
 ---
 
