@@ -4,14 +4,15 @@ slug: "37-context-files"
 title: "Context Files — CLAUDE.md, memory, skills"
 subtitle: "Where Conventions Live, Where They Die"
 tldr: "Prompt engineering is the visible part. Context-file architecture is the load-bearing part nobody writes about. CLAUDE.md is the kitchen rules taped to the wall. memory/ is the notebook the agent writes to. Skills are the recipes pulled on demand. Get the layers wrong and the model ignores all of them."
-keyConcepts: ["CLAUDE.md", "memory", "skills", "context engineering", "prompt cache"]
-readingMinutes: 10
+keyConcepts: ["CLAUDE.md", "memory", "skills", "context engineering", "prompt cache", "large codebases", "agentic search"]
+readingMinutes: 12
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
 import PullQuote from '@/components/PullQuote.astro';
 import Callout from '@/components/Callout.astro';
 import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+import VideoEmbed from '@/components/VideoEmbed.astro';
 
 It's 11:47 AM on a Wednesday in February. Yehor on my engineering team pings me on Slack with three sentences I'd already typed myself the week before, almost verbatim:
 
@@ -213,6 +214,32 @@ That's it. Sixty-three lines. Everything else lives somewhere else.
   id="37-context-files-1"
   caption="The four layers of context-file architecture, mapped to what loads when"
   note="diagram showing CLAUDE.md (always loaded) / memory (loaded on session start) / skills (loaded when triggered) / session-scoped (volatile)."/>
+
+## Scaling this to a large codebase
+
+Everything above holds for a 5-file side project and a 5-million-line monorepo. What changes at scale is that the cost of getting the layers wrong stops being "the model ignored a rule" and becomes "the model can't find the file." Anthropic published a [field guide on exactly this](https://claude.com/blog/how-claude-code-works-in-large-codebases-best-practices-and-where-to-start) — Claude Code running in production across decade-old legacy systems and architectures spanning dozens of repos. Three things in it are worth stealing.
+
+**First: it's agentic search, not RAG.** Claude doesn't embed your repo into a vector store and retrieve chunks. It navigates the tree like an engineer would — `ls`, `grep`, open a file, follow an import. That means your directory structure *is* your retrieval index. A legible tree is a fast agent. A dumping-ground `src/` with 400 files is a slow one, for the same reason it's slow for a new hire.
+
+**Second: initialize Claude in the subdirectory, not the repo root.** This is the highest-leverage move in the whole guide and almost nobody does it. Claude walks *up* the tree from where it starts and loads every CLAUDE.md it finds, additively. So a CLAUDE.md at `services/payments/CLAUDE.md` plus one at the repo root gives the agent local payment conventions *and* the big picture — but only the slices that matter, not all 2,000 lines of every service's rules at once. The root file becomes pointers and critical gotchas only. The subdirectory files carry the local conventions. Same layering principle as the rest of this chapter, applied spatially.
+
+The practical setup, the one I run on the bigger Belkins repos:
+
+- Root CLAUDE.md: ≤ 80 lines. What the system is, where the landmines are, links down.
+- Per-service CLAUDE.md: the test command *for that service*, the lint config, the one weird thing about that subsystem. Scoped, not global.
+- `.claude/settings.json` checked into the repo with `permissions.deny` rules for generated files, build artifacts, vendored code. Version-controlled, so the whole team inherits the exclusions and nobody's agent wastes a turn reading `dist/`.
+- An LSP server wired up if it's a multi-language repo — symbol-level "go to definition" beats string-grep, and it filters before the model reads anything. ([Chapter 16](/chapters/16-hooks-subagents) covers the exploration-split that pairs with this.)
+
+**Third: context files rot, and they rot faster as the model improves.** Review the whole stack every 3–6 months, and always after a major model release. Half the rules you wrote in 2025 were scaffolding around limitations the current model doesn't have. The classic: a rule that forces single-file refactors because an older model lost the plot across files. The current model does coordinated cross-file edits fine — that rule is now a cage, not a guardrail. Retiring stale instructions is maintenance, not optional. A CLAUDE.md you haven't pruned since the last model generation is actively making the agent dumber.
+
+<VideoEmbed
+  youtubeId="Lue8K2jqfKk"
+  title="Claude Code & the evolution of agentic coding — Boris Cherny, Anthropic"
+/>
+
+If you only have eighteen minutes for the why behind all of this, watch Boris Cherny — he created Claude Code — explain why the harness around the model matters more than the model. This whole chapter is the operator's version of that argument.
+
+<PullQuote>Your directory tree is your retrieval index. A legible repo is a fast agent for the same reason it's a fast onboarding.</PullQuote>
 
 ## A note on `~/.claude/CLAUDE.md` (the global one)
 

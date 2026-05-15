@@ -4,8 +4,8 @@ slug: "26-team-adoption"
 title: "How Do I Get My Team to Adopt?"
 subtitle: "Getting Twelve People to Use This"
 tldr: "I shipped a Cowork briefing skill to twelve sales reps and by 9:47 AM the rollout had already split into a 4-3-2-2-1 distribution that nobody warns you about. Tools don't adopt themselves and the early adopter is your worst onboarding partner. The team CLAUDE.md, skills as policy, and a 30-day metric that isn't usage."
-keyConcepts: ["CLAUDE.md", "Skill", "team adoption", "Cowork"]
-readingMinutes: 9
+keyConcepts: ["CLAUDE.md", "Skill", "team adoption", "Cowork", "DRI", "Agent Manager"]
+readingMinutes: 10
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
@@ -124,6 +124,18 @@ Here's the line I hold. Aggregation, yes. Evaluation, no. The agent can roll up 
 Three reasons the line matters. First, the Anthropic 81k-interviews study put unreliability at 26.7% — the single largest concern in the whole dataset. Unreliable models making people decisions is the worst possible application surface. A bursty content drop in a recipe is annoying. A bursty content drop in a review memo costs someone their career. Second, the legal gate. The moment Slack data, 1-on-1 notes, or KPI roll-ups leave Slack and enter an external LLM context, you've crossed a privacy boundary your General Counsel needs to clear before the first prompt. Run the legal review or don't ship the workflow. Third, the trust gate — once your team knows the agent is writing reviews, they stop being themselves on Slack. That alone is more expensive than the workflow saved.
 
 The guardrail I use: every aggregation skill that touches people data has a hardcoded refusal in the SKILL.md — "this skill does not generate evaluative language, ratings, recommendations, or review prose; if asked, return the underlying numbers only." Tested. Eval'd. Reviewed quarterly. The agent rolls up. The leader reviews. That's the deal.
+
+## Who owns the harness
+
+Everything in this chapter assumes someone owns the setup. That assumption is the one most rollouts skip, and Anthropic's [large-codebase field guide](https://claude.com/blog/how-claude-code-works-in-large-codebases-best-practices-and-where-to-start) is blunt about why it can't be skipped: the fastest adoption happens when the first experience is productive, and the first experience is only productive if someone wired the tooling up *before* the team got access. CLAUDE.md conventions, the plugin marketplace, the permission defaults, the skills that encode policy — none of that configures itself. Twelve reps landing on an unconfigured tool is twelve people forming the opinion "this doesn't work" in the same week.
+
+So the move is: infrastructure before rollout, not infrastructure discovered during rollout. One person wires it up, the team lands on something that already fits their day.
+
+That person has a name now. Anthropic calls the minimum viable version a **DRI** — one human with authority over the configuration, the permissions, the marketplace, the CLAUDE.md conventions. Not a committee. One desk where the call gets made. The emerging full-time version of the role is the **Agent Manager**: a hybrid PM/engineer who runs the Claude Code ecosystem the way a platform team runs CI — it's their job, not their side quest. At twelve people you don't need a full-time Agent Manager. You need a DRI, and it's probably you. At a hundred and twelve you need the role to exist before you find that out the hard way.
+
+For regulated orgs the same ownership question has a compliance edge: define the approved skills and plugins up front, route AI-generated code through the same review as human code, start with limited access and widen as confidence builds, and stand up a cross-functional working group (engineering, security, governance) before the first prompt — not after the first incident. That's not bureaucracy for its own sake. It's the same "make the safe path the default path" gravity argument from earlier in this chapter, applied to the org instead of the rep.
+
+<PullQuote>Adoption has a DRI or it has an excuse. There is no third option.</PullQuote>
 
 ## The closer
 
