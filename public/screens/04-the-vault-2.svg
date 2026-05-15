@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Header -->
+  <text x="80" y="64" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 4 · THE CONTEXT-FILE SYSTEM</text>
+  <text x="80" y="124" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">The CLAUDE.md system, copyable</text>
+  <text x="80" y="160" fill="#AAA79A" font-size="18">Two layers, one discipline. <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">~/.claude/</tspan> is machine-wide and DRY; <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">&lt;project&gt;/CLAUDE.md</tspan> ships with the code. Copy the shape, not the rules.</text>
+  <text x="1520" y="64" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">SANITIZED TEMPLATE · COPY FREELY</text>
+
+  <!-- ===================== LEFT: the on-disk tree ===================== -->
+  <text x="80" y="214" fill="#6EE7B7" font-size="11" letter-spacing="2.4" font-weight="600">ON DISK · LOAD ORDER TOP → BOTTOM</text>
+  <!-- spine -->
+  <line x1="100" y1="240" x2="100" y2="788" stroke="#2A3138" stroke-width="2"/>
+
+  <!-- node 1 -->
+  <g transform="translate(80, 232)">
+    <circle cx="20" cy="34" r="7" fill="#FF6B2C"/>
+    <rect x="48" y="0" width="600" height="92" fill="#161B1F" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="68" y="32" fill="#FAFAF7" font-size="17" font-family="JetBrains Mono, monospace">~/.claude/CLAUDE.md</text>
+    <text x="68" y="58" fill="#AAA79A" font-size="13">Global skill-routing disambiguators.</text>
+    <text x="68" y="78" fill="#71717A" font-size="13">Loads into every session, every project.</text>
+  </g>
+  <!-- node 2 -->
+  <g transform="translate(80, 340)">
+    <circle cx="20" cy="30" r="7" fill="#FF8E54"/>
+    <rect x="48" y="0" width="600" height="80" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="68" y="30" fill="#FAFAF7" font-size="16" font-family="JetBrains Mono, monospace">~/.claude/rules/00-core.md</text>
+    <text x="68" y="56" fill="#AAA79A" font-size="13">Index + load order. Numeric prefix = priority.</text>
+  </g>
+  <!-- node 3 -->
+  <g transform="translate(80, 432)">
+    <circle cx="20" cy="30" r="7" fill="#FF8E54"/>
+    <rect x="48" y="0" width="600" height="80" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="68" y="30" fill="#FAFAF7" font-size="16" font-family="JetBrains Mono, monospace">~/.claude/rules/01-foundation.md</text>
+    <text x="68" y="56" fill="#AAA79A" font-size="13">12 universal task rules — the bedrock every task obeys.</text>
+  </g>
+  <!-- node 4 -->
+  <g transform="translate(80, 524)">
+    <circle cx="20" cy="30" r="7" fill="#FF8E54"/>
+    <rect x="48" y="0" width="600" height="80" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="68" y="30" fill="#FAFAF7" font-size="16" font-family="JetBrains Mono, monospace">~/.claude/rules/08-self-improve.md</text>
+    <text x="68" y="56" fill="#AAA79A" font-size="13">Memory + retro hooks — the system compounds itself.</text>
+  </g>
+  <!-- node 5 -->
+  <g transform="translate(80, 616)">
+    <circle cx="20" cy="30" r="7" fill="#FF8E54"/>
+    <rect x="48" y="0" width="600" height="80" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="68" y="30" fill="#FAFAF7" font-size="16" font-family="JetBrains Mono, monospace">~/.claude/rules/09-tool-hygiene.md</text>
+    <text x="68" y="56" fill="#AAA79A" font-size="13">Tool-invariant gotchas (Read-before-Edit, symlinks…).</text>
+  </g>
+  <!-- node 6 -->
+  <g transform="translate(80, 708)">
+    <circle cx="20" cy="34" r="7" fill="#6EE7B7"/>
+    <rect x="48" y="0" width="600" height="80" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="68" y="32" fill="#FAFAF7" font-size="16" font-family="JetBrains Mono, monospace">&lt;project&gt;/CLAUDE.md</text>
+    <text x="68" y="58" fill="#AAA79A" font-size="13">Checked into the repo. Travels with the code, shared with the team.</text>
+  </g>
+
+  <!-- ===================== RIGHT: what & disambiguator pattern ===================== -->
+  <!-- Panel 1 -->
+  <g transform="translate(760, 222)">
+    <text x="0" y="0" fill="#6EE7B7" font-size="11" letter-spacing="2.4" font-weight="600">WHAT WINS WHEN THEY DISAGREE</text>
+    <rect x="0" y="16" width="760" height="116" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="24" y="50" fill="#FAFAF7" font-size="15">Rules resolve <tspan font-family="JetBrains Mono, monospace" fill="#FF8E54">deny → ask → allow</tspan>. Deny is sticky upward.</text>
+    <text x="24" y="78" fill="#FAFAF7" font-size="15">Global rules are machine-wide; project CLAUDE.md is repo-scoped.</text>
+    <text x="24" y="106" fill="#FAFAF7" font-size="15">Project conventions can't silently rewrite foundational rules.</text>
+  </g>
+
+  <!-- Panel 2: disambiguator patterns -->
+  <g transform="translate(760, 380)">
+    <text x="0" y="0" fill="#6EE7B7" font-size="11" letter-spacing="2.4" font-weight="600">THE DISAMBIGUATOR PATTERN · 3 OF 6</text>
+
+    <rect x="0" y="16" width="760" height="92" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="24" y="46" fill="#FF6B2C" font-size="13" font-weight="600">Scope an over-eager skill narrowly</text>
+    <text x="24" y="72" fill="#AAA79A" font-size="13">Fire it only for its true core job. Adjacent intents route to the</text>
+    <text x="24" y="92" fill="#AAA79A" font-size="13">tool that actually owns them. Name that tool so Claude goes there.</text>
+
+    <rect x="0" y="120" width="760" height="92" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="24" y="150" fill="#FF6B2C" font-size="13" font-weight="600">Prefer the team skill over the generic plugin skill</text>
+    <text x="24" y="176" fill="#AAA79A" font-size="13">Plugin skills are generic templates; custom skills encode your</text>
+    <text x="24" y="196" fill="#AAA79A" font-size="13">context. When ambiguous, ASK before firing.</text>
+
+    <rect x="0" y="224" width="760" height="92" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="24" y="254" fill="#FF6B2C" font-size="13" font-weight="600">Never prepend daily snapshots into an always-loaded file</text>
+    <text x="24" y="280" fill="#AAA79A" font-size="13">Replace current-state in place; append displaced history elsewhere;</text>
+    <text x="24" y="300" fill="#AAA79A" font-size="13">leave a one-line pointer. CLAUDE.md taxes every turn.</text>
+  </g>
+
+  <!-- Footer discipline strip -->
+  <g transform="translate(760, 716)">
+    <rect x="0" y="0" width="760" height="72" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="24" y="28" fill="#FF6B2C" font-size="10" letter-spacing="2" font-weight="600">THE DISCIPLINE</text>
+    <text x="24" y="52" fill="#FAFAF7" font-size="14">200-line ceiling per file · new rules append at the bottom ·</text>
+    <text x="24" y="72" fill="#FAFAF7" font-size="14">numeric prefix = load priority · the loaded file stays lean</text>
+  </g>
+
+  <text x="80" y="836" fill="#71717A" font-size="13">Full sanitized template (every section, copy-paste ready) ships in the repo — this is the shape, not anyone's private rules.</text>
+</svg>

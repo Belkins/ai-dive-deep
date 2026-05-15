@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Header -->
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 5 · A 67-SKILL LIBRARY</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">How to organize 60+ skills</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">One operator's <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">~/.claude/skills/</tspan>, by function. 85% reusable anywhere, 15% project-tied. Categories are the navigation layer.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">67 SKILLS · 9 CATEGORIES · MAY 2026</text>
+
+  <defs>
+    <style>
+      .cat { fill:#161B1F; stroke:#2A3138; stroke-width:1; }
+      .cnum { font-family:"Source Serif 4",Georgia,serif; font-weight:500; font-size:26px; fill:#FF6B2C; }
+      .cname { fill:#FAFAF7; font-size:17px; font-weight:600; }
+      .cbadge-t { fill:#FF8E54; font-size:12px; font-weight:600; }
+      .cpurpose { fill:#AAA79A; font-size:12px; }
+      .cskill { fill:#E5E5E5; font-size:12.5px; font-family:"JetBrains Mono",monospace; }
+    </style>
+  </defs>
+
+  <!-- Row 1 -->
+  <g transform="translate(80, 188)">
+    <rect class="cat" width="460" height="184" rx="8"/>
+    <text class="cnum" x="22" y="44">1</text>
+    <text class="cname" x="56" y="42">Code Lifecycle</text>
+    <text class="cbadge-t" x="438" y="42" text-anchor="end">8</text>
+    <text class="cpurpose" x="22" y="72">Scaffold, implement, refactor, fix.</text>
+    <text class="cskill" x="22" y="104">scaffold · build-feature · refactor</text>
+    <text class="cskill" x="22" y="128">quick-fix · api-design · tdd-workflow</text>
+    <text class="cskill" x="22" y="152">review-and-fix · mirror-pattern</text>
+  </g>
+  <g transform="translate(570, 188)">
+    <rect class="cat" width="460" height="184" rx="8"/>
+    <text class="cnum" x="22" y="44">2</text>
+    <text class="cname" x="56" y="42">Debugging &amp; Diagnostics</text>
+    <text class="cbadge-t" x="438" y="42" text-anchor="end">8</text>
+    <text class="cpurpose" x="22" y="72">Finding and reasoning about what's broken.</text>
+    <text class="cskill" x="22" y="104">bughunter · debug-swarm</text>
+    <text class="cskill" x="22" y="128">debugging-guide · webhook-guide</text>
+    <text class="cskill" x="22" y="152">device-logs · diagnose-iap</text>
+  </g>
+  <g transform="translate(1060, 188)">
+    <rect class="cat" width="460" height="184" rx="8"/>
+    <text class="cnum" x="22" y="44">3</text>
+    <text class="cname" x="56" y="42">Quality &amp; Security</text>
+    <text class="cbadge-t" x="438" y="42" text-anchor="end">9</text>
+    <text class="cpurpose" x="22" y="72">Audits, hardening, pre-merge gates.</text>
+    <text class="cskill" x="22" y="104">audit · security-review · harden</text>
+    <text class="cskill" x="22" y="128">ultrareview · perf-check · gstack-qa</text>
+    <text class="cskill" x="22" y="152">security-audit · gstack-review</text>
+  </g>
+
+  <!-- Row 2 -->
+  <g transform="translate(80, 392)">
+    <rect class="cat" width="460" height="184" rx="8"/>
+    <text class="cnum" x="22" y="44">4</text>
+    <text class="cname" x="56" y="42">Planning &amp; Strategy</text>
+    <text class="cbadge-t" x="438" y="42" text-anchor="end">7</text>
+    <text class="cpurpose" x="22" y="72">Thinking before building, task → venture.</text>
+    <text class="cskill" x="22" y="104">ultraplan · plan-only</text>
+    <text class="cskill" x="22" y="128">sprint-kickoff · monetize-idea</text>
+    <text class="cskill" x="22" y="152">swarm-strategic-plan · preflight-deps</text>
+  </g>
+  <g transform="translate(570, 392)">
+    <rect class="cat" width="460" height="184" rx="8"/>
+    <text class="cnum" x="22" y="44">5</text>
+    <text class="cname" x="56" y="42">Ship &amp; Deploy</text>
+    <text class="cbadge-t" x="438" y="42" text-anchor="end">9</text>
+    <text class="cpurpose" x="22" y="72">Commits, deploy validation, env, releases.</text>
+    <text class="cskill" x="22" y="104">git-ship · deploy-check</text>
+    <text class="cskill" x="22" y="128">vercel-env-flip · ship-ios</text>
+    <text class="cskill" x="22" y="152">supabase-state-check · verify-durability</text>
+  </g>
+  <g transform="translate(1060, 392)">
+    <rect class="cat" width="460" height="184" rx="8"/>
+    <text class="cnum" x="22" y="44">6</text>
+    <text class="cname" x="56" y="42">Meta / Self-Improvement</text>
+    <text class="cbadge-t" x="438" y="42" text-anchor="end">6</text>
+    <text class="cpurpose" x="22" y="72">The library improving itself.</text>
+    <text class="cskill" x="22" y="104">learn · retro · teleport</text>
+    <text class="cskill" x="22" y="128">memory-hygiene · claude-md-hygiene</text>
+    <text class="cskill" x="22" y="152">agent-wave-verify</text>
+  </g>
+
+  <!-- Row 3 -->
+  <g transform="translate(80, 596)">
+    <rect class="cat" width="460" height="184" rx="8"/>
+    <text class="cnum" x="22" y="44">7</text>
+    <text class="cname" x="56" y="42">Research &amp; Growth</text>
+    <text class="cbadge-t" x="438" y="42" text-anchor="end">7</text>
+    <text class="cpurpose" x="22" y="72">Market, SEO, competitors, content.</text>
+    <text class="cskill" x="22" y="104">research · competitor-intel</text>
+    <text class="cskill" x="22" y="128">growth-scan · seo-check</text>
+    <text class="cskill" x="22" y="152">content-draft · ahrefs-budget-check</text>
+  </g>
+  <g transform="translate(570, 596)">
+    <rect class="cat" width="460" height="184" rx="8"/>
+    <text class="cnum" x="22" y="44">8</text>
+    <text class="cname" x="56" y="42">Ops &amp; Monitoring</text>
+    <text class="cbadge-t" x="438" y="42" text-anchor="end">5</text>
+    <text class="cpurpose" x="22" y="72">Cross-project cadence, health, reporting.</text>
+    <text class="cskill" x="22" y="104">daily · weekly · health-pulse</text>
+    <text class="cskill" x="22" y="128">telegram-report</text>
+    <text class="cskill" x="22" y="152">cross-trio-audit</text>
+  </g>
+  <g transform="translate(1060, 596)">
+    <rect class="cat" width="460" height="184" rx="8" stroke="#6EE7B7"/>
+    <text class="cnum" x="22" y="44" fill="#6EE7B7">9</text>
+    <text class="cname" x="56" y="42">Project-Specific</text>
+    <text x="438" y="42" text-anchor="end" fill="#6EE7B7" font-size="12" font-weight="600">8</text>
+    <text class="cpurpose" x="22" y="72">Loads one project's gotchas at session start.</text>
+    <text class="cskill" x="22" y="104">pc · pc-api · pc-client</text>
+    <text class="cskill" x="22" y="128">lingualive · vault-audit · vault-note</text>
+    <text class="cskill" x="22" y="152">pitch-html · [product]-hub-edit</text>
+  </g>
+
+  <!-- Footer pattern strip -->
+  <g transform="translate(80, 804)">
+    <rect x="0" y="0" width="1440" height="74" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="22" y="28" fill="#6EE7B7" font-size="10" letter-spacing="2" font-weight="600">WHY IT SCALES PAST 50</text>
+    <text x="22" y="52" fill="#FAFAF7" font-size="14">One skill = one job (compose by chaining, not monoliths) · meta-skills compound (learn / retro / hygiene fight entropy) ·</text>
+    <text x="22" y="72" fill="#FAFAF7" font-size="14">generic-first, project-specific-last (85/15) · categories let you find a tool by intent, not recall.</text>
+  </g>
+</svg>
