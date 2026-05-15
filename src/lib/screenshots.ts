@@ -25,7 +25,10 @@ export const SCREENSHOTS: Record<string, string> = {
   "24-lmarena-snapshot": "24-lmarena-snapshot.svg",
   "24-tier-list-1": "24-tier-list-1.svg",
   "25-evals-or-hope-1": "25-evals-or-hope-1.svg",
+  "29-cost-economics-1": "29-cost-economics-1.png",
   "29-cost-economics-2": "29-cost-economics-2.png",
+  "29-cost-economics-3": "29-cost-economics-3.png",
+  "29-cost-economics-4": "29-cost-economics-4.png",
   "31-stages-1": "31-stages-1.svg",
   "37-context-files-1": "37-context-files-1.svg",
   "38-run-until-done-1": "38-run-until-done-1.svg",
@@ -34,4 +37,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "claude-md-rules-1": "claude-md-rules-1.svg"
 };
 
-export const SCREENSHOT_COUNT = 29;
+export const SCREENSHOT_COUNT = 32;

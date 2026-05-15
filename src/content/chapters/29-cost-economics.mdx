@@ -128,8 +128,9 @@ Three lines. It cut my bill by roughly 30% the week I shipped it. Not from any o
 
 <ScreenshotPlaceholder
   id="29-cost-economics-1"
-  caption="Anthropic console weekly cost view"
-  note="capture the actual graph showing the $4,312 spike and the return-to-baseline week, with cached vs fresh input tokens overlaid, so the cache-miss event is visible."/>
+  caption="Anthropic console — March 2026, the before picture"
+  ratio="2452/1558"
+  note="Real console: 2.25B tokens in for the month, grouped by model. The single 450M-token day mid-March is exactly the kind of spike the rest of this chapter is about killing."/>
 
 ## The token budget per skill
 
@@ -144,6 +145,28 @@ On a subscription instead of the API, the dashboard speaks a different language 
   caption="Claude Max (20x) plan usage limits"
   ratio="2380/1864"
   note="Settings → Usage on a Max plan: current-session vs weekly limits, all-models at 88% mid-week, daily routine-run allowance. The subscription-side view of the same cost question."/>
+
+## Two subscriptions and a shrinking API line
+
+Here's the actual cost structure, not a hypothetical. I run two Max (20x) subscriptions — about $400 a month, total — and for where I am right now that is more than enough. The discipline isn't "spend less," it's "max out the thing with the predictable ceiling before you touch the thing with the open meter." A Max seat has a wall you hit and a price you already know. The API has no wall and a meter that runs as fast as your worst-written agent loop. Push everything you can onto the subscription. The cap is a feature, not a limitation.
+
+The direct API only comes out for the work the subscription can't do: API integrations, and the autonomous always-on projects — the Rick-style agents that run unattended against the raw API because they need the SDK, not a chat surface ([Chapter 30](/chapters/30-sdk-direct), [Chapter 32](/chapters/32-archetypes-rick)). That's a real cost, separate from the $400, and it's the line I actually optimize.
+
+And it has been shrinking. The March graph a few sections up ran ~2.25B tokens in, with one ugly 450M-token day in the middle. April held roughly flat at ~2.2B in — but the spikes started flattening as model routing landed. By mid-May the shape had changed entirely: ~590M tokens in over the first half of the month, no spikes, a flat daily baseline running around a tenth of March's worst day. Same class of workload. The difference is everything earlier in this chapter, applied — Haiku for triage, stable prefixes for the cache, batch for anything that can wait. The line went down because the discipline went up, not because the work got smaller.
+
+<ScreenshotPlaceholder
+  id="29-cost-economics-3"
+  caption="April 2026 — the spikes start flattening"
+  ratio="2382/1558"
+  note="~2.2B tokens in, similar volume to March, but the daily peaks are coming down as routing lands. The transition month."/>
+
+<ScreenshotPlaceholder
+  id="29-cost-economics-4"
+  caption="May 2026 — flat, no spikes"
+  ratio="2368/1530"
+  note="~590M tokens in over the first half of the month. The 450M single-day spike is gone; the baseline is roughly a tenth of March's worst day. The optimization, landed."/>
+
+The lesson isn't the numbers — yours will be different. It's the structure: a predictable subscription ceiling for the bulk, a ruthlessly optimized API line for the rest, and a monthly look at the graph so a 450M-token day never happens twice without you seeing it coming.
 
 ## The annual math
 
