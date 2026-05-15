@@ -2,13 +2,13 @@ SCREENSHOTS — what's still needed (updated 2026-05-15, post-SMB-connectors sec
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
-Current state: 36 visual artifacts done · 29 captures still needed · 61 chapter references total.
+Current state: 38 visual artifacts done · 27 captures still needed · 61 chapter references total.
 
 ────────────────────────────────────────────
-DONE — 36 visual artifacts
+DONE — 38 visual artifacts
 ────────────────────────────────────────────
 
-SVG diagrams (18):
+SVG diagrams (20):
   01-killed-my-tabs-1            Follow-up accountability brief (sanitized)
   01-killed-my-tabs-2            Scheduled tasks panel (sanitized)
   06-the-swarm-1                 6-agent swarm in flight (terminal output)
@@ -28,6 +28,8 @@ SVG diagrams (18):
   38-run-until-done-2            /goal overlay panel (marquee shot for Ch 38)
   39-skills-you-should-steal-1   9-library star bar chart
   claude-md-rules-1              12-rule infographic (for /claude-md-rules page)
+  04-the-vault-2                 Sanitized CLAUDE.md system map — copyable template ← NEW
+  05-skills-1                    67-skill library by category — sanitized ← NEW
 
 Real PNG captures (17):
   02-five-tools-1                Vlad's connected Cowork connector stack + Gmail tool permissions ← NEW
@@ -49,16 +51,14 @@ Real PNG captures (17):
   29-cost-economics-8            May direct-API token cost — $556 MTD (~half April) ← NEW
 
 ────────────────────────────────────────────
-STILL NEEDED — 29 real captures
+STILL NEEDED — 27 real captures
 ────────────────────────────────────────────
 
 ★ TIER S — CLEARED ✓ (all book-defining shots captured)
 
-★ TIER A — high-leverage receipts and surfaces (~45 min, 7 shots)
+★ TIER A — high-leverage receipts and surfaces (~30 min, 5 shots)
 
    02-five-tools-2                Anthropic billing dashboard
-   04-the-vault-2                 Your actual CLAUDE.md OR a recent vault note
-   05-skills-1                    ~/.claude/skills/ folder listing
    12-connectors-mcp-2            Real .mcp.json open in editor + /mcp output in split pane
    13-quickstart-2                The 10-minute end-state (CC with a CLAUDE.md, a skill, /agents)
    14-cheat-sheet-1               Your real ~/.claude/settings.json with preferences
@@ -115,7 +115,7 @@ SANITIZATION CHECKLIST (before saving)
 ────────────────────────────────────────────
 THE LINE
 ────────────────────────────────────────────
-Ship Tier A (7 shots, ~45 minutes) and the artifact crosses
+Ship Tier A (5 shots, ~30 minutes) and the artifact crosses
 the "feels visually complete" line. Tier B is icing — most chapters
 read fine with the cards + pull-quotes carrying the visual weight.
 
