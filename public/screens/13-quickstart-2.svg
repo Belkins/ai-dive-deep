@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 13 · THE 10-MINUTE END-STATE</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">You made it. Here's the screen.</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Ten minutes in: <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">claude</tspan> running, a CLAUDE.md it reads, one MCP server connected, one real task done.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">FIRST SESSION · DONE</text>
+
+  <!-- Terminal -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="940" height="620" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="940" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="940" height="22" fill="#1A1F24"/>
+    <circle cx="24" cy="22" r="6" fill="#FF6B5C"/><circle cx="46" cy="22" r="6" fill="#F5C24A"/><circle cx="68" cy="22" r="6" fill="#6EE7B7"/>
+    <text x="470" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">claude — ~/projects/hello-agent</text>
+    <g font-family="JetBrains Mono, monospace" font-size="15.5">
+      <text x="28" y="84" fill="#FF8E54">✻ Claude Code</text><text x="200" y="84" fill="#71717A">  v2.x · /help for commands</text>
+      <text x="28" y="116" fill="#71717A">Loaded </text><text x="110" y="116" fill="#6EE7B7">CLAUDE.md</text><text x="220" y="116" fill="#71717A"> (18 lines) · project context active</text>
+
+      <text x="28" y="160" fill="#6EE7B7">❯</text><text x="52" y="160" fill="#FAFAF7">/mcp</text>
+      <text x="28" y="190" fill="#AAA79A">MCP servers · </text><text x="218" y="190" fill="#6EE7B7">1 connected</text>
+      <text x="28" y="220" fill="#6EE7B7">●</text><text x="52" y="220" fill="#FAFAF7">filesystem</text><text x="520" y="220" fill="#6EE7B7" font-size="13">connected · 5 tools</text>
+
+      <text x="28" y="266" fill="#6EE7B7">❯</text><text x="52" y="266" fill="#FAFAF7">list the files in this folder and summarise the README</text>
+      <text x="28" y="300" fill="#AAA79A">I'll read the directory and the README.</text>
+      <text x="28" y="328" fill="#71717A">  ⎿ list_dir(.) → 6 entries</text>
+      <text x="28" y="356" fill="#71717A">  ⎿ read_file(README.md) → 1.2 KB</text>
+      <text x="28" y="392" fill="#AAA79A">This is a starter repo. The README describes a CLI that</text>
+      <text x="28" y="416" fill="#AAA79A">greets a user; entry point is </text><text x="395" y="416" fill="#E5E5E5">src/index.ts</text><text x="520" y="416" fill="#AAA79A">. No tests yet.</text>
+
+      <text x="28" y="462" fill="#6EE7B7">❯</text><text x="52" y="462" fill="#FAFAF7">add a --name flag with a test</text>
+      <text x="28" y="494" fill="#F5C24A">● Edit src/index.ts</text><text x="300" y="494" fill="#71717A">— approve? </text><text x="430" y="494" fill="#6EE7B7">[y]</text>
+      <text x="28" y="522" fill="#71717A">  ⎿ wrote src/index.ts, src/index.test.ts</text>
+      <text x="28" y="550" fill="#6EE7B7">✓ 2 tests passing</text>
+      <text x="28" y="586" fill="#6EE7B7">❯</text><text x="52" y="586" fill="#71717A">_</text>
+    </g>
+  </g>
+
+  <!-- 10-minute checklist -->
+  <g transform="translate(1060, 200)">
+    <rect x="0" y="0" width="460" height="620" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="28" y="48" fill="#6EE7B7" font-size="12" letter-spacing="2.4" font-weight="600">THE 10-MINUTE CHECKLIST</text>
+
+    <text x="28" y="108" fill="#6EE7B7" font-size="22">✓</text><text x="64" y="108" fill="#FAFAF7" font-size="17">claude installed</text>
+    <text x="64" y="134" fill="#71717A" font-size="13">npm i -g @anthropic-ai/claude-code</text>
+
+    <text x="28" y="190" fill="#6EE7B7" font-size="22">✓</text><text x="64" y="190" fill="#FAFAF7" font-size="17">authenticated</text>
+    <text x="64" y="216" fill="#71717A" font-size="13">claude → login, once</text>
+
+    <text x="28" y="272" fill="#6EE7B7" font-size="22">✓</text><text x="64" y="272" fill="#FAFAF7" font-size="17">CLAUDE.md committed</text>
+    <text x="64" y="298" fill="#71717A" font-size="13">what the project is, in 18 lines</text>
+
+    <text x="28" y="354" fill="#6EE7B7" font-size="22">✓</text><text x="64" y="354" fill="#FAFAF7" font-size="17">one MCP server under /mcp</text>
+    <text x="64" y="380" fill="#71717A" font-size="13">filesystem, connected</text>
+
+    <text x="28" y="436" fill="#6EE7B7" font-size="22">✓</text><text x="64" y="436" fill="#FAFAF7" font-size="17">one real task, end to end</text>
+    <text x="64" y="462" fill="#71717A" font-size="13">with the approval gate honoured</text>
+
+    <rect x="28" y="510" width="404" height="84" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="48" y="540" fill="#6EE7B7" font-size="10" letter-spacing="2" font-weight="600">YOU'RE DONE</text>
+    <text x="48" y="566" fill="#FAFAF7" font-size="14">Same pattern scales to every</text>
+    <text x="48" y="586" fill="#FAFAF7" font-size="14">MCP server you'll ever add.</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">One entry in <tspan font-family="JetBrains Mono, monospace" fill="#FAFAF7">.mcp.json</tspan>, restart, <tspan font-family="JetBrains Mono, monospace" fill="#FAFAF7">/mcp</tspan> to verify, one task with an approval gate. That's the whole loop.</text>
+</svg>

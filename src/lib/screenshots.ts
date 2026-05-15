@@ -6,6 +6,7 @@ export const SCREENSHOTS: Record<string, string> = {
   "01-killed-my-tabs-1": "01-killed-my-tabs-1.svg",
   "01-killed-my-tabs-2": "01-killed-my-tabs-2.svg",
   "02-five-tools-1": "02-five-tools-1.png",
+  "02-five-tools-2": "02-five-tools-2.svg",
   "04-the-vault-1": "04-the-vault-1.png",
   "04-the-vault-2": "04-the-vault-2.svg",
   "04-the-vault-rick-2": "04-the-vault-rick-2.png",
@@ -15,11 +16,14 @@ export const SCREENSHOTS: Record<string, string> = {
   "07-cron-1": "07-cron-1.svg",
   "08-three-doors-1": "08-three-doors-1.svg",
   "12-connectors-mcp-1": "12-connectors-mcp-1.png",
+  "12-connectors-mcp-2": "12-connectors-mcp-2.svg",
   "12-connectors-mcp-3": "12-connectors-mcp-3.png",
   "12-connectors-mcp-4": "12-connectors-mcp-4.png",
   "12-connectors-mcp-5": "12-connectors-mcp-5.png",
   "12-connectors-mcp-6": "12-connectors-mcp-6.png",
   "13-quickstart-1": "13-quickstart-1.svg",
+  "13-quickstart-2": "13-quickstart-2.svg",
+  "14-cheat-sheet-1": "14-cheat-sheet-1.svg",
   "15-yolo-decision-1": "15-yolo-decision-1.svg",
   "16-hooks-subagents-1": "16-hooks-subagents-1.svg",
   "21-three-modes-1": "21-three-modes-1.svg",
@@ -27,6 +31,7 @@ export const SCREENSHOTS: Record<string, string> = {
   "24-lmarena-snapshot": "24-lmarena-snapshot.svg",
   "24-tier-list-1": "24-tier-list-1.svg",
   "25-evals-or-hope-1": "25-evals-or-hope-1.svg",
+  "26-team-adoption-1": "26-team-adoption-1.svg",
   "29-cost-economics-1": "29-cost-economics-1.png",
   "29-cost-economics-2": "29-cost-economics-2.png",
   "29-cost-economics-3": "29-cost-economics-3.png",
@@ -43,4 +48,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "claude-md-rules-1": "claude-md-rules-1.svg"
 };
 
-export const SCREENSHOT_COUNT = 38;
+export const SCREENSHOT_COUNT = 43;
