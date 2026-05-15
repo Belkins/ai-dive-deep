@@ -2,10 +2,10 @@ SCREENSHOTS — what's still needed (updated 2026-05-15, post-SMB-connectors sec
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
-Current state: 26 visual artifacts done · 32 captures still needed · 54 chapter references total.
+Current state: 28 visual artifacts done · 30 captures still needed · 54 chapter references total.
 
 ────────────────────────────────────────────
-DONE — 26 visual artifacts
+DONE — 28 visual artifacts
 ────────────────────────────────────────────
 
 SVG diagrams (18):
@@ -29,30 +29,30 @@ SVG diagrams (18):
   39-skills-you-should-steal-1   9-library star bar chart
   claude-md-rules-1              12-rule infographic (for /claude-md-rules page)
 
-Real PNG captures (7):
+Real PNG captures (9):
+  02-five-tools-1                Vlad's connected Cowork connector stack + Gmail tool permissions ← NEW
   04-the-vault-1                 Vlad's real Obsidian vault graph
   04-the-vault-rick              Rick AI-agent vault (pattern generalizes)
   04-the-vault-rick-2            Rick agent's daily note
+  12-connectors-mcp-1            Connector Directory / registry browse view ← NEW
   12-connectors-mcp-3            SMB cash reconciliation (QuickBooks + PayPal) ← NEW, from claude.com/solutions/small-business
   12-connectors-mcp-4            SMB month-end close P&L (QuickBooks + PayPal + Drive) ← NEW
   12-connectors-mcp-5            SMB Monday Slack brief (QuickBooks + Calendar + Slack) ← NEW
   12-connectors-mcp-6            SMB staged campaign (QuickBooks + Canva + HubSpot) ← NEW
 
 ────────────────────────────────────────────
-STILL NEEDED — 32 real captures
+STILL NEEDED — 30 real captures
 ────────────────────────────────────────────
 
 ★ TIER S — book-defining shots (do these first, ~10 min total)
 
    29-cost-economics-1            Anthropic console — weekly cost view, full month
 
-★ TIER A — high-leverage receipts and surfaces (~1 hour, 9 shots)
+★ TIER A — high-leverage receipts and surfaces (~45 min, 7 shots)
 
-   02-five-tools-1                Cowork connectors panel (sanitized)
    02-five-tools-2                Anthropic billing dashboard
    04-the-vault-2                 Your actual CLAUDE.md OR a recent vault note
    05-skills-1                    ~/.claude/skills/ folder listing
-   12-connectors-mcp-1            Cowork Connectors panel (full view)
    12-connectors-mcp-2            Real .mcp.json open in editor + /mcp output in split pane
    13-quickstart-2                The 10-minute end-state (CC with a CLAUDE.md, a skill, /agents)
    14-cheat-sheet-1               Your real ~/.claude/settings.json with preferences
@@ -109,7 +109,7 @@ SANITIZATION CHECKLIST (before saving)
 ────────────────────────────────────────────
 THE LINE
 ────────────────────────────────────────────
-Ship Tier S + Tier A (10 shots, ~70 minutes) and the artifact crosses
+Ship Tier S + Tier A (8 shots, ~55 minutes) and the artifact crosses
 the "feels visually complete" line. Tier B is icing — most chapters
 read fine with the cards + pull-quotes carrying the visual weight.
 
