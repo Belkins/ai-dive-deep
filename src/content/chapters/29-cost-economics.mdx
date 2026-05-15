@@ -4,8 +4,8 @@ slug: "29-cost-economics"
 title: "Why Is My Bill So High?"
 subtitle: "Token Math, Caching, Batch, Routing"
 tldr: "My Anthropic bill went from $1,108 a week to $4,312 a week with zero workload change. The culprit was a 38-line CLAUDE.md edit that voided prompt caching on 60% of my morning briefings. The fix took 12 minutes. Knowing the fix existed took six months. This chapter is so you don't have to wait six months."
-keyConcepts: ["prompt caching", "batch API", "model routing", "token economics"]
-readingMinutes: 9
+keyConcepts: ["prompt caching", "batch API", "model routing", "token economics", "cache read ratio", "write amortization"]
+readingMinutes: 12
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
@@ -72,6 +72,50 @@ The mental fix is: treat your system prompt like an append-only log. New stuff g
 <Callout type="warn">
 The 5-minute eviction window is real. If your scheduled job fires every 15 minutes and the prefix is 50K tokens, you'll cache-write every single run. Bump the schedule to every 4 minutes or use the 1-hour cache tier (slightly higher write premium, dramatically better hit rate for sparse cron).
 </Callout>
+
+## Reading the caching scorecard
+
+The two sections above tell you how caching works and what voids it. This one tells you how to know, without waiting for the invoice, whether yours is actually working. The Anthropic console has a Caching tab. Most operators have never opened it. Open it weekly. Two numbers decide whether you're winning.
+
+**Cache read ratio.** Of every input token you sent, what fraction was a cheap cache read versus a full-price fresh or write token. This is the single number that would have caught my $4,312 week on the Tuesday instead of the following Monday. Mine over the last seven days: **98.1%**. The target isn't a figure I invented — anything north of ~90% means your prefixes are stable and the contract from the last section is holding. Below ~80% means you're voiding it somewhere and don't know it yet. Watch the chart, not just the number: there's one sharp dip in mine around May 11. That dip is a cache-voiding event with a timestamp on it. You can trace it to the commit. That is the early-warning system the cold open of this chapter didn't have.
+
+<ScreenshotPlaceholder
+  id="29-cost-economics-5"
+  caption="The Caching tab — 7-day scorecard"
+  ratio="2476/2198"
+  note="Real console: 98.1% cache read ratio, 11.7× write amortization, 306M cache-read tokens, per-model breakdown. The single read-ratio dip on May 11 is a traceable cache-voiding event."/>
+
+**Write amortization.** How many times you read a cached prefix for each time you paid to write it. This is the number nobody talks about, and it's the one that actually moves the bill. A cache write costs 1.25× the base input rate — a 25% premium. A cache read costs 0.1×. So if you write a prefix and read it back exactly once, your "discount" is a 35% surcharge wearing a discount's clothes — you paid the premium and barely used it. The math only works on repetition. Mine, blended: **11.7×**. Per model it splits the way the work splits:
+
+- **Haiku 4.5 — 25.0×, 100% read ratio.** Textbook. High-frequency triage hitting the identical prefix hundreds of times. This is what caching is *for*.
+- **Sonnet 4.6 — 12.3×, 97.8%, 284M tokens.** Carries the volume, and it's healthy. The bulk of the operation lives here.
+- **Opus 4.7 — 4.75×, 99.3%.** The watch line. Opus runs are rarer and spikier, so each cached prefix amortizes fewer times. That is *fine* if Opus is genuinely your "only when you actually need it" tier — and it is, see the routing section below. It is a red flag if Opus is quietly running routine work that belonged on Sonnet.
+
+The blended math, concretely: at 11.7× the cached portion of a prefix costs roughly `(1.25 + 11.7 × 0.1) / 12.7 ≈ 0.19×` the base input rate — an ~81% discount on the part of every prompt that never changes. At Haiku's 25× it is ~86% off. At a 1× "amortization" it is a ~35% *markup*. Same feature, opposite sign, and the only variable is whether you reuse the prefix.
+
+<ScreenshotPlaceholder
+  id="29-cost-economics-6"
+  caption="Input token composition + write amortization climbing"
+  ratio="2374/1590"
+  note="Green (cache read) dominates the daily composition; amortization curves climb through the week as the same prefixes get reused — the cache paying itself back in real time."/>
+
+Here is what that scorecard produces on the actual invoice, and this is the proof, not the theory. April direct-API token cost, every model, the whole month: **$2,216**. The daily bars run ~$220 early in the month and fall to ~$50 by the end — the same optimization arc as the token graphs above, now denominated in dollars. Then May: **$556 month-to-date through the 14th** — call it a ~$1,200 run-rate against April's $2,216, the bill itself cut roughly in half with the same class of workload. Web search, code execution, session runtime: $0 in both months, because none of that work needed them. That is the caching receipt in dollars: not "tokens went down," but "the invoice went down while the work didn't." Without the cache, that same workload is a four-figure-*per-week* number — I know, because I lived one week of it in the cold open.
+
+<ScreenshotPlaceholder
+  id="29-cost-economics-7"
+  caption="April direct-API token cost — $2,216, the whole month"
+  ratio="2414/1718"
+  note="Cost view, grouped by model: $2,216 total, daily bars decaying ~$220 → ~$50 as optimization lands. This is the bill a 98% read ratio produces."/>
+
+<ScreenshotPlaceholder
+  id="29-cost-economics-8"
+  caption="May direct-API token cost — $556 month-to-date"
+  ratio="2414/1718"
+  note="Same view, May 1–14: $556.02 so far, ~$1,200 run-rate vs April's $2,216. The dollar proof the caching is working — same workload, half the bill."/>
+
+The discipline is three lines. Open the Caching tab every Monday. If the read ratio cliffs, you voided a prefix — trace it to the commit the way I traced mine in the cold open. If a model's write amortization sits under ~3× for a week, that cache breakpoint is earning its keep nowhere — consolidate the workload onto it or take the breakpoint out, because you are paying the write premium for a discount you are not collecting.
+
+<PullQuote>Cache read ratio tells you the contract is holding. Write amortization tells you the contract was worth signing. You only see either one if you open the tab.</PullQuote>
 
 ## Batch API — half off if you can wait
 

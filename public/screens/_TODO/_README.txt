@@ -2,10 +2,10 @@ SCREENSHOTS — what's still needed (updated 2026-05-15, post-SMB-connectors sec
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
-Current state: 32 visual artifacts done · 29 captures still needed · 57 chapter references total.
+Current state: 36 visual artifacts done · 29 captures still needed · 61 chapter references total.
 
 ────────────────────────────────────────────
-DONE — 32 visual artifacts
+DONE — 36 visual artifacts
 ────────────────────────────────────────────
 
 SVG diagrams (18):
@@ -29,7 +29,7 @@ SVG diagrams (18):
   39-skills-you-should-steal-1   9-library star bar chart
   claude-md-rules-1              12-rule infographic (for /claude-md-rules page)
 
-Real PNG captures (13):
+Real PNG captures (17):
   02-five-tools-1                Vlad's connected Cowork connector stack + Gmail tool permissions ← NEW
   04-the-vault-1                 Vlad's real Obsidian vault graph
   04-the-vault-rick              Rick AI-agent vault (pattern generalizes)
@@ -43,6 +43,10 @@ Real PNG captures (13):
   29-cost-economics-2            Claude Max (20x) plan usage limits — weekly caps ← NEW
   29-cost-economics-3            Anthropic console April 2026 — spikes flattening ← NEW
   29-cost-economics-4            Anthropic console May 2026 — flat, optimized ← NEW
+  29-cost-economics-5            Caching tab — 98.1% read ratio, 11.7× amortization ← NEW
+  29-cost-economics-6            Input token composition + write amortization curves ← NEW
+  29-cost-economics-7            April direct-API token cost — $2,216 the whole month ← NEW
+  29-cost-economics-8            May direct-API token cost — $556 MTD (~half April) ← NEW
 
 ────────────────────────────────────────────
 STILL NEEDED — 29 real captures
