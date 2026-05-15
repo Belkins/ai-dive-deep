@@ -1,73 +1,42 @@
-SCREENSHOTS — what's still needed (updated 2026-05-15, post-SMB-connectors section)
+SCREENSHOTS — what's left (updated 2026-05-15, post Tier-S+A clearance)
 
-This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
-
-Current state: 43 visual artifacts done · 22 captures still needed · 61 chapter references total.
-
-────────────────────────────────────────────
-DONE — 43 visual artifacts
-────────────────────────────────────────────
-
-SVG diagrams (25):
-  01-killed-my-tabs-1            Follow-up accountability brief (sanitized)
-  01-killed-my-tabs-2            Scheduled tasks panel (sanitized)
-  06-the-swarm-1                 6-agent swarm in flight (terminal output)
-  07-cron-1                      Scheduled task detail view
-  08-three-doors-1               Chat / Cowork / Code comparison
-  13-quickstart-1                First useful task in Claude Code
-  15-yolo-decision-1             4-gate decision tree for --dangerously-skip-permissions ← NEW
-  16-hooks-subagents-1           Subagent fan-out flow
-  21-three-modes-1               Plan / Interactive / Auto / /goal
-  22-sessions-1                  claude --resume picker
-  24-tier-list-1                 Proper tier-image SVG (6 tiers, 28 tools, May 2026 loadout) ← NEW
-  24-lmarena-snapshot            LMArena top-10 snapshot (replaces broken HF iframe on /tier-list) ← NEW
-  25-evals-or-hope-1             Three-receipt eval thesis
-  31-stages-1                    Six stages flow (also rendered by StagesFlow widget)
-  37-context-files-1             Four-layer context-file authority hierarchy
-  38-run-until-done-1            Autonomy ladder (Plan → Auto → /goal)
-  38-run-until-done-2            /goal overlay panel (marquee shot for Ch 38)
-  39-skills-you-should-steal-1   9-library star bar chart
-  claude-md-rules-1              12-rule infographic (for /claude-md-rules page)
-  04-the-vault-2                 Sanitized CLAUDE.md system map — copyable template ← NEW
-  05-skills-1                    67-skill library by category — sanitized ← NEW
-  02-five-tools-2                Anthropic invoice — $2,216 / ~2.2B tokens ← NEW
-  12-connectors-mcp-2            .mcp.json + /mcp split (config → live state) ← NEW
-  13-quickstart-2                The 10-minute end-state terminal ← NEW
-  14-cheat-sheet-1               settings.json annotated (sanitized) ← NEW
-  26-team-adoption-1             The 9:47 AM Slack — 4-3-2-2-1 distribution ← NEW
-
-Real PNG captures (17):
-  02-five-tools-1                Vlad's connected Cowork connector stack + Gmail tool permissions ← NEW
-  04-the-vault-1                 Vlad's real Obsidian vault graph
-  04-the-vault-rick              Rick AI-agent vault (pattern generalizes)
-  04-the-vault-rick-2            Rick agent's daily note
-  12-connectors-mcp-1            Connector Directory / registry browse view ← NEW
-  12-connectors-mcp-3            SMB cash reconciliation (QuickBooks + PayPal) ← NEW, from claude.com/solutions/small-business
-  12-connectors-mcp-4            SMB month-end close P&L (QuickBooks + PayPal + Drive) ← NEW
-  12-connectors-mcp-5            SMB Monday Slack brief (QuickBooks + Calendar + Slack) ← NEW
-  12-connectors-mcp-6            SMB staged campaign (QuickBooks + Canva + HubSpot) ← NEW
-  29-cost-economics-1            Anthropic console March 2026 — the "before" spike (2.25B in) ← NEW
-  29-cost-economics-2            Claude Max (20x) plan usage limits — weekly caps ← NEW
-  29-cost-economics-3            Anthropic console April 2026 — spikes flattening ← NEW
-  29-cost-economics-4            Anthropic console May 2026 — flat, optimized ← NEW
-  29-cost-economics-5            Caching tab — 98.1% read ratio, 11.7× amortization ← NEW
-  29-cost-economics-6            Input token composition + write amortization curves ← NEW
-  29-cost-economics-7            April direct-API token cost — $2,216 the whole month ← NEW
-  29-cost-economics-8            May direct-API token cost — $556 MTD (~half April) ← NEW
+This folder holds 0-byte placeholder files for screenshots not yet captured.
+Drop a real PNG into public/screens/ (one level UP, not here) named the exact
+ID — e.g. 23-vibe-coding-1.png — and the build picks it up. Or paste it in
+chat with the ID and it gets filed for you. Your original is COPIED, never
+moved, so nothing ever disappears from where you put it.
 
 ────────────────────────────────────────────
-STILL NEEDED — 22 real captures (all TIER B — optional icing)
+STATUS: VISUALLY COMPLETE
 ────────────────────────────────────────────
+43 visual artifacts done · 22 captures still needed · 61 chapter references.
 
-★ TIER S — CLEARED ✓ (all book-defining shots captured)
+  ★ TIER S — CLEARED ✓   book-defining shots all captured
+  ★ TIER A — CLEARED ✓   high-leverage receipts all done (5 as sanitized SVGs)
+  ★ TIER B — 22 open     supporting / nice-to-have · no urgency
 
-★ TIER A — CLEARED ✓ (all 5 rendered as sanitized SVGs)
+The book reads as visually finished. Everything below is optional icing —
+most of these chapters carry their weight on cards + pull-quotes already.
 
+────────────────────────────────────────────
+DONE — 43 (26 SVG diagrams + 17 real PNG captures)
+────────────────────────────────────────────
+Full list is the source of truth in src/lib/screenshots.ts (auto-generated).
+Highlights this cycle:
+  SVG: 15-yolo-decision-1, 24-tier-list-1, 24-lmarena-snapshot,
+       04-the-vault-2 (CLAUDE.md system), 05-skills-1 (67-skill library),
+       02-five-tools-2 ($2,216 invoice), 12-connectors-mcp-2 (.mcp.json+/mcp),
+       13-quickstart-2, 14-cheat-sheet-1, 26-team-adoption-1 (4-3-2-2-1)
+  PNG: 02-five-tools-1, 12-connectors-mcp-1/3/4/5/6 (SMB workflows),
+       29-cost-economics-1..8 (full Mar→May cost + caching receipts),
+       04-the-vault-1 + Rick vault series
 
-★ TIER B — supporting / nice-to-have (no urgency, 22 shots)
+────────────────────────────────────────────
+STILL NEEDED — 22 (all TIER B, no urgency)
+────────────────────────────────────────────
 
    03-temp-agency-1               Scheduled instance running in Cowork
-   06-the-swarm-2                 Repo's .claude/agents/ folder + .mcp.json in a file tree ← NEW
+   06-the-swarm-2                 Repo's .claude/agents/ folder + .mcp.json in a file tree
    09-dont-get-owned-1            Secret manager vault (1Password or similar)
    10-wild-stuff-1                Generative video pipeline (Higgsfield/Suno workflow)
    11-build-a-skill-1             ~/.claude/skills/morning-briefing/ expanded in Finder
@@ -87,38 +56,28 @@ STILL NEEDED — 22 real captures (all TIER B — optional icing)
    33-browser-agents-1            Slack post from pricing-watch browser agent
    34-write-on-behalf-1           The 9:14 AM approval flow
    35-codex-and-cc-1              .mcp.json + CLAUDE.md side by side
-   35-codex-and-cc-2              AI Studio Build mode mid-iteration (3-pane + annotation) ← NEW
+   35-codex-and-cc-2              AI Studio Build mode mid-iteration (3-pane + annotation)
+
+Several of these could also be rendered as sanitized SVGs the same way
+04-the-vault-2 / 05-skills-1 / the 5 Tier-A shots were — just say which.
 
 ────────────────────────────────────────────
 HOW TO DROP A SHOT
 ────────────────────────────────────────────
-1. Take screenshot (⌘⇧4 for area, ⌘⇧5 for window with selection)
-2. Rename to the exact ID + extension. Example: 04-the-vault-2.png
-3. Drag from Desktop directly into public/screens/ (NOT inside _TODO/)
-4. Run `npm run build` OR push to main. Done.
-
-OR just paste in chat with the ID and I save it.
+1. Take screenshot (⌘⇧4 for area, ⌘⇧5 for window).
+2. Rename to the exact ID + extension, e.g. 19-build-products-1.png
+3. Drop it in public/screens/  (one level UP from this folder)
+4. `npm run build` or push to main. Done.
+   OR paste in chat with the ID — it gets filed + your copy stays put.
 
 ────────────────────────────────────────────
-SANITIZATION CHECKLIST (before saving)
+SANITIZATION CHECKLIST (before saving any real capture)
 ────────────────────────────────────────────
-- Mask every contact name (use generic firsts: John A. / Finance / etc.)
-- Mask deal names, customer names, channel IDs, workspace identifiers
+- Mask contact/customer/deal/channel names → generic (John A. / Acme)
 - Mask OAuth tokens, API keys, session URLs, signed S3 URLs
-- Mask dollar amounts that identify specific Belkins/Folderly accounts
-- For Slack shots: take in a fresh demo workspace if any DM context is sensitive
-- For HubSpot: use sandbox account OR mask company names + deal amounts > demo levels
-- For Anthropic billing: keep aggregate totals; mask org name + email
-- For terminal shots: set PS1 to `[demo] $`, use anonymized paths
-- When in doubt, use a fresh demo workspace with fake data
-
-────────────────────────────────────────────
-THE LINE
-────────────────────────────────────────────
-Tier S + Tier A are CLEARED — the artifact is visually complete.
-The 22 remaining are all Tier B icing — most chapters
-read fine with the cards + pull-quotes carrying the visual weight.
-
-Tier A is where the operator-flavor lives: real CLAUDE.md, real settings.json,
-real billing dashboard, real Cowork connectors. These can't be illustrated;
-they have to be photographed.
+- Mask dollar amounts that identify a specific Belkins/Folderly account
+- Slack: fresh demo workspace if any DM context is sensitive
+- HubSpot: sandbox account, or mask company names + deal amounts
+- Anthropic billing: keep aggregate totals; mask org name + email
+- Terminal: PS1 = `[demo] $`, anonymized paths
+- When in doubt, over-sanitize — this is a public artifact.
