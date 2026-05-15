@@ -2,10 +2,10 @@ SCREENSHOTS — what's still needed (updated 2026-05-15, post-SMB-connectors sec
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
-Current state: 29 visual artifacts done · 30 captures still needed · 55 chapter references total.
+Current state: 32 visual artifacts done · 29 captures still needed · 57 chapter references total.
 
 ────────────────────────────────────────────
-DONE — 29 visual artifacts
+DONE — 32 visual artifacts
 ────────────────────────────────────────────
 
 SVG diagrams (18):
@@ -29,7 +29,7 @@ SVG diagrams (18):
   39-skills-you-should-steal-1   9-library star bar chart
   claude-md-rules-1              12-rule infographic (for /claude-md-rules page)
 
-Real PNG captures (10):
+Real PNG captures (13):
   02-five-tools-1                Vlad's connected Cowork connector stack + Gmail tool permissions ← NEW
   04-the-vault-1                 Vlad's real Obsidian vault graph
   04-the-vault-rick              Rick AI-agent vault (pattern generalizes)
@@ -39,15 +39,16 @@ Real PNG captures (10):
   12-connectors-mcp-4            SMB month-end close P&L (QuickBooks + PayPal + Drive) ← NEW
   12-connectors-mcp-5            SMB Monday Slack brief (QuickBooks + Calendar + Slack) ← NEW
   12-connectors-mcp-6            SMB staged campaign (QuickBooks + Canva + HubSpot) ← NEW
+  29-cost-economics-1            Anthropic console March 2026 — the "before" spike (2.25B in) ← NEW
   29-cost-economics-2            Claude Max (20x) plan usage limits — weekly caps ← NEW
+  29-cost-economics-3            Anthropic console April 2026 — spikes flattening ← NEW
+  29-cost-economics-4            Anthropic console May 2026 — flat, optimized ← NEW
 
 ────────────────────────────────────────────
-STILL NEEDED — 30 real captures
+STILL NEEDED — 29 real captures
 ────────────────────────────────────────────
 
-★ TIER S — book-defining shots (do these first, ~10 min total)
-
-   29-cost-economics-1            Anthropic console — weekly cost view, full month
+★ TIER S — CLEARED ✓ (all book-defining shots captured)
 
 ★ TIER A — high-leverage receipts and surfaces (~45 min, 7 shots)
 
@@ -110,7 +111,7 @@ SANITIZATION CHECKLIST (before saving)
 ────────────────────────────────────────────
 THE LINE
 ────────────────────────────────────────────
-Ship Tier S + Tier A (8 shots, ~55 minutes) and the artifact crosses
+Ship Tier A (7 shots, ~45 minutes) and the artifact crosses
 the "feels visually complete" line. Tier B is icing — most chapters
 read fine with the cards + pull-quotes carrying the visual weight.
 
