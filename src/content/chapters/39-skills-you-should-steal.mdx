@@ -4,8 +4,8 @@ slug: "39-skills-you-should-steal"
 title: "Skills You Should Steal (and the Three You Should Write Yourself)"
 subtitle: "A tour of the 1M-skill ecosystem, the 73% that's broken, and the gaps an operator can fill"
 tldr: "By May 2026 the public skills ecosystem crossed a million entries — and a dev.to audit found 73% of them silently broken. The fix isn't installing more, it's knowing which nine libraries to steal from and which three gap-filling skills no one's written yet. Star count is not a security signal."
-keyConcepts: ["community skills", "gstack", "73% problem", "vertical skill library", "publishing gap-filling skills"]
-readingMinutes: 8
+keyConcepts: ["community skills", "gstack", "73% problem", "vertical skill library", "publishing gap-filling skills", "provider-neutral harness skill"]
+readingMinutes: 9
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
@@ -169,6 +169,20 @@ The cadence here matches [Chapter 24's](/chapters/24-tier-list) tier list, narro
   One specific skill: `semgrep-rule-creator`. Generates a custom Semgrep rule from a natural-language description of a code anti-pattern you want to catch. Smoke-test: prompt *"write me a Semgrep rule that flags any `eval()` call inside a route handler"*. The skill should produce a ready-to-paste YAML rule with `pattern:` + `message:` + `severity:`. If you get prose explaining what Semgrep is, the skill misfired.
 
   The lesson is structural: one repo, ten skills, all derived from real client work. Star count (5.2k) is irrelevant. The pattern is the asset.
+
+- **`DenisSergeevitch/agents-best-practices`** — 26 stars, MIT, pushed this week. [github.com/DenisSergeevitch/agents-best-practices](https://github.com/DenisSergeevitch/agents-best-practices). Graded B for star count, A for what it actually is: the only *provider-neutral harness-design* skill in the ecosystem. Not a workflow skill — a meta-skill. You load it when you're designing, auditing, or refactoring an agent's harness, and it walks the decision with you across OpenAI, Anthropic, and OpenAI-compatible APIs without picking a side. Explicitly not coding-only — the same harness patterns are documented for research, ops, sales, finance, and legal agents.
+
+  **Walkthrough — this book, as a loadable skill.**
+
+  ```bash
+  git clone https://github.com/DenisSergeevitch/agents-best-practices ~/.claude/skills/agents-best-practices
+  ```
+
+  Open its `references/` directory and read the filenames: `architecture`, `agentic-loop`, `system-prompts-instructions`, `tools-and-permissions`, `planning-and-goals`, `context-memory-compaction`, `prompt-caching-and-cost`, `skills-and-connectors`, `security-evals-observability`. That is this book's table of contents. The difference is delivery: the book is the argument you read once; the skill is the same principles your agent loads on demand the moment it's about to make a harness decision — vendor-neutral, no re-explaining. Read the chapter for the *why*; install the skill so the agent applies the *what* without you in the loop every session.
+
+  Smoke-test: load it and prompt *"audit this harness — one 4,000-line system prompt, no cache breakpoints, tools that can all write to prod, no eval suite."* A working skill returns a structured triage — split the prompt at a stable cache boundary, separate tools by risk class, add a read-only plan phase, name the missing eval. If you get a generic essay about what agents are, it misfired.
+
+  Same lesson as Trail of Bits, inverted: there it was one vertical, ten skills; here it's one horizontal skill that covers the whole harness. Both beat a 200-skill mega-repo. 26 stars today is irrelevant — the reference map is the asset.
 
 <Callout type="warn">
 Star count measures intent to install, not fire reliability. Treat every library above as a *menu*, not a *meal*. Install gstack, then prune to the eight or twelve that match your actual work. The other fifteen are noise weighing down your context.
