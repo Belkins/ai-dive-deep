@@ -4,8 +4,8 @@ slug: "12-connectors-mcp"
 title: "Connectors and MCP"
 subtitle: "Types, install paths, custom servers"
 tldr: "An AI agent without connectors is a chef with no kitchen — it can describe a meal but can't cook. MCP is the USB-C of AI tools: one port, every device. Here's the full taxonomy, the install path for Cowork and Claude Code, and the 50-line custom server you can write in an evening."
-keyConcepts: ["MCP", "connectors", "stdio", "OAuth", "custom servers"]
-readingMinutes: 9
+keyConcepts: ["MCP", "connectors", "stdio", "OAuth", "custom servers", "small business", "review gate"]
+readingMinutes: 12
 video:
   title: "Your Tools Are Now Interactive in Claude"
   youtubeId: "bluAmTHoEow"
@@ -228,6 +228,62 @@ Most operators overestimate the difficulty. After your first server, every subse
 - **Audit logs on.** Every tool call gets logged. Anomaly = breach until proven otherwise.
 - **Rotate creds on a schedule.** OAuth refresh handles itself; API keys do not. Ninety-day rotation, written down somewhere.
 - **Pin SDK versions** in `package.json` and `requirements.txt`. MCP is moving fast and a breaking change in a minor release will ruin your Tuesday.
+
+## What the stack actually produces — four workflows
+
+Everything above is plumbing. Here's what the plumbing pumps. These four are from Anthropic's [small-business solutions](https://claude.com/solutions/small-business) — the owner with no finance team, no ops hire, no analyst, and the connector stack standing in for all three. I'm including them because the pattern is identical at portfolio scale; the only thing that changes is how many zeros are on the gap.
+
+The thread through all four: the agent does the clerical work, you own the decision. Every one ends at a review gate, not a send button. That's not a limitation — it's the design. Anthropic's framing is "delegate the work, own the decisions," which is the same approval discipline as [Chapter 34](/chapters/34-write-on-behalf).
+
+**1. Cash reconciliation under payroll pressure.** QuickBooks + PayPal.
+
+> "I'm working on April 15 payroll. Pull my cash position from QuickBooks and reconcile it against my PayPal settlements. Rank any overdue invoices that could close the gap and draft a reminder email for each one."
+
+What comes back isn't a chat answer — it's a workbook with three tabs (Cash Position, PayPal Settlements, Overdue A/R ranked). It separates cleared cash ($96,710) from projected cash including PayPal-pending ($115,160), nets out the $84,500 payroll and the $30k reserve hold, and lands on the number that matters: a +$660 cushion if PayPal clears, a −$17,789 hole if it doesn't. Plus a drafted reminder email per overdue invoice. The owner reads three tabs and makes one call. The reconciliation that used to eat a Saturday is the part the agent already did.
+
+<ScreenshotPlaceholder
+  id="12-connectors-mcp-3"
+  caption="Cash reconciliation under payroll pressure"
+  ratio="1999/1216"
+  note="QuickBooks + PayPal. Cleared vs projected cash, the payroll gap, ranked overdue A/R — one workbook, one decision."/>
+
+**2. Month-end close as an accountant-ready narrative.** QuickBooks + PayPal + Google Drive.
+
+> "Close out March for me. Reconcile my QuickBooks transactions against PayPal settlements, flag anything that doesn't match, and write the P&L narrative as a document I can send straight to my accountant."
+
+The output is prose, not a spreadsheet — a written month-end close. Revenue $48,210, up 7.5%; net income down to $11,840 because annual software renewals landed this month as ~$2,040 of one-time spend. 142 of 147 transactions matched cleanly; five flagged — three timing differences, one disputed duplicate refund, one real mismatch. It reads like something a controller wrote, because the controller's job here was done by the connector stack reading both ledgers at once.
+
+<ScreenshotPlaceholder
+  id="12-connectors-mcp-4"
+  caption="Month-end close, written for the accountant"
+  ratio="2000/1072"
+  note="QuickBooks + PayPal + Drive. A P&L narrative document, not a dump — 142/147 matched, 5 flagged with reasons."/>
+
+**3. The Monday brief, recurring, in Slack.** QuickBooks + Google Calendar + Slack.
+
+> "Help me build a Monday morning brief every week in Slack. Pull my cash position from QuickBooks, incoming settlements from PayPal, pipeline movement from HubSpot, and what's on my calendar this week. Tell me the three things that need my attention today."
+
+A standing order, not a one-shot — see [Chapter 7](/chapters/07-cron) for the scheduling layer underneath. 9:16 AM Monday, a Slack DM: cash $184.3k operating (+$12.4k WoW), 38 days runway; $13.5k PayPal in-flight; pipeline moves; the week's calendar; and the three things to do today, ranked. Four connectors collapsed into the one message you read with coffee. This is [Chapter 1](/chapters/01-killed-my-tabs) at the company level — the brief killed the tabs.
+
+<ScreenshotPlaceholder
+  id="12-connectors-mcp-5"
+  caption="The recurring Monday brief"
+  ratio="1999/1093"
+  note="QuickBooks + Calendar + Slack, on a schedule. Cash, runway, pipeline, week, today's top three — one DM."/>
+
+**4. A campaign from the weakest month, staged not sent.** QuickBooks + Canva + HubSpot.
+
+> "Find my weakest revenue month from last year and plan a promo to address it. Draft the strategy, generate the campaign assets in Canva, segment my list in HubSpot, and stage the send. Show me everything before anything goes out."
+
+The one that crosses from finance into growth, and the clearest illustration of the review gate. The agent reads QuickBooks to find the soft month, builds the offer, generates the actual creative in Canva (a designed "$500 off" graphic, not a description of one), segments the HubSpot list, drafts the email — and stops. Staged, not sent. "Show me everything before anything goes out" is the whole relationship in one clause. The agent did the campaign. You decide if it ships.
+
+<ScreenshotPlaceholder
+  id="12-connectors-mcp-6"
+  caption="A campaign, staged not sent"
+  ratio="1999/1047"
+  note="QuickBooks + Canva + HubSpot. Real Canva creative, segmented list, drafted email — stopped at the Send button on purpose."/>
+
+The reason these belong in the connectors chapter and not a use-case appendix: none of them are possible without the plumbing. Pull QuickBooks out of #1 and it's a guess. Pull Canva out of #4 and it's a brief nobody designed. The workflow is what impresses; the connector is what makes it real. Wire the stack, and the demo becomes Tuesday.
 
 ## My active connector set
 

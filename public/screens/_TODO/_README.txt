@@ -1,11 +1,11 @@
-SCREENSHOTS — what's still needed (updated 2026-05-15, post-AI-Studio section)
+SCREENSHOTS — what's still needed (updated 2026-05-15, post-SMB-connectors section)
 
 This folder holds empty placeholder files for screenshots that haven't been captured yet. Drop your real PNG over the matching file, move it UP one level to public/screens/, push to main. Build picks it up automatically.
 
-Current state: 22 visual artifacts done · 32 captures still needed · 50 chapter references total.
+Current state: 26 visual artifacts done · 32 captures still needed · 54 chapter references total.
 
 ────────────────────────────────────────────
-DONE — 22 visual artifacts
+DONE — 26 visual artifacts
 ────────────────────────────────────────────
 
 SVG diagrams (18):
@@ -29,10 +29,14 @@ SVG diagrams (18):
   39-skills-you-should-steal-1   9-library star bar chart
   claude-md-rules-1              12-rule infographic (for /claude-md-rules page)
 
-Real PNG captures (3):
+Real PNG captures (7):
   04-the-vault-1                 Vlad's real Obsidian vault graph
   04-the-vault-rick              Rick AI-agent vault (pattern generalizes)
   04-the-vault-rick-2            Rick agent's daily note
+  12-connectors-mcp-3            SMB cash reconciliation (QuickBooks + PayPal) ← NEW, from claude.com/solutions/small-business
+  12-connectors-mcp-4            SMB month-end close P&L (QuickBooks + PayPal + Drive) ← NEW
+  12-connectors-mcp-5            SMB Monday Slack brief (QuickBooks + Calendar + Slack) ← NEW
+  12-connectors-mcp-6            SMB staged campaign (QuickBooks + Canva + HubSpot) ← NEW
 
 ────────────────────────────────────────────
 STILL NEEDED — 32 real captures
