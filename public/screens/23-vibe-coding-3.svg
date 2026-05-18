@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 23 · END OF SATURDAY</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">One Saturday, then nothing</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">The whole pipeline shipped in a single dense burst. The commit graph is the proof it happened in one day.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">GITHUB · daily-voice-brief</text>
+
+  <!-- commit bar chart -->
+  <g transform="translate(80, 220)">
+    <text x="0" y="0" fill="#6EE7B7" font-size="11" letter-spacing="2.4" font-weight="600">COMMITS PER DAY — THE WEEK</text>
+    <line x1="0" y1="320" x2="1440" y2="320" stroke="#2A3138" stroke-width="1"/>
+    <!-- baseline flat days then spike then flat -->
+    <g>
+      <rect x="60"  y="312" width="120" height="8"  fill="#1F2A22" rx="2"/>
+      <rect x="240" y="308" width="120" height="12" fill="#1F2A22" rx="2"/>
+      <rect x="420" y="312" width="120" height="8"  fill="#1F2A22" rx="2"/>
+      <rect x="600" y="40"  width="120" height="280" fill="#6EE7B7" rx="3"/>
+      <rect x="780" y="316" width="120" height="4"  fill="#1F2A22" rx="2"/>
+      <rect x="960" y="316" width="120" height="4"  fill="#1F2A22" rx="2"/>
+      <rect x="1140" y="312" width="120" height="8" fill="#1F2A22" rx="2"/>
+    </g>
+    <text x="660" y="28" fill="#6EE7B7" font-size="15" font-weight="600" text-anchor="middle">17 commits</text>
+    <g font-size="13" fill="#71717A">
+      <text x="120" y="348" text-anchor="middle">Wed</text>
+      <text x="300" y="348" text-anchor="middle">Thu</text>
+      <text x="480" y="348" text-anchor="middle">Fri</text>
+      <text x="660" y="348" text-anchor="middle" fill="#6EE7B7" font-weight="600">SAT</text>
+      <text x="840" y="348" text-anchor="middle">Sun</text>
+      <text x="1020" y="348" text-anchor="middle">Mon</text>
+      <text x="1200" y="348" text-anchor="middle">Tue</text>
+    </g>
+    <text x="0" y="392" fill="#AAA79A" font-size="15">Flat all week. One vertical wall on Saturday. Flat again after. That shape is the story.</text>
+  </g>
+
+  <!-- the day's numbers -->
+  <g transform="translate(80, 636)">
+    <rect x="0" y="0" width="270" height="120" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="22" y="34" fill="#71717A" font-size="11" letter-spacing="2" font-weight="600">TOKENS · COST</text>
+    <text x="22" y="74" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">~4.8M · $72</text>
+    <text x="22" y="100" fill="#71717A" font-size="13">Sonnet, ~90s of Opus at hr 4</text>
+
+    <rect x="290" y="0" width="270" height="120" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="312" y="34" fill="#71717A" font-size="11" letter-spacing="2" font-weight="600">CLOCK · FOCUSED</text>
+    <text x="312" y="74" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">8h42m · ~4h</text>
+    <text x="312" y="100" fill="#71717A" font-size="13">rest was builds + coffee</text>
+
+    <rect x="580" y="0" width="270" height="120" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="602" y="34" fill="#71717A" font-size="11" letter-spacing="2" font-weight="600">BUGS HIT + FIXED</text>
+    <text x="602" y="74" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">6</text>
+    <text x="602" y="100" fill="#71717A" font-size="13">auth · voice ID · iCloud · quoting · lint · race</text>
+
+    <rect x="870" y="0" width="270" height="120" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="10"/>
+    <text x="892" y="34" fill="#6EE7B7" font-size="11" letter-spacing="2" font-weight="600">THINGS SHIPPED</text>
+    <text x="892" y="74" fill="#FAFAF7" font-size="26" font-weight="500" font-family="Source Serif 4, Georgia, serif">1</text>
+    <text x="892" y="100" fill="#71717A" font-size="13">the pipeline, end to end</text>
+
+    <rect x="1160" y="0" width="280" height="120" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="10"/>
+    <text x="1182" y="34" fill="#FF6B2C" font-size="11" letter-spacing="2" font-weight="600">THE POINT</text>
+    <text x="1182" y="68" fill="#FAFAF7" font-size="15">A side project is a</text>
+    <text x="1182" y="90" fill="#FAFAF7" font-size="15">Saturday, not a someday.</text>
+  </g>
+
+  <text x="80" y="800" fill="#71717A" font-size="13">Slack canvas → ElevenLabs MP3 → iCloud Drive → Apple Health on the phone. One day of commits, then it just runs.</text>
+</svg>

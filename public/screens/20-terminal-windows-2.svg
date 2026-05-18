@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 20 · THE OS LAYER MATTERS TOO</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">"work belkins" — and you're in</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">One launcher keystroke spins the whole layout: cd, a named tmux session, three panes, attached. Friction is the enemy.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">RAYCAST · ⌃Space</text>
+
+  <!-- Raycast bar -->
+  <g transform="translate(330, 220)">
+    <rect x="0" y="0" width="940" height="380" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="14"/>
+    <!-- search input -->
+    <rect x="0" y="0" width="940" height="76" fill="#1A1F24" rx="14"/>
+    <rect x="0" y="38" width="940" height="38" fill="#1A1F24"/>
+    <text x="28" y="48" fill="#FF6B2C" font-size="22">⌘</text>
+    <text x="64" y="49" fill="#FAFAF7" font-size="24" font-family="JetBrains Mono, monospace">work belkins</text>
+    <rect x="232" y="28" width="3" height="32" fill="#FF6B2C"/>
+    <text x="912" y="49" fill="#71717A" font-size="13" text-anchor="end">Raycast</text>
+
+    <!-- result row highlighted -->
+    <rect x="14" y="92" width="912" height="60" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <rect x="30" y="106" width="32" height="32" rx="7" fill="#FF6B2C"/>
+    <text x="46" y="129" fill="#0E0F11" font-size="16" font-weight="700" text-anchor="middle" font-family="JetBrains Mono, monospace">›</text>
+    <text x="80" y="120" fill="#FAFAF7" font-size="17" font-weight="600">work belkins</text>
+    <text x="80" y="142" fill="#71717A" font-size="13">Script Command · open repo session</text>
+    <text x="912" y="128" fill="#6EE7B7" font-size="14" text-anchor="end">↵ Run</text>
+
+    <!-- other results dimmed -->
+    <text x="30" y="190" fill="#71717A" font-size="15" font-family="JetBrains Mono, monospace">work folderly</text>
+    <text x="30" y="222" fill="#71717A" font-size="15" font-family="JetBrains Mono, monospace">work lingualive</text>
+    <text x="30" y="254" fill="#71717A" font-size="15" font-family="JetBrains Mono, monospace">work newsletter</text>
+
+    <line x1="14" y1="284" x2="926" y2="284" stroke="#1A1F24" stroke-width="1"/>
+    <text x="30" y="318" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">work() { cd ~/code/$1; tmux new -d -s "$1" claude \; split-window -h \; split-window -v \; attach -t "$1"; }</text>
+    <text x="30" y="350" fill="#AAA79A" font-size="14">cd → named session → 3 panes → attached. One word.</text>
+  </g>
+
+  <!-- before/after -->
+  <g transform="translate(330, 636)">
+    <rect x="0" y="0" width="455" height="120" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="24" y="34" fill="#71717A" font-size="11" letter-spacing="2" font-weight="600">WITHOUT IT</text>
+    <text x="24" y="64" fill="#AAA79A" font-size="14">cd, tmux new, split, split, attach,</text>
+    <text x="24" y="88" fill="#AAA79A" font-size="14">launch claude — 6 steps, every repo</text>
+
+    <rect x="485" y="0" width="455" height="120" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="10"/>
+    <text x="509" y="34" fill="#6EE7B7" font-size="11" letter-spacing="2" font-weight="600">WITH IT</text>
+    <text x="509" y="64" fill="#FAFAF7" font-size="14">⌃Space · "work belkins" · ↵</text>
+    <text x="509" y="88" fill="#AAA79A" font-size="14">one keystroke, from any app</text>
+  </g>
+
+  <text x="80" y="836" fill="#71717A" font-size="13">iTerm Hotkey Window (⌃Space drop-down) gets you the same launcher from inside any app. The OS layer is part of the harness.</text>
+</svg>

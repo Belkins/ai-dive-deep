@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 19 · HOUR 2 — REPO TO DEPLOY</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Eight minutes in, it exists</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">A real (ugly) URL in DNS. The project crossed the line from "idea" to "thing that exists." Fastest, not best.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">VERCEL · daily-brief</text>
+
+  <!-- Vercel window -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="1440" height="560" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="1440" height="52" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="26" width="1440" height="26" fill="#1A1F24"/>
+    <text x="32" y="33" fill="#FAFAF7" font-size="16" font-weight="600">▲ Vercel</text>
+    <text x="140" y="33" fill="#71717A" font-size="14">/ my-team / daily-brief</text>
+    <text x="1408" y="33" fill="#6EE7B7" font-size="13" text-anchor="end">Production · Ready</text>
+
+    <!-- project title row -->
+    <text x="40" y="108" fill="#FAFAF7" font-size="26" font-weight="600" font-family="Source Serif 4, Georgia, serif">daily-brief</text>
+    <text x="40" y="138" fill="#71717A" font-size="14">Next.js · TypeScript · Tailwind · App Router</text>
+
+    <!-- big production URL card -->
+    <rect x="40" y="166" width="860" height="150" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="10"/>
+    <text x="64" y="206" fill="#6EE7B7" font-size="12" letter-spacing="2" font-weight="600">PRODUCTION DEPLOYMENT</text>
+    <text x="64" y="248" fill="#FAFAF7" font-size="24" font-family="JetBrains Mono, monospace">daily-brief-q3f8x.vercel.app</text>
+    <text x="64" y="284" fill="#6EE7B7" font-size="14">✓ Ready</text>
+    <text x="180" y="284" fill="#71717A" font-size="14">Build 41s · deployed 8m ago · commit a1f9c2 "initial commit"</text>
+
+    <!-- right status panel -->
+    <rect x="924" y="166" width="476" height="150" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="948" y="206" fill="#71717A" font-size="12" letter-spacing="2" font-weight="600">STATUS</text>
+    <text x="948" y="240" fill="#6EE7B7" font-size="15">● Build  ✓ passed</text>
+    <text x="948" y="268" fill="#6EE7B7" font-size="15">● DNS    ✓ resolving</text>
+    <text x="948" y="296" fill="#6EE7B7" font-size="15">● HTTPS  ✓ cert issued</text>
+
+    <!-- deployments list -->
+    <text x="40" y="364" fill="#71717A" font-size="12" letter-spacing="2" font-weight="600">DEPLOYMENTS</text>
+    <line x1="40" y1="378" x2="1400" y2="378" stroke="#2A3138" stroke-width="1"/>
+    <g font-family="JetBrains Mono, monospace" font-size="14">
+      <text x="40" y="412" fill="#6EE7B7">✓</text><text x="68" y="412" fill="#E5E5E5">Production</text><text x="240" y="412" fill="#AAA79A">a1f9c2  initial commit</text><text x="1000" y="412" fill="#71717A">main</text><text x="1400" y="412" fill="#71717A" text-anchor="end">8m ago · 41s</text>
+      <text x="40" y="448" fill="#71717A">○</text><text x="68" y="448" fill="#71717A">Queued</text><text x="240" y="448" fill="#3F4651">— no further commits yet —</text>
+    </g>
+    <line x1="40" y1="476" x2="1400" y2="476" stroke="#1A1F24" stroke-width="1"/>
+    <text x="40" y="514" fill="#AAA79A" font-size="15" font-family="JetBrains Mono, monospace">npx create-next-app · gh repo create · vercel link &amp;&amp; vercel deploy</text>
+    <text x="40" y="538" fill="#71717A" font-size="13">Four commands. Eight minutes later, a URL.</text>
+  </g>
+
+  <text x="80" y="808" fill="#71717A" font-size="13">Real means it shows up in DNS, serves over HTTPS, and has a green check. Ugly is fine. Existing is the bar.</text>
+</svg>
