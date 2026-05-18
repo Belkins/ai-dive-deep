@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 10 · ONE OPERATOR, ONE PIPELINE</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">2:14 a.m. London. Team of one.</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">A generative-video side-project mid-run. The leverage isn't the tools — it's the seams between them.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">GENERATIVE VIDEO · IN FLIGHT</text>
+
+  <!-- Showrunner -->
+  <g transform="translate(80, 210)">
+    <rect x="0" y="0" width="280" height="120" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="10"/>
+    <text x="22" y="34" fill="#FF6B2C" font-size="11" letter-spacing="2" font-weight="600">SHOWRUNNER</text>
+    <text x="22" y="66" fill="#FAFAF7" font-size="20" font-weight="600">Claude Code</text>
+    <text x="22" y="92" fill="#71717A" font-size="13">project bible loaded</text>
+    <text x="22" y="110" fill="#71717A" font-size="13">shot queue in flight</text>
+  </g>
+
+  <!-- the seam chain -->
+  <g transform="translate(440, 210)">
+    <rect x="0" y="0" width="220" height="120" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="20" y="32" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">MOTION</text>
+    <text x="20" y="62" fill="#FAFAF7" font-size="18" font-weight="600">SeeDance</text>
+    <text x="20" y="90" fill="#71717A" font-size="13">generates the shot</text>
+
+    <rect x="280" y="0" width="220" height="120" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="300" y="32" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">FACE LOCK</text>
+    <text x="300" y="62" fill="#FAFAF7" font-size="18" font-weight="600">Character LoRA</text>
+    <text x="300" y="90" fill="#71717A" font-size="13">stable across angles</text>
+
+    <rect x="560" y="0" width="220" height="120" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="580" y="32" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">FINISH</text>
+    <text x="580" y="62" fill="#FAFAF7" font-size="18" font-weight="600">Upscaler</text>
+    <text x="580" y="90" fill="#71717A" font-size="13">to delivery res</text>
+
+    <rect x="840" y="0" width="220" height="120" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="10"/>
+    <text x="860" y="32" fill="#6EE7B7" font-size="11" letter-spacing="2" font-weight="600">BACK TO</text>
+    <text x="860" y="62" fill="#FAFAF7" font-size="18" font-weight="600">Showrunner</text>
+    <text x="860" y="90" fill="#71717A" font-size="13">next shot, repeat</text>
+  </g>
+
+  <!-- seam arrows row labels -->
+  <g fill="#6EE7B7" font-size="22">
+    <text x="372" y="278">→</text>
+    <text x="652" y="278">→</text>
+    <text x="932" y="278">→</text>
+    <text x="1212" y="278">↺</text>
+  </g>
+  <text x="80" y="382" fill="#6EE7B7" font-size="12" letter-spacing="2.4" font-weight="600">THE SEAM: SeeDance → LoRA → upscaler → back to the showrunner. The handoffs are the moat.</text>
+
+  <!-- side feeds -->
+  <g transform="translate(80, 430)">
+    <rect x="0" y="0" width="460" height="150" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="24" y="36" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">SCORE</text>
+    <text x="24" y="72" fill="#FAFAF7" font-size="20" font-weight="600">Suno</text>
+    <text x="24" y="100" fill="#71717A" font-size="14">scores the cold open while the shots render</text>
+    <text x="24" y="128" fill="#71717A" font-size="13">→ feeds the showrunner's timeline</text>
+
+    <rect x="500" y="0" width="460" height="150" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="524" y="36" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">VOICE</text>
+    <text x="524" y="72" fill="#FAFAF7" font-size="20" font-weight="600">ElevenLabs</text>
+    <text x="524" y="100" fill="#71717A" font-size="14">reads the lines in three voices</text>
+    <text x="524" y="128" fill="#71717A" font-size="13">→ dropped onto the cut by the showrunner</text>
+
+    <rect x="1000" y="0" width="440" height="150" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="10"/>
+    <text x="1024" y="36" fill="#6EE7B7" font-size="11" letter-spacing="2" font-weight="600">THE TEAM</text>
+    <text x="1024" y="76" fill="#FAFAF7" font-size="28" font-weight="500" font-family="Source Serif 4, Georgia, serif">One person</text>
+    <text x="1024" y="108" fill="#71717A" font-size="14">making a sandwich while the</text>
+    <text x="1024" y="130" fill="#71717A" font-size="14">queue clears. Studio output, no studio.</text>
+  </g>
+
+  <text x="80" y="640" fill="#FAFAF7" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif" font-style="italic">"For operator advantage, don't look at the tools. Look at the seams."</text>
+  <text x="80" y="690" fill="#71717A" font-size="14">The target is volume that needed a studio a year ago. Each tool is ordinary alone. The orchestration across the handoffs is the whole game.</text>
+</svg>

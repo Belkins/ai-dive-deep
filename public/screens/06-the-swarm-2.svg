@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 6 · THE CONFIG LIVES IN THE REPO</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Claude Code config, on disk</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Subagents and hooks aren't settings in an app — they're files in the repo, committed to git, shared with the team.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">.claude/agents/ + .mcp.json</text>
+
+  <!-- LEFT: .claude/ tree -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="700" height="620" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="700" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="700" height="22" fill="#1A1F24"/>
+    <text x="24" y="28" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">repo root</text>
+    <g font-family="JetBrains Mono, monospace" font-size="17">
+      <text x="30" y="92"  fill="#FF8E54">.claude/</text>
+      <text x="60" y="128" fill="#FF8E54">agents/</text><text x="220" y="128" fill="#71717A" font-size="13"># subagent definitions (*.md)</text>
+      <text x="92" y="162" fill="#E5E5E5">reviewer.md</text>
+      <text x="92" y="194" fill="#E5E5E5">explorer.md</text>
+      <text x="92" y="226" fill="#E5E5E5">planner.md</text>
+      <text x="92" y="258" fill="#71717A" font-size="14">… one file per role</text>
+      <text x="60" y="298" fill="#FAFAF7">settings.json</text><text x="280" y="298" fill="#71717A" font-size="13"># hooks live here · git-tracked</text>
+      <text x="30" y="338" fill="#FAFAF7">.mcp.json</text><text x="220" y="338" fill="#71717A" font-size="13"># connectors · sibling of .claude/</text>
+      <text x="30" y="372" fill="#3F4651">CLAUDE.md   src/   …</text>
+    </g>
+    <line x1="30" y1="402" x2="670" y2="402" stroke="#1A1F24" stroke-width="1"/>
+    <text x="30" y="438" fill="#6EE7B7" font-size="12" letter-spacing="2" font-weight="600">THREE HOOK EVENTS — IN settings.json</text>
+    <g font-family="JetBrains Mono, monospace" font-size="15">
+      <text x="30" y="476" fill="#6EE7B7">●</text><text x="54" y="476" fill="#FAFAF7">PreToolUse</text><text x="240" y="476" fill="#71717A" font-size="13">before any tool call</text>
+      <text x="30" y="512" fill="#6EE7B7">●</text><text x="54" y="512" fill="#FAFAF7">PostToolUse</text><text x="240" y="512" fill="#71717A" font-size="13">after a tool call (format-on-save)</text>
+      <text x="30" y="548" fill="#6EE7B7">●</text><text x="54" y="548" fill="#FAFAF7">Stop</text><text x="240" y="548" fill="#71717A" font-size="13">when the agent finishes its turn</text>
+    </g>
+    <text x="30" y="592" fill="#71717A" font-size="13">Generic example names — the chapter doesn't pin filenames.</text>
+  </g>
+
+  <!-- RIGHT: .mcp.json -->
+  <g transform="translate(820, 200)">
+    <rect x="0" y="0" width="700" height="620" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="700" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="700" height="22" fill="#1A1F24"/>
+    <text x="350" y="28" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">.mcp.json</text>
+    <g font-family="JetBrains Mono, monospace" font-size="16">
+      <text x="30" y="86"  fill="#3F4651">1</text><text x="70" y="86"  fill="#E5E5E5">{</text>
+      <text x="30" y="118" fill="#3F4651">2</text><text x="90" y="118" fill="#FF8E54">"mcpServers"</text><text x="260" y="118" fill="#E5E5E5">: {</text>
+      <text x="30" y="150" fill="#3F4651">3</text><text x="110" y="150" fill="#FF8E54">"github"</text><text x="220" y="150" fill="#E5E5E5">: {</text>
+      <text x="30" y="182" fill="#3F4651">4</text><text x="130" y="182" fill="#FF8E54">"command"</text><text x="260" y="182" fill="#E5E5E5">: </text><text x="285" y="182" fill="#6EE7B7">"npx"</text><text x="340" y="182" fill="#E5E5E5">,</text>
+      <text x="30" y="214" fill="#3F4651">5</text><text x="130" y="214" fill="#FF8E54">"args"</text><text x="210" y="214" fill="#E5E5E5">: [</text><text x="250" y="214" fill="#6EE7B7">"-y"</text><text x="295" y="214" fill="#E5E5E5">, </text><text x="315" y="214" fill="#6EE7B7">"@github/mcp-server"</text><text x="600" y="214" fill="#E5E5E5">]</text>
+      <text x="30" y="246" fill="#3F4651">6</text><text x="110" y="246" fill="#E5E5E5">},</text>
+      <text x="30" y="278" fill="#3F4651">7</text><text x="110" y="278" fill="#FF8E54">"filesystem"</text><text x="270" y="278" fill="#E5E5E5">: {</text>
+      <text x="30" y="310" fill="#3F4651">8</text><text x="130" y="310" fill="#FF8E54">"command"</text><text x="260" y="310" fill="#E5E5E5">: </text><text x="285" y="310" fill="#6EE7B7">"npx"</text><text x="340" y="310" fill="#E5E5E5">,</text>
+      <text x="30" y="342" fill="#3F4651">9</text><text x="130" y="342" fill="#FF8E54">"args"</text><text x="210" y="342" fill="#E5E5E5">: [</text><text x="250" y="342" fill="#6EE7B7">"-y"</text><text x="295" y="342" fill="#E5E5E5">, </text><text x="315" y="342" fill="#6EE7B7">"@mcp/filesystem"</text><text x="560" y="342" fill="#E5E5E5">]</text>
+      <text x="24" y="374" fill="#3F4651">10</text><text x="110" y="374" fill="#E5E5E5">}</text>
+      <text x="24" y="406" fill="#3F4651">11</text><text x="90" y="406" fill="#E5E5E5">}</text>
+      <text x="24" y="438" fill="#3F4651">12</text><text x="70" y="438" fill="#E5E5E5">}</text>
+    </g>
+    <line x1="30" y1="470" x2="670" y2="470" stroke="#1A1F24" stroke-width="1"/>
+    <text x="30" y="508" fill="#FAFAF7" font-size="15">Same shape, every agent. Codex reads it. Claude Code reads it.</text>
+    <text x="30" y="536" fill="#71717A" font-size="14">One file at the repo root. No second source of truth to drift.</text>
+    <rect x="30" y="560" width="640" height="40" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="50" y="585" fill="#6EE7B7" font-size="13">Commit it. The swarm config travels with the code.</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">If it's not in the repo, it's not shared. Subagents + hooks as files = a swarm anyone on the team can run identically.</text>
+</svg>
