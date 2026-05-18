@@ -112,15 +112,15 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
 
   <!-- COLD OPEN -->
   <section class="container-prose pt-8 pb-4">
-    <h2 id="cold-open">11:47 AM Wednesday, February. an engineer in Slack.</h2>
+    <h2 id="cold-open">11:47 AM Wednesday, February. An engineer in Slack.</h2>
 
-    <p>I'd already typed the lesson myself the week before, near-verbatim. an engineer on my engineering team pings me:</p>
+    <p>I'd already typed the lesson myself the week before, near-verbatim. An engineer on my team pings me:</p>
 
     <blockquote style="border-left: 3px solid rgb(var(--accent)); padding-left: 1rem; color: rgb(var(--fg) / 0.85); font-style: italic;">
-      "Sic Claude on it to format commits as conventional commits — it stopped doing that. I'll try to spell it out in claude.md."
+      "Claude stopped formatting commits as conventional commits. I'll spell the convention out in CLAUDE.md."
     </blockquote>
 
-    <p>The agent had been doing the right thing for weeks. Then it stopped. Not because the rule changed. Because the rule was never written down in the layer the model actually reads. It lived in a Slack thread, a PR review comment, somebody's head. an engineer's fix — spell it out in CLAUDE.md — is the whole point. The convention has to live in the file the agent reads at session start, not in the team's accumulated muscle memory. <strong>Rule 8 (read before you write) is what should have prevented this</strong>, but Rule 8 only fires if the convention is in the file. If CLAUDE.md is silent, the agent isn't reading anything to inherit.</p>
+    <p>The agent had been doing the right thing for weeks. Then it stopped. Not because the rule changed. Because the rule was never written down in the layer the model actually reads. It lived in a Slack thread, a PR review comment, somebody's head. The fix — spell it out in CLAUDE.md — is the whole point. The convention has to live in the file the agent reads at session start, not in the team's accumulated muscle memory. <strong>Rule 8 (read before you write) is what should have prevented this</strong>, but Rule 8 only fires if the convention is in the file. If CLAUDE.md is silent, the agent isn't reading anything to inherit.</p>
 
     <p>That's the wedge. CLAUDE.md is the kitchen rules taped to the wall (see <a href={`${base}/chapters/37-context-files`}>Ch 37</a> for the four-layer architecture — CLAUDE.md, memory, skills, session-scoped). If your rules aren't in it, the model defaults to whatever it was trained to do, and any operator working in the same repo writes their own version of the convention in their own session. Six months later you have a codebase where no two PRs follow the same pattern, and you're not sure how it happened.</p>
   </section>
@@ -205,7 +205,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <p>Before adding code, read exports, immediate callers, shared utilities. If unsure why existing code is structured a certain way, ask.</p>
     <div class="my-3 rounded-md p-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
       <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Operator overlay</div>
-      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">This is an engineer's regression in the cold open above. The agent stopped formatting commits as conventional commits because it hadn't read what the convention was — there was no convention in the file the agent reads. Rule 8 is the most load-bearing of the 12 in my experience: roughly half of every regression I've debugged in portfolio repos traces back to the agent writing without reading the existing pattern first. If you only adopt three rules from the 12, this is one of them. (See <a href={`${base}/#three-rules`}>the 3-rules section below</a>.)</p>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">This is the regression in the cold open above. The agent stopped formatting commits as conventional commits because it hadn't read what the convention was — there was no convention in the file the agent reads. Rule 8 is the most load-bearing of the 12 in my experience: roughly half of every regression I've debugged in portfolio repos traces back to the agent writing without reading the existing pattern first. If you only adopt three rules from the 12, this is one of them. (See <a href={`${base}/#three-rules`}>the 3-rules section below</a>.)</p>
     </div>
 
     <!-- RULE 9 -->
@@ -248,7 +248,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <p>If a reader can adopt only three of the 12 today, which? The other nine amplify if these three land. The other nine are also strictly less load-bearing if these three don't.</p>
 
     <ol>
-      <li><strong>Rule 8 (Read before you write).</strong> Roughly half the regressions I've debugged across portfolio repos trace back to the agent writing without reading the existing pattern first. an engineer's conventional-commits regression is one example; I have a folder of others. Rule 8 is the cheapest possible defense against "the agent wrote a function next to an identical one it hadn't read." Cost to enforce: 60 seconds of agent latency per task. ROI: most of the silent regressions you'd otherwise debug at 11 PM.</li>
+      <li><strong>Rule 8 (Read before you write).</strong> Roughly half the regressions I've debugged across portfolio repos trace back to the agent writing without reading the existing pattern first. That conventional-commits regression is one example; I have a folder of others. Rule 8 is the cheapest possible defense against "the agent wrote a function next to an identical one it hadn't read." Cost to enforce: 60 seconds of agent latency per task. ROI: most of the silent regressions you'd otherwise debug at 11 PM.</li>
       <li><strong>Rule 12 (Fail loud).</strong> The silent-failure category is the single most expensive class of bug in operator-Claude — friday-wrapup at $0 pipeline for 9 days, the wrong-vault-write for 9 days, the migration that skipped 14% of records. All of them shipped "completed" messages. Rule 12 doesn't eliminate the failure mode; it eliminates the silence around it. Cost to enforce: occasional false-positive surfacing. ROI: catch the failure on day zero instead of day nine.</li>
       <li><strong>Rule 4 (Goal-driven execution).</strong> Pairs with <code>/goal</code> in <a href={`${base}/chapters/38-run-until-done`}>Ch 38</a> — same primitive, different surface. Without measurable success criteria, every session ends in "is this what you wanted?" and the autonomy ladder collapses to per-turn approval. Cost to enforce: a few minutes thinking about what "done" looks like before you start. ROI: the difference between 12 turns to a clean diff and 41 turns to a vibe-eval that never lands.</li>
     </ol>

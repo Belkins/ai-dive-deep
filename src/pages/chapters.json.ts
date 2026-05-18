@@ -25,7 +25,7 @@ export const GET: APIRoute = async () => {
   });
 
   const payload = {
-    book: "Vlad's Ultimate AI Dive Deep",
+    book: "Vlad's Playbook",
     subtitle: 'A field manual for operators who want to stop juggling tabs and start running AI like an OS.',
     author: 'Vlad Podoliako',
     canonicalUrl: SITE,

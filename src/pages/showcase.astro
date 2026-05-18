@@ -109,15 +109,15 @@ const skillChains = [
     brittle: 'voice-calibration scores on syntax, not argument shape. A draft can pass voice and still be a topical retread of last month\'s piece — the chain needs a "have I shipped this argument before" check that doesn\'t exist yet.',
   },
   {
-    when: 'Tuesday 12:30 ET (30 min before the 13:00 Chris call)',
+    when: 'Tuesday, 30 min before a recurring mentee call',
     title: 'The mentee tuesday prep',
     skills: [
-      "mentoring-lifecycle — pre-session mode: loads Session History + Action Tracker + Patterns file + last Session Prep for a mentee",
-      "friday-wrapup — pulls any Belkins/Folderly cross-portfolio context Chris should know (e.g., Folderly upsell warm lead Chris flagged in Session 3)",
-      "vault-note — writes the 1-page prep into Vlad-Brain/Projects/Active/Mentoring/a mentee - Session Prep 5.md with proper frontmatter + wikilinks",
+      "mentoring-lifecycle — pre-session mode: loads Session History + Action Tracker + Patterns file + last Session Prep for the mentee",
+      "friday-wrapup — pulls any cross-portfolio context the mentee should know (e.g., a warm intro the mentee flagged in a prior session)",
+      "vault-note — writes the 1-page prep into the mentoring folder as a dated Session Prep note with proper frontmatter + wikilinks",
     ],
-    scene: '12:30. Chris call at 13:00 ET. mentoring-lifecycle fires in pre-session mode, loads four files from the vault: Mentoring.md (session history table), Action Tracker (3 commitments overdue 2.5 weeks from Vlad — GTM referrals), Patterns.md (Chris\'s "result is attached to me, my identity" emotional pattern), Session Prep 4 (the legal bottleneck discovery). friday-wrapup adds the Folderly upsell warm lead status — Chris had mentioned inbox issues, the Folderly team had been pinged but no follow-up yet. vault-note writes the prep at 12:38. Vlad reads for 6 minutes, walks into the call at 12:58 knowing the attorney status is the load-bearing question.',
-    receipt: '1-page prep doc written in 8 minutes vs. the old 35-minute scramble through vault files. Chris\'s $2,375/mo retainer kept defensible because the session opens on his actual question, not Vlad\'s last-mentee context bleeding through.',
+    scene: 'T-30. mentoring-lifecycle fires in pre-session mode, loads four files from the vault: the session-history table, the action tracker (a few commitments overdue on Vlad\'s side), the patterns file (the recurring behavioural pattern for this mentee), and the last session prep (a blocker discovered last time). friday-wrapup adds a cross-portfolio status item the mentee had flagged. vault-note writes the prep ~8 min in. Vlad reads for 6 minutes and walks into the call knowing the one load-bearing question.',
+    receipt: '1-page prep doc written in 8 minutes vs. the old 35-minute scramble through vault files. The retainer stays defensible because the session opens on the mentee\'s actual question, not the last mentee\'s context bleeding through.',
     brittle: "mentoring-lifecycle assumes the vault paths are stable. When Cowork's bindfs mirror got re-synced on May 9 the chain returned an empty Patterns.md for 18 minutes — verify-file-durability now runs as a pre-check, but the chain doesn't fail loudly when a source file is silently empty.",
   },
   {
@@ -128,8 +128,8 @@ const skillChains = [
       "cfo-case — defense generator, builds the \"what this spend bought\" memo from git activity + shipped artifacts + revenue-attached outcomes",
       "model-comparison — pulls Claude Opus 4.7 vs. GPT-5 cost-per-task on the actual prompts Vlad ran that month",
     ],
-    scene: '16:45. Slack DM from Maria (Belkins CFO): "Vlad, the Anthropic bill is up 59% this month, can you justify before the board on Monday?" billing-alert-template had already pinged Tuesday — Vlad had ignored it because the spike was a swarm-strategic-plan run for a new portfolio venture, deliberate. cfo-case fires at 16:48: pulls git activity across 4 repos (Partner Connector ships, ai-dive-deep edition 4, belkins.app hub, LinguaLive), maps Claude usage to specific outcomes ($28k Folderly upsell recovered Tuesday, 36-chapter book shipped May 11, 18 Stripe Payment Links live). model-comparison runs at 16:55: same prompts on GPT-5 would have cost $14,100 with worse output on the long-context chapter drafts.',
-    receipt: '4-paragraph response to Maria at 17:08, board memo attached. $9,240 bill defended with $74k of attached deal-and-shipped-product outcomes. 23 minutes total vs. the old "spend Saturday reconstructing what the money bought" pattern.',
+    scene: '16:45. Slack DM from the CFO: "Vlad, the Anthropic bill is up 59% this month, can you justify before the board on Monday?" billing-alert-template had already pinged Tuesday — Vlad had ignored it because the spike was a swarm-strategic-plan run for a new portfolio venture, deliberate. cfo-case fires at 16:48: pulls git activity across four active repos, maps Claude usage to specific outcomes (a portfolio upsell recovered Tuesday, the 36-chapter book shipped, the payment links live). model-comparison runs at 16:55: same prompts on a competing model would have cost ~$14k with worse output on the long-context chapter drafts.',
+    receipt: '4-paragraph response to the CFO at 17:08, board memo attached. $9,240 bill defended with ~$74k of attached deal-and-shipped-product outcomes. 23 minutes total vs. the old "spend Saturday reconstructing what the money bought" pattern.',
     brittle: "cfo-case maps spend to git activity, but a third of Vlad's Claude usage is conversational (mentoring prep, strategic thinking) with no git trail. The defense undercounts the actual value — currently the chain reports the floor, not the truth.",
   },
   {
