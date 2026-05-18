@@ -47,6 +47,7 @@ export const SCREENSHOTS: Record<string, string> = {
   "24-tier-list-1": "24-tier-list-1.svg",
   "25-evals-or-hope-1": "25-evals-or-hope-1.svg",
   "26-team-adoption-1": "26-team-adoption-1.svg",
+  "27-voice-agents-1": "27-voice-agents-1.svg",
   "29-cost-economics-1": "29-cost-economics-1.png",
   "29-cost-economics-2": "29-cost-economics-2.png",
   "29-cost-economics-3": "29-cost-economics-3.png",
@@ -56,6 +57,10 @@ export const SCREENSHOTS: Record<string, string> = {
   "29-cost-economics-7": "29-cost-economics-7.png",
   "29-cost-economics-8": "29-cost-economics-8.png",
   "31-stages-1": "31-stages-1.svg",
+  "33-browser-agents-1": "33-browser-agents-1.svg",
+  "34-write-on-behalf-1": "34-write-on-behalf-1.svg",
+  "35-codex-and-cc-1": "35-codex-and-cc-1.svg",
+  "35-codex-and-cc-2": "35-codex-and-cc-2.svg",
   "37-context-files-1": "37-context-files-1.svg",
   "38-run-until-done-1": "38-run-until-done-1.svg",
   "38-run-until-done-2": "38-run-until-done-2.svg",
@@ -63,4 +68,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "claude-md-rules-1": "claude-md-rules-1.svg"
 };
 
-export const SCREENSHOT_COUNT = 58;
+export const SCREENSHOT_COUNT = 63;

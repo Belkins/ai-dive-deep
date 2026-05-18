@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 27 · LINGUALIVE VOICE AGENT</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">No single villain. The stack is.</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Four components, each fine alone. Their sum is 1,150 ms before the first phoneme — past the 800 ms a human will tolerate.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">REBUILD #4 · LATENCY WATERFALL</text>
+
+  <!-- waterfall. scale: 1ms = 1.1px, x0 = 90, baseline rows -->
+  <g transform="translate(0, 210)">
+    <!-- 800ms tolerance line at x = 90 + 800*1.1 = 970 -->
+    <line x1="970" y1="20" x2="970" y2="470" stroke="#FF6B5C" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="978" y="40" fill="#FF6B5C" font-size="13" font-weight="600">800 ms — human tolerance</text>
+    <text x="978" y="60" fill="#71717A" font-size="12">silence past here is paid for in trust</text>
+
+    <!-- row 1: PSTN 0→300 -->
+    <text x="90" y="108" fill="#AAA79A" font-size="14">Telephony · Twilio PSTN handoff</text>
+    <rect x="90" y="120" width="330" height="46" fill="#FF6B2C" rx="3"/>
+    <text x="110" y="149" fill="#0E0F11" font-size="15" font-weight="700">PSTN  300 ms</text>
+
+    <!-- row 2: STT 300→500 -->
+    <text x="90" y="200" fill="#AAA79A" font-size="14">Speech-to-text · Deepgram streaming</text>
+    <rect x="420" y="212" width="220" height="46" fill="#FF8E54" rx="3"/>
+    <text x="440" y="241" fill="#0E0F11" font-size="15" font-weight="700">STT  +200 ms</text>
+
+    <!-- row 3: LLM 500→900 -->
+    <text x="90" y="292" fill="#AAA79A" font-size="14">LLM first-token · Sonnet 4.7 (warm)</text>
+    <rect x="640" y="304" width="440" height="46" fill="#F5C24A" rx="3"/>
+    <text x="660" y="333" fill="#0E0F11" font-size="15" font-weight="700">LLM first-token  +400 ms</text>
+
+    <!-- row 4: TTS 900→1150 -->
+    <text x="90" y="384" fill="#AAA79A" font-size="14">Text-to-speech · ElevenLabs Turbo first-audio</text>
+    <rect x="1080" y="396" width="275" height="46" fill="#9EE6C0" rx="3"/>
+    <text x="1100" y="425" fill="#0E0F11" font-size="15" font-weight="700">TTS  +250 ms</text>
+
+    <!-- cumulative marker -->
+    <line x1="1355" y1="120" x2="1355" y2="470" stroke="#6EE7B7" stroke-width="2"/>
+    <text x="1347" y="470" fill="#6EE7B7" font-size="20" font-weight="600" text-anchor="end" font-family="Source Serif 4, Georgia, serif">1,150 ms</text>
+    <text x="90" y="500" fill="#71717A" font-size="13">0 ms · the call connects</text>
+  </g>
+
+  <!-- context cards -->
+  <g transform="translate(80, 730)">
+    <rect x="0" y="0" width="450" height="86" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="22" y="32" fill="#71717A" font-size="11" letter-spacing="2" font-weight="600">WHAT THE INVESTOR HEARD</text>
+    <text x="22" y="66" fill="#FAFAF7" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">1.4 s of silence</text>
+
+    <rect x="470" y="0" width="450" height="86" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="492" y="32" fill="#71717A" font-size="11" letter-spacing="2" font-weight="600">WARM vs COLD</text>
+    <text x="492" y="66" fill="#FAFAF7" font-size="20" font-weight="500" font-family="Source Serif 4, Georgia, serif">~900 ms warm · ~2.6 s cold</text>
+
+    <rect x="940" y="0" width="500" height="86" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="10"/>
+    <text x="962" y="32" fill="#FF6B2C" font-size="11" letter-spacing="2" font-weight="600">THE FIX ISN'T A FASTER MODEL</text>
+    <text x="962" y="62" fill="#FAFAF7" font-size="15">It's parallelizing the seams + warming the path.</text>
+  </g>
+
+  <text x="80" y="860" fill="#71717A" font-size="13">Every component vendor demos their slice alone and it looks fast. The deal dies in the sum nobody put on one chart.</text>
+</svg>
