@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 35 · THE THIRD INSTRUMENT</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">The wrong-but-useful first render</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">AI Studio Build mode, mid-iteration. Gemini 3 Pro returns a working page in under a minute. It's wrong — usefully.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">aistudio.google.com · Build mode</text>
+
+  <!-- 3-pane -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="1440" height="620" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="1440" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="1440" height="22" fill="#1A1F24"/>
+    <text x="720" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">Google AI Studio — Build · Gemini 3 Pro</text>
+
+    <!-- chat pane -->
+    <rect x="14" y="58" width="450" height="548" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="6"/>
+    <text x="34" y="86" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">CHAT</text>
+    <rect x="34" y="100" width="410" height="92" fill="#1A1208" rx="8"/>
+    <text x="50" y="124" fill="#71717A" font-size="11" font-family="Inter">YOU · seed prompt</text>
+    <text x="50" y="148" fill="#E5E5E5" font-size="13">modern editorial landing page,</text>
+    <text x="50" y="168" fill="#E5E5E5" font-size="13">scroll-driven motion, dark, serif</text>
+    <text x="50" y="186" fill="#E5E5E5" font-size="13">headlines, one product shot</text>
+    <rect x="34" y="208" width="410" height="56" fill="#161B1F" rx="8"/>
+    <text x="50" y="230" fill="#6EE7B7" font-size="11" font-family="Inter">GEMINI</text>
+    <text x="50" y="252" fill="#AAA79A" font-size="13">Rendered. React + Tailwind. ~48s.</text>
+    <rect x="34" y="280" width="410" height="56" fill="#1A1208" rx="8"/>
+    <text x="50" y="304" fill="#FF6B2C" font-size="13">"this, but the headline reveals</text>
+    <text x="50" y="324" fill="#FF6B2C" font-size="13">on scroll, not on load"</text>
+    <rect x="34" y="352" width="410" height="44" fill="#1A1208" rx="8"/>
+    <text x="50" y="380" fill="#FF6B2C" font-size="13">"kill the gradient, it's cheap"</text>
+    <text x="34" y="436" fill="#71717A" font-size="12" font-family="Inter">Pointing loop — not a prose loop.</text>
+    <rect x="34" y="556" width="410" height="34" fill="#161B1F" stroke="#2A3138" rx="6"/>
+    <text x="50" y="578" fill="#71717A" font-size="13" font-family="Inter">I'm Feeling Lucky · type a change…</text>
+
+    <!-- code pane -->
+    <rect x="476" y="58" width="450" height="548" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="6"/>
+    <text x="496" y="86" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">CODE · React + Tailwind</text>
+    <g font-family="JetBrains Mono, monospace" font-size="12.5">
+      <text x="496" y="120" fill="#3F4651">1</text><text x="524" y="120" fill="#FF8E54">export default function</text><text x="760" y="120" fill="#6EE7B7"> Hero</text><text x="812" y="120" fill="#E5E5E5">() {</text>
+      <text x="496" y="146" fill="#3F4651">2</text><text x="540" y="146" fill="#E5E5E5">return (</text>
+      <text x="496" y="172" fill="#3F4651">3</text><text x="560" y="172" fill="#E5E5E5">&lt;</text><text x="572" y="172" fill="#F4978E">section</text><text x="640" y="172" fill="#FF8E54"> className</text><text x="730" y="172" fill="#E5E5E5">=</text><text x="745" y="172" fill="#6EE7B7">"…"</text><text x="775" y="172" fill="#E5E5E5">&gt;</text>
+      <text x="496" y="198" fill="#3F4651">4</text><text x="580" y="198" fill="#E5E5E5">&lt;</text><text x="592" y="198" fill="#F4978E">h1</text><text x="616" y="198" fill="#FF8E54"> className</text><text x="706" y="198" fill="#E5E5E5">=</text><text x="721" y="198" fill="#6EE7B7">"font-serif"</text><text x="845" y="198" fill="#E5E5E5">&gt;</text>
+      <text x="496" y="224" fill="#3F4651">5</text><text x="600" y="224" fill="#E5E5E5">Operate at speed</text>
+      <text x="496" y="250" fill="#3F4651">6</text><text x="580" y="250" fill="#E5E5E5">&lt;/</text><text x="600" y="250" fill="#F4978E">h1</text><text x="624" y="250" fill="#E5E5E5">&gt;</text>
+      <text x="496" y="276" fill="#3F4651">7</text><text x="580" y="276" fill="#3F4651">// gradient — flagged for removal</text>
+      <text x="496" y="302" fill="#3F4651">8</text><text x="560" y="302" fill="#E5E5E5">&lt;/</text><text x="580" y="302" fill="#F4978E">section</text><text x="648" y="302" fill="#E5E5E5">&gt;</text>
+      <text x="496" y="328" fill="#3F4651">9</text><text x="540" y="328" fill="#E5E5E5">) }</text>
+    </g>
+    <text x="496" y="580" fill="#71717A" font-size="12" font-family="Inter">Generated, editable, throwaway — you keep the idea.</text>
+
+    <!-- preview pane -->
+    <rect x="938" y="58" width="488" height="548" fill="#101316" stroke="#2A3138" stroke-width="1" rx="6"/>
+    <text x="958" y="86" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">LIVE PREVIEW</text>
+    <!-- mock rendered page, deliberately rough -->
+    <rect x="958" y="100" width="448" height="486" fill="#0B0D0F" rx="6"/>
+    <!-- hero with annotation highlight -->
+    <rect x="978" y="120" width="408" height="180" fill="none" stroke="#FF6B2C" stroke-width="2" stroke-dasharray="6 4" rx="6"/>
+    <text x="1182" y="200" fill="#FAFAF7" font-size="28" text-anchor="middle" font-family="Source Serif 4, Georgia, serif">Operate at speed</text>
+    <text x="1182" y="232" fill="#71717A" font-size="13" text-anchor="middle">a subhead the model guessed at</text>
+    <rect x="1130" y="252" width="104" height="30" rx="15" fill="#161B1F"/>
+    <text x="1182" y="272" fill="#AAA79A" font-size="12" text-anchor="middle">Get started</text>
+    <!-- annotation pin -->
+    <circle cx="1386" cy="120" r="14" fill="#FF6B2C"/>
+    <text x="1386" y="125" fill="#0E0F11" font-size="13" font-weight="700" text-anchor="middle">!</text>
+    <rect x="1090" y="312" width="296" height="44" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="1106" y="339" fill="#FF6B2C" font-size="12">annotation: headline on scroll, kill gradient</text>
+    <!-- rough body blocks -->
+    <rect x="978" y="376" width="408" height="14" fill="#1A1F24" rx="3"/>
+    <rect x="978" y="400" width="360" height="14" fill="#1A1F24" rx="3"/>
+    <rect x="978" y="430" width="408" height="120" fill="#14181C" rx="6"/>
+    <text x="1182" y="496" fill="#3F4651" font-size="13" text-anchor="middle">[ product shot placeholder ]</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">Upstream of the build, never the build. Point at what's wrong, fork the direction, stop at "I can describe this now."</text>
+</svg>

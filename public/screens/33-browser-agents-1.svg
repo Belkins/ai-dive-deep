@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 33 · A WORKER THAT WATCHED ALL NIGHT</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">4:13 AM. The price moved.</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">A Playwright cron woke at 4:11, diffed a competitor's pricing page, posted to Slack, and went back to sleep.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">pricing_watch · #ci-pricing</text>
+
+  <!-- Slack post -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="980" height="620" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="980" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="980" height="22" fill="#1A1F24"/>
+    <text x="24" y="28" fill="#AAA79A" font-size="14" font-family="JetBrains Mono, monospace"># ci-pricing</text>
+
+    <rect x="28" y="68" width="40" height="40" rx="8" fill="#6EE7B7"/>
+    <text x="48" y="95" fill="#0E0F11" font-size="16" font-weight="700" text-anchor="middle" font-family="JetBrains Mono, monospace">⊳</text>
+    <text x="84" y="86" fill="#FAFAF7" font-size="16" font-weight="600">pricing-watch</text>
+    <rect x="222" y="72" width="38" height="18" rx="4" fill="#2A3138"/>
+    <text x="241" y="85" fill="#AAA79A" font-size="10" text-anchor="middle" font-weight="600">APP</text>
+    <text x="276" y="86" fill="#71717A" font-size="13">4:13 AM</text>
+
+    <text x="84" y="120" fill="#E5E5E5" font-size="16">Competitor pricing changed overnight. The <tspan fill="#FAFAF7" font-weight="600">Pro plan went from</tspan></text>
+    <text x="84" y="146" fill="#E5E5E5" font-size="16"><tspan fill="#FAFAF7" font-weight="600">$79 to $89</tspan>, and a new <tspan fill="#FAFAF7" font-weight="600">"Scale" tier appeared at $249</tspan>. Snapshot</text>
+    <text x="84" y="172" fill="#E5E5E5" font-size="16">attached; sales may want to adjust the deck before the 9 AM call.</text>
+    <text x="84" y="198" fill="#71717A" font-size="12">47 words · diff vs yesterday's snapshot</text>
+
+    <!-- JSON block -->
+    <rect x="84" y="216" width="868" height="296" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <g font-family="JetBrains Mono, monospace" font-size="15">
+      <text x="104" y="248" fill="#71717A">{</text>
+      <text x="124" y="274" fill="#FF8E54">"plans"</text><text x="200" y="274" fill="#E5E5E5">: [</text>
+      <text x="144" y="300" fill="#E5E5E5">{ </text><text x="170" y="300" fill="#FF8E54">"name"</text><text x="232" y="300" fill="#E5E5E5">: </text><text x="252" y="300" fill="#6EE7B7">"Pro"</text><text x="305" y="300" fill="#E5E5E5">, </text><text x="325" y="300" fill="#FF8E54">"monthly_price_usd"</text><text x="575" y="300" fill="#E5E5E5">: </text><text x="595" y="300" fill="#F4978E">89</text><text x="620" y="300" fill="#71717A"> (was 79)</text><text x="730" y="300" fill="#E5E5E5"> },</text>
+      <text x="144" y="326" fill="#E5E5E5">{ </text><text x="170" y="326" fill="#FF8E54">"name"</text><text x="232" y="326" fill="#E5E5E5">: </text><text x="252" y="326" fill="#6EE7B7">"Scale"</text><text x="325" y="326" fill="#E5E5E5">, </text><text x="345" y="326" fill="#FF8E54">"monthly_price_usd"</text><text x="595" y="326" fill="#E5E5E5">: </text><text x="615" y="326" fill="#6EE7B7">249</text><text x="655" y="326" fill="#71717A"> (new tier)</text><text x="780" y="326" fill="#E5E5E5"> }</text>
+      <text x="124" y="352" fill="#E5E5E5">],</text>
+      <text x="124" y="378" fill="#FF8E54">"changed"</text><text x="220" y="378" fill="#E5E5E5">: </text><text x="240" y="378" fill="#6EE7B7">true</text><text x="290" y="378" fill="#E5E5E5">,</text>
+      <text x="124" y="404" fill="#FF8E54">"checked_at"</text><text x="255" y="404" fill="#E5E5E5">: </text><text x="275" y="404" fill="#6EE7B7">"2026-05-07T04:13Z"</text>
+      <text x="104" y="430" fill="#71717A">}</text>
+      <text x="104" y="478" fill="#71717A" font-size="14">📎 snapshots/competitor-pricing-2026-05-06.json</text>
+    </g>
+  </g>
+
+  <!-- run meta -->
+  <g transform="translate(1100, 200)">
+    <rect x="0" y="0" width="420" height="620" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="28" y="48" fill="#6EE7B7" font-size="12" letter-spacing="2.4" font-weight="600">THE RUN</text>
+    <text x="28" y="92"  fill="#71717A" font-size="13">WOKE</text><text x="28" y="116" fill="#FAFAF7" font-size="16">4:11 AM Wed · cron</text>
+    <text x="28" y="156" fill="#71717A" font-size="13">POSTED</text><text x="28" y="180" fill="#FAFAF7" font-size="16">4:13 AM · #ci-pricing</text>
+    <text x="28" y="220" fill="#71717A" font-size="13">AGENT</text><text x="28" y="244" fill="#FAFAF7" font-size="16" font-family="JetBrains Mono, monospace">pricing_watch.py</text>
+    <text x="28" y="284" fill="#71717A" font-size="13">DIFF AGAINST</text><text x="28" y="306" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">competitor-pricing-</text><text x="28" y="326" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">2026-05-06.json</text>
+    <line x1="28" y1="360" x2="392" y2="360" stroke="#2A3138" stroke-width="1"/>
+    <text x="28" y="396" fill="#FAFAF7" font-size="15">"I read it with coffee.</text>
+    <text x="28" y="420" fill="#FAFAF7" font-size="15">Sales adjusts a deck</text>
+    <text x="28" y="444" fill="#FAFAF7" font-size="15">before the 9 AM call."</text>
+    <rect x="28" y="476" width="364" height="100" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="48" y="506" fill="#FF6B2C" font-size="10" letter-spacing="2" font-weight="600">THE BLAST RADIUS</text>
+    <text x="48" y="532" fill="#AAA79A" font-size="13">Same agent once posted into</text>
+    <text x="48" y="552" fill="#AAA79A" font-size="13">the wrong channel. Channel</text>
+    <text x="48" y="572" fill="#AAA79A" font-size="13">scoping is not optional.</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">This is what an unattended overnight browser agent produces: a readable diff, a snapshot, a timestamp, an identity.</text>
+</svg>

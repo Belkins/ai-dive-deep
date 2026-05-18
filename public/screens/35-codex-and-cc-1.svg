@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 35 · ONE CONTRACT, TWO AGENTS</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">.mcp.json + CLAUDE.md, side by side</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Codex (night) and Claude Code (day) read the same two files. One source of truth. No "Codex's view of HubSpot."</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">the-partner-portal · repo root</text>
+
+  <!-- .mcp.json (5 servers) -->
+  <g transform="translate(80, 196)">
+    <rect x="0" y="0" width="700" height="624" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="700" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="700" height="22" fill="#1A1F24"/>
+    <text x="350" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">.mcp.json — five servers</text>
+    <g font-family="JetBrains Mono, monospace" font-size="14.5">
+      <text x="28" y="82"  fill="#3F4651">1</text><text x="62" y="82"  fill="#E5E5E5">{ </text><text x="86" y="82" fill="#FF8E54">"mcpServers"</text><text x="246" y="82" fill="#E5E5E5">: {</text>
+      <text x="28" y="118" fill="#3F4651">2</text><text x="80" y="118" fill="#FF8E54">"hubspot"</text><text x="200" y="118" fill="#E5E5E5">: { npx </text><text x="290" y="118" fill="#6EE7B7">@hubspot/mcp-server</text><text x="560" y="118" fill="#E5E5E5"> }</text>
+      <text x="28" y="154" fill="#3F4651">3</text><text x="80" y="154" fill="#FF8E54">"stripe"</text><text x="200" y="154" fill="#E5E5E5">: { npx </text><text x="290" y="154" fill="#6EE7B7">@stripe/mcp</text><text x="450" y="154" fill="#E5E5E5"> }</text>
+      <text x="28" y="190" fill="#3F4651">4</text><text x="80" y="190" fill="#FF8E54">"sentry"</text><text x="200" y="190" fill="#E5E5E5">: { npx </text><text x="290" y="190" fill="#6EE7B7">@sentry/mcp-server</text><text x="545" y="190" fill="#E5E5E5"> }</text>
+      <text x="28" y="226" fill="#3F4651">5</text><text x="80" y="226" fill="#FF8E54">"github"</text><text x="200" y="226" fill="#E5E5E5">: { npx </text><text x="290" y="226" fill="#6EE7B7">@github/mcp-server</text><text x="545" y="226" fill="#E5E5E5"> }</text>
+      <text x="28" y="262" fill="#3F4651">6</text><text x="80" y="262" fill="#FF8E54">"slack"</text><text x="200" y="262" fill="#E5E5E5">: { npx </text><text x="290" y="262" fill="#6EE7B7">@slack/mcp-server</text><text x="530" y="262" fill="#E5E5E5"> }</text>
+      <text x="28" y="298" fill="#3F4651">7</text><text x="62" y="298" fill="#E5E5E5">} }</text>
+    </g>
+    <line x1="28" y1="330" x2="672" y2="330" stroke="#1A1F24" stroke-width="1"/>
+    <text x="28" y="366" fill="#71717A" font-size="13">Tokens via <tspan font-family="JetBrains Mono, monospace" fill="#AAA79A">${HUBSPOT_TOKEN}</tspan> · never inline.</text>
+    <text x="28" y="392" fill="#71717A" font-size="13">Note the deliberate drift: <tspan font-family="JetBrains Mono, monospace" fill="#AAA79A">@stripe/mcp</tspan> has no</text>
+    <text x="28" y="414" fill="#71717A" font-size="13">-server suffix; env keys aren't all <tspan font-family="JetBrains Mono, monospace" fill="#AAA79A">*_TOKEN</tspan>. Real configs are uneven.</text>
+    <rect x="28" y="444" width="644" height="150" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="48" y="476" fill="#6EE7B7" font-size="11" letter-spacing="2" font-weight="600">WHO READS THIS</text>
+    <text x="48" y="510" fill="#FAFAF7" font-size="16">Codex, when it boots in the cloud sandbox at 3 AM.</text>
+    <text x="48" y="538" fill="#FAFAF7" font-size="16">Claude Code, when you open the repo at 9 AM.</text>
+    <text x="48" y="572" fill="#AAA79A" font-size="14">Same five servers. Same shape. Same auth.</text>
+  </g>
+
+  <!-- CLAUDE.md -->
+  <g transform="translate(820, 196)">
+    <rect x="0" y="0" width="700" height="624" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="700" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="700" height="22" fill="#1A1F24"/>
+    <text x="350" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">CLAUDE.md — 240 lines · the policy</text>
+    <g font-family="JetBrains Mono, monospace" font-size="15">
+      <text x="28" y="80" fill="#71717A">… project overview, stack, conventions …</text>
+      <rect x="24" y="98" width="652" height="380" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+      <text x="44" y="132" fill="#FF6B2C" font-size="17" font-weight="700"># Codex never pushes to main</text>
+      <text x="44" y="160" fill="#71717A" font-size="12" font-family="Inter">≈ a third of the whole file</text>
+
+      <text x="44" y="200" fill="#FF8E54" font-size="13">## Branch protection</text>
+      <text x="44" y="226" fill="#E5E5E5" font-size="13.5">Codex pushes to codex/&lt;issue&gt;-&lt;slug&gt;,</text>
+      <text x="44" y="248" fill="#E5E5E5" font-size="13.5">opens a PR. CI green + 1 human review.</text>
+
+      <text x="44" y="288" fill="#FF8E54" font-size="13">## File ownership</text>
+      <text x="44" y="314" fill="#E5E5E5" font-size="13.5">Codex: src/server/jobs, workers,</text>
+      <text x="44" y="336" fill="#E5E5E5" font-size="13.5">tests/regression. Day driver: src/app,</text>
+      <text x="44" y="358" fill="#E5E5E5" font-size="13.5">components, prisma/schema.prisma.</text>
+      <text x="44" y="380" fill="#FAFAF7" font-size="13.5">The schema is the line in the sand.</text>
+
+      <text x="44" y="420" fill="#FF8E54" font-size="13">## Social rules</text>
+      <text x="44" y="446" fill="#E5E5E5" font-size="13.5">No self-merge. No approving CC's PRs.</text>
+      <text x="44" y="468" fill="#E5E5E5" font-size="13.5">No closing issues without a human ack.</text>
+    </g>
+    <text x="28" y="516" fill="#71717A" font-size="13">e.g. branch codex/sentry-4471-deal-sync-null,</text>
+    <text x="28" y="538" fill="#71717A" font-size="13">commit "Fixes ENG-1842", PR #4471 → #eng-incidents.</text>
+    <rect x="28" y="560" width="644" height="40" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="48" y="585" fill="#6EE7B7" font-size="13">One policy file. The night shift obeys it; the day shift wrote it.</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">The dual-shift hand-off works because there's no second config to drift. Two agents, two contracts, one repo.</text>
+</svg>
