@@ -14,9 +14,9 @@ import Callout from '@/components/Callout.astro';
 import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 import VideoEmbed from '@/components/VideoEmbed.astro';
 
-It's 11:47 AM on a Wednesday in February. Yehor on my engineering team pings me on Slack with three sentences I'd already typed myself the week before, almost verbatim:
+It's late morning on a Wednesday in February. An engineer on my team pings me on Slack with the same frustration I'd hit myself the week before:
 
-> "Sic Claude on it to format commits as conventional commits — it stopped doing that. I'll try to spell it out in claude.md."
+> "Claude stopped formatting commits as conventional commits — can we just spell it out in claude.md so it sticks?"
 
 Read that again. The agent had been doing the right thing for weeks. Then it stopped. Not because the rule changed. Because the rule was never written down in the layer the model actually reads. It was floating in a Slack thread, in a PR review comment, in someone's head. The convention existed in the team. It just didn't exist in the place an instance reboots into every morning.
 
@@ -109,7 +109,7 @@ Three questions. Run any rule through them.
 2. **Does it change across sessions, or is it stable?** Stable → CLAUDE.md or skill. Changes session-to-session → memory or session-scoped. A weekly metric goal is not a CLAUDE.md entry.
 3. **Is it a rule (apply everywhere) or a workflow (multi-step, conditional)?** Rule → CLAUDE.md. Workflow → skill. If your "rule" has the words "first," "then," "if X do Y" — it's a workflow. Make it a skill.
 
-A worked example. "Format git commits as conventional commits" is project-specific, stable, and a rule. CLAUDE.md, one line, done. "Pull HubSpot deal data, cross-reference with Slack mentions, draft a Friday memo" is personal, stable, and a workflow. Skill. "Vlad currently has Chris's Tuesday session at 1 PM ET, rescheduled to Wednesday this week" is personal, volatile, and project-specific. Memory.
+A worked example. "Format git commits as conventional commits" is project-specific, stable, and a rule. CLAUDE.md, one line, done. "Pull HubSpot deal data, cross-reference with Slack mentions, draft a Friday memo" is personal, stable, and a workflow. Skill. "Mentee A's weekly session is rescheduled this week" is personal, volatile, and project-specific. Memory.
 
 ## The five context-file mistakes (with receipts)
 

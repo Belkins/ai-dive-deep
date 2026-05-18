@@ -11,10 +11,13 @@ interface Props {
   noNav?: boolean;
 }
 
+const BRAND = "Vlad's Playbook";
+const FULL = "Vlad's Playbook — The Ultimate AI Dive Deep";
+
 const { title, description, ogImage, noNav } = Astro.props;
-const fullTitle = title === "Vlad's Ultimate AI Dive Deep" ? title : `${title} — Vlad's Ultimate AI Dive Deep`;
+const fullTitle = title === BRAND || title === FULL ? FULL : `${title} — ${BRAND}`;
 const desc = description ?? 'Thirty-nine chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.';
-const og = ogImage ?? `${import.meta.env.BASE_URL.replace(/\/$/, '')}/og-default.svg`;
+const og = new URL(ogImage ?? '/og-default.png', Astro.site).toString();
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 
 // JSON-LD: emit Article on chapter pages, Book on root, WebPage elsewhere.
@@ -28,17 +31,17 @@ const jsonLd: Record<string, unknown> = isChapter
       headline: title,
       description: desc,
       author: { '@type': 'Person', name: 'Vlad Podoliako', url: 'https://www.vladsnewsletter.com' },
-      publisher: { '@type': 'Organization', name: "Vlad's Ultimate AI Dive Deep", url: 'https://dive.vladyslavpodoliako.com' },
+      publisher: { '@type': 'Organization', name: BRAND, url: 'https://dive.vladyslavpodoliako.com' },
       image: og,
       url: canonical,
-      isPartOf: { '@type': 'Book', name: "Vlad's Ultimate AI Dive Deep", url: 'https://dive.vladyslavpodoliako.com' },
+      isPartOf: { '@type': 'Book', name: BRAND, url: 'https://dive.vladyslavpodoliako.com' },
       inLanguage: 'en',
     }
   : isRoot
     ? {
         '@context': 'https://schema.org',
         '@type': 'Book',
-        name: "Vlad's Ultimate AI Dive Deep",
+        name: BRAND,
         author: { '@type': 'Person', name: 'Vlad Podoliako', url: 'https://www.vladsnewsletter.com' },
         url: 'https://dive.vladyslavpodoliako.com',
         description: desc,
@@ -54,7 +57,7 @@ const jsonLd: Record<string, unknown> = isChapter
         name: title,
         description: desc,
         url: canonical,
-        isPartOf: { '@type': 'Book', name: "Vlad's Ultimate AI Dive Deep", url: 'https://dive.vladyslavpodoliako.com' },
+        isPartOf: { '@type': 'Book', name: BRAND, url: 'https://dive.vladyslavpodoliako.com' },
         inLanguage: 'en',
       };
 ---
@@ -75,7 +78,7 @@ const jsonLd: Record<string, unknown> = isChapter
     <meta property="og:description" content={desc} />
     <meta property="og:image" content={og} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="Vlad's Ultimate AI Dive Deep" />
+    <meta property="og:site_name" content={BRAND} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={desc} />

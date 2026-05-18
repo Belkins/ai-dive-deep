@@ -12,7 +12,7 @@
 
   <!-- Title -->
   <text x="100" y="130" fill="#FAFAF7" font-size="28" font-weight="500" font-family="Source Serif 4, Georgia, serif">Scheduled tasks — what runs while I sleep</text>
-  <text x="100" y="160" fill="#AAA79A" font-size="14">Cron-style cards. Each one is a SKILL.md invoked at a fixed cadence. The output lands in #vlad-ops.</text>
+  <text x="100" y="160" fill="#AAA79A" font-size="14">Cron-style cards. Each one is a SKILL.md invoked at a fixed cadence. The output lands in #ops.</text>
 
   <!-- 4 columns × 3 rows = 12 cards. Card: 330 wide × 200 tall, gap 30 -->
   <!-- Total height (with header at 200): 200 + 3×200 + 2×30 = 860. Fits at 900. -->
@@ -32,10 +32,10 @@
       <text x="120" y="168" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Weekdays  ·  7:00 ET</text>
     </g>
 
-    <!-- Card 2: Belkins pipeline heartbeat -->
+    <!-- Card 2: Pipeline heartbeat -->
     <g transform="translate(360, 0)">
       <rect x="0" y="0" width="330" height="200" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
-      <text x="20" y="36" fill="#FAFAF7" font-size="16" font-weight="500">Belkins pipeline heartbeat</text>
+      <text x="20" y="36" fill="#FAFAF7" font-size="16" font-weight="500">Pipeline heartbeat</text>
       <text x="20" y="64" fill="#AAA79A" font-size="12">HubSpot deal motion + Gong call signals →</text>
       <text x="20" y="82" fill="#AAA79A" font-size="12">flags deals quiet &gt;4 days at stage 3+.</text>
       <text x="20" y="100" fill="#AAA79A" font-size="12">SDR ramp progress vs week-2 cohort.</text>
@@ -54,11 +54,11 @@
       <text x="120" y="168" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Mon &amp; Thu  ·  8:00 ET</text>
     </g>
 
-    <!-- Card 4: Belkins NEXA solo-LO pulse (replaces mentorship) -->
+    <!-- Card 4: partner-account pulse -->
     <g transform="translate(1080, 0)">
       <rect x="0" y="0" width="330" height="200" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
-      <text x="20" y="36" fill="#FAFAF7" font-size="16" font-weight="500">Belkins NEXA solo-LO pulse</text>
-      <text x="20" y="64" fill="#AAA79A" font-size="12">Tracks the ~4,000-LO NEXA partner motion.</text>
+      <text x="20" y="36" fill="#FAFAF7" font-size="16" font-weight="500">Partner-account pulse</text>
+      <text x="20" y="64" fill="#AAA79A" font-size="12">Tracks a large partner-seat motion.</text>
       <text x="20" y="82" fill="#AAA79A" font-size="12">Surfaces stalled outreach, week-1 conversion,</text>
       <text x="20" y="100" fill="#AAA79A" font-size="12">solo-LO replies that need a human follow-up.</text>
       <rect x="20" y="150" width="200" height="26" rx="13" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
@@ -84,7 +84,7 @@
       <text x="20" y="36" fill="#FAFAF7" font-size="16" font-weight="500">Friday wrapup</text>
       <text x="20" y="64" fill="#AAA79A" font-size="12">Portfolio-wide weekly reflection. Aggregates</text>
       <text x="20" y="82" fill="#AAA79A" font-size="12">Mon-Fri across 5 companies. ~400 words,</text>
-      <text x="20" y="100" fill="#AAA79A" font-size="12">drops in #vlad-ops as a single canvas.</text>
+      <text x="20" y="100" fill="#AAA79A" font-size="12">drops in #ops as a single canvas.</text>
       <rect x="20" y="150" width="200" height="26" rx="13" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
       <text x="120" y="168" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Fridays  ·  5:00 PM ET</text>
     </g>
@@ -129,7 +129,7 @@
       <rect x="0" y="0" width="330" height="200" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="8"/>
       <text x="20" y="36" fill="#FAFAF7" font-size="16" font-weight="500">Folderly cron health</text>
       <text x="20" y="64" fill="#AAA79A" font-size="12">Pings the deliverability eval skill across 6</text>
-      <text x="20" y="82" fill="#AAA79A" font-size="12">customer domains. Flags SPF/DKIM/DMARC drift</text>
+      <text x="20" y="82" fill="#AAA79A" font-size="12">monitored domains. Flags SPF/DKIM/DMARC drift</text>
       <text x="20" y="100" fill="#AAA79A" font-size="12">before the next cadence fires.</text>
       <rect x="20" y="150" width="200" height="26" rx="13" fill="#22D3A0" fill-opacity="0.15" stroke="#22D3A0" stroke-width="1"/>
       <text x="120" y="168" fill="#22D3A0" font-size="11" text-anchor="middle" font-family="JetBrains Mono, monospace">Daily  ·  6:30 AM ET</text>

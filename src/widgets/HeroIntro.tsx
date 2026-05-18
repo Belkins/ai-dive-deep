@@ -67,7 +67,7 @@ export default function HeroIntro() {
           <div className="rounded-lg p-4" style={{ background: 'rgb(var(--bg))', border: '1px solid rgb(var(--line))' }}>
             <div className="flex items-center gap-2 mb-3">
               <span className="inline-block h-2 w-2 rounded-full" style={{ background: 'rgb(var(--accent-2))' }}></span>
-              <span className="font-mono text-xs" style={{ color: 'rgb(var(--muted))' }}>#vlad-ops · 6:30 AM</span>
+              <span className="font-mono text-xs" style={{ color: 'rgb(var(--muted))' }}>#ops · 6:30 AM</span>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex gap-2">

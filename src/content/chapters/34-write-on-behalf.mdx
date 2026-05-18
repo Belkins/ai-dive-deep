@@ -13,7 +13,7 @@ import PullQuote from '@/components/PullQuote.astro';
 import Callout from '@/components/Callout.astro';
 import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
-It's 9:14 AM Tuesday. I'm in a 1:1. A persona agent I'd built — a <GlossaryTerm term="Skill">skill</GlossaryTerm> called `vlad-voice-async` — read a 12-message Slack thread in #leadership-folderly, drafted a 90-word reply in my voice, dropped the draft into my DMs at 9:08 AM, and waited. At 9:14 I tabbed over, read the draft on my phone, typed "yes," and the agent posted as me into the thread. Total elapsed time from the question landing to a reply going up: 11 minutes. My contribution: six seconds of reading and a "yes."
+It's 9:14 AM Tuesday. I'm in a 1:1. A persona agent I'd built — a <GlossaryTerm term="Skill">skill</GlossaryTerm> called `vlad-voice-async` — read a 12-message Slack thread in #leadership, drafted a 90-word reply in my voice, dropped the draft into my DMs at 9:08 AM, and waited. At 9:14 I tabbed over, read the draft on my phone, typed "yes," and the agent posted as me into the thread. Total elapsed time from the question landing to a reply going up: 11 minutes. My contribution: six seconds of reading and a "yes."
 
 Two weeks earlier the same agent didn't wait. I'd shipped a version that auto-posted if the thread sat untouched for more than 90 seconds — a "fast lane" I added because I was tired of catching them on my phone. A co-founder asked a half question about Q3 hiring; the agent confidently posted a quarter answer, in my voice, to the wrong half. He called me four minutes later. "Did you mean what you wrote in #leadership?" I had not written it. I had not even read it. I rolled the auto-post out of the skill within the hour and wrote the audit-log change before I went to bed.
 
@@ -56,9 +56,9 @@ The four NEVERs are not a starter list. They are the floor. Add categories of yo
 
 Here's the shape that works, with real timing numbers.
 
-The agent reads the trigger — a Slack mention, an inbound email, a thread it's been watching. The agent drafts a response against the rubric. The agent posts the draft into a single private channel — for me, that's #vlad-drafts, a DM-equivalent that only I can see. The agent attaches three things to every draft: the original trigger (so I have context without scrolling), the proposed action (post to which channel? reply to which thread?), and a "approve" / "reject" / "edit" interaction. The agent then waits for a real human signal before doing anything else.
+The agent reads the trigger — a Slack mention, an inbound email, a thread it's been watching. The agent drafts a response against the rubric. The agent posts the draft into a single private channel — for me, that's #drafts, a DM-equivalent that only I can see. The agent attaches three things to every draft: the original trigger (so I have context without scrolling), the proposed action (post to which channel? reply to which thread?), and a "approve" / "reject" / "edit" interaction. The agent then waits for a real human signal before doing anything else.
 
-For my workload, the math: about 60 drafts per week land in #vlad-drafts. I approve roughly 70% on the first pass — six seconds of reading, a "yes" emoji. About 20% I edit before approval — 12 to 30 seconds of typing. About 10% I reject outright. Median time-to-approval: 6 to 9 minutes, including the times I'm asleep or on a call and circle back.
+For my workload, the math: about 60 drafts per week land in #drafts. I approve roughly 70% on the first pass — six seconds of reading, a "yes" emoji. About 20% I edit before approval — 12 to 30 seconds of typing. About 10% I reject outright. Median time-to-approval: 6 to 9 minutes, including the times I'm asleep or on a call and circle back.
 
 What does NOT work: time-based auto-post. "If Vlad doesn't reject within 90 seconds, post anyway." That's the design that produced the 9:14 AM disaster. The agent doesn't know the difference between "Vlad approved with silence" and "Vlad is in a 1:1 and his phone is face down." Auto-post smuggles a default of "post" into a system that should default to "wait." Every persona agent I run defaults to wait. No exceptions.
 
@@ -92,11 +92,11 @@ description: Drafts Slack/email replies in Vlad's voice. ALWAYS waits for explic
 ## Workflow (DO NOT SKIP STEPS)
 1. Read trigger (Slack thread, email, mention) and surface context.
 2. Draft response against the rubric. Length matches Vlad's typical reply for that channel.
-3. Post draft to #vlad-drafts ONLY — never the destination channel.
+3. Post draft to #drafts ONLY — never the destination channel.
 4. Attach: trigger link, proposed destination, approve/reject/edit buttons.
 5. WAIT for explicit human input. No timeouts. No auto-post. Ever.
 6. On "approve": post the draft as Vlad to the destination.
-7. On "edit": apply Vlad's edits, repost to #vlad-drafts, return to step 5.
+7. On "edit": apply Vlad's edits, repost to #drafts, return to step 5.
 8. On "reject": discard, log the rejection reason, exit.
 
 ## Audit log (mandatory after every action)

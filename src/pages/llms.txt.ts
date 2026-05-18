@@ -8,7 +8,7 @@ export const GET: APIRoute = async () => {
   const sorted = chapters.sort((a, b) => a.data.number - b.data.number);
 
   const lines: string[] = [];
-  lines.push("# Vlad's Ultimate AI Dive Deep");
+  lines.push("# Vlad's Playbook — The Ultimate AI Dive Deep");
   lines.push('');
   lines.push("> A 36-chapter operator field manual for using AI tools in production.");
   lines.push("> By Vlad Podoliako — CEO Belkins (B2B email outreach, $30M+ ARR); founder of Folderly, LinguaLive, NoCancer AI, 404 Model Agency.");
@@ -28,7 +28,7 @@ export const GET: APIRoute = async () => {
   lines.push(`- [How to read](${SITE}/how-to-read/) — the prologue`);
   lines.push(`- [The journey](${SITE}/journey/) — chapters in narrative order, six parts`);
   lines.push(`- [Sections](${SITE}/sections/) — chapters grouped by topic`);
-  lines.push(`- [Research notes](${SITE}/research-notes/) — external papers folded into operator implications (DELEGATE-52, Anthropic 81k-interviews, etc.)`);
+  lines.push(`- [Research notes](${SITE}/research-notes/) — external papers folded into operator implications (OPS-204, Anthropic 81k-interviews, etc.)`);
   lines.push(`- [Tier list](${SITE}/tier-list/) — operator-usefulness ranking embedded next to the public LMArena leaderboard`);
   lines.push(`- [Day zero](${SITE}/day-zero/) — first 30 minutes for a new reader`);
   lines.push(`- [Vault starter](${SITE}/vault-starter/) — Obsidian as working memory, with a cloneable starter vault`);

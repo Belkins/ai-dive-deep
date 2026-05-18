@@ -64,7 +64,7 @@ export const GET: APIRoute = async () => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Vlad's Ultimate AI Dive Deep — Changelog</title>
+    <title>Vlad's Playbook — Changelog</title>
     <link>${PAGE_URL}</link>
     <atom:link href="${FEED_URL}" rel="self" type="application/rss+xml" />
     <description>Edition history. What shipped, when, and the receipts behind each.</description>

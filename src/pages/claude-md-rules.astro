@@ -112,15 +112,15 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
 
   <!-- COLD OPEN -->
   <section class="container-prose pt-8 pb-4">
-    <h2 id="cold-open">11:47 AM Wednesday, February. Yehor in Slack.</h2>
+    <h2 id="cold-open">11:47 AM Wednesday, February. An engineer in Slack.</h2>
 
-    <p>I'd already typed the lesson myself the week before, near-verbatim. Yehor on my engineering team pings me:</p>
+    <p>I'd already typed the lesson myself the week before, near-verbatim. An engineer on my team pings me:</p>
 
     <blockquote style="border-left: 3px solid rgb(var(--accent)); padding-left: 1rem; color: rgb(var(--fg) / 0.85); font-style: italic;">
-      "Sic Claude on it to format commits as conventional commits — it stopped doing that. I'll try to spell it out in claude.md."
+      "Claude stopped formatting commits as conventional commits. I'll spell the convention out in CLAUDE.md."
     </blockquote>
 
-    <p>The agent had been doing the right thing for weeks. Then it stopped. Not because the rule changed. Because the rule was never written down in the layer the model actually reads. It lived in a Slack thread, a PR review comment, somebody's head. Yehor's fix — spell it out in CLAUDE.md — is the whole point. The convention has to live in the file the agent reads at session start, not in the team's accumulated muscle memory. <strong>Rule 8 (read before you write) is what should have prevented this</strong>, but Rule 8 only fires if the convention is in the file. If CLAUDE.md is silent, the agent isn't reading anything to inherit.</p>
+    <p>The agent had been doing the right thing for weeks. Then it stopped. Not because the rule changed. Because the rule was never written down in the layer the model actually reads. It lived in a Slack thread, a PR review comment, somebody's head. The fix — spell it out in CLAUDE.md — is the whole point. The convention has to live in the file the agent reads at session start, not in the team's accumulated muscle memory. <strong>Rule 8 (read before you write) is what should have prevented this</strong>, but Rule 8 only fires if the convention is in the file. If CLAUDE.md is silent, the agent isn't reading anything to inherit.</p>
 
     <p>That's the wedge. CLAUDE.md is the kitchen rules taped to the wall (see <a href={`${base}/chapters/37-context-files`}>Ch 37</a> for the four-layer architecture — CLAUDE.md, memory, skills, session-scoped). If your rules aren't in it, the model defaults to whatever it was trained to do, and any operator working in the same repo writes their own version of the convention in their own session. Six months later you have a codebase where no two PRs follow the same pattern, and you're not sure how it happened.</p>
   </section>
@@ -189,7 +189,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <p>Per-task: 4,000 tokens. Per-session: 30,000 tokens. If approaching budget, summarize and start fresh. Surface the breach. Do not silently overrun.</p>
     <div class="my-3 rounded-md p-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
       <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Operator overlay</div>
-      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">Last winter I put my entire vault-update workflow into CLAUDE.md. 340 lines. The agent read all 340 lines on every turn of every session — including unrelated TypeScript debugging in a different repo. The token bill on the project doubled in a week (<a href={`${base}/chapters/37-context-files`}>Ch 37</a> has the receipt). Pair this with the DELEGATE-52 research note on long-edit-chain drift (<a href={`${base}/research-notes`}>research-notes</a>) — both are the same underlying claim: token budgets aren't just a cost question, they're a quality question. Past the budget, attention triages badly and the relevant rule gets buried.</p>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">Last winter I put my entire vault-update workflow into CLAUDE.md. 340 lines. The agent read all 340 lines on every turn of every session — including unrelated TypeScript debugging in a different repo. The token bill on the project doubled in a week (<a href={`${base}/chapters/37-context-files`}>Ch 37</a> has the receipt). Pair this with the OPS-204 research note on long-edit-chain drift (<a href={`${base}/research-notes`}>research-notes</a>) — both are the same underlying claim: token budgets aren't just a cost question, they're a quality question. Past the budget, attention triages badly and the relevant rule gets buried.</p>
     </div>
 
     <!-- RULE 7 -->
@@ -205,7 +205,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <p>Before adding code, read exports, immediate callers, shared utilities. If unsure why existing code is structured a certain way, ask.</p>
     <div class="my-3 rounded-md p-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
       <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Operator overlay</div>
-      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">This is Yehor's regression in the cold open above. The agent stopped formatting commits as conventional commits because it hadn't read what the convention was — there was no convention in the file the agent reads. Rule 8 is the most load-bearing of the 12 in my experience: roughly half of every regression I've debugged in portfolio repos traces back to the agent writing without reading the existing pattern first. If you only adopt three rules from the 12, this is one of them. (See <a href={`${base}/#three-rules`}>the 3-rules section below</a>.)</p>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">This is the regression in the cold open above. The agent stopped formatting commits as conventional commits because it hadn't read what the convention was — there was no convention in the file the agent reads. Rule 8 is the most load-bearing of the 12 in my experience: roughly half of every regression I've debugged in portfolio repos traces back to the agent writing without reading the existing pattern first. If you only adopt three rules from the 12, this is one of them. (See <a href={`${base}/#three-rules`}>the 3-rules section below</a>.)</p>
     </div>
 
     <!-- RULE 9 -->
@@ -237,7 +237,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <p>"Completed" is wrong if anything was skipped silently. "Tests pass" is wrong if any were skipped. Default to surfacing uncertainty, not hiding it.</p>
     <div class="my-3 rounded-md p-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
       <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Operator overlay</div>
-      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">"Completed" is the most expensive word in operator-Claude. The origin story — "database migration reported completed successfully; had skipped 14% of records on constraint violations; found 11 days later" — is the same shape as Anthropic's 81k-respondent study landing unreliability as the #1 concern at 26.7% (the highest single number in the whole study). The friday-wrapup canvas, the DELEGATE-52 doc-drift, the migration that ate 14% of records — they're all the same failure: silent success. Rule 12 is the eval-thesis of <a href={`${base}/chapters/25-evals-or-hope`}>Ch 25</a> written into the rule-file. If you adopt one rule from the 12, this is it.</p>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">"Completed" is the most expensive word in operator-Claude. The origin story — "database migration reported completed successfully; had skipped 14% of records on constraint violations; found 11 days later" — is the same shape as Anthropic's 81k-respondent study landing unreliability as the #1 concern at 26.7% (the highest single number in the whole study). The friday-wrapup canvas, the OPS-204 doc-drift, the migration that ate 14% of records — they're all the same failure: silent success. Rule 12 is the eval-thesis of <a href={`${base}/chapters/25-evals-or-hope`}>Ch 25</a> written into the rule-file. If you adopt one rule from the 12, this is it.</p>
     </div>
   </section>
 
@@ -248,7 +248,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <p>If a reader can adopt only three of the 12 today, which? The other nine amplify if these three land. The other nine are also strictly less load-bearing if these three don't.</p>
 
     <ol>
-      <li><strong>Rule 8 (Read before you write).</strong> Roughly half the regressions I've debugged across portfolio repos trace back to the agent writing without reading the existing pattern first. Yehor's conventional-commits regression is one example; I have a folder of others. Rule 8 is the cheapest possible defense against "the agent wrote a function next to an identical one it hadn't read." Cost to enforce: 60 seconds of agent latency per task. ROI: most of the silent regressions you'd otherwise debug at 11 PM.</li>
+      <li><strong>Rule 8 (Read before you write).</strong> Roughly half the regressions I've debugged across portfolio repos trace back to the agent writing without reading the existing pattern first. That conventional-commits regression is one example; I have a folder of others. Rule 8 is the cheapest possible defense against "the agent wrote a function next to an identical one it hadn't read." Cost to enforce: 60 seconds of agent latency per task. ROI: most of the silent regressions you'd otherwise debug at 11 PM.</li>
       <li><strong>Rule 12 (Fail loud).</strong> The silent-failure category is the single most expensive class of bug in operator-Claude — friday-wrapup at $0 pipeline for 9 days, the wrong-vault-write for 9 days, the migration that skipped 14% of records. All of them shipped "completed" messages. Rule 12 doesn't eliminate the failure mode; it eliminates the silence around it. Cost to enforce: occasional false-positive surfacing. ROI: catch the failure on day zero instead of day nine.</li>
       <li><strong>Rule 4 (Goal-driven execution).</strong> Pairs with <code>/goal</code> in <a href={`${base}/chapters/38-run-until-done`}>Ch 38</a> — same primitive, different surface. Without measurable success criteria, every session ends in "is this what you wanted?" and the autonomy ladder collapses to per-turn approval. Cost to enforce: a few minutes thinking about what "done" looks like before you start. ROI: the difference between 12 turns to a clean diff and 41 turns to a vibe-eval that never lands.</li>
     </ol>
@@ -265,7 +265,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <ul>
       <li><strong>Solo operator (CLAUDE_MD_SOLO).</strong> Lean on <strong>Rule 2 (Simplicity First)</strong> and <strong>Rule 4 (Goal-Driven)</strong>. You're shipping fast across multiple weekend builds. Abstractions are the enemy. Measurable success criteria are how you avoid building the wrong thing for three days before noticing.</li>
       <li><strong>B2B sales lead (CLAUDE_MD_B2B_SALES).</strong> Lean on <strong>Rule 5 (Model only for judgment)</strong> and <strong>Rule 12 (Fail loud)</strong>. Routing, stage filters, CRM writes are deterministic — they belong in code, not the model. And every report the model produces about pipeline lands in front of leadership; "completed" with an empty deal list is the failure mode that costs the most.</li>
-      <li><strong>Newsletter operator (CLAUDE_MD_NEWSLETTER).</strong> Lean on <strong>Rule 6 (Token budgets)</strong> and <strong>Rule 11 (Match conventions)</strong>. Your voice is the convention; drift is the failure. Long sessions on a published draft are exactly the DELEGATE-52 drift case (research-note) — token budgets keep the prose from corrupting silently.</li>
+      <li><strong>Newsletter operator (CLAUDE_MD_NEWSLETTER).</strong> Lean on <strong>Rule 6 (Token budgets)</strong> and <strong>Rule 11 (Match conventions)</strong>. Your voice is the convention; drift is the failure. Long sessions on a published draft are exactly the OPS-204 drift case (research-note) — token budgets keep the prose from corrupting silently.</li>
       <li><strong>Portfolio CEO (CLAUDE_MD_PORTFOLIO_CEO).</strong> Lean on <strong>Rule 8 (Read before write)</strong> and <strong>Rule 10 (Checkpoint)</strong>. Across five companies, the agent's job is mostly synthesis across an inbox you can't read end-to-end — reading before writing is the difference between a useful brief and a confident hallucination. Checkpoint per step is how you trust the multi-step rollup.</li>
     </ul>
   </section>

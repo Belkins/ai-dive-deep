@@ -150,7 +150,7 @@ export default function TierListBuilder() {
 
   const nativeShare = async () => {
     try {
-      await navigator.share({ title: "Vlad's Ultimate AI Dive Deep — tier list", text: shareText, url: shareUrl });
+      await navigator.share({ title: "Vlad's Playbook — tier list", text: shareText, url: shareUrl });
     } catch {}
   };
 
