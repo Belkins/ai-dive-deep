@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 16 · HOOKS + SUBAGENTS = SYSTEMS</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">A real release flow</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Three hooks enforce policy, four subagents do the work. The human shows up only where judgment matters: the push to main.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">NEWSLETTER REPO · RELEASE</text>
+
+  <!-- LEFT: settings.json hooks -->
+  <g transform="translate(80, 196)">
+    <rect x="0" y="0" width="720" height="490" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="720" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="720" height="22" fill="#1A1F24"/>
+    <text x="360" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">.claude/settings.json — the three hooks</text>
+    <g font-family="JetBrains Mono, monospace" font-size="15.5">
+      <rect x="24" y="66" width="672" height="118" fill="#161B1F" stroke="#FF8E54" stroke-width="1" rx="8"/>
+      <text x="44" y="96" fill="#FF8E54" font-size="13" font-weight="600">"PostToolUse"</text>
+      <text x="44" y="124" fill="#E5E5E5">matcher: "Edit|Write"</text>
+      <text x="44" y="152" fill="#E5E5E5">command: prettier --write</text>
+      <text x="44" y="174" fill="#71717A" font-size="13" font-family="Inter">never see a formatting nit again</text>
+
+      <rect x="24" y="196" width="672" height="118" fill="#161B1F" stroke="#FF8E54" stroke-width="1" rx="8"/>
+      <text x="44" y="226" fill="#FF8E54" font-size="13" font-weight="600">"Stop"</text>
+      <text x="44" y="254" fill="#E5E5E5">command: slack-dm release summary</text>
+      <text x="44" y="282" fill="#E5E5E5">→ version + smoke-test result</text>
+      <text x="44" y="304" fill="#71717A" font-size="13" font-family="Inter">you get pinged when the agent finishes</text>
+
+      <rect x="24" y="326" width="672" height="140" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+      <text x="44" y="356" fill="#FF6B2C" font-size="13" font-weight="600">"PreToolUse"</text>
+      <text x="44" y="384" fill="#E5E5E5">deny: Bash(git push origin main)</text>
+      <text x="44" y="412" fill="#FAFAF7" font-family="Inter" font-size="14">the push waits for a human</text>
+      <text x="44" y="438" fill="#71717A" font-size="13" font-family="Inter">the one place judgment is required</text>
+    </g>
+  </g>
+
+  <!-- RIGHT: agents dir -->
+  <g transform="translate(824, 196)">
+    <rect x="0" y="0" width="696" height="490" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="696" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="696" height="22" fill="#1A1F24"/>
+    <text x="348" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">.claude/agents/</text>
+    <g font-family="JetBrains Mono, monospace" font-size="17">
+      <text x="30" y="92" fill="#FF8E54">▸ agents/</text>
+      <rect x="60" y="112" width="606" height="44" fill="#161B1F" rx="6"/>
+      <text x="80" y="140" fill="#E5E5E5">code-reviewer.md</text><text x="640" y="140" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">fan-out reviewer</text>
+      <rect x="60" y="166" width="606" height="44" fill="#161B1F" rx="6"/>
+      <text x="80" y="194" fill="#E5E5E5">changelog-writer.md</text><text x="640" y="194" fill="#6EE7B7" font-size="12" text-anchor="end" font-family="Inter">spawned ●</text>
+      <rect x="60" y="220" width="606" height="44" fill="#161B1F" rx="6"/>
+      <text x="80" y="248" fill="#E5E5E5">version-bumper.md</text><text x="640" y="248" fill="#6EE7B7" font-size="12" text-anchor="end" font-family="Inter">spawned ●</text>
+      <rect x="60" y="274" width="606" height="44" fill="#161B1F" rx="6"/>
+      <text x="80" y="302" fill="#E5E5E5">smoke-test-runner.md</text><text x="640" y="302" fill="#6EE7B7" font-size="12" text-anchor="end" font-family="Inter">spawned ●</text>
+    </g>
+    <line x1="30" y1="346" x2="666" y2="346" stroke="#1A1F24" stroke-width="1"/>
+    <text x="30" y="382" fill="#71717A" font-size="13" font-family="Inter">Release spawns 3 in parallel. code-reviewer.md is the</text>
+    <text x="30" y="404" fill="#71717A" font-size="13" font-family="Inter">fan-out reviewer from earlier in the chapter — same dir.</text>
+    <text x="30" y="446" fill="#AAA79A" font-size="14" font-family="Inter">Each runs in its own clean context, returns a summary.</text>
+  </g>
+
+  <!-- flow strip -->
+  <g transform="translate(80, 712)">
+    <rect x="0" y="0" width="1440" height="84" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="24" y="30" fill="#6EE7B7" font-size="10" letter-spacing="2" font-weight="600">THE RELEASE, END TO END</text>
+    <text x="24" y="58" fill="#FAFAF7" font-size="15">Main orchestrates → spawns changelog-writer · version-bumper · smoke-test-runner → PostToolUse formats every file →</text>
+    <text x="24" y="78" fill="#FAFAF7" font-size="15">Stop DMs you the summary → PreToolUse blocks the push → <tspan fill="#FF6B2C">you review the diff and push to main yourself.</tspan></text>
+  </g>
+</svg>
