@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 20 · A REAL LAYOUT — MINE</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">One screen, three panes, one per role</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">One tmux session per active repo. Claude Code does the work; a free shell for the fast things; a log tail for the truth.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">iTerm2 + tmux · session: belkins</text>
+
+  <!-- iTerm2 window -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="1440" height="620" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="1440" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="1440" height="22" fill="#1A1F24"/>
+    <circle cx="24" cy="22" r="6" fill="#FF6B5C"/><circle cx="46" cy="22" r="6" fill="#F5C24A"/><circle cx="68" cy="22" r="6" fill="#6EE7B7"/>
+    <text x="720" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">tmux: belkins — 3 panes</text>
+
+    <!-- LEFT pane: Claude Code -->
+    <rect x="14" y="58" width="700" height="548" fill="#0B0D0F" stroke="#FF6B2C" stroke-width="1" rx="6"/>
+    <text x="34" y="86" fill="#FF6B2C" font-size="11" letter-spacing="2" font-weight="600">PANE 1 · CLAUDE CODE — WHERE THE WORK HAPPENS</text>
+    <g font-family="JetBrains Mono, monospace" font-size="14.5">
+      <text x="34" y="124" fill="#FF8E54">✻ Claude Code</text><text x="200" y="124" fill="#71717A">~/code/belkins</text>
+      <text x="34" y="154" fill="#6EE7B7">❯</text><text x="56" y="154" fill="#FAFAF7">fix the deal-sync null + add a test</text>
+      <text x="34" y="184" fill="#AAA79A">Tracing the null to a renamed HubSpot field…</text>
+      <text x="34" y="212" fill="#71717A">  ⎿ Read src/server/jobs/deal-sync.ts</text>
+      <text x="34" y="240" fill="#71717A">  ⎿ Edit src/server/jobs/deal-sync.ts</text>
+      <text x="34" y="268" fill="#71717A">  ⎿ Write tests/regression/deal-sync.spec.ts</text>
+      <text x="34" y="296" fill="#6EE7B7">✓ 3 tests passing</text>
+      <text x="34" y="332" fill="#6EE7B7">❯</text><text x="56" y="332" fill="#71717A">_</text>
+    </g>
+
+    <!-- TOP-RIGHT pane: shell -->
+    <rect x="726" y="58" width="700" height="266" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="6"/>
+    <text x="746" y="86" fill="#AAA79A" font-size="11" letter-spacing="2" font-weight="600">PANE 2 · SHELL — SOME THINGS ARE FASTER TYPED</text>
+    <g font-family="JetBrains Mono, monospace" font-size="14.5">
+      <text x="746" y="124" fill="#6EE7B7">$</text><text x="766" y="124" fill="#FAFAF7">git status -s</text>
+      <text x="746" y="150" fill="#71717A"> M src/server/jobs/deal-sync.ts</text>
+      <text x="746" y="176" fill="#6EE7B7">$</text><text x="766" y="176" fill="#FAFAF7">npm run build</text>
+      <text x="746" y="202" fill="#71717A">✓ compiled in 4.1s</text>
+      <text x="746" y="228" fill="#6EE7B7">$</text><text x="766" y="228" fill="#FAFAF7">vercel deploy --prebuilt</text>
+      <text x="746" y="254" fill="#71717A">Inspect: vercel.com/…/9f2c</text>
+      <text x="746" y="288" fill="#6EE7B7">$</text><text x="766" y="288" fill="#71717A">_</text>
+    </g>
+
+    <!-- BOTTOM-RIGHT pane: log tail -->
+    <rect x="726" y="336" width="700" height="270" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="6"/>
+    <text x="746" y="364" fill="#AAA79A" font-size="11" letter-spacing="2" font-weight="600">PANE 3 · LOG TAIL — "IS IT WORKING?"</text>
+    <g font-family="JetBrains Mono, monospace" font-size="13.5">
+      <text x="746" y="398" fill="#71717A">$ vercel logs --follow</text>
+      <text x="746" y="424" fill="#6EE7B7">200</text><text x="800" y="424" fill="#AAA79A">GET /api/brief        38ms</text>
+      <text x="746" y="448" fill="#6EE7B7">200</text><text x="800" y="448" fill="#AAA79A">POST /api/sync       142ms</text>
+      <text x="746" y="472" fill="#6EE7B7">200</text><text x="800" y="472" fill="#AAA79A">GET /healthz           9ms</text>
+      <text x="746" y="496" fill="#F5C24A">↻</text><text x="800" y="496" fill="#AAA79A">deploy 9f2c promoted</text>
+      <text x="746" y="520" fill="#6EE7B7">200</text><text x="800" y="520" fill="#AAA79A">GET /api/brief        35ms</text>
+      <text x="746" y="552" fill="#71717A">…streaming</text>
+    </g>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">Switch repos with <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">tmux switch-client -t &lt;repo&gt;</tspan> or <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">Ctrl-b s</tspan> for the fuzzy picker. One session per repo, always the same shape.</text>
+</svg>

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 23 · HOUR 1 — THE PRD VIA COWORK</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">The question that saved four hours</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Ten turns refining a one-page PRD. One pushback question cut the entire voice-config UI before a line was written.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">COWORK · PRD v0.1</text>
+
+  <!-- Cowork chat -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="920" height="620" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="920" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="920" height="22" fill="#1A1F24"/>
+    <text x="24" y="28" fill="#AAA79A" font-size="14" font-family="JetBrains Mono, monospace">Cowork · Daily Voice Brief — scoping</text>
+    <text x="896" y="28" fill="#71717A" font-size="12" text-anchor="end">turn 7 / ~10</text>
+
+    <!-- me bubble -->
+    <rect x="240" y="68" width="656" height="92" fill="#1A1208" rx="10"/>
+    <text x="876" y="94" fill="#FF6B2C" font-size="11" letter-spacing="2" font-weight="600" text-anchor="end">ME</text>
+    <text x="262" y="100" fill="#E5E5E5" font-size="15">Tool that turns the morning Slack brief into a 90-second voice</text>
+    <text x="262" y="124" fill="#E5E5E5" font-size="15">memo, drops it in iCloud, plays on a walk. Add a voice picker,</text>
+    <text x="262" y="148" fill="#E5E5E5" font-size="15">a settings page, an audio-history table.</text>
+
+    <!-- cowork pushback bubble (highlighted) -->
+    <rect x="24" y="184" width="700" height="92" fill="#0F1A14" stroke="#6EE7B7" stroke-width="2" rx="10"/>
+    <text x="44" y="210" fill="#6EE7B7" font-size="11" letter-spacing="2" font-weight="600">COWORK</text>
+    <text x="44" y="244" fill="#FAFAF7" font-size="19" font-weight="600">"Do you have one user with that</text>
+    <text x="44" y="270" fill="#FAFAF7" font-size="19" font-weight="600">pain right now?"</text>
+
+    <!-- me bubble -->
+    <rect x="500" y="300" width="396" height="60" fill="#1A1208" rx="10"/>
+    <text x="876" y="326" fill="#FF6B2C" font-size="11" letter-spacing="2" font-weight="600" text-anchor="end">ME</text>
+    <text x="522" y="338" fill="#E5E5E5" font-size="16">No. Just me. One device.</text>
+
+    <!-- cowork bubble -->
+    <rect x="24" y="384" width="640" height="60" fill="#161B1F" rx="10"/>
+    <text x="44" y="410" fill="#6EE7B7" font-size="11" letter-spacing="2" font-weight="600">COWORK</text>
+    <text x="44" y="424" fill="#E5E5E5" font-size="15">Then cut the voice picker, the settings page, the history table.</text>
+
+    <line x1="24" y1="470" x2="896" y2="470" stroke="#1A1F24" stroke-width="1"/>
+    <text x="24" y="506" fill="#71717A" font-size="13" letter-spacing="1">RESULT</text>
+    <text x="24" y="536" fill="#AAA79A" font-size="15">One question. ~4 hours of voice-config UI never built.</text>
+    <text x="24" y="562" fill="#AAA79A" font-size="15">Ten turns later: a one-page PRD I actually believe in.</text>
+  </g>
+
+  <!-- PRD card -->
+  <g transform="translate(1040, 200)">
+    <rect x="0" y="0" width="480" height="620" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="480" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="480" height="22" fill="#1A1F24"/>
+    <text x="240" y="28" fill="#AAA79A" font-size="13" text-anchor="middle" font-family="JetBrains Mono, monospace">PRD.md</text>
+    <text x="28" y="86" fill="#FAFAF7" font-size="20" font-weight="600" font-family="Source Serif 4, Georgia, serif">Daily Voice Brief — v0.1</text>
+    <text x="28" y="124" fill="#FF8E54" font-size="12" letter-spacing="2" font-weight="600">USER</text>
+    <text x="28" y="148" fill="#E5E5E5" font-size="14">me · one user · single device</text>
+    <text x="28" y="186" fill="#FF8E54" font-size="12" letter-spacing="2" font-weight="600">DONE =</text>
+    <text x="28" y="210" fill="#E5E5E5" font-size="14">7:35 AM weekdays, an MP3 in</text>
+    <text x="28" y="232" fill="#E5E5E5" font-size="14">iCloud Drive /DailyBrief/</text>
+    <text x="28" y="270" fill="#FF8E54" font-size="12" letter-spacing="2" font-weight="600">STACK</text>
+    <text x="28" y="294" fill="#E5E5E5" font-size="14">Next.js (TS) · Vercel ·</text>
+    <text x="28" y="316" fill="#E5E5E5" font-size="14">ElevenLabs TTS · local cron</text>
+    <text x="28" y="356" fill="#FF6B5C" font-size="12" letter-spacing="2" font-weight="600">NOT DONE</text>
+    <text x="28" y="380" fill="#71717A" font-size="14">✗ multi-voice / voice picker</text>
+    <text x="28" y="402" fill="#71717A" font-size="14">✗ web UI · settings page</text>
+    <text x="28" y="424" fill="#71717A" font-size="14">✗ audio-history table</text>
+    <text x="28" y="446" fill="#71717A" font-size="14">✗ multi-user / auth</text>
+    <text x="28" y="468" fill="#71717A" font-size="14">✗ analytics</text>
+    <line x1="28" y1="504" x2="452" y2="504" stroke="#2A3138" stroke-width="1"/>
+    <text x="28" y="540" fill="#6EE7B7" font-size="13">The "Not Done" list is the PRD's</text>
+    <text x="28" y="562" fill="#6EE7B7" font-size="13">most valuable section.</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">The model that pushes back on scope is worth more than the model that builds fast. Cut before you build.</text>
+</svg>
