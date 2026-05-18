@@ -4,7 +4,10 @@ import { CHAPTERS } from '@/lib/chapters';
 import HeroIntro from '@/widgets/HeroIntro.tsx';
 import ResumeReading from '@/widgets/ResumeReading.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import { CHANGELOG } from '@/lib/changelog';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const ed = CHANGELOG[0];
+const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
 
 <BaseLayout title="Vlad's Ultimate AI Dive Deep" description="A field manual for operators who want to stop juggling tabs and start running AI like an OS. By Vlad Podoliako.">
@@ -19,7 +22,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       For operators who want to stop juggling tabs and start running AI like an OS.
       Thirty-nine chapters. One operator. Belkins, Folderly, the Newsletter, and a portfolio of others.
     </p>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">by Vlad Podoliako · Edition 3 · May 2026</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">by Vlad Podoliako · {ed.edition} · {edWhen}</p>
 
     <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-mono" style="color: rgb(var(--muted))">
       <span><span style="color: rgb(var(--accent))">3-10B</span> tokens / mo</span>

@@ -1,5 +1,7 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { CHANGELOG } from '@/lib/changelog';
+const edition = CHANGELOG[0].edition;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const path = Astro.url.pathname;
 const isHome = path === base + '/' || path === base || path === '/';
@@ -8,7 +10,7 @@ const isHome = path === base + '/' || path === base || path === '/';
   <nav class="container-wide flex items-center justify-between h-14">
     <a href={`${base}/`} class="flex items-center gap-2 group" style="color: rgb(var(--fg))">
       <span class="font-display text-lg tracking-tight font-medium">Vlad's Playbook</span>
-      <span class="hidden md:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">Edition 1</span>
+      <span class="hidden md:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">{edition}</span>
     </a>
     <div class="flex items-center gap-1 sm:gap-3">
       <a href={`${base}/day-zero`} class="hidden sm:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent))">Start here</a>
