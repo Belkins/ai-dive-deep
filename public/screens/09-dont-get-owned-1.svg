@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 9 · API KEY HYGIENE</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Scoped, rotated, never in a prompt</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">A secrets manager (Doppler / 1Password / AWS) is non-negotiable: scoped keys, 90-day rotation, redacted values, usage watched.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">DOPPLER · VALUES REDACTED</text>
+
+  <!-- vault window -->
+  <g transform="translate(80, 196)">
+    <rect x="0" y="0" width="1440" height="556" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="1440" height="46" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="23" width="1440" height="23" fill="#1A1F24"/>
+    <text x="24" y="29" fill="#AAA79A" font-size="14" font-family="JetBrains Mono, monospace">vault · belkins-portfolio</text>
+    <text x="1416" y="29" fill="#6EE7B7" font-size="12" text-anchor="end">6 secrets · all in policy</text>
+
+    <!-- column headers -->
+    <g font-size="11" letter-spacing="2" fill="#71717A" font-weight="600">
+      <text x="32" y="80">NAME</text>
+      <text x="430" y="80">VALUE</text>
+      <text x="660" y="80">SCOPE</text>
+      <text x="980" y="80">ENV</text>
+      <text x="1130" y="80">LAST ROTATED</text>
+      <text x="1340" y="80">STATUS</text>
+    </g>
+    <line x1="32" y1="94" x2="1408" y2="94" stroke="#2A3138" stroke-width="1"/>
+
+    <!-- rows -->
+    <g font-family="JetBrains Mono, monospace" font-size="15">
+      <text x="32" y="134" fill="#FAFAF7">ANTHROPIC_API_KEY</text>
+      <text x="430" y="134" fill="#3F4651">sk-ant-•••••••••••••</text>
+      <text x="660" y="134" fill="#AAA79A" font-family="Inter">workspace · read+write</text>
+      <text x="980" y="134" fill="#AAA79A" font-family="Inter">prod</text>
+      <text x="1130" y="134" fill="#AAA79A" font-family="Inter">12 days ago</text>
+      <text x="1340" y="134" fill="#6EE7B7" font-family="Inter">●</text>
+
+      <text x="32" y="178" fill="#FAFAF7">STRIPE_KEY</text>
+      <text x="430" y="178" fill="#3F4651">rk_live_••••••••••••</text>
+      <text x="660" y="178" fill="#AAA79A" font-family="Inter">restricted · charges read-only</text>
+      <text x="980" y="178" fill="#AAA79A" font-family="Inter">prod</text>
+      <text x="1130" y="178" fill="#AAA79A" font-family="Inter">61 days ago</text>
+      <text x="1340" y="178" fill="#6EE7B7" font-family="Inter">●</text>
+
+      <text x="32" y="222" fill="#FAFAF7">HUBSPOT_TOKEN</text>
+      <text x="430" y="222" fill="#3F4651">pat-na1-••••••••••••</text>
+      <text x="660" y="222" fill="#AAA79A" font-family="Inter">deals + contacts scope</text>
+      <text x="980" y="222" fill="#AAA79A" font-family="Inter">prod</text>
+      <text x="1130" y="222" fill="#F5C24A" font-family="Inter">83 days ago</text>
+      <text x="1340" y="222" fill="#F5C24A" font-family="Inter">▲ rotate soon</text>
+
+      <text x="32" y="266" fill="#FAFAF7">SENTRY_AUTH</text>
+      <text x="430" y="266" fill="#3F4651">sntrys_•••••••••••••</text>
+      <text x="660" y="266" fill="#AAA79A" font-family="Inter">project:read</text>
+      <text x="980" y="266" fill="#AAA79A" font-family="Inter">prod</text>
+      <text x="1130" y="266" fill="#AAA79A" font-family="Inter">7 days ago</text>
+      <text x="1340" y="266" fill="#6EE7B7" font-family="Inter">●</text>
+
+      <text x="32" y="310" fill="#FAFAF7">DB_URL</text>
+      <text x="430" y="310" fill="#3F4651">postgres://••••••••</text>
+      <text x="660" y="310" fill="#AAA79A" font-family="Inter">read replica only</text>
+      <text x="980" y="310" fill="#AAA79A" font-family="Inter">staging</text>
+      <text x="1130" y="310" fill="#AAA79A" font-family="Inter">30 days ago</text>
+      <text x="1340" y="310" fill="#6EE7B7" font-family="Inter">●</text>
+
+      <text x="32" y="354" fill="#FAFAF7">SLACK_BOT_TOKEN</text>
+      <text x="430" y="354" fill="#3F4651">xoxb-•••••••••••••••</text>
+      <text x="660" y="354" fill="#AAA79A" font-family="Inter">chat:write · 2 channels</text>
+      <text x="980" y="354" fill="#AAA79A" font-family="Inter">prod</text>
+      <text x="1130" y="354" fill="#AAA79A" font-family="Inter">44 days ago</text>
+      <text x="1340" y="354" fill="#6EE7B7" font-family="Inter">●</text>
+    </g>
+    <line x1="32" y1="386" x2="1408" y2="386" stroke="#2A3138" stroke-width="1"/>
+
+    <!-- the 7 non-negotiables strip -->
+    <text x="32" y="426" fill="#6EE7B7" font-size="12" letter-spacing="2" font-weight="600">THE RULES THIS VAULT ENFORCES</text>
+    <g font-size="14" fill="#AAA79A">
+      <text x="32" y="458">▸ Scoped keys — read-only, resource-restricted (col SCOPE)</text>
+      <text x="32" y="486">▸ Rotate every 90 days — amber at 83d, the calendar reminder fires (col LAST ROTATED)</text>
+      <text x="32" y="514">▸ Different key per environment — never reuse prod in dev (col ENV)</text>
+      <text x="740" y="458">▸ Never in a prompt, never in git — values redacted, here only</text>
+      <text x="740" y="486">▸ Usage dashboard watched — a spike is a breach until proven otherwise</text>
+      <text x="740" y="514">▸ One manager — 1Password CLI / Doppler / AWS Secrets Manager</text>
+    </g>
+  </g>
+
+  <text x="80" y="800" fill="#71717A" font-size="13">A leaked key is a Tuesday-ruining event. The vault is the one place a secret lives — scoped, dated, and out of every prompt.</text>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 3 · THE MOST EXPENSIVE GHOST</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Born at 7:00. Read by 7:05. Gone.</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">A scheduled Cowork instance with no memory of yesterday. It runs one job, ships one canvas, and terminates.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">COWORK · SCHEDULED INSTANCE</text>
+
+  <!-- lifecycle ribbon -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="300" height="92" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="20" y="30" fill="#6EE7B7" font-size="11" letter-spacing="2" font-weight="600">07:00:00 ET</text>
+    <text x="20" y="58" fill="#FAFAF7" font-size="18" font-weight="600">Instance starts</text>
+    <text x="20" y="80" fill="#71717A" font-size="13">cold — no memory of yesterday</text>
+
+    <text x="318" y="52" fill="#3F4651" font-size="22">→</text>
+
+    <rect x="346" y="0" width="300" height="92" fill="#1C140A" stroke="#FF8E54" stroke-width="1" rx="8"/>
+    <text x="366" y="30" fill="#FF8E54" font-size="11" letter-spacing="2" font-weight="600">07:00 – 07:04</text>
+    <text x="366" y="58" fill="#FAFAF7" font-size="18" font-weight="600">Runs the job</text>
+    <text x="366" y="80" fill="#71717A" font-size="13">job description + skill bundle</text>
+
+    <text x="664" y="52" fill="#3F4651" font-size="22">→</text>
+
+    <rect x="692" y="0" width="300" height="92" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="712" y="30" fill="#71717A" font-size="11" letter-spacing="2" font-weight="600">07:04:38 ET</text>
+    <text x="712" y="58" fill="#FAFAF7" font-size="18" font-weight="600">Completed · terminated</text>
+    <text x="712" y="80" fill="#71717A" font-size="13">the worker no longer exists</text>
+  </g>
+
+  <!-- input chain -->
+  <text x="80" y="346" fill="#6EE7B7" font-size="11" letter-spacing="2.4" font-weight="600">WHAT IT DID IN FOUR MINUTES — IN ORDER</text>
+  <g transform="translate(80, 366)" font-size="15">
+    <rect x="0" y="0" width="912" height="60" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <text x="22" y="28" fill="#FAFAF7" font-weight="600">1 · HubSpot</text><text x="22" y="48" fill="#71717A" font-size="13">deal motion, overnight</text>
+    <text x="208" y="36" fill="#3F4651">→</text>
+    <text x="236" y="28" fill="#FAFAF7" font-weight="600">2 · Slack</text><text x="236" y="48" fill="#71717A" font-size="13">signals</text>
+    <text x="372" y="36" fill="#3F4651">→</text>
+    <text x="400" y="28" fill="#FAFAF7" font-weight="600">3 · Gong</text><text x="400" y="48" fill="#71717A" font-size="13">3 quotes that mattered</text>
+    <text x="612" y="36" fill="#3F4651">→</text>
+    <text x="640" y="28" fill="#FAFAF7" font-weight="600">4 · Calendar</text><text x="640" y="48" fill="#71717A" font-size="13">flagged 1 forgotten investor</text>
+  </g>
+  <g transform="translate(80, 442)">
+    <rect x="0" y="0" width="912" height="44" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="22" y="28" fill="#FF6B2C" font-size="14" font-weight="600">5 · Synthesize → one Slack canvas, then die</text>
+  </g>
+
+  <!-- produced canvas -->
+  <g transform="translate(1024, 200)">
+    <rect x="0" y="0" width="496" height="500" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="496" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="496" height="22" fill="#1A1F24"/>
+    <text x="24" y="28" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace"># exec-brief · canvas</text>
+    <text x="28" y="90" fill="#FAFAF7" font-size="22" font-weight="500" font-family="Source Serif 4, Georgia, serif">Morning Brief — May 7</text>
+    <line x1="28" y1="110" x2="468" y2="110" stroke="#2A3138" stroke-width="1"/>
+    <text x="28" y="146" fill="#FF8E54" font-size="12" letter-spacing="2" font-weight="600">PIPELINE</text>
+    <text x="28" y="172" fill="#E5E5E5" font-size="14">3 deals advanced overnight · 1 stalled 9d</text>
+    <text x="28" y="210" fill="#FF8E54" font-size="12" letter-spacing="2" font-weight="600">SIGNALS</text>
+    <text x="28" y="236" fill="#E5E5E5" font-size="14">2 Slack escalations · 3 Gong quotes attached</text>
+    <text x="28" y="274" fill="#FF6B2C" font-size="12" letter-spacing="2" font-weight="600">DON'T FORGET</text>
+    <text x="28" y="300" fill="#FAFAF7" font-size="14">Investor intro you parked 11 days ago</text>
+    <text x="28" y="338" fill="#6EE7B7" font-size="12" letter-spacing="2" font-weight="600">TODAY · TOP 3</text>
+    <text x="28" y="364" fill="#E5E5E5" font-size="14">1. Reply to the stalled deal before noon</text>
+    <text x="28" y="388" fill="#E5E5E5" font-size="14">2. Send the investor intro</text>
+    <text x="28" y="412" fill="#E5E5E5" font-size="14">3. Approve the Q3 plan draft</text>
+    <line x1="28" y1="446" x2="468" y2="446" stroke="#2A3138" stroke-width="1"/>
+    <text x="28" y="474" fill="#71717A" font-size="12">Read with coffee at 7:05. Author already gone.</text>
+  </g>
+
+  <text x="80" y="836" fill="#71717A" font-size="13">It is the most expensive ghost in the company. It does not persist, does not learn, does not idle. Worth every cent.</text>
+</svg>

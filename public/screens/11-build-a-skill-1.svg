@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 11 · ANATOMY OF A SKILL</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">A skill is a folder. That's it.</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">The on-disk shape of the <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">morning-briefing</tspan> skill — one required file, three optional folders.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">~/.claude/skills/morning-briefing/</text>
+
+  <!-- Finder window -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="900" height="620" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="900" height="46" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="23" width="900" height="23" fill="#1A1F24"/>
+    <circle cx="24" cy="23" r="6" fill="#FF6B5C"/><circle cx="46" cy="23" r="6" fill="#F5C24A"/><circle cx="68" cy="23" r="6" fill="#6EE7B7"/>
+    <text x="450" y="29" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">morning-briefing</text>
+    <!-- sidebar -->
+    <rect x="0" y="46" width="200" height="574" fill="#101316"/>
+    <text x="24" y="86" fill="#71717A" font-size="11" letter-spacing="2">FAVORITES</text>
+    <text x="24" y="118" fill="#AAA79A" font-size="14">~/.claude</text>
+    <text x="24" y="146" fill="#AAA79A" font-size="14">skills</text>
+    <text x="24" y="174" fill="#FAFAF7" font-size="14" font-weight="600">morning-briefing</text>
+
+    <!-- file rows -->
+    <g font-family="JetBrains Mono, monospace" font-size="17">
+      <rect x="216" y="74" width="668" height="40" fill="#1A1208" rx="6"/>
+      <text x="236" y="100" fill="#FF6B2C">📄</text><text x="276" y="100" fill="#FAFAF7">SKILL.md</text>
+      <text x="560" y="100" fill="#FF6B2C" font-size="13" font-family="Inter" font-weight="600">REQUIRED — the manifest</text>
+
+      <text x="236" y="156" fill="#FF8E54">▸</text><text x="266" y="156" fill="#FF8E54">scripts/</text>
+      <text x="560" y="156" fill="#71717A" font-size="13" font-family="Inter">code-executed steps</text>
+      <text x="300" y="196" fill="#E5E5E5">pull_calendar.py</text>
+      <text x="300" y="232" fill="#E5E5E5">format_canvas.py</text>
+
+      <text x="236" y="288" fill="#FF8E54">▸</text><text x="266" y="288" fill="#FF8E54">templates/</text>
+      <text x="560" y="288" fill="#71717A" font-size="13" font-family="Inter">output shape</text>
+      <text x="300" y="328" fill="#E5E5E5">canvas.md</text>
+
+      <text x="236" y="384" fill="#FF8E54">▸</text><text x="266" y="384" fill="#FF8E54">reference/</text>
+      <text x="560" y="384" fill="#71717A" font-size="13" font-family="Inter">pull-in context</text>
+      <text x="300" y="424" fill="#E5E5E5">tone-guide.md</text>
+    </g>
+    <line x1="216" y1="462" x2="864" y2="462" stroke="#1A1F24" stroke-width="1"/>
+    <text x="236" y="500" fill="#AAA79A" font-size="14">4 files, 3 folders · 12 KB</text>
+    <text x="236" y="528" fill="#71717A" font-size="13">Most of my skills only have SKILL.md. This one earned its scripts.</text>
+    <rect x="216" y="552" width="668" height="44" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="236" y="579" fill="#6EE7B7" font-size="13">SKILL.md alone does 80% of the work — the rest is optional.</text>
+  </g>
+
+  <!-- what SKILL.md declares -->
+  <g transform="translate(1020, 200)">
+    <rect x="0" y="0" width="500" height="620" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="28" y="48" fill="#6EE7B7" font-size="12" letter-spacing="2.4" font-weight="600">WHAT THE MANIFEST DECLARES</text>
+
+    <text x="28" y="96" fill="#FF8E54" font-size="13" font-weight="600">name</text>
+    <text x="28" y="120" fill="#FAFAF7" font-size="15" font-family="JetBrains Mono, monospace">morning-briefing</text>
+
+    <text x="28" y="168" fill="#FF8E54" font-size="13" font-weight="600">pulls</text>
+    <text x="28" y="194" fill="#E5E5E5" font-size="14">Calendar (MCP) · overnight Slack DMs</text>
+    <text x="28" y="216" fill="#E5E5E5" font-size="14">HubSpot deal changes since 5 PM</text>
+
+    <text x="28" y="264" fill="#FF8E54" font-size="13" font-weight="600">runs</text>
+    <text x="28" y="290" fill="#FAFAF7" font-size="15" font-family="JetBrains Mono, monospace">scripts/format_canvas.py</text>
+
+    <text x="28" y="338" fill="#FF8E54" font-size="13" font-weight="600">posts</text>
+    <text x="28" y="364" fill="#E5E5E5" font-size="14">Slack <tspan font-family="JetBrains Mono, monospace" fill="#FAFAF7">#morning-briefing</tspan></text>
+    <text x="28" y="386" fill="#E5E5E5" font-size="14">canvas title <tspan font-family="JetBrains Mono, monospace" fill="#FAFAF7">"Morning Brief — {{ date }}"</tspan></text>
+
+    <text x="28" y="434" fill="#FF8E54" font-size="13" font-weight="600">budget</text>
+    <text x="28" y="460" fill="#FAFAF7" font-size="15">max 250 words</text>
+
+    <line x1="28" y1="500" x2="472" y2="500" stroke="#2A3138" stroke-width="1"/>
+    <text x="28" y="536" fill="#71717A" font-size="13">SKILL.md is the manifest + prompt + runbook</text>
+    <text x="28" y="558" fill="#71717A" font-size="13">Claude reads to decide whether and how to fire.</text>
+    <text x="28" y="588" fill="#6EE7B7" font-size="13">The folder IS the skill. Zip it, share it, done.</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">No registry, no plugin system, no install step. A directory with a SKILL.md is a skill the moment it exists.</text>
+</svg>

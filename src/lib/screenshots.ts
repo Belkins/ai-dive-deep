@@ -7,14 +7,19 @@ export const SCREENSHOTS: Record<string, string> = {
   "01-killed-my-tabs-2": "01-killed-my-tabs-2.svg",
   "02-five-tools-1": "02-five-tools-1.png",
   "02-five-tools-2": "02-five-tools-2.svg",
+  "03-temp-agency-1": "03-temp-agency-1.svg",
   "04-the-vault-1": "04-the-vault-1.png",
   "04-the-vault-2": "04-the-vault-2.svg",
   "04-the-vault-rick-2": "04-the-vault-rick-2.png",
   "04-the-vault-rick": "04-the-vault-rick.png",
   "05-skills-1": "05-skills-1.svg",
   "06-the-swarm-1": "06-the-swarm-1.svg",
+  "06-the-swarm-2": "06-the-swarm-2.svg",
   "07-cron-1": "07-cron-1.svg",
   "08-three-doors-1": "08-three-doors-1.svg",
+  "09-dont-get-owned-1": "09-dont-get-owned-1.svg",
+  "10-wild-stuff-1": "10-wild-stuff-1.svg",
+  "11-build-a-skill-1": "11-build-a-skill-1.svg",
   "12-connectors-mcp-1": "12-connectors-mcp-1.png",
   "12-connectors-mcp-2": "12-connectors-mcp-2.svg",
   "12-connectors-mcp-3": "12-connectors-mcp-3.png",
@@ -48,4 +53,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "claude-md-rules-1": "claude-md-rules-1.svg"
 };
 
-export const SCREENSHOT_COUNT = 43;
+export const SCREENSHOT_COUNT = 48;

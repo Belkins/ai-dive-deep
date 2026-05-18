@@ -9,11 +9,11 @@ moved, so nothing ever disappears from where you put it.
 ────────────────────────────────────────────
 STATUS: VISUALLY COMPLETE
 ────────────────────────────────────────────
-43 visual artifacts done · 22 captures still needed · 61 chapter references.
+48 visual artifacts done · 17 captures still needed · 61 chapter references.
 
   ★ TIER S — CLEARED ✓   book-defining shots all captured
   ★ TIER A — CLEARED ✓   high-leverage receipts all done (5 as sanitized SVGs)
-  ★ TIER B — 22 open     supporting / nice-to-have · no urgency
+  ★ TIER B — 17 open     supporting / nice-to-have · no urgency
 
 The book reads as visually finished. Everything below is optional icing —
 most of these chapters carry their weight on cards + pull-quotes already.
@@ -35,11 +35,6 @@ Highlights this cycle:
 STILL NEEDED — 22 (all TIER B, no urgency)
 ────────────────────────────────────────────
 
-   03-temp-agency-1               Scheduled instance running in Cowork
-   06-the-swarm-2                 Repo's .claude/agents/ folder + .mcp.json in a file tree
-   09-dont-get-owned-1            Secret manager vault (1Password or similar)
-   10-wild-stuff-1                Generative video pipeline (Higgsfield/Suno workflow)
-   11-build-a-skill-1             ~/.claude/skills/morning-briefing/ expanded in Finder
    15-permissions-1               The permission prompt in Claude Code
    15-permissions-2               ~/.claude/settings.json permissions block
    16-hooks-subagents-2           Hooks + subagents — release flow
