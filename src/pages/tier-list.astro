@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TierListBuilder from '@/widgets/TierListBuilder.tsx';
+import LMArenaLeaderboard from '@/widgets/LMArenaLeaderboard.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 ---
 <BaseLayout title="The Tier List" description="Drag-and-drop your own AI tools tier list. Share via URL. Public benchmarks vs operator usefulness, side by side.">
@@ -16,20 +17,8 @@ import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://lmarena.ai/" target="_blank" rel="noopener" style="color: rgb(var(--accent))">lmarena.ai</a>. This is the canonical "which model is better at benchmark tasks" public ranking. It's the right answer to one specific question — and the wrong answer to the question you actually care about as an operator.</p>
   </section>
 
-  <section class="container-wide pt-4 pb-2">
-    <div class="rounded-xl overflow-hidden" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
-      <a href="https://arena.ai/leaderboard" target="_blank" rel="noopener" style="display: block;">
-        <img
-          src="/screens/24-lmarena-snapshot.svg"
-          alt="LMArena top-10 overall leaderboard snapshot, 2026-05-14. Anthropic owns 4 of the top 10."
-          loading="lazy"
-          style="width: 100%; height: auto; display: block; background: rgb(var(--bg));"
-        />
-      </a>
-    </div>
-    <p class="container-prose mt-3 text-xs" style="color: rgb(var(--muted))">
-      Static snapshot captured 2026-05-14 from <a href="https://arena.ai/leaderboard" target="_blank" rel="noopener" style="color: rgb(var(--accent))">arena.ai/leaderboard</a> (the page itself blocks iframe embedding). Tap the table to open the live, current ranking in a new tab.
-    </p>
+  <section class="pt-4 pb-2">
+    <LMArenaLeaderboard client:load />
   </section>
 
   <section class="container-prose pt-12 pb-2">
