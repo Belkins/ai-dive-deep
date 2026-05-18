@@ -9,16 +9,76 @@ const year = new Date().getFullYear();
       <h2 class="font-display text-2xl md:text-3xl m-0 leading-tight">Edition 3 lands when this list says it does.</h2>
       <p class="mt-3 text-sm" style="color: rgb(var(--muted))">No course. No paywall. Operator playbooks weekly. 10K+ subscribers.</p>
     </div>
-    <div class="rounded-lg overflow-hidden" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
-      <iframe
-        src="https://vladsnewsletter.substack.com/embed"
-        title="Subscribe to Vlad's newsletter"
-        loading="lazy"
-        style="width: 100%; height: 150px; border: 0; background: transparent;"
-        frameborder="0"
-        scrolling="no"
-      ></iframe>
+    <div class="rounded-xl p-6 md:p-7" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+      <form
+        action="https://www.vladsnewsletter.com/subscribe"
+        method="get"
+        target="_blank"
+        rel="noopener"
+        class="newsletter-form"
+        aria-label="Subscribe to Vlad's newsletter"
+      >
+        <input type="hidden" name="simple" value="true" />
+        <input type="hidden" name="utm_source" value="ai-dive-deep" />
+        <input type="hidden" name="next" value="https://www.vladsnewsletter.com/" />
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input
+            type="email"
+            name="email"
+            required
+            autocomplete="email"
+            placeholder="you@company.com"
+            class="nl-input flex-1"
+            aria-label="Email address"
+          />
+          <button type="submit" class="nl-btn">Subscribe</button>
+        </div>
+        <p class="mt-3 text-xs" style="color: rgb(var(--muted)); display: flex; align-items: center;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="flex-shrink:0; margin-right:0.5rem">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path>
+          </svg>
+          <span>Free&nbsp;·&nbsp;weekly&nbsp;·&nbsp;double opt-in on <a href="https://www.vladsnewsletter.com" target="_blank" rel="noopener" style="color: rgb(var(--accent)); text-decoration: underline; text-underline-offset: 2px;">vladsnewsletter.com</a></span>
+        </p>
+      </form>
     </div>
+    <style>
+      .newsletter-form .nl-input {
+        background: rgb(var(--bg));
+        border: 1px solid rgb(var(--line));
+        color: rgb(var(--fg));
+        border-radius: 0.625rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        min-width: 0;
+      }
+      .newsletter-form .nl-input::placeholder { color: rgb(var(--muted)); opacity: 0.7; }
+      .newsletter-form .nl-input:focus {
+        border-color: rgb(var(--accent));
+        box-shadow: 0 0 0 3px rgb(var(--accent) / 0.18);
+      }
+      .newsletter-form .nl-btn {
+        background: rgb(var(--accent));
+        color: #fff;
+        border: 0;
+        border-radius: 0.625rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: filter 0.15s ease, transform 0.05s ease;
+      }
+      .newsletter-form .nl-btn:hover { filter: brightness(1.08); }
+      .newsletter-form .nl-btn:active { transform: translateY(1px); }
+      .newsletter-form .nl-btn:focus-visible {
+        outline: 2px solid rgb(var(--accent));
+        outline-offset: 2px;
+      }
+    </style>
   </div>
 </section>
 
