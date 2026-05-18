@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 15 · PERMISSION GRANULARITY</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">The permissions block, for real</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">A real <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">~/.claude/settings.json</tspan> permissions block. Deny → ask → allow. Deny always wins. First match resolves it.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">USER-LEVEL · NAMES REDACTED</text>
+
+  <!-- editor -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="900" height="620" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="900" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="900" height="22" fill="#1A1F24"/>
+    <circle cx="24" cy="22" r="6" fill="#FF6B5C"/><circle cx="46" cy="22" r="6" fill="#F5C24A"/><circle cx="68" cy="22" r="6" fill="#6EE7B7"/>
+    <text x="450" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">~/.claude/settings.json</text>
+    <g font-family="JetBrains Mono, monospace" font-size="18">
+      <text x="30" y="92"  fill="#3F4651">1</text><text x="76" y="92"  fill="#E5E5E5">{</text>
+      <text x="30" y="128" fill="#3F4651">2</text><text x="100" y="128" fill="#FF8E54">"permissions"</text><text x="290" y="128" fill="#E5E5E5">: {</text>
+      <text x="30" y="164" fill="#3F4651">3</text><text x="130" y="164" fill="#6EE7B7">"allow"</text><text x="230" y="164" fill="#E5E5E5">: [</text>
+      <text x="30" y="200" fill="#3F4651">4</text><text x="160" y="200" fill="#9EE6C0">"Bash(npm test*)"</text><text x="420" y="200" fill="#E5E5E5">,</text>
+      <text x="30" y="236" fill="#3F4651">5</text><text x="160" y="236" fill="#9EE6C0">"Bash(npm run build*)"</text><text x="500" y="236" fill="#E5E5E5">,</text>
+      <text x="30" y="272" fill="#3F4651">6</text><text x="160" y="272" fill="#9EE6C0">"Edit(src/**/*)"</text><text x="400" y="272" fill="#E5E5E5">,</text>
+      <text x="30" y="308" fill="#3F4651">7</text><text x="160" y="308" fill="#9EE6C0">"Read(/etc/hosts)"</text>
+      <text x="30" y="344" fill="#3F4651">8</text><text x="130" y="344" fill="#E5E5E5">],</text>
+      <text x="30" y="380" fill="#3F4651">9</text><text x="130" y="380" fill="#FF6B5C">"deny"</text><text x="220" y="380" fill="#E5E5E5">: [</text>
+      <text x="24" y="416" fill="#3F4651">10</text><text x="160" y="416" fill="#F4978E">"Bash(rm -rf*)"</text><text x="390" y="416" fill="#E5E5E5">,</text>
+      <text x="24" y="452" fill="#3F4651">11</text><text x="160" y="452" fill="#F4978E">"Bash(git push origin main)"</text><text x="610" y="452" fill="#E5E5E5">,</text>
+      <text x="24" y="488" fill="#3F4651">12</text><text x="160" y="488" fill="#F4978E">"WebFetch"</text><text x="320" y="488" fill="#E5E5E5">,</text>
+      <text x="24" y="524" fill="#3F4651">13</text><text x="160" y="524" fill="#F4978E">"Edit(.env*)"</text><text x="370" y="524" fill="#E5E5E5"></text>
+      <text x="24" y="560" fill="#3F4651">14</text><text x="130" y="560" fill="#E5E5E5">]</text>
+      <text x="24" y="596" fill="#3F4651">15</text><text x="100" y="596" fill="#E5E5E5">}</text>
+    </g>
+  </g>
+
+  <!-- rules panel -->
+  <g transform="translate(1020, 200)">
+    <rect x="0" y="0" width="500" height="620" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="28" y="48" fill="#6EE7B7" font-size="12" letter-spacing="2.4" font-weight="600">HOW IT EVALUATES</text>
+
+    <rect x="28" y="72" width="444" height="76" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+    <text x="48" y="104" fill="#6EE7B7" font-size="15" font-weight="600">deny → ask → allow</text>
+    <text x="48" y="130" fill="#AAA79A" font-size="13">first matching rule resolves the question</text>
+
+    <text x="28" y="194" fill="#FF6B5C" font-size="13" font-weight="600">DENY ALWAYS WINS</text>
+    <text x="28" y="220" fill="#AAA79A" font-size="14">Sticky upward. A managed deny</text>
+    <text x="28" y="242" fill="#AAA79A" font-size="14">can't be re-allowed by project.</text>
+
+    <text x="28" y="290" fill="#FF8E54" font-size="13" font-weight="600">CASE-SENSITIVE</text>
+    <text x="28" y="316" fill="#AAA79A" font-size="14"><tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">bash(...)</tspan> does nothing. It's <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">Bash</tspan>.</text>
+
+    <text x="28" y="364" fill="#FF8E54" font-size="13" font-weight="600">GLOBS LIVE IN THE PARENS</text>
+    <text x="28" y="390" fill="#AAA79A" font-size="14"><tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">Edit(src/**/*)</tspan> = a real rule.</text>
+    <text x="28" y="412" fill="#AAA79A" font-size="14"><tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">Edit(src)</tspan> = one literal file.</text>
+
+    <text x="28" y="460" fill="#FF8E54" font-size="13" font-weight="600">BARE NAME = EVERY CALL</text>
+    <text x="28" y="486" fill="#AAA79A" font-size="14"><tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">WebFetch</tspan> denies every invocation.</text>
+
+    <line x1="28" y1="520" x2="472" y2="520" stroke="#2A3138" stroke-width="1"/>
+    <text x="28" y="556" fill="#71717A" font-size="13">Three levels: managed (org) ›</text>
+    <text x="28" y="578" fill="#71717A" font-size="13">user (~/.claude) › project (.claude/).</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">This block already ships with zero private names — "redact as needed" is trivially satisfied. Copy it as a starting floor.</text>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 15 · THE PERMISSION MODEL</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">approve?</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Every world-touching call shows a preview and waits. The model never silently writes to disk in default mode.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">DEFAULT MODE · THE GATE</text>
+
+  <!-- terminal -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="1000" height="620" fill="#0B0D0F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="1000" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="1000" height="22" fill="#1A1F24"/>
+    <circle cx="24" cy="22" r="6" fill="#FF6B5C"/><circle cx="46" cy="22" r="6" fill="#F5C24A"/><circle cx="68" cy="22" r="6" fill="#6EE7B7"/>
+    <text x="500" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">claude — belkins-portal</text>
+    <g font-family="JetBrains Mono, monospace" font-size="16">
+      <text x="30" y="86" fill="#AAA79A">I'll run the test suite to confirm the change is green.</text>
+      <text x="30" y="128" fill="#F5C24A">●</text><text x="56" y="128" fill="#FAFAF7" font-size="18">Bash command</text>
+      <rect x="30" y="148" width="940" height="48" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="6"/>
+      <text x="50" y="178" fill="#6EE7B7" font-size="17">Bash(npm test)</text>
+      <text x="50" y="232" fill="#71717A" font-size="14" font-family="Inter">Runs the project test suite. No files written.</text>
+
+      <text x="30" y="290" fill="#FAFAF7" font-size="17">Do you want to proceed?</text>
+    </g>
+    <!-- 4 options -->
+    <g transform="translate(30, 312)" font-family="Inter, system-ui">
+      <rect x="0" y="0" width="940" height="56" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1" rx="8"/>
+      <text x="20" y="34" fill="#6EE7B7" font-size="16" font-weight="700">1</text>
+      <text x="52" y="34" fill="#FAFAF7" font-size="16">Approve once.</text>
+
+      <rect x="0" y="68" width="940" height="56" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+      <text x="20" y="102" fill="#FF8E54" font-size="16" font-weight="700">2</text>
+      <text x="52" y="102" fill="#FAFAF7" font-size="16">Approve always for this exact pattern, this session only.</text>
+
+      <rect x="0" y="136" width="940" height="56" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+      <text x="20" y="170" fill="#FF8E54" font-size="16" font-weight="700">3</text>
+      <text x="52" y="170" fill="#FAFAF7" font-size="16">Approve always for this pattern, permanently <tspan fill="#71717A">(writes a rule into settings.json).</tspan></text>
+
+      <rect x="0" y="204" width="940" height="56" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="8"/>
+      <text x="20" y="238" fill="#FF6B5C" font-size="16" font-weight="700">4</text>
+      <text x="52" y="238" fill="#FAFAF7" font-size="16">Reject.</text>
+    </g>
+  </g>
+
+  <!-- right note -->
+  <g transform="translate(1120, 200)">
+    <rect x="0" y="0" width="400" height="620" fill="#161B1F" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <text x="28" y="48" fill="#6EE7B7" font-size="12" letter-spacing="2.4" font-weight="600">THE CONTRACT</text>
+    <text x="28" y="92" fill="#FAFAF7" font-size="16">Edit · Write · Bash · WebFetch ·</text>
+    <text x="28" y="116" fill="#FAFAF7" font-size="16">MCP all hit this gate.</text>
+    <text x="28" y="160" fill="#AAA79A" font-size="15">Reads inside the working dir</text>
+    <text x="28" y="184" fill="#AAA79A" font-size="15">are free. Anything that</text>
+    <text x="28" y="208" fill="#AAA79A" font-size="15">mutates state is gated.</text>
+    <line x1="28" y1="248" x2="372" y2="248" stroke="#2A3138" stroke-width="1"/>
+    <text x="28" y="288" fill="#FF6B2C" font-size="12" letter-spacing="2" font-weight="600">OPTION 3 IS THE TRAP</text>
+    <text x="28" y="328" fill="#AAA79A" font-size="15">It teaches future-you to</text>
+    <text x="28" y="352" fill="#AAA79A" font-size="15">trust the pattern. Pick</text>
+    <text x="28" y="376" fill="#AAA79A" font-size="15">carefully.</text>
+    <rect x="28" y="404" width="344" height="64" fill="#1A1208" stroke="#FF6B2C" stroke-width="1" rx="8"/>
+    <text x="44" y="432" fill="#FF6B2C" font-size="13" font-family="JetBrains Mono, monospace">Always allow</text>
+    <text x="44" y="456" fill="#FAFAF7" font-size="13" font-family="JetBrains Mono, monospace">Bash(rm -rf*)</text>
+    <text x="28" y="508" fill="#71717A" font-size="13">…is the muscle-memory</text>
+    <text x="28" y="530" fill="#71717A" font-size="13">mistake that ends weekends.</text>
+  </g>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">Bare <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">npm test</tspan> here, no glob — distinct from the <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">Bash(npm test*)</tspan> rule a permanent approve would write.</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 17 · THE PERSONAL TOOLBOX</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">What 200 hours leaves on disk</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18"><tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">~/.claude/commands/</tspan> and <tspan font-family="JetBrains Mono, monospace" fill="#E5E5E5">~/.claude/skills/</tspan> — accreted over months, pruned by the weekly audit. Generic shapes shown.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">STYLIZED · NAMES GENERIC</text>
+
+  <!-- LEFT: commands -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="700" height="556" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="700" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="700" height="22" fill="#1A1F24"/>
+    <text x="350" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">~/.claude/commands/</text>
+    <text x="660" y="27" fill="#71717A" font-size="12" text-anchor="end">9 slash-commands</text>
+    <g font-family="JetBrains Mono, monospace" font-size="16">
+      <text x="30" y="86"  fill="#E5E5E5">/daily.md</text>          <text x="540" y="86"  fill="#6EE7B7" font-size="12" font-family="Inter">fires daily</text>
+      <text x="30" y="120" fill="#E5E5E5">/closeday.md</text>      <text x="540" y="120" fill="#6EE7B7" font-size="12" font-family="Inter">fires daily</text>
+      <text x="30" y="154" fill="#E5E5E5">/ship.md</text>          <text x="540" y="154" fill="#6EE7B7" font-size="12" font-family="Inter">high-yield</text>
+      <text x="30" y="188" fill="#E5E5E5">/review.md</text>        <text x="540" y="188" fill="#6EE7B7" font-size="12" font-family="Inter">high-yield</text>
+      <text x="30" y="222" fill="#E5E5E5">/plan.md</text>          <text x="540" y="222" fill="#AAA79A" font-size="12" font-family="Inter">weekly</text>
+      <text x="30" y="256" fill="#E5E5E5">/retro.md</text>         <text x="540" y="256" fill="#AAA79A" font-size="12" font-family="Inter">weekly</text>
+      <text x="30" y="290" fill="#E5E5E5">/standup.md</text>       <text x="540" y="290" fill="#AAA79A" font-size="12" font-family="Inter">weekly</text>
+      <text x="30" y="324" fill="#71717A">/scratch.md</text>      <text x="540" y="324" fill="#F5C24A" font-size="12" font-family="Inter">▲ retire?</text>
+      <text x="30" y="358" fill="#71717A">/old-deploy.md</text>   <text x="540" y="358" fill="#F5C24A" font-size="12" font-family="Inter">▲ retire?</text>
+    </g>
+    <line x1="30" y1="392" x2="670" y2="392" stroke="#1A1F24" stroke-width="1"/>
+    <text x="30" y="430" fill="#6EE7B7" font-size="12" letter-spacing="2" font-weight="600">THE WEEKLY AUDIT (tip 25)</text>
+    <text x="30" y="462" fill="#AAA79A" font-size="14">Read your own command history. A flow you ran</text>
+    <text x="30" y="486" fill="#AAA79A" font-size="14">3+ times → promote to a command. A command</text>
+    <text x="30" y="510" fill="#AAA79A" font-size="14">you didn't run in a month → retire it.</text>
+  </g>
+
+  <!-- RIGHT: skills -->
+  <g transform="translate(820, 200)">
+    <rect x="0" y="0" width="700" height="556" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="10"/>
+    <rect x="0" y="0" width="700" height="44" fill="#1A1F24" rx="10"/>
+    <rect x="0" y="22" width="700" height="22" fill="#1A1F24"/>
+    <text x="350" y="27" fill="#AAA79A" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">~/.claude/skills/</text>
+    <text x="660" y="27" fill="#71717A" font-size="12" text-anchor="end">67 skills · 9 buckets</text>
+    <g font-family="JetBrains Mono, monospace" font-size="15.5">
+      <text x="30" y="84"  fill="#FF8E54">code-lifecycle/</text>   <text x="660" y="84"  fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">scaffold · refactor · quick-fix · +5</text>
+      <text x="30" y="116" fill="#FF8E54">quality-security/</text> <text x="660" y="116" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">audit · security-review · +7</text>
+      <text x="30" y="148" fill="#FF8E54">planning/</text>         <text x="660" y="148" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">ultraplan · plan-only · +5</text>
+      <text x="30" y="180" fill="#FF8E54">ship-deploy/</text>      <text x="660" y="180" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">git-ship · deploy-check · +7</text>
+      <text x="30" y="212" fill="#FF8E54">meta/</text>             <text x="660" y="212" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">learn · retro · memory-hygiene · +3</text>
+      <text x="30" y="244" fill="#FF8E54">research-growth/</text>  <text x="660" y="244" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">research · competitor-intel · +5</text>
+      <text x="30" y="276" fill="#FF8E54">ops-monitoring/</text>   <text x="660" y="276" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">health-pulse · daily · +3</text>
+      <text x="30" y="308" fill="#FF8E54">debugging/</text>        <text x="660" y="308" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">bughunter · debug-swarm · +6</text>
+      <text x="30" y="340" fill="#6EE7B7">project-specific/</text> <text x="660" y="340" fill="#71717A" font-size="12" text-anchor="end" font-family="Inter">8 · the 15% portfolio-tied tail</text>
+    </g>
+    <line x1="30" y1="392" x2="670" y2="392" stroke="#1A1F24" stroke-width="1"/>
+    <text x="30" y="430" fill="#6EE7B7" font-size="12" letter-spacing="2" font-weight="600">THE PAYOFF</text>
+    <text x="30" y="462" fill="#AAA79A" font-size="14">The toolbox is the compounding asset. Hour 1</text>
+    <text x="30" y="486" fill="#AAA79A" font-size="14">had zero skills. Hour 200 has 67 — because every</text>
+    <text x="30" y="510" fill="#AAA79A" font-size="14">repeated flow got promoted, every dead one cut.</text>
+  </g>
+
+  <text x="80" y="804" fill="#71717A" font-size="13">Generic names — the real directory shouldn't be screenshotted raw. The point is the shape: a toolbox that grew because it was audited, not hoarded.</text>
+</svg>
