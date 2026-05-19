@@ -1,0 +1,118 @@
+---
+// Reusable sticky in-page section nav (mobile drawer + desktop rail).
+// Self-contained: ships its own active-section IntersectionObserver + styles.
+// Host page must: wrap this + content in `lg:grid lg:grid-cols-[240px_1fr] lg:gap-10`,
+// give each section container `data-section-target` + a matching `id`.
+interface Item { id: string; label: string }
+interface Props { items: Item[]; title?: string }
+const { items, title = 'On this page' } = Astro.props;
+---
+<!-- Mobile drawer (< 1024px) -->
+<details class="lg:hidden mb-6 rounded-lg border" style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
+  <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between text-sm font-medium select-none">
+    <span>Jump to section</span>
+    <span class="text-xs" style="color: rgb(var(--muted))">tap to open</span>
+  </summary>
+  <nav class="px-2 pb-3">
+    <ol class="space-y-1 text-sm">
+      {items.map((s, i) => (
+        <li>
+          <a href={`#${s.id}`} data-toc-link={s.id} class="block px-3 py-2 rounded transition" style="color: rgb(var(--fg) / 0.85)">
+            <span class="font-mono text-xs mr-2" style="color: rgb(var(--muted))">{String(i + 1).padStart(2, '0')}</span>
+            {s.label}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</details>
+
+<!-- Sticky desktop rail (≥ 1024px) -->
+<aside class="hidden lg:block">
+  <nav class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2">
+    <div class="text-xs uppercase tracking-[0.2em] mb-3" style="color: rgb(var(--muted))">{title}</div>
+    <ol class="space-y-0.5 text-sm">
+      {items.map((s, i) => (
+        <li>
+          <a
+            href={`#${s.id}`}
+            data-toc-link={s.id}
+            class="toc-link block pl-3 pr-2 py-1.5 border-l-2 transition"
+            style="border-color: rgb(var(--line)); color: rgb(var(--fg) / 0.75)"
+          >
+            <span class="font-mono text-[0.7rem] mr-2" style="color: rgb(var(--muted))">{String(i + 1).padStart(2, '0')}</span>
+            {s.label}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</aside>
+
+<style>
+  .toc-link:hover {
+    color: rgb(var(--fg));
+    border-color: rgb(var(--accent-2) / 0.5);
+    background: rgb(var(--accent-2) / 0.04);
+  }
+  .toc-link[data-active="true"] {
+    color: rgb(var(--accent-2));
+    border-color: rgb(var(--accent-2));
+    background: rgb(var(--accent-2) / 0.08);
+    font-weight: 500;
+  }
+  details a[data-toc-link]:hover {
+    background: rgb(var(--line) / 0.5);
+    color: rgb(var(--fg));
+  }
+  details a[data-toc-link][data-active="true"] {
+    color: rgb(var(--accent-2));
+    background: rgb(var(--accent-2) / 0.08);
+  }
+  :global([data-section-target]) { scroll-margin-top: 5rem; }
+</style>
+
+<script>
+  const targets = document.querySelectorAll<HTMLElement>('[data-section-target]');
+  const links = document.querySelectorAll<HTMLAnchorElement>('a[data-toc-link]');
+
+  if (targets.length && links.length && 'IntersectionObserver' in window) {
+    const setActive = (id: string) => {
+      links.forEach((a) => {
+        if (a.getAttribute('data-toc-link') === id) a.setAttribute('data-active', 'true');
+        else a.removeAttribute('data-active');
+      });
+    };
+
+    const visible = new Map<string, number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const id = (e.target as HTMLElement).id;
+          if (e.isIntersecting) visible.set(id, e.intersectionRatio);
+          else visible.delete(id);
+        }
+        if (visible.size === 0) return;
+        let topId: string | null = null;
+        let topY = Infinity;
+        for (const id of visible.keys()) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const y = el.getBoundingClientRect().top;
+          if (y < topY) { topY = y; topId = id; }
+        }
+        if (topId) setActive(topId);
+      },
+      { rootMargin: '-25% 0px -65% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+
+    targets.forEach((t) => io.observe(t));
+    const first = (targets[0] as HTMLElement)?.id;
+    if (first) setActive(first);
+
+    const drawer = document.querySelector<HTMLDetailsElement>('details');
+    document.querySelectorAll('details a[data-toc-link]').forEach((a) => {
+      a.addEventListener('click', () => { if (drawer) drawer.open = false; });
+    });
+  }
+</script>

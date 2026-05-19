@@ -51,6 +51,10 @@ import {
   PROMPT_TRUTH_EXTRACT,
   SETTINGS_JSON_EXAMPLE,
   GITHUB_PR_DIGEST_ACTION,
+  DOCKERFILE_CLAUDE_SANDBOX,
+  DEVCONTAINER_JSON,
+  AGENT_MD_CODE_REVIEWER,
+  HOOK_SESSION_START_CONTEXT,
 } from '@/lib/snippets';
 
 const toc = [
@@ -58,6 +62,8 @@ const toc = [
   { id: 'connectors-mcp', label: 'Connectors / MCP' },
   { id: 'permissions', label: 'Permissions' },
   { id: 'hooks', label: 'Hooks' },
+  { id: 'subagents', label: 'Subagents' },
+  { id: 'sandboxes', label: 'Sandboxes' },
   { id: 'skill-md-templates', label: 'SKILL.md templates' },
   { id: 'five-reusable-prompts', label: 'Five reusable prompts' },
   { id: 'ten-more-operator-prompts', label: 'Eighteen more operator prompts' },
@@ -180,6 +186,19 @@ const toc = [
         <h3>commit-msg-enforcer</h3>
         <p class="text-sm" style="color: rgb(var(--muted))">Half my "chore: fix" commits come from sessions where Claude defaulted to something useless — three months later <code>git log --oneline</code> is a wall of noise. Stop hook, warn-only — force-blocking a Stop is rude.</p>
         <CopyBlock client:visible text={HOOK_COMMIT_MSG_ENFORCER} filename="commit-msg-enforcer.sh" language="bash" />
+
+        <h3>session-start-context</h3>
+        <p class="text-sm" style="color: rgb(var(--muted))">A <code>SessionStart</code> hook that <code>cat</code>s a priorities file — whatever it prints is prepended to the model's context for the session. The side-channel for "what this codebase has been burned by." Ch 16.</p>
+        <CopyBlock client:visible text={HOOK_SESSION_START_CONTEXT} filename="session-start-context.json" language="json" />
+
+        <h2 id="subagents">Subagents</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">A custom subagent is Markdown + YAML frontmatter in <code>~/.claude/agents/</code> (user) or <code>&lt;repo&gt;/.claude/agents/</code> (committed). The <code>tools</code> line is an allow-list — strip Edit/Write/Bash and the subagent is physically read-only. Ch 16.</p>
+        <CopyBlock client:visible text={AGENT_MD_CODE_REVIEWER} filename="code-reviewer.md" language="markdown" />
+
+        <h2 id="sandboxes">Sandboxes</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">Where <code>--dangerously-skip-permissions</code> is actually safe: blast radius bounded to a container. Two recipes from Ch 15 — the air-gapped Docker cage and the official Anthropic devcontainer feature.</p>
+        <CopyBlock client:visible text={DOCKERFILE_CLAUDE_SANDBOX} filename="Dockerfile" language="dockerfile" />
+        <CopyBlock client:visible text={DEVCONTAINER_JSON} filename=".devcontainer/devcontainer.json" language="json" />
 
         <h2 id="skill-md-templates">SKILL.md templates</h2>
         <p class="text-sm" style="color: rgb(var(--muted))">Eight real shapes from Vlad's stack. Adapt to your workflow.</p>
