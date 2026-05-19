@@ -15,6 +15,66 @@ export type ResearchNote = {
 
 export const RESEARCH_NOTES: ResearchNote[] = [
   {
+    title: 'Gemini 3.5 Flash announced — a Flash outrunning last-gen Pros',
+    source: 'Google launch presentation + DeepMind evals-methodology page · announced, not independently benchmarked',
+    date: '2026-05-19',
+    tagline: 'The cheap tier is eating the premium tier — and the Pro hasn\'t even shipped yet.',
+    takeaway:
+      "Google announced Gemini 3.5 Flash on 2026-05-19, and the headline isn't the model — it's the tier. This is a *Flash*, the speed/cost line, and on the agentic and coding boards Google chose to show, it clears Gemini 3.1 Pro: Terminal-bench 76.2 vs 70.3, MCP Atlas 83.6 vs 78.2, Finance Agent v2 57.9 vs 43.0. Google explicitly went after agency this cycle — the demo they led with was 3.5 Flash writing a small OS that boots and runs Doom in about twelve hours. The catch: token price tripled, $0.5/$3 → $1.5/$9 per million (for reference, 3.1 Pro is $2/$12 under 200k context). So the sticker went up while the tier went down — a Flash that costs what a Pro used to. The Pro variant exists and is promised next month at a number nobody will say out loud yet. Two operator disciplines apply. First: these are vendor launch-deck numbers, not independent evals — a signal, not a receipt. We do not touch the live LMArena board over a slide; the auto-updated leaderboard in Ch 24 stays the moving source of truth, and a launch presentation is not a leaderboard. Second, the one that actually matters: the price of a model is not the price of a task (Ch 29). A stronger Flash that one-shots what the old Flash needed three turns for can be cheaper at 3× the sticker — and you will not know which until you run *your* workload. The structural read is the real takeaway: when the Flash tier clears last-gen Pro, every cheap-tier/expensive-tier routing assumption you made six months ago is stale. Re-run the split; don't trust the slide; wait for the Pro price before you commit anything.",
+    implications: [
+      'Do not switch on a launch deck. Re-test cost-per-task on your own workload (Ch 29 method) before moving any routing — a 3× sticker can still be cheaper per task, or not, and only your traffic tells you which.',
+      'The Flash-beats-Pro signal means your model floor moved again. Revisit your Haiku/Sonnet/Opus (or cross-vendor) split — the assumption that "cheap tier = weak tier" is the thing that just broke.',
+      'Keep the live LMArena widget (Ch 24) as the moving source of truth. A vendor slide is not a leaderboard; wait for independent evals + the Pro price before re-tiering anything in writing.',
+      'If you run a second-prior workflow (Ch 35 — Gemini in AI Studio as the idea machine), nothing changes operationally — but the prior just got stronger and pricier. The move is still "two priors triangulate," not "switch to the new one."',
+    ],
+    receipts: [
+      { label: 'Tier', value: 'Flash (speed/cost line) — not the Pro' },
+      { label: 'vs 3.1 Pro (Google slide)', value: 'Terminal-bench 76.2 / 70.3 · MCP Atlas 83.6 / 78.2' },
+      { label: 'Token price', value: '$0.5/$3 → $1.5/$9 per M (3×)' },
+      { label: 'Agency demo', value: 'wrote a small OS that runs Doom (~12h)' },
+      { label: 'Pro variant', value: 'next month — price undisclosed' },
+      { label: 'Source confidence', value: 'low (vendor launch deck, not independent eval)' },
+    ],
+    chapters: [
+      { slug: '35-codex-and-cc', ref: 'Ch 35', why: 'The second-prior thesis — AI Studio as the idea machine; the bench moved under it but the move ("two priors triangulate") is unchanged' },
+      { slug: '29-cost-economics', ref: 'Ch 29', why: 'The 3× sticker is the exact "price of a model is not the price of a task" case — test cost-per-task on your own workload' },
+      { slug: '24-tier-list', ref: 'Ch 24', why: 'The model floor moved again; the live leaderboard — not this slide — is the source of truth' },
+    ],
+    links: [
+      { label: 'DeepMind — Gemini 3.5 Flash evals methodology', href: 'https://deepmind.google/models/evals-methodology/gemini-3-5-flash/' },
+    ],
+  },
+  {
+    title: 'Claude for the legal industry — Anthropic goes vertical',
+    source: 'Anthropic blog (claude.com) · first-party announcement',
+    date: '2026-05-12',
+    tagline: 'Operator patterns, packaged: 20+ legal connectors, 12 practice-area plugins, sold into a regulated vertical.',
+    takeaway:
+      "On 2026-05-12 Anthropic shipped a packaged legal vertical, and for an operator the interesting part isn't \"Claude does law\" — it's the *shape*. Three pieces: 20+ MCP connectors into legal systems of record (iManage, NetDocuments, Relativity, Thomson Reuters CoCounsel, Everlaw, Ironclad, Docusign, Box, Datasite, Consilio), 12 practice-area plugins scoped to roles (Litigation, IP, Privacy, Corporate, Employment, Regulatory, AI Governance, Product, Commercial, plus Law Student / Legal Clinic / Legal Builder Hub), and discounted public-service pricing for legal aid. Design partners are not small: Thomson Reuters, Docusign, Harvey, Everlaw, Freshfields, Accenture, Holland & Knight. Claude Opus 4.7 scored 90.9% on Harvey's BigLaw Bench, the highest of any Claude model — a procurement-grade number, the kind you put in a risk memo. The operator read: this is the connectors-plus-skills pattern this entire book teaches, assembled into a product and sold into a regulated industry. The signal is not the law vertical specifically — it's that \"MCP connectors into the systems of record + role-scoped plugins\" is now Anthropic's own go-to-market motion. If you operate in or sell into any regulated niche, the move is to assemble that same shape yourself — the connector layer over your systems of record, plus per-function skill packs — before a vendor packages your niche for you. Verticalization is a tailwind for operators who already think in connectors and skills, and a clock for those who don't.",
+    implications: [
+      'If you work in or sell into a regulated vertical, audit which of your systems of record already have MCP connectors and wire them now — the connector layer is the moat, and it is being commoditized fastest.',
+      'The "12 practice-area plugins" pattern is role-scoped skill packs (Ch 39). Build your own per-function packs the same way — one plugin per role, not one mega-assistant.',
+      'Opus 4.7 at 90.9% on Harvey BigLaw Bench is a defensible procurement number. Use first-party benchmark scores like this when you have to justify a model choice to risk, legal, or finance.',
+      'Watch for the same vertical packaging arriving in your industry. Being early on the connector + plugin layer is the difference between riding the tailwind and being disintermediated by it.',
+    ],
+    receipts: [
+      { label: 'Legal MCP connectors', value: '20+ (iManage, Relativity, CoCounsel, Everlaw…)' },
+      { label: 'Practice-area plugins', value: '12 role-scoped' },
+      { label: 'Opus 4.7 — Harvey BigLaw Bench', value: '90.9% (highest Claude model)' },
+      { label: 'Design partners', value: 'Freshfields, Holland & Knight, Accenture, Thomson Reuters, Harvey' },
+      { label: 'Surface', value: 'Microsoft 365 + Cowork, multi-doc workflows' },
+      { label: 'Source confidence', value: 'high (first-party announcement)' },
+    ],
+    chapters: [
+      { slug: '12-connectors-mcp', ref: 'Ch 12', why: 'The connector layer over systems of record is the productized pattern — this is that chapter, sold as a vertical' },
+      { slug: '39-skills-you-should-steal', ref: 'Ch 39', why: 'The 12 practice-area plugins are role-scoped skill packs — the same build pattern, one per function' },
+      { slug: '10-wild-stuff', ref: 'Ch 10', why: 'Vertical packaging is the strongest signal yet that operator-Claude patterns are going enterprise' },
+    ],
+    links: [
+      { label: 'Anthropic — Claude for the legal industry', href: 'https://claude.com/blog/claude-for-the-legal-industry' },
+    ],
+  },
+  {
     title: "Karpathy's CLAUDE.md — 4 rules cut Claude mistakes from 41% to 11%",
     source: 'Public post + community replication · 30-codebase informal study',
     date: '2026-05-14',

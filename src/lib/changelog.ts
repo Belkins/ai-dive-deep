@@ -10,6 +10,24 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 5',
+    date: '2026-05-19',
+    tagline: 'The bench moved. The reports stopped being files.',
+    shipped: [
+      'Gemini 3.5 Flash + Claude-for-the-legal-industry logged as dated research notes — signal-vs-receipt discipline, not a leaderboard edit',
+      'Ch 35: corrected the stale "Gemini 3 Pro" reference + added the Flash-beats-last-gen-Pro signal, scoped as a Ch 29 cost question rather than a re-tiering',
+      'Ch 29: new section — "The price of a model is not the price of a task" + a cost-per-task test loop you run on your own traffic',
+      'Ch 24: May-2026 addendum extended; the live LMArena widget stays the source of truth — no slide-driven tier edits',
+      'New thesis across Ch 19 / Ch 26 / About — every report ships as a living link on a private repo, not a dead file; unsanctioned copying as the truest adoption metric',
+    ],
+    receipts: [
+      { label: 'Research notes added', value: '2' },
+      { label: 'Chapters touched', value: '19, 24, 26, 29, 35' },
+      { label: 'Live bench edits', value: '0 (signal, not receipt)' },
+      { label: 'New components', value: '0' },
+    ],
+  },
+  {
     edition: 'Edition 4',
     date: '2026-05-11',
     tagline: 'Retitled for navigation. Voice survived.',

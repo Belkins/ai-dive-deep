@@ -176,6 +176,32 @@ Three lines. It cut my bill by roughly 30% the week I shipped it. Not from any o
   ratio="2452/1558"
   note="Real console: 2.25B tokens in for the month, grouped by model. The single 450M-token day mid-March is exactly the kind of spike the rest of this chapter is about killing."/>
 
+## The price of a model is not the price of a task
+
+Every time a new model lands, the first number everyone quotes is the sticker — dollars per million tokens. It is the wrong number to decide on, and the launch decks are built to make you decide on it.
+
+Concrete, current case: on 2026-05-19 Google announced Gemini 3.5 Flash. The token price tripled — $0.5/$3 → $1.5/$9 per million (3.1 Pro, for reference, is $2/$12 under 200k context). Sticker-shock reaction: "the cheap tier got expensive, skip it." But it's a *Flash* that, on the boards Google showed, clears last-gen Gemini 3.1 Pro on agentic and coding work. A model that one-shots what the previous one needed three turns and a retry to get right is **cheaper per task at 3× the per-token price** — fewer turns, fewer tool round-trips, no failure-and-retry tax, less of your time reading a wrong answer. The sticker went up; the cost of the task may have gone down. The two numbers are not the same number and nothing on the pricing page tells you which way it broke for *your* workload.
+
+The only honest way to know is to run it:
+
+```python
+# cost-per-task, not cost-per-token. Run YOUR top-5 real tasks
+# through old vs new, measure the thing that's actually on the invoice.
+for task in top_5_real_workloads:
+    old = run(task, model="prev")   # tokens in/out + turns + retries + wall-clock
+    new = run(task, model="candidate")
+    log(task, old.total_billed, new.total_billed, old.turns, new.turns)
+# decide on the total-billed-per-completed-task column. Never on $/Mtok.
+```
+
+<PullQuote>The pricing page sells you a per-token rate. The invoice charges you per finished task. A model can get more expensive per token and cheaper per job in the same release.</PullQuote>
+
+Three rules that fall out of this:
+
+- **Never re-route on a launch-deck number.** Vendor benchmarks are a signal that a test is *worth running*, not a result. Run the loop above on your own traffic before you move a single route.
+- **A stronger cheap tier resets your whole split.** The Haiku/Sonnet/Opus (or cross-vendor) routing table above assumes "cheap tier = weak tier." The day a Flash clears a last-gen Pro, that assumption is the thing that broke — re-derive the split, don't patch it.
+- **Wait for the tier you can't see.** Google promised a 3.5 Pro "next month" at an undisclosed price. Re-tiering on the Flash before the Pro lands is committing on half the board. Note the signal (see [Research Notes](/research-notes/)), hold the routing.
+
 ## The token budget per skill
 
 Once your portfolio of <GlossaryTerm term="Skill">skills</GlossaryTerm> crosses about a dozen, you stop being able to eyeball the bill. I attach a tiny logger to each skill that records `(skill_name, input_tokens, output_tokens, cached_tokens, model, ts)` to a Postgres table. Once a week I look at the top ten by cost. Some weeks the answer is "morning-briefing is doing what it should." Some weeks the answer is "competitive-intel-scan is calling Sonnet 60 times in a row when it should be one Sonnet call orchestrating Haiku tool calls."

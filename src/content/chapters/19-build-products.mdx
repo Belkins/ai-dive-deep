@@ -169,6 +169,22 @@ When you hit a feature choice, walk down the ladder before you write code:
 
 Most "I need to build X" turns out to be a skill, an MCP server, or a $20/month SaaS. The first instinct of a former-engineer founder is to build. The right instinct of an operator is to buy until buying breaks.
 
+## The lowest-effort product you'll ever ship: the report itself
+
+Everything above is the Saturday-product version of one mechanic: a repo, a deploy, a live URL that exists. Here's the version that doesn't take a Saturday — it takes the rest of your company ten minutes to copy, and it's the highest-ROI move in this chapter.
+
+Stop sending dead files. Every report, every deck, every "here's the Q3 numbers" attachment is a thing that was true the second it was exported and started rotting on the way to the inbox. The operator move: the report is an interactive HTML doc in a private repo, deployed to a link. You don't send the numbers — you send the link. The link is current because the repo is. Next week's update is a commit, not a re-send-and-hope-they-open-the-newest-one.
+
+I rolled this across the portfolio and the second-order effect was the surprise. It wasn't "nicer reports." It was retention and circulation: an interactive doc with the source attached gets *opened*, gets *clicked into*, gets *forwarded* — a PDF gets archived unread. Information that used to die in an attachment now circulates because it's a living surface, not a snapshot. And it's genuinely more fun to make and to read, which is the part nobody admits matters until adoption proves it does.
+
+<Callout type="tip">
+The mechanic is exactly Hour 2 of this chapter, pointed at a doc instead of a product: `gh repo create --private`, drop the HTML, `vercel deploy` (or GitHub Pages), share the link. Private repo, public-to-the-recipient link, updated by commit. The people on my teams who got it didn't wait for a mandate — they spun up their own private repos to get their own living links. That's the adoption signal: when the tool is obviously better, you don't roll it out, it spreads. (The team-behavior side of this is [Ch 26](/chapters/26-team-adoption).)
+</Callout>
+
+<PullQuote>The cheapest product you'll ever ship isn't an MVP. It's the report you were going to email anyway — shipped as a living link instead of a dead file.</PullQuote>
+
+This entire book is the maximal version of the same move: a private repo, a deployed link, updated by commit, that stays current instead of rotting. The report you send Monday is the minimal version. Same mechanic, two ends of the same ladder.
+
 ## Real spend math
 
 Saturday's project, line by line:
