@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AFC — Robot Stable & Supply Chain</title>
+<meta name="description" content="Every humanoid platform in the AFC scouting catalog. Factories, lead times, profit per fighter." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --afc-black:#0A0A0B;
+    --afc-chrome:#B8BCC0;
+    --afc-blood:#7A0A0A;
+    --afc-blood-bright:#A50F0F;
+    --afc-bone:#E8E2D5;
+    --afc-smoke:#D9D9D6;
+    --afc-cobalt:#1A2EFF;
+    --afc-gold:#C9A24E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--afc-black);color:var(--afc-smoke);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    font-size:15px;line-height:1.6;overflow-x:hidden;
+  }
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    opacity:.06;mix-blend-mode:overlay;
+  }
+  .display{font-family:'Anton',sans-serif;letter-spacing:-.01em;text-transform:uppercase;line-height:.9}
+  .editorial{font-family:'Cormorant Garamond',serif;font-style:italic}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+  h1{font-family:'Anton',sans-serif;font-size:clamp(3rem,12vw,9rem);line-height:.85;letter-spacing:-.02em;text-transform:uppercase}
+  h2{font-family:'Anton',sans-serif;font-size:clamp(2rem,5vw,3.6rem);line-height:1;letter-spacing:-.005em;text-transform:uppercase;margin-bottom:.6em}
+  h3{font-family:'Anton',sans-serif;font-size:clamp(1.4rem,2.5vw,2rem);text-transform:uppercase;line-height:1;margin-bottom:.6em}
+  h4{font-family:'Inter',sans-serif;font-size:.92rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5em;color:var(--afc-bone)}
+  p{margin-bottom:1em;max-width:64ch}
+  a{color:var(--afc-bone);border-bottom:1px solid currentColor;text-decoration:none;transition:color .2s}
+  a:hover{color:var(--afc-cobalt)}
+  ::selection{background:var(--afc-blood);color:var(--afc-bone)}
+  .blood{color:var(--afc-blood-bright)}
+  .gold{color:var(--afc-gold)}
+  .chrome{color:var(--afc-chrome)}
+  .bone{color:var(--afc-bone)}
+
+  /* ──────── NAV ──────── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px clamp(20px,4vw,40px);
+    background:linear-gradient(180deg,rgba(10,10,11,.92),rgba(10,10,11,.3) 80%,transparent);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+  nav .brand{font-family:'Anton',sans-serif;font-size:1.25rem;letter-spacing:.06em;color:var(--afc-bone)}
+  nav ul{display:flex;gap:clamp(14px,2vw,32px);list-style:none}
+  nav li{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase}
+  nav a{border:0;color:var(--afc-chrome)}nav a:hover{color:var(--afc-bone)}
+  @media(max-width:780px){nav ul{display:none}}
+
+  /* ──────── HERO ──────── */
+  section{padding:clamp(70px,12vh,160px) clamp(20px,5vw,60px);position:relative;border-top:1px solid rgba(184,188,192,.08)}
+  section:first-of-type{border:0}
+  .container{max-width:1400px;margin:0 auto}
+  .row-label{display:flex;align-items:center;gap:14px;margin-bottom:32px;color:var(--afc-chrome)}
+  .row-label::before{content:'';display:block;width:32px;height:1px;background:var(--afc-chrome)}
+  .hero{min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+    background:radial-gradient(ellipse at 30% 80%,rgba(122,10,10,.18) 0%,transparent 60%),var(--afc-black)}
+  .hero h1 span.stroke{-webkit-text-stroke:1px var(--afc-chrome);color:transparent}
+  .hero .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;margin-top:48px;padding-top:24px;border-top:1px solid rgba(184,188,192,.15)}
+  .hero .meta div{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--afc-chrome)}
+  .hero .meta strong{display:block;color:var(--afc-bone);font-weight:500;margin-top:6px;font-size:.85rem}
+
+  /* ──────── Filter bar ──────── */
+  .filter-bar{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:32px;
+    padding:18px 22px;border:1px solid rgba(184,188,192,.18);background:rgba(10,10,11,.5);
+    position:sticky;top:64px;z-index:50;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+  .filter-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--afc-chrome);margin-right:8px}
+  .chip{
+    font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    padding:8px 14px;background:transparent;color:var(--afc-chrome);border:1px solid rgba(184,188,192,.25);
+    cursor:pointer;transition:all .2s
+  }
+  .chip:hover{border-color:rgba(184,188,192,.5);color:var(--afc-bone)}
+  .chip.active{background:var(--afc-blood);border-color:var(--afc-blood-bright);color:var(--afc-bone)}
+  .chip[data-class] {min-width:0}
+  .chip.search{flex:1;min-width:200px;padding:0}
+  .chip.search input{
+    width:100%;padding:8px 14px;background:transparent;border:0;color:var(--afc-bone);
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.04em;outline:0;
+  }
+  .chip.search input::placeholder{color:var(--afc-chrome)}
+
+  /* ──────── Robot grid ──────── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+  .card{
+    border:1px solid rgba(184,188,192,.18);padding:24px 22px;background:rgba(10,10,11,.4);
+    cursor:pointer;transition:all .25s;position:relative;display:flex;flex-direction:column;gap:12px;
+  }
+  .card::before{
+    content:'';position:absolute;top:0;left:0;width:0;height:1px;background:var(--afc-blood-bright);
+    transition:width .35s ease-out
+  }
+  .card:hover{border-color:rgba(184,188,192,.4);transform:translateY(-3px)}
+  .card:hover::before{width:100%}
+  .card.afc-pick{border-color:var(--afc-gold)}
+  .card.afc-pick::after{
+    content:'AFC PICK';position:absolute;top:14px;right:16px;
+    font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;color:var(--afc-gold);
+    border:1px solid var(--afc-gold);padding:3px 8px
+  }
+  .card .name{font-family:'Anton',sans-serif;font-size:1.6rem;text-transform:uppercase;line-height:1;color:var(--afc-bone);margin-bottom:2px;padding-right:64px}
+  .card .maker{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--afc-chrome)}
+  .card .flag{display:inline-block;margin-right:6px}
+  .card .price{font-family:'Anton',sans-serif;font-size:1.4rem;color:var(--afc-gold);line-height:1}
+  .card .price small{font-family:'Inter',sans-serif;font-size:.7rem;color:var(--afc-chrome);font-weight:400;text-transform:uppercase;letter-spacing:.08em;margin-left:6px}
+  .stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 14px;margin-top:6px}
+  .stat-row .item{}
+  .stat-row .l{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--afc-chrome)}
+  .stat-row .v{font-size:.85rem;color:var(--afc-bone)}
+  .verdict{margin-top:8px;padding-top:12px;border-top:1px solid rgba(184,188,192,.12);font-size:.82rem;color:var(--afc-smoke);min-height:42px}
+  .score{display:flex;align-items:center;gap:8px;margin-top:auto}
+  .score-bar{flex:1;height:3px;background:rgba(184,188,192,.15);position:relative;overflow:hidden}
+  .score-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--afc-blood-bright)}
+  .score-num{font-family:'Anton',sans-serif;font-size:1.4rem;color:var(--afc-bone)}
+  .score-num small{font-family:'Inter',sans-serif;font-size:.7rem;color:var(--afc-chrome);font-weight:400}
+
+  /* ──────── Profit Calculator ──────── */
+  .calc{
+    border:1px solid rgba(201,162,78,.4);background:linear-gradient(180deg,rgba(201,162,78,.06),rgba(122,10,10,.04));
+    padding:36px 32px
+  }
+  .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  @media(max-width:780px){.calc-grid{grid-template-columns:1fr}}
+  .ctrl{margin-bottom:22px}
+  .ctrl label{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--afc-chrome);margin-bottom:8px}
+  .ctrl label b{color:var(--afc-bone);font-weight:500}
+  .ctrl input[type=range]{width:100%;-webkit-appearance:none;background:transparent;cursor:grab}
+  .ctrl input[type=range]:active{cursor:grabbing}
+  .ctrl input[type=range]::-webkit-slider-runnable-track{height:2px;background:rgba(184,188,192,.25)}
+  .ctrl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--afc-blood-bright);margin-top:-8px;border:2px solid var(--afc-bone);border-radius:0}
+  .ctrl input[type=range]::-moz-range-track{height:2px;background:rgba(184,188,192,.25)}
+  .ctrl input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--afc-blood-bright);border:2px solid var(--afc-bone);border-radius:0}
+  .ctrl select{
+    width:100%;background:rgba(10,10,11,.6);color:var(--afc-bone);border:1px solid rgba(184,188,192,.25);
+    padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.06em;
+    text-transform:uppercase;outline:0;cursor:pointer;border-radius:0;
+  }
+  .calc-readout{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .calc-readout .item{padding:18px;border:1px solid rgba(184,188,192,.18);background:rgba(10,10,11,.5)}
+  .calc-readout .item .l{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--afc-chrome);margin-bottom:8px}
+  .calc-readout .item .v{font-family:'Anton',sans-serif;font-size:2rem;line-height:1;color:var(--afc-bone)}
+  .calc-readout .item.profit .v{color:var(--afc-gold)}
+  .calc-readout .item.loss .v{color:var(--afc-blood-bright)}
+  .calc-note{font-size:.82rem;color:var(--afc-chrome);margin-top:18px;line-height:1.55}
+
+  /* ──────── Factory map ──────── */
+  .factories{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0;border:1px solid rgba(184,188,192,.18)}
+  .factory{padding:24px;border-right:1px solid rgba(184,188,192,.18);border-bottom:1px solid rgba(184,188,192,.18);background:rgba(10,10,11,.4);transition:background .2s}
+  .factory:hover{background:rgba(122,10,10,.05)}
+  .factory .city{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--afc-chrome);margin-bottom:8px}
+  .factory .name{font-family:'Anton',sans-serif;font-size:1.4rem;text-transform:uppercase;color:var(--afc-bone);line-height:1;margin-bottom:12px}
+  .factory .specialty{font-size:.85rem;margin-bottom:10px}
+  .factory .makes{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;color:var(--afc-gold);text-transform:uppercase}
+  .factory .lead{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;color:var(--afc-chrome);text-transform:uppercase;margin-top:10px}
+
+  /* ──────── Modal / detail panel ──────── */
+  .modal-bg{
+    position:fixed;inset:0;background:rgba(10,10,11,.92);z-index:200;
+    opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  }
+  .modal-bg.on{opacity:1;pointer-events:auto}
+  .modal{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-46%);
+    background:var(--afc-black);border:1px solid rgba(184,188,192,.25);
+    width:min(880px,92vw);max-height:88vh;overflow-y:auto;z-index:201;
+    padding:36px;opacity:0;pointer-events:none;transition:all .3s;
+  }
+  .modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+  .modal-close{
+    position:absolute;top:16px;right:16px;background:transparent;color:var(--afc-bone);
+    border:1px solid rgba(184,188,192,.3);width:32px;height:32px;cursor:pointer;font-size:1rem;
+  }
+  .modal-close:hover{border-color:var(--afc-blood-bright);color:var(--afc-blood-bright)}
+  .modal h3{font-size:2.4rem;margin-bottom:.2em;padding-right:48px}
+  .modal .submeta{font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--afc-chrome);margin-bottom:24px}
+  .modal-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:28px;padding:18px;border:1px solid rgba(184,188,192,.15);background:rgba(122,10,10,.04)}
+  .modal-stats .l{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--afc-chrome)}
+  .modal-stats .v{font-size:.95rem;color:var(--afc-bone);margin-top:4px}
+  .modal-section{margin-bottom:22px}
+  .modal-section h5{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--afc-gold);margin-bottom:10px}
+  .modal-section p{font-size:.93rem;color:var(--afc-smoke);margin:0}
+  .modal-section ul{font-size:.9rem;color:var(--afc-smoke);padding-left:18px}
+  .modal-section li{padding:3px 0}
+
+  /* ──────── KPI strip ──────── */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0;border:1px solid rgba(184,188,192,.18);margin-bottom:32px}
+  .kpi{padding:24px 22px;border-right:1px solid rgba(184,188,192,.15)}
+  .kpi:last-child{border-right:0}
+  .kpi .l{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--afc-chrome);margin-bottom:10px}
+  .kpi .v{font-family:'Anton',sans-serif;font-size:2.2rem;line-height:1;color:var(--afc-bone)}
+  .kpi .v.gold{color:var(--afc-gold)}
+  .kpi .d{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.06em;color:var(--afc-chrome);margin-top:8px;text-transform:uppercase}
+
+  /* ──────── Footer ──────── */
+  footer{padding:36px 20px;text-align:center;border-top:1px solid rgba(184,188,192,.08)}
+  footer p{margin:0 auto;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;color:var(--afc-chrome)}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">AFC · Stable</div>
+  <ul>
+    <li><a href="#stable">Stable</a></li>
+    <li><a href="#calc">Profit Calc</a></li>
+    <li><a href="#factories">Factories</a></li>
+    <li><a href="#suppliers">Suppliers</a></li>
+    <li><a href="pitch.html">← Pitch</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="mono chrome" style="margin-bottom:24px">Robot stable · Supply chain · Profit math · v0.1 / 2026-05-05</div>
+    <h1>THE<br><span class="stroke">STABLE</span></h1>
+    <p style="max-width:60ch;margin-top:32px;font-size:1.1rem;color:var(--afc-bone)">Every credible humanoid platform shipping in 2026. Where they're made, what they cost, what AFC does with them, and what each fighter prints per night in the cage.</p>
+    <div class="meta">
+      <div>Platforms tracked<strong class="bone">14 active · 4 deferred</strong></div>
+      <div>Phase 0 buy<strong class="bone">~$340K · 4×G1 + spares + 1×H1</strong></div>
+      <div>Per-fighter / event<strong class="bone">~$24,500 cost-to-field</strong></div>
+      <div>Net per fighter / event<strong class="gold">~$45–95K Phase 1 mature</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────── KPI STRIP ──────── -->
+<section style="padding-top:0;padding-bottom:0;border:0">
+  <div class="container">
+    <div class="kpis">
+      <div class="kpi"><div class="l">Cheapest credible</div><div class="v">$13.5K</div><div class="d">Unitree G1 base · ships 8–24 wks from Hangzhou</div></div>
+      <div class="kpi"><div class="l">Phase 1 fleet target</div><div class="v">8–10</div><div class="d">Across 2 weight classes</div></div>
+      <div class="kpi"><div class="l">Total-loss rate / bout</div><div class="v">~8%</div><div class="d">Engineerable down to 3% with chassis discipline</div></div>
+      <div class="kpi"><div class="l">Cost curve 2026 → 2029</div><div class="v gold">−65%</div><div class="d">G1-tier: $13.5K → ~$4–6K by 2029</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────── ROBOT STABLE ──────── -->
+<section id="stable">
+  <div class="container">
+    <div class="row-label mono">01 · The catalog</div>
+    <h2>14 platforms.<br><span class="blood">Five make the cage.</span></h2>
+    <p class="bone" style="font-size:1rem;max-width:60ch">Click any card for the deep card — combat suitability, Phase plan, AFC verdict, mod cost, and the contact. The four golden cards are the actual Phase 0–1 buy plan.</p>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter</span>
+      <button class="chip active" data-filter="all">All (14)</button>
+      <button class="chip" data-filter="afcPick">AFC Picks</button>
+      <button class="chip" data-class="feather">Featherweight</button>
+      <button class="chip" data-class="heavy">Heavyweight</button>
+      <button class="chip" data-class="titan">Titan</button>
+      <button class="chip" data-region="China">China</button>
+      <button class="chip" data-region="USA">USA</button>
+      <button class="chip" data-region="EU/UK">EU/UK</button>
+      <button class="chip search"><input type="text" id="search" placeholder="Search name, maker, city…"/></button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- ──────── PROFIT CALC ──────── -->
+<section id="calc">
+  <div class="container">
+    <div class="row-label mono">02 · Profit per fighter, per event</div>
+    <h2>Move the sliders.<br><span class="gold">Every variable is real.</span></h2>
+    <p class="bone" style="font-size:1rem;max-width:60ch;margin-bottom:24px">Numbers grounded in <span class="mono chrome">REVENUE-MODEL.md</span>. Default state = Phase 1 mature event (400-cap), 4 fights, base sponsor offset.</p>
+    <div class="calc">
+      <div class="calc-grid">
+        <div>
+          <div class="ctrl">
+            <label>Robot platform <b id="lblBot">Unitree G1 ($13.5K)</b></label>
+            <select id="bot">
+              <option value="13500" data-class="feather">Unitree G1 — $13,500 (feather)</option>
+              <option value="35000" data-class="feather" selected>Booster T1 — $35,000 (feather)</option>
+              <option value="90000" data-class="heavy">Unitree H1 — $90,000 (heavy)</option>
+              <option value="129000" data-class="heavy">Unitree H1-2 — $129,000 (heavy)</option>
+              <option value="73900" data-class="feather">Unitree G1 EDU max-config — $73,900</option>
+              <option value="180000" data-class="heavy">EngineAI T800 — $180,000 (heavy)</option>
+              <option value="200000" data-class="heavy">Fourier GR-1 — $200,000 (heavy)</option>
+              <option value="50000" data-class="feather">EngineAI PM01 — $50,000 (feather)</option>
+            </select>
+          </div>
+          <div class="ctrl">
+            <label>Combat-mod budget <b id="lblMod">$15,000</b></label>
+            <input type="range" id="mod" min="5000" max="40000" step="1000" value="15000" />
+          </div>
+          <div class="ctrl">
+            <label>Bouts before retirement <b id="lblBouts">12</b></label>
+            <input type="range" id="bouts" min="2" max="30" step="1" value="12" />
+          </div>
+          <div class="ctrl">
+            <label>Total-loss probability / bout <b id="lblLoss">8%</b></label>
+            <input type="range" id="loss" min="0" max="30" step="1" value="8" />
+          </div>
+          <div class="ctrl">
+            <label>Sponsor revenue this fighter / event <b id="lblSpons">$50,000</b></label>
+            <input type="range" id="spons" min="0" max="250000" step="5000" value="50000" />
+          </div>
+          <div class="ctrl">
+            <label>Ticket revenue allocated / fighter <b id="lblTix">$35,000</b></label>
+            <input type="range" id="tix" min="10000" max="120000" step="2500" value="35000" />
+          </div>
+          <div class="ctrl">
+            <label>Merch + capsule attribution / fighter <b id="lblMerch">$8,000</b></label>
+            <input type="range" id="merch" min="0" max="60000" step="1000" value="8000" />
+          </div>
+        </div>
+
+        <div>
+          <div class="calc-readout">
+            <div class="item"><div class="l">Robot amortization / event</div><div class="v" id="rAmort">—</div></div>
+            <div class="item"><div class="l">Pre-event prep + crew</div><div class="v" id="rPrep">$11,500</div></div>
+            <div class="item"><div class="l">Consumables (servos, panels)</div><div class="v" id="rCons">$3,500</div></div>
+            <div class="item"><div class="l">Total-loss reserve</div><div class="v" id="rLoss">—</div></div>
+            <div class="item"><div class="l">Insurance + walkout prod</div><div class="v" id="rInsure">$3,500</div></div>
+            <div class="item"><div class="l"><strong>Cost to field / event</strong></div><div class="v" id="rTotalCost">—</div></div>
+            <div class="item"><div class="l">Revenue attributed / fighter</div><div class="v" id="rRev">—</div></div>
+            <div class="item profit"><div class="l"><strong>Net contribution / event</strong></div><div class="v" id="rNet">—</div></div>
+          </div>
+          <div class="calc-note" id="calcVerdict"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────── PHASE PLAN ──────── -->
+<section id="phase">
+  <div class="container">
+    <div class="row-label mono">03 · The buy plan</div>
+    <h2>Hardware is solved.<br><span class="blood">$340K opens the cage.</span></h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+      <div class="card afc-pick" style="cursor:default">
+        <div class="name">Phase 0 · 6 mo</div>
+        <div class="maker">Skunkworks · ~$340K all-in</div>
+        <div class="verdict" style="min-height:0;border:0;padding:0">
+          <strong class="bone">4× Unitree G1</strong> ($54K) — primary fighter platform, cheap enough to break.<br><br>
+          <strong class="bone">2× G1 spare bodies</strong> ($16K) — parts cannibalization.<br><br>
+          <strong class="bone">1× Unitree H1</strong> ($90K) — heavyweight hero / upgrade path.<br><br>
+          <strong class="bone">1× Booster T1</strong> ($35K) — featherweight specialty.<br><br>
+          <strong class="chrome">Mods + tooling + shipping + customs:</strong> ~$135K
+        </div>
+      </div>
+      <div class="card" style="cursor:default">
+        <div class="name">Phase 1 · 18 mo</div>
+        <div class="maker">8–10 fighters fielded · $500K–$1M</div>
+        <div class="verdict" style="min-height:0;border:0;padding:0">
+          Mix of G1 (light class) + H1 (heavy class) + 2 experimental builds. Independent forges (Detroit, Tokyo, Berlin) field their own under sanctioning.<br><br>
+          <strong class="bone">Repair pipeline:</strong> 3× rotation depth on actuators, 50% extra at high-failure parts. Mobile workshop trailer for events.
+        </div>
+      </div>
+      <div class="card" style="cursor:default">
+        <div class="name">Phase 2+ · Y3+</div>
+        <div class="maker">Proprietary AFC platform · $2–5M</div>
+        <div class="verdict" style="min-height:0;border:0;padding:0">
+          Co-development deal with Chinese OEM (likely Unitree, Fourier, or EngineAI). AFC supplies design + R&amp;D budget, they manufacture.<br><br>
+          <strong class="bone">First proprietary AFC fighter chassis.</strong> Class-specific tuning. AFC owns the IP from this point forward.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────── FACTORIES ──────── -->
+<section id="factories">
+  <div class="container">
+    <div class="row-label mono">04 · Factories</div>
+    <h2>Where the metal<br>actually comes from.</h2>
+    <p class="bone" style="font-size:1rem;max-width:62ch">Hangzhou is the gravitational center. Every Phase 0–1 chassis comes from China. Phase 2 onward, AFC opens a Detroit / Brooklyn build line for proprietary mods.</p>
+    <div class="factories" id="factoryGrid"></div>
+  </div>
+</section>
+
+<!-- ──────── SUPPLIERS ──────── -->
+<section id="suppliers">
+  <div class="container">
+    <div class="row-label mono">05 · Suppliers</div>
+    <h2>The actuator<br>supply chain.</h2>
+    <p class="bone" style="font-size:1rem;max-width:62ch">When a robot dies in the cage, here's who AFC calls. Servos, batteries, IMU, structural components — sourced separately from the chassis OEM.</p>
+    <div class="factories" id="supplierGrid"></div>
+  </div>
+</section>
+
+<section style="text-align:center;border-top:1px solid rgba(184,188,192,.12);background:radial-gradient(ellipse at 50% 50%,rgba(122,10,10,.18) 0%,transparent 60%),var(--afc-black);padding:120px 20px">
+  <h2>The robots are buyable.<br><span class="blood">The icon isn't.</span></h2>
+  <p class="editorial chrome" style="font-size:1.4rem;max-width:50ch;margin:24px auto;line-height:1.4">Whoever produces one cinematic 90-second piece of footage that defines what humanoid combat looks like to the world owns the next decade.</p>
+  <p class="mono chrome" style="margin-top:32px">vladislav@belkins.io</p>
+</section>
+
+<footer><p>AFC · Robot Stable v0.1 · Confidential · 2026-05-05</p></footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg"></div>
+<div class="modal" id="modal">
+  <button class="modal-close" id="modalClose">×</button>
+  <div id="modalContent"></div>
+</div>
+
+<script>
+/* ════════ Robot data ════════ */
+const ROBOTS = [
+  {
+    id:'g1', name:'Unitree G1', maker:'Unitree Robotics', flag:'🇨🇳', country:'China', region:'China', city:'Hangzhou',
+    price:13500, priceMax:73900, priceLabel:'$13.5K – $73.9K',
+    height:'1.32 m', weight:'35 kg', dof:23, payload:'2 kg', battery:'~2 hr',
+    klass:'feather', score:9, afcPick:true,
+    autonomy:'Tier 2 — operator triggers, RL policy executes',
+    leadTime:'8–24 weeks (direct) · 2–4 weeks (US distributor)',
+    modCost:'$10K–$15K combat mods',
+    afcVerdict:'The Phase 0/1 default. Cheap enough to break. Massive open-source community. ROS2 + MuJoCo + IsaacSim native. Already proven in Hangzhou kickboxing tournament (May 2025) and Rek SF events.',
+    pros:['Cheap ($13.5K base)','Retail-available','Open SDK ecosystem','Sim-to-real proven','Spare parts in inventory'],
+    cons:['Featherweight only','Combat use voids warranty','Smaller frame limits spectacle'],
+    bouts:'12-15 before retirement', plan:'Phase 0: 4 units + 2 spare bodies. Phase 1: scale to 6.'
+  },
+  {
+    id:'h1', name:'Unitree H1', maker:'Unitree Robotics', flag:'🇨🇳', country:'China', region:'China', city:'Hangzhou',
+    price:90000, priceLabel:'$90K',
+    height:'1.80 m', weight:'47 kg', dof:25, payload:'30 kg', battery:'~1.5 hr',
+    klass:'heavy', score:8, afcPick:true,
+    autonomy:'Tier 2 — RL bipedal control demoed publicly',
+    leadTime:'12–20 weeks',
+    modCost:'$15K–$25K combat mods',
+    afcVerdict:'Phase 0 hero / heavyweight class anchor. The crossover where humanoid combat starts looking cinematic on broadcast. Heavier strikes, real damage.',
+    pros:['Real heavyweight scale','Video-ready silhouette','Bipedal RL maturity','Strong dev community'],
+    cons:['10× G1 cost','Longer lead time','Battery-throttled at full output'],
+    bouts:'8-12 before retirement', plan:'Phase 0: 1 unit. Phase 1: 2-3 units across forges.'
+  },
+  {
+    id:'h1-2', name:'Unitree H1-2', maker:'Unitree Robotics', flag:'🇨🇳', country:'China', region:'China', city:'Hangzhou',
+    price:129000, priceLabel:'$129K',
+    height:'1.85 m', weight:'52 kg', dof:27, payload:'35 kg', battery:'~2 hr',
+    klass:'heavy', score:8.5,
+    autonomy:'Tier 2/3 — improved sim-to-real',
+    leadTime:'14–22 weeks',
+    modCost:'$15K–$25K',
+    afcVerdict:'H1 successor. More dexterity, longer battery, better balance recovery. Phase 1 upgrade path once Hangzhou relationship is established.',
+    pros:['Successor to proven H1','Improved RL stack','27 DoF dexterity'],
+    cons:['Premium pricing','Newer = less community testing'],
+    bouts:'10-15 before retirement', plan:'Phase 1+ swap-in for H1.'
+  },
+  {
+    id:'t800', name:'EngineAI T800', maker:'EngineAI', flag:'🇨🇳', country:'China', region:'China', city:'Shenzhen',
+    price:180000, priceLabel:'~$180K',
+    height:'1.78 m', weight:'55 kg', dof:32, payload:'25 kg', battery:'~2 hr',
+    klass:'heavy', score:8,
+    autonomy:'Tier 2 — RL-trained for striking',
+    leadTime:'16–24 weeks',
+    modCost:'$20K–$30K',
+    afcVerdict:'URKL\'s belt-holder platform. Already validated in real combat (URKL season 2026). Direct Hangzhou competitor with stronger boxing-trained RL stack.',
+    pros:['Combat-validated','High DoF','Already known to fight'],
+    cons:['Higher cost','Less open SDK','Direct URKL association (brand-adjacent)'],
+    bouts:'12-18 before retirement', plan:'Phase 1: scout one unit for proprietary modifications.'
+  },
+  {
+    id:'pm01', name:'EngineAI PM01', maker:'EngineAI', flag:'🇨🇳', country:'China', region:'China', city:'Shenzhen',
+    price:50000, priceLabel:'~$50K',
+    height:'1.38 m', weight:'34 kg', dof:24, payload:'5 kg', battery:'~1.5 hr',
+    klass:'feather', score:7.5,
+    autonomy:'Tier 2 — boxing-trained policies',
+    leadTime:'14–20 weeks',
+    modCost:'$10K–$15K',
+    afcVerdict:'Featherweight alternative to G1. More expensive but better balance recovery and impact tolerance. Consider for one Phase 1 fighter slot.',
+    pros:['Combat-tuned','Better than G1 at impact tolerance','Decent SDK'],
+    cons:['3× G1 price','China-only support'],
+    bouts:'12-15', plan:'Phase 1: 1 unit if budget allows.'
+  },
+  {
+    id:'t1', name:'Booster T1', maker:'Booster Robotics', flag:'🇨🇳', country:'China', region:'China', city:'Beijing',
+    price:35000, priceLabel:'~$35K',
+    height:'1.20 m', weight:'30 kg', dof:23, payload:'5 kg', battery:'~1.5 hr',
+    klass:'feather', score:7.5, afcPick:true,
+    autonomy:'Tier 2 — running + walking RL stack',
+    leadTime:'12–18 weeks',
+    modCost:'$10K–$15K',
+    afcVerdict:'Featherweight specialty. Smaller, faster, more agile than G1. AFC keeps one as the "Phantom" archetype anchor.',
+    pros:['Lightest in class','Fast RL stack','Affordable'],
+    cons:['Less dev community','Smaller payload'],
+    bouts:'10-15', plan:'Phase 0: 1 unit. Phase 1: hold or swap to G1.'
+  },
+  {
+    id:'gr-1', name:'Fourier GR-1', maker:'Fourier Intelligence', flag:'🇨🇳', country:'China', region:'China', city:'Shanghai',
+    price:200000, priceLabel:'~$200K',
+    height:'1.65 m', weight:'55 kg', dof:40, payload:'50 kg', battery:'~1 hr',
+    klass:'heavy', score:7,
+    autonomy:'Tier 1/2 — clinical-grade rehab roots',
+    leadTime:'20–28 weeks',
+    modCost:'$25K–$40K',
+    afcVerdict:'Highest DoF in class but originally designed for rehab/clinical. Needs heavy combat mod work. Phase 2 R&D candidate, not Phase 0.',
+    pros:['40 DoF dexterity','Strong frame','Industrial-grade actuators'],
+    cons:['Not combat-tuned','Battery is short','Premium pricing'],
+    bouts:'8-12', plan:'Phase 2 evaluate for proprietary builds.'
+  },
+  {
+    id:'iron', name:'XPENG Iron', maker:'XPENG', flag:'🇨🇳', country:'China', region:'China', city:'Guangzhou',
+    price:160000, priceLabel:'~$160K (est.)',
+    height:'1.78 m', weight:'70 kg', dof:62, payload:'40 kg', battery:'~3 hr',
+    klass:'heavy', score:7.5,
+    autonomy:'Tier 2 — auto-industry RL pedigree',
+    leadTime:'18–24 weeks (selective sales)',
+    modCost:'$25K–$40K',
+    afcVerdict:'Tesla-Optimus competitor with heavyweight class fit. XPENG\'s autonomous-driving stack transfers to bipedal locomotion. Phase 1 wildcard.',
+    pros:['62 DoF','Long battery','Auto-industry engineering depth'],
+    cons:['Selective sales (not retail)','Premium price','Newer platform'],
+    bouts:'12-18', plan:'Phase 1: scout one for proprietary modification.'
+  },
+  {
+    id:'apollo', name:'Apptronik Apollo', maker:'Apptronik', flag:'🇺🇸', country:'USA', region:'USA', city:'Austin TX',
+    price:170000, priceLabel:'~$170K (est.)',
+    height:'1.73 m', weight:'73 kg', dof:32, payload:'25 kg', battery:'~4 hr',
+    klass:'heavy', score:8,
+    autonomy:'Tier 2/3 — Mercedes-Benz factory deployed',
+    leadTime:'24–36 weeks · enterprise sales channel only',
+    modCost:'$30K–$50K',
+    afcVerdict:'US-built premium. $5B valuation in Feb 2026 raise. May refuse combat licensing. Phase 2 wildcard if relationship can be built.',
+    pros:['Premium engineering','US support','Mercedes-Benz validation'],
+    cons:['Industrial-only sales','May reject combat use','Long lead time'],
+    bouts:'15-20', plan:'Phase 2 if license obtainable; otherwise pass.'
+  },
+  {
+    id:'figure', name:'Figure 02', maker:'Figure AI', flag:'🇺🇸', country:'USA', region:'USA', city:'Sunnyvale CA',
+    price:NaN, priceLabel:'Commercial-only',
+    height:'1.68 m', weight:'70 kg', dof:32, payload:'25 kg', battery:'~5 hr',
+    klass:'heavy', score:6,
+    autonomy:'Tier 3 — full vision-language stack',
+    leadTime:'No retail · enterprise contracts only',
+    modCost:'N/A',
+    afcVerdict:'Will not license for combat. Mentioned for completeness — premium hardware exists, but channel is closed. AFC continues monitoring.',
+    pros:['Best-in-class VLM stack','Long battery','BMW deployment'],
+    cons:['No retail','Combat license = no','Brand image protection'],
+    bouts:'—', plan:'Monitor only.'
+  },
+  {
+    id:'neo', name:'1X Neo', maker:'1X Technologies', flag:'🇳🇴', country:'Norway/USA', region:'EU/UK', city:'Moss',
+    price:20000, priceLabel:'$20K · or $499/mo',
+    height:'1.65 m', weight:'30 kg', dof:30, payload:'15 kg', battery:'~4 hr',
+    klass:'heavy', score:5,
+    autonomy:'Tier 2 — home-robot focus',
+    leadTime:'6–12 weeks (home market)',
+    modCost:'$30K+ to combat-rate',
+    afcVerdict:'Soft-skin home-robot form factor — wrong silhouette for cage combat. Cheap but extensive structural rework needed.',
+    pros:['Cheap','Long battery','Subscription option'],
+    cons:['Soft outer shell','Wrong form factor','Designed for human safety not combat'],
+    bouts:'—', plan:'Pass.'
+  },
+  {
+    id:'optimus', name:'Tesla Optimus', maker:'Tesla', flag:'🇺🇸', country:'USA', region:'USA', city:'Fremont CA',
+    price:NaN, priceLabel:'~$20K target by 2028',
+    height:'1.73 m', weight:'57 kg', dof:28, payload:'20 kg', battery:'~6 hr',
+    klass:'heavy', score:4,
+    autonomy:'Tier 2/3',
+    leadTime:'Not yet retail',
+    modCost:'N/A',
+    afcVerdict:'Musk has publicly distanced from combat use. Won\'t license. Hardware would be excellent if it could be acquired.',
+    pros:['FSD computer carryover','Long battery','Mass-production potential'],
+    cons:['No combat license','Brand-protective','Not for sale'],
+    bouts:'—', plan:'Monitor.'
+  },
+  {
+    id:'walker', name:'UBTECH Walker S', maker:'UBTECH', flag:'🇨🇳', country:'China', region:'China', city:'Shenzhen',
+    price:120000, priceLabel:'~$120K (est.)',
+    height:'1.70 m', weight:'76 kg', dof:42, payload:'30 kg', battery:'~2 hr',
+    klass:'heavy', score:6.5,
+    autonomy:'Tier 2 — auto-factory deployments',
+    leadTime:'16–24 weeks',
+    modCost:'$25K–$35K',
+    afcVerdict:'Industrial-deployed (BYD, Xiaomi factories). Combat use would void warranty but hardware is solid. Phase 2 candidate.',
+    pros:['42 DoF','Industrial validation','Reasonable price'],
+    cons:['Combat-use unclear','Warranty risk'],
+    bouts:'10-15', plan:'Phase 2 evaluate.'
+  },
+  {
+    id:'atlas', name:'Boston Dynamics Atlas (electric)', maker:'Boston Dynamics', flag:'🇺🇸', country:'USA', region:'USA', city:'Waltham MA',
+    price:NaN, priceLabel:'Research-only',
+    height:'1.50 m', weight:'89 kg', dof:28, payload:'11 kg', battery:'~1 hr',
+    klass:'titan', score:3,
+    autonomy:'Tier 3',
+    leadTime:'Not for sale',
+    modCost:'N/A',
+    afcVerdict:'BD will not license Atlas for combat. Period. Mentioned for completeness — the robot most associated with humanoid agility is structurally off-limits.',
+    pros:['Most agile humanoid','Decade of mobility R&D'],
+    cons:['Not for sale','BD policy = no','Hyundai brand protection'],
+    bouts:'—', plan:'Hard pass.'
+  }
+];
+
+const FACTORIES = [
+  {city:'Hangzhou, China',name:'Unitree HQ + Factory',specialty:'G1 / H1 / H1-2 production, 23–27 DoF actuators, full assembly. Vlad\'s Phase-0 trip target.',makes:'Unitree G1 · H1 · H1-2',lead:'8–24 wk direct'},
+  {city:'Shenzhen, China',name:'EngineAI Factory',specialty:'Combat-tuned humanoids. URKL\'s exclusive supplier. Direct sales for boxing-trained platforms.',makes:'EngineAI T800 · PM01',lead:'14–24 wk'},
+  {city:'Shanghai, China',name:'Fourier Intelligence',specialty:'Clinical-rehab humanoids retrofitted for AFC. 40+ DoF dexterity is class-leading.',makes:'Fourier GR-1',lead:'20–28 wk'},
+  {city:'Beijing, China',name:'Booster Robotics',specialty:'Featherweight bipedal RL specialty. Running gait policy is competitive with G1.',makes:'Booster T1',lead:'12–18 wk'},
+  {city:'Guangzhou, China',name:'XPENG Auto Factory',specialty:'EV-platform actuators repurposed for humanoids. Selective enterprise sales.',makes:'XPENG Iron',lead:'18–24 wk'},
+  {city:'Austin, TX, USA',name:'Apptronik HQ + Lab',specialty:'$5B valuation. Mercedes factory deployments. Premium US-built option.',makes:'Apollo',lead:'24–36 wk · enterprise only'},
+  {city:'Sunnyvale, CA, USA',name:'Figure AI Lab',specialty:'BMW deployments. Premium VLM stack. Closed channel — combat license unavailable.',makes:'Figure 02',lead:'No retail'},
+  {city:'Detroit / Brooklyn',name:'AFC Brick Foundry (Phase 2+)',specialty:'AFC\'s own retrofit + customization line. Salvage builds + proprietary mods. Where the Glitch archetype is born.',makes:'Custom AFC chassis',lead:'In-house'}
+];
+
+const SUPPLIERS = [
+  {city:'Hangzhou + Shenzhen',name:'Joint-Servo Manufacturers',specialty:'Brushless DC servos with planetary gearing. The single highest-failure component in cage combat — stocked 3× rotation per fighter.',makes:'Servos · gearboxes · joints',lead:'4–8 wk · stockable'},
+  {city:'Shenzhen + Dongguan',name:'CATL / EVE Battery Cells',specialty:'Combat-rated lithium cells. Hot-swappable packs for between-round repairs. Top underwriter concern (thermal runaway).',makes:'Battery packs · BMS · chargers',lead:'2–6 wk'},
+  {city:'Hangzhou',name:'Unitree IMU + Sensor Suite',specialty:'9-axis IMU + force-torque sensors. Survives cage impact better than third-party retrofits.',makes:'IMUs · F/T sensors · cameras',lead:'4–6 wk'},
+  {city:'Taiwan + Shenzhen',name:'Carbon-Fiber + Aramid Plating',specialty:'Custom armor plating fabricated to AFC specs. CNC-milled mounting plates. Phase 0 cost: $3–5K per fighter.',makes:'Armor plating · structural mounts',lead:'6–10 wk'},
+  {city:'Detroit + Brooklyn',name:'AFC Custom Mod Shop',specialty:'AFC-employed mechatronics workshop. Combat appendages (padded clubs, blunt strikers, grappling hooks), branded paint + LED accent strips, kill-switch firmware.',makes:'Combat mods · paint · LEDs · kill-switch firmware',lead:'In-house · 2–3 wk per fighter'},
+  {city:'Lisbon + Berlin',name:'Independent Forge Network (Phase 1+)',specialty:'F1-style independent teams that field their own fighters under AFC sanctioning. They cover their own R&D + repair costs; AFC takes carry on revenue.',makes:'Sanctioned independent fighters',lead:'Ongoing'}
+];
+
+/* ════════ Render robot grid ════════ */
+const grid = document.getElementById('grid');
+function renderGrid(filtered = ROBOTS){
+  grid.innerHTML = '';
+  filtered.forEach(r=>{
+    const card = document.createElement('div');
+    card.className = 'card reveal' + (r.afcPick ? ' afc-pick' : '');
+    card.dataset.id = r.id;
+    card.innerHTML = `
+      <div>
+        <div class="name">${r.name}</div>
+        <div class="maker"><span class="flag">${r.flag}</span>${r.maker} · ${r.city}</div>
+      </div>
+      <div class="price">${r.priceLabel}</div>
+      <div class="stat-row">
+        <div class="item"><div class="l">Class</div><div class="v">${r.klass==='feather'?'Featherweight':r.klass==='heavy'?'Heavyweight':'Titan'}</div></div>
+        <div class="item"><div class="l">Mass</div><div class="v">${r.weight}</div></div>
+        <div class="item"><div class="l">Height</div><div class="v">${r.height}</div></div>
+        <div class="item"><div class="l">DoF</div><div class="v">${r.dof}</div></div>
+      </div>
+      <div class="verdict">${r.afcVerdict.slice(0,140)}${r.afcVerdict.length>140?'…':''}</div>
+      <div class="score">
+        <div class="score-num">${r.score}<small>/10</small></div>
+        <div class="score-bar"><i style="width:${r.score*10}%"></i></div>
+      </div>`;
+    card.addEventListener('click',()=>openModal(r.id));
+    grid.appendChild(card);
+  });
+  setTimeout(()=>document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')), 60);
+}
+renderGrid();
+
+/* ════════ Filters ════════ */
+let activeFilter = 'all';
+let activeClass = null;
+let activeRegion = null;
+let activeSearch = '';
+function applyFilters(){
+  let r = ROBOTS;
+  if (activeFilter==='afcPick') r = r.filter(x=>x.afcPick);
+  if (activeClass) r = r.filter(x=>x.klass===activeClass);
+  if (activeRegion) r = r.filter(x=>x.region===activeRegion);
+  if (activeSearch){
+    const q = activeSearch.toLowerCase();
+    r = r.filter(x=>(x.name+' '+x.maker+' '+x.city+' '+x.country).toLowerCase().includes(q));
+  }
+  renderGrid(r);
+}
+document.querySelectorAll('.chip[data-filter]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  activeFilter = b.dataset.filter; activeClass=null; activeRegion=null; applyFilters();
+}));
+document.querySelectorAll('.chip[data-class]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  activeClass = activeClass===b.dataset.class ? null : b.dataset.class;
+  activeFilter='all'; activeRegion=null; applyFilters();
+}));
+document.querySelectorAll('.chip[data-region]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  activeRegion = activeRegion===b.dataset.region ? null : b.dataset.region;
+  activeFilter='all'; activeClass=null; applyFilters();
+}));
+document.getElementById('search').addEventListener('input',e=>{
+  activeSearch = e.target.value; applyFilters();
+});
+
+/* ════════ Modal ════════ */
+const modal = document.getElementById('modal');
+const modalBg = document.getElementById('modalBg');
+function openModal(id){
+  const r = ROBOTS.find(x=>x.id===id);
+  document.getElementById('modalContent').innerHTML = `
+    <h3>${r.name}</h3>
+    <div class="submeta"><span class="flag">${r.flag}</span> ${r.maker} · ${r.city} · ${r.country}</div>
+    <div class="modal-stats">
+      <div><div class="l">Price</div><div class="v">${r.priceLabel}</div></div>
+      <div><div class="l">Class</div><div class="v">${r.klass==='feather'?'Featherweight':r.klass==='heavy'?'Heavyweight':'Titan'}</div></div>
+      <div><div class="l">Height / Mass</div><div class="v">${r.height} / ${r.weight}</div></div>
+      <div><div class="l">DoF / Payload</div><div class="v">${r.dof} / ${r.payload}</div></div>
+      <div><div class="l">Battery</div><div class="v">${r.battery}</div></div>
+      <div><div class="l">Combat-suit. score</div><div class="v gold" style="color:var(--afc-gold)">${r.score}/10</div></div>
+    </div>
+    <div class="modal-section"><h5>AFC verdict</h5><p>${r.afcVerdict}</p></div>
+    <div class="modal-section"><h5>Pros</h5><ul>${r.pros.map(p=>`<li>${p}</li>`).join('')}</ul></div>
+    <div class="modal-section"><h5>Cons</h5><ul>${r.cons.map(c=>`<li>${c}</li>`).join('')}</ul></div>
+    <div class="modal-section"><h5>Operations</h5>
+      <ul>
+        <li><strong>Lead time:</strong> ${r.leadTime}</li>
+        <li><strong>Mod budget:</strong> ${r.modCost}</li>
+        <li><strong>Bouts before retirement:</strong> ${r.bouts}</li>
+        <li><strong>Autonomy stack:</strong> ${r.autonomy}</li>
+      </ul>
+    </div>
+    <div class="modal-section"><h5>AFC plan</h5><p class="bone">${r.plan}</p></div>`;
+  modalBg.classList.add('on'); modal.classList.add('on');
+}
+function closeModal(){modalBg.classList.remove('on'); modal.classList.remove('on');}
+modalBg.addEventListener('click', closeModal);
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModal();});
+
+/* ════════ Factories + suppliers ════════ */
+function renderShops(arr, container){
+  container.innerHTML = '';
+  arr.forEach(f=>{
+    const d = document.createElement('div');
+    d.className='factory';
+    d.innerHTML = `
+      <div class="city">${f.city}</div>
+      <div class="name">${f.name}</div>
+      <div class="specialty">${f.specialty}</div>
+      <div class="makes">↳ ${f.makes}</div>
+      <div class="lead">${f.lead}</div>`;
+    container.appendChild(d);
+  });
+}
+renderShops(FACTORIES, document.getElementById('factoryGrid'));
+renderShops(SUPPLIERS, document.getElementById('supplierGrid'));
+
+/* ════════ Profit calculator ════════ */
+const fmt = n => n>=0 ? '$'+Math.round(n).toLocaleString() : '−$'+Math.round(-n).toLocaleString();
+const fmtK = n => n>=0 ? '$'+Math.round(n/1000)+'K' : '−$'+Math.round(-n/1000)+'K';
+function recalc(){
+  const botPrice = +document.getElementById('bot').value;
+  const botLabel = document.getElementById('bot').selectedOptions[0].text.split(' (')[0];
+  const mod      = +document.getElementById('mod').value;
+  const bouts    = +document.getElementById('bouts').value;
+  const lossPct  = +document.getElementById('loss').value;
+  const spons    = +document.getElementById('spons').value;
+  const tix      = +document.getElementById('tix').value;
+  const merch    = +document.getElementById('merch').value;
+
+  const totalRobotCost = botPrice + mod;
+  const amort = totalRobotCost / bouts;
+  const lossReserve = totalRobotCost * (lossPct/100);
+  const prep = 11500;       // pre-event prep + crew
+  const consumables = 3500; // servos / panels
+  const insureWalkout = 3500;
+  const totalCost = amort + lossReserve + prep + consumables + insureWalkout;
+  const totalRev = spons + tix + merch;
+  const net = totalRev - totalCost;
+
+  document.getElementById('lblBot').textContent = botLabel;
+  document.getElementById('lblMod').textContent = fmt(mod);
+  document.getElementById('lblBouts').textContent = bouts;
+  document.getElementById('lblLoss').textContent = lossPct+'%';
+  document.getElementById('lblSpons').textContent = fmt(spons);
+  document.getElementById('lblTix').textContent = fmt(tix);
+  document.getElementById('lblMerch').textContent = fmt(merch);
+
+  document.getElementById('rAmort').textContent = fmt(amort);
+  document.getElementById('rLoss').textContent  = fmt(lossReserve);
+  document.getElementById('rTotalCost').textContent = fmt(totalCost);
+  document.getElementById('rRev').textContent   = fmt(totalRev);
+  const netEl = document.getElementById('rNet');
+  netEl.textContent = fmt(net);
+  const item = netEl.closest('.item');
+  item.classList.toggle('profit', net>=0);
+  item.classList.toggle('loss', net<0);
+
+  let verdict;
+  if (net > 60000) verdict = `<strong class="gold">Strongly profitable.</strong> This fighter prints ${fmt(net)} per event. At 6 events/yr that's ${fmt(net*6)} annual contribution. Near optimal — replicate this configuration.`;
+  else if (net > 30000) verdict = `<strong class="gold">Healthy profit.</strong> ${fmt(net)} contribution per event. Sponsorship coverage is strong; this is the Phase 1 mature target zone.`;
+  else if (net > 10000) verdict = `<strong class="bone">Modestly profitable.</strong> ${fmt(net)} per event. Watch the sponsor stack — one anchor deal lifts this 2–3×.`;
+  else if (net > 0) verdict = `<strong class="chrome">Marginal.</strong> Only ${fmt(net)} per event. Likely Phase 0 / early-Phase 1 reality. Acceptable while building the brand.`;
+  else verdict = `<strong class="blood">Loss-making at this configuration.</strong> ${fmt(net)} per event. Need to lift sponsor revenue, increase bouts-before-retirement, or reduce total-loss probability through chassis discipline.`;
+  document.getElementById('calcVerdict').innerHTML = verdict;
+}
+['bot','mod','bouts','loss','spons','tix','merch'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',recalc);
+  document.getElementById(id).addEventListener('change',recalc);
+});
+recalc();
+
+/* ════════ Reveal ════════ */
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+</script>
+</body>
+</html>

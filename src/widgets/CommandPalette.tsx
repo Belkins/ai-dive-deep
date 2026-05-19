@@ -20,6 +20,12 @@ const CHEAT_SHEET_SECTIONS = [
   '.mcp.json shape', 'Hook JSON shape', 'Headless / CI one-liners',
   'Plan → Auto → /goal ladder', 'Model routing + cost',
 ];
+const HTMLFIRST_SECTIONS: { id: string; label: string }[] = [
+  { id: 'the-case', label: 'The case for HTML-first' },
+  { id: 'case-afc', label: 'AFC — idea became a company' },
+  { id: 'case-audit', label: 'The 90-domain deliverability audit' },
+  { id: 'do-this', label: 'Do this Monday' },
+];
 const RESOURCES_SECTIONS: { id: string; label: string }[] = [
   { id: 'working-memory', label: 'Working memory (CLAUDE.md)' },
   { id: 'connectors-mcp', label: 'Connectors / MCP' },
@@ -66,6 +72,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Sections',              href: `${base}/sections`,        subtitle: 'Chapters by theme' },
       { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: `${Object.keys(glossary).length} terms, A–Z` },
       { type: 'page', title: 'Resources',             href: `${base}/resources`,       subtitle: 'Copy-paste templates, hooks, prompts' },
+      { type: 'page', title: 'HTML-first method',     href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up' },
@@ -94,6 +101,13 @@ export default function CommandPalette() {
         subtitle: 'Resources',
         href: `${base}/resources#${s.id}`,
         keywords: `resources ${s.label} ${s.id}`.toLowerCase(),
+      })),
+      ...HTMLFIRST_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'HTML-first',
+        href: `${base}/html-first#${s.id}`,
+        keywords: `html first htmlization artifact ${s.label} ${s.id}`.toLowerCase(),
       })),
     ];
     const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({

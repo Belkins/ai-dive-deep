@@ -1,0 +1,99 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import ArtifactEmbed from '@/components/ArtifactEmbed.astro';
+
+const navItems = [
+  { id: 'the-case', label: 'The case' },
+  { id: 'case-afc', label: 'AFC — idea → company' },
+  { id: 'case-audit', label: 'The 90-domain audit' },
+  { id: 'do-this', label: 'Do this Monday' },
+];
+---
+<BaseLayout
+  title="HTML-first"
+  description="Stop sending dead files. Every report, pitch, audit, and deck ships as a live interactive HTML artifact. Two real, clickable case studies inside."
+>
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">The HTML-first method</div>
+    <h1>Stop sending dead files.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Everything you produce — report, pitch, audit, deck, model — ships as a live interactive artifact, not an attachment. Two real ones are embedded below. Click them.</p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Sidebar tracks where you are. The Folderly case is a sanitized sample — client, domains, and infra de-identified.</p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="the-case" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The case</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Stop sending dead files. I mean it as a literal instruction, not a metaphor. A PDF was true the second it was exported and started rotting on the way to the inbox. A slide deck is a screenshot of your thinking on the day you stopped editing it. The attachment is the format that loses — every time, against the same content as a link.</p>
+            <p>Here's the move, and it's the whole move: every deliverable — report, pitch, audit, deck, financial model, competitive teardown — ships as a live interactive HTML artifact in a private repo, deployed to a link. You don't send the numbers. You send the link. The link is current because the repo is. Next week's update is a commit, not a re-export and a prayer that they open the newest attachment instead of the one from two Tuesdays ago.</p>
+            <p>I rolled this across the portfolio and the surprise wasn't "nicer reports." It was retention and circulation. An interactive doc with the source attached gets opened, gets clicked into, gets forwarded. A PDF gets archived unread. The medium changes the behavior — you can put a slider in it, you can let the reader filter the catalog, you can make them move the assumptions and watch the number move. Nobody forwards a spreadsheet. People forward a thing they got to play with. That's not aesthetics, that's distribution, and distribution is the only thing that was ever scarce.</p>
+            <p>It's also faster to make than the dead version. A deck is hand-built, slide by slide, by a human at midnight. An interactive artifact is a single HTML file an agent writes in the time it takes to argue about the title font. The cheaper, better, more current artifact also happens to be the one that takes less of your night. There is no tradeoff here. That's rare enough that you should be suspicious you're missing something — and you're not.</p>
+            <p>And the medium itself is the signal. A live link says operator. A PDF named <code>Deck_v7_FINAL_final.pdf</code> says the opposite, before anyone reads a word.</p>
+            <p>This is the same idea as the living link from <a href="/chapters/19-build-products">Chapter 19</a> — the report you were going to email anyway, shipped as a surface instead of a snapshot — taken to its conclusion. The book is the maximal version. The Monday report is the minimal version. Same mechanic, same repo, same deploy, both ends of one ladder.</p>
+          </div>
+        </div>
+
+        <div id="case-afc" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">AFC — the idea that got a company because the artifact existed first</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Here's the proof, and it's a stupid story. I had a wild idea I couldn't shake: an Autonomous Fighting Championship. Humanoid robots, an octagon, blacklight and bass, no humans bleed. The UFC of robots, underground first. The kind of idea you say out loud at dinner with friends and watch the table decide whether you're serious.</p>
+            <p>So I said it out loud at dinner. The table did the thing the table does. And the question that came back wasn't "is this insane" — it was "do you have a deck? Is there an investment doc?" The honest answer was no. There was a thought and a steak.</p>
+            <p>So one got spun up. Fast — the mechanic from Chapter 19 pointed at an idea instead of a product. Not a slide file. Two linked interactive HTML docs: a pitch — vision, why-now, tier economics, a use-of-funds donut you can hover, a revenue model that toggles by year — and a second doc, the robot stable: every humanoid platform shipping in 2026, filterable, with a profit-per-fighter calculator where you move the sliders and watch the math move. Real links. Forwardable.</p>
+            <p>The punchline is the part that matters. The artifact existed before the next meeting did. That's the entire reason this might become a company instead of a dinner anecdote. A dead deck would still be in a folder. A live link is already circulating — and circulation is how an idea stops being yours alone and starts being real.</p>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 mt-6">
+            <ArtifactEmbed
+              tag="Pitch / investment deck"
+              title="AFC — the pitch"
+              src="/artifacts/afc-pitch.html"
+              meta="single-file HTML · ~39 KB · built fast, not designed"
+              blurb="Vision, why-now, tier economics, a hover-able use-of-funds donut, a revenue model that toggles by year. The doc that existed before the meeting did."
+            />
+            <ArtifactEmbed
+              tag="Operating annex"
+              title="AFC — the robot stable"
+              src="/artifacts/afc-robots.html"
+              meta="single-file HTML · ~50 KB · the supply-chain doc"
+              blurb="Every humanoid platform shipping in 2026, filterable, with a profit-per-fighter calculator — move the sliders, watch the math move. A second linked artifact, not a slide."
+            />
+          </div>
+        </div>
+
+        <div id="case-audit" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The 90-domain audit — a swarm, a methodology, and a link instead of a PDF</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>A prospect came in with a problem and a number: a cold-email estate of ~90 sending domains and ~5,000 mailboxes, deliverability quietly collapsing, and a question — "can you run an external audit of our infrastructure?" External meaning passive: no access to their sending platform, just what the public internet already says about them.</p>
+            <p>That's a Folderly-methodology job. So I swarmed it — Claude Code agents running the deliverability playbooks in parallel: DNS and SPF resolution across every domain, blacklist sweeps, the registration-pattern read that exposes a snowshoe estate, the infra-misrepresentation check. Same-week turnaround, with the rigor the manual version takes a fortnight to reach.</p>
+            <p>The part that mattered to the client wasn't the speed. It was that the finding arrived as <em>an interactive audit, not a 40-page PDF</em>. They could filter the domain table, sort by risk, click a flagged domain and see exactly why it failed, watch the pooled-IP story render. A PDF would have been argued with. A live artifact where every claim is one click from its evidence is not argued with — it's acted on. The medium made the methodology undeniable, and made the operator look like the operator.</p>
+            <p>The embed below is that exact deliverable, sanitized: the client, every domain, and the infra fingerprints are de-identified — the structure, charts, and findings shape are the real thing.</p>
+          </div>
+          <div class="mt-6">
+            <ArtifactEmbed
+              tag="External deliverability audit · sanitized sample"
+              title="Interactive Deliverability Audit (sample)"
+              src="/artifacts/deliverability-audit-sample.html"
+              meta="single-file HTML · ~114 KB · client / domains / infra de-identified"
+              blurb="A real Folderly-methodology external audit of a ~90-domain, ~5K-mailbox cold-email estate — swarmed in days, delivered as a clickable artifact. Every identifying detail replaced; the audit itself is intact."
+            />
+          </div>
+        </div>
+
+        <div id="do-this" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The next thing you were about to attach to an email — don't. Spin up the private repo, drop the HTML, deploy, send the link. The mechanic is <a href="/chapters/19-build-products">Chapter 19</a>'s Hour 2 pointed at a document instead of a product: <code>gh repo create --private</code>, the artifact, <code>vercel deploy</code> (or GitHub Pages), share the link. Updated by commit, current forever, forwardable.</p>
+            <p>The people who get it won't wait for a mandate — they'll spin up their own. That's the adoption tell from <a href="/chapters/26-team-adoption">Chapter 26</a>: when the better way is obviously better, you don't roll it out, it spreads. AFC became plausible because the artifact beat the meeting. The audit closed because the link beat the PDF. Your move is the same one, every deliverable, starting with the next one.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>

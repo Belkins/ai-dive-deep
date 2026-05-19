@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interactive Deliverability Audit — Sample (Sanitized Case Study)</title>
+<style>
+  :root{
+    --paper:#fbfaf7;
+    --paper-2:#f4f2ec;
+    --ink:#1a1a18;
+    --ink-soft:#46443e;
+    --ink-faint:#7c7a72;
+    --rule:#dcd8cd;
+    --rule-soft:#e8e5dc;
+    --accent:#1f3a5f;          /* sophisticated ink-blue */
+    --accent-soft:#e9eef4;
+    --red:#8c2d28; --red-bg:#f6e7e4;
+    --amber:#8a5a16; --amber-bg:#f6eedb;
+    --green:#2f5a3b; --green-bg:#e6efe6;
+    --grey:#5b5950; --grey-bg:#eeece4;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+    --sans:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+  h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.18;color:var(--ink)}
+  h2{font-size:1.85rem;letter-spacing:-.01em}
+  h3{font-size:1.28rem;letter-spacing:-.005em}
+  p{margin:0 0 1rem}
+  a{color:var(--accent)}
+  .small{font-size:.82rem}
+  .mono{font-family:var(--mono)}
+  .eyebrow{
+    font-family:var(--sans);font-size:.72rem;font-weight:700;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+  }
+  .figcap{font-size:.78rem;color:var(--ink-faint);font-style:italic;font-family:var(--serif)}
+
+  /* ---------- Cover ---------- */
+  .cover{
+    border-bottom:1px solid var(--rule);
+    padding:72px 0 56px;background:
+      linear-gradient(180deg,var(--paper) 0%,var(--paper) 60%,var(--paper-2) 100%);
+  }
+  .cover .masthead{
+    display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:48px;
+    flex-wrap:wrap;gap:10px;
+  }
+  .cover .brand{font-family:var(--serif);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+  .cover .brand span{color:var(--accent)}
+  .cover .doctype{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  .cover h1{
+    font-size:clamp(2.3rem,5.4vw,3.7rem);letter-spacing:-.018em;
+    max-width:16ch;margin-bottom:22px;
+  }
+  .cover .lede{font-family:var(--serif);font-size:1.18rem;color:var(--ink-soft);max-width:54ch;font-style:italic}
+  .cover .meta-line{
+    display:flex;flex-wrap:wrap;gap:30px;margin-top:42px;
+    padding-top:22px;border-top:1px solid var(--rule);
+  }
+  .cover .meta-line div .k{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .cover .meta-line div .v{font-family:var(--serif);font-size:1.02rem;margin-top:3px}
+  .verdict-banner{
+    margin-top:46px;border:1px solid var(--red);background:var(--red-bg);
+    border-left:5px solid var(--red);padding:20px 26px;border-radius:3px;
+  }
+  .verdict-banner .lbl{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--red)}
+  .verdict-banner .txt{font-family:var(--serif);font-size:1.5rem;color:var(--red);margin-top:5px;line-height:1.25}
+
+  /* ---------- Section frame ---------- */
+  section{padding:60px 0;border-bottom:1px solid var(--rule-soft)}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:34px}
+  .sec-head .num{
+    font-family:var(--serif);font-size:1.05rem;color:var(--accent);
+    border:1px solid var(--accent);border-radius:50%;
+    width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  .sec-head .t h2{margin-bottom:3px}
+  .sec-head .t p{color:var(--ink-faint);margin:0;font-size:.92rem}
+
+  /* ---------- KPI band ---------- */
+  .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .kpi{background:var(--paper);padding:24px 22px}
+  .kpi .v{font-family:var(--serif);font-size:2.15rem;letter-spacing:-.02em;line-height:1}
+  .kpi .v small{font-size:1rem;color:var(--ink-faint)}
+  .kpi .k{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;margin-top:9px}
+  .kpi.alert .v{color:var(--red)}
+  .kpi .sub{font-size:.8rem;color:var(--ink-soft);margin-top:5px;font-style:italic;font-family:var(--serif)}
+
+  /* ---------- Charts ---------- */
+  .charts{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+  .chart{border:1px solid var(--rule);background:var(--paper);padding:22px 22px 18px;border-radius:3px}
+  .chart h4{font-size:.95rem;margin-bottom:4px}
+  .chart .ch-sub{font-size:.78rem;color:var(--ink-faint);margin-bottom:14px}
+  .chart svg{width:100%;height:auto;display:block}
+  .chart .figcap{margin-top:12px;padding-top:10px;border-top:1px solid var(--rule-soft)}
+  text{font-family:var(--sans)}
+
+  /* ---------- Findings ---------- */
+  .findings{counter-reset:f;display:grid;gap:0}
+  .finding{
+    display:grid;grid-template-columns:54px 1fr;gap:22px;
+    padding:24px 0;border-top:1px solid var(--rule-soft);
+  }
+  .finding:first-child{border-top:none}
+  .finding .idx{
+    counter-increment:f;font-family:var(--serif);font-size:1.45rem;color:var(--accent);
+  }
+  .finding .idx::before{content:counter(f,decimal-leading-zero)}
+  .finding .body strong{color:var(--ink)}
+  .finding .body{font-size:1.02rem;color:var(--ink-soft);line-height:1.6}
+  .finding .tag{
+    display:inline-block;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+    font-weight:700;padding:2px 9px;border-radius:2px;margin-bottom:8px;
+    background:var(--accent-soft);color:var(--accent);
+  }
+  .finding.sev-red .tag{background:var(--red-bg);color:var(--red)}
+  .finding.sev-amber .tag{background:var(--amber-bg);color:var(--amber)}
+
+  /* ---------- Action register / table ---------- */
+  .controls{
+    display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;
+    margin-bottom:20px;
+  }
+  .controls .field{display:flex;flex-direction:column;gap:5px}
+  .controls label{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .controls input,.controls select{
+    font-family:var(--sans);font-size:.9rem;color:var(--ink);
+    background:var(--paper);border:1px solid var(--rule);
+    padding:8px 11px;border-radius:3px;min-width:150px;
+  }
+  .controls input:focus,.controls select:focus,
+  th[role=columnheader] button:focus-visible,
+  tr.dom-row:focus-visible,.reset-btn:focus-visible{
+    outline:2px solid var(--accent);outline-offset:2px;
+  }
+  .controls .grow{flex:1;min-width:210px}
+  .controls .grow input{width:100%}
+  .reset-btn{
+    font-family:var(--sans);font-size:.82rem;color:var(--accent);
+    background:none;border:1px solid var(--rule);padding:9px 14px;
+    border-radius:3px;cursor:pointer;
+  }
+  .reset-btn:hover{background:var(--accent-soft)}
+  .count-line{font-size:.85rem;color:var(--ink-faint);margin-bottom:14px;font-family:var(--serif);font-style:italic}
+  .count-line b{color:var(--ink);font-style:normal}
+  .tbl-scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:3px}
+  table{border-collapse:collapse;width:100%;font-size:.84rem;min-width:920px}
+  thead th{
+    background:var(--paper-2);text-align:left;font-weight:700;
+    font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft);
+    padding:0;border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:2;
+  }
+  thead th button{
+    all:unset;display:flex;align-items:center;gap:6px;width:100%;
+    padding:13px 14px;cursor:pointer;box-sizing:border-box;
+  }
+  thead th:not(.sortable){padding:13px 14px}
+  thead th button .ar{font-size:.7rem;color:var(--ink-faint)}
+  thead th[aria-sort=ascending] button .ar::after{content:'▲';color:var(--accent)}
+  thead th[aria-sort=descending] button .ar::after{content:'▼';color:var(--accent)}
+  thead th[aria-sort=none] button .ar::after{content:'⇅';opacity:.45}
+  tbody td{padding:11px 14px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+  tr.dom-row{cursor:pointer}
+  tr.dom-row:hover{background:var(--paper-2)}
+  tr.dom-row:focus{background:var(--accent-soft)}
+  .dom-cell{font-family:var(--mono);font-size:.82rem;color:var(--ink);white-space:nowrap}
+  .dom-cell .car{color:var(--ink-faint);margin-right:7px;display:inline-block;width:8px;transition:transform .15s}
+  tr.dom-row[aria-expanded=true] .car{transform:rotate(90deg);color:var(--accent)}
+  .num-cell{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pill{
+    display:inline-block;font-size:.72rem;font-weight:700;
+    padding:3px 9px;border-radius:2px;white-space:nowrap;
+  }
+  .pill.red{background:var(--red-bg);color:var(--red)}
+  .pill.amber{background:var(--amber-bg);color:var(--amber)}
+  .pill.green{background:var(--green-bg);color:var(--green)}
+  .pill.grey{background:var(--grey-bg);color:var(--grey)}
+  .risk-cell{display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .risk-bar{width:46px;height:6px;background:var(--rule);border-radius:3px;overflow:hidden;flex:none}
+  .risk-bar i{display:block;height:100%}
+  .detail-row td{background:var(--paper-2);padding:0;border-bottom:1px solid var(--rule)}
+  .detail-inner{padding:22px 26px}
+  .detail-inner .rationale{
+    font-family:var(--serif);font-size:1.04rem;color:var(--ink);
+    border-left:3px solid var(--accent);padding-left:16px;margin-bottom:18px;line-height:1.55;
+  }
+  .detail-inner .drivers{margin-bottom:18px}
+  .detail-inner .drivers .dh,.detail-grid .dh{
+    font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:700;margin-bottom:7px;
+  }
+  .driver-chip{
+    display:inline-block;font-size:.76rem;background:var(--paper);
+    border:1px solid var(--rule);color:var(--ink-soft);
+    padding:3px 10px;border-radius:2px;margin:0 6px 6px 0;
+  }
+  .detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px 26px}
+  .detail-grid .dg-k{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .detail-grid .dg-v{font-family:var(--mono);font-size:.82rem;color:var(--ink);margin-top:3px;word-break:break-word}
+
+  /* ---------- Roadmap ---------- */
+  .road{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:8px}
+  .phase{border:1px solid var(--rule);border-top:3px solid var(--accent);background:var(--paper);padding:24px 22px;border-radius:3px}
+  .phase .ph-win{font-family:var(--mono);font-size:.78rem;color:var(--accent);font-weight:700;letter-spacing:.05em}
+  .phase h3{margin:6px 0 12px;font-size:1.16rem}
+  .phase p{font-size:.93rem;color:var(--ink-soft);margin-bottom:12px}
+  .phase ul{list-style:none;display:grid;gap:9px}
+  .phase li{font-size:.9rem;color:var(--ink-soft);padding-left:20px;position:relative;line-height:1.45}
+  .phase li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px;border:1px solid var(--accent);border-radius:50%}
+  .timeline{display:flex;align-items:center;margin:34px 0 4px;padding:0}
+  .timeline .seg{flex:1;text-align:center;position:relative}
+  .timeline .seg .dot{width:13px;height:13px;border-radius:50%;background:var(--accent);margin:0 auto 9px;position:relative;z-index:2}
+  .timeline .seg::before{content:'';position:absolute;top:6px;left:-50%;width:100%;height:1px;background:var(--rule)}
+  .timeline .seg:first-child::before{display:none}
+  .timeline .seg .lab{font-size:.78rem;color:var(--ink-soft);font-weight:600}
+  .timeline .seg .d{font-size:.72rem;color:var(--ink-faint);font-family:var(--mono)}
+
+  /* ---------- Colophon ---------- */
+  .colophon{padding:48px 0 70px;border-bottom:none}
+  .colophon .rule-top{border-top:2px solid var(--ink);padding-top:26px}
+  .colophon p{font-size:.88rem;color:var(--ink-soft);max-width:74ch}
+  .colophon .meth{font-family:var(--serif);font-size:1rem;color:var(--ink);margin-bottom:14px}
+  .colophon .sig{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-top:30px;font-size:.8rem;color:var(--ink-faint)}
+
+  /* ---------- Responsive ---------- */
+  @media(max-width:860px){
+    .kpi-grid,.charts,.road{grid-template-columns:1fr}
+    .charts{gap:22px}
+    .cover{padding:48px 0 40px}
+  }
+  @media(max-width:560px){
+    .wrap{padding:0 18px}
+    .kpi-grid{grid-template-columns:1fr 1fr}
+    .finding{grid-template-columns:36px 1fr;gap:14px}
+    .sec-head{flex-direction:column;gap:12px}
+    .controls .field,.controls input,.controls select{min-width:0;width:100%}
+  }
+
+  /* ---------- Print ---------- */
+  @media print{
+    @page{margin:15mm}
+    body{background:#fff;font-size:11px;color:#000}
+    .wrap{max-width:none;padding:0}
+    .controls,.reset-btn,.tbl-scroll{display:revert}
+    .controls{display:none}
+    section,.cover{padding:18px 0;border-bottom:1px solid #bbb;break-inside:avoid}
+    .cover{break-after:page}
+    section{break-inside:auto}
+    .sec-head,.kpi-grid,.charts,.findings,.road,.timeline{break-inside:avoid}
+    .chart{break-inside:avoid}
+    .finding{break-inside:avoid}
+    .phase{break-inside:avoid}
+    .tbl-scroll{overflow:visible;border:none}
+    table{min-width:0;font-size:9.5px}
+    thead{display:table-header-group}
+    thead th{position:static;background:#eee !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    tr.dom-row,.detail-row,.finding,.kpi{break-inside:avoid}
+    .pill,.kpi.alert .v,.verdict-banner,.risk-bar i{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .detail-row{display:table-row !important}
+    tr.dom-row .car{display:none}
+    a{color:#000;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<header class="cover">
+  <div class="wrap">
+    <div class="masthead">
+      <div class="brand">Folderly <span>Deliverability</span></div>
+      <div class="doctype">Sample Case Study · Read-Only Findings</div>
+    </div>
+    <p class="eyebrow" id="cover-eyebrow">Interactive Deliverability Audit (Sample)</p>
+    <h1>An infrastructure built to be disposable.</h1>
+    <p class="lede">A passive, external examination of the prospect's cold-email
+       sending estate — its provenance, its authentication posture, and its
+       standing with the inbox providers that decide whether mail is delivered at all.</p>
+
+    <div class="meta-line" id="cover-meta"></div>
+
+    <div class="verdict-banner">
+      <div class="lbl">Overall Verdict</div>
+      <div class="txt">CRITICAL — Not salvageable in current form.</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ 1. EXECUTIVE KPI BAND ============ -->
+<section id="kpis">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">I</div>
+      <div class="t">
+        <h2>The estate at a glance</h2>
+        <p>Every figure below is computed at render time from the captured dataset.</p>
+      </div>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </div>
+</section>
+
+<!-- ============ 2. CHARTS ============ -->
+<section id="charts">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">II</div>
+      <div class="t">
+        <h2>Three views of the same problem</h2>
+        <p>Exposure measured by mailbox volume, by severity, and by the gap between what was sold and what is running.</p>
+      </div>
+    </div>
+    <div class="charts">
+      <figure class="chart">
+        <h4>Mailboxes by verdict</h4>
+        <div class="ch-sub">Where the 5,120 mailboxes land</div>
+        <div id="chart1"></div>
+        <figcaption class="figcap">Fig. 1 — Disposition of mailbox volume across the four advisory verdicts.</figcaption>
+      </figure>
+      <figure class="chart">
+        <h4>Risk-band split</h4>
+        <div class="ch-sub">Domains by severity band</div>
+        <div id="chart2"></div>
+        <figcaption class="figcap">Fig. 2 — Domain count by risk band; the bulk sits at HIGH or worse.</figcaption>
+      </figure>
+      <figure class="chart">
+        <h4>Provider → actual pool</h4>
+        <div class="ch-sub">Sold label vs. detected reality</div>
+        <div id="chart3"></div>
+        <figcaption class="figcap">Fig. 3 — Reconciliation of the provider on record against the egress detected by MX.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. KEY FINDINGS ============ -->
+<section id="findings">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">III</div>
+      <div class="t">
+        <h2>Key findings</h2>
+        <p>Six observations, each independently sufficient to depress delivery to the inbox.</p>
+      </div>
+    </div>
+    <div class="findings">
+      <div class="finding sev-red">
+        <div class="idx"></div>
+        <div class="body">
+          <span class="tag">Provenance</span><br>
+          <strong>All 90 domains were registered on the same day, 2025-04-24.</strong>
+          One registrant (&ldquo;a single registrant&rdquo;), NameCheap, across two roughly
+          three-minute automated bursts — the textbook signature of snowshoe
+          spamming. Forty-seven distinct names appear across the ninety domains,
+          and every domain expires on the same day.
+        </div>
+      </div>
+      <div class="finding sev-red">
+        <div class="idx"></div>
+        <div class="body">
+          <span class="tag">Misrepresented infrastructure</span><br>
+          <strong>&ldquo;Infra.email&rdquo; is in fact Microsoft&nbsp;365 shared outbound.</strong>
+          Sixty domains and 5,030 mailboxes route through it with no IP isolation,
+          operating against Microsoft&nbsp;365&rsquo;s anti-bulk terms — there is no
+          dedicated reputation to protect or rebuild.
+        </div>
+      </div>
+      <div class="finding sev-red">
+        <div class="idx"></div>
+        <div class="body">
+          <span class="tag">Authentication not enforced</span><br>
+          <strong>5,000 of 5,120 mailboxes (97.7%) publish DMARC <span class="mono">p=none</span>.</strong>
+          The policy is published but not enforced — it tells receivers to take no
+          action on failures. All of these sit on the Infra.email pool.
+        </div>
+      </div>
+      <div class="finding sev-red">
+        <div class="idx"></div>
+        <div class="body">
+          <span class="tag">Active blacklisting</span><br>
+          <strong>17 domains are already SURBL-listed (<span class="mono">127.0.0.64</span>).</strong>
+          That places 1,700 mailboxes on domains that are publicly blacklisted
+          today — mail from them is filtered before content is ever evaluated.
+        </div>
+      </div>
+      <div class="finding sev-amber">
+        <div class="idx"></div>
+        <div class="body">
+          <span class="tag">Compliance exposure</span><br>
+          <strong>No compliant one-click unsubscribe.</strong>
+          Unsolicited income-opportunity copy is being sent to personal consumer
+          inboxes — independent CAN-SPAM exposure compounded by Google/Yahoo
+          February-2024 bulk-sender failures.
+        </div>
+      </div>
+      <div class="finding sev-amber">
+        <div class="idx"></div>
+        <div class="body">
+          <span class="tag">Weak technical base</span><br>
+          <strong>30 domains carry weak SPF (~all softfail); 28 have no working
+          website or TLS.</strong> The supporting web presence and authentication
+          posture do not meet the baseline receivers now expect.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. ACTION REGISTER ============ -->
+<section id="register">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">IV</div>
+      <div class="t">
+        <h2>Action register</h2>
+        <p>The full ninety-domain disposition. Search, filter, sort by risk, and open any row for the underlying evidence.</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="field grow">
+        <label for="q">Search domain</label>
+        <input id="q" type="search" placeholder="type a domain substring…" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fVerdict">Verdict</label>
+        <select id="fVerdict"><option value="">All verdicts</option></select>
+      </div>
+      <div class="field">
+        <label for="fBand">Risk band</label>
+        <select id="fBand"><option value="">All bands</option></select>
+      </div>
+      <div class="field">
+        <label for="fProv">Provider</label>
+        <select id="fProv"><option value="">All providers</option></select>
+      </div>
+      <button class="reset-btn" id="resetBtn" type="button">Reset</button>
+    </div>
+
+    <p class="count-line" id="countLine">Showing <b>0</b> / 0 domains</p>
+
+    <div class="tbl-scroll">
+      <table id="tbl" aria-label="Domain action register">
+        <thead>
+          <tr>
+            <th class="sortable" data-key="domain" aria-sort="none">
+              <button type="button">Domain <span class="ar"></span></button></th>
+            <th>Provider</th>
+            <th>Actual pool</th>
+            <th class="sortable" data-key="mailboxes" aria-sort="none">
+              <button type="button">Mbx <span class="ar"></span></button></th>
+            <th>Registered</th>
+            <th>SPF</th>
+            <th>DMARC</th>
+            <th>Blacklist</th>
+            <th class="sortable" data-key="risk_score" aria-sort="descending">
+              <button type="button">Risk <span class="ar"></span></button></th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. ROADMAP ============ -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="num">V</div>
+      <div class="t">
+        <h2>A 90-day path back to the inbox</h2>
+        <p>Remediation in three deliberate phases. The current estate is not rebuilt — it is retired, and reputation is re-earned from a clean base.</p>
+      </div>
+    </div>
+
+    <div class="timeline" aria-hidden="true">
+      <div class="seg"><div class="dot"></div><div class="lab">Stop the bleeding</div><div class="d">Day 0–30</div></div>
+      <div class="seg"><div class="dot"></div><div class="lab">Rebuild the base</div><div class="d">Day 30–60</div></div>
+      <div class="seg"><div class="dot"></div><div class="lab">Re-earn reputation</div><div class="d">Day 60–90</div></div>
+    </div>
+
+    <div class="road">
+      <div class="phase">
+        <div class="ph-win">Day 0 – 30</div>
+        <h3>Stop the bleeding</h3>
+        <p>Halt the harm before any rebuild is attempted. Nothing on the current
+           estate is worth defending in its present state.</p>
+        <ul>
+          <li>Pause all sending from the 17 blacklisted domains immediately.</li>
+          <li>Suspend the unsolicited income-opportunity campaigns to consumer inboxes.</li>
+          <li>Stop onboarding new mailboxes onto the shared Microsoft&nbsp;365 pool.</li>
+          <li>Notify stakeholders that the estate is being retired, not patched.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="ph-win">Day 30 – 60</div>
+        <h3>Rebuild the base</h3>
+        <p>Stand up a clean, isolated sending foundation that does not inherit
+           any of the snowshoe provenance or shared-pool reputation.</p>
+        <ul>
+          <li>Acquire domains over time from varied registrars — no single-day bursts.</li>
+          <li>Move to dedicated, IP-isolated infrastructure with real reputation.</li>
+          <li>Deploy enforced authentication: SPF hardfail, DKIM, DMARC <span class="mono">p=reject</span>.</li>
+          <li>Restore legitimate websites with valid TLS for every sending domain.</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <div class="ph-win">Day 60 – 90</div>
+        <h3>Re-earn reputation</h3>
+        <p>Reputation is earned through behaviour, not configuration. Warm
+           gradually and prove legitimate engagement to the receivers.</p>
+        <ul>
+          <li>Warm new domains slowly with low, rising volume to engaged recipients.</li>
+          <li>Operate compliant one-click unsubscribe and honest sender identity.</li>
+          <li>Monitor placement, complaint and bounce rates against Google/Yahoo thresholds.</li>
+          <li>Scale only as inbox placement and engagement metrics confirm trust.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLOPHON ============ -->
+<section class="colophon">
+  <div class="wrap">
+    <div class="rule-top">
+      <p class="meth">Methodology — external, passive, read-only.</p>
+      <p>Captured 2026-05-19 via <span class="mono">dig</span> / <span class="mono">whois</span> /
+         <span class="mono">RDAP</span> / <span class="mono">curl</span> /
+         <span class="mono">DNSBL</span>. Every figure in this report is reproducible
+         from the raw dataset; no privileged access, mailbox content or sending
+         credentials were used or required.</p>
+      <p><strong>Stated limitation.</strong> Because the estate sends through
+         shared Microsoft&nbsp;365 and Google egress, the specific outbound IPs are
+         not externally enumerable. Findings on shared-pool reputation are
+         therefore conservative — the true exposure on those IPs may be greater
+         than what passive measurement can confirm.</p>
+      <div class="sig">
+        <span id="footAuditor">Folderly Deliverability</span>
+        <span id="footMeta"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+"use strict";
+const AUDIT_DATA = {"meta": {"generated": "2026-05-19", "client": "Client A", "auditor": "Folderly Deliverability", "domains": 90, "mailboxes": 5120, "single_reg_date": ["2025-04-24"], "by_verdict": {"KILL": 17, "KILL → REPLACE": 33, "REHAB": 10, "KEEP (conditional)": 30}, "by_band": {"CRITICAL": 17, "HIGH": 33, "ELEVATED": 10, "MODERATE": 30}, "by_provider": {"Infra.email": 50, "Zapmail Google": 20, "Maildoso": 10, "Zapmail Outlook": 10}, "mbx_by_verdict": {"KILL": 1700, "KILL → REPLACE": 3300, "REHAB": 30, "KEEP (conditional)": 90}, "blacklisted": 17, "mbx_blacklisted": 1700, "dmarc_none": 50, "mbx_dmarc_none": 5000, "spf_soft": 30, "no_site": 28, "shared_pool_domains": 80}, "domains": [{"domain": "loc-01.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-02.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-03.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-04.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-05.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-06.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-07.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-08.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-09.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-10.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-11.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-12.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-13.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-14.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-15.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-16.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-17.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "domain:surbl", "risk_score": 92, "risk_band": "CRITICAL", "verdict": "KILL", "drivers": "SURBL-listed, DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Publicly blacklisted (SURBL 127.0.0.64). Domain reputation is burned and follows the domain into the message body — unrecoverable for consumer mail. Stop immediately; do NOT reuse the name."}, {"domain": "loc-18.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-19.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-20.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-21.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-22.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-23.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-24.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-25.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-26.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-27.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-28.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-29.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-30.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-31.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-32.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-33.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-34.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-35.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-36.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-37.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-38.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-39.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-40.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-41.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-42.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-43.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-44.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-45.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-46.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .co low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-47.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-48.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-49.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-50.example.com", "sheet_provider": "Infra.email", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 100, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "-all", "spf_lookups": 1, "dkim": "selector1|selector2", "dmarc_policy": "none", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 52, "risk_band": "HIGH", "verdict": "KILL → REPLACE", "drivers": "DMARC p=none, 100 mbx/domain, shared sending pool, .net low-trust TLD", "rationale": "Shared Microsoft 365 outbound (no IP isolation), DMARC p=none (unenforced), 100 mbx/domain, same-day snowshoe cohort. No reputation control. Retire from production and rebuild on controlled dedicated infra."}, {"domain": "loc-51.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-51.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-52.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-52.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-53.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-53.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-54.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-54.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-55.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-55.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-56.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-56.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-57.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-57.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-58.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-58.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-59.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-59.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-60.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".net", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "000", "web_final": "http://loc-60.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 34, "risk_band": "ELEVATED", "verdict": "REHAB", "drivers": "SPF ~all softfail, shared sending pool, no live website, no working TLS, .net low-trust TLD", "rationale": "No live website / no A record. A cold sending domain with no real site at its apex is a top spam heuristic. Stand up a real branded site (or retire) before any further sending."}, {"domain": "loc-61.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-61.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-62.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-62.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-63.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-63.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-64.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-64.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-65.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-65.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-66.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-66.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-67.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-67.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-68.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-68.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-69.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-69.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-70.example.com", "sheet_provider": "Zapmail Google", "actual_pool": "Google Workspace (shared)", "mx_detected": "Google Workspace", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 1, "dkim": "google", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-70.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 20, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-71.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".co", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-71.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 16, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403, .co low-trust TLD", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-72.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-72.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-73.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-73.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-74.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-74.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-75.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-75.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-76.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-76.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-77.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-77.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-78.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-78.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-79.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "http://loc-79.example.com/", "tls_ok": false, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool, no working TLS", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-80.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-80.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-81.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-81.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-82.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-82.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-83.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-83.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-84.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-84.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-85.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-85.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-86.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-86.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-87.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-b.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-87.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-88.example.com", "sheet_provider": "Maildoso", "actual_pool": "dedicated:_spf.dedicated-pool-a.example.com", "mx_detected": "Other/Unknown", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "~all", "spf_lookups": 2, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "no", "web_status": "403", "web_final": "http://loc-88.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 12, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "SPF ~all softfail, site returns 403", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: harden SPF to -all; add DMARC rua/ruf; confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-89.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 8, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}, {"domain": "loc-90.example.com", "sheet_provider": "Zapmail Outlook", "actual_pool": "Microsoft 365 (shared)", "mx_detected": "Microsoft 365", "mailboxes": 3, "registered": "2025-04-24", "registrar": "NameCheap, Inc.", "tld": ".com", "spf": "-all", "spf_lookups": 1, "dkim": "selector1", "dmarc_policy": "reject", "dmarc_rua": "yes", "web_status": "200", "web_final": "https://client-primary.example.com/", "tls_ok": true, "blacklist": "clean", "risk_score": 8, "risk_band": "MODERATE", "verdict": "KEEP (conditional)", "drivers": "shared sending pool", "rationale": "Enforced DMARC (p=reject), low mailbox density. Only salvageable tier. Conditions: confirm one-click List-Unsubscribe; throttle volume; clear via Postmaster/SNDS."}]};
+
+(function(){
+  const D = AUDIT_DATA || {};
+  const META = D.meta || {};
+  const ROWS = Array.isArray(D.domains) ? D.domains.slice() : [];
+
+  /* ---------- helpers ---------- */
+  const $  = s => document.querySelector(s);
+  const el = (t,c,txt) => { const e=document.createElement(t); if(c)e.className=c; if(txt!=null)e.textContent=txt; return e; };
+  const fmt = n => (n==null||isNaN(n)) ? '—' : Number(n).toLocaleString('en-US');
+  const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const pct = (a,b) => b ? Math.round(a/b*1000)/10 : 0;
+
+  function verdictClass(v){
+    v=String(v||'');
+    if(v==='KILL') return 'red';
+    if(v==='KILL → REPLACE') return 'red';
+    if(v==='REHAB') return 'amber';
+    if(v.indexOf('KEEP')===0) return 'green';
+    return 'grey';
+  }
+  function bandClass(b){
+    b=String(b||'').toUpperCase();
+    if(b==='CRITICAL') return 'red';
+    if(b==='HIGH') return 'amber';
+    if(b==='ELEVATED') return 'amber';
+    if(b==='MODERATE') return 'green';
+    return 'grey';
+  }
+  const RISK_MAX = 92;
+  function riskColor(s){
+    if(s>=70) return 'var(--red)';
+    if(s>=45) return 'var(--amber)';
+    if(s>=25) return '#7a7320';
+    return 'var(--green)';
+  }
+  const yn = v => v===true?'Yes':v===false?'No':(v==null?'—':String(v));
+
+  /* ---------- cover meta ---------- */
+  (function cover(){
+    const c = $('#cover-meta');
+    const date = META.generated || '2026-05-19';
+    const client = META.client || 'Prospect';
+    const fields = [
+      ['Client', client],
+      ['Prepared by', META.auditor || 'Folderly Deliverability'],
+      ['Date of capture', date],
+      ['Scope', (META.domains||ROWS.length||0)+' domains · '+fmt(META.mailboxes||0)+' mailboxes']
+    ];
+    fields.forEach(([k,v])=>{
+      const d=el('div'); d.appendChild(el('div','k',k)); d.appendChild(el('div','v',v)); c.appendChild(d);
+    });
+    $('#footAuditor').textContent = (META.auditor||'Folderly Deliverability');
+    $('#footMeta').textContent = client+' · captured '+date+' · '+(META.domains||ROWS.length)+' domains examined';
+    document.title = 'Interactive Deliverability Audit (Sample) — '+client;
+  })();
+
+  /* ---------- KPI band ---------- */
+  (function kpis(){
+    const g = $('#kpiGrid');
+    const mbx = META.mailboxes || ROWS.reduce((a,r)=>a+(+r.mailboxes||0),0);
+    const dn  = META.mbx_dmarc_none || 0;
+    const cards = [
+      {v:fmt(META.domains||ROWS.length), k:'Sending domains', sub:'all examined externally'},
+      {v:fmt(mbx), k:'Mailboxes in scope', sub:'across the full estate'},
+      {v:fmt(META.blacklisted||0), k:'Blacklisted domains', sub:fmt(META.mbx_blacklisted||0)+' mailboxes affected', alert:true},
+      {v:fmt(dn)+' <small>mbx</small>', k:'DMARC p=none', sub:pct(dn,mbx)+'% of all mailboxes', alert:true},
+      {v:fmt(META.shared_pool_domains||0), k:'Shared-pool domains', sub:'no IP isolation'},
+      {v:'100<small>%</small>', k:'Registration concentration', sub:'all on '+((META.single_reg_date&&META.single_reg_date[0])||'2025-04-24'), alert:true}
+    ];
+    cards.forEach(c=>{
+      const d=el('div','kpi'+(c.alert?' alert':''));
+      const v=el('div','v'); v.innerHTML=c.v; d.appendChild(v);
+      d.appendChild(el('div','k',c.k));
+      if(c.sub) d.appendChild(el('div','sub',c.sub));
+      g.appendChild(d);
+    });
+  })();
+
+  /* ---------- SVG chart utilities ---------- */
+  const SVGNS='http://www.w3.org/2000/svg';
+  function svg(w,h){ const s=document.createElementNS(SVGNS,'svg');
+    s.setAttribute('viewBox','0 0 '+w+' '+h); s.setAttribute('role','img'); return s; }
+  function rect(x,y,w,h,fill){ const r=document.createElementNS(SVGNS,'rect');
+    r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',Math.max(0,w));
+    r.setAttribute('height',Math.max(0,h));r.setAttribute('fill',fill);return r; }
+  function txt(x,y,s,opt){ opt=opt||{}; const t=document.createElementNS(SVGNS,'text');
+    t.setAttribute('x',x);t.setAttribute('y',y);
+    t.setAttribute('font-size',opt.size||10);
+    t.setAttribute('fill',opt.fill||'#46443e');
+    if(opt.anchor)t.setAttribute('text-anchor',opt.anchor);
+    if(opt.weight)t.setAttribute('font-weight',opt.weight);
+    t.textContent=s;return t; }
+  function line(x1,y1,x2,y2,stroke){ const l=document.createElementNS(SVGNS,'line');
+    l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);
+    l.setAttribute('stroke',stroke||'#dcd8cd');l.setAttribute('stroke-width','1');return l; }
+
+  const PAL = { red:'#8c2d28', amber:'#a06a1f', green:'#2f5a3b', accent:'#1f3a5f', grey:'#7c7a72' };
+
+  /* Chart 1 — mailboxes by verdict (horizontal bars) */
+  (function c1(){
+    const host=$('#chart1');
+    const src = META.mbx_by_verdict || {};
+    let entries = Object.keys(src).map(k=>[k,+src[k]||0]);
+    if(!entries.length){
+      const agg={}; ROWS.forEach(r=>{agg[r.verdict]=(agg[r.verdict]||0)+(+r.mailboxes||0);});
+      entries=Object.keys(agg).map(k=>[k,agg[k]]);
+    }
+    entries.sort((a,b)=>b[1]-a[1]);
+    const W=320,H=190,padL=10,padR=14,top=14,rh=30,gap=12;
+    const max=Math.max(1,...entries.map(e=>e[1]));
+    const s=svg(W,H+10);
+    entries.forEach((e,i)=>{
+      const y=top+i*(rh+gap);
+      const bw=(W-padL-padR-118)*(e[1]/max);
+      const col=PAL[verdictClass(e[0])]||PAL.grey;
+      s.appendChild(rect(118,y,W-padL-padR-118,rh,'#efece3'));
+      s.appendChild(rect(118,y,bw,rh,col));
+      s.appendChild(txt(0,y+rh/2+3.5,e[0].length>16?e[0].slice(0,15)+'…':e[0],{size:10,weight:600}));
+      const lblIn = bw>54;
+      const tl=txt(lblIn?118+bw-7:118+bw+6, y+rh/2+3.6, fmt(e[1]),
+        {size:10.5,weight:700,fill:lblIn?'#fff':'#1a1a18',anchor:lblIn?'end':'start'});
+      s.appendChild(tl);
+    });
+    s.setAttribute('aria-label','Mailboxes by verdict bar chart');
+    host.appendChild(s);
+  })();
+
+  /* Chart 2 — risk band split (donut) */
+  (function c2(){
+    const host=$('#chart2');
+    const src = META.by_band || {};
+    const order=['CRITICAL','HIGH','ELEVATED','MODERATE'];
+    let entries = order.filter(k=>k in src).map(k=>[k,+src[k]||0]);
+    if(!entries.length){
+      const agg={}; ROWS.forEach(r=>{agg[r.risk_band]=(agg[r.risk_band]||0)+1;});
+      entries=Object.keys(agg).map(k=>[k,agg[k]]);
+    }
+    const total=entries.reduce((a,e)=>a+e[1],0)||1;
+    const W=320,H=190,cx=96,cy=95,r=66,sw=26;
+    const s=svg(W,H);
+    let ang=-Math.PI/2;
+    const C=2*Math.PI*r;
+    entries.forEach(e=>{
+      const frac=e[1]/total;
+      const circ=document.createElementNS(SVGNS,'circle');
+      circ.setAttribute('cx',cx);circ.setAttribute('cy',cy);circ.setAttribute('r',r);
+      circ.setAttribute('fill','none');
+      circ.setAttribute('stroke',PAL[bandClass(e[0])]||PAL.grey);
+      circ.setAttribute('stroke-width',sw);
+      circ.setAttribute('stroke-dasharray',(C*frac)+' '+C);
+      circ.setAttribute('stroke-dashoffset', -C*((ang+Math.PI/2)/(2*Math.PI)));
+      circ.setAttribute('transform','rotate(-90 '+cx+' '+cy+')');
+      s.appendChild(circ);
+      ang += frac*2*Math.PI;
+    });
+    s.appendChild(txt(cx,cy-2,String(total),{size:22,weight:700,anchor:'middle',fill:'#1a1a18'}));
+    s.appendChild(txt(cx,cy+15,'domains',{size:9.5,anchor:'middle',fill:'#7c7a72'}));
+    let ly=24;
+    entries.forEach(e=>{
+      s.appendChild(rect(204,ly-9,11,11,PAL[bandClass(e[0])]||PAL.grey));
+      s.appendChild(txt(221,ly,e[0],{size:10,weight:600}));
+      s.appendChild(txt(221,ly+13,e[1]+' · '+pct(e[1],total)+'%',{size:9.5,fill:'#7c7a72'}));
+      ly+=40;
+    });
+    s.setAttribute('aria-label','Risk band split donut chart');
+    host.appendChild(s);
+  })();
+
+  /* Chart 3 — provider → actual pool reconciliation */
+  (function c3(){
+    const host=$('#chart3');
+    const src = META.by_provider || {};
+    let entries = Object.keys(src).map(k=>[k,+src[k]||0]);
+    if(!entries.length){
+      const agg={}; ROWS.forEach(r=>{agg[r.sheet_provider]=(agg[r.sheet_provider]||0)+1;});
+      entries=Object.keys(agg).map(k=>[k,agg[k]]);
+    }
+    entries.sort((a,b)=>b[1]-a[1]);
+    const W=320, top=18, rh=24, gap=16, H=top+entries.length*(rh+gap)+6;
+    const max=Math.max(1,...entries.map(e=>e[1]));
+    const s=svg(W,Math.max(H,150));
+    entries.forEach((e,i)=>{
+      const y=top+i*(rh+gap);
+      const bw=(W-150)*(e[1]/max);
+      s.appendChild(txt(0,y-4,e[0].length>22?e[0].slice(0,21)+'…':e[0],{size:9.5,weight:600}));
+      s.appendChild(rect(0,y,W-44,rh,'#efece3'));
+      s.appendChild(rect(0,y,bw,rh,PAL.accent));
+      s.appendChild(txt(W-38,y+rh/2+3.6,String(e[1]),{size:10.5,weight:700,fill:'#1a1a18'}));
+    });
+    s.setAttribute('aria-label','Provider to actual pool reconciliation chart');
+    host.appendChild(s);
+  })();
+
+  /* ---------- Action register table ---------- */
+  const tbody = $('#tbody');
+  const state = { q:'', verdict:'', band:'', prov:'', sortKey:'risk_score', sortDir:'desc', open:new Set() };
+
+  // populate filter selects
+  (function fillFilters(){
+    const uniq = k => [...new Set(ROWS.map(r=>r[k]).filter(Boolean))];
+    const add=(sel,vals)=>vals.sort().forEach(v=>{const o=el('option',null,v);o.value=v;sel.appendChild(o);});
+    const vOrder=['KILL','KILL → REPLACE','REHAB','KEEP (conditional)'];
+    const vs=uniq('verdict').sort((a,b)=>{
+      const i=vOrder.indexOf(a),j=vOrder.indexOf(b);
+      return (i<0?9:i)-(j<0?9:j)||a.localeCompare(b);
+    });
+    vs.forEach(v=>{const o=el('option',null,v);o.value=v;$('#fVerdict').appendChild(o);});
+    add($('#fBand'),uniq('risk_band'));
+    add($('#fProv'),uniq('sheet_provider'));
+  })();
+
+  function filtered(){
+    let rs = ROWS.filter(r=>{
+      if(state.q && String(r.domain||'').toLowerCase().indexOf(state.q)<0) return false;
+      if(state.verdict && r.verdict!==state.verdict) return false;
+      if(state.band && r.risk_band!==state.band) return false;
+      if(state.prov && r.sheet_provider!==state.prov) return false;
+      return true;
+    });
+    const k=state.sortKey, dir=state.sortDir==='asc'?1:-1;
+    rs.sort((a,b)=>{
+      let x=a[k], y=b[k];
+      if(k==='domain'){ x=String(x||'').toLowerCase(); y=String(y||'').toLowerCase();
+        return x<y?-1*dir:x>y?1*dir:0; }
+      x=+x||0; y=+y||0; return (x-y)*dir;
+    });
+    return rs;
+  }
+
+  function detailRow(r){
+    const tr=el('tr','detail-row'); tr.dataset.for=r.domain;
+    const td=el('td'); td.colSpan=10;
+    const inner=el('div','detail-inner');
+    const rat=el('div','rationale', r.rationale || 'No additional rationale recorded for this domain.');
+    inner.appendChild(rat);
+
+    if(r.drivers){
+      const dv=el('div','drivers');
+      dv.appendChild(el('div','dh','Risk drivers'));
+      String(r.drivers).split(',').map(s=>s.trim()).filter(Boolean).forEach(d=>{
+        dv.appendChild(el('span','driver-chip',d));
+      });
+      inner.appendChild(dv);
+    }
+
+    const grid=el('div','detail-grid');
+    const facts=[
+      ['MX detected', r.mx_detected],
+      ['Actual pool', r.actual_pool],
+      ['DKIM', yn(r.dkim)],
+      ['SPF lookups', r.spf_lookups],
+      ['DMARC policy', r.dmarc_policy],
+      ['DMARC rua', r.dmarc_rua],
+      ['Web status', r.web_status],
+      ['Web final', r.web_final],
+      ['TLS OK', yn(r.tls_ok)],
+      ['Registrar', r.registrar],
+      ['TLD', r.tld],
+      ['Registered', r.registered]
+    ];
+    facts.forEach(([k,v])=>{
+      const c=el('div');
+      c.appendChild(el('div','dg-k',k));
+      c.appendChild(el('div','dg-v', v==null||v===''?'—':String(v)));
+      grid.appendChild(c);
+    });
+    inner.appendChild(grid);
+    td.appendChild(inner); tr.appendChild(td);
+    return tr;
+  }
+
+  function render(){
+    const rs=filtered();
+    tbody.textContent='';
+    const frag=document.createDocumentFragment();
+    rs.forEach(r=>{
+      const tr=el('tr','dom-row');
+      tr.tabIndex=0;
+      tr.setAttribute('role','button');
+      const isOpen=state.open.has(r.domain);
+      tr.setAttribute('aria-expanded',isOpen?'true':'false');
+      tr.dataset.domain=r.domain;
+
+      const dc=el('td','dom-cell');
+      const car=el('span','car','▶'); dc.appendChild(car);
+      dc.appendChild(document.createTextNode(r.domain||'—'));
+      tr.appendChild(dc);
+
+      tr.appendChild(el('td',null,r.sheet_provider||'—'));
+      tr.appendChild(el('td',null,r.actual_pool||'—'));
+
+      const mc=el('td','num-cell',fmt(r.mailboxes)); tr.appendChild(mc);
+      tr.appendChild(el('td','num-cell',r.registered||'—'));
+      tr.appendChild(el('td',null,r.spf||'—'));
+      tr.appendChild(el('td',null,r.dmarc_policy||'—'));
+
+      const bl=el('td');
+      if(r.blacklist && String(r.blacklist).toLowerCase()!=='clean' && String(r.blacklist)!=='—'){
+        const p=el('span','pill red', String(r.blacklist)); bl.appendChild(p);
+      } else { bl.appendChild(el('span','pill green','Clean')); }
+      tr.appendChild(bl);
+
+      const rk=el('td');
+      const wrap=el('div','risk-cell');
+      const bar=el('span','risk-bar'); const fill=el('i');
+      fill.style.width=Math.min(100,Math.round((+r.risk_score||0)/RISK_MAX*100))+'%';
+      fill.style.background=riskColor(+r.risk_score||0);
+      bar.appendChild(fill);
+      wrap.appendChild(bar);
+      const rt=el('span','pill '+bandClass(r.risk_band));
+      rt.textContent=(r.risk_score!=null?r.risk_score:'—')+' · '+(r.risk_band||'');
+      wrap.appendChild(rt);
+      rk.appendChild(wrap); tr.appendChild(rk);
+
+      const vd=el('td');
+      vd.appendChild(el('span','pill '+verdictClass(r.verdict), r.verdict||'—'));
+      tr.appendChild(vd);
+
+      frag.appendChild(tr);
+      if(isOpen) frag.appendChild(detailRow(r));
+    });
+    tbody.appendChild(frag);
+
+    $('#countLine').innerHTML = 'Showing <b>'+rs.length+'</b> / '+ROWS.length+' domains';
+  }
+
+  function toggle(dom){
+    if(state.open.has(dom)) state.open.delete(dom); else state.open.add(dom);
+    render();
+  }
+
+  tbody.addEventListener('click', e=>{
+    const tr=e.target.closest('tr.dom-row'); if(!tr) return;
+    toggle(tr.dataset.domain);
+  });
+  tbody.addEventListener('keydown', e=>{
+    if(e.key!=='Enter' && e.key!==' ') return;
+    const tr=e.target.closest('tr.dom-row'); if(!tr) return;
+    e.preventDefault(); toggle(tr.dataset.domain);
+  });
+
+  // sorting
+  document.querySelectorAll('th.sortable').forEach(th=>{
+    th.querySelector('button').addEventListener('click', ()=>{
+      const k=th.dataset.key;
+      if(state.sortKey===k){ state.sortDir = state.sortDir==='asc'?'desc':'asc'; }
+      else { state.sortKey=k; state.sortDir = (k==='domain')?'asc':'desc'; }
+      document.querySelectorAll('th.sortable').forEach(t=>{
+        t.setAttribute('aria-sort', t.dataset.key===state.sortKey
+          ? (state.sortDir==='asc'?'ascending':'descending') : 'none');
+      });
+      render();
+    });
+  });
+
+  // filters
+  const bind=(id,key)=>{ const node=$(id);
+    node.addEventListener('input', ()=>{
+      state[key] = (key==='q') ? node.value.trim().toLowerCase() : node.value;
+      render();
+    });
+  };
+  bind('#q','q'); bind('#fVerdict','verdict'); bind('#fBand','band'); bind('#fProv','prov');
+
+  $('#resetBtn').addEventListener('click', ()=>{
+    state.q='';state.verdict='';state.band='';state.prov='';
+    state.sortKey='risk_score';state.sortDir='desc';state.open.clear();
+    $('#q').value='';$('#fVerdict').value='';$('#fBand').value='';$('#fProv').value='';
+    document.querySelectorAll('th.sortable').forEach(t=>{
+      t.setAttribute('aria-sort', t.dataset.key==='risk_score'?'descending':'none');
+    });
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

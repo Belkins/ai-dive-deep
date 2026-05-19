@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AFC — Autonomous Fighting Championship</title>
+<meta name="description" content="The UFC of humanoid robots. Underground first." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --afc-black:#0A0A0B;
+    --afc-chrome:#B8BCC0;
+    --afc-blood:#7A0A0A;
+    --afc-blood-bright:#A50F0F;
+    --afc-bone:#E8E2D5;
+    --afc-smoke:#D9D9D6;
+    --afc-cobalt:#1A2EFF;
+    --afc-gold:#C9A24E;
+    --grain-opacity:.06;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--afc-black);
+    color:var(--afc-smoke);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    overflow-x:hidden;
+    cursor:default;
+  }
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    pointer-events:none;
+    z-index:1000;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    opacity:var(--grain-opacity);
+    mix-blend-mode:overlay;
+  }
+  /* ─────────── Type ─────────── */
+  .display{font-family:'Anton',sans-serif;letter-spacing:-.01em;text-transform:uppercase;line-height:.9;font-weight:400}
+  .editorial{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase}
+  h1{font-family:'Anton',sans-serif;font-size:clamp(4rem,18vw,16rem);line-height:.85;letter-spacing:-.02em}
+  h2{font-family:'Anton',sans-serif;font-size:clamp(2.5rem,7vw,5.5rem);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:1.2em}
+  h3{font-family:'Anton',sans-serif;font-size:clamp(1.5rem,3vw,2.4rem);text-transform:uppercase;line-height:1;letter-spacing:.01em;margin-bottom:.8em}
+  h4{font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5em;color:var(--afc-bone)}
+  p{margin-bottom:1em;max-width:62ch}
+  a{color:var(--afc-bone);text-decoration:none;border-bottom:1px solid currentColor;transition:color .2s}
+  a:hover{color:var(--afc-cobalt)}
+  .blood{color:var(--afc-blood-bright)}
+  .gold{color:var(--afc-gold)}
+  .bone{color:var(--afc-bone)}
+  .chrome{color:var(--afc-chrome)}
+  /* ─────────── Layout ─────────── */
+  section{padding:clamp(80px,14vh,180px) clamp(20px,6vw,80px);position:relative;border-top:1px solid rgba(184,188,192,.08)}
+  section:first-of-type{border:0}
+  .container{max-width:1320px;margin:0 auto;width:100%}
+  .grid{display:grid;gap:clamp(20px,3vw,48px)}
+  .grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+  .grid-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .grid-4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .row-label{display:flex;align-items:center;gap:14px;margin-bottom:48px;color:var(--afc-chrome)}
+  .row-label::before{content:'';display:block;width:32px;height:1px;background:var(--afc-chrome)}
+  /* ─────────── NAV ─────────── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px clamp(20px,4vw,48px);
+    background:linear-gradient(180deg,rgba(10,10,11,.92) 0%,rgba(10,10,11,.4) 80%,transparent 100%);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    transition:background .3s;
+  }
+  nav .brand{font-family:'Anton',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:var(--afc-bone)}
+  nav ul{display:flex;gap:clamp(16px,2.5vw,40px);list-style:none}
+  nav li{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase}
+  nav a{border:0;color:var(--afc-chrome)}
+  nav a:hover{color:var(--afc-bone)}
+  @media(max-width:740px){nav ul{display:none}}
+  /* ─────────── HERO ─────────── */
+  .hero{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    background:radial-gradient(ellipse at 50% 80%,rgba(122,10,10,.18) 0%,transparent 60%),var(--afc-black);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero h1{position:relative;z-index:2}
+  .hero h1 .stroke{-webkit-text-stroke:1px var(--afc-chrome);color:transparent}
+  .hero .meta{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:30px;margin-top:60px;padding-top:30px;border-top:1px solid rgba(184,188,192,.15)}
+  .hero .meta div{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--afc-chrome)}
+  .hero .meta strong{display:block;color:var(--afc-bone);font-weight:500;margin-top:6px;font-size:.85rem}
+  .ember{
+    position:absolute;width:6px;height:6px;border-radius:50%;
+    background:var(--afc-blood-bright);
+    box-shadow:0 0 12px var(--afc-blood-bright),0 0 24px var(--afc-blood);
+    animation:rise 14s linear infinite;
+    bottom:-20px;
+    pointer-events:none;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0);opacity:0}
+    10%{opacity:.9}
+    90%{opacity:.4}
+    100%{transform:translateY(-110vh) translateX(40px);opacity:0}
+  }
+  .scroll-cue{
+    position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--afc-chrome);animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:.4;transform:translate(-50%,0)}50%{opacity:1;transform:translate(-50%,8px)}}
+  /* ─────────── Manifesto ─────────── */
+  .manifesto p{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.4;font-weight:400;max-width:32ch;color:var(--afc-bone);margin-bottom:1.2em}
+  .manifesto p:last-child{font-style:italic;color:var(--afc-chrome);font-size:clamp(1rem,1.6vw,1.2rem)}
+  .anchors{display:flex;flex-wrap:wrap;gap:14px;margin-top:48px}
+  .anchor-pill{
+    font-family:'JetBrains Mono',monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;
+    padding:8px 14px;border:1px solid rgba(184,188,192,.3);border-radius:1px;color:var(--afc-chrome);
+    transition:all .25s;
+  }
+  .anchor-pill:hover{border-color:var(--afc-blood-bright);color:var(--afc-bone)}
+  /* ─────────── Why Now tiles ─────────── */
+  .tile{
+    border:1px solid rgba(184,188,192,.18);
+    padding:32px;
+    transition:all .3s;
+    position:relative;
+    overflow:hidden;
+    background:rgba(10,10,11,.4);
+  }
+  .tile::before{
+    content:'';position:absolute;top:0;left:0;width:0;height:1px;background:var(--afc-blood-bright);
+    transition:width .4s ease-out;
+  }
+  .tile:hover{border-color:rgba(184,188,192,.4);transform:translateY(-4px)}
+  .tile:hover::before{width:100%}
+  .tile .num{font-family:'Anton',sans-serif;font-size:3.4rem;color:var(--afc-blood-bright);line-height:1;margin-bottom:8px}
+  .tile h4{margin-bottom:12px}
+  .tile p{font-size:.92rem;color:var(--afc-chrome);margin:0}
+  /* ─────────── Tier Table ─────────── */
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border:1px solid rgba(184,188,192,.18);margin-top:32px}
+  .tier{padding:32px 24px;border-right:1px solid rgba(184,188,192,.18);position:relative;cursor:pointer;transition:background .25s;background:rgba(10,10,11,.4)}
+  .tier:last-child{border-right:0}
+  .tier:hover{background:rgba(122,10,10,.12)}
+  .tier.active{background:rgba(122,10,10,.18);border-top:2px solid var(--afc-blood-bright);margin-top:-1px}
+  .tier .name{font-family:'Anton',sans-serif;font-size:1.6rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:8px;color:var(--afc-bone)}
+  .tier .price{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--afc-gold);margin-bottom:18px;letter-spacing:.06em}
+  .tier .cap{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--afc-chrome);text-transform:uppercase;letter-spacing:.18em;margin-bottom:24px}
+  .tier ul{list-style:none;font-size:.85rem;color:var(--afc-smoke)}
+  .tier li{padding:6px 0;border-bottom:1px solid rgba(184,188,192,.08)}
+  .tier li:last-child{border:0}
+  @media(max-width:880px){.tier{border-right:0;border-bottom:1px solid rgba(184,188,192,.18)}}
+  /* ─────────── Year Selector ─────────── */
+  .year-selector{display:flex;gap:8px;margin-bottom:48px;flex-wrap:wrap}
+  .year-btn{
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;
+    padding:14px 28px;background:transparent;color:var(--afc-chrome);
+    border:1px solid rgba(184,188,192,.2);cursor:pointer;transition:all .25s;
+  }
+  .year-btn:hover{border-color:rgba(184,188,192,.5);color:var(--afc-bone)}
+  .year-btn.active{background:var(--afc-blood);border-color:var(--afc-blood-bright);color:var(--afc-bone)}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;border:1px solid rgba(184,188,192,.18);margin-bottom:24px}
+  .stat{padding:32px 24px;border-right:1px solid rgba(184,188,192,.18)}
+  .stat:last-child{border-right:0}
+  .stat .label{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--afc-chrome);margin-bottom:14px}
+  .stat .value{font-family:'Anton',sans-serif;font-size:clamp(2.2rem,4vw,3.4rem);line-height:1;color:var(--afc-bone);transition:color .3s}
+  .stat .value.highlight{color:var(--afc-blood-bright)}
+  .stat .delta{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;color:var(--afc-gold);margin-top:8px;text-transform:uppercase}
+  @media(max-width:740px){.stat{border-right:0;border-bottom:1px solid rgba(184,188,192,.18)}.stat:last-child{border:0}}
+  /* ─────────── Funds donut ─────────── */
+  .funds-wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+  @media(max-width:740px){.funds-wrap{grid-template-columns:1fr}}
+  .donut-svg{width:100%;max-width:380px;margin:0 auto;display:block}
+  .donut-center{font-family:'Anton',sans-serif;fill:var(--afc-bone);font-size:32px;text-anchor:middle;letter-spacing:-.02em}
+  .donut-center-sub{font-family:'JetBrains Mono',monospace;fill:var(--afc-chrome);font-size:9px;text-anchor:middle;letter-spacing:.18em;text-transform:uppercase}
+  .donut-seg{transition:transform .25s,opacity .25s;cursor:pointer;transform-origin:center;transform-box:fill-box}
+  .donut-seg:hover{transform:scale(1.04);opacity:.9}
+  .funds-list{list-style:none}
+  .funds-list li{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(184,188,192,.1);font-size:.92rem;cursor:pointer;transition:padding-left .2s}
+  .funds-list li:hover{padding-left:8px}
+  .funds-list .swatch{width:14px;height:14px;flex-shrink:0;border-radius:1px}
+  .funds-list .pct{font-family:'JetBrains Mono',monospace;color:var(--afc-chrome);margin-left:auto;font-size:.78rem;letter-spacing:.08em}
+  .funds-list .amount{font-family:'JetBrains Mono',monospace;color:var(--afc-gold);font-size:.78rem;letter-spacing:.08em;min-width:64px;text-align:right}
+  /* ─────────── Unit econ panel ─────────── */
+  .unit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;margin-bottom:32px}
+  .unit{padding:28px;background:rgba(122,10,10,.06);border:1px solid rgba(122,10,10,.3);position:relative}
+  .unit .label{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--afc-chrome);margin-bottom:10px}
+  .unit .value{font-family:'Anton',sans-serif;font-size:2.6rem;line-height:1;color:var(--afc-bone);margin-bottom:8px}
+  .unit .note{font-size:.82rem;color:var(--afc-chrome);line-height:1.4}
+  /* ─────────── Timeline ─────────── */
+  .timeline{position:relative;padding-left:32px;margin-top:32px}
+  .timeline::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--afc-blood-bright),rgba(184,188,192,.2))}
+  .tl-item{position:relative;padding-bottom:48px}
+  .tl-item::before{
+    content:'';position:absolute;left:-37px;top:6px;width:11px;height:11px;border-radius:50%;
+    background:var(--afc-black);border:2px solid var(--afc-blood-bright);
+  }
+  .tl-item:last-child{padding-bottom:0}
+  .tl-quarter{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--afc-blood-bright);margin-bottom:6px}
+  .tl-title{font-family:'Anton',sans-serif;font-size:1.6rem;text-transform:uppercase;color:var(--afc-bone);margin-bottom:8px;line-height:1.1}
+  .tl-body{color:var(--afc-chrome);font-size:.92rem;max-width:54ch}
+  /* ─────────── Capital path ─────────── */
+  .rounds{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(184,188,192,.18);margin-top:24px}
+  .round{padding:28px 22px;border-right:1px solid rgba(184,188,192,.18)}
+  .round:last-child{border-right:0}
+  .round .stage{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--afc-chrome);margin-bottom:14px}
+  .round .amt{font-family:'Anton',sans-serif;font-size:2.2rem;color:var(--afc-bone);line-height:1;margin-bottom:8px}
+  .round .when{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--afc-gold);letter-spacing:.1em;margin-bottom:14px}
+  .round .desc{font-size:.82rem;color:var(--afc-chrome);line-height:1.5}
+  @media(max-width:880px){.rounds{grid-template-columns:1fr 1fr}.round{border-right:1px solid rgba(184,188,192,.18);border-bottom:1px solid rgba(184,188,192,.18)}}
+  @media(max-width:480px){.rounds{grid-template-columns:1fr}.round{border-right:0}}
+  /* ─────────── Asks ─────────── */
+  .asks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:32px}
+  .ask{padding:36px 28px;border:1px solid rgba(184,188,192,.18);transition:all .3s;position:relative;background:rgba(10,10,11,.4)}
+  .ask:hover{border-color:var(--afc-blood-bright);background:rgba(122,10,10,.06)}
+  .ask .num{font-family:'Anton',sans-serif;font-size:4rem;color:var(--afc-blood-bright);line-height:1;margin-bottom:14px;display:block}
+  .ask h4{margin-bottom:12px}
+  .ask p{font-size:.9rem;color:var(--afc-chrome);margin:0}
+  /* ─────────── CTA / Footer ─────────── */
+  .cta{
+    text-align:center;padding:clamp(100px,18vh,200px) 20px;
+    background:radial-gradient(ellipse at 50% 50%,rgba(122,10,10,.22) 0%,transparent 60%),var(--afc-black);
+    border-top:1px solid rgba(184,188,192,.12);
+  }
+  .cta h2{margin-bottom:.4em}
+  .cta .editorial{display:block;font-size:clamp(1.2rem,2vw,1.6rem);color:var(--afc-chrome);margin-bottom:48px}
+  .cta-buttons{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+  .btn{
+    font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;
+    padding:18px 36px;border:1px solid var(--afc-bone);background:transparent;color:var(--afc-bone);
+    cursor:pointer;transition:all .25s;text-decoration:none;border-radius:0;display:inline-block;
+  }
+  .btn:hover{background:var(--afc-bone);color:var(--afc-black)}
+  .btn-primary{background:var(--afc-blood);border-color:var(--afc-blood-bright);color:var(--afc-bone)}
+  .btn-primary:hover{background:var(--afc-blood-bright);color:var(--afc-bone)}
+  footer{padding:40px 20px;text-align:center;border-top:1px solid rgba(184,188,192,.08)}
+  footer p{margin:0 auto;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--afc-chrome)}
+  /* ─────────── reveal animation ─────────── */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:translateY(0)}
+  /* ─────────── selection ─────────── */
+  ::selection{background:var(--afc-blood);color:var(--afc-bone)}
+  ::-moz-selection{background:var(--afc-blood);color:var(--afc-bone)}
+  /* easter ─────────── */
+  .konami{position:fixed;inset:0;background:var(--afc-blood);display:none;align-items:center;justify-content:center;z-index:2000;font-family:'Anton',sans-serif;font-size:8vw;color:var(--afc-bone);letter-spacing:.05em}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">AFC</div>
+  <ul>
+    <li><a href="#vision">Vision</a></li>
+    <li><a href="#why-now">Why Now</a></li>
+    <li><a href="#product">Product</a></li>
+    <li><a href="#money">The Money</a></li>
+    <li><a href="#unit">Unit Econ</a></li>
+    <li><a href="#launch">Launch</a></li>
+    <li><a href="#ask">The Ask</a></li>
+  </ul>
+</nav>
+
+<!-- ─────────── HERO ─────────── -->
+<section class="hero" id="top">
+  <div class="container">
+    <div class="mono chrome" style="margin-bottom:30px">Confidential · Insider list · Q2 2026</div>
+    <h1>
+      AUTONOMOUS<br>
+      <span class="stroke">FIGHTING</span><br>
+      CHAMPIONSHIP
+    </h1>
+    <div class="meta">
+      <div>Status<strong class="bone">Pre-seed · $750K target</strong></div>
+      <div>Window<strong class="bone">12–18 months to lock category</strong></div>
+      <div>First fight<strong class="bone">Q4 2026 · Las Vegas · 50 invited</strong></div>
+      <div>Founder<strong class="bone">Vlad Podolyako</strong></div>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll · ↓</div>
+</section>
+
+<!-- ─────────── VISION ─────────── -->
+<section id="vision" class="manifesto">
+  <div class="container">
+    <div class="row-label mono">01 · Vision</div>
+    <p>Two autonomous humanoids walk into an octagon under blacklight and bass.</p>
+    <p>They hit each other until one of them stops moving.</p>
+    <p>No scripts. No decisions. <span class="blood">No humans bleed here.</span></p>
+    <p>The Roman Colosseum, rebuilt for the AI era. A members-only tribe, curated by hand. The UFC of humanoid robots — <em>underground first</em>.</p>
+    <div class="anchors">
+      <span class="anchor-pill">Fight Club</span>
+      <span class="anchor-pill">Tron</span>
+      <span class="anchor-pill">Berghain</span>
+      <span class="anchor-pill">UFC</span>
+      <span class="anchor-pill">Cyberpunk 2077</span>
+      <span class="anchor-pill">A24</span>
+      <span class="anchor-pill">Boiler Room</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── WHY NOW ─────────── -->
+<section id="why-now">
+  <div class="container">
+    <div class="row-label mono">02 · Why now</div>
+    <h2>Six things that<br>weren't true 24 months ago.</h2>
+    <div class="grid grid-3" style="margin-top:40px">
+      <div class="tile reveal"><div class="num">$13.5K</div><h4>Hardware crossed the curve</h4><p>Unitree G1 humanoid is consumer-priced. Twelve credible humanoid platforms ship in 2026. A six-robot roster costs less than the lighting rig.</p></div>
+      <div class="tile reveal"><div class="num">2025</div><h4>AI motor control crossed sim-to-real</h4><p>Reinforcement-learned bipedal striking is now demonstrable. CMG ran the first humanoid kickboxing tournament in Hangzhou, May 2025.</p></div>
+      <div class="tile reveal"><div class="num">$11B</div><h4>Combat-sports valuations all-time high</h4><p>UFC sold to TKO at $11B. F1 to Liberty at $8B (worth $25B+ today). The category prints.</p></div>
+      <div class="tile reveal"><div class="num">$25K</div><h4>Scarcity-as-luxury cycle peaking</h4><p>Berghain, Erewhon, Anyma, Aimé Leon Dore. Audiences pay premium for rooms they can't easily enter. The wedge has never been more open.</p></div>
+      <div class="tile reveal"><div class="num">$1.44M</div><h4>China is already running it</h4><p>URKL has a $1.44M gold belt live. Rek selling tickets in San Francisco. The category is no longer hypothetical.</p></div>
+      <div class="tile reveal"><div class="num">12 mo</div><h4>One slot still open</h4><p>No Western premium-underground player exists yet. That window closes in 12–18 months.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── PRODUCT ─────────── -->
+<section id="product">
+  <div class="container">
+    <div class="row-label mono">03 · The product</div>
+    <h2>Five products.<br>One flywheel.</h2>
+    <p class="bone" style="font-size:1.1rem;max-width:62ch;margin-bottom:30px">Events are not the product. The tribe is. Membership is the moat — recurring, 90%+ margin, cannot be cloned. Hover any tier.</p>
+    <div class="tiers">
+      <div class="tier" data-tier="initiate">
+        <div class="name">Initiate</div>
+        <div class="price">$1,200 / yr</div>
+        <div class="cap">Cap 5,000 · Target 1,500</div>
+        <ul><li>Members-only fight library</li><li>Iron Order Telegram</li><li>48–72hr early ticket window</li><li>Drop pre-access</li></ul>
+      </div>
+      <div class="tier" data-tier="iron">
+        <div class="name">Iron</div>
+        <div class="price">$5,000 / yr</div>
+        <div class="cap">Cap 1,000 · Target 400</div>
+        <ul><li>2 guaranteed event tix at face</li><li>Members floor seating</li><li>12hr capsule pre-access</li><li>Members-only afterparty</li></ul>
+      </div>
+      <div class="tier" data-tier="gold">
+        <div class="name">Gold</div>
+        <div class="price">$25,000 / yr</div>
+        <div class="cap">Cap 200 · Target 80</div>
+        <ul><li>Cage-adjacent VIP every event</li><li>$5K fighter sponsor credit</li><li>Annual retreat invite</li><li>Founder dinners</li></ul>
+      </div>
+      <div class="tier" data-tier="founder">
+        <div class="name">Founder</div>
+        <div class="price">$100,000 / yr</div>
+        <div class="cap">Lifetime cap 50</div>
+        <ul><li>Lifetime rate-locked</li><li>Custom fighter naming rights</li><li>Founders-only WhatsApp w/ Vlad</li><li>Voting rights on rule changes</li><li>Etched in venue forever</li></ul>
+      </div>
+    </div>
+    <p class="chrome" style="margin-top:32px;font-size:.85rem">Iron Order target: <span class="bone">$8.3M ARR by month 18.</span> Highest-LTV stream in the entire architecture.</p>
+  </div>
+</section>
+
+<!-- ─────────── THE MONEY ─────────── -->
+<section id="money">
+  <div class="container">
+    <div class="row-label mono">04 · The money</div>
+    <h2>$5–8M Y1.<br><span class="blood">$110–200M Y5.</span></h2>
+    <p class="bone" style="font-size:1.05rem;max-width:60ch">EBITDA-positive Year 3. Exit math 8–12× revenue at scale (IP business, not event business). $1B+ enterprise value at base case.</p>
+    <div class="year-selector" style="margin-top:48px">
+      <button class="year-btn active" data-year="1">Year 1 · 2026</button>
+      <button class="year-btn" data-year="3">Year 3 · 2028</button>
+      <button class="year-btn" data-year="5">Year 5 · 2030</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="label">Revenue</div><div class="value" id="rev-val">$5–8M</div><div class="delta" id="rev-delta">— Phase 1 events 1–2</div></div>
+      <div class="stat"><div class="label">EBITDA</div><div class="value" id="ebitda-val">−$1M</div><div class="delta" id="ebitda-delta">— Investment year</div></div>
+      <div class="stat"><div class="label">Iron Order members</div><div class="value" id="mem-val">300</div><div class="delta" id="mem-delta">— Soft launch</div></div>
+      <div class="stat"><div class="label">Events / year</div><div class="value" id="ev-val">2</div><div class="delta" id="ev-delta">— Skunkworks + first ticketed</div></div>
+    </div>
+
+    <h3 style="margin-top:80px">Use of pre-seed funds</h3>
+    <div class="funds-wrap">
+      <svg class="donut-svg" viewBox="0 0 200 200" id="donut" aria-label="Use of funds"></svg>
+      <ul class="funds-list" id="funds-list"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── UNIT ECON ─────────── -->
+<section id="unit">
+  <div class="container">
+    <div class="row-label mono">05 · Unit economics</div>
+    <h2>The math.<br>Every line traceable.</h2>
+    <p class="bone" style="font-size:1.05rem;max-width:60ch">Every number below is grounded in the financial model at <span class="mono chrome">/05-revenue/REVENUE-MODEL.md</span> and <span class="mono chrome">/08-financials/PNL-SKETCH.md</span>.</p>
+
+    <h4 style="margin-top:48px;margin-bottom:18px" class="chrome">Iron Order — the moat</h4>
+    <div class="unit-grid">
+      <div class="unit"><div class="label">Blended LTV</div><div class="value">$11,800</div><div class="note">Across the 4-tier mix at 80% gross renewal (Soho-House anchor).</div></div>
+      <div class="unit"><div class="label">Loaded CAC</div><div class="value">$400</div><div class="note">Event-attendee conversion + onboarding + member ops. Zero paid.</div></div>
+      <div class="unit"><div class="label">LTV / CAC</div><div class="value gold" style="color:var(--afc-gold)">29×</div><div class="note">The defining unit economic of AFC.</div></div>
+      <div class="unit"><div class="label">Renewal rate floor</div><div class="value">90%</div><div class="note">Below this, the Order is becoming a punch card. Hard discipline.</div></div>
+    </div>
+
+    <h4 style="margin-top:48px;margin-bottom:18px" class="chrome">Per-event economics — Phase 1 (300-cap)</h4>
+    <div class="unit-grid">
+      <div class="unit"><div class="label">Total revenue / event</div><div class="value">$559K</div><div class="note">Tickets $270K + sponsor $167K + ancillary.</div></div>
+      <div class="unit"><div class="label">Direct costs</div><div class="value">$523K</div><div class="note">Venue, AV, crew, robots, insurance, talent.</div></div>
+      <div class="unit"><div class="label">Contribution margin</div><div class="value">~25%</div><div class="note">At 400-cap mature config. 6% at 300-cap launch.</div></div>
+      <div class="unit"><div class="label">Break-even attendance</div><div class="value">395</div><div class="note">With sponsorship intact. 580 without (above cap = sponsorship is non-optional).</div></div>
+    </div>
+
+    <h4 style="margin-top:48px;margin-bottom:18px" class="chrome">Cost-to-field per fighter / event</h4>
+    <div class="unit-grid">
+      <div class="unit"><div class="label">All-in (Phase 1)</div><div class="value">$24,500</div><div class="note">Robot amortization + 5-day prep + event-day crew + consumables + walkout production.</div></div>
+      <div class="unit"><div class="label">Total-loss reserve</div><div class="value">8%</div><div class="note">Probability per bout × ~$25K replacement. Engineerable through chassis design.</div></div>
+      <div class="unit"><div class="label">Phase 2 (sanctioning model)</div><div class="value">$22,200</div><div class="note">Independent teams (F1 model) cover their own robots from Phase 2.</div></div>
+      <div class="unit"><div class="label">Y3 EBITDA sensitivity</div><div class="value">−$3.5M → $23M</div><div class="note">Worst → best case. Anchor sponsor deal size is the most fragile lever.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── LAUNCH ─────────── -->
+<section id="launch">
+  <div class="container">
+    <div class="row-label mono">06 · Launch</div>
+    <h2>Six months from<br>signature to footage.</h2>
+    <div class="grid grid-2" style="margin-top:48px">
+      <div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-quarter">Q3 2026 · M+0–3</div><div class="tl-title">Foundation</div><div class="tl-body">Delaware C-Corp formed. Trademarks filed (US + Madrid). K&amp;K Insurance + Lloyd's specialty broker engaged. Production cofounder signed. Two Unitree G1 + spare ordered from Hangzhou.</div></div>
+          <div class="tl-item"><div class="tl-quarter">Q4 2026 · M+6</div><div class="tl-title">First private fight</div><div class="tl-body"><span class="blood">50 invited guests.</span> Vegas warehouse. No press, no phones, no posts. Two robots fight. One 90-second cinematic cut leaks 72 hours later. <em>That clip is the entire Phase 1 sales asset.</em></div></div>
+          <div class="tl-item"><div class="tl-quarter">Q1 2027 · M+9</div><div class="tl-title">First ticketed event</div><div class="tl-body">Phase 1 event #1. 200 cap. Vegas or Miami. Members-only. Sells out in &lt;60 seconds. Iron Order opens to first 100 paying.</div></div>
+          <div class="tl-item"><div class="tl-quarter">Q2 2027 · M+12</div><div class="tl-title">Brand co-sign</div><div class="tl-body">Phase 1 event #2 (alt city). First $1M Founding Partner signed (Hublot / Kraken / Lamborghini-tier). First controlled press feature.</div></div>
+          <div class="tl-item"><div class="tl-quarter">Q3–Q4 2027 · M+15–18</div><div class="tl-title">Series A position</div><div class="tl-body">Events #3 + #4. $5M trailing run-rate. 500+ Iron Order members. Doc producer optioned (Apple TV+ or A24 orbit). Series A deck v1.</div></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:1.4rem">Capital path</h3>
+        <div class="rounds">
+          <div class="round"><div class="stage">Now</div><div class="amt">$750K</div><div class="when">Pre-seed · SAFE · $8M cap</div><div class="desc">18-month runway. Buys Phase 0 + first 2 events.</div></div>
+          <div class="round"><div class="stage">2027 Q1</div><div class="amt">$7M</div><div class="when">Seed · $25–35M post</div><div class="desc">4–6 Phase 1 events. Robot stable to 10 fighters.</div></div>
+          <div class="round"><div class="stage">2028 Q2</div><div class="amt">$40M</div><div class="when">Series A · $150–250M post</div><div class="desc">Touring season. Pro CEO. R&amp;D pod. Platform deal.</div></div>
+          <div class="round"><div class="stage">2030</div><div class="amt">$80M+</div><div class="when">Series B · optional</div><div class="desc">Phase 3 stadium. Or self-funded from cash flow.</div></div>
+        </div>
+        <p class="chrome" style="margin-top:32px;font-size:.88rem">Each round tranched against milestone gates. Strategic acquirers active above $100M ARR (TKO/Endeavor 6–8× rev, Liberty 5–7× rev, sovereign 8–15× sovereign premium).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── THE ASK ─────────── -->
+<section id="ask">
+  <div class="container">
+    <div class="row-label mono">07 · The ask</div>
+    <h2>Three things,<br>ranked.</h2>
+    <div class="asks">
+      <div class="ask reveal">
+        <span class="num">01</span>
+        <h4>Honest gut check</h4>
+        <p>Does this read as inevitable or insane? Both are useful. Reply with the answer you'd give if you were the only person who got to be wrong.</p>
+      </div>
+      <div class="ask reveal">
+        <span class="num">02</span>
+        <h4>One intro</h4>
+        <p>Combat-sports operator (UFC/PFL/BattleBots alum), luxury or crypto-exchange CMO, or a creative director (Off-White / Acronym / A24 orbit). Pick whichever is closest.</p>
+      </div>
+      <div class="ask reveal">
+        <span class="num">03</span>
+        <h4>Are you in?</h4>
+        <p>Pre-seed has room for ~12 angels at $25–100K each. SAFE, $8M cap, MFN. If yes — deck and data room within 24 hours. If no — your reaction is the gift.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── CTA / FOOTER ─────────── -->
+<section class="cta">
+  <h2>No press.<br>No public deck.<br><span class="blood">No second chances.</span></h2>
+  <span class="editorial">If this is for you, you'll know in thirty seconds.</span>
+  <div class="cta-buttons">
+    <a class="btn btn-primary" href="mailto:vladislav@belkins.io?subject=AFC%20%E2%80%94%20I%27m%20in&body=Vlad%2C%0A%0AI%20read%20the%20deck.%20Send%20me%20the%20data%20room.%0A%0A">I'm in — send the deck</a>
+    <a class="btn" href="mailto:vladislav@belkins.io?subject=AFC%20%E2%80%94%20intro&body=Vlad%2C%0A%0AHere%27s%20the%20intro%20I%20can%20make%3A%0A%0A">I have an intro</a>
+    <a class="btn" href="mailto:vladislav@belkins.io?subject=AFC%20%E2%80%94%20gut%20check&body=Vlad%2C%0A%0AGut%20check%3A%0A%0A">Send my gut check</a>
+  </div>
+</section>
+
+<footer>
+  <p>AFC · Autonomous Fighting Championship · vladislav@belkins.io · Confidential</p>
+</footer>
+
+<div class="konami" id="konami">UNDERGROUND ACTIVATED</div>
+
+<script>
+/* ──────── Year selector / revenue toggle ──────── */
+const yearData = {
+  '1': {rev:'$5–8M', revD:'— Phase 1 events 1–2',  ebitda:'−$1M',     ebitdaD:'— Investment year',         mem:'300',     memD:'— Soft launch',                ev:'2',  evD:'— Skunkworks + first ticketed', highlight:false},
+  '3': {rev:'$36M',  revD:'— Phase 2 early',         ebitda:'$7.9M',    ebitdaD:'— 22% margin',              mem:'2,000',   memD:'— Iron Order at scale',        ev:'8',  evD:'— First PPV pilot',              highlight:false},
+  '5': {rev:'$150M', revD:'— Phase 3 inflection',    ebitda:'$56.5M',   ebitdaD:'— 38% margin',              mem:'5,000',   memD:'— Cap reached',                ev:'14', evD:'— First stadium event',         highlight:true}
+};
+function setYear(y){
+  const d = yearData[y];
+  ['rev','ebitda','mem','ev'].forEach(k=>{
+    const el = document.getElementById(k+'-val');
+    const elD = document.getElementById(k+'-delta');
+    el.textContent = d[k];
+    elD.textContent = d[k+'D'];
+    el.classList.toggle('highlight', d.highlight);
+  });
+}
+document.querySelectorAll('.year-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    setYear(btn.dataset.year);
+  });
+});
+
+/* ──────── Donut: use of pre-seed ──────── */
+const funds = [
+  {label:'Hardware + Phase 0 production', pct:40, amount:'$300K', color:'#7A0A0A'},
+  {label:'Legal + Insurance',             pct:25, amount:'$188K', color:'#C9A24E'},
+  {label:'Production + R&D',              pct:15, amount:'$113K', color:'#1A2EFF'},
+  {label:'Brand + Creative',              pct:10, amount:'$75K',  color:'#B8BCC0'},
+  {label:'Founding hires',                pct:10, amount:'$75K',  color:'#E8E2D5'},
+];
+const svg = document.getElementById('donut');
+const cx=100, cy=100, r=80, sw=22;
+let angleStart = -Math.PI/2;
+funds.forEach((f,i)=>{
+  const angle = (f.pct/100) * Math.PI*2;
+  const angleEnd = angleStart + angle;
+  const x1 = cx + r*Math.cos(angleStart);
+  const y1 = cy + r*Math.sin(angleStart);
+  const x2 = cx + r*Math.cos(angleEnd);
+  const y2 = cy + r*Math.sin(angleEnd);
+  const large = angle > Math.PI ? 1 : 0;
+  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',`M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`);
+  path.setAttribute('fill','none');
+  path.setAttribute('stroke',f.color);
+  path.setAttribute('stroke-width',sw);
+  path.setAttribute('class','donut-seg');
+  path.setAttribute('data-idx',i);
+  svg.appendChild(path);
+  angleStart = angleEnd;
+});
+const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+text.setAttribute('class','donut-center');
+text.setAttribute('x',100);text.setAttribute('y',102);
+text.textContent='$750K';
+svg.appendChild(text);
+const subtext = document.createElementNS('http://www.w3.org/2000/svg','text');
+subtext.setAttribute('class','donut-center-sub');
+subtext.setAttribute('x',100);subtext.setAttribute('y',118);
+subtext.textContent='PRE-SEED · 18 MO RUNWAY';
+svg.appendChild(subtext);
+
+const list = document.getElementById('funds-list');
+funds.forEach((f,i)=>{
+  const li = document.createElement('li');
+  li.dataset.idx = i;
+  li.innerHTML = `<span class="swatch" style="background:${f.color}"></span><span>${f.label}</span><span class="pct">${f.pct}%</span><span class="amount">${f.amount}</span>`;
+  list.appendChild(li);
+  li.addEventListener('mouseenter',()=>highlightFund(i));
+  li.addEventListener('mouseleave',()=>highlightFund(-1));
+});
+document.querySelectorAll('.donut-seg').forEach(p=>{
+  p.addEventListener('mouseenter',()=>highlightFund(parseInt(p.dataset.idx)));
+  p.addEventListener('mouseleave',()=>highlightFund(-1));
+});
+function highlightFund(idx){
+  document.querySelectorAll('.donut-seg').forEach(p=>{
+    p.style.opacity = (idx===-1 || parseInt(p.dataset.idx)===idx) ? 1 : .25;
+  });
+}
+
+/* ──────── Tier active state ──────── */
+document.querySelectorAll('.tier').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tier').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
+
+/* ──────── Reveal on scroll ──────── */
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ──────── Embers (mostly hero) ──────── */
+function spawnEmber(){
+  const e = document.createElement('div');
+  e.className='ember';
+  e.style.left = Math.random()*100 + 'vw';
+  e.style.animationDuration = (10 + Math.random()*8) + 's';
+  e.style.animationDelay = '0s';
+  document.querySelector('.hero').appendChild(e);
+  setTimeout(()=>e.remove(), 18000);
+}
+for(let i=0;i<14;i++) setTimeout(spawnEmber, i*900);
+setInterval(spawnEmber, 1400);
+
+/* ──────── Subtle nav darken on scroll ──────── */
+const nav = document.querySelector('nav');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY > 80) nav.style.background = 'rgba(10,10,11,.96)';
+  else nav.style.background = '';
+});
+
+/* ──────── Easter: type "iron" anywhere ──────── */
+let buf = '';
+window.addEventListener('keydown',e=>{
+  buf = (buf + e.key.toLowerCase()).slice(-4);
+  if(buf==='iron'){
+    const k = document.getElementById('konami');
+    k.style.display='flex';
+    setTimeout(()=>k.style.display='none', 1400);
+    buf='';
+  }
+});
+</script>
+
+</body>
+</html>
