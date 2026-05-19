@@ -80,7 +80,12 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
   </section>
 
   <section class="container-wide pt-16 pb-24">
-    <div class="grid gap-6 md:grid-cols-3">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <a href={`${base}/html-first`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Method</div>
+        <h3 class="m-0 font-display text-2xl">HTML-ization</h3>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Stop sending dead files. Every report, pitch, and audit ships as a live interactive artifact — two real ones embedded and clickable.</p>
+      </a>
       <a href={`${base}/resources`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Resources</div>
         <h3 class="m-0 font-display text-2xl">Vault library</h3>
@@ -94,7 +99,7 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
       <a href={`${base}/glossary`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Vocabulary</div>
         <h3 class="m-0 font-display text-2xl">Glossary</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Thirty terms you'll need. Linked inline throughout the book. Hover any underlined term to read it.</p>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Fifty-plus terms you'll need, grouped A–Z. Linked inline throughout the book. Hover any underlined term to read it.</p>
       </a>
     </div>
   </section>
