@@ -1,10 +1,37 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-type Item = { type: 'chapter' | 'page' | 'glossary'; title: string; subtitle?: string; href: string; keywords?: string };
+type Item = { type: 'chapter' | 'page' | 'section' | 'glossary' | 'note'; title: string; subtitle?: string; href: string; keywords?: string };
 
 // These are populated at module load — small enough to inline.
 import { CHAPTERS } from '@/lib/chapters';
 import { glossary } from '@/lib/glossary';
+import { RESEARCH_NOTES } from '@/lib/research-notes';
+
+const slugify = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+// Deep-link section anchors so Cmd-K resolves "permissions", "hooks",
+// "model routing", etc. straight to the right block on long reference pages.
+// Mirrors the section titles in cheat-sheet.astro / resources.astro toc.
+const CHEAT_SHEET_SECTIONS = [
+  'Daily slash commands', 'CLI flags', 'Settings.json keys', 'File paths',
+  'Environment vars', 'Keyboard shortcuts', 'Hook events (90% rule)', 'Cron syntax',
+  'Permission rule syntax', 'Subagent frontmatter', 'SKILL.md frontmatter',
+  '.mcp.json shape', 'Hook JSON shape', 'Headless / CI one-liners',
+  'Plan → Auto → /goal ladder', 'Model routing + cost',
+];
+const RESOURCES_SECTIONS: { id: string; label: string }[] = [
+  { id: 'working-memory', label: 'Working memory (CLAUDE.md)' },
+  { id: 'connectors-mcp', label: 'Connectors / MCP' },
+  { id: 'permissions', label: 'Permissions' },
+  { id: 'hooks', label: 'Hooks' },
+  { id: 'subagents', label: 'Subagents (custom agent .md)' },
+  { id: 'sandboxes', label: 'Sandboxes (Docker / devcontainer)' },
+  { id: 'skill-md-templates', label: 'SKILL.md templates' },
+  { id: 'five-reusable-prompts', label: 'Five reusable prompts' },
+  { id: 'ten-more-operator-prompts', label: 'Eighteen more operator prompts' },
+  { id: 'github-action', label: 'GitHub Action' },
+];
 
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -37,8 +64,8 @@ export default function CommandPalette() {
       { type: 'page', title: "Vlad's CC setup",        href: `${base}/showcase`,        subtitle: '62 skills + 32 agents + 12 plugins' },
       { type: 'page', title: "Vlad's Cowork setup",    href: `${base}/cowork-setup`,    subtitle: 'Connectors + scheduled tasks (sanitized)' },
       { type: 'page', title: 'Sections',              href: `${base}/sections`,        subtitle: 'Chapters by theme' },
-      { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: '30+ terms you need' },
-      { type: 'page', title: 'Resources',             href: `${base}/resources`,       subtitle: '15 prompts + templates + hooks' },
+      { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: `${Object.keys(glossary).length} terms, A–Z` },
+      { type: 'page', title: 'Resources',             href: `${base}/resources`,       subtitle: 'Copy-paste templates, hooks, prompts' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up' },
@@ -49,11 +76,34 @@ export default function CommandPalette() {
     const glossaryItems: Item[] = Object.keys(glossary).map((term) => ({
       type: 'glossary',
       title: term,
-      subtitle: glossary[term].definition.slice(0, 80) + '…',
+      subtitle: glossary[term].definition.replace(/<[^>]+>/g, '').slice(0, 80) + '…',
       href: `${base}/glossary#${encodeURIComponent(term)}`,
       keywords: `${term} ${glossary[term].definition}`.toLowerCase(),
     }));
-    return [...pages, ...chapterItems, ...glossaryItems];
+    const sectionItems: Item[] = [
+      ...CHEAT_SHEET_SECTIONS.map((h) => ({
+        type: 'section' as const,
+        title: h,
+        subtitle: 'Cheat sheet',
+        href: `${base}/cheat-sheet#${slugify(h)}`,
+        keywords: `cheat sheet ${h}`.toLowerCase(),
+      })),
+      ...RESOURCES_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'Resources',
+        href: `${base}/resources#${s.id}`,
+        keywords: `resources ${s.label} ${s.id}`.toLowerCase(),
+      })),
+    ];
+    const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({
+      type: 'note',
+      title: n.title,
+      subtitle: n.tagline,
+      href: `${base}/research-notes`,
+      keywords: `${n.title} ${n.tagline} ${(n.implications || []).join(' ')}`.toLowerCase(),
+    }));
+    return [...pages, ...chapterItems, ...sectionItems, ...glossaryItems, ...noteItems];
   }, [base]);
 
   const filtered = useMemo(() => {
@@ -112,7 +162,7 @@ export default function CommandPalette() {
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search chapters, pages, glossary…"
+            placeholder="Search chapters, pages, sections, glossary, notes…"
             className="flex-1 bg-transparent outline-none text-base"
             style={{ color: 'rgb(var(--fg))' }}
           />

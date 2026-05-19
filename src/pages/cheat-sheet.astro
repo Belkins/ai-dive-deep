@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
 const sections = [
   {
     h: 'Daily slash commands',
@@ -106,7 +107,125 @@ const sections = [
       ['crontab.guru', 'Translate human ↔ cron'],
     ],
   },
+  {
+    h: 'Permission rule syntax',
+    items: [
+      ['Bash(npm test*)', 'Glob inside parens auto-approves'],
+      ['Edit(src/**/*)', 'Recursive path glob'],
+      ['Edit(src)', 'Matches one literal file "src"'],
+      ['WebFetch', 'Bare name = every invocation'],
+      ['Edit(.env*)', 'Common deny: secrets'],
+      ['Bash(rm -rf*)', 'Common deny: destructive'],
+      ['bash(...)', 'Wrong — names case-sensitive'],
+      ['deny → ask → allow', 'Eval order; deny always wins'],
+      ['~/.ssh/**', 'Deny follows symlinks both ways'],
+    ],
+  },
+  {
+    h: 'Subagent frontmatter',
+    items: [
+      ['name', 'Subagent identifier'],
+      ['description', 'What orchestrator reads to delegate'],
+      ['tools', 'Allow-list, e.g. Read, Grep, Glob'],
+      ['(omit Edit/Write)', 'Makes it physically read-only'],
+      ['<body>', 'The system prompt for the job'],
+      ['~/.claude/agents/', 'User-level, every project'],
+      ['.claude/agents/', 'Repo-level, commit it'],
+      ['general-purpose', 'Built-in, all tools'],
+      ['Explore', 'Built-in, read-only repo search'],
+      ['Plan', 'Built-in, returns plan only'],
+    ],
+  },
+  {
+    h: 'SKILL.md frontmatter',
+    items: [
+      ['name', 'Skill identifier'],
+      ['description', 'Trigger — literal phrases, exclusions'],
+      ['allowed-tools', 'Optional tool allow-list'],
+      ['SKILL.md', 'Only required file'],
+      ['scripts/', 'Deterministic code, optional'],
+      ['templates/', 'Output shapes to match'],
+      ['reference/', 'Long detail pulled on demand'],
+      ['Do NOT use for', 'Negative space stops misfires'],
+      ['<40 line body', 'Past that, model skips steps'],
+    ],
+  },
+  {
+    h: '.mcp.json shape',
+    items: [
+      ['mcpServers', 'Top-level object of servers'],
+      ['command', '"npx" | "python" launcher'],
+      ['args', 'Array, e.g. ["-y", "pkg", path]'],
+      ['env', 'Per-server vars (never raw keys)'],
+      ['stdio', 'Local subprocess, zero network'],
+      ['streamable-http', 'Hosted SaaS transport'],
+      ['SSE', 'Legacy — being phased out'],
+      ['/mcp', 'List + confirm connected'],
+      ['<repo>/.mcp.json', 'Commit it, team shares servers'],
+    ],
+  },
+  {
+    h: 'Hook JSON shape',
+    items: [
+      ['matcher', 'Regex vs tool name, "Edit|Write"'],
+      ['type: command', 'Hook runs a shell command'],
+      ['command', 'The shell line to execute'],
+      ['$CLAUDE_FILE_PATH', 'File the tool touched'],
+      ['$CLAUDE_PROJECT_DIR', 'Repo root'],
+      ['$CLAUDE_TOOL_INPUT', 'Raw tool input for grep'],
+      ['exit 0', 'Tool call proceeds'],
+      ['exit non-zero', 'Tool call blocked'],
+      ['stderr', 'Surfaces to model as error'],
+      ['stdout', 'Surfaces to model as context'],
+    ],
+  },
+  {
+    h: 'Headless / CI one-liners',
+    items: [
+      ['-p / --print', 'Headless, stdout, exit code'],
+      ['--output-format json', 'Single result object'],
+      ['--output-format stream-json', 'NDJSON live events'],
+      ['total_cost_usd', 'JSON field — spend per run'],
+      ['--allowed-tools "..."', 'Launch-time allow-list'],
+      ['--disallowed-tools "..."', 'Launch-time block-list'],
+      ['--resume <id>', 'Reattach prior session'],
+      ['timeout 300 claude -p', 'Hard cap on a loop'],
+      ['ANTHROPIC_API_KEY', 'Server/CI auth (not OAuth)'],
+    ],
+  },
+  {
+    h: 'Plan → Auto → /goal ladder',
+    items: [
+      ['Plan mode', 'Removes per-step surprise'],
+      ['Auto mode', 'Removes per-tool prompts'],
+      ['/goal <cond>', 'Removes per-turn prompts'],
+      ['/goal clear', 'Aliases: stop off reset cancel'],
+      ['or stop after N', 'Always cap blast radius'],
+      ['/loop 5m <prompt>', 'Interval-driven polling'],
+      ['Stop hook', 'Script-driven, settings-scoped'],
+      ['Haiku 4.5', 'Default /goal evaluator'],
+      ['one goal/session', 'New goal replaces old'],
+    ],
+  },
+  {
+    h: 'Model routing + cost',
+    items: [
+      ['Haiku', 'Triage/classify — ~1/15 Sonnet'],
+      ['Sonnet', 'Default working model'],
+      ['Opus', 'Hard reasoning, agent loops'],
+      ['output tokens', '~5x input price'],
+      ['cache write', '1.25x input rate, one-time'],
+      ['cache read', '~0.1x input rate (10x cheaper)'],
+      ['5-min eviction', 'Ephemeral cache cold window'],
+      ['append-only', 'New context at bottom, not top'],
+      ['Batch API', '50% off, returns within 24h'],
+    ],
+  },
 ];
+
+const slug = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const navItems = sections.map((s) => ({ id: slug(s.h), label: s.h }));
 ---
 <BaseLayout title="Cheat sheet" description="Slash commands, settings, env vars, file paths, keyboard shortcuts. Tape it next to your monitor.">
   <section class="container-wide pt-12 pb-6 print:pt-2 print:pb-2">
@@ -121,22 +240,41 @@ const sections = [
   </section>
 
   <section class="container-wide pb-24 print:pb-0">
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 print:grid-cols-3 print:gap-2">
-      {sections.map((s) => (
-        <div class="card print:p-3" style="break-inside: avoid;">
-          <h3 class="m-0 font-display text-lg mb-2">{s.h}</h3>
-          <table class="w-full text-xs">
-            <tbody>
-              {s.items.map(([k, v]) => (
-                <tr class="border-b" style="border-color: rgb(var(--line))">
-                  <td class="py-1 pr-2 font-mono align-top" style="color: rgb(var(--accent))">{k}</td>
-                  <td class="py-1 align-top" style="color: rgb(var(--fg) / 0.85)">{v}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
+    <div class="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10 print:block">
+      <div class="no-print">
+        <SectionNav items={navItems} title="Sections" />
+      </div>
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 print:grid-cols-3 print:gap-2">
+        {sections.map((s) => (
+          <div id={slug(s.h)} data-section-target class="card print:p-3 scroll-mt-24" style="break-inside: avoid;">
+            <h3 class="m-0 font-display text-lg mb-2">{s.h}</h3>
+            <table class="w-full text-xs table-fixed">
+              <colgroup>
+                <col style="width: 44%" />
+                <col style="width: 56%" />
+              </colgroup>
+              <tbody>
+                {s.items.map(([k, v]) => (
+                  <tr class="border-b align-top" style="border-color: rgb(var(--line))">
+                    <td class="py-1.5 pr-3 font-mono align-top" style="color: rgb(var(--accent)); overflow-wrap: anywhere; word-break: break-word">{k}</td>
+                    <td class="py-1.5 align-top" style="color: rgb(var(--fg) / 0.85)">
+                      {v.includes(' | ') ? (
+                        <span class="flex flex-wrap gap-1">
+                          {v.split(' | ').map((p) => (
+                            <code class="font-mono text-[0.7rem] px-1.5 py-0.5 rounded whitespace-nowrap" style="background: rgb(var(--line) / 0.5); color: rgb(var(--fg) / 0.9)">{p}</code>
+                          ))}
+                        </span>
+                      ) : (
+                        <span>{v}</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 

@@ -1165,3 +1165,79 @@ jobs:
             --data "{\\"text\\": \\"$(cat digest.md)\\"}" \\
             \${{ secrets.SLACK_WEBHOOK }}
 `;
+
+// Ch 15 — sandbox cookbook #1: the air-gapped Docker cage.
+export const DOCKERFILE_CLAUDE_SANDBOX = `# Dockerfile
+FROM node:22-bookworm-slim
+RUN apt-get update && apt-get install -y --no-install-recommends \\
+    git ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN npm install -g @anthropic-ai/claude-code@latest
+WORKDIR /workspace
+ENTRYPOINT ["claude"]
+
+# Build, then run with NO egress and only your workdir mounted:
+#   docker build -t claude-yolo .
+#   docker run --rm -it \\
+#     --network none \\
+#     -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \\
+#     -v "$PWD":/workspace \\
+#     claude-yolo --dangerously-skip-permissions
+#
+# --network none blocks api.anthropic.com too — flip to --network bridge
+# + an egress firewall if you need network. Never mount $HOME or ~/.ssh.
+# The whole point: the blast radius is /workspace.
+`;
+
+// Ch 15 — sandbox cookbook #2: the official Anthropic devcontainer feature.
+export const DEVCONTAINER_JSON = `{
+  "name": "claude-yolo",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  },
+  "remoteEnv": {
+    "ANTHROPIC_API_KEY": "\${localEnv:ANTHROPIC_API_KEY}"
+  },
+  "postCreateCommand": "claude --version",
+  "containerUser": "vscode"
+}
+`;
+
+// Ch 16 — a read-only custom subagent (tools allow-list strips Edit/Write/Bash).
+export const AGENT_MD_CODE_REVIEWER = `---
+name: code-reviewer
+description: Reviews diffs for security, performance, style. Use when user says
+  "review this PR", "check this diff", or "is this code safe?". Read-only.
+tools: Read, Grep, Glob
+---
+
+You are a senior code reviewer. Given a diff, return:
+1. Three highest-impact issues, ranked by severity.
+2. Two style nits, with line numbers.
+3. One suggestion the original author would not have considered.
+
+Do not edit. Do not run shell. Read-only review only.
+`;
+
+// Ch 16 — SessionStart hook: cat a priorities file so it prepends to context.
+export const HOOK_SESSION_START_CONTEXT = `// ~/.claude/settings.json (or <repo>/.claude/settings.json)
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \${CLAUDE_PROJECT_DIR}/.claude/sprint-priorities.md 2>/dev/null"
+          }
+        ]
+      }
+    ]
+  }
+}
+// Whatever the command prints to stdout is prepended to the model's
+// context for the session. Great for "current sprint priorities" or
+// "things this codebase has been burned by." Keep the file short —
+// it is billed on every turn of the session.
+`;

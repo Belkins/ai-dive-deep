@@ -14,7 +14,8 @@ export const glossary: Record<string, GlossaryEntry> = {
   'CLAUDE.md': {
     term: 'CLAUDE.md',
     definition:
-      'A markdown file your project loads into every session. Working memory. Keep it under 100 lines.',
+      'A markdown file loaded on every turn of every session. Stacks: global <code>~/.claude/CLAUDE.md</code> + repo-local + subdirectory, nearest wins. Under 100 lines — every line is billed in perpetuity and edits void the prompt cache.',
+    related: ['Prompt caching', 'Context window'],
   },
   'Claude Code': {
     term: 'Claude Code',
@@ -62,12 +63,14 @@ export const glossary: Record<string, GlossaryEntry> = {
   'Headless mode': {
     term: 'Headless mode',
     definition:
-      'Running an AI tool without an interactive UI. `claude --print "..."` is the CC version. Use in CI and cron.',
+      'Running Claude Code with no interactive UI via <code>claude --print</code> (<code>-p</code>). Prints to stdout, exits — pipeable, cron-able, drops straight into a GitHub Action.',
+    related: ['Night shift'],
   },
   Hook: {
     term: 'Hook',
     definition:
-      'A shell script Claude Code runs before/after tool calls. PreToolUse, PostToolUse, Stop. Format-on-save, alert-on-finish.',
+      'A command, HTTP endpoint, or short LLM prompt Claude Code runs automatically at lifecycle points (PreToolUse, PostToolUse, Stop, SessionStart, …). Lives in <code>settings.json</code>, not the chat — the model can\'t skip it.',
+    related: ['PreToolUse', 'PostToolUse', 'Stop hook'],
   },
   Inference: {
     term: 'Inference',
@@ -124,7 +127,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   Subagent: {
     term: 'Subagent',
     definition:
-      'A specialized instance you spawn from your main session. Own context, own tools, returns one summary.',
+      'A child instance spawned from your main session: own context window, own tool allow-list (restrict it to bound blast radius), own system prompt, returns one summary.',
     related: ['Agent', 'Swarm'],
   },
   Swarm: {
@@ -165,6 +168,126 @@ export const glossary: Record<string, GlossaryEntry> = {
     term: 'Worktree',
     definition:
       "Git's built-in way to check out multiple branches of the same repo into separate folders. The single most useful Unix trick when running parallel CC sessions.",
+  },
+  PreToolUse: {
+    term: 'PreToolUse',
+    definition:
+      'A <code>Hook</code> event that fires before any tool call. Validate, block, or audit-log; a non-zero exit blocks the call and the stderr goes back into the model\'s context.',
+    related: ['Hook', 'PostToolUse', 'Permission mode'],
+  },
+  PostToolUse: {
+    term: 'PostToolUse',
+    definition:
+      'A <code>Hook</code> event that fires after a tool call succeeds. The format-on-save / lint / test / notify slot.',
+    related: ['Hook', 'PreToolUse'],
+  },
+  'Stop hook': {
+    term: 'Stop hook',
+    definition:
+      'A <code>Hook</code> that fires when the agent\'s turn ends. The custom-logic autonomous-loop primitive — the next turn runs if your script returns non-zero, stops on 0. Determinism beats vibes.',
+    related: ['Hook', '/goal', '/loop'],
+  },
+  '/goal': {
+    term: '/goal',
+    definition:
+      '<code>/goal &lt;condition&gt;</code> runs turns until a small evaluator reading the transcript says the condition holds. Removes per-turn approval the way Auto mode removes per-tool. Always add an "or stop after N turns" clause.',
+    related: ['Stop hook', '/loop', 'Auto mode', 'Evaluator', 'Eval'],
+  },
+  '/loop': {
+    term: '/loop',
+    definition:
+      '<code>/loop [interval] [prompt]</code> — interval-driven, no evaluator. Run this prompt every N minutes (polling). The slash-command replacement for rigging cron.',
+    related: ['/goal', 'Cron', 'Stop hook'],
+  },
+  Evaluator: {
+    term: 'Evaluator',
+    definition:
+      'The small fast model (Haiku by default) that judges a <code>/goal</code> condition from the transcript after each turn. It has no tools — if your output can\'t prove "done," it loops forever.',
+    related: ['/goal', 'Eval'],
+  },
+  'Plan mode': {
+    term: 'Plan mode',
+    definition:
+      'The agent describes what it WOULD do — every file, every line — without writing a byte. Approve the plan as one unit. The safety stop between Interactive and Auto that nobody uses.',
+    related: ['Auto mode', 'Interactive mode'],
+  },
+  'Auto mode': {
+    term: 'Auto mode',
+    definition:
+      'No prompts, no approvals — <code>--dangerously-skip-permissions</code> (nuclear), an <code>--allowed-tools</code> allow-list (what pros use), or <code>--auto</code> (a classifier). The flag isn\'t the problem; the environment is.',
+    related: ['Plan mode', 'Interactive mode', 'Permission mode', 'Sandbox'],
+  },
+  'Interactive mode': {
+    term: 'Interactive mode',
+    definition:
+      'The default. Every Edit/Write/Bash/WebFetch shows a preview and asks "approve?" Slow on purpose — the slowness is the safety margin.',
+    related: ['Plan mode', 'Auto mode'],
+  },
+  'Permission mode': {
+    term: 'Permission mode',
+    definition:
+      'The settings layer evaluated <code>deny → ask → allow</code> across managed/user/project files. Deny wins and is sticky upward. Tool names are case-sensitive.',
+    related: ['Auto mode', 'Sandbox', 'Hook'],
+  },
+  '.mcp.json': {
+    term: '.mcp.json',
+    definition:
+      'The repo-root file declaring <code>MCP</code> servers, committed so the whole team (and both Codex + CC) gets the same connector set.',
+    related: ['MCP', 'Connector', 'MCP server'],
+  },
+  stdio: {
+    term: 'stdio',
+    definition:
+      'An <code>MCP</code> transport where the server runs as a local subprocess piping JSON-RPC over stdin/stdout. Zero network exposure — the filesystem/local-DB default.',
+    related: ['MCP', '.mcp.json'],
+  },
+  'MCP server': {
+    term: 'MCP server',
+    definition:
+      'The tool side of <code>MCP</code> — the thing exposing Slack messages or Stripe charges. Same object a consumer UI labels a "connector," seen from the build side.',
+    related: ['MCP', 'Connector', '.mcp.json'],
+  },
+  'Prompt caching': {
+    term: 'Prompt caching',
+    definition:
+      'Not a feature you turn on — a contract about what changes between calls. A cache read costs ~1/10th of full input; one CLAUDE.md edit voids the prefix and the bill spikes downstream.',
+    related: ['Cache breakpoint', 'CLAUDE.md', 'Token'],
+  },
+  'Cache breakpoint': {
+    term: 'Cache breakpoint',
+    definition:
+      'The <code>cache_control</code> point in a prompt marking the cached prefix. Put volatile content (new CLAUDE.md sections) <em>behind</em> it or you pay the write premium for a discount you never collect.',
+    related: ['Prompt caching', 'Token'],
+  },
+  'Batch API': {
+    term: 'Batch API',
+    definition:
+      'Half-price async inference if you can wait (up to 24h). The cost lever for non-interactive bulk work.',
+    related: ['Token', 'Inference'],
+  },
+  Fork: {
+    term: 'Fork',
+    definition:
+      'Resuming an old session and submitting a new prompt grows a new branch — the original timeline survives on disk. You can\'t overwrite; every new prompt on an old session is a new branch.',
+    related: ['Instance', 'Context window'],
+  },
+  'Persona agent': {
+    term: 'Persona agent',
+    definition:
+      'An agent that writes/posts in one specific human\'s voice behind an approval gate. Default is always <em>wait</em>, never time-based auto-post, with the Four NEVERs (deals, hires, firings, condolences) off-limits.',
+    related: ['Skill', 'Agent', 'Hook'],
+  },
+  LSP: {
+    term: 'LSP',
+    definition:
+      'A Language Server Protocol server wired into CC for symbol-level navigation ("go to definition") instead of string <code>grep</code>. Not automatic — install the code-intelligence plugin + a language-server binary.',
+    related: ['Subagent', 'Plugin'],
+  },
+  'Night shift': {
+    term: 'Night shift',
+    definition:
+      'A monitoring agent (typically Codex) running 24/7 against Sentry, issues, and cron failures — opens a PR, posts a summary, goes back to watching. The day driver (Claude Code) reviews and merges.',
+    related: ['Agent', 'Headless mode'],
   },
 };
 

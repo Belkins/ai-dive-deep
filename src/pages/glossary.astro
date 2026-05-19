@@ -2,32 +2,65 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { glossary } from '@/lib/glossary';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
-const entries = Object.values(glossary).sort((a, b) => a.term.localeCompare(b.term));
+import SectionNav from '@/components/SectionNav.astro';
+const entries = Object.values(glossary).sort((a, b) =>
+  a.term.replace(/[^a-zA-Z0-9]/g, '').localeCompare(b.term.replace(/[^a-zA-Z0-9]/g, ''))
+);
+const letterOf = (t: string) => {
+  const c = t.replace(/[^a-zA-Z0-9]/g, '').charAt(0).toUpperCase();
+  return /[0-9]/.test(c) ? '#' : c;
+};
+const groups: { letter: string; items: typeof entries }[] = [];
+for (const e of entries) {
+  const L = letterOf(e.term);
+  const last = groups[groups.length - 1];
+  if (last && last.letter === L) last.items.push(e);
+  else groups.push({ letter: L, items: [e] });
+}
+const navItems = groups.map((g) => ({ id: `letter-${g.letter === '#' ? 'num' : g.letter}`, label: g.letter }));
 ---
 <BaseLayout title="Glossary" description="Vocabulary you'll need across the book — agent, MCP, skill, swarm, vault, and more.">
-  <section class="container-prose pt-16 pb-8">
+  <section class="container-wide pt-16 pb-8">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Glossary</div>
     <h1>Vocabulary you'll need.</h1>
     <p class="mt-3 text-lg" style="color: rgb(var(--muted))">{entries.length} terms. Linked from inside the chapters. Search Cmd-K from anywhere.</p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Jump by letter — sidebar tracks where you are.</p>
   </section>
 
-  <section class="container-prose pb-24">
-    <dl class="space-y-6">
-      {entries.map((e) => (
-        <div id={e.term} class="rounded-lg p-5 scroll-mt-20" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
-          <dt class="font-display text-2xl">{e.term}</dt>
-          <dd class="mt-2 leading-relaxed" set:html={e.definition} />
-          {e.related && e.related.length > 0 && (
-            <div class="mt-3 text-sm flex items-center gap-2 flex-wrap">
-              <span class="text-xs uppercase tracking-wider" style="color: rgb(var(--muted))">Related</span>
-              {e.related.map((r) => (
-                <a href={`#${r}`} class="pill no-underline">{r}</a>
-              ))}
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[200px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="A–Z" />
+      <div class="max-w-3xl">
+        <dl class="space-y-10">
+          {groups.map((g) => (
+            <div>
+              <h2
+                id={`letter-${g.letter === '#' ? 'num' : g.letter}`}
+                data-section-target
+                class="font-display text-3xl mb-4 pb-1 border-b"
+                style="border-color: rgb(var(--line)); color: rgb(var(--accent))"
+              >{g.letter}</h2>
+              <div class="space-y-6">
+                {g.items.map((e) => (
+                  <div id={e.term} class="rounded-lg p-5 scroll-mt-24" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+                    <dt class="font-display text-2xl">{e.term}</dt>
+                    <dd class="mt-2 leading-relaxed" set:html={e.definition} />
+                    {e.related && e.related.length > 0 && (
+                      <div class="mt-3 text-sm flex items-center gap-2 flex-wrap">
+                        <span class="text-xs uppercase tracking-wider" style="color: rgb(var(--muted))">Related</span>
+                        {e.related.map((r) => (
+                          <a href={`#${r}`} class="pill no-underline">{r}</a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
-        </div>
-      ))}
-    </dl>
+          ))}
+        </dl>
+      </div>
+    </div>
   </section>
   <CommandPaletteMount />
 </BaseLayout>
