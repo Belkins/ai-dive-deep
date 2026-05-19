@@ -10,6 +10,24 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 6',
+    date: '2026-05-19',
+    tagline: 'The method, embedded. Click the artifacts.',
+    shipped: [
+      'New /html-first page — the htmlization thesis (every deliverable ships as a live interactive artifact, not a dead file) with two REAL artifacts embedded and clickable',
+      'AFC case: the dinner-table idea whose investment deck + robot-stable annex got spun up as interactive HTML before the next meeting — Vlad\'s own venture, embedded as-is',
+      'Folderly case: a real ~90-domain / ~5K-mailbox external deliverability audit, swarm-produced on the Folderly methodology — fully de-identified (client, all 90 domains, SPF/infra fingerprints, WHOIS name) and embedded as a sanitized sample',
+      'New ArtifactEmbed.astro — sandboxed, lazy, render-on-click iframe modal (no src until opened; referrerpolicy=no-referrer)',
+      'Ch 19 callout + glossary "Htmlization" + Cmd-K (page + 4 section anchors) wired',
+    ],
+    receipts: [
+      { label: 'Live artifacts embedded', value: '3 (AFC ×2, audit ×1)' },
+      { label: 'Folderly identifiers redacted', value: '90 domains + name + 2 SPF + WHOIS → 0 residual' },
+      { label: 'New page / component', value: '/html-first + ArtifactEmbed' },
+      { label: 'External calls in embeds', value: '0 (fully self-contained)' },
+    ],
+  },
+  {
     edition: 'Edition 5',
     date: '2026-05-19',
     tagline: 'The bench moved. The reports stopped being files.',

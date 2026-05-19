@@ -1,0 +1,123 @@
+---
+// A case-study card that renders a real interactive HTML artifact on click,
+// in a sandboxed lazy iframe modal (no src until opened). "Open full" = new tab.
+interface Props {
+  title: string;
+  tag: string;
+  src: string;        // path under /public, e.g. /artifacts/afc-pitch.html
+  blurb: string;
+  meta?: string;      // small line under the title in the card
+}
+const { title, tag, src, blurb, meta } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const href = `${base}${src}`;
+const id = 'art-' + src.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
+---
+<div class="rounded-lg p-5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+  <div class="flex items-start justify-between gap-3">
+    <div class="min-w-0">
+      <div class="text-[0.7rem] uppercase tracking-[0.18em] mb-1" style="color: rgb(var(--accent))">{tag}</div>
+      <h3 class="font-display text-xl m-0">{title}</h3>
+      {meta && <div class="text-xs mt-1 font-mono" style="color: rgb(var(--muted))">{meta}</div>}
+    </div>
+  </div>
+  <p class="text-sm mt-3 leading-relaxed" style="color: rgb(var(--fg) / 0.82)">{blurb}</p>
+  <div class="mt-4 flex flex-wrap gap-2">
+    <button
+      type="button"
+      class="btn-ghost text-sm"
+      data-artifact-open
+      data-src={href}
+      data-target={id}
+      data-arttitle={title}
+    >▶ Preview here</button>
+    <a href={href} target="_blank" rel="noopener" class="btn-ghost text-sm no-underline">Open full ↗</a>
+  </div>
+</div>
+
+<!-- Modal (one per card; iframe src is set only on open) -->
+<div id={id} class="artifact-modal" hidden aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="artifact-modal-backdrop" data-artifact-close data-target={id}></div>
+  <div class="artifact-modal-panel">
+    <div class="artifact-modal-bar">
+      <span class="artifact-modal-title">{title}</span>
+      <span class="artifact-modal-actions">
+        <a href={href} target="_blank" rel="noopener" class="artifact-modal-link no-underline">Open full ↗</a>
+        <button type="button" class="artifact-modal-x" data-artifact-close data-target={id} aria-label="Close">✕</button>
+      </span>
+    </div>
+    <iframe
+      class="artifact-modal-frame"
+      title={title}
+      data-src={href}
+      sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+      referrerpolicy="no-referrer"
+      loading="lazy"
+    ></iframe>
+  </div>
+</div>
+
+<style>
+  .artifact-modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  .artifact-modal[hidden] { display: none; }
+  .artifact-modal-backdrop { position: absolute; inset: 0; background: rgb(0 0 0 / 0.78); }
+  .artifact-modal-panel {
+    position: relative; width: min(1200px, 95vw); height: min(88vh, 1000px);
+    background: rgb(var(--bg)); border: 1px solid rgb(var(--line));
+    border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 24px 80px rgb(0 0 0 / 0.5);
+  }
+  .artifact-modal-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 0.6rem 0.9rem; border-bottom: 1px solid rgb(var(--line));
+    background: rgb(var(--paper)); flex: 0 0 auto;
+  }
+  .artifact-modal-title { font-weight: 600; font-size: 0.9rem; color: rgb(var(--fg)); }
+  .artifact-modal-actions { display: flex; align-items: center; gap: 0.75rem; }
+  .artifact-modal-link { font-size: 0.8rem; color: rgb(var(--accent)); }
+  .artifact-modal-x {
+    appearance: none; background: transparent; border: 0; cursor: pointer;
+    color: rgb(var(--muted)); font-size: 1rem; line-height: 1; padding: 0.25rem 0.4rem;
+  }
+  .artifact-modal-x:hover { color: rgb(var(--fg)); }
+  .artifact-modal-frame { flex: 1 1 auto; width: 100%; border: 0; background: #fff; }
+</style>
+
+<script>
+  if (!(window as any).__artifactModalWired) {
+    (window as any).__artifactModalWired = true;
+    const open = (el: HTMLElement) => {
+      const id = el.getAttribute('data-target');
+      const src = el.getAttribute('data-src');
+      if (!id) return;
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      const frame = modal.querySelector('iframe') as HTMLIFrameElement | null;
+      if (frame && src && !frame.getAttribute('src')) frame.setAttribute('src', src);
+      modal.hidden = false;
+      modal.setAttribute('aria-hidden', 'false');
+      document.documentElement.style.overflow = 'hidden';
+    };
+    const close = (id: string | null) => {
+      if (!id) return;
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      document.documentElement.style.overflow = '';
+    };
+    document.addEventListener('click', (e) => {
+      const t = (e.target as HTMLElement)?.closest('[data-artifact-open],[data-artifact-close]') as HTMLElement | null;
+      if (!t) return;
+      if (t.hasAttribute('data-artifact-open')) { e.preventDefault(); open(t); }
+      else { e.preventDefault(); close(t.getAttribute('data-target')); }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll<HTMLElement>('.artifact-modal:not([hidden])').forEach((m) => {
+        m.hidden = true; m.setAttribute('aria-hidden', 'true');
+      });
+      document.documentElement.style.overflow = '';
+    });
+  }
+</script>

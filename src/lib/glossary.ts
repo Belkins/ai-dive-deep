@@ -289,6 +289,12 @@ export const glossary: Record<string, GlossaryEntry> = {
       'A monitoring agent (typically Codex) running 24/7 against Sentry, issues, and cron failures — opens a PR, posts a summary, goes back to watching. The day driver (Claude Code) reviews and merges.',
     related: ['Agent', 'Headless mode'],
   },
+  Htmlization: {
+    term: 'Htmlization',
+    definition:
+      'Shipping every deliverable — report, pitch, audit, deck, model — as a live interactive HTML artifact on a deployed link instead of a dead PDF/slide attachment. It gets opened, clicked into, forwarded; it stays current because it\'s re-rendered, not re-attached. See the <a href="/html-first">HTML-first method</a>.',
+    related: ['Persona agent', 'Swarm'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);
