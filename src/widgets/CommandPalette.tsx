@@ -72,7 +72,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Sections',              href: `${base}/sections`,        subtitle: 'Chapters by theme' },
       { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: `${Object.keys(glossary).length} terms, A–Z` },
       { type: 'page', title: 'Resources',             href: `${base}/resources`,       subtitle: 'Copy-paste templates, hooks, prompts' },
-      { type: 'page', title: 'HTML-first method',     href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies' },
+      { type: 'page', title: 'HTML-ization',          href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up' },
@@ -105,9 +105,9 @@ export default function CommandPalette() {
       ...HTMLFIRST_SECTIONS.map((s) => ({
         type: 'section' as const,
         title: s.label,
-        subtitle: 'HTML-first',
+        subtitle: 'HTML-ization',
         href: `${base}/html-first#${s.id}`,
-        keywords: `html first htmlization artifact ${s.label} ${s.id}`.toLowerCase(),
+        keywords: `html-ization htmlization html first artifact ${s.label} ${s.id}`.toLowerCase(),
       })),
     ];
     const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({
