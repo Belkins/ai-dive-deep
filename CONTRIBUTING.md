@@ -17,10 +17,10 @@ Include:
 
 We don't move based on hype cycles. We move based on operator-grade evidence.
 
-## New chapters / edition 2
+## New chapters / future editions
 
 Vlad maintains the canonical content. Out-of-band proposals welcome via the
-[newsletter](https://www.vladsnewsletter.com) — discuss before writing.
+[newsletter](https://www.vladsnewsletter.com) or [Discussions](https://github.com/Belkins/ai-dive-deep/discussions) — talk before writing.
 
 ## Widget improvements
 
