@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "max_age_days": 90,
+  "comment": "Patterns the lint should monitor. hard_deprecations FAIL the build; soft_facts WARN if stale beyond max_age_days. Run `python3 scripts/check-stale-numbers.py --update-ledger` after manual review to reset last_verified.",
+  "hard_deprecations": [
+    {"regex": "\\bclaude-3-opus(-\\d{8})?\\b", "reason": "deprecated model ID; current is claude-opus-4-7"},
+    {"regex": "\\bclaude-3-5-sonnet(-\\d{8})?\\b", "reason": "deprecated model ID; current is claude-sonnet-4-6"},
+    {"regex": "\\bclaude-3-5-haiku(-\\d{8})?\\b", "reason": "deprecated model ID; current is claude-haiku-4-5"},
+    {"regex": "\\bclaude-3-haiku(-\\d{8})?\\b", "reason": "deprecated model ID; current is claude-haiku-4-5"},
+    {"regex": "\\bclaude-3-sonnet(-\\d{8})?\\b", "reason": "deprecated model ID; current is claude-sonnet-4-6"},
+    {"regex": "\\bgpt-3\\.5-turbo(-\\d+k)?\\b", "reason": "deprecated model ID"},
+    {"regex": "\\btext-davinci-\\d+\\b", "reason": "deprecated OpenAI legacy completion model"},
+    {"regex": "\\bcode-davinci-\\d+\\b", "reason": "deprecated OpenAI legacy code model"},
+    {"regex": "\\bgemini-1\\.5-(pro|flash)(-\\d+)?\\b", "reason": "deprecated Gemini ID; current generation is gemini-3"},
+    {"regex": "\\bgemini-pro-vision\\b", "reason": "deprecated; vision is unified in current Gemini models"}
+  ],
+  "soft_facts": [
+    {
+      "regex": "3 to 10 billion tokens a month",
+      "label": "Vlad monthly token burn (Ch 02)",
+      "last_verified": "2026-05-20"
+    },
+    {
+      "regex": "around 24 billion tokens",
+      "label": "annual tokens-per-$120K math (Ch 02)",
+      "last_verified": "2026-05-20"
+    },
+    {
+      "regex": "120B tokens a year",
+      "label": "Vlad annual token burn high end (Ch 02)",
+      "last_verified": "2026-05-20"
+    },
+    {
+      "regex": "\\$120K a year fully loaded",
+      "label": "fully-loaded US engineer cost (Ch 02)",
+      "last_verified": "2026-05-20"
+    },
+    {
+      "regex": "5 to 10 times the volume",
+      "label": "AI vs engineer leverage ratio (Ch 02)",
+      "last_verified": "2026-05-20"
+    },
+    {
+      "regex": "\\b10K\\+ subs\\b|\\b10,000\\+ subs\\b|\\b10[Kk]\\+ subscribers\\b",
+      "label": "vladsnewsletter subscriber count",
+      "last_verified": "2026-05-20"
+    }
+  ]
+}
