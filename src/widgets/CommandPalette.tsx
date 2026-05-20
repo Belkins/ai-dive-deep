@@ -128,6 +128,7 @@ const CHAPTER_SYNONYMS: Record<string, string> = {
   '38-run-until-done':  'run until done goals loops evaluator agent autonomy /goal',
   '39-skills-you-should-steal': 'skills steal community 1M ecosystem broken gaps DenisSergeevitch agents-best-practices simon willison',
   '40-prompting-knob':  'prompting prompt engineering chain of thought few-shot role play act as ladder skills swarms memory data layer rigor enforcer ultimate prompt cot zero-shot magic phrases anthropic karpathy benchmark tuesday repeatability schema not answer multiple instances',
+  '41-send-the-link':   'html htmlization html-first link not file pdf dead file living link artifact deliverable deploy private repo github pages vercel afc folderly audit qbr board update brief operator distribution',
 };
 
 const RESOURCES_SECTIONS: { id: string; label: string }[] = [

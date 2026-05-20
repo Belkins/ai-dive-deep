@@ -10,6 +10,24 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.2',
+    date: '2026-05-20',
+    tagline: 'Forty-one chapters. The HTML-ization thesis gets its own chapter slot.',
+    shipped: [
+      'New Chapter 41 — "Send the Link, Not the File" (~1,800 words, 9-min read). Chapter-length narrative companion to /html-first. The story version of the HTML-ization thesis: every report, pitch, audit, deck, model in the portfolio ships as a live interactive link in a private repo, not a PDF or slide attachment. Same recipe across the portfolio; the chapter tells the story, /html-first is the deep reference with the embedded case studies, the recipe, the gallery, and the 12 public examples in the wild.',
+      'Ch 41 placed in Part V (Building Site) — sits next to Ch 19 (Saturday builds), Ch 31 (six stages), Ch 38 (run until done). Also in SECTIONS "building" topical group.',
+      'Cmd-K — Ch 41 chapter entry + synonyms (html htmlization living-link artifact deploy private repo afc folderly qbr board update)',
+      'Hanging-pages audit + homepage secondary text row expanded — surfaced /swarms, /github-playbook, /showcase, /resources, /research-notes alongside /about. Five previously-hanging pages now one click from the homepage.',
+      'Stale "39 chapters" → "41 chapters" across 11 user-facing sites: homepage hero stat ("39 chapters"), homepage section header ("Thirty-Nine Chapters" → "Forty-One Chapters"), Now banner copy, launch-tile description, /journey description meta + body, /sections description meta + body, /launch description meta + body, /github-playbook example card. Historical changelog entries kept original count (accurate at the time).',
+    ],
+    receipts: [
+      { label: 'New chapter', value: 'Ch 41 · 41-send-the-link · Part V · ~1,800 words' },
+      { label: 'Chapter count', value: '39 → 41 (+2 this session: Ch 40 Prompting + Ch 41 HTML-ization)' },
+      { label: 'Stale-stat sites corrected', value: '11 (across 4 pages)' },
+      { label: 'Hanging pages surfaced on homepage', value: '5 (/swarms, /github-playbook, /showcase, /resources, /research-notes)' },
+    ],
+  },
+  {
     edition: 'Edition 9.1',
     date: '2026-05-20',
     tagline: 'Swarms — the deep version, with the skills and the prompts and the receipts.',

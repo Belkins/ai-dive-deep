@@ -47,6 +47,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 38, slug: '38-run-until-done', title: 'Run Until Done', subtitle: 'Goals, Loops, and the Evaluator That Tells the Agent to Stop' },
   { number: 39, slug: '39-skills-you-should-steal', title: 'Skills You Should Steal', subtitle: 'A tour of the 1M-skill ecosystem, the 73% that\'s broken, and the gaps an operator can fill' },
   { number: 40, slug: '40-prompting-knob', title: "Prompting, or the Knob You Probably Shouldn't Tune", subtitle: 'Why most prompt engineering content is wrong for operators' },
+  { number: 41, slug: '41-send-the-link', title: 'Send the Link, Not the File', subtitle: 'Every Deliverable as a Live Artifact' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -87,7 +88,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part V — The Building Site',
     tagline: 'From Saturday idea to deployed URL with receipts.',
     intro: "Six stages: ideation → foundation → creation → polishing → security → deploy. Plus cron, headless, vibe coding, evals, the bill. This is the part that turns reading into shipping.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done', '41-send-the-link'],
   },
   {
     key: 'VI',
@@ -138,7 +139,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'building',
     label: 'Building Products',
     description: "From Saturday idea to deployed URL. Six stages. Cron. Headless. Vibe coding. The bill, demystified.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '41-send-the-link'],
   },
   {
     key: 'resources',
