@@ -72,6 +72,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Sections',              href: `${base}/sections`,        subtitle: 'Chapters by theme' },
       { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: `${Object.keys(glossary).length} terms, A–Z` },
       { type: 'page', title: 'Resources',             href: `${base}/resources`,       subtitle: 'Copy-paste templates, hooks, prompts' },
+      { type: 'page', title: 'The launch (Edition 6 is public)', href: `${base}/launch`,    subtitle: 'May 20, 2026 — the repo is open; the source is the recipe' },
       { type: 'page', title: 'HTML-ization',          href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours' },

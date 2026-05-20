@@ -1,0 +1,259 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import ArtifactEmbed from '@/components/ArtifactEmbed.astro';
+import LaunchTypewriter from '@/widgets/LaunchTypewriter.tsx';
+import LaunchCountUp from '@/widgets/LaunchCountUp.tsx';
+import PostCreditScene from '@/widgets/PostCreditScene.tsx';
+import { CHAPTERS } from '@/lib/chapters';
+import { CHANGELOG } from '@/lib/changelog';
+import { glossary } from '@/lib/glossary';
+
+// Build-time GitHub stars fetch (no auth required for public repo).
+// Falls back gracefully if the API is throttled or unreachable at build time.
+let starCount: number | null = null;
+try {
+  const r = await fetch('https://api.github.com/repos/Belkins/ai-dive-deep', {
+    headers: { 'User-Agent': 'vlads-playbook-build' },
+  });
+  if (r.ok) {
+    const j = await r.json();
+    if (typeof j?.stargazers_count === 'number') starCount = j.stargazers_count;
+  }
+} catch { /* fall through */ }
+
+// Honest counts derived from the source of truth.
+const stats = [
+  { value: CHAPTERS.length,                                 label: 'chapters' },
+  { value: 25,                                              label: 'widgets' },
+  { value: Object.keys(glossary).length,                    label: 'glossary terms' },
+  { value: 3,                                               label: 'live embeds' },
+  { value: CHANGELOG.length,                                label: 'editions' },
+  { value: starCount ?? 1,                                  label: 'github stars', prefix: '★ ' },
+];
+
+// What it took — restrained, dated, factual.
+const timeline = [
+  { date: 'May 7',  title: 'Edition 1 ships',     body: 'First public web edition of the playbook. 36 chapters, 8 widgets, github.io URL.' },
+  { date: 'May 11', title: 'Edition 4 — retitled',body: '36 chapter titles rewritten topical-primary in one atomic re-runnable rewrite.' },
+  { date: 'May 18', title: 'Safety scrub',        body: 'Full third-party/secret exposure scrub across the shipped surface. 0 residue in dist/, verified twice.' },
+  { date: 'May 19', title: 'Editions 5 + 6',      body: 'Gemini 3.5 Flash research note · HTML-ization page · 3 live embedded artifacts (AFC pitch + robot stable + sanitized client audit).' },
+  { date: 'May 20', title: 'Repo flips public',   body: 'Git history rewritten with filter-repo (0 leaks across 71 commits), backup ref preserved, force-pushed, visibility → public.' },
+];
+---
+<BaseLayout
+  title="Vlad's Playbook is public"
+  description="Edition 6 · 39 chapters · 3 live embedded case studies · open source. Read it, fork it, copy the recipe — no signup."
+  ogImage="/og-launch.png"
+>
+  <!-- HERO -->
+  <section id="hero" data-section-target class="container-wide pt-20 pb-12">
+    <div class="text-xs uppercase tracking-[0.28em] mb-5" style="color: rgb(var(--accent))">Edition 6 · May 20, 2026</div>
+    <h1 class="font-display text-5xl md:text-7xl m-0" style="letter-spacing: -0.02em; line-height: 1.05;">
+      <LaunchTypewriter text="Vlad's Playbook is public." client:load />
+    </h1>
+    <p class="mt-6 text-lg md:text-xl max-w-2xl reveal" style="color: rgb(var(--muted))">39 chapters · 25 interactive widgets · 3 real embedded case studies · the source is open and is the recipe. Read it, fork it, copy the recipe — no signup.</p>
+  </section>
+
+  <!-- FROM PRIVATE TO PUBLIC -->
+  <section data-section-target class="container-wide py-12 reveal">
+    <div class="text-[0.7rem] uppercase tracking-[0.24em] mb-6" style="color: rgb(var(--muted))">Today</div>
+    <div class="flex flex-wrap items-center gap-3 md:gap-5 font-mono text-sm md:text-base">
+      <span class="badge-pill badge-strike" aria-label="was private">🔒&nbsp; private</span>
+      <span style="color: rgb(var(--muted))">→</span>
+      <span class="badge-pill badge-go" aria-label="now public">●&nbsp; public</span>
+      <span class="ml-2" style="color: rgb(var(--muted))">71 commits · history scrubbed · 0 leaks · backup ref preserved.</span>
+    </div>
+  </section>
+
+  <!-- STAT ODOMETER -->
+  <section data-section-target class="container-wide py-14 reveal">
+    <LaunchCountUp client:load stats={stats} />
+    {starCount === null && (
+      <p class="mt-4 text-xs" style="color: rgb(var(--muted))">★ count fetched at build; updates with each commit.</p>
+    )}
+  </section>
+
+  <!-- THE THESIS -->
+  <section data-section-target class="container-wide py-12 reveal">
+    <div class="max-w-3xl">
+      <div class="text-xs uppercase tracking-[0.24em] mb-3" style="color: rgb(var(--accent))">The thesis</div>
+      <h2 class="font-display text-3xl md:text-4xl m-0 mb-4" style="letter-spacing: -0.02em;">HTML-ization. Stop sending dead files.</h2>
+      <p class="text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.88)">Every deliverable — report, pitch, audit, deck, model — ships as a live interactive HTML artifact on a deployed link, not a PDF attachment that started rotting the second it was exported. The link is current because the repo is. People forward links; they archive PDFs unread.</p>
+      <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.88)">This page is the proof. The book about building this kind of artifact is, itself, this kind of artifact — and the source you're holding is the recipe.</p>
+      <p class="mt-6"><a href="/html-first" class="underline-offset-4 hover:underline" style="color: rgb(var(--accent)); font-weight: 600">Read the method →</a></p>
+    </div>
+  </section>
+
+  <!-- THREE LIVE ARTIFACTS -->
+  <section data-section-target class="container-wide py-12 reveal">
+    <div class="text-xs uppercase tracking-[0.24em] mb-3" style="color: rgb(var(--accent))">Three real ones. Open any of them.</div>
+    <h2 class="font-display text-3xl md:text-4xl m-0 mb-8" style="letter-spacing: -0.02em;">The artifacts are clickable.</h2>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <ArtifactEmbed tag="Pitch deck" title="AFC — the pitch" src="/artifacts/afc-pitch.html"
+        meta="single-file HTML · ~39 KB · built fast, not designed"
+        blurb="Vision, why-now, tier economics, a use-of-funds donut you can hover. The deck that existed before the next meeting did." />
+      <ArtifactEmbed tag="Operating annex" title="AFC — the robot stable" src="/artifacts/afc-robots.html"
+        meta="single-file HTML · ~50 KB"
+        blurb="Every humanoid platform shipping in 2026, filterable, with a profit-per-fighter calculator — move the sliders, watch the math move." />
+      <ArtifactEmbed tag="External audit · sanitized" title="The 90-domain deliverability audit" src="/artifacts/deliverability-audit-sample.html"
+        meta="single-file HTML · ~114 KB · client / domains / infra de-identified"
+        blurb="A real Folderly-methodology audit of a ~90-domain / ~5K-mailbox cold-email estate — swarmed in days, delivered as a clickable doc instead of a 40-page PDF." />
+    </div>
+  </section>
+
+  <!-- ALL 39 CHAPTERS, AT ONCE -->
+  <section data-section-target class="container-wide py-14 reveal">
+    <div class="text-xs uppercase tracking-[0.24em] mb-3" style="color: rgb(var(--accent))">The whole book</div>
+    <h2 class="font-display text-3xl md:text-4xl m-0 mb-2" style="letter-spacing: -0.02em;">All {CHAPTERS.length} chapters at once.</h2>
+    <p class="mb-8 max-w-2xl" style="color: rgb(var(--muted))">Click any. Or hit ⌘K and search the whole thing.</p>
+    <div class="chapter-mosaic grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
+      {CHAPTERS.map((c) => (
+        <a href={`/chapters/${c.slug}`} class="ch-tile no-underline"
+          style="display:block;padding:10px 12px;border:1px solid rgb(var(--line));border-radius:8px;background:rgb(var(--paper));color:rgb(var(--fg));">
+          <div class="font-mono text-[0.65rem] mb-1" style="color: rgb(var(--accent))">{String(c.number).padStart(2, '0')}</div>
+          <div class="text-sm leading-snug" style="font-weight: 500">{c.title}</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- WHAT IT TOOK -->
+  <section data-section-target class="container-wide py-14 reveal">
+    <div class="text-xs uppercase tracking-[0.24em] mb-3" style="color: rgb(var(--accent))">What it took</div>
+    <h2 class="font-display text-3xl md:text-4xl m-0 mb-8" style="letter-spacing: -0.02em;">Thirteen days. Six editions. Open from day zero.</h2>
+    <ol class="space-y-5 max-w-3xl" style="list-style: none; padding: 0;">
+      {timeline.map((t) => (
+        <li class="flex gap-5">
+          <div class="font-mono text-sm whitespace-nowrap pt-1" style="color: rgb(var(--accent)); min-width: 4rem">{t.date}</div>
+          <div>
+            <div class="font-display text-lg" style="color: rgb(var(--fg)); font-weight: 600">{t.title}</div>
+            <div class="text-sm mt-1 leading-relaxed" style="color: rgb(var(--fg) / 0.82)">{t.body}</div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- CTA -->
+  <section data-section-target class="container-wide py-16 reveal text-center">
+    <h2 class="font-display text-3xl md:text-5xl m-0 mb-6" style="letter-spacing: -0.02em;">Now do something with it.</h2>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+      <a href="/sections" class="cta-primary">Read the book →</a>
+      <a href="https://github.com/Belkins/ai-dive-deep" target="_blank" rel="noopener" class="cta-secondary">Star the repo on GitHub</a>
+    </div>
+    <p class="mt-6 text-sm" style="color: rgb(var(--muted))">No signup. No paywall. The source is the recipe.</p>
+  </section>
+
+  <!-- SIGN-OFF -->
+  <section class="container-wide pb-8 reveal">
+    <div class="max-w-3xl">
+      <p class="font-display text-xl italic" style="color: rgb(var(--fg) / 0.88); letter-spacing: -0.01em">— Vlad</p>
+      <p class="mt-1 text-sm" style="color: rgb(var(--muted))">Belkins · Folderly · LinguaLive · NoCancer AI · 404 · the newsletter</p>
+    </div>
+  </section>
+
+  <!-- POST-CREDIT SCENE -->
+  <section class="container-wide pb-32">
+    <PostCreditScene client:load>
+      <div class="max-w-2xl mt-16 pt-10" style="border-top: 1px dashed rgb(var(--line))">
+        <div class="text-[0.7rem] uppercase tracking-[0.28em] mb-3" style="color: rgb(var(--muted))">After the credits</div>
+        <p class="text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.88)">If you scrolled this far, you might be the kind of person who'd appreciate the side project I'm not technically supposed to be working on yet.</p>
+        <p class="mt-3 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.88)">An <strong>Autonomous Fighting Championship</strong>. Humanoid robots, an octagon, blacklight and bass, no humans bleed. The kind of idea you say out loud at dinner and watch the table decide if you're serious. I have a pitch deck. It exists because the deck got built before the next meeting did.</p>
+        <p class="mt-5"><a href="/artifacts/afc-pitch.html" target="_blank" rel="noopener" style="color: rgb(var(--accent)); font-weight: 600">→ AFC — the pitch (the actual deck)</a></p>
+        <p class="mt-5 text-xs" style="color: rgb(var(--muted))">Marvel taught me to do this. Sorry not sorry.</p>
+      </div>
+    </PostCreditScene>
+  </section>
+
+  <CommandPaletteMount />
+
+  <style>
+    /* Restrained motion: ALL scroll-revealed animations gated on prefers-reduced-motion. */
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 700ms ease-out, transform 700ms ease-out;
+      will-change: opacity, transform;
+    }
+    .reveal[data-revealed="true"] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* Lock-flip pills */
+    .badge-pill {
+      display: inline-flex; align-items: center; gap: 0.4em;
+      padding: 0.4em 0.85em; border-radius: 999px; line-height: 1;
+      border: 1px solid rgb(var(--line));
+      background: rgb(var(--paper));
+    }
+    .badge-strike {
+      color: rgb(var(--muted));
+      text-decoration: line-through;
+      text-decoration-color: rgb(var(--accent) / 0.7);
+      text-decoration-thickness: 1.5px;
+    }
+    .badge-go {
+      color: rgb(var(--bg));
+      background: rgb(34 211 160);
+      border-color: rgb(34 211 160);
+      font-weight: 600;
+    }
+
+    /* Chapter mosaic hover */
+    .ch-tile { transition: transform 180ms ease-out, border-color 180ms ease-out, background 180ms ease-out; }
+    .ch-tile:hover {
+      transform: translateY(-2px);
+      border-color: rgb(var(--accent) / 0.6);
+      background: rgb(var(--accent) / 0.05);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ch-tile:hover { transform: none; }
+    }
+
+    /* CTA buttons */
+    .cta-primary, .cta-secondary {
+      display: inline-block; padding: 0.85em 1.4em; border-radius: 8px;
+      font-weight: 600; text-decoration: none; transition: transform 150ms ease-out, background 150ms ease-out;
+    }
+    .cta-primary {
+      background: rgb(var(--accent));
+      color: rgb(var(--bg));
+      font-size: 1.05rem;
+    }
+    .cta-primary:hover { transform: translateY(-1px); background: rgb(255 142 84); }
+    .cta-secondary {
+      border: 1px solid rgb(var(--line));
+      color: rgb(var(--fg));
+      background: rgb(var(--paper));
+    }
+    .cta-secondary:hover { transform: translateY(-1px); border-color: rgb(var(--accent)); }
+    @media (prefers-reduced-motion: reduce) {
+      .cta-primary:hover, .cta-secondary:hover { transform: none; }
+    }
+  </style>
+
+  <script>
+    // Scroll-reveal: mark .reveal elements as data-revealed="true" when they
+    // enter the viewport. One-shot per element (no re-trigger on scroll-up).
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const els = document.querySelectorAll<HTMLElement>('.reveal');
+    if (reduced || !('IntersectionObserver' in window)) {
+      els.forEach((el) => el.setAttribute('data-revealed', 'true'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).setAttribute('data-revealed', 'true');
+            io.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+      els.forEach((el) => io.observe(el));
+    }
+  </script>
+</BaseLayout>

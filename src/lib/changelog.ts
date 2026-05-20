@@ -10,6 +10,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 7',
+    date: '2026-05-20',
+    tagline: 'The book is open. The source is the recipe.',
+    shipped: [
+      'Repo flipped to public after a full git-filter-repo history scrub — 71 commits rewritten, 0 leaks across blobs and commit messages from an independent fresh-clone verification, backup ref preserved server-side',
+      'New /launch page — the launch artifact IS the demo: typewriter hero, animated stat odometer (chapters/widgets/glossary/embeds/editions/stars), the 3 live embedded case studies, all 39 chapters as a click-anywhere mosaic, what-it-took timeline, post-credit AFC tease',
+      'Homepage "Now" banner above the tile grid promoting the launch through launch week',
+      'README rewrite to current reality (Edition 6/7, real counts, dive.vladyslavpodoliako.com as primary CTA), repo metadata (description, homepage, 12 topics, Discussions on), custom 1280x640 GitHub social-preview image',
+      'SECURITY.md + CONTRIBUTING.md refreshed for the public posture; private-vulnerability-reporting path documented',
+      'Ch 02 contradiction fixed (the Fathom-in-the-don\'t-use-bin error caught externally) — reframed as "picked Fathom, killed the rest" with the discipline of one transcript surface',
+    ],
+    receipts: [
+      { label: 'Repo state', value: 'PUBLIC · github.com/Belkins/ai-dive-deep' },
+      { label: 'History leaks (post-scrub, fresh-clone verified)', value: '0 / 71 commits' },
+      { label: 'New page', value: '/launch' },
+      { label: 'Edition 1 → public', value: '13 days, 7 editions' },
+    ],
+  },
+  {
     edition: 'Edition 6',
     date: '2026-05-19',
     tagline: 'The method, embedded. Click the artifacts.',
