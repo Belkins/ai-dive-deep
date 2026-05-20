@@ -24,6 +24,11 @@ const HTMLFIRST_SECTIONS: { id: string; label: string }[] = [
   { id: 'the-case', label: 'The case for HTML-first' },
   { id: 'case-afc', label: 'AFC — idea became a company' },
   { id: 'case-audit', label: 'The 90-domain deliverability audit' },
+  { id: 'portfolio', label: 'More across the portfolio' },
+  { id: 'recipe', label: 'The recipe — Saturday walkthrough' },
+  { id: 'gallery', label: 'Applications gallery (12 shapes)' },
+  { id: 'not-for-everything', label: 'Where it fails (anti-cases)' },
+  { id: 'in-the-wild', label: 'The pattern in the wild (12 public)' },
   { id: 'do-this', label: 'Do this Monday' },
 ];
 const SOVEREIGN_SECTIONS: { id: string; label: string }[] = [

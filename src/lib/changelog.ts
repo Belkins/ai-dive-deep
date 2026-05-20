@@ -10,6 +10,26 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 8.2',
+    date: '2026-05-20',
+    tagline: 'HTML-ization, expanded — the recipe, the gallery, the receipts, the edges.',
+    shipped: [
+      '/html-first expanded from 4 sections to 9: kept the existing case (AFC + Folderly audit + Do-this-Monday) and added five new ones',
+      'New section "More across the portfolio" — the order of operations (pitches first, audits next, internal deliverables third, communication fourth), the one-to-two gap that flips the format from curiosity to default, the Playbook itself as the maximal version of the thesis',
+      'New section "The recipe — do this Saturday" — exact verbatim prompt template (12-line constraint block), the four-step ladder (shape → prompt → three iterations → deploy), and the gh-create-repo deploy snippet',
+      'New section "Applications gallery" — 12 deliverable shapes that work (audit, pitch, QBR, board, mentee tracker, weekly KPI, financial model, brief, strategy memo, newsletter, conference companion, retro) rendered as a 3-col grid',
+      'New section "Not for everything — where this fails" — four honest edges where htmlization should not be used (legal documents, e-signatures, link-averse readers, deploy overhead vs reward)',
+      'New section "The pattern in the wild" — 12 public examples sourced (Ciechanowski Moon, Stripe Annual Letter, AI 2027, Anthropic attribution graphs, NYT needle, Ramp benchmarks, a16z market map, Pudding, Bloomberg year-in-graphics, Linear changelog, OWID, Nicky Case) rendered as a clickable 3-col grid with deep links, plus four emerging-pattern paragraphs',
+      'SectionNav updated 4 items → 9 items; Cmd-K HTMLFIRST_SECTIONS updated to match for discoverability',
+    ],
+    receipts: [
+      { label: 'Page sections', value: '4 → 9 (+5)' },
+      { label: 'New gallery cards (operator applications)', value: '12 shapes' },
+      { label: 'New "in the wild" citations', value: '12 sourced public examples, 2024–2026' },
+      { label: 'New page weight', value: '+5,500 words approx · still single page, no nav split' },
+    ],
+  },
+  {
     edition: 'Edition 8.1',
     date: '2026-05-20',
     tagline: 'The launch as its own experiment in the thesis.',

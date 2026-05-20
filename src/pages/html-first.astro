@@ -3,12 +3,49 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SectionNav from '@/components/SectionNav.astro';
 import ArtifactEmbed from '@/components/ArtifactEmbed.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
 
 const navItems = [
   { id: 'the-case', label: 'The case' },
   { id: 'case-afc', label: 'AFC — idea → company' },
   { id: 'case-audit', label: 'The 90-domain audit' },
+  { id: 'portfolio', label: 'More across the portfolio' },
+  { id: 'recipe', label: 'The recipe (Saturday)' },
+  { id: 'gallery', label: 'Applications gallery' },
+  { id: 'not-for-everything', label: 'Where it fails' },
+  { id: 'in-the-wild', label: 'The pattern in the wild' },
   { id: 'do-this', label: 'Do this Monday' },
+];
+
+const wildItems = [
+  { tag: 'Ciechanowski',  title: 'Moon (Dec 2024)',                  url: 'https://ciechanow.ski/moon/',                                      blurb: 'A long-form essay you read by driving the diagrams. ~30 hand-coded WebGL/Canvas simulations. The canonical interactive essay — a PDF cannot do what dragging a slider does.' },
+  { tag: 'Stripe',        title: 'Annual Letter 2024',               url: 'https://stripe.com/annual-updates/2024',                           blurb: 'The Collison brothers\' yearly letter to merchants and devs, with inline charts and animated KPI counters. The PDF version exists for archive; every press link points to the URL. The pattern: link is the lead, PDF is the fallback.' },
+  { tag: 'AI 2027',       title: 'Scenario Forecast (Apr 2025)',     url: 'https://ai-2027.com/',                                              blurb: 'Multi-author research scenario with sidebar time-scrubber and branching narrative paths. Would have been a 165-page PDF in the genre Aschenbrenner\'s "Situational Awareness" published as a year earlier. Going interactive made it the most-discussed AI policy artifact of 2025.' },
+  { tag: 'Anthropic',     title: 'Attribution Graphs (Mar 2025)',    url: 'https://transformer-circuits.pub/2025/attribution-graphs/biology.html', blurb: 'Click any node to see upstream features; hover any token to inspect activations. Replaces ~40 static figures with one navigable structure. The PDF version technically exists. No one reads it.' },
+  { tag: 'NYT',           title: '2024 Election Needle',              url: 'https://www.nytimes.com/interactive/2024/11/05/us/elections/results-president.html', blurb: 'Real-time forecast that updates as county results arrive — live data pipe, animated needle, county-level drill-down. A deliverable connected to its data source beats any static report by definition.' },
+  { tag: 'Ramp',          title: '2024 Spending Benchmarks',          url: 'https://ramp.com/reports/2024-fall-spending-benchmarks',           blurb: 'Quarterly aggregated spending from 30,000+ businesses, filterable by company size and industry. Lead-capture is the page itself — no PDF gate. Direct template for Folderly / Belkins-style operator audits.' },
+  { tag: 'a16z',          title: 'Voice Agents Market Map (Feb 2025)', url: 'https://a16z.com/voice-agents-market-map-b2b-and-b2c/',          blurb: 'Filterable taxonomy with hover-to-reveal detail, version-controlled as new companies enter the category. Market maps used to ship as PNG slides that died the day after. As a live URL they keep accruing inbound forever.' },
+  { tag: 'Pudding',       title: 'How to dice an onion (Aug 2025)',   url: 'https://pudding.cool/2025/08/onion/',                              blurb: 'Reader-controlled cut-angle slider, live simulator renders thousands of distributions in-browser. The Pudding has shipped this format weekly since 2017 — proof the form scales as a publication strategy, not a one-off stunt.' },
+  { tag: 'Bloomberg',     title: '2024: The Year in Graphics',         url: 'https://www.bloomberg.com/graphics/2024-in-graphics/',              blurb: 'Annual portfolio review where each tile opens a full scrollytell — animated wildfire maps, currency bar races, click-to-filter dashboards. Treats the annual review itself as an artifact. Direct template for end-of-year shareholder communications.' },
+  { tag: 'Linear',        title: 'Changelog (per-release artifacts)', url: 'https://linear.app/changelog',                                       blurb: 'Every release is a standalone link — inline demos, animated mockups, anchor-linked deep-dives, threaded discussions. Each changelog entry is its own forwardable URL. The operator analog: every pricing change, policy update, feature ship gets its own artifact.' },
+  { tag: 'OWID',          title: 'CO2 Charts + Archived Embeds',      url: 'https://ourworldindata.org/co2-and-greenhouse-gas-emissions',     blurb: 'Every chart filterable by country, time range, metric — exportable as embed code with a stable URL. Archived-version embeds shipped 2024 for citation integrity. Same data, infinite views — stakeholders explore their question, not the analyst\'s pre-canned one.' },
+  { tag: 'Nicky Case',    title: 'AI Safety for Fleshy Humans (2024)', url: 'https://aisafety.dance/',                                          blurb: 'Three-part scroll-driven explainer with playable mini-simulations — the "Robot Catboy Maid" mesa-optimization demo is its centerpiece. Proves an interactive artifact can carry policy content, not just data. If a complex technical thesis benefits from the format, so does a sales narrative or a board memo.' },
+];
+
+const galleryItems = [
+  { tag: 'Audit',       title: 'External deliverability audit',  blurb: '90 domains, 5K mailboxes. Filter by risk, click any flagged domain to its evidence. Shipped, sanitized, embedded above.' },
+  { tag: 'Pitch',       title: 'Investment deck + annex',         blurb: 'Vision, why-now, tier economics, hover-able use-of-funds donut, revenue model with a year toggle. AFC. Shipped, embedded above.' },
+  { tag: 'QBR',         title: 'Quarterly business review',        blurb: 'Inbox-placement trend, SPF/DKIM/DMARC health badge, sender-rep over time, three scenario costs the customer can toggle.' },
+  { tag: 'Board',       title: 'Quarterly board update',           blurb: 'Cohort retention by month, pipeline-by-segment filter, revenue waterfall with a slider for the close-rate assumption.' },
+  { tag: 'Tracker',     title: 'Coaching / mentee tracker',        blurb: 'Weekly session prep — agenda, last week\'s commitments with check-boxes, the metrics they sent Sunday rendered as a trend.' },
+  { tag: 'Weekly',      title: 'Weekly KPI report',                blurb: 'The Monday report that used to be a PDF. Filterable, sortable, with last-week\'s deltas highlighted. Same numbers, opened more.' },
+  { tag: 'Model',       title: 'Financial / pricing model',         blurb: 'The sliders move, the line at the bottom of the page moves. The conversation is about what to do, not about whether the math is right.' },
+  { tag: 'Brief',       title: 'Contractor / vendor brief',          blurb: 'Scope, milestones, payment, a "questions" panel the contractor can answer inline. No version-numbered .docx in the inbox.' },
+  { tag: 'Strategy',    title: 'Offsite strategy memo',              blurb: 'The 12-page memo with the assumptions live and editable. The team reads it ahead and the offsite starts at "okay, now what."' },
+  { tag: 'Newsletter',  title: 'Long-form newsletter issue',          blurb: 'The essay with the calculator embedded. Substack hosts the prose; the artifact is the click-through that makes the argument.' },
+  { tag: 'Talk',        title: 'Conference companion artifact',       blurb: 'Not a slides PDF after the talk. A QR code on screen → the link → the deeper version with the data the talk skipped over.' },
+  { tag: 'Retro',       title: 'Project / sprint retrospective',       blurb: 'What shipped, what didn\'t, what we learned — with each claim one click from the receipt. Internal-honest, future-self-readable.' },
 ];
 ---
 <BaseLayout
@@ -84,11 +121,122 @@ const navItems = [
           </div>
         </div>
 
+        <div id="portfolio" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">More across the portfolio</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Two embedded cases above is the proof, not the catalogue. The pattern crossed every business I run, in a particular order, and the order matters because it's the same one yours will follow.</p>
+            <p><strong>Pitches went first.</strong> The cheapest deliverable to htmlize is the one no compliance team has to approve. An investment deck for a venture that doesn't exist yet — like AFC — is a private repo with a link in it, and the first version is up in an evening. The second time you make a pitch this way, you don't even consider PowerPoint. By the third, you've forgotten the format you used to use. That's the path of every deliverable on this page — it took going from one to two for the old format to feel embarrassing.</p>
+            <p><strong>Audits and external reports went next.</strong> The Folderly case above is the canonical version, but the methodology lifts directly to anything that has a structure (claims → evidence → recommendations). Procurement audits, vendor due-diligence reports, market scans, competitive teardowns, ICP reviews — anything where a static doc would be argued with becomes a link where every claim is one click from its evidence. The medium changes what the reader does, which changes what the conversation is.</p>
+            <p><strong>Then internal deliverables.</strong> Quarterly business reviews, board updates, the weekly KPI digest, offsite strategy memos. The format hits a wall the first time someone wants to "see what happens if we ship two weeks later" — a slide can't answer, an artifact can. The internal version is where the operator gets the muscle memory; the external version is where the operator gets the wins.</p>
+            <p><strong>Then communication that used to be Notion or email.</strong> Briefs to contractors. Mentee session prep. Retrospectives. Vendor RFP responses. None of these <em>need</em> to be interactive — until you ship one that is, watch the recipient open it three times instead of zero, and stop attaching .docx files. Distribution is the only thing that was ever scarce, and a forwardable artifact wins distribution against anything you can attach.</p>
+            <p>The Playbook itself is the maximal version. Every chapter you're reading is an artifact under this same thesis — the book is a private repo, deployed to a link, updated by commit. Edition 6 added three embedded case studies. Edition 7 made the launch itself an artifact (<a href="/launch">/launch</a>). Edition 8.1 made the launch week live (<a href="/launch-week">/launch-week</a>) — numbers updating from real data, day-by-day timeline, the "what I'd do differently" section that fills from receipts instead of Day-0 guesses. The book is the proof and the demo. You're inside the case study right now.</p>
+            <PullQuote>One to two is the gap that matters. The first one you ship as a link is a curiosity. The second one is the format you can't go back from.</PullQuote>
+          </div>
+        </div>
+
+        <div id="recipe" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The recipe — do this Saturday</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Four steps. Skip none of them. Total time on a doc you'd previously have spent four hours on is about thirty-five minutes the first time and twelve minutes by the fifth.</p>
+            <p><strong>Step 1 — Decide the shape, not the content.</strong> "What's in it" is the easy part and it's also the wrong part to start on. Start with the shape: a waterfall chart? A filterable table? A scenario calculator with sliders? An audit with one click per finding to its evidence? The shape is the interaction. If you can't describe the interaction in one sentence — "the reader moves a slider for close-rate and watches the year-end number move" — the artifact will look like a slide deck stuffed into HTML and read worse than the deck did. Decide the interaction first; the content will fit around it.</p>
+            <p><strong>Step 2 — Hand Claude this prompt with your data.</strong> Verbatim. This is the prompt I use across the portfolio, with the angle-brackets filled in for the specific job.</p>
+            <pre class="rounded-lg p-4 my-3 text-sm overflow-x-auto" style="background: rgba(var(--fg) / 0.05); border: 1px solid rgb(var(--border))"><code>{`You are building a single-file interactive HTML artifact — no build step,
+no framework, vanilla HTML/CSS/JS, ~30KB target. The reader will receive
+it as a deployed link. It will be forwarded to people I'll never meet.
+
+DELIVERABLE:        <one-line shape from Step 1>
+PRIMARY INTERACTION: <the slider / filter / hover / toggle>
+AUDIENCE:           <investor / customer / board / client / public>
+TONE:               <operator-grade / consulting-grade / brand-grade>
+NUMBERS TO LOAD:    <attach JSON or CSV or paste inline>
+BRAND:              <link to brand identity OR paste 3 hex codes + 1 typeface>
+
+Constraints:
+- Single .html file, no external scripts (inline everything)
+- Mobile-first responsive
+- All numbers come from the data I just gave you — no hallucinated figures
+- Every interactive element answers a question the reader was going to
+  ask anyway. Don't add a slider for its own sake.
+- The header must say what this is and who it's for in under 12 words.
+- If the data has anomalies, show them. Don't smooth.`}</code></pre>
+            <p>That's the whole prompt. Adjust the constraint block for the specific surface — add <code>"must work inside a Gmail-rendered iframe"</code> if you're embedding in a newsletter, add <code>"single dark theme only"</code> if you've got a brand book that says so, add <code>"include a print stylesheet"</code> if you genuinely think someone might print it (they won't).</p>
+            <p><strong>Step 3 — Iterate three times and stop.</strong> First pass will be 80% there. Second pass tightens the design and fixes the numbers Claude pulled from the wrong column. Third pass adds the one interaction the first pass didn't have because you hadn't seen the first pass yet. After three, marginal improvement curves out — ship. The chapter on <a href="/chapters/38-run-until-done">running until done</a> applies here, but the "done" criterion is "would I send this link right now?" not "could it be 5% better next week."</p>
+            <p><strong>Step 4 — Deploy and send the link.</strong> Private repo, GitHub Pages or Vercel, thirty seconds. The mechanic is <a href="/chapters/19-build-products">Chapter 19</a>'s Hour 2 pointed at a document instead of a product:</p>
+            <pre class="rounded-lg p-4 my-3 text-sm overflow-x-auto" style="background: rgba(var(--fg) / 0.05); border: 1px solid rgb(var(--border))"><code>{`gh repo create board-update-q3 --private
+mkdir -p board-update-q3 && cp artifact.html board-update-q3/index.html
+cd board-update-q3 && git init && git add . && git commit -m "q3"
+vercel --prod   # or push and let GH Pages serve from /docs`}</code></pre>
+            <p>The link goes in the email. The dead file does not. Next week's update is a commit, not a re-export and a prayer that they open the newest attachment instead of the one from two Tuesdays ago.</p>
+            <Callout type="tip">
+              The first artifact you ship will take an evening. The second will take a morning. The fifth will take ten minutes. Skill compounds against the format. Don't measure the cost of the first one — measure the cost of doing your entire pipeline of deliverables this way for a year. The difference is one full FTE worth of saved hours.
+            </Callout>
+          </div>
+        </div>
+
+        <div id="gallery" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Applications — twelve shapes that work</h2>
+          <div class="space-y-4 leading-relaxed mb-6" style="color: rgb(var(--fg) / 0.88)">
+            <p>Where the format earns its keep. Twelve deliverable types I've shipped or am one cycle away from shipping. The shape doesn't care about the category — it cares about whether the reader has a number to move or a filter to apply. If they do, this is the format. If they don't, write a normal page.</p>
+          </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {galleryItems.map((item) => (
+              <div class="card" style="background: rgba(var(--fg) / 0.02)">
+                <div class="text-[0.65rem] uppercase tracking-[0.22em] mb-1.5" style="color: rgb(var(--accent))">{item.tag}</div>
+                <div class="font-display text-lg leading-tight mb-2" style="color: rgb(var(--fg))">{item.title}</div>
+                <p class="m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">{item.blurb}</p>
+              </div>
+            ))}
+          </div>
+          <p class="mt-6 text-sm leading-relaxed" style="color: rgb(var(--muted))">The unifying thread: every one of these used to be a static doc with a stale number in it. The htmlized version updates from a data source the reader can see. Each one is the same recipe — shape → prompt → three iterations → deploy — pointed at a different category.</p>
+        </div>
+
+        <div id="not-for-everything" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Not for everything — where this fails</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>I'd be the only person publishing a chapter on a format if I weren't honest about its edges. Four places htmlization doesn't work — or where it works but the juice isn't worth the squeeze.</p>
+            <p><strong>Documents the receiver legally needs as a PDF.</strong> Court filings, regulatory submissions, signed contracts, tax filings, certain insurance claims, anything a clerk or compliance officer ingests through a fixed pipeline. The format is the format. Don't htmlize the LLC operating agreement, the EIN application, or the response to a regulator's request for production. The dead file is the right file. Reserve the link for the brief that decided you needed the agreement.</p>
+            <p><strong>Anything that has to be e-signed.</strong> DocuSign, HelloSign, the notary's portal — the static-doc format is doing legal work, not communication work. Don't fight it. Send the boring PDF. The opportunity is the artifact that explains <em>why</em> the contract — that one's the link.</p>
+            <p><strong>One-off deliverables for a reader who doesn't open links.</strong> Some recipients will not click. They are who they are. Two paths: send the file and move on, or send both — the file as the attachment, the link in the email body as "live version with the assumptions you can move." The conversion rate from the second path isn't zero. By the third deliverable, half the holdouts are clicking. The other half never will and that's fine.</p>
+            <p><strong>Internal artifacts where the deploy overhead beats the value.</strong> Quick brain-dump, ten-line meeting agenda, Slack DM, a comment on a PR. Don't deploy a webpage to send a fifty-word ask. The whole point is that the format wins distribution. If there's no distribution problem, there's no format problem to solve. Reserve the format for the thing that gets forwarded.</p>
+            <p>The edges are legal, signature, audience, and minimum-effective-dose. Stay on the right side of all four and the rest of your pipeline moves to links. The list of things that survive as files gets shorter every quarter — but it isn't zero, and pretending otherwise makes the thesis less credible, not more.</p>
+          </div>
+        </div>
+
+        <div id="in-the-wild" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The pattern in the wild</h2>
+          <div class="space-y-4 leading-relaxed mb-6" style="color: rgb(var(--fg) / 0.88)">
+            <p>I'm not the only one doing this — I'm just being noisy about it. The interactive-artifact-instead-of-a-static-doc pattern has been quietly building for a decade across journalism, research labs, and a handful of operators who figured this out before AI made it cheap. Twelve examples below, all live, all auth-free, all in the 2024–2026 window. Click any one and you'll know more about the shape of what you should ship next than from another five paragraphs of me.</p>
+          </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {wildItems.map((item) => (
+              <a href={item.url} target="_blank" rel="noopener noreferrer" class="card no-underline hover:border-flame" style="background: rgba(var(--fg) / 0.02); color: rgb(var(--fg))">
+                <div class="text-[0.65rem] uppercase tracking-[0.22em] mb-1.5" style="color: rgb(var(--accent))">{item.tag}</div>
+                <div class="font-display text-base leading-tight mb-2 flex items-center gap-1.5">
+                  <span>{item.title}</span>
+                  <span class="text-[0.65rem] opacity-60" aria-hidden="true">↗</span>
+                </div>
+                <p class="m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">{item.blurb}</p>
+              </a>
+            ))}
+          </div>
+          <div class="space-y-4 leading-relaxed mt-8" style="color: rgb(var(--fg) / 0.88)">
+            <p class="font-display text-xl">Four patterns the catalogue exposes — quote them, then ship them.</p>
+            <p><strong>One — sliders are now table stakes.</strong> Pudding, Ciechanowski, Our World in Data, Ramp, AI 2027 all let the reader change one parameter and watch the conclusion move. A static screenshot of the same chart now reads as a tell that the author didn't want you to test the claim. The interactive equivalent shifts the conversation from "do I trust your number?" to "what happens at <em>my</em> assumptions?" The cost of <em>not</em> having a slider is unsigned and growing.</p>
+            <p><strong>Two — the artifact and its source data are converging into one URL.</strong> NYT's needle, OWID's embeds, Ramp's quarterly report, and Anthropic's attribution graphs are connected to live data or live models, not exports of a one-time analysis. The deliverable updates itself. That kills the "is this still current?" objection that dooms PDFs after week two, and turns a one-time delivery into recurring inbound.</p>
+            <p><strong>Three — single-page artifacts forward better than multi-page sites.</strong> Stripe's annual letter, AI 2027, Linear's changelog entries, Bloomberg's year-in-graphics — each is <em>one URL</em> containing the whole thing. They get copy-pasted into Slack, X, board emails as a single link. Forwarding friction is zero. Multi-page microsites lose this property; a PDF attachment never had it.</p>
+            <p><strong>Four — the PDF lives as archival fallback, never the lead.</strong> Stripe ships a PDF <em>and</em> the interactive page — but every external link, every press hit, every social share points to the URL. The PDF exists for legal archiving and offline reading. This is the cleanest migration path for operators who can't fully kill the PDF yet: ship both, but make the URL the front door. Quarter after quarter, fewer people click the fallback.</p>
+            <p>Twelve operators publicly. Probably a hundred more privately — every Stripe board update, every YC partner memo, every research scientist's internal write-up. The shift already happened. The question is whether your pipeline shifts with it or stays on the format that wins fewer arguments every year.</p>
+          </div>
+        </div>
+
         <div id="do-this" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
           <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
             <p>The next thing you were about to attach to an email — don't. Spin up the private repo, drop the HTML, deploy, send the link. The mechanic is <a href="/chapters/19-build-products">Chapter 19</a>'s Hour 2 pointed at a document instead of a product: <code>gh repo create --private</code>, the artifact, <code>vercel deploy</code> (or GitHub Pages), share the link. Updated by commit, current forever, forwardable.</p>
             <p>The people who get it won't wait for a mandate — they'll spin up their own. That's the adoption tell from <a href="/chapters/26-team-adoption">Chapter 26</a>: when the better way is obviously better, you don't roll it out, it spreads. AFC became plausible because the artifact beat the meeting. The audit closed because the link beat the PDF. Your move is the same one, every deliverable, starting with the next one.</p>
+            <p class="mt-6 text-sm" style="color: rgb(var(--muted))">
+              Related: <a href="/chapters/19-build-products">Ch 19 — building products</a> · <a href="/chapters/26-team-adoption">Ch 26 — team adoption</a> · <a href="/launch">The launch artifact</a> · <a href="/launch-week">Launch week, live</a>
+            </p>
           </div>
         </div>
 
