@@ -25,6 +25,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # PostHog analytics — baked into the client bundle at build time.
+          # Repo secret PUBLIC_POSTHOG_KEY (and optional PUBLIC_POSTHOG_HOST).
+          # Absent secret = empty value = palette analytics stay dark.
+          PUBLIC_POSTHOG_KEY: ${{ secrets.PUBLIC_POSTHOG_KEY }}
+          PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
