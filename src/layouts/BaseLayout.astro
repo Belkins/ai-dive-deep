@@ -23,6 +23,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 // JSON-LD: emit Article on chapter pages, Book on root, WebPage elsewhere.
 // LLMs and search engines read this for citation-grade structured data.
 const isChapter = Astro.url.pathname.startsWith('/chapters/');
+
+// PostHog: gated on PUBLIC_POSTHOG_KEY env var. Absent = no init, no events, no
+// network calls. Set the var on Vercel to turn analytics on without code changes.
+const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY as string | undefined;
+const posthogHost = (import.meta.env.PUBLIC_POSTHOG_HOST as string | undefined) ?? 'https://us.i.posthog.com';
 const isRoot = Astro.url.pathname === '/' || Astro.url.pathname === '';
 const jsonLd: Record<string, unknown> = isChapter
   ? {
@@ -127,5 +132,21 @@ const jsonLd: Record<string, unknown> = isChapter
         }
       });
     </script>
+
+    {posthogKey && (
+      <script is:inline define:vars={{ posthogKey, posthogHost }}>
+        // PostHog — minimal init. No autocapture, no session replay, no profiles
+        // for anonymous visitors. We only need custom events (cmd_k_search,
+        // cmd_k_click) + pageviews.
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Be Bs As capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        window.posthog.init(posthogKey, {
+          api_host: posthogHost,
+          person_profiles: 'identified_only',
+          autocapture: false,
+          capture_pageview: true,
+          disable_session_recording: true,
+        });
+      </script>
+    )}
   </body>
 </html>
