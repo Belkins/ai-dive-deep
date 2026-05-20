@@ -32,11 +32,16 @@ const isHome = path === base + '/' || path === base || path === '/';
       <button
         type="button"
         id="open-palette-btn"
-        class="hidden sm:inline-flex items-center gap-2 text-xs px-2.5 py-1.5 rounded font-mono"
-        style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted))"
-        aria-label="Open command palette"
+        class="inline-flex items-center gap-2 text-xs rounded sm:min-w-[180px] sm:max-w-[220px] px-2 sm:px-2.5 py-1.5"
+        style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted)); background: rgb(var(--bg) / 0.4)"
+        aria-label="Search (Cmd-K)"
+        title="Search (⌘K / Ctrl-K)"
       >
-        <span>⌘K</span>
+        <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/>
+        </svg>
+        <span class="hidden sm:inline flex-1 text-left">Search…</span>
+        <kbd id="palette-kbd-hint" class="hidden sm:inline-flex items-center gap-0.5 text-[10px] px-1 py-0 rounded font-mono" style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted))">⌘K</kbd>
       </button>
       <ThemeToggle />
     </div>
@@ -46,6 +51,10 @@ const isHome = path === base + '/' || path === base || path === '/';
 <script>
   const btn = document.getElementById('open-palette-btn');
   btn?.addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-palette')));
+
+  // Platform-aware ⌘K vs Ctrl-K hint
+  const kbdHint = document.getElementById('palette-kbd-hint');
+  if (kbdHint && !/Mac|iPhone|iPad/.test(navigator.platform)) kbdHint.textContent = 'Ctrl K';
 
   // Read-state surfacing: walks the page, decorates [data-chapter-slug] cards
   // based on cc-progress localStorage (already written to by ProgressBar.astro

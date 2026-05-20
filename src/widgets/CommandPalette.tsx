@@ -10,6 +10,25 @@ import { RESEARCH_NOTES } from '@/lib/research-notes';
 const slugify = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+// Min edit distance — used only as a fuzzy fallback when substring search
+// returns < 3 hits. Bounded inputs (<60 chars) so the O(m·n) cost is negligible.
+function levenshtein(a: string, b: string): number {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+  const v0 = new Array(b.length + 1).fill(0).map((_, i) => i);
+  const v1 = new Array(b.length + 1).fill(0);
+  for (let i = 0; i < a.length; i++) {
+    v1[0] = i + 1;
+    for (let j = 0; j < b.length; j++) {
+      const cost = a[i] === b[j] ? 0 : 1;
+      v1[j + 1] = Math.min(v1[j] + 1, v0[j + 1] + 1, v0[j] + cost);
+    }
+    for (let j = 0; j <= b.length; j++) v0[j] = v1[j];
+  }
+  return v1[b.length];
+}
+
 // Deep-link section anchors so Cmd-K resolves "permissions", "hooks",
 // "model routing", etc. straight to the right block on long reference pages.
 // Mirrors the section titles in cheat-sheet.astro / resources.astro toc.
@@ -44,30 +63,48 @@ const SOVEREIGN_SECTIONS: { id: string; label: string }[] = [
   { id: 'watch', label: 'The 6-month watch' },
   { id: 'monday', label: 'Do this Monday' },
 ];
-// Per-chapter synonyms — model names, company names, and use-case terms that
-// readers type into Cmd-K but don't appear in chapter titles/subtitles.
+// Per-chapter synonyms — model names, company names, competing tools, people,
+// and adjacent topics that readers type into Cmd-K but don't appear in chapter
+// titles/subtitles.
 const CHAPTER_SYNONYMS: Record<string, string> = {
-  '02-five-tools':      'chatgpt cursor windsurf claude code cowork picker which tool model picker',
+  '01-killed-my-tabs':  'operating system os tabs workflow productivity daily driver',
+  '02-five-tools':      'chatgpt cursor windsurf codex aider continue cline zed jetbrains copilot github copilot v0 bolt lovable replit claude code cowork picker which tool model picker',
   '03-temp-agency':     'context window memory state amnesia session forgets',
   '04-the-vault':       'obsidian PARA notes zettelkasten knowledge graph working memory',
+  '05-skills':          'skill recipe SKILL.md prompt engineering prompting',
+  '06-the-swarm':       'swarm subagents parallel fan-out orchestration',
   '08-three-doors':     'chat cowork claude code which mode picker door',
-  '09-dont-get-owned':  'security secrets api key blast radius hygiene attack owned',
-  '10-wild-stuff':      'hosted agents local models frontier openai anthropic google deepmind meta xai grok llama gpt opus sonnet haiku gemini',
-  '12-connectors-mcp':  'mcp connectors model context protocol install server custom',
-  '15-permissions':     'permissions sandbox docker devcontainer yolo skip dangerous',
-  '17-tips-tricks':     'tips tricks operator wisdom 25',
+  '09-dont-get-owned':  'security secrets api key blast radius hygiene attack owned jailbreak prompt injection',
+  '10-wild-stuff':      'hosted agents local models frontier openai anthropic google deepmind meta xai cohere perplexity grok llama gpt opus sonnet haiku gemini RLHF RLAIF fine-tuning fine tuning distillation',
+  '11-build-a-skill':   'skill SKILL.md template 30 minute tutorial',
+  '12-connectors-mcp':  'mcp connectors model context protocol install server custom .mcp.json',
+  '13-quickstart':      'quickstart 10 minute install setup claude code',
+  '14-cheat-sheet':     'cheat sheet slash commands settings.json reference cmd-k command palette',
+  '15-permissions':     'permissions sandbox docker devcontainer yolo skip dangerous --dangerously-skip-permissions',
+  '16-hooks-subagents': 'hooks subagents custom agent .md events PreToolUse PostToolUse SessionStart',
+  '17-tips-tricks':     'tips tricks operator wisdom 25 boris cherny hyrum geoffrey huntley simon willison',
   '18-headless-ci':     'headless CI claude --print pipeline automation production github actions',
-  '24-tier-list':       'tier list ranking compare which model best leaderboard lmarena chatgpt gpt gpt-5 gpt-4 o1 o3 claude opus sonnet haiku gemini grok deepseek qwen llama mistral kimi glm anthropic openai google meta xai',
-  '25-evals-or-hope':   'evals benchmark smoke regression golden testing eval',
+  '19-build-products':  'build products saturday ship mvp startup 80% rule',
+  '20-terminal-windows':'tmux worktrees windows sessions parallel six claudes screen',
+  '21-three-modes':     'interactive plan auto mode picker which mode',
+  '22-sessions':        'sessions resume replay fork session management /resume',
+  '23-vibe-coding':     'vibe coding saturday hour by hour build cursor windsurf',
+  '24-tier-list':       'tier list ranking compare which model best leaderboard lmarena chatgpt gpt gpt-5 gpt-4 o1 o3 claude opus sonnet haiku gemini grok deepseek qwen llama mistral kimi glm anthropic openai google meta xai cohere perplexity cursor windsurf codex aider continue zed copilot',
+  '25-evals-or-hope':   'evals benchmark smoke regression golden testing eval llm-judge hog',
+  '26-team-adoption':   'team adoption rollout twelve people change management karpathy',
   '27-voice-agents':    'voice STT TTS speech elevenlabs cartesia deepgram phone call agent',
-  '29-cost-economics':  'cost economics bill pricing tokens cents caching batch routing api openai anthropic google',
-  '30-sdk-direct':      'sdk anthropic typescript python direct api drop cc claude api',
+  '28-failure-receipts':'failure bills receipts mistakes losses postmortem',
+  '29-cost-economics':  'cost economics bill pricing tokens cents caching batch routing api openai anthropic google prompt caching cache hit',
+  '30-sdk-direct':      'sdk anthropic typescript python direct api drop cc claude api function calling structured output tool use',
+  '31-stages':          'stages ideation foundation creation polishing security deploy six',
   '32-archetypes-rick': 'agent archetypes rick platform openclaw nemoclaw hermes',
-  '33-browser-agents':  'browser agents playwright scrape login click post automation',
+  '33-browser-agents':  'browser agents playwright scrape login click post automation puppeteer',
   '34-write-on-behalf': 'persona agents write on behalf newsletter social ghostwriter writing email outreach',
   '35-codex-and-cc':    'codex openai claude code anthropic gemini google day shift night shift compare',
-  '36-frameworks-beyond':'frameworks crewai langgraph sdk alternatives openai assistants beyond',
-  '37-context-files':   'claude.md memory skills conventions context files',
+  '36-frameworks-beyond':'frameworks crewai langgraph sdk alternatives openai assistants beyond autogen smolagents',
+  '37-context-files':   'claude.md memory skills conventions context files always-loaded',
+  '38-run-until-done':  'run until done goals loops evaluator agent autonomy /goal',
+  '39-skills-you-should-steal': 'skills steal community 1M ecosystem broken gaps DenisSergeevitch agents-best-practices simon willison',
 };
 
 const RESOURCES_SECTIONS: { id: string; label: string }[] = [
@@ -111,7 +148,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Research notes',         href: `${base}/research-notes`,  subtitle: 'External findings that shift what to do Monday',                                                      keywords: 'research notes findings external signal evidence gemini claude anthropic openai mythos karpathy' },
       { type: 'page', title: 'The journey',           href: `${base}/journey`,         subtitle: 'Six parts. One arc.',                                                                                 keywords: 'journey arc path roadmap parts' },
       { type: 'page', title: 'Questions people ask',  href: `${base}/questions`,       subtitle: "Top questions from Vlad's inbox",                                                                     keywords: 'faq questions common asked help' },
-      { type: 'page', title: "Vlad's CC setup",        href: `${base}/showcase`,        subtitle: '62 skills + 32 agents + 12 plugins',                                                                  keywords: 'showcase claude code setup skills agents plugins configuration mine' },
+      { type: 'page', title: "Vlad's CC setup",        href: `${base}/showcase`,        subtitle: '62 skills + 32 agents + 12 plugins',                                                                  keywords: 'showcase claude code setup skills agents plugins configuration mine cursor codex aider windsurf' },
       { type: 'page', title: "Vlad's Cowork setup",    href: `${base}/cowork-setup`,    subtitle: 'Connectors + scheduled tasks (sanitized)',                                                            keywords: 'cowork claude.ai setup connectors scheduled tasks routines' },
       { type: 'page', title: 'Sections',              href: `${base}/sections`,        subtitle: 'Chapters by theme',                                                                                   keywords: 'sections themes chapters parts table of contents toc' },
       { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: `${Object.keys(glossary).length} terms, A–Z`,                                                          keywords: 'glossary terms definitions vocabulary a-z dictionary' },
@@ -124,7 +161,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours',                                                                                 keywords: 'tier list ranking compare which model best leaderboard lmarena chatgpt gpt gpt-5 gpt-4 o1 o3 claude opus sonnet haiku gemini grok deepseek qwen llama mistral kimi glm anthropic openai google meta xai cohere perplexity' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up',                                                                                  keywords: 'cheat sheet reference quick cmd-k command palette search slash commands settings shortcut keyboard print' },
       { type: 'page', title: '30-day plan',           href: `${base}/thirty-day-plan`, subtitle: 'Custom roadmap',                                                                                      keywords: '30 day thirty plan roadmap onboarding schedule monthly week-by-week' },
-      { type: 'page', title: 'About',                 href: `${base}/about`,           subtitle: 'Vlad + portfolio + newsletter',                                                                       keywords: 'about vlad podoliako belkins folderly lingualive nocancer portfolio playbook author bio newsletter' },
+      { type: 'page', title: 'About',                 href: `${base}/about`,           subtitle: 'Vlad + portfolio + newsletter',                                                                       keywords: 'about vlad podoliako belkins folderly lingualive nocancer portfolio playbook author bio newsletter contact who' },
       { type: 'page', title: 'Changelog',             href: `${base}/changelog`,       subtitle: "What's new in each edition",                                                                          keywords: 'changelog edition history versions updates release notes whats new' },
     ];
     const glossaryItems: Item[] = Object.keys(glossary).map((term) => ({
@@ -174,13 +211,60 @@ export default function CommandPalette() {
     return [...pages, ...chapterItems, ...sectionItems, ...glossaryItems, ...noteItems];
   }, [base]);
 
+  // Curated defaults for the empty-state — high-intent entry points, not
+  // first-N by array order. Keep this list under 10; render with a "Popular"
+  // header so users see they're not search results.
+  const POPULAR_HREFS = useMemo(() => [
+    '/day-zero', '/cheat-sheet', '/tier-list', '/sovereign-stack',
+    '/html-first', '/showcase', '/glossary', '/resources',
+  ].map((p) => `${base}${p}`), [base]);
+
+  const popularDefaults = useMemo(() => {
+    const byHref = new Map(items.map((it) => [it.href, it] as const));
+    return POPULAR_HREFS.map((href) => byHref.get(href)).filter(Boolean) as Item[];
+  }, [items, POPULAR_HREFS]);
+
   const filtered = useMemo(() => {
-    if (!q.trim()) return items.slice(0, 24);
+    if (!q.trim()) return popularDefaults;
     const needle = q.toLowerCase();
-    return items
-      .filter((it) => (it.title + ' ' + (it.subtitle || '') + ' ' + (it.keywords || '')).toLowerCase().includes(needle))
-      .slice(0, 24);
-  }, [q, items]);
+    const typeBonus: Record<Item['type'], number> = { page: 5, chapter: 4, section: 3, glossary: 2, note: 1 };
+
+    const scored = items.map((it) => {
+      const title = it.title.toLowerCase();
+      const subtitle = (it.subtitle || '').toLowerCase();
+      const keywords = (it.keywords || '').toLowerCase();
+      let score = 0;
+      if (title === needle) score += 200;                              // exact title match
+      else if (title.startsWith(needle)) score += 100;                 // prefix
+      else if (title.includes(needle)) score += 50;                    // anywhere in title
+      if (subtitle.includes(needle)) score += 20;
+      // word-boundary match in keywords scores higher than substring
+      if ((' ' + keywords + ' ').includes(' ' + needle + ' ')) score += 15;
+      else if (keywords.includes(needle)) score += 10;
+      if (score > 0) score += typeBonus[it.type] || 0;
+      return { it, score };
+    });
+
+    const exact = scored.filter((s) => s.score > 0).sort((a, b) => b.score - a.score).map((s) => s.it).slice(0, 24);
+    if (exact.length >= 3 || needle.length < 3) return exact;
+
+    // Fuzzy fallback — Levenshtein over titles only, max edit distance 2,
+    // capped at 5 approximate matches. Runs only when substring is thin.
+    const fuzzy: Item[] = items
+      .filter((it) => !exact.includes(it))
+      .map((it) => ({ it, d: levenshtein(needle, it.title.toLowerCase().slice(0, Math.max(needle.length + 2, it.title.length))) }))
+      .filter(({ d, it }) => d > 0 && d <= 2 && Math.abs(it.title.length - needle.length) <= 4)
+      .sort((a, b) => a.d - b.d)
+      .slice(0, 5)
+      .map(({ it }) => it);
+    // Tag fuzzy results so the UI can render them under a divider.
+    return [...exact, ...fuzzy.map((it) => ({ ...it, _fuzzy: true } as Item & { _fuzzy?: boolean }))];
+  }, [q, items, popularDefaults]);
+
+  const exactCount = useMemo(() => {
+    if (!q.trim()) return filtered.length;
+    return filtered.filter((it) => !(it as Item & { _fuzzy?: boolean })._fuzzy).length;
+  }, [filtered, q]);
 
   useEffect(() => {
     const onOpen = () => {
@@ -193,6 +277,22 @@ export default function CommandPalette() {
 
   useEffect(() => { setActive(0); }, [q, open]);
 
+  // PostHog: capture searches (debounced 500ms) and clicks. No-op when
+  // window.posthog isn't loaded (env var absent or ad-blocker active).
+  useEffect(() => {
+    if (!open || !q.trim()) return;
+    const t = setTimeout(() => {
+      const ph = (window as any).posthog;
+      if (ph?.capture) ph.capture('cmd_k_search', { query: q, result_count: filtered.length });
+    }, 500);
+    return () => clearTimeout(t);
+  }, [q, open, filtered.length]);
+
+  const trackClick = (it: Item, position: number) => {
+    const ph = (window as any).posthog;
+    if (ph?.capture) ph.capture('cmd_k_click', { query: q, href: it.href, type: it.type, position, fuzzy: !!(it as Item & { _fuzzy?: boolean })._fuzzy });
+  };
+
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -202,7 +302,7 @@ export default function CommandPalette() {
       if (e.key === 'Enter')     {
         e.preventDefault();
         const it = filtered[active];
-        if (it) window.location.href = it.href;
+        if (it) { trackClick(it, active); window.location.href = it.href; }
       }
     };
     window.addEventListener('keydown', handler);
@@ -238,21 +338,33 @@ export default function CommandPalette() {
         </div>
         <div className="max-h-[60vh] overflow-y-auto">
           {filtered.length === 0 && <div className="px-4 py-8 text-sm text-center" style={{ color: 'rgb(var(--muted))' }}>No matches.</div>}
-          {filtered.map((it, idx) => (
-            <a
-              key={it.href}
-              href={it.href}
-              className="flex items-center gap-3 px-4 py-2.5 no-underline"
-              style={{ background: idx === active ? 'rgb(var(--line) / 0.6)' : 'transparent', color: 'rgb(var(--fg))' }}
-              onMouseEnter={() => setActive(idx)}
-            >
-              <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>{it.type}</span>
-              <div className="min-w-0 flex-1">
-                <div className="font-medium truncate">{it.title}</div>
-                {it.subtitle && <div className="text-xs truncate" style={{ color: 'rgb(var(--muted))' }}>{it.subtitle}</div>}
+          {!q.trim() && filtered.length > 0 && (
+            <div className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-wider" style={{ color: 'rgb(var(--muted))' }}>Popular</div>
+          )}
+          {filtered.map((it, idx) => {
+            const isFuzzy = (it as Item & { _fuzzy?: boolean })._fuzzy === true;
+            const showFuzzyDivider = isFuzzy && idx === exactCount;
+            return (
+              <div key={it.href}>
+                {showFuzzyDivider && (
+                  <div className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-wider border-t" style={{ color: 'rgb(var(--muted))', borderColor: 'rgb(var(--line))' }}>Approximate matches</div>
+                )}
+                <a
+                  href={it.href}
+                  className="flex items-center gap-3 px-4 py-2.5 no-underline"
+                  style={{ background: idx === active ? 'rgb(var(--line) / 0.6)' : 'transparent', color: 'rgb(var(--fg))', opacity: isFuzzy ? 0.75 : 1 }}
+                  onMouseEnter={() => setActive(idx)}
+                  onClick={() => trackClick(it, idx)}
+                >
+                  <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>{it.type}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium truncate" style={{ fontStyle: isFuzzy ? 'italic' : 'normal' }}>{it.title}</div>
+                    {it.subtitle && <div className="text-xs truncate" style={{ color: 'rgb(var(--muted))' }}>{it.subtitle}</div>}
+                  </div>
+                </a>
               </div>
-            </a>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
