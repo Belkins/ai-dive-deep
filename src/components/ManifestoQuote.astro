@@ -1,0 +1,99 @@
+---
+/**
+ * ManifestoQuote — the operator's why, displayed as a typographic band.
+ *
+ * Used on /, /launch, and /about to anchor a single quote that frames the
+ * whole playbook. Self-contained: centers its own typography so it sits
+ * cleanly in container-wide and container-prose alike.
+ *
+ * Props:
+ *   quote        — the line itself (no surrounding curly quotes; the
+ *                  component renders them).
+ *   attribution  — short attribution (e.g. "Vlad Podoliako"). Renders as
+ *                  "— {attribution}".
+ *   tag          — optional eyebrow label (defaults to "The why").
+ */
+interface Props {
+  quote: string;
+  attribution: string;
+  tag?: string;
+}
+const { quote, attribution, tag = 'The why' } = Astro.props;
+---
+<figure
+  class="manifesto-quote my-16 md:my-20 mx-auto max-w-3xl text-center px-4"
+  aria-label="Manifesto quote"
+>
+  <div
+    class="text-[0.7rem] uppercase tracking-[0.32em] mb-6"
+    style="color: rgb(var(--accent))"
+  >
+    {tag}
+  </div>
+
+  <div class="manifesto-rule manifesto-rule--top" aria-hidden="true"></div>
+
+  <blockquote
+    class="font-display m-0 leading-[1.15] text-[clamp(1.6rem,4.2vw,2.75rem)]"
+    style="color: rgb(var(--fg)); letter-spacing: -0.01em;"
+  >
+    <span
+      class="manifesto-mark"
+      aria-hidden="true"
+      style="color: rgb(var(--accent))"
+    >&ldquo;</span>{quote}<span
+      class="manifesto-mark"
+      aria-hidden="true"
+      style="color: rgb(var(--accent))"
+    >&rdquo;</span>
+  </blockquote>
+
+  <div class="manifesto-rule manifesto-rule--bot" aria-hidden="true"></div>
+
+  <figcaption
+    class="mt-6 text-sm tracking-wide"
+    style="color: rgb(var(--muted))"
+  >
+    &mdash;&nbsp;{attribution}
+  </figcaption>
+</figure>
+
+<style>
+  .manifesto-rule {
+    margin: 1.5rem auto 0;
+    width: 56px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(var(--accent) / 0.7) 50%,
+      transparent 100%
+    );
+  }
+  .manifesto-rule--bot {
+    margin: 0 auto 0;
+    margin-top: 1.75rem;
+  }
+  .manifesto-mark {
+    font-family: inherit;
+    font-weight: 600;
+    margin: 0 0.1em;
+    display: inline-block;
+    transform: translateY(-0.05em);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .manifesto-quote {
+      animation: manifesto-rise 0.9s ease-out both;
+    }
+    @keyframes manifesto-rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+</style>

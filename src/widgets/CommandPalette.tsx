@@ -50,6 +50,18 @@ const HTMLFIRST_SECTIONS: { id: string; label: string }[] = [
   { id: 'in-the-wild', label: 'The pattern in the wild (12 public)' },
   { id: 'do-this', label: 'Do this Monday' },
 ];
+const SWARMS_SECTIONS: { id: string; label: string }[] = [
+  { id: 'why', label: 'Why swarms exist' },
+  { id: 'architecture', label: 'The four patterns (interactive)' },
+  { id: 'waves', label: 'The 5 × 4 wave pattern' },
+  { id: 'shelf', label: "Vlad's swarm skill shelf (10)" },
+  { id: 'patterns', label: 'Seven patterns I actually use' },
+  { id: 'prompts', label: 'Orchestration prompts to steal' },
+  { id: 'breaks', label: 'Three things that break swarms' },
+  { id: 'verify', label: 'The between-wave audit' },
+  { id: 'not-for', label: 'When NOT to use a swarm' },
+  { id: 'monday', label: 'Do this Monday — 3 paths' },
+];
 const GITHUB_PLAYBOOK_SECTIONS: { id: string; label: string }[] = [
   { id: 'new-linkedin', label: 'GH is the new LinkedIn' },
   { id: 'five-uses', label: 'Five non-code uses of GitHub' },
@@ -169,6 +181,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'HTML-ization',          href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies',                                            keywords: 'html-ization htmlization html-first html first interactive artifact deliverable single-file static page case study clickable afc folderly audit' },
       { type: 'page', title: 'The Sovereign Stack',   href: `${base}/sovereign-stack`, subtitle: 'Open-weights LLMs that survive the deprecation calendar — Ollama, hardware, the heretic question, nano-gpt', keywords: 'sovereign stack open source weights local llm on-device edge ollama lm studio kimi qwen glm deepseek llama mistral grok gpt-oss heretic abliteration nano-gpt nanogpt karpathy mythos hardware mac studio rtx 3090 4090 mythos meta google deepmind anthropic openai xai zhipu alibaba' },
       { type: 'page', title: 'GitHub Playbook',       href: `${base}/github-playbook`, subtitle: 'GitHub for non-developers — 5 non-code uses, 8 gh commands, what to ignore, 6 worked examples',                              keywords: 'github gh git non-developer non-coder operator pages readme issues releases discussions linkedin karpathy simonw willison nanogpt nanochat profile readme private repo public repo deploy artifacts' },
+      { type: 'page', title: 'Swarms — deep dive',     href: `${base}/swarms`,          subtitle: '10 swarm skills, 7 patterns, the prompts to steal, the 3 things that break',                                                          keywords: 'swarm swarms parallel subagents fan-out pipeline map-reduce adversarial wave orchestration agent-wave-verify swarm-strategic-plan debug-swarm audit bughunter ultrareview cross-trio-audit folderly orchestrator conductor brief canon-lock red-team' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.',                                                       keywords: 'claude.md rules karpathy twelve 12 conventions context file always-loaded operator overlay' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours',                                                                                 keywords: 'tier list ranking compare which model best leaderboard lmarena chatgpt gpt gpt-5 gpt-4 o1 o3 claude opus sonnet haiku gemini grok deepseek qwen llama mistral kimi glm anthropic openai google meta xai cohere perplexity' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up',                                                                                  keywords: 'cheat sheet reference quick cmd-k command palette search slash commands settings shortcut keyboard print' },
@@ -218,6 +231,13 @@ export default function CommandPalette() {
         subtitle: 'GitHub Playbook',
         href: `${base}/github-playbook#${s.id}`,
         keywords: `github gh git non-developer operator pages readme issues releases linkedin karpathy nanogpt nanochat simon willison profile readme ${s.label} ${s.id}`.toLowerCase(),
+      })),
+      ...SWARMS_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'Swarms',
+        href: `${base}/swarms#${s.id}`,
+        keywords: `swarm parallel subagents fan-out pipeline map-reduce adversarial wave orchestration agent-wave-verify swarm-strategic-plan debug-swarm audit ${s.label} ${s.id}`.toLowerCase(),
       })),
     ];
     const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({

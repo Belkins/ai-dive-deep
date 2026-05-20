@@ -10,6 +10,28 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.1',
+    date: '2026-05-20',
+    tagline: 'Swarms — the deep version, with the skills and the prompts and the receipts.',
+    shipped: [
+      'New /swarms page (~3,800 words) — the operator\'s deep dive into multi-agent orchestration. Embeds the SwarmVisualizer widget (4 patterns animated: fan-out, pipeline, map-reduce, adversarial). The 5 × 4 wave pattern explained with the real five-wave breakdown from /swarm-strategic-plan.',
+      'The skill shelf — 10 swarm skills listed with shape + use case + file path: /swarm-strategic-plan, /debug-swarm, /audit, /agent-wave-verify, /folderly-external-audit, /cross-trio-audit, /bughunter, /ultrareview, /gstack-qa, /gstack-review',
+      'Seven swarm patterns from memory — CANON-lock + red-team / design-variant / perspectival editorial / multi-model bake-off / script-not-swarm collector / data-injection-slot / demand-test ≠ build. Each one earned its place by failing first; each gets one paragraph with the receipt.',
+      'Three orchestration prompts to steal — the universal subagent dispatch envelope (with the inline-fallback contract), the /audit 6-agent parallel dispatch shape, the BRIEF.md template with HARD CONSTRAINTS section that load-bears across 20 agents',
+      'Three things that quietly break a swarm — the 600s watchdog stall, filesystem contention with 5+ agents, load-bearing false premises in the BRIEF. Each one with the fix.',
+      '3 ScreenshotPlaceholder slots — tmux running multi-agent dispatch, /swarm-strategic-plan output folder, /agent-wave-verify catching a stub. Placeholders mark intent; screenshots get captured live.',
+      'Ch 06 callout — added a tip box at the top of "The Swarm" chapter pointing to /swarms as the deep reference (chapter = story, page = playbook)',
+      'Ch 40 cross-link upgraded — the "swarms tease" section in Ch 40 now links to /swarms (was text-only when /swarms didn\'t exist yet)',
+      'Cmd-K — /swarms page entry + 10 section anchors searchable',
+    ],
+    receipts: [
+      { label: 'New page', value: '/swarms · ~3,800 words · 10 sections · reuses SwarmVisualizer' },
+      { label: 'Skills documented', value: '10 (with paths in ~/.claude/skills/)' },
+      { label: 'Swarm patterns codified', value: '7 (each with a failure-receipt origin)' },
+      { label: 'Orchestration prompts published', value: '3 (dispatch envelope, /audit shape, BRIEF template)' },
+    ],
+  },
+  {
     edition: 'Edition 9',
     date: '2026-05-20',
     tagline: 'Prompting is basic now. The leverage moved up the ladder.',

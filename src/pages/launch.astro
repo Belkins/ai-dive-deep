@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import ArtifactEmbed from '@/components/ArtifactEmbed.astro';
+import ManifestoQuote from '@/components/ManifestoQuote.astro';
 import LaunchTypewriter from '@/widgets/LaunchTypewriter.tsx';
 import LaunchCountUp from '@/widgets/LaunchCountUp.tsx';
 import PostCreditScene from '@/widgets/PostCreditScene.tsx';
@@ -72,6 +73,14 @@ const timeline = [
     {starCount === null && (
       <p class="mt-4 text-xs" style="color: rgb(var(--muted))">★ count fetched at build; updates with each commit.</p>
     )}
+  </section>
+
+  <!-- MANIFESTO -->
+  <section data-section-target class="container-wide reveal">
+    <ManifestoQuote
+      quote="It has always given me satisfaction to be able to create what I have in mind."
+      attribution="Vlad Podoliako"
+    />
   </section>
 
   <!-- THE THESIS -->

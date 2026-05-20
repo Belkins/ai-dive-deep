@@ -167,7 +167,7 @@ A short field guide. When you see any of these, you're reading content optimized
 
 ## A short note on swarms, because this chapter keeps gesturing at them
 
-I'll write the deep version separately — a `/swarms` page is queued for the next edition, with diagrams, examples, and the orchestration patterns I actually use. For this chapter, the load-bearing claim is:
+I wrote the deep version separately — [the /swarms page](/swarms) has the architecture diagrams, the ten swarm skills I've shipped, the seven patterns I use, the orchestration prompts to steal, and the three things that quietly break a swarm. For this chapter, the load-bearing claim is:
 
 A swarm is the upgrade path from "I have a clever single-instance prompt." When the prompt is doing too much work, the answer isn't to make the prompt cleverer; the answer is to split the prompt across instances and let synthesis do the integration. `/swarm-strategic-plan` is the productized version of this — twenty pre-prompted agents in five waves, with a master BRIEF locking the constraints across the whole run. Each agent's prompt is plain. The intelligence is in the architecture.
 

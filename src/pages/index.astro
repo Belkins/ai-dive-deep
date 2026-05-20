@@ -4,6 +4,7 @@ import { CHAPTERS } from '@/lib/chapters';
 import HeroIntro from '@/widgets/HeroIntro.tsx';
 import ResumeReading from '@/widgets/ResumeReading.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import ManifestoQuote from '@/components/ManifestoQuote.astro';
 import { CHANGELOG } from '@/lib/changelog';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const ed = CHANGELOG[0];
@@ -48,6 +49,13 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
 
   <section class="container-wide pt-4 pb-12">
     <HeroIntro client:load />
+  </section>
+
+  <section class="container-wide">
+    <ManifestoQuote
+      quote="It has always given me satisfaction to be able to create what I have in mind."
+      attribution="Vlad Podoliako"
+    />
   </section>
 
   <section class="container-wide pt-16 pb-8">
