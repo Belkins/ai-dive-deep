@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "description": "ULTIMATE AI DIVE DEEP — interactive field manual by Vlad Podoliako",
   "scripts": {
-    "prebuild": "python3 scripts/scan-screenshots.py && bash scripts/check-template-literals.sh",
-    "predev": "python3 scripts/scan-screenshots.py && bash scripts/check-template-literals.sh",
+    "prebuild": "python3 scripts/scan-screenshots.py && bash scripts/check-template-literals.sh && python3 scripts/check-stack-integrity.py",
+    "predev": "python3 scripts/scan-screenshots.py && bash scripts/check-template-literals.sh && python3 scripts/check-stack-integrity.py",
     "lint:tpl": "bash scripts/check-template-literals.sh",
+    "lint:stack": "python3 scripts/check-stack-integrity.py",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
