@@ -135,7 +135,7 @@ changelog.
 
 ## Credits
 
-Written and built by **Vlad Podoliako** — CEO of [Belkins](https://belkins.com),
+Written and built by **Vlad Podoliako** — Founder & CEO of [Belkins](https://belkins.com),
 founder of [Folderly](https://folderly.com), and operator across a portfolio
 of others.
 
