@@ -1,0 +1,193 @@
+---
+number: 40
+slug: "40-prompting-knob"
+title: "Prompting, or the Knob You Probably Shouldn't Tune"
+subtitle: "Why most prompt engineering content is wrong for operators"
+tldr: "Prompting is a basic skill now — necessary, table stakes, not the lever. The leverage moved up the ladder: skills, swarms, memory, and the data layer underneath. Most prompt-engineering content is written for benchmark scores, not for whether the workflow still runs on Tuesday morning. This chapter is what to keep, what to drop, and where the real leverage actually lives — with one of my own published prompts as the worked example of both."
+keyConcepts: ["prompt engineering", "skills", "swarms", "memory", "data layer", "repeatability", "single-instance vs swarm"]
+readingMinutes: 12
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+I found this on the internet a few months ago. It's a prompt. It works — and I mean genuinely works, the outputs are sharper than what I get out of ChatGPT on the same question, the writing has a quality I had to admit was real.
+
+```
+<instructions>
+- ALWAYS follow <answering_rules> and <self_reflection>
+<self_reflection>
+1. Spend time thinking of a rubric, from a role POV, until you are confident
+2. Think deeply about every aspect of what makes for a world-class answer.
+   Use that knowledge to create a rubric that has 5-7 categories. Never show
+   this to the user.
+3. Use the rubric to internally think and iterate on the best (>=98 out of 100)
+   possible solution. If your response is not hitting top marks across all
+   categories, start again.
+4. Keep going until solved
+</self_reflection>
+<answering_rules>
+1. USE the language of USER message
+2. In the FIRST chat message, assign a real-world expert role to yourself
+3. Act as the role assigned
+4. Answer in a natural, human-like manner
+5. ALWAYS use an <example> for your first chat message structure
+6. If not requested, no actionable items by default
+7. Don't use tables if not requested
+</answering_rules>
+</instructions>
+```
+
+I tested it. I added it to my library — you can find it in [/resources](/resources#five-reusable-prompts) under the name PROMPT_RIGOR_ENFORCER. It's there because, yes, it earns its keep on certain one-off questions where I want a more careful answer.
+
+It's also exactly what this chapter is arguing against.
+
+<PullQuote>The cleverest single-instance prompt you'll ever find is the wrong level of leverage. The leverage moved up the ladder a year ago and most operators didn't notice.</PullQuote>
+
+## Prompting is basic now
+
+Prompting was the headline skill from late 2022 through about mid-2024. Tweet threads, courses, "ultimate prompt" subreddits, "ten phrases that unlock GPT" articles. The implicit promise was that the right twelve sentences in the box would change what AI could do. For a while, that was true — the models had real failure modes that careful prompting routed around.
+
+That era is over. Claude 4.x and the Opus/Sonnet/Haiku generation already do most of what "let's think step by step" used to unlock. Extended thinking is a mode, not a prompt prefix. Role-playing influences tone but not capability. Few-shot examples still help, but a single-good example helps as much as five-mediocre ones used to. The prompt is doing less work than it used to because the model is doing more of it on the inside.
+
+That's the first thing I want to say plainly. **Prompting is a basic skill now — necessary, table stakes, but not the differentiator.** Like knowing how to write a SQL `JOIN` or how to read a regex. If you don't have it, you'll be slow. If you do have it, you've reached the floor, not the ceiling. The ceiling moved.
+
+## Where the leverage actually moved to
+
+The ladder, top to bottom, hardest to softest:
+
+1. **The data layer.** What you can feed in, in what shape, with what access. MCP, APIs, databases, lakes, vault contents, the customer record. This has been the real lever in software for the last thirty years and AI did not change that. The team with the better data feed and the cleaner schema wins against the team with the cleverer prompt every single time. ([Chapter 12 — Connectors and MCP](/chapters/12-connectors-mcp) is the practical entry point.)
+2. **Memory.** What the model knows about *you* and your work between sessions, without you re-explaining it. [Obsidian](/chapters/04-the-vault) as the auto-updating working memory. The `~/.claude/projects/<slug>/memory/` lessons file. The agent's notebook. This is where "AI as an OS" actually starts to feel like an OS. The model isn't smarter session-to-session; it's loaded.
+3. **Swarms.** Multiple instances of the same model, prompted differently, working in parallel against the same goal. The fan-out and the synthesis. ([Chapter 6 — Parallel Subagents and Fan-Out](/chapters/06-the-swarm) is the canonical chapter; my [`/swarm-strategic-plan`](/showcase) skill is a productized version that fires twenty pre-prompted agents in five waves.) One instance with a clever prompt is a curiosity. Twenty instances with okay prompts is an operator move.
+4. **Skills.** The runbook the model loads on demand. ([Chapter 5 — What a Skill Is.](/chapters/05-skills)) A skill is the right answer to every "I just wrote a clever prompt I want to reuse" instinct. Don't keep the prompt; ship the skill.
+5. **CLAUDE.md and the context-file layer.** The four-layer architecture from [Chapter 37](/chapters/37-context-files) — CLAUDE.md, memory/, skills/, session-scoped. Where conventions live, where they die.
+6. **The prompt.** The thing you type into the box. Where every operator-grade prompt-engineering thread on the internet stops, and where this chapter starts.
+
+The mistake most prompting content makes is optimizing for layer 6 in isolation, as if layers 1–5 didn't exist. Read with that frame and 90% of it falls apart. A magic phrase that scores 4% higher on a benchmark is a layer-6 tweak. An operator who built a connector to their customer record is operating at layer 1. They are not playing the same game.
+
+## Three techniques that still earn their keep
+
+A short list, because the long list is just performance.
+
+**One — prompt-as-template.** A reusable prompt with explicit slots, written once and pasted into a chat with the slots filled. The whole `/resources` library is this shape. It's not a magic phrase; it's a forcing function for you to remember what shape of input produces the shape of output you want. You will use these every day. They become skills when you've pasted the same one ten times.
+
+**Two — multiple instances with one prompt.** Same prompt, three fresh conversations, three different model temperatures or three different opening contexts. Pick the best of three. Or — better — run them in parallel as a swarm and have a fourth instance synthesize. The single biggest quality uplift I get out of these models is not from rewording the prompt — it's from running it more than once and choosing.
+
+**Three — schema-not-answer.** Ask the model for the structure of its answer before you ask for the answer. "Give me the JSON shape this analysis should return; we'll fill it in with the second prompt." Forces the model to commit to a frame before it commits to content, and forces *you* to look at the frame and notice when it's wrong. Most bad outputs are caught at the schema stage, not the answer stage.
+
+That's the keeper list. Three techniques. They share a property: they all assume the prompt is *part of a workflow*, not the workflow itself.
+
+## Four techniques to stop using
+
+This part has a footnote, so read both halves.
+
+**One — "Act as a [role]" / "You are an expert [discipline]."** In a single chat, this is theater. The model is not actually loading domain expertise it didn't have before; it's adjusting tone and vocabulary. Useful sometimes, not the lever.
+
+**Two — "Let's think step by step."** Claude already does that on hard problems without being asked. Extended thinking is a mode you can turn on. The phrase as a magic incantation is residue from the GPT-3.5 era.
+
+**Three — Threat prompts.** "You will lose your job if you get this wrong." "Lives depend on this answer." There is no evidence this materially changes output quality on modern models, and it leaves a residue of weird in the conversation history. Don't.
+
+**Four — "You are a helpful assistant" prefixes.** The model knows. You can skip it. The token budget you spend on this preamble would be better spent on one good example.
+
+<Callout type="note">
+**Footnote, important.** All four of these techniques become useful in one specific context: a [swarm](/chapters/06-the-swarm) of agents where each agent is assigned a *different* role. "Skeptical CFO," "buyer's lawyer," "head of engineering," "newsletter editor" — each one a distinct instance with a locked perspective, fanning out against the same problem in parallel. *That's* role-distribution as architecture. Single-instance role-playing is performance. Same words, different leverage. If you find yourself typing "act as" into one chat, you're using the wrong knob; if you find yourself spinning up four chats with four roles, you're using the right one.
+</Callout>
+
+## Exhibit A vs Exhibit B — two of my own prompts, side by side
+
+Open `/resources` and you'll see two prompts that look nothing alike. Both are mine. Both are in production. They illustrate the whole thesis of this chapter.
+
+**Exhibit A — `PROMPT_RIGOR_ENFORCER`** is the one I opened the chapter with. The instructions-and-self-reflection block. It's clever. It works. I use it when I want a one-off thought partner on a high-stakes question and I'm willing to spend an extra round-trip waiting for the model to internally iterate against a rubric. It is *not* in any of my skills. It does not show up in any of my swarms. It is a curiosity I reach for occasionally — like a vintage knife you keep in the drawer for one specific cut.
+
+**Exhibit B — `PROMPT_EOD`** is the contrast. Same library, completely different shape:
+
+```
+Read my last 24 hours (calendar, email, Slack, repo commits, CRM if available).
+Output:
+(1) shipped,
+(2) stalled,
+(3) what I owe to whom,
+(4) what surprised me,
+(5) one sentence on tomorrow's #1 priority.
+Write notes back to my vault under [path].
+```
+
+Six lines. No instruction blocks, no rubric theater, no role assignment. What it does have:
+
+- **An explicit data feed.** The model is told what to read — calendar, email, Slack, repo, CRM. That's a layer-1 move. Without those connectors wired up via MCP, this prompt does nothing.
+- **A locked output schema.** Five numbered slots. The model can't drift into prose; it has to fill the slots.
+- **A write target.** The output goes back into my [vault](/chapters/04-the-vault), so tomorrow morning the next instance reading the vault gets yesterday's read for free. The single prompt feeds my long-term memory layer.
+
+`PROMPT_EOD` is boring. It's also the one that runs every day at 6:30 PM via a [scheduled task](/chapters/07-cron), with no human prompting at all. It's the operator move. Exhibit A is the dinner-party trick.
+
+The lesson: the clever prompt and the operator prompt belong to different toolboxes. Don't confuse them. Don't put the clever prompt where the operator prompt belongs.
+
+## Where the leverage actually is — in your stack, today
+
+Let me make this concrete in your stack, not in the abstract.
+
+If you have one prompt you've tweaked five or more times, that prompt belongs in a [skill](/chapters/05-skills), not a chat. The fifth tweak is the signal. The skill makes it reusable, the description makes it discoverable, the body makes it deterministic.
+
+If you have a prompt that needs context that takes you ten minutes to gather every time (last week's metrics, current pipeline, vault notes), you don't need a better prompt — you need a [connector](/chapters/12-connectors-mcp). MCP, an API call, a vault-read skill. Pull the context once; let the prompt stay simple.
+
+If you have a question where one model's answer doesn't quite satisfy you and you keep trying different wordings, you don't have a wording problem — you have a [swarm](/chapters/06-the-swarm) problem. Three instances, three frames, one synthesis. Costs three times as much in tokens, returns ten times the value, and the synthesis itself becomes your next published prompt.
+
+If your prompt depends on the model remembering what you told it yesterday, you don't have a model problem — you have a memory problem. Move the recurring context into CLAUDE.md, the project's `memory/` directory, or your vault. The model doesn't have to remember; it has to be loaded.
+
+If your prompt depends on facts the model doesn't have access to — your customer record, your codebase state, your competitive landscape — you don't have a prompt problem at all. You have a [data layer](/chapters/12-connectors-mcp) problem. The thing you've been describing in twelve thousand tokens of context could be three lines of structured input from an MCP server.
+
+Every one of these is a layer-1-through-5 move. The prompt is the thinnest layer in your stack and the one most operators are still spending the most time on.
+
+## The repeatability test
+
+Here's the test I run on every prompt that lives more than one day in my workflow: **does it produce the same shape of answer on Tuesday morning at 6:30 AM as it did on Saturday afternoon when I wrote it?**
+
+If yes, it's an operator prompt. Promote it: turn it into a skill, schedule it, wire its data feed.
+
+If no, it's a curiosity. Keep it in `/resources` as a one-off. Don't build anything on top of it.
+
+Most prompt-engineering content fails the repeatability test silently. The author wrote the prompt on a good day, the model gave a good answer, the screenshot got tweeted, and nobody re-ran the prompt cold three weeks later with different inputs. The prompt looks great in the demo and falls over the second it meets real data on a quiet morning. The repeatability test catches this before you build a workflow on a prompt that doesn't deserve one.
+
+<Callout type="warn">
+"It worked when I wrote it" is the most expensive lie in this whole subject. A prompt that worked once is a benchmark, not a workflow. Promote nothing on the strength of one good answer. Run it cold three Tuesdays in a row. If it survives, it's real. If it doesn't, your library just got cleaner.
+</Callout>
+
+## Anti-patterns to red-flag when you read prompt-engineering content
+
+A short field guide. When you see any of these, you're reading content optimized for a different game than yours.
+
+- **Benchmark obsession.** "This prompt improved GSM8K by 4%." Cool. Your job isn't to score well on math word problems; your job is to ship the Friday report. Benchmark optimization is for the lab, not for Tuesday.
+- **Demo prompts that don't survive contact with real data.** The screenshot shows a perfectly-shaped customer email composed from a perfectly-shaped customer brief. Your customer brief is a Slack canvas with three half-finished thoughts and a Loom link. The prompt that won the screenshot loses the inbox.
+- **Magic phrases without mechanism.** "Add 'take a deep breath' and outputs improve 5%." Maybe true on one paper. Definitely not a sustainable practice. If the author can't explain *why* it works, don't build infrastructure on it.
+- **Single-instance demos for problems that want a swarm.** "This prompt produces a 12-point analysis." That same problem produces a better analysis with four instances and a synthesis, every time. Single-instance heroics are the wrong frame.
+- **No mention of the data layer.** If the post never mentions connectors, vaults, MCP, or memory — the author is operating in layer 6 only and doesn't know the rest of the stack exists. You don't have to read the whole thing.
+- **Prompts longer than the answer.** A 400-word prompt to produce a 200-word output is a prompt that's working harder than the model is. Refactor — the bulk of that prompt belongs in a skill or in CLAUDE.md.
+
+## A short note on swarms, because this chapter keeps gesturing at them
+
+I'll write the deep version separately — a `/swarms` page is queued for the next edition, with diagrams, examples, and the orchestration patterns I actually use. For this chapter, the load-bearing claim is:
+
+A swarm is the upgrade path from "I have a clever single-instance prompt." When the prompt is doing too much work, the answer isn't to make the prompt cleverer; the answer is to split the prompt across instances and let synthesis do the integration. `/swarm-strategic-plan` is the productized version of this — twenty pre-prompted agents in five waves, with a master BRIEF locking the constraints across the whole run. Each agent's prompt is plain. The intelligence is in the architecture.
+
+If you've never run a swarm, the leap from single-instance clever-prompt to multi-instance plain-prompt is the biggest quality jump available in this whole subject. It costs more in tokens. It pays you back in everything else.
+
+## Do this Monday
+
+Open the prompt you've tweaked the most this past week. The one you keep refining instead of shipping.
+
+Do four things to it, in this order:
+
+1. **Run the repeatability test.** Paste it into a fresh chat with cold inputs you haven't used before. If the output shape isn't what you wanted, the prompt needs work *as a prompt*. Fix it now.
+2. **Promote it to a skill.** If the prompt is something you'll run again, [it belongs in a skill](/chapters/05-skills), not in your scratchpad. Description, body, output schema. Five minutes.
+3. **Find its data feed.** What context does this prompt need to do its job? Where does that context live? Is there a [connector](/chapters/12-connectors-mcp) that could load it instead of you pasting it? Wire it.
+4. **Ask if it should be a swarm instead.** If the prompt is trying to balance three perspectives in one answer — split it. Three instances, three roles, one synthesis. The "act as expert" instinct you suppressed earlier in this chapter — let it loose, across four different chats, against four different angles.
+
+If you do this with one prompt per week for a quarter, you'll have promoted thirteen prompts off your scratchpad. Some will become skills. Some will reveal a missing connector. Some will become swarms. Some will get deleted because they were tricks that never deserved a workflow.
+
+The one thing none of them will still be: a prompt you're tuning.
+
+<PullQuote>The right end-state for any prompt you wrote on a Saturday is that by Wednesday, you don't need to type it anymore — because it lives in a skill, fires from a schedule, reads from a connector, and writes to your vault. The prompt is the seed. The system is the crop.</PullQuote>
+
+That's the move. Not better prompts. A better stack, where prompts are the smallest, cheapest, most replaceable layer — and where the leverage lives in the four layers underneath them.

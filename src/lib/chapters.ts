@@ -46,6 +46,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 37, slug: '37-context-files', title: 'Context Files — CLAUDE.md, memory, skills', subtitle: 'Where Conventions Live, Where They Die' },
   { number: 38, slug: '38-run-until-done', title: 'Run Until Done', subtitle: 'Goals, Loops, and the Evaluator That Tells the Agent to Stop' },
   { number: 39, slug: '39-skills-you-should-steal', title: 'Skills You Should Steal', subtitle: 'A tour of the 1M-skill ecosystem, the 73% that\'s broken, and the gaps an operator can fill' },
+  { number: 40, slug: '40-prompting-knob', title: "Prompting, or the Knob You Probably Shouldn't Tune", subtitle: 'Why most prompt engineering content is wrong for operators' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -65,7 +66,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part II — Working Memory',
     tagline: 'The handbook every new instance reads on wake-up.',
     intro: 'The model is the genius with amnesia. The vault is the journal you hand it every morning. Skills are the recipe cards. Connectors are the kitchen. Without these four, every session starts from zero.',
-    slugs: ['04-the-vault', '05-skills', '11-build-a-skill', '12-connectors-mcp'],
+    slugs: ['04-the-vault', '05-skills', '11-build-a-skill', '12-connectors-mcp', '40-prompting-knob'],
   },
   {
     key: 'III',
@@ -119,7 +120,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'claude',
     label: 'Claude',
     description: 'Three doors (Chat / Cowork / Code), the swarm, the modes, sessions, the cheat sheet.',
-    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp', '37-context-files', '38-run-until-done'],
+    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp', '37-context-files', '38-run-until-done', '40-prompting-knob'],
   },
   {
     key: 'security',

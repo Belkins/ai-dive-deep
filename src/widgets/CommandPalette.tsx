@@ -50,6 +50,16 @@ const HTMLFIRST_SECTIONS: { id: string; label: string }[] = [
   { id: 'in-the-wild', label: 'The pattern in the wild (12 public)' },
   { id: 'do-this', label: 'Do this Monday' },
 ];
+const GITHUB_PLAYBOOK_SECTIONS: { id: string; label: string }[] = [
+  { id: 'new-linkedin', label: 'GH is the new LinkedIn' },
+  { id: 'five-uses', label: 'Five non-code uses of GitHub' },
+  { id: 'eight-commands', label: 'The 8 gh commands you need' },
+  { id: 'ignore', label: 'What you can safely ignore' },
+  { id: 'delivery', label: 'GH as delivery surface' },
+  { id: 'collab', label: 'Collaboration without code' },
+  { id: 'examples', label: 'Six examples in the wild' },
+  { id: 'saturday', label: 'The Saturday move (20 min)' },
+];
 const SOVEREIGN_SECTIONS: { id: string; label: string }[] = [
   { id: 'two-stack', label: 'The two-stack thesis' },
   { id: 'leaderboard', label: 'The 2026 open-weights bench' },
@@ -105,6 +115,7 @@ const CHAPTER_SYNONYMS: Record<string, string> = {
   '37-context-files':   'claude.md memory skills conventions context files always-loaded',
   '38-run-until-done':  'run until done goals loops evaluator agent autonomy /goal',
   '39-skills-you-should-steal': 'skills steal community 1M ecosystem broken gaps DenisSergeevitch agents-best-practices simon willison',
+  '40-prompting-knob':  'prompting prompt engineering chain of thought few-shot role play act as ladder skills swarms memory data layer rigor enforcer ultimate prompt cot zero-shot magic phrases anthropic karpathy benchmark tuesday repeatability schema not answer multiple instances',
 };
 
 const RESOURCES_SECTIONS: { id: string; label: string }[] = [
@@ -157,6 +168,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Launch week — live receipts', href: `${base}/launch-week`, subtitle: 'The launch as its own experiment in the thesis. Numbers as they come in.',                          keywords: 'launch week numbers receipts day-by-day live metrics analytics' },
       { type: 'page', title: 'HTML-ization',          href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies',                                            keywords: 'html-ization htmlization html-first html first interactive artifact deliverable single-file static page case study clickable afc folderly audit' },
       { type: 'page', title: 'The Sovereign Stack',   href: `${base}/sovereign-stack`, subtitle: 'Open-weights LLMs that survive the deprecation calendar — Ollama, hardware, the heretic question, nano-gpt', keywords: 'sovereign stack open source weights local llm on-device edge ollama lm studio kimi qwen glm deepseek llama mistral grok gpt-oss heretic abliteration nano-gpt nanogpt karpathy mythos hardware mac studio rtx 3090 4090 mythos meta google deepmind anthropic openai xai zhipu alibaba' },
+      { type: 'page', title: 'GitHub Playbook',       href: `${base}/github-playbook`, subtitle: 'GitHub for non-developers — 5 non-code uses, 8 gh commands, what to ignore, 6 worked examples',                              keywords: 'github gh git non-developer non-coder operator pages readme issues releases discussions linkedin karpathy simonw willison nanogpt nanochat profile readme private repo public repo deploy artifacts' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.',                                                       keywords: 'claude.md rules karpathy twelve 12 conventions context file always-loaded operator overlay' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours',                                                                                 keywords: 'tier list ranking compare which model best leaderboard lmarena chatgpt gpt gpt-5 gpt-4 o1 o3 claude opus sonnet haiku gemini grok deepseek qwen llama mistral kimi glm anthropic openai google meta xai cohere perplexity' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up',                                                                                  keywords: 'cheat sheet reference quick cmd-k command palette search slash commands settings shortcut keyboard print' },
@@ -199,6 +211,13 @@ export default function CommandPalette() {
         subtitle: 'The Sovereign Stack',
         href: `${base}/sovereign-stack#${s.id}`,
         keywords: `sovereign stack open source weights local llm on-device edge ollama lm studio kimi qwen glm deepseek llama mistral grok gpt-oss heretic abliteration nano-gpt nanogpt karpathy mythos hardware openai anthropic google deepmind meta xai zhipu alibaba ${s.label} ${s.id}`.toLowerCase(),
+      })),
+      ...GITHUB_PLAYBOOK_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'GitHub Playbook',
+        href: `${base}/github-playbook#${s.id}`,
+        keywords: `github gh git non-developer operator pages readme issues releases linkedin karpathy nanogpt nanochat simon willison profile readme ${s.label} ${s.id}`.toLowerCase(),
       })),
     ];
     const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({

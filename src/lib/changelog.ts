@@ -10,6 +10,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9',
+    date: '2026-05-20',
+    tagline: 'Prompting is basic now. The leverage moved up the ladder.',
+    shipped: [
+      'New Chapter 40 — "Prompting, or the Knob You Probably Shouldn\'t Tune" (~3,200 words, 12-min read). The contrarian take: prompting is a basic skill now, the real ladder is skills → swarms → memory → data layer. Opens with the verbatim "rigor enforcer" prompt (works, but the wrong leverage) and contrasts it side-by-side with PROMPT_EOD from /resources (the operator-grade shape). Closes with a Monday move: pick the prompt you\'ve tweaked 5+ times and promote it to a skill, schedule, or swarm.',
+      'New page /github-playbook — "GitHub for non-developers" (~3,400 words). GH-is-the-new-LinkedIn reframe, 5 non-code uses (private repo as delivery surface, README as living doc, Issues as ops queue, Discussions as forum, Releases as launch posts), the 8 gh commands you actually need, what you can safely ignore (branches, rebasing, merge conflicts, 80% of git), six examples in the wild (Vlad\'s Playbook + AFC + Karpathy/nanoGPT + Simon Willison/TIL + Willison/blog source + GitHub profile README pattern), and the Saturday move.',
+      'Ch 40 placed in Part II (Working Memory) — sits next to the vault, skills, build-a-skill, and connectors-MCP chapters. Also added to SECTIONS "claude" topical group.',
+      'Cmd-K wired — Ch 40 chapter entry + synonyms (prompting, prompt engineering, chain of thought, ladder, rigor enforcer, etc.), /github-playbook page entry + 8 section anchors searchable',
+      'Ch 19 cross-link callout — added a tip box near the gh repo create snippet pointing non-developers to /github-playbook',
+      'Fact-checked: nanoGPT marked deprecated by Karpathy in Nov 2025 (still live; example notes the move to nanochat). Originally proposed Patrick Collison reading-list example swapped for Simon Willison blog source (Collison\'s reading list is NOT on GitHub — fact-verified). Anthropic prompting docs URL host updated (docs.anthropic.com → platform.claude.com).',
+    ],
+    receipts: [
+      { label: 'New chapter', value: 'Ch 40 · 40-prompting-knob · Part II · ~3,200 words' },
+      { label: 'New page', value: '/github-playbook · 6 examples · 8 gh commands · ~3,400 words' },
+      { label: 'Slop catches by research agent', value: '3 (Collison/nanoGPT/gh-pages-flag — all corrected before push)' },
+      { label: 'Cross-links wired', value: 'Ch 19 → /github-playbook, Ch 40 → Ch 04/05/06/12/37, /github-playbook → /html-first + /sovereign-stack' },
+    ],
+  },
+  {
     edition: 'Edition 8.2',
     date: '2026-05-20',
     tagline: 'HTML-ization, expanded — the recipe, the gallery, the receipts, the edges.',

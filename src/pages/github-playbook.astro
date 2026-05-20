@@ -1,0 +1,222 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const navItems = [
+  { id: 'new-linkedin', label: 'GH is the new LinkedIn' },
+  { id: 'five-uses', label: 'Five non-code uses' },
+  { id: 'eight-commands', label: 'The 8 commands you need' },
+  { id: 'ignore', label: 'What you can ignore' },
+  { id: 'delivery', label: 'GH as delivery surface' },
+  { id: 'collab', label: 'Collaboration without code' },
+  { id: 'examples', label: 'Six examples in the wild' },
+  { id: 'saturday', label: 'The Saturday move' },
+];
+
+const examples = [
+  {
+    tag: 'Yours · public repo',
+    title: "Vlad's Playbook",
+    url: 'https://github.com/Belkins/ai-dive-deep',
+    blurb: "The thing you're reading. Public repo, custom domain, 39 chapters as MDX files, edition history in changelog.ts. Every chapter is a markdown file anyone can read, fork, or send a PR against. The source is the recipe.",
+  },
+  {
+    tag: 'Yours · private repo + Pages',
+    title: 'AFC pitch artifacts',
+    url: '/html-first#case-afc',
+    blurb: 'Two interactive HTML files (the AFC investment deck + the robot-stable annex) deployed from a private repo to a public-to-the-recipient link. The artifact existed before the next meeting did. Private code, public-to-the-recipient link, updated by commit.',
+  },
+  {
+    tag: 'Karpathy',
+    title: 'nanoGPT (and the successor)',
+    url: 'https://github.com/karpathy/nanoGPT',
+    blurb: "~600 lines of Python, MIT-licensed — the literal source for understanding how transformers train. 58k+ stars from people who treat the repo as the textbook. Karpathy marked it deprecated in late 2025 in favor of <a href='https://github.com/karpathy/nanochat' target='_blank' rel='noopener noreferrer' style='color: rgb(var(--accent))'>nanochat</a>, but the repo is still live and is the Saturday curriculum from the <a href='/sovereign-stack#nanogpt' style='color: rgb(var(--accent))'>Sovereign Stack</a> chapter. You don't have to be able to write it to learn from it.",
+  },
+  {
+    tag: 'Simon Willison',
+    title: 'TIL — Today I Learned',
+    url: 'https://github.com/simonw/til',
+    blurb: 'A public repo of "today I learned" notes, mostly markdown, ~1,000+ entries. A working researcher\'s scratchpad shipped as a hostable site. The format is one folder per topic, one file per learning. Forwardable, searchable, version-controlled — and it doubles as proof-of-work for one of the most respected operators in the AI tooling space.',
+  },
+  {
+    tag: 'Simon Willison',
+    title: 'simonwillisonblog (the source)',
+    url: 'https://github.com/simonw/simonwillisonblog',
+    blurb: "The Django source behind <a href='https://simonwillison.net' target='_blank' rel='noopener noreferrer' style='color: rgb(var(--accent))'>simonwillison.net</a>, one of the most-read solo tech blogs in 2026 — every post, template, and database migration in a public repo. Same author as the TIL repo; the demo of treating your real publication as version-controlled, fork-able, and forever-archivable. Your blog as code, the code as the blog.",
+  },
+  {
+    tag: 'GitHub profile pattern',
+    title: 'username/username — the profile README trick',
+    url: 'https://github.com/abhisheknaiidu/awesome-github-profile-readme',
+    blurb: "Create a repo whose name exactly matches your GitHub username. The README.md becomes your profile homepage. Operators have turned this into living résumés — current portfolio, current writing, contact info, dynamic stats. A personal site for free, version-controlled, on infrastructure your kids' kids will still be able to clone.",
+  },
+];
+---
+<BaseLayout
+  title="GitHub for Non-Developers"
+  description="GitHub isn't a code site — it's operator infrastructure. The 5 things you can do without writing code, the 8 gh commands you actually need, and what you can safely ignore. With six worked examples (Vlad's Playbook, AFC, Karpathy/nanoGPT, Simon Willison TIL, Simon Willison blog source, GitHub profile README pattern)."
+>
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">GitHub Playbook</div>
+    <h1>GitHub is not for engineers anymore.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">
+      It's the cheapest, fastest infrastructure layer an operator gets. A delivery surface, a living-doc layer, a permalink machine. This page is what to do with it if you don't write code — and what you can safely ignore.
+    </p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">
+      The five non-code uses, the eight <code>gh</code> commands you actually need, what you can skip from the engineering side, and six worked examples — two of mine plus four from people you've heard of who use GH for the non-code half of their work.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="new-linkedin" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">GitHub is the new LinkedIn</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>LinkedIn has gone the way every social platform goes when the algorithm matters more than the work — bots, recruiters writing in voices not their own, "RIP emails / RIP calls / RIP ads" posts from people whose own emails and calls are doing fine, thanks. The feed is mostly performance. The signal is mostly noise. You can still find good people there, but the platform isn't doing the finding for you anymore.</p>
+            <p>GitHub did the opposite. It is — quietly, without an algorithm pushing the trend — turning into the place operators actually show their work. People share repos the way they used to share decks. They follow each other to watch what gets shipped, not to like a takeoff thread. The Playbook itself is the example I'm closest to: I made a public repo of how I run AI across the portfolio, and the people who care about that work found it through a link to the repo, not through a LinkedIn impression count.</p>
+            <p>The macro shift behind this is the [HTML-ization](/html-first) era — every deliverable becoming a link, every link wanting a home. GitHub is the cheapest, most durable, most operator-respectable home that exists. A repo is a permalink that survives platforms. It's also where the proof-of-work lives — the literal commit history of how you did the thing.</p>
+            <PullQuote>Imagine being on a date and exchanging GitHubs instead of LinkedIns. We're closer to that than people think — and the people closer to it are doing more interesting work.</PullQuote>
+            <p>The rest of this page is the operator's path into GH if you don't write code. What's worth doing, what you can ignore, and the commands and examples that get you there.</p>
+          </div>
+        </div>
+
+        <div id="five-uses" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Five things you can do without writing a line of code</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p><strong>1. Private repo as a delivery surface.</strong> This is the move the <a href="/html-first">HTML-ization</a> chapter is built around. You make a private repo, drop in a single HTML file (the artifact your team wrote with you in Claude in twelve minutes), enable GitHub Pages, and you have a deployed link. Send the link in an email. The recipient clicks. They never see GitHub — they see your artifact. You never saw a server config — you saw a checkbox. Every audit I've shipped externally, every pitch deck that became a link, every QBR that should have been a slide deck and isn't — they all live in private repos serving public-to-the-recipient links.</p>
+            <p><strong>2. README as a living doc that beats Notion.</strong> A README.md is just a markdown file at the top of a repo. It's also the most forwardable document format that exists — version-controlled, mobile-readable, accessible from anywhere, never lost in a Notion workspace nobody can find. Your "company one-pager," your "project status," your "policies people keep asking about" — all of them work as a README in a repo you control. Update with a commit. The link never changes. The history is preserved automatically.</p>
+            <p><strong>3. Issues as a public roadmap OR an internal ops queue.</strong> Pick one. Don't do both. A GitHub Issue is a small forwardable document with a title, a body, comments, labels, and a state (open/closed). That's a Linear ticket. That's a Trello card. That's a roadmap item. You can run a product roadmap publicly by opening Issues for each item and labeling them by status. You can run an internal ops queue privately the same way. The mistake is mixing the two in one repo — separate the surfaces, separate the audiences.</p>
+            <p><strong>4. Discussions as a forum you don't have to host.</strong> If you've ever wanted to "set up a community" and bounced off Circle, Discourse, Slack-pricing, or whatever — Discussions are free, durable, and already trusted by every developer who'd come anywhere near your work. For technical-adjacent audiences (operators using AI, founders, builders), Discussions outperform a fresh Discord nine times out of ten. The interface looks like Reddit. The infrastructure is GitHub. The cost is zero.</p>
+            <p><strong>5. Releases as launch posts with permanent URLs.</strong> When you ship something — a new edition of your Playbook, a new version of an artifact, a major update to a public doc — make a Release. It's a forwardable URL with a title, a body, optional attachments. Press writes about it because the URL is permanent. Future-you can link back to it without breaking the link. Edition 6 of this Playbook went out as a Release. So did Edition 8 and Edition 8.2. Each one is a permalink to a moment.</p>
+          </div>
+        </div>
+
+        <div id="eight-commands" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The eight commands you actually need</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>This is not <code>git</code>. This is <code>gh</code> — the GitHub CLI. Install it once (<code>brew install gh</code> on a Mac), authenticate once (<code>gh auth login</code>), then these eight commands cover ~95% of what an operator does with GitHub for the rest of their career.</p>
+            <pre class="rounded-lg p-4 my-3 text-sm overflow-x-auto" style="background: rgba(var(--fg) / 0.05); border: 1px solid rgb(var(--border))"><code>{`# One-time setup
+gh auth login                    # log in to GitHub from the terminal — once
+brew install gh                  # the CLI itself (Mac); see cli.github.com for other OSes
+
+# Daily moves
+gh repo create my-thing --private  # create a new repo in 5 seconds
+gh repo clone <user>/<repo>        # pull someone else's repo to your machine
+gh repo view --web                 # open the current repo in your browser
+gh issue create --title "..."      # open an issue (your ops queue or roadmap)
+gh issue list                      # see what's open
+gh pr view <number>                # read a pull request — no code review needed
+gh release create v1.0 --notes ...  # publish a release (your "launch post" URL)`}</code></pre>
+            <p>That's it. Eight commands. No <code>git rebase</code>, no <code>git stash</code>, no <code>git merge --strategy-option theirs</code>. If you need any of those, you're solving a problem this page isn't trying to solve.</p>
+            <Callout type="tip">
+              When in doubt: <code>gh repo view --web</code>. It opens the repo in your browser, where everything is buttons. The CLI is faster once you're used to it; the web UI is forgiving while you're learning. Use both. Same data underneath.
+            </Callout>
+          </div>
+        </div>
+
+        <div id="ignore" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What you can safely ignore</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The same git/GitHub surface that supports a 200-person engineering org also supports the operator with one repo and a markdown file. The trick is knowing which 80% of the tool isn't for you.</p>
+            <p><strong>Branches.</strong> An engineering team uses branches because multiple humans edit the same files in parallel and they need to merge later. You're one human with one markdown file. Stay on <code>main</code>. Commit directly. Skip the branching theory unless you cross the multi-human threshold — which, for non-code work, you mostly won't.</p>
+            <p><strong>Merge conflicts.</strong> A merge conflict happens when two branches modify the same lines. You're not branching, so you're not merging. You'll never see a merge conflict. The whole vocabulary of "merge strategy," "fast-forward," "three-way merge" — not yours. Skip the chapter.</p>
+            <p><strong>Rebasing.</strong> Rebasing is rewriting commit history to make it look like the work was done in a different order. It's powerful and dangerous and entirely unnecessary for what you're doing. Don't learn it. Don't try it. It is the most common way operators accidentally delete their work; the most common engineer-told-me-to advice; the most common Stack Overflow rabbit hole. Stay out.</p>
+            <p><strong>Forking.</strong> Forking is making your own copy of someone else's repo. Useful occasionally — when you want to suggest changes to a repo you don't own — but mostly not your move. Most of the time, if you want to use someone else's repo, you clone it; if you want to riff on it, you make your own. Forking is for proposing changes back upstream, which is an engineering concern.</p>
+            <p><strong>80% of <code>git</code> syntax.</strong> <code>git cherry-pick</code>, <code>git bisect</code>, <code>git reflog</code>, <code>git submodule</code> — these are powerful tools for engineering teams managing complex codebases. They are not for you. The mental model "I am editing one file in one folder and saving versions with messages attached" is the entire model you need. Save it like Word saves a document, with a name. That's a commit. Move on.</p>
+            <PullQuote>Most of <code>git</code> is for engineering teams. The operator's <code>git</code> is three concepts — <code>main</code>, commit, push. Everything else is optional and most of it is a trap.</PullQuote>
+          </div>
+        </div>
+
+        <div id="delivery" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">GitHub as a delivery surface</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The single highest-leverage pattern in this whole page: <strong>private repo + public-to-the-recipient link, deployed via GitHub Pages or Vercel.</strong> It's the move the <a href="/html-first">HTML-ization</a> chapter is built around. It's the move that makes every other use case on this page tractable.</p>
+            <p>What it looks like in practice: you produce a single-file HTML artifact (the recipe is in <a href="/html-first#recipe">/html-first → The recipe</a>). You make a private GitHub repo. You drop the file in. You enable GitHub Pages — one checkbox in the repo settings — or you run <code>vercel --prod</code> from the folder. You now have a deployed link. You send the link to your investor / customer / client. They see your artifact in their browser. They never see your repo, your file structure, your commit history, or any other implementation detail. You see all of that, because it's yours.</p>
+            <p>The deeper pattern: <strong>public repos are your portfolio, private repos are your delivery surface.</strong> The Playbook is a public repo because I want strangers to read it and the source to be the recipe. The AFC pitch artifacts are in a private repo because the investment thesis isn't yours to read yet. Both patterns use the same infrastructure. The choice is access control — who can see the repo — not the underlying tool.</p>
+            <p>For pages-as-deliverables, the choice between GitHub Pages and Vercel is roughly: GH Pages is free, simpler, and tied to your GH account. Vercel is also free for personal use, faster builds, custom domains feel more native, but you're on a third-party platform that could change its terms tomorrow. I use both. For artifacts where the URL needs to feel native (a real subdomain, a clean deploy), Vercel. For the Playbook itself and for "I just want a link, fast," GH Pages.</p>
+          </div>
+        </div>
+
+        <div id="collab" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Collaboration without code</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The GitHub collaboration vocabulary maps directly onto operator behaviors most teams already do — just on inferior tooling.</p>
+            <p><strong>Comments aren't code review — they're feedback on a doc.</strong> If you've ever left a comment on a Google Doc, you can leave a comment on a GitHub file or a pull request. The mechanism is identical. The forwarding is better. The permalink is durable. The history is preserved automatically. Engineers do "PR review" because they're reviewing code; non-developers can do exactly the same dance on a strategy memo, a brief, a contract draft, a brand-identity doc. Same UI. Different content.</p>
+            <p><strong>@-mentions are async Slack.</strong> Type <code>@username</code> in any comment and that person gets a notification. It's a ping with a permanent link to the thing you pinged about. The Slack equivalent dies in 90 days on a free plan and gets lost in a channel scrollback. The GitHub equivalent survives forever and the linked context is always one click away.</p>
+            <p><strong>Issues are lightweight Linear.</strong> A title, a body, labels, an assignee, comments, and a state. You don't need Linear for a five-person team running an internal project. You don't need it for the cross-functional backlog of "things we should do about the website." GitHub Issues solve both, for free, with the version control as a free side effect.</p>
+            <p><strong>Pull Requests are a unit of agreement, not just a unit of code.</strong> The default mental model of a PR is "engineer asks to merge code changes." The non-developer model is "person proposes a change to a shared document and asks others to agree." That works for any markdown file in any repo. A new strategy memo? Open it as a PR. A change to the company FAQ? PR. The team's comments are tracked, the merge is the decision, the closed PR is the permanent record.</p>
+          </div>
+        </div>
+
+        <div id="examples" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Six examples in the wild</h2>
+          <div class="space-y-4 leading-relaxed mb-6" style="color: rgb(var(--fg) / 0.88)">
+            <p>Two of mine, four from people you've heard of. Each one is a non-code use of GitHub by someone whose work is read more than their code is. Click any of them and the pattern becomes obvious.</p>
+          </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {examples.map((item) => (
+              <a
+                href={item.url}
+                target={item.url.startsWith('http') ? '_blank' : '_self'}
+                rel={item.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                class="card no-underline hover:border-flame"
+                style="background: rgba(var(--fg) / 0.02); color: rgb(var(--fg))"
+              >
+                <div class="text-[0.65rem] uppercase tracking-[0.22em] mb-1.5" style="color: rgb(var(--accent))">{item.tag}</div>
+                <div class="font-display text-base leading-tight mb-2 flex items-center gap-1.5">
+                  <span>{item.title}</span>
+                  {item.url.startsWith('http') && <span class="text-[0.65rem] opacity-60" aria-hidden="true">↗</span>}
+                </div>
+                <p class="m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))" set:html={item.blurb} />
+              </a>
+            ))}
+          </div>
+          <p class="mt-6 text-sm leading-relaxed" style="color: rgb(var(--muted))">
+            None of these people would describe themselves primarily as a software engineer right now — Karpathy is a researcher and educator, Willison is a writer and tool-builder, and the profile-README crowd are operators of every stripe. All of them treat GitHub as a publishing platform first and a code platform second. That inversion is what the operator move looks like.
+          </p>
+        </div>
+
+        <div id="saturday" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The Saturday move</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Twenty minutes. The next thing you were about to put in Notion. Put it in GitHub instead.</p>
+            <pre class="rounded-lg p-4 my-3 text-sm overflow-x-auto" style="background: rgba(var(--fg) / 0.05); border: 1px solid rgb(var(--border))"><code>{`# 1. Install gh (Mac) — once
+brew install gh && gh auth login   # browser flow, takes 60 seconds
+
+# 2. Create your first non-code repo (private to start)
+gh repo create my-first-non-code-repo --private --clone
+cd my-first-non-code-repo
+
+# 3. Drop in your content
+#    A README.md (your company one-pager, project status, FAQ — whatever).
+#    Or a single index.html artifact you made in Claude.
+echo "# My One-Pager" > README.md
+
+# 4. Commit and push
+git add . && git commit -m "first push" && git push
+
+# 5. (Optional) Enable Pages for a live link
+#    Open the repo: gh repo view --web
+#    → Settings → Pages → set source = main / root → save
+#    (There's no clean CLI flag for this; the web UI is the path.)
+#    Your site lives at https://&lt;your-username&gt;.github.io/&lt;repo-name&gt;/`}</code></pre>
+            <p>That's the whole loop. The next time you have something to send — an audit, a brief, a board update, a status page — the move is the same one. Repo. Commit. Push. Share the link. The link is current because the repo is. Forwardable forever. The format your future-self can still open in 2040 because Microsoft is not going to take GitHub offline before then.</p>
+            <PullQuote>The PDF you would have sent dies in the inbox. The repo you ship lives wherever you point it.</PullQuote>
+            <p class="mt-6 text-sm" style="color: rgb(var(--muted))">
+              Related: <a href="/html-first">HTML-ization — every deliverable as a link</a> · <a href="/chapters/19-build-products">Ch 19 — building products on a Saturday</a> · <a href="/chapters/40-prompting-knob">Ch 40 — where the leverage actually is</a> · <a href="/launch">The Playbook launch artifact (also a GH repo)</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
