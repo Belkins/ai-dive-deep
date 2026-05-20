@@ -119,8 +119,8 @@ const patterns = [
           </div>
           <ScreenshotPlaceholder
             id="swarms-1"
-            caption="Five Claude Code agents running in parallel — main session orchestrating."
-            note="Tmux session screenshot — main Claude Code window on the left, four background Agent tool calls visible in the status line, the four output files appearing in /tmp/ as they complete. Captured during a real /swarm-strategic-plan run."
+            caption="Four Claude Code sessions running in parallel — payment-migration, perf-audit, release-notes, dark-mode. One operator, four threads, one conductor."
+            note="Cascading terminal windows from the Claude Code multi-session view. The pixel-art figure (the cowboy) is the operator-orchestrator — each window is a clean context, each task is a distinct deliverable, the conductor holds them together. This is what the four-pattern visualizer above looks like in a real workspace."
           />
         </div>
 
@@ -142,8 +142,8 @@ const patterns = [
           </div>
           <ScreenshotPlaceholder
             id="swarms-2"
-            caption="A real /swarm-strategic-plan run — the 25-file output folder."
-            note="Finder window showing the AFC/ project directory with the 01-vision/ through 08-financials/ folders, BRIEF.md highlighted at root. Total 33 markdown files, ~62K words. Captured 2026-05-04."
+            caption="Claude Code multi-session control surface — 2 awaiting input · 4 working · 2 completed."
+            note="The conductor's dashboard. Opus 1M-context, working directory ~/acme, eight concurrent threads in flight. The peak-shaped pixel figure is the operator. Each row is a distinct session with its own clean context window — pr-review, perf-audit, payment-migration (12/14), onboarding-copy, dark-mode, release-notes, load-test, test-coverage. This is what a productive Tuesday looks like when prompting stops being the work."
           />
         </div>
 
@@ -296,8 +296,8 @@ done`}</code></pre>
           </div>
           <ScreenshotPlaceholder
             id="swarms-3"
-            caption="agent-wave-verify output showing 3 OK + 1 STUB after a 4-agent wave."
-            note="Terminal output of /agent-wave-verify after a swarm run. Three agents land OK with green checkmarks and LOC counts; one agent shows STUB with 12 lines — the agent returned 'completed' but only wrote a partial deliverable. Captured after a real run that would have shipped broken without the audit."
+            caption="The multi-agent task pane — Needs input / Working / Completed in one screen."
+            note="The verification view in practice. Three threads need operator input (dark-mode picks system-vs-toggle, release-notes asks which feature leads, load-test wants a return decision). Five threads are actively working. Two are completed and merged. This is the dashboard the between-wave audit answers in one glance — what's stuck, what's flowing, what landed. No agent silently completes here; the operator sees the state."
           />
         </div>
 

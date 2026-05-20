@@ -64,7 +64,10 @@ export const SCREENSHOTS: Record<string, string> = {
   "38-run-until-done-1": "38-run-until-done-1.svg",
   "38-run-until-done-2": "38-run-until-done-2.svg",
   "39-skills-you-should-steal-1": "39-skills-you-should-steal-1.svg",
-  "claude-md-rules-1": "claude-md-rules-1.svg"
+  "claude-md-rules-1": "claude-md-rules-1.svg",
+  "swarms-1": "swarms-1.png",
+  "swarms-2": "swarms-2.png",
+  "swarms-3": "swarms-3.png"
 };
 
-export const SCREENSHOT_COUNT = 62;
+export const SCREENSHOT_COUNT = 65;
