@@ -10,6 +10,22 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.3',
+    date: '2026-05-20',
+    tagline: 'Every page one click from the homepage. Tile grid grows to 3 rows.',
+    shipped: [
+      'Homepage tile grid expanded from 8 → 12 tiles (3 rows of 4). Row 3 added: Swarms · GitHub Playbook · Setup showcase (62 skills · 32 agents · 12 plugins) · Research notes (what shifted this week). The pages I shipped this week are now first-class tiles, not secondary-row text links.',
+      'Hanging-pages cleanup — secondary text row rewritten to surface the remaining 10 previously-hanging pages: Build vs Buy · For your CFO · CLAUDE.md rules · Cowork setup · Vault starter · Weekend builds · Starter skills · 30-day plan · Sections · About. Every standalone page in the Playbook is now one click from the homepage.',
+      'Reachability audit complete — 27 user-facing pages audited (plus /the-bill which is intentionally sitemap-excluded). Zero orphans, zero hanging-from-homepage pages remain.',
+    ],
+    receipts: [
+      { label: 'Homepage tiles', value: '8 → 12 (+4 third-row tiles)' },
+      { label: 'Pages reachable from homepage', value: '13 → 27 (every page surfaced)' },
+      { label: 'Hanging pages (after audit)', value: '0 (was 9 pre-audit)' },
+      { label: 'Orphans', value: '1 — /the-bill, intentional sitemap exclusion' },
+    ],
+  },
+  {
     edition: 'Edition 9.2',
     date: '2026-05-20',
     tagline: 'Forty-one chapters. The HTML-ization thesis gets its own chapter slot.',
