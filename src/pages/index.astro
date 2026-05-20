@@ -100,7 +100,12 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
   </section>
 
   <section class="container-wide pt-6 pb-24">
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+      <a href={`${base}/sovereign-stack`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Sovereign Stack</div>
+        <h3 class="m-0 font-display text-2xl">Don't get deprecated</h3>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Open-weights LLMs that survive the deprecation calendar — Ollama, hardware ladder, the open-source tier list, the heretic question, and the nano-gpt Saturday. Two stacks, not one.</p>
+      </a>
       <a href={`${base}/html-first`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Method</div>
         <h3 class="m-0 font-display text-2xl">HTML-ization</h3>

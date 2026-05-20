@@ -10,6 +10,24 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 8',
+    date: '2026-05-20',
+    tagline: 'Two stacks, not one. The sovereign tier is built.',
+    shipped: [
+      'New /sovereign-stack page — the open-weights answer to the deprecation calendar. The Onyx Open-Source LLM Leaderboard rebuilt as a tier list (Overall / Coding / Math / Chat / Reasoning), Ollama vs LM Studio vs vLLM, five hardware tiers ($2k MacBook → $40k+ deploy) with what-breaks-first per tier, quantization + KV-cache math, open-vs-closed cost-per-task table (30× ratio on repeated evals), the heretic question (abliteration framed as sovereignty, not jailbreaking), the Mythos lesson, Karpathy nano-gpt as a Saturday curriculum, the 6-month watch list',
+      'New OnyxLeaderboard.tsx widget — interactive S/A/B/C/D tier list with category tabs, size filters (Small/Medium/Large by parameter count), and per-lab filters showing the Chinese-lab dominance of the open-weights frontier (6/6 S-tier slots)',
+      'New glossary terms — Sovereign stack · Heretic model · Mythos · Abliteration — all cross-linked',
+      'Ch 24 (tier-list) callout pointing to /sovereign-stack — the closed-model tier list and the open-weights tier list now talk to each other',
+      'Homepage tile grid expanded to 5 columns; Sovereign Stack takes flagship-first position',
+    ],
+    receipts: [
+      { label: 'New page', value: '/sovereign-stack' },
+      { label: 'Leaderboard snapshot', value: 'Onyx Open-Source LLM Leaderboard · 2026-03-24 · 19 models across 5 categories' },
+      { label: 'Sourced citations', value: '60+ inline links — Arditi 2024, modded-nanogpt, Onyx, Ollama MLX, all model releases' },
+      { label: 'Open-weights S-tier (May 2026)', value: 'GLM-5 · Kimi K2.5 · MiniMax M2.5 · DeepSeek V3.2 · Step-3.5-Flash · Qwen 3.5' },
+    ],
+  },
+  {
     edition: 'Edition 7',
     date: '2026-05-20',
     tagline: 'The book is open. The source is the recipe.',

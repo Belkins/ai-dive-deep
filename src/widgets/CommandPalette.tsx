@@ -26,6 +26,19 @@ const HTMLFIRST_SECTIONS: { id: string; label: string }[] = [
   { id: 'case-audit', label: 'The 90-domain deliverability audit' },
   { id: 'do-this', label: 'Do this Monday' },
 ];
+const SOVEREIGN_SECTIONS: { id: string; label: string }[] = [
+  { id: 'two-stack', label: 'The two-stack thesis' },
+  { id: 'leaderboard', label: 'The 2026 open-weights bench' },
+  { id: 'runtimes', label: 'Ollama, LM Studio, the rest' },
+  { id: 'hardware', label: 'Hardware — five tiers' },
+  { id: 'quant-ctx', label: 'Quantization + context math' },
+  { id: 'vs-closed', label: 'Open vs closed — honest' },
+  { id: 'heretic', label: 'The heretic question' },
+  { id: 'mythos', label: 'The Mythos lesson' },
+  { id: 'nanogpt', label: 'nano-gpt — a Saturday' },
+  { id: 'watch', label: 'The 6-month watch' },
+  { id: 'monday', label: 'Do this Monday' },
+];
 const RESOURCES_SECTIONS: { id: string; label: string }[] = [
   { id: 'working-memory', label: 'Working memory (CLAUDE.md)' },
   { id: 'connectors-mcp', label: 'Connectors / MCP' },
@@ -74,6 +87,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Resources',             href: `${base}/resources`,       subtitle: 'Copy-paste templates, hooks, prompts' },
       { type: 'page', title: 'The launch (Edition 6 is public)', href: `${base}/launch`,    subtitle: 'May 20, 2026 — the repo is open; the source is the recipe' },
       { type: 'page', title: 'HTML-ization',          href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies' },
+      { type: 'page', title: 'The Sovereign Stack',   href: `${base}/sovereign-stack`, subtitle: 'Open-weights LLMs that survive the deprecation calendar — Ollama, hardware, the heretic question, nano-gpt' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up' },
@@ -109,6 +123,13 @@ export default function CommandPalette() {
         subtitle: 'HTML-ization',
         href: `${base}/html-first#${s.id}`,
         keywords: `html-ization htmlization html first artifact ${s.label} ${s.id}`.toLowerCase(),
+      })),
+      ...SOVEREIGN_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'The Sovereign Stack',
+        href: `${base}/sovereign-stack#${s.id}`,
+        keywords: `sovereign stack open source llm ollama lm studio kimi qwen glm deepseek heretic abliteration nano-gpt karpathy mythos ${s.label} ${s.id}`.toLowerCase(),
       })),
     ];
     const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({

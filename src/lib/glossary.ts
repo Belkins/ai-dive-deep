@@ -295,6 +295,30 @@ export const glossary: Record<string, GlossaryEntry> = {
       'Shipping every deliverable — report, pitch, audit, deck, model — as a live interactive HTML artifact on a deployed link instead of a dead PDF/slide attachment. It gets opened, clicked into, forwarded; it stays current because it\'s re-rendered, not re-attached. See <a href="/html-first">HTML-ization</a>.',
     related: ['Persona agent', 'Swarm'],
   },
+  'Sovereign stack': {
+    term: 'Sovereign stack',
+    definition:
+      'A second LLM stack you run yourself — open-weights models (GLM-4.7, Kimi K2.5, Qwen 3.5, DeepSeek) on hardware you own, behind a runtime you control (Ollama / LM Studio / vLLM). Not a replacement for Claude / GPT / Gemini — insurance against the deprecation calendar, plus a 10–30× cheaper batch tier for evaluators, summarization, and RAG. See <a href="/sovereign-stack">The Sovereign Stack</a>.',
+    related: ['Mythos', 'Heretic model'],
+  },
+  'Heretic model': {
+    term: 'Heretic model',
+    definition:
+      'An open-weights model whose refusal direction has been surgically removed via abliteration — orthogonalizing weight matrices against the linear refusal direction in the residual stream (Arditi et al., 2024). Not jailbreaking: the weights themselves no longer encode the refusal, persistent across all sessions. Trade-off: 1–6% benchmark regression, and the model is no longer aligned by its lab — alignment becomes your problem. See <a href="/sovereign-stack#heretic">The heretic question</a>.',
+    related: ['Sovereign stack'],
+  },
+  'Mythos': {
+    term: 'Mythos',
+    definition:
+      'Vlad\'s private name for Claude Opus 3 — the model his team had learned to write against, retired by Anthropic on January 5, 2026. The Mythos lesson: any model you build a moat around is on someone else\'s calendar. Treat as a tail risk; eval-suite the alternative before the deprecation email arrives, not after. See <a href="/sovereign-stack#mythos">The Mythos lesson</a>.',
+    related: ['Sovereign stack'],
+  },
+  'Abliteration': {
+    term: 'Abliteration',
+    definition:
+      'A technique (coined by FailSpy in 2024, automated by the Heretic CLI in 2025) for permanently removing a model\'s refusal behavior by orthogonalizing every weight matrix that writes into the residual stream against the empirically-found refusal direction. Produces a "<a href="/glossary#Heretic+model">heretic model</a>" — same weights minus one specific behavior. See <a href="/sovereign-stack#heretic">The heretic question</a>.',
+    related: ['Heretic model', 'Sovereign stack'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);

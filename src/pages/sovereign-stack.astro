@@ -1,0 +1,276 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import OnyxLeaderboard from '@/widgets/OnyxLeaderboard.tsx';
+
+const navItems = [
+  { id: 'two-stack', label: 'The two-stack thesis' },
+  { id: 'leaderboard', label: 'The 2026 open-weights bench' },
+  { id: 'runtimes', label: 'Ollama, LM Studio, the rest' },
+  { id: 'hardware', label: 'Hardware — five tiers' },
+  { id: 'quant-ctx', label: 'Quantization + context math' },
+  { id: 'vs-closed', label: 'Open vs closed — honest' },
+  { id: 'heretic', label: 'The heretic question' },
+  { id: 'mythos', label: 'The Mythos lesson' },
+  { id: 'nanogpt', label: 'nano-gpt — a Saturday' },
+  { id: 'watch', label: 'The 6-month watch' },
+  { id: 'monday', label: 'Do this Monday' },
+];
+---
+<BaseLayout
+  title="The Sovereign Stack"
+  description="Open-weights LLMs that survive Anthropic's deprecation calendar. Runtimes, hardware tiers, the 2026 open-source leaderboard, the heretic question, and the Saturday Karpathy gives you. Two stacks, not one."
+>
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Sovereign Stack</div>
+    <h1>The model you build a moat around is on someone else's calendar.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">
+      Mythos got deprecated. Sonnet 3.5 got deprecated. GPT-4-Turbo got deprecated. Three of the four most-deployed frontier models from 2024 went dark in a six-week window earlier this year. If you have a workflow that pays for itself, you should have a second stack. This is how to build it — runtimes, hardware, the open-weights leaderboard, the heretic question, and the one Saturday that dissolves the magic.
+    </p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">
+      Two stacks, not one. Claude / GPT / Gemini for the frontier. Self-hosted GLM-4.7 / Kimi K2.5 / Qwen 3.5 for the cost-bound, sovereignty-critical, deprecation-proof tier. Run the second one before you need it.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="two-stack" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The two-stack thesis</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>I run Opus 4.7, GPT-5, and Gemini 3 Pro every working day. The question portfolio operators ask me is never "is open-weights cool" — it's "if I burn the API contracts and run my own weights tomorrow, what do I lose, and what do I gain?" The honest answer is: you lose the wrapper, you gain the calendar.</p>
+            <p>The wrapper is what makes <a href="/chapters/05-skills">Claude Code</a> a daily driver — the agentic harness, the diff-and-edit loop, the tool registry, the permission model. Strip Opus out of Claude Code and you have a model. Strip the wrapper out and you have a script. Open-weights are catching up on the model. The wrapper is where the closed labs still earn the price.</p>
+            <p>The calendar is what nobody priced in. Anthropic deprecated Opus 3 on January 5, 2026 — the model I quietly called Mythos because it had a register my team had learned to write against. The Claude 3.5 generation was sunsetted by February 19. OpenAI retired GPT-4 from the active API on February 13. Three of the four most-deployed models from 2024 went dark in six weeks. Every workflow built around those models' specific quirks — the legal-memo prompt, the eval suite, the eight-shot example chain — got rewritten under a 90-day shot clock. The model you build a moat around is on someone else's calendar.</p>
+            <p>So: two stacks. Use the frontier for the frontier — agentic loops, the work that pays for itself in minutes, the place where the wrapper compounds. Run open-weights warm for the rest — batch summarization, evaluators, RAG, classification, anything you do a thousand times a week where output cost dwarfs the per-call quality margin. The Onyx <a href="https://onyx.app/open-llm-leaderboard" target="_blank" rel="noopener noreferrer">open-source LLM leaderboard</a> below tells you what to run. The rest of this chapter tells you how.</p>
+            <PullQuote>Sovereign-stack is insurance, not religion. You still use Opus. You also have a 70B Qwen warm. Insurance you never claim is still cheap insurance.</PullQuote>
+          </div>
+        </div>
+
+        <div id="leaderboard" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The 2026 open-weights bench</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>This is the Onyx Open Source LLM Leaderboard, rebuilt as a tier list — snapshot from March 24, 2026. Tabs across the top swap categories. Filters let you slice by parameter size and by lab. The chips show MoE total params (active param counts are smaller — Kimi K2.5 is 1T total / ~32B active; DeepSeek V3.2 is 685B / 37B). Hover any model for license and strengths.</p>
+          </div>
+          <OnyxLeaderboard client:visible />
+          <div class="space-y-4 leading-relaxed mt-6" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>The load-bearing observation: six of six S-tier slots are Chinese labs. America's open-weights contribution to S-tier is zero. Meta's Llama 4 is C-tier. OpenAI's gpt-oss-120B is B-tier. Not a political claim — a procurement fact. If you run open weights for sovereignty, you trade US closed-model dependency for Chinese open-weight dependency. Choose deliberately, with eyes open.</p>
+            <p>Second observation: <em>open weights ≠ open source</em>. Llama 4's Community License caps you at 700M MAU; Kimi K2.5 / K2.6 require attribution above $20M/month revenue. GLM-4.7, DeepSeek V3.2 / R1, Step-3.5-Flash, Qwen 3.x, and MiniMax M2.5 are all genuinely MIT or Apache 2.0. Read the LICENSE file before you wire one into production. The Hugging Face card is not the contract.</p>
+            <p>My actual picks, May 2026, by job:</p>
+            <ul class="list-disc pl-5 space-y-1.5">
+              <li><b>Coding agent</b> (Claude Code / Cursor replacement) → <b>Kimi K2.6</b> (post-Onyx-cutoff release; 80.2% SWE-Bench Verified, 58.6% SWE-Bench Pro). Honorable mention: <b>GLM-4.7</b> (73.8% Verified, MIT, smaller deploy footprint).</li>
+              <li><b>Math / reasoning</b> → <b>DeepSeek R1</b> (AIME 79.8, GPQA Diamond 71.5, the gold-medal-IMO lineage). Honorable mention: <b>Step-3.5-Flash</b>.</li>
+              <li><b>Long-context document chat</b> → <b>Kimi K2.6</b> at 256K native, or <b>GLM-4.7</b> at the documented 1M (verify needle-in-haystack before betting on it).</li>
+              <li><b>General chat / drafting</b> → <b>GLM-5</b>. Reads less alignment-flattened than Claude or GPT for long-form writing.</li>
+              <li><b>Tool-use / function-calling</b> → <b>MiniMax M2.5</b>. Independently ranked #1 open on agentic tool calling.</li>
+              <li><b>Vision-language</b> → <b>Qwen 3 VL (235B-A22B)</b>. The only honest answer. 2-hour native video, Apache 2.0.</li>
+              <li><b>Embeddings</b> (separate tier — not chat models) → <b>Qwen3-Embedding</b> at scale, <b>bge-m3</b> for multilingual, <b>jina-embeddings-v3</b> for price-performance.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="runtimes" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Ollama, LM Studio, and the rest</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p><b>Ollama</b> is a llama.cpp wrapper with a model registry, a daemon, and an <a href="https://docs.ollama.com/api/openai-compatibility" target="_blank" rel="noopener noreferrer">OpenAI-compatible REST API</a> at <code>localhost:11434/v1/</code>. That last bit is the killer move. Anything that speaks OpenAI — Continue, LangChain, the Anthropic SDK if you swap the base URL, Cursor's local mode, your own scripts — points at Ollama unchanged. <code>ollama pull qwen2.5:32b</code> and you have a model. <code>ollama serve</code> and you have an inference server. There is no step three. As of v0.19 (March 2026), Ollama added an experimental MLX backend on Apple Silicon for machines with 32GB+ unified memory, closing most of the performance gap with native MLX.</p>
+            <p>The gotchas are real. Default quantization is Q4_K_M — fine for chat, mediocre for code. Default context window is 2048 tokens, which silently truncates everything past the first few exchanges; you have to set <code>OLLAMA_CONTEXT_LENGTH</code> or pass <code>num_ctx</code> in the request. And <code>~/.ollama/models/</code> will eat your SSD if you forget — a 32B Q4 model is ~20GB on disk, and you'll end up with eight of them.</p>
+            <p><b>LM Studio</b> is the GUI. Hugging Face browser built in, in-app chat, native MLX backend on Apple Silicon, OpenAI-compatible server you can flip on for the same <code>localhost</code> endpoint pattern. On Apple Silicon, LM Studio's MLX backend produces 26–60% more tokens/sec than llama.cpp-via-Ollama depending on model size. It's the laptop chat surface — when I want to <em>feel</em> a new model, I open LM Studio. When I want to wire it into anything, I'm in Ollama.</p>
+            <p>The rest, one line each. <b>llama.cpp</b> — the C++ engine under both; direct use when you need fine-grained control over KV cache quant or custom GGUF builds. <b>vLLM</b> — production serving. Continuous batching gives ~16× Ollama's throughput under concurrent load. Reach for it only when multiple users hit one box. <b>MLX</b> — Apple's native ML framework, not a runner. Sits under LM Studio and (now) Ollama on Apple Silicon. <b>text-generation-webui</b> and <b>KoboldCpp</b> — hobbyist UIs; skip unless you're tuning samplers for roleplay.</p>
+            <p><b>The winning combo for an operator:</b> Ollama as the always-on REST daemon (every script and IDE points at it), LM Studio as the laptop chat surface (browsing, vibes-check), llama.cpp under both. On a Mac, let Ollama 0.19+ use MLX. That's the whole stack. Two installs, no architecture astronomy.</p>
+          </div>
+        </div>
+
+        <div id="hardware" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Hardware — five tiers, what breaks first</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Five tiers. Real 2026 prices. What you can actually run, and which component dies under load. If you are buying hardware for sovereign-stack rather than reading about it, this is the ladder.</p>
+
+            <div class="rounded-xl border p-5 my-4" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Tier 1 · MacBook · $2k–$4k</div>
+              <p class="m-0"><b>M4 Pro 36GB through M4 Max 64GB.</b> Runs Llama 3 8B Q4 at ~60–120 tok/s, Qwen 2.5 32B Q4 at ~15 tok/s on M4 Pro and faster on M4 Max with MLX, Mistral 7B at conversational speeds. M4 Max 64GB will technically run Llama 3.3 70B Q4 at 10–15 tok/s but the laptop runs hot. Memory bandwidth (273 GB/s on M4 Pro, ~546 GB/s on M4 Max) is the wall. <b>What breaks first:</b> memory bandwidth — you'll feel it at 30B+.</p>
+            </div>
+
+            <div class="rounded-xl border p-5 my-4" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Tier 2 · Desktop · $3k–$6k</div>
+              <p class="m-0"><b>Single 24–32GB GPU.</b> RTX 4090 24GB is ~$1,800 used in 2026; RTX 5090 32GB is the Blackwell card — $2,000 MSRP but street price has climbed to $3,000+ on DRAM shortages. Build the rest of the box for $1,500–$2,500. Runs Qwen 2.5 32B Q4 (~20GB) comfortably, Mixtral 8x7B Q4, anything 13B in higher quants. 70B with CPU offloading is technically possible but you'll get 3–5 tok/s — not worth it. <b>What breaks first:</b> VRAM. 24GB is tight the moment you want 32K context on a 32B model.</p>
+            </div>
+
+            <div class="rounded-xl border p-5 my-4" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Tier 3 · Workstation · $8k–$15k</div>
+              <p class="m-0"><b>Dual RTX 4090 (48GB) or single used H100 80GB.</b> A 2×4090 build with workstation chassis, threadripper, and proper cooling lands at $8k–$10k. Used H100 80GB hit $15k–$28k retail in 2026, though March auctions saw $8.2k–$12.5k cards. The 2×4090 runs Llama 3 70B Q4 at 25–30 tok/s; the H100 single-card hits ~89 tok/s on the same model. <b>What breaks first:</b> PCIe bandwidth between the two 4090s (no NVLink) — and your power circuit. Two 4090s pull ~900W under load. Plan a dedicated 20A breaker.</p>
+            </div>
+
+            <div class="rounded-xl border p-5 my-4" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Tier 4 · Home-lab · $15k–$30k</div>
+              <p class="m-0"><b>Mac Studio M3 Ultra 256GB (~$6,000) or a 4×RTX 4090 rig (~$15k).</b> Apple pulled the 512GB SKU in March 2026 due to DRAM shortages; verify before publishing whether it has returned. The Mac Studio is the operator's quiet build — runs DeepSeek V3 at the 1.78-bit dynamic quant (~151GB) or 2.7-bit (larger, better quality) in fanless-ish silence. The 4×4090 rig will be louder and need a basement. <b>What breaks first:</b> on the Mac, memory bandwidth caps you at ~10–20 tok/s on 200B+ models. On the 4×4090 rig, cooling and PCIe topology.</p>
+            </div>
+
+            <div class="rounded-xl border p-5 my-4" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Tier 5 · Serious deploy · $40k+</div>
+              <p class="m-0"><b>2–4× H100 80GB (used $30k–$60k for the cluster) or H200.</b> Runs frontier open weights at production speeds. DeepSeek V3 671B Q8 needs ~700GB across the cluster; Kimi K2.6 (1T total, 32B activated, MoE) ships in block-fp8 — ~500GB of weights. You don't buy this tier for personal use. You buy it when you're serving a team or running a commercial inference product and the math against API spend pencils out. <b>What breaks first:</b> the check.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="quant-ctx" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Quantization and context — the two hidden levers</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>A model trained in FP16 (16 bits per weight) is the reference. Quantization compresses each weight: Q8 (~1% quality loss), Q5_K_M (~2% loss), <b>Q4_K_M — the pragmatic default, 1–3% quality loss vs FP16 on MMLU, ~70% memory reduction.</b> Q3 starts to be noticeable; Q2 is broken — avoid. The K-quant variants (K_S/K_M/K_L) use mixed precision per layer; medium is the sweet spot.</p>
+            <p>When Q5 or Q6 is worth it: code generation, math, anywhere a single token error cascades. Q6_K is often the right move on a 32B coding model if VRAM permits — the file is ~30% larger but the quality is meaningfully closer to FP16. On Apple Silicon, MLX's own quants (4-bit, 6-bit, 8-bit) outperform llama.cpp's GGUF Q4_K_M in tokens/sec because MLX uses unified-memory zero-copy. If the model exists as <code>mlx-community/…</code> on Hugging Face, prefer MLX.</p>
+            <p><b>Then context. Parameter count gets the headlines. KV cache eats the VRAM.</b> A 7B model at Q4 with 32K context adds ~2GB of KV cache on top of ~4GB of weights — fine on a phone. A 70B model at Q4 with 32K context adds ~8–10GB on top of ~40GB of weights. Push to 128K and the cache alone passes 32GB. This is why a 48GB dual-4090 box runs 70B Q4 fine at 8K context but chokes at 64K — the model fits, the cache doesn't. The fix: KV cache quantization (Q8 KV cache halves the overhead with almost zero quality cost; Q4 KV is more aggressive but works for non-reasoning).</p>
+            <p>The operator takeaway: "long context locally" is the actual ceiling on the workstation tier, not parameter count. If your use case is feeding in long documents — legal, codebases, transcripts — spec for KV cache headroom, not just weights.</p>
+          </div>
+        </div>
+
+        <div id="vs-closed" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Open vs closed — the honest comparison</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Four-column table. Frontier closed on the left, best open on the right. Numbers are SWE-Bench Verified and current published prices per million tokens, May 2026. Where I can't verify, I'm flagging it.</p>
+            <div class="overflow-x-auto my-4">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border))' }}>
+                    <th class="text-left py-2 pr-3 font-semibold"></th>
+                    <th class="text-left py-2 pr-3 font-semibold">Opus 4.7</th>
+                    <th class="text-left py-2 pr-3 font-semibold">GPT-5.5</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Gemini 3.1 Pro</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Kimi K2.6 (open)</th>
+                  </tr>
+                </thead>
+                <tbody style={{ color: 'rgb(var(--fg) / 0.85)' }}>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">SWE-Bench Verified</td>
+                    <td class="py-2 pr-3">87.6%</td>
+                    <td class="py-2 pr-3">88.7%</td>
+                    <td class="py-2 pr-3">~75%</td>
+                    <td class="py-2 pr-3">80.2%</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">Reasoning (GPQA Diamond)</td>
+                    <td class="py-2 pr-3">frontier</td>
+                    <td class="py-2 pr-3">frontier</td>
+                    <td class="py-2 pr-3">frontier</td>
+                    <td class="py-2 pr-3">competitive</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">Tool-use / agentic</td>
+                    <td class="py-2 pr-3">best (CC wrapper)</td>
+                    <td class="py-2 pr-3">strong</td>
+                    <td class="py-2 pr-3">strong</td>
+                    <td class="py-2 pr-3">strong (300-agent swarm)</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">Native long context</td>
+                    <td class="py-2 pr-3">200K</td>
+                    <td class="py-2 pr-3">400K</td>
+                    <td class="py-2 pr-3">1M</td>
+                    <td class="py-2 pr-3">256K</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">Output $/M tokens</td>
+                    <td class="py-2 pr-3">$25</td>
+                    <td class="py-2 pr-3">$30</td>
+                    <td class="py-2 pr-3">$12</td>
+                    <td class="py-2 pr-3">$2.50 hosted · ~$0.50 self-hosted</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3">Will it exist in 3 years</td>
+                    <td class="py-2 pr-3">Anthropic-bet</td>
+                    <td class="py-2 pr-3">OpenAI-bet</td>
+                    <td class="py-2 pr-3">Google-bet</td>
+                    <td class="py-2 pr-3"><b>weights persist regardless</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p><b>Where closed still wins:</b> agent-shaped tasks where the wrapper compounds the weights. Claude Code is not "Opus with a CLI" — it's the file-handling layer, the diff layer, the verification layer, the tool registry. GLM-4.7 with a worse wrapper loses to Opus 4.7 with Claude Code even when the raw model is within 5 points on SWE-Bench. The frontier-reasoning lead is real but narrow (1–8 points on the headline benchmarks). Multilingual + vision in one API, Gemini is still the cleanest answer.</p>
+            <p><b>Where open is closer than marketing suggests:</b> raw coding (Kimi K2.6 is within 8 points of GPT-5.5 on SWE-Bench Verified and matches it on SWE-Bench Pro). Math (DeepSeek R1 is at o1-class). Pure chat quality (GLM-5 reads less alignment-flattened). And — the part nobody priced in — output cost. The closed labs are 10–50× more expensive on output. For batch work that's not a margin difference, it's a different business.</p>
+            <p><b>Cost-per-task, three real jobs.</b> Refactor a 5K LOC Python module (80K input / 30K output): Opus 4.7 = ~$1.15. GLM-4.7 hosted via Z.ai API at $0.50/$1.50 = ~$0.09. 13× cheaper. Summarize a 500-doc audit batch (2M input / 500K output): Gemini Flash 3 = ~$1.85 hot. Self-hosting Qwen 7B locally saves pennies and costs hours — don't bother unless the data can't leave your network. LLM-as-judge evaluator (30M input / 15M output × 1000 runs): Opus = $525. Kimi K2.6 hosted = $55. Self-hosted GLM-4.7 on a rented H100 = $17. 30× ratio. For repeated-eval workloads, open weights pay for themselves in a week. The full cost math lives in <a href="/chapters/29-cost-economics">Chapter 29</a>.</p>
+            <p><b>The "would I switch" answer.</b> Open-weights for anything in volume — evaluators, batch summarization, embedding-driven RAG, document extraction, agentic loops where I control the wrapper. Closed for frontier agent loops where the wrapper carries the workflow — Claude Code for engineering, Cursor for IDE work, Gemini for "throw a 600-page PDF at it" one-shots. Don't bother for the middle — don't self-host a 70B for "general chat" because Twitter said local LLMs are the future. The quality gap to a hosted Kimi K2.6 call at $0.60/M is too large to justify the operational burden.</p>
+          </div>
+        </div>
+
+        <div id="heretic" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The heretic question</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>A heretic model is not a jailbroken model. The difference is structural, and the structure is the whole point.</p>
+            <p>In June 2024, Arditi and co-authors published <em><a href="https://proceedings.neurips.cc/paper_files/paper/2024/file/f545448535dfde4f9786555403ab7c49-Paper-Conference.pdf" target="_blank" rel="noopener noreferrer">Refusal in Language Models Is Mediated by a Single Direction</a></em> — a paper that proved, across thirteen open-source chat models, that refusal behavior is governed by one linear direction in the residual stream of the transformer. You can find that direction empirically: feed the model a batch of harmful prompts that produce "I cannot help with that" completions, feed it a matched batch of harmless prompts that produce "Sure, here's…" completions, take the mean activation difference at each layer, and the largest principal component of that difference <em>is</em> the refusal vector. The paper showed this direction is both necessary and sufficient — ablate it and refusals collapse, inject it into a harmless prompt and the model refuses to translate "hello" into French.</p>
+            <p><b>Abliteration</b> is what you do with that vector. The term was coined by FailSpy — a portmanteau of "ablation" and "obliteration" — and the technique is mechanically simple: orthogonalize every weight matrix that writes into the residual stream (attention output projections, MLP down projections) against the refusal direction. You are not adding a jailbreak prompt. You are not editing a system message. You are surgically removing the model's ability to produce that one behavior, permanently, across every future session, with no detectable bypass because there is nothing to detect — the weights themselves no longer encode the response.</p>
+            <p>The trade-off is real and worth naming. Quality regresses — the original Arditi work reported ~1–3% degradation on standard benchmarks; subsequent measurement is messier (MMLU drops from 0.5 to 6 points; GSM8K can swing from +1.5 to -18.8 percentage points depending on tool, model, and aggression). Math reasoning is the most sensitive surface. The deeper trade-off: the model is no longer aligned by its lab. That is now <em>your</em> problem. You align it via system prompt, evals, an output filter, and your wrapper. If you are not prepared to own alignment, do not run an abliterated model in production. The whole sovereignty thesis is that owning a thing means owning the failure modes too.</p>
+            <p>Why a working operator might want this. Domain models that refuse legitimate queries — legal LLMs declining to summarize criminal statutes, medical LLMs refusing to discuss overdose thresholds for a poison-control workflow, security tooling that won't analyze the malware sample it was hired to triage. Red-team eval generation — adversarial test cases at scale, which a model that flinches at "exploit" cannot produce. Creative and satirical work where the lab's refusal surface is calibrated for a consumer chat product, not your business. And jurisdictions where Anthropic's terms do not apply or where your customer contract requires data sovereignty no API vendor can offer.</p>
+            <p>The landscape, names worth knowing — not to download, but to map the territory. FailSpy and mlabonne wrote the original 2024 scripts. Eric Hartford's <code>cognitivecomputations</code> ships the Dolphin finetune line — Dolphin 3.0 Mistral 24B and its R1 reasoning variant are the 2026 flagships of the actively-maintained uncensored line. Philipp Emanuel Weidmann's <a href="https://github.com/p-e-w/heretic" target="_blank" rel="noopener noreferrer">Heretic CLI</a> automates the whole thing with TPE-based Optuna optimization so you don't need to read transformer internals to run it. The Hugging Face "uncensored" and "abliterated" tags are search results, not a curated list. The trust problem is the real story — who actually did the abliteration on the model you pulled? Most uploads are unverifiable. The pragmatic answer is to run your own abliteration on a base model you already trust, using one of the public recipes. This chapter does not include the recipe. That is not what books are for. The pointer is enough.</p>
+            <Callout type="warn">
+              The point is sovereignty over your stack, the same reason you self-host email or own your customer data — not a how-to-bypass-safety. If you're here because you want a model to write malware, leave. If you're here because Anthropic's refusal classifier is blocking your legitimate audit workflow, the technique exists; the responsibility for alignment is yours.
+            </Callout>
+          </div>
+        </div>
+
+        <div id="mythos" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The Mythos lesson — corporate retirement is a tail risk</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Anthropic retired Claude Opus 3 on January 5, 2026 — the model I call Mythos because it had a register and a moral patience the rest of the family lost. The Claude 3.5 generation was fully sunsetted by February 19. OpenAI retired GPT-4 from the active API on February 13 and killed the last GPT-4 Turbo preview variants on March 26. Three of the four most-deployed frontier models from 2024 went dark in a six-week window. Every workflow built around their specific quirks — the Opus 3 prompt that produced the exact legal-memo register the firm liked, the GPT-4 Turbo eval suite that calibrated your customer-facing chatbot — had to be rewritten, re-evaluated, and re-baselined against models that behave differently in ways small enough to escape unit tests and big enough to escape into production.</p>
+            <p>The pattern is now permanent. Four implications for an operator with leverage to lose.</p>
+            <p><b>One:</b> pin the open-weights version of any model in a workflow you cannot afford to migrate. Llama 3 70B and Qwen 2.5 32B will still be downloadable in 2030 because they already exist on a thousand mirrors. Opus 3 will not.</p>
+            <p><b>Two:</b> eval-suite the alternative <em>before</em> the deprecation email, not after. The 90-day window is not enough time to discover that your replacement model regresses on the one task that drives 40% of your customer NPS. Run the bake-off in the calm.</p>
+            <p><b>Three:</b> the wrapper matters more than the weights. Claude Code's value is 60% wrapper, 40% Opus. Open-source equivalents — aider, continue.dev, opencode, plandex — are 70% there in May 2026 and closing. Build wrapper competence inside your team; you will need it.</p>
+            <p><b>Four:</b> sovereign-stack as insurance, not religion. You still use Opus 4.7 for the frontier and the agentic work. You also keep a Qwen 3.5 397B or a Kimi K2.5 warm on a box you control, with an eval suite that lights up red when the gap closes or the cloud goes dark. The <a href="/research-notes">Mythos non-release</a> is the receipt for this lesson — the lab disclosed a capability and then explicitly withheld it. The next disclosure may not be a withholding; it may be a deletion.</p>
+          </div>
+        </div>
+
+        <div id="nanogpt" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">nano-gpt — the Saturday that dissolves the magic</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Andrej Karpathy's <a href="https://github.com/karpathy/nanogpt" target="_blank" rel="noopener noreferrer">nanoGPT</a> is roughly 600 lines of Python, single file, MIT-licensed. It trains a working character-level transformer on the complete works of Shakespeare in about three minutes on a single GPU, or roughly half an hour on an M-series MacBook via Metal Performance Shaders. The companion lecture — <em>Let's Build GPT: from scratch, in code, spelled out</em> — is two hours, free on YouTube, and remains the canonical primary source for understanding what is actually happening inside a transformer. It is not a metaphor or an analogy. It is the literal code.</p>
+            <p>The 2025 sequel is Keller Jordan's <a href="https://github.com/KellerJordan/modded-nanogpt" target="_blank" rel="noopener noreferrer">modded-nanogpt</a> — the same architecture, optimized to absurdity. The current speed record on the FineWeb validation-loss benchmark: 124M-parameter GPT-2 trained to 3.28 val loss in roughly thirteen minutes on 8×H100; NanoGPT-Medium to 2.92 val loss in twenty-eight minutes. The trick is the Muon optimizer, which replaces each SGD-momentum update matrix with the nearest orthogonal matrix via Newton-Schulz iteration. That sentence will sound foreign on first read and unremarkable by the end of the lecture. Which is the point.</p>
+            <p>Why this matters for the operator. The black box is not a black box. Training an LLM is fewer lines of code than the tRPC router I shipped last week. The next time someone in a meeting tells you "we cannot run our own model, that's what OpenAI is for," they are wrong by a factor of about a thousand in cost and a hundred in code complexity — and you should be able to say so from working knowledge, not from a take you read.</p>
+            <p>The homework. One Saturday.</p>
+            <pre class="rounded-lg p-4 my-3 text-sm overflow-x-auto" style={{ background: 'rgba(var(--fg) / 0.05)', border: '1px solid rgb(var(--border))' }}><code>git clone https://github.com/karpathy/nanoGPT
+cd nanoGPT
+pip install -r requirements.txt
+python data/shakespeare_char/prepare.py
+python train.py config/train_shakespeare_char.py
+# 30 min on M3, 3 min on a 4090. Then:
+python sample.py --out_dir=out-shakespeare-char</code></pre>
+            <p>Wait thirty minutes on the M3. Read the sample output. It will produce mangled Shakespeare — but it will produce <em>Shakespeare-shaped</em> mangled output, because it learned. You did not build a competitor. You dissolved the magic. Every conversation you have about model strategy for the next decade is now grounded.</p>
+          </div>
+        </div>
+
+        <div id="watch" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The 6-month watch list</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Three signals. If any one of them hits, the answer above changes. Bet on at least one landing. Don't bet on all three.</p>
+            <p><b>One — an open coding model at SWE-Bench Verified ≥ 90%.</b> Kimi K2.6 is at 80.2%. If K2.7 or GLM-6 closes that 10-point gap by November, the "wrapper still matters more than weights" argument cracks. Claude Code with Kimi-class weights becomes the rational portfolio default, and Anthropic's pricing has to drop. The wrapper market commoditizes faster than anyone is pricing in.</p>
+            <p><b>Two — Apple MLX shipping 70B-class at 60+ tok/s on M5 Ultra Mac Studio.</b> Current M4 Max does 8–15 tok/s on 70B; the M5 Ultra is rumored mid-2026 and may hit 40–60 tok/s. At 60+ tok/s, a $7K Mac Studio replaces a $4K/month H100 rental for solo-operator workloads. That changes the unit economics of one-person AI shops. The portfolio answer flips from "rent compute" to "own compute" overnight.</p>
+            <p><b>Three — Llama 5 with a real open license and S-tier benchmarks.</b> Meta has the capital and Zuckerberg's stated commitment; the question is whether they ship a license a Fortune 500 will actually deploy without 700M-MAU hostage clauses. If yes, US open-weights catches up to Chinese open-weights and the geopolitical procurement calculus changes. If no, Chinese labs keep the S-tier monopoly through 2027 and your sovereign-stack stays Chinese-lab-dependent. Watch the LICENSE file, not the marketing.</p>
+            <p>What could kill the trajectory entirely: hardware export controls extended to consumer GPUs (currently rumored, not in force); model licensing tightening across the board; or a frontier closed model accelerating faster than open catches up — Opus 5, hypothetically, blowing the gap back open. None of these is in force today. All of them are watchable.</p>
+          </div>
+        </div>
+
+        <div id="monday" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>You have an M3 or M4 Mac. Open Terminal. Fifteen minutes.</p>
+            <pre class="rounded-lg p-4 my-3 text-sm overflow-x-auto" style={{ background: 'rgba(var(--fg) / 0.05)', border: '1px solid rgb(var(--border))' }}><code>brew install ollama
+ollama serve &
+ollama pull qwen2.5:32b
+ollama run qwen2.5:32b</code></pre>
+            <p>That's it. You now have a 32B-parameter model running locally with an OpenAI-compatible API at <code>http://localhost:11434/v1/</code>. Point Cursor's "Local Models" config or your scripts at it. On M4 Pro 36GB+ expect ~15 tok/s. On M4 Max 64GB+ expect 20–30 tok/s with MLX backend enabled. First load: 20–40 seconds while weights stream from disk. Steady-state RAM: ~22GB. M4 Pro fans will audibly spin; M4 Max stays quieter.</p>
+            <p>Then take your top ten prompts — the real ones, the ones that actually run your business — and run them through Qwen 32B. Run the same ten through Opus 4.7. Read the outputs side by side. Not to switch. To know the gap, <em>in your specific work, with your specific data</em>. Then you have a real answer the next time the deprecation email arrives, instead of a vibe.</p>
+            <p>Install LM Studio for the GUI when you want to browse models without typing. Then forget about both for a week and just use it. You're sovereign.</p>
+            <PullQuote>The first time the local answer streams in faster than you can read, you understand why this matters. The bill is gone. The deprecation email is gone. The model is yours.</PullQuote>
+            <p class="mt-6 text-sm" style={{ color: 'rgb(var(--muted))' }}>
+              Related: <a href="/chapters/24-tier-list">Ch 24 — the closed-model tier list</a> · <a href="/chapters/29-cost-economics">Ch 29 — cost economics</a> · <a href="/chapters/35-codex-and-cc">Ch 35 — Codex and Claude Code</a> · <a href="/research-notes">Research notes (Mythos)</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
