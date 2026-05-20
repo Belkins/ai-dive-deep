@@ -2,8 +2,18 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SetupShowcase from '@/widgets/SetupShowcase.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
 import { SETUP_STATS } from '@/lib/setup';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const navItems = [
+  { id: 'overview', label: 'Overview · the receipts' },
+  { id: 'swarm-compositions', label: 'Six swarm compositions' },
+  { id: 'skill-chains', label: 'Eight skill chains' },
+  { id: 'swarm-deep-dives', label: 'Five swarm deep-dives' },
+  { id: 'setup-list', label: 'The full skill + agent list' },
+  { id: 'how-to-read', label: 'How to read this list' },
+];
 
 const swarmCompositions = [
   {
@@ -346,7 +356,12 @@ artifact + segment-specific hook per channel.`,
 ];
 ---
 <BaseLayout title="Vlad's actual setup" description="Sixty-two skills, thirty-two custom agents, twelve plugins. Live snapshot of Vlad's working Claude Code environment.">
-  <section class="container-prose pt-16 pb-4">
+  <div class="container-wide pt-16 pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="min-w-0">
+
+  <section id="overview" data-section-target class="pb-4 scroll-mt-20">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">The setup · Claude Code half</div>
     <h1>Vlad's actual Claude Code, snapshotted.</h1>
     <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
@@ -380,8 +395,8 @@ artifact + segment-specific hook per channel.`,
     </div>
   </section>
 
-  <section id="swarm-compositions" class="container-wide pt-8 pb-12 scroll-mt-20">
-    <div class="container-prose px-0">
+  <section id="swarm-compositions" data-section-target class="pt-8 pb-12 scroll-mt-20">
+    <div>
       <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent-2))">Compositions · how the pieces chain</div>
       <h2 class="font-display text-3xl md:text-4xl m-0">Six swarm compositions Vlad actually runs</h2>
       <p class="mt-4 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
@@ -433,7 +448,7 @@ artifact + segment-specific hook per channel.`,
   </section>
 
   <!-- Eight skill chains -->
-  <section id="skill-chains" class="container-wide pt-8 pb-12 scroll-mt-20">
+  <section id="skill-chains" data-section-target class="pt-8 pb-12 scroll-mt-20">
     <div class="container-prose px-0">
       <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Chains · skills in sequence</div>
       <h2 class="font-display text-3xl md:text-4xl m-0">Eight skill chains Vlad runs</h2>
@@ -474,7 +489,7 @@ artifact + segment-specific hook per channel.`,
   </section>
 
   <!-- Five swarm deep-dives -->
-  <section id="swarm-deep-dives" class="container-wide pt-8 pb-12 scroll-mt-20">
+  <section id="swarm-deep-dives" data-section-target class="pt-8 pb-12 scroll-mt-20">
     <div class="container-prose px-0">
       <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent-2))">Deep-dives · the spawn templates</div>
       <h2 class="font-display text-3xl md:text-4xl m-0">Five swarm deep-dives</h2>
@@ -545,9 +560,11 @@ artifact + segment-specific hook per channel.`,
     </div>
   </section>
 
-  <SetupShowcase client:load />
+  <div id="setup-list" data-section-target class="scroll-mt-20">
+    <SetupShowcase client:load />
+  </div>
 
-  <section class="container-prose pb-24">
+  <section id="how-to-read" data-section-target class="pb-4 scroll-mt-20">
     <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent)); border-top: 1px solid rgb(var(--line)); border-right: 1px solid rgb(var(--line)); border-bottom: 1px solid rgb(var(--line));">
       <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">How to read this list</div>
       <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92)">
@@ -561,6 +578,10 @@ artifact + segment-specific hook per channel.`,
       </p>
     </div>
   </section>
+
+      </div>
+    </div>
+  </div>
 
   <CommandPaletteMount />
 </BaseLayout>
