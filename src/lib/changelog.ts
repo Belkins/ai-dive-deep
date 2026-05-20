@@ -18,7 +18,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       'New OnyxLeaderboard.tsx widget — interactive S/A/B/C/D tier list with category tabs, size filters (Small/Medium/Large by parameter count), and per-lab filters showing the Chinese-lab dominance of the open-weights frontier (6/6 S-tier slots)',
       'New glossary terms — Sovereign stack · Heretic model · Mythos · Abliteration — all cross-linked',
       'Ch 24 (tier-list) callout pointing to /sovereign-stack — the closed-model tier list and the open-weights tier list now talk to each other',
-      'Homepage tile grid expanded to 5 columns; Sovereign Stack takes flagship-first position',
+      'Homepage tile grid rebalanced — Sovereign Stack takes flagship-first position (4 across), Glossary + tier-list + launch + about demoted to a single text row of secondary links below the grid',
     ],
     receipts: [
       { label: 'New page', value: '/sovereign-stack' },

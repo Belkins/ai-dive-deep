@@ -100,11 +100,11 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
   </section>
 
   <section class="container-wide pt-6 pb-24">
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       <a href={`${base}/sovereign-stack`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Sovereign Stack</div>
         <h3 class="m-0 font-display text-2xl">Don't get deprecated</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Open-weights LLMs that survive the deprecation calendar — Ollama, hardware ladder, the open-source tier list, the heretic question, and the nano-gpt Saturday. Two stacks, not one.</p>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Open-weights LLMs that survive the deprecation calendar — Ollama, the hardware ladder, the heretic question, and the nano-gpt Saturday.</p>
       </a>
       <a href={`${base}/html-first`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Method</div>
@@ -121,12 +121,10 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
         <h3 class="m-0 font-display text-2xl">Cheat sheet</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Slash commands, settings, env vars, file paths, keyboard shortcuts. Print it. Tape it next to your monitor.</p>
       </a>
-      <a href={`${base}/glossary`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Vocabulary</div>
-        <h3 class="m-0 font-display text-2xl">Glossary</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Fifty-plus terms you'll need, grouped A–Z. Linked inline throughout the book. Hover any underlined term to read it.</p>
-      </a>
     </div>
+    <p class="text-center mt-6 text-sm" style="color: rgb(var(--muted))">
+      Also: <a href={`${base}/glossary`} style="color: rgb(var(--accent))">Glossary</a> · <a href={`${base}/tier-list`} style="color: rgb(var(--accent))">Tier list builder</a> · <a href={`${base}/launch`} style="color: rgb(var(--accent))">The launch</a> · <a href={`${base}/about`} style="color: rgb(var(--accent))">About</a>
+    </p>
   </section>
 
   <CommandPaletteMount />
