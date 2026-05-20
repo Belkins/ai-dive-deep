@@ -10,6 +10,24 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 8.1',
+    date: '2026-05-20',
+    tagline: 'The launch as its own experiment in the thesis.',
+    shipped: [
+      'New /launch-week page — the launch is its own forwardable artifact. Numbers panel (live GitHub stars, newsletter open rate, subs delta, page-views), a day-by-day timeline of every distribution surface, a "what I\'d do differently" section that populates from real data not Day-0 guesses, a meta-callout explaining why a PDF version would be obsolete the second it was exported',
+      'src/lib/launch-week.ts — single source of truth for the timeline + numbers + retrospective; append-only daily edits (one-line additions, no schema breaking)',
+      'Day-0 distribution drafts authored locally (notes/launch/, gitignored): 8-tweet X thread (each tweet stands alone), LinkedIn longform (founder-realization frame), Hacker News Show HN (title + first-comment), Day-7 Numbers newsletter template with TBD slots',
+      'Homepage tile grid restored to 4-up across multiple rows — 8 tiles: Sovereign Stack · HTML-ization · The launch · Launch week · Vault library · Cheat sheet · Glossary · Tier list. About moved to the small text-link below.',
+      'Cmd-K indexes /launch-week as a discoverable destination',
+    ],
+    receipts: [
+      { label: 'New page', value: '/launch-week' },
+      { label: 'Distribution surfaces drafted', value: '4 (Newsletter · X · LinkedIn · HN)' },
+      { label: 'Homepage tiles', value: '4 → 8 (2 rows of 4)' },
+      { label: 'Day-7 follow-up scheduled', value: 'Numbers post — receipts of launch week, sent regardless of how it goes' },
+    ],
+  },
+  {
     edition: 'Edition 8',
     date: '2026-05-20',
     tagline: 'Two stacks, not one. The sovereign tier is built.',

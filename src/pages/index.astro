@@ -111,6 +111,16 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
         <h3 class="m-0 font-display text-2xl">HTML-ization</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Stop sending dead files. Every report, pitch, and audit ships as a live interactive artifact — two real ones embedded and clickable.</p>
       </a>
+      <a href={`${base}/launch`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">The launch</div>
+        <h3 class="m-0 font-display text-2xl">Edition 7 is public</h3>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Typewriter hero, animated stat odometer, three live embedded artifacts, all 39 chapters as a click-anywhere mosaic, a post-credit scene.</p>
+      </a>
+      <a href={`${base}/launch-week`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Live diary</div>
+        <h3 class="m-0 font-display text-2xl">Launch week</h3>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The launch as its own experiment in the thesis. Four surfaces, seven days, receipts accruing — honest, even the embarrassing ones.</p>
+      </a>
       <a href={`${base}/resources`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Resources</div>
         <h3 class="m-0 font-display text-2xl">Vault library</h3>
@@ -121,9 +131,19 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
         <h3 class="m-0 font-display text-2xl">Cheat sheet</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Slash commands, settings, env vars, file paths, keyboard shortcuts. Print it. Tape it next to your monitor.</p>
       </a>
+      <a href={`${base}/glossary`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Vocabulary</div>
+        <h3 class="m-0 font-display text-2xl">Glossary</h3>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Fifty-plus terms you'll need, grouped A–Z. Linked inline throughout the book. Hover any underlined term to read it.</p>
+      </a>
+      <a href={`${base}/tier-list`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Tier list</div>
+        <h3 class="m-0 font-display text-2xl">Rank without mercy</h3>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Drag-and-drop your own tier list across AI tools, connectors, and infra. The live LMArena leaderboard for reference.</p>
+      </a>
     </div>
     <p class="text-center mt-6 text-sm" style="color: rgb(var(--muted))">
-      Also: <a href={`${base}/glossary`} style="color: rgb(var(--accent))">Glossary</a> · <a href={`${base}/tier-list`} style="color: rgb(var(--accent))">Tier list builder</a> · <a href={`${base}/launch`} style="color: rgb(var(--accent))">The launch</a> · <a href={`${base}/about`} style="color: rgb(var(--accent))">About</a>
+      Also: <a href={`${base}/about`} style="color: rgb(var(--accent))">About</a>
     </p>
   </section>
 
