@@ -41,8 +41,8 @@ The cron cadence matters more than the wiring. I don't poll Sentry every minute 
 
 <ScreenshotPlaceholder
   id="42-codex-on-a-loop-5"
-  caption="Codex working a fresh signal — cron-triggered, PR opened in its own worktree"
-  note="No real capture yet — the loop opening a codex/ branch against a PostHog funnel-drop alert."/>
+  caption="The loop, end to end — cron → signal → worktree PR → gate → back to watching"
+  note="Crons pull from Sentry/PostHog/BetterStack; Codex fixes each in its own worktree; the evaluator and the human are the only gate to main."/>
 
 ## A worktree per fix
 

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#FF6B2C"/></marker>
+    <marker id="arl" markerWidth="9" markerHeight="9" refX="5.5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#71717A"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- header -->
+  <text x="80" y="60" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 42 · CODEX ON A LOOP</text>
+  <text x="80" y="118" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Cron → signal → worktree PR → gate</text>
+  <text x="80" y="154" fill="#AAA79A" font-size="18">Crons pull fresh signals; Codex fixes each in its own worktree and opens a PR. The evaluator and the human are the gate.</text>
+  <text x="1520" y="60" fill="#71717A" font-size="11" letter-spacing="3" text-anchor="end">the loop · runs while you sleep</text>
+
+  <!-- A: CRON -->
+  <g transform="translate(70, 280)">
+    <rect x="0" y="0" width="250" height="300" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="12"/>
+    <circle cx="125" cy="92" r="40" fill="none" stroke="#FF8E54" stroke-width="3"/>
+    <line x1="125" y1="92" x2="125" y2="66" stroke="#FF8E54" stroke-width="3" stroke-linecap="round"/>
+    <line x1="125" y1="92" x2="146" y2="104" stroke="#FF8E54" stroke-width="3" stroke-linecap="round"/>
+    <text x="125" y="180" fill="#FF6B2C" font-size="12" letter-spacing="3" font-weight="600" text-anchor="middle">CRON</text>
+    <text x="125" y="214" fill="#FAFAF7" font-size="16" text-anchor="middle">Pull fresh signals</text>
+    <text x="125" y="238" fill="#FAFAF7" font-size="16" text-anchor="middle">on a schedule</text>
+    <text x="125" y="272" fill="#71717A" font-size="13" text-anchor="middle" font-family="JetBrains Mono, monospace">errors: tight · funnels: slow</text>
+  </g>
+
+  <!-- B: SIGNALS -->
+  <g transform="translate(360, 280)">
+    <rect x="0" y="0" width="320" height="300" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="12"/>
+    <text x="24" y="40" fill="#FF6B2C" font-size="12" letter-spacing="3" font-weight="600">THREE DEFINITIONS OF "WRONG"</text>
+    <!-- sentry -->
+    <rect x="24" y="60" width="272" height="62" fill="#1A1F24" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <circle cx="50" cy="91" r="7" fill="#FF6B6B"/>
+    <text x="72" y="86" fill="#FAFAF7" font-size="16" font-weight="500">Sentry</text>
+    <text x="72" y="108" fill="#AAA79A" font-size="13">errors — the hard signal, a trace</text>
+    <!-- posthog -->
+    <rect x="24" y="132" width="272" height="62" fill="#1A1F24" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <circle cx="50" cy="163" r="7" fill="#A78BFA"/>
+    <text x="72" y="158" fill="#FAFAF7" font-size="16" font-weight="500">PostHog</text>
+    <text x="72" y="180" fill="#AAA79A" font-size="13">anomalies — a funnel that bent</text>
+    <!-- betterstack -->
+    <rect x="24" y="204" width="272" height="62" fill="#1A1F24" stroke="#2A3138" stroke-width="1" rx="8"/>
+    <circle cx="50" cy="235" r="7" fill="#6EE7B7"/>
+    <text x="72" y="230" fill="#FAFAF7" font-size="16" font-weight="500">BetterStack</text>
+    <text x="72" y="252" fill="#AAA79A" font-size="13">uptime — slow, flapping, or down</text>
+  </g>
+
+  <!-- C: CODEX -->
+  <g transform="translate(720, 280)">
+    <rect x="0" y="0" width="250" height="300" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="12"/>
+    <text x="125" y="44" fill="#FF6B2C" font-size="12" letter-spacing="3" font-weight="600" text-anchor="middle">CODEX</text>
+    <text x="125" y="68" fill="#71717A" font-size="12" text-anchor="middle">a second prior</text>
+    <g font-size="15" fill="#E5E5E5" font-family="JetBrains Mono, monospace">
+      <text x="28" y="120">reads the signal</text>
+      <text x="28" y="160">traces to a recent diff</text>
+      <text x="28" y="200">writes a local fix</text>
+      <text x="28" y="240">+ the test it implies</text>
+    </g>
+    <text x="125" y="278" fill="#AAA79A" font-size="13" text-anchor="middle">≤ 3 files, or it's not a fix</text>
+  </g>
+
+  <!-- D: WORKTREE PR -->
+  <g transform="translate(1010, 280)">
+    <rect x="0" y="0" width="250" height="300" fill="#14181C" stroke="#2A3138" stroke-width="1" rx="12"/>
+    <text x="125" y="44" fill="#FF6B2C" font-size="12" letter-spacing="3" font-weight="600" text-anchor="middle">WORKTREE PR</text>
+    <!-- branch glyph -->
+    <g stroke="#FF8E54" stroke-width="3" fill="none">
+      <circle cx="60" cy="96" r="9"/><circle cx="60" cy="170" r="9"/><circle cx="150" cy="133" r="9"/>
+      <path d="M60 105 L60 161"/><path d="M60 133 C100 133, 110 133, 141 133"/>
+    </g>
+    <text x="92" y="92" fill="#FAFAF7" font-size="13" font-family="JetBrains Mono, monospace">main</text>
+    <text x="92" y="200" fill="#6EE7B7" font-size="12.5" font-family="JetBrains Mono, monospace">codex/funnel-drop</text>
+    <text x="28" y="246" fill="#E5E5E5" font-size="14">its own checkout</text>
+    <text x="28" y="270" fill="#AAA79A" font-size="13">never touches the day tree</text>
+  </g>
+
+  <!-- E: MERGE GATE -->
+  <g transform="translate(1300, 280)">
+    <rect x="0" y="0" width="250" height="300" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1.5" rx="12"/>
+    <text x="125" y="44" fill="#6EE7B7" font-size="12" letter-spacing="3" font-weight="600" text-anchor="middle">THE GATE</text>
+    <g font-size="14.5" fill="#E5E5E5">
+      <text x="28" y="96">evaluator: stop condition</text>
+      <text x="28" y="138">diff ceiling: ≤ ~4 files</text>
+      <text x="28" y="180">CC builds · Codex checks</text>
+      <text x="28" y="222" fill="#FAFAF7" font-weight="600">human merges</text>
+    </g>
+    <path d="M28 256 l16 16 l28 -34" stroke="#6EE7B7" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="84" y="272" fill="#6EE7B7" font-size="13">never self-merge</text>
+  </g>
+
+  <!-- horizontal arrows -->
+  <line x1="324" y1="430" x2="354" y2="430" stroke="#FF6B2C" stroke-width="2.5" marker-end="url(#ar)"/>
+  <line x1="684" y1="430" x2="714" y2="430" stroke="#FF6B2C" stroke-width="2.5" marker-end="url(#ar)"/>
+  <line x1="974" y1="430" x2="1004" y2="430" stroke="#FF6B2C" stroke-width="2.5" marker-end="url(#ar)"/>
+  <line x1="1264" y1="430" x2="1294" y2="430" stroke="#FF6B2C" stroke-width="2.5" marker-end="url(#ar)"/>
+
+  <!-- loop-back arrow: gate -> cron -->
+  <path d="M1425 580 C1425 730, 195 730, 195 596" fill="none" stroke="#71717A" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round" marker-end="url(#arl)"/>
+  <text x="810" y="724" fill="#71717A" font-size="14" text-anchor="middle" font-style="italic">…then back to watching — the loop never closes</text>
+
+  <text x="80" y="866" fill="#71717A" font-size="13">Two priors, one of them a human. The fence — a stop condition and a diff ceiling — is what makes it safe to leave running.</text>
+</svg>

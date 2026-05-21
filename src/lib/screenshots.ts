@@ -68,10 +68,11 @@ export const SCREENSHOTS: Record<string, string> = {
   "42-codex-on-a-loop-2": "42-codex-on-a-loop-2.png",
   "42-codex-on-a-loop-3": "42-codex-on-a-loop-3.gif",
   "42-codex-on-a-loop-4": "42-codex-on-a-loop-4.png",
+  "42-codex-on-a-loop-5": "42-codex-on-a-loop-5.svg",
   "claude-md-rules-1": "claude-md-rules-1.svg",
   "swarms-1": "swarms-1.png",
   "swarms-2": "swarms-2.png",
   "swarms-3": "swarms-3.png"
 };
 
-export const SCREENSHOT_COUNT = 69;
+export const SCREENSHOT_COUNT = 70;
