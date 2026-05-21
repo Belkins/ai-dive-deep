@@ -1,0 +1,97 @@
+---
+number: 42
+slug: "42-codex-on-a-loop"
+title: "Codex on a Loop"
+subtitle: "The Second Opinion, Proof-Checked While You Sleep"
+tldr: "Codex isn't a better Claude Code — it's a second prior I run on a loop. Pointed at Sentry + PostHog + BetterStack via MCP and crons, it fixes fresh signals in worktree-isolated PRs, proof-checks the day driver's diffs by running the tests CC didn't think to run, and — one afternoon, in about ten minutes — hatched a desktop pet from a cross-vendor skill. Best execution is always a second opinion plus a proof check, never one agent trusted blind."
+keyConcepts: ["second opinion", "proof-checking", "design-system loop", "worktree isolation", "PostHog", "BetterStack", "cross-vendor skill", "hatch-pet"]
+readingMinutes: 11
+---
+
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import Callout from '@/components/Callout.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+2:40 PM, a Thursday. A cron fires against the LinguaLive analytics workspace and Codex pulls a fresh <GlossaryTerm term="MCP">MCP</GlossaryTerm> signal: a PostHog funnel drop. The trial-to-onboarded step lost a chunk of its conversion overnight — not a crash, not an error in any log, just a number that bent the wrong way. Codex reads the funnel breakdown, notices the drop is isolated to one browser cohort, traces it to a client-side guard that started throwing silently after a dependency bump shipped the day before. It opens a PR on `codex/funnel-drop-onboard-guard`, in its own <GlossaryTerm term="Worktree">worktree</GlossaryTerm>, three files, one test that asserts the guard fires on the cohort that broke. Slack gets a one-line summary. Then it goes back to watching.
+
+The twist that sets up this chapter: that wasn't Codex's only job that morning. At 9:15 it had proof-checked a PR <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> wrote the night before — a feature branch I'd left half-merged — and it caught a regression by running a test suite CC never thought to run. CC built the thing. Codex checked the thing. Two agents, one repo, and neither of them trusted blind.
+
+## The second opinion, not the better tool
+
+Here's the thesis, and it's the opposite of what the leaderboard tourists want it to be: Codex is a *second prior*, not a Claude Code replacement. I don't run it because it's better. I run it because it's *different* — a separate model carrying separate training, which makes it useful for exactly three things — testing, an additional point of view, and proof-checking — and not much else.
+
+This is the same argument I made about Gemini in [Ch 35](/chapters/35-codex-and-cc): a second prior from a different vendor triangulates the right answer faster than ten iterations against one model's taste. There it was for ideation. Here it's for verification. The mechanism is identical — two priors, one comparison surface — and the value is the delta, never the ranking.
+
+<Callout type="note">
+This is NOT "Codex beats Claude Code." If you want the honest ranking with no diplomacy — which model is actually ahead this month, on which axis — that's [the tier list](/tier-list), and it's the source of truth, not this chapter. This chapter is about running a second model *alongside* the first, not instead of it. The whole point is that you don't have to choose.
+</Callout>
+
+## The signal sources
+
+The loop is only as good as what it watches. Codex is wired to three sources via <GlossaryTerm term="MCP">MCP</GlossaryTerm>, with crons that pull fresh signals on a schedule, fix straight away, and open a PR. Each repo carries its own `.mcp.json`, so the set differs by what the repo actually needs — the Belkins partner-portal set in [Ch 35](/chapters/35-codex-and-cc) is HubSpot-heavy; the LinguaLive set below leans on the product-analytics trio. Each source is good at a different kind of "something's wrong":
+
+- **Sentry** — errors. The hard signal. A stack trace lands, Codex reads it, finds the file, writes a local fix with a test. This is the cleanest contract there is: given this trace, produce this diff.
+- **PostHog** — product-analytics anomalies. The soft signal. A funnel drops, a retention curve bends, an event stops firing. No exception is thrown — the code "works," it just stopped converting. Codex is good at tracing these back to a recent diff, less good at deciding whether the drop is a bug or a seasonality blip. That judgment call is mine.
+- **BetterStack** — uptime and log alerts. The infrastructure signal. A health check flaps, an error rate crosses a threshold, a log pattern spikes. Codex correlates the alert window against recent deploys and opens the PR or, more often, flags it for me when the fix is a config call rather than a code one.
+
+Sentry tells you it broke. PostHog tells you it stopped working without breaking. BetterStack tells you it's slow or down. Three different definitions of "wrong," one night-shift agent watching all three.
+
+The cron cadence matters more than the wiring. I don't poll Sentry every minute — that's noise, and noise trains you to ignore the channel. Errors get a tight loop because a trace is actionable the second it lands. PostHog gets a slow loop — once or twice a day — because a funnel number needs a window of data before a "drop" is real and not just an hour of low traffic. BetterStack sits in the middle. The wrong cadence is its own bug: too fast and Codex opens a PR against a blip that self-corrects; too slow and the day shift is already firefighting by the time the night shift notices. Verify the cadence against your own signal volume — a repo that throws twice a week wants a different loop than one that throws twice an hour.
+
+<ScreenshotPlaceholder
+  id="42-codex-on-a-loop-5"
+  caption="Codex working a fresh signal — cron-triggered, PR opened in its own worktree"
+  note="No real capture yet — the loop opening a codex/ branch against a PostHog funnel-drop alert."/>
+
+## A worktree per fix
+
+Every fix gets its own <GlossaryTerm term="Worktree">worktree</GlossaryTerm>, and this is the part that makes the loop safe to leave running. The night shift's churn — six fixes in flight against six different signals — never collides with the day driver's working tree. I can be mid-feature in my own checkout while Codex opens, churns, and closes branches in parallel worktrees that share the same `.git` but never touch my files. No stashing, no "wait, what's staged right now," no dirty tree when I sit down.
+
+This is the [Ch 20](/chapters/20-terminal-windows) pattern doing exactly what it was built for: a worktree is a cheap, isolated checkout, and isolation is the whole reason you can have a second agent running churn against your repo without it stepping on the work you're doing live. The PR is the only thing that ever crosses back into shared space, and the PR is gated.
+
+## The loop
+
+The standing prompt I actually run is `/loop` with a goal like *"simplify, follow my design system."* Codex churns the codebase against that one constraint — finds a component that drifted off the design tokens, a duplicated utility, a div soup that should be three semantic elements — and opens a small PR. Then it does it again. Small diff, small diff, small diff, against a single design-system north star.
+
+The honest part, and the part [Ch 38](/chapters/38-run-until-done) is the whole reference for: a loop drifts and over-reaches without an evaluator that tells it to stop and a diff ceiling that caps the blast radius. "Simplify" with no stop condition is a vibe-eval — the agent will helpfully "simplify" your auth flow into a security hole on turn 14 while you're at lunch. The constraint that makes `/loop` safe isn't the goal, it's the *fence*: a measurable stop condition and a hard cap on how many files one PR can touch. A four-file simplification is a simplification. A nine-file one is a re-architecture wearing a fix's clothes — close it unread.
+
+<PullQuote>A loop without an evaluator and a diff ceiling isn't running until done. It's running until tired — and it'll take your design system down with it.</PullQuote>
+
+## Proof-checking is the whole discipline
+
+The reason any of this is safe comes down to one word, and it's not "autonomy." It's proof-checking, at two levels.
+
+Level one: Codex proof-checks the day driver's PRs. CC ships a feature; Codex reads the diff with a fresh prior, runs the test suite — including the tests CC didn't think to run, because a different model reaches for different edge cases — and catches the regression before I merge. A second pair of eyes that never gets tired and never assumes its own code is correct, because it didn't write the code.
+
+Level two: *I* proof-check the loop's output. The evaluator from Ch 38 is the machine gate; the human merge is the judgment gate. This is the [Ch 35](/chapters/35-codex-and-cc) rule restated — Codex never pushes to `main`, never merges its own PR, never approves its own work. Every shift hand-off needs a moment of human attention, because that moment is the only thing between "the loop caught a real bug" and "the loop quietly merged a regression while you slept."
+
+So the rule is simple and it scales to anything: best execution is a second opinion *plus* a proof check, never one agent trusted blind. One agent writing and the same agent approving is how you ship the 5:58 PM deploy that 500s the checkout button. Two priors, one of which is a human, is how you don't. (This very chapter was drafted by a swarm and adversarially proof-checked before it shipped — the book keeps its receipts on its own thesis.)
+
+## Ten minutes to a desktop pet
+
+The fun payoff, and the lightest possible proof the workflow holds. One afternoon I handed Codex a cross-vendor skill called `hatch-pet` — the same SKILL.md format Claude Code uses, the cross-vendor portability I covered in [Ch 39](/chapters/39-skills-you-should-steal) — and a one-line brief: *a pet based on my interest in cyberpunk — half robot, half flame.*
+
+The first thing Codex did was the thing that earns it the slot: it read the skill's requirements before generating a pixel. `hatch-pet` specifies the sprite dimensions, the required animation rows, the validation step. Codex read the contract, *then* generated and validated the sprite assets in a worktree.
+
+<ScreenshotPlaceholder id="42-codex-on-a-loop-1" ratio="1228/940" caption="One line, one skill — Codex reads hatch-pet's requirements before generating a thing" note="‘Create a pet based on my interest in cyberpunk, like half robot-half flame.’ Codex reads the skill first, then generates and validates the assets."/>
+
+It produced a contact sheet — idle, walk, run, sleep, every animation row rendered as frames — and checked it against the skill's spec itself, before assembly. Not "generate and hope." Generate, validate, then build.
+
+<ScreenshotPlaceholder id="42-codex-on-a-loop-2" ratio="768/1134" caption="The contact sheet Codex generated and checked itself" note="Idle, walk, run, sleep — every animation row rendered as frames, validated before assembly."/>
+
+Then it assembled a running desktop pet — "Emberling," half robot, half flame — and parked it on my desktop. About ten minutes, one-line brief to living thing.
+
+<ScreenshotPlaceholder id="42-codex-on-a-loop-3" ratio="1/1" caption="Emberling, alive on the desktop" note="The assembled pet — half robot, half flame — about ten minutes from one-line brief to this."/>
+
+It idles in the corner now with a little thought bubble. Right now it's apparently thinking about a Folderly simplification, which is a joke the loop didn't know it was making.
+
+<ScreenshotPlaceholder id="42-codex-on-a-loop-4" ratio="1076/1000" caption="Parked on the desktop, thinking about a Folderly simplification" note="The pet idles in the corner with a thought bubble — the cyberpunk flame creature, hatched by a skill."/>
+
+Why a desktop toy earns a slot in a book about portfolio operations: it's the cheapest possible demonstration that a skill drives Codex end-to-end — read the contract, generate in isolation, self-validate, assemble — with no human in the loop except the one-line brief. The same machinery that fixes a PostHog funnel drop hatched a pet. And joy is a legitimate output. If the workflow can only ever produce bug fixes, you've built a tool. If it can also produce Emberling in ten minutes, you've built something you'll actually keep running.
+
+## The through-line
+
+Codex isn't better than Claude Code. It's a second prior on a loop — pointed at Sentry, PostHog, and BetterStack, fixing fresh signals in isolated worktrees, proof-checked at both ends: the evaluator catches the drift, the human catches the rest. CC builds; Codex checks; I merge. The loop doesn't care whether I'm at my desk at 2:40 PM or asleep at 3 AM — that's the whole point of the subtitle. The pet is the receipt that the whole thing is cheap, fast, and occasionally delightful.
+
+Two priors beat one. One of them should be a human.

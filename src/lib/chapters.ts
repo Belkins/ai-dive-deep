@@ -48,6 +48,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 39, slug: '39-skills-you-should-steal', title: 'Skills You Should Steal', subtitle: 'A tour of the 1M-skill ecosystem, the 73% that\'s broken, and the gaps an operator can fill' },
   { number: 40, slug: '40-prompting-knob', title: "Prompting, or the Knob You Probably Shouldn't Tune", subtitle: 'Why most prompt engineering content is wrong for operators' },
   { number: 41, slug: '41-send-the-link', title: 'Send the Link, Not the File', subtitle: 'Every Deliverable as a Live Artifact' },
+  { number: 42, slug: '42-codex-on-a-loop', title: 'Codex on a Loop', subtitle: 'The Second Opinion, Proof-Checked While You Sleep' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -95,7 +96,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part VI — The Frontier and the Tier',
     tagline: 'Agents that talk, write, browse, and the honest tier list.',
     intro: 'Voice, browser, persona, archetype agents. Two-agent infrastructure. Frameworks beyond Claude Code. Team adoption when twelve people need to use it. Failure stories with dollar amounts. The tier list, ranked without diplomatic phrasing. Plus the community skill ecosystem — what to steal and what to publish.',
-    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '36-frameworks-beyond', '39-skills-you-should-steal', '26-team-adoption', '28-failure-receipts', '24-tier-list'],
+    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '42-codex-on-a-loop', '36-frameworks-beyond', '39-skills-you-should-steal', '26-team-adoption', '28-failure-receipts', '24-tier-list'],
   },
 ];
 
@@ -133,7 +134,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'agents',
     label: 'AI Agents',
     description: 'The wild stuff. Rick archetypes. Browser agents. Persona agents. Frameworks beyond Claude Code.',
-    slugs: ['10-wild-stuff', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '36-frameworks-beyond', '35-codex-and-cc', '27-voice-agents', '39-skills-you-should-steal'],
+    slugs: ['10-wild-stuff', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '36-frameworks-beyond', '35-codex-and-cc', '42-codex-on-a-loop', '27-voice-agents', '39-skills-you-should-steal'],
   },
   {
     key: 'building',

@@ -10,6 +10,26 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.4',
+    date: '2026-05-21',
+    tagline: 'Forty-two chapters. Codex gets the hands-on companion — second opinion, on a loop, proof-checked.',
+    shipped: [
+      'New Chapter 42 — "Codex on a Loop" (~1,950 words, 11-min read). The hands-on companion to Ch 35\'s strategic day-shift/night-shift framing. The thesis: Codex isn\'t a better Claude Code, it\'s a second prior I run on a loop — pointed at Sentry (errors), PostHog (funnel-drop anomalies), and BetterStack (uptime/log alerts) via MCP + crons, fixing fresh signals in worktree-isolated PRs, and proof-checking the day driver\'s diffs by running the tests CC didn\'t think to run.',
+      'The honest framing — explicit "this is NOT Codex beats Claude Code" callout that defers the ranking to /tier-list. Same second-prior logic as the Gemini argument in Ch 35: the value is the delta, never the leaderboard.',
+      'The loop, with a fence — the standing `/loop` prompt ("simplify, follow my design system") plus the discipline that makes it safe: an evaluator that says stop (cross-link Ch 38) and a diff ceiling that caps blast radius. A four-file simplification is a fix; a nine-file one is a re-architecture wearing a fix\'s clothes.',
+      'Proof-checking as the whole discipline — two levels: Codex proof-checks CC\'s PRs (machine), the human proof-checks the loop (judgment). Best execution = a second opinion plus a proof check, never one agent trusted blind.',
+      'Ten minutes to a desktop pet — the fun payoff and the lightest proof the cross-vendor SKILL.md claim holds: handed Codex the `hatch-pet` skill + a one-line cyberpunk brief, it read the contract, generated + self-validated sprite assets in a worktree, and hatched "Emberling" — a half-robot/half-flame desktop pet — in ~10 minutes. 4 real screenshots wired in (Codex conversation, contact sheet, live animation gif, pet-on-desktop).',
+      'Placed in Part VI (Frontier + Tier) next to Ch 35, and in the SECTIONS "AI agents" topical group. Cmd-K entry + synonyms (codex loop worktree sentry posthog betterstack proof-check pet emberling hatch-pet second opinion).',
+      'Executed as a swarm — voice-calibrated drafting agent + adversarial proof-checking pass. The chapter keeps its own receipt: it says so in the text.',
+    ],
+    receipts: [
+      { label: 'New chapter', value: 'Ch 42 · 42-codex-on-a-loop · Part VI · ~1,950 words' },
+      { label: 'Chapter count', value: '41 → 42' },
+      { label: 'Real screenshots added', value: '4 (hatch-pet conversation, contact sheet, Emberling gif, desktop pet)' },
+      { label: 'Emberling gif weight', value: '3.8 MB → 2.4 MB (gifsicle -O3 --lossy)' },
+    ],
+  },
+  {
     edition: 'Edition 9.3',
     date: '2026-05-20',
     tagline: 'Every page one click from the homepage. Tile grid grows to 3 rows.',
