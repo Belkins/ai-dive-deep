@@ -21,6 +21,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Ten minutes to a desktop pet — the fun payoff and the lightest proof the cross-vendor SKILL.md claim holds: handed Codex the `hatch-pet` skill + a one-line cyberpunk brief, it read the contract, generated + self-validated sprite assets in a worktree, and hatched "Emberling" — a half-robot/half-flame desktop pet — in ~10 minutes. 4 real screenshots wired in (Codex conversation, contact sheet, live animation gif, pet-on-desktop).',
       'Placed in Part VI (Frontier + Tier) next to Ch 35, and in the SECTIONS "AI agents" topical group. Cmd-K entry + synonyms (codex loop worktree sentry posthog betterstack proof-check pet emberling hatch-pet second opinion).',
       'Executed as a swarm — voice-calibrated drafting agent + adversarial proof-checking pass. The chapter keeps its own receipt: it says so in the text.',
+      'Consistency pass — chapter-count stat swept 41 → 42 across 5 user-facing pages (homepage header + Now banner + launch tile, /journey, /sections, /launch, /github-playbook). Two copy-pasteable artifacts added to Ch 42 (the LinguaLive product-analytics .mcp.json; the worktree + fenced /loop commands). Three inbound cross-links added so Ch 42 is a node, not a dead end: Ch 38 (a real /loop example), Ch 39 (the hatch-pet cross-vendor receipt), Ch 20 (worktree-per-fix in practice). The last screenshot slot filled with a house-style loop-flow diagram.',
     ],
     receipts: [
       { label: 'New chapter', value: 'Ch 42 · 42-codex-on-a-loop · Part VI · ~1,950 words' },

@@ -106,6 +106,8 @@ This is the single most useful Unix trick when running parallel CC sessions. It'
 
 When you're done with a worktree: `git worktree remove ../repo-feature-x`. Done.
 
+The same isolation is what lets a *second agent* run churn against your repo without touching the tree you're working in live — a worktree per fix is how [Codex on a loop](/chapters/42-codex-on-a-loop) opens six PRs while you stay mid-feature in your own checkout.
+
 ## Headless sessions in the same setup
 
 One pane runs `claude --print` against a long-poll loop or a cron-style watcher. Another pane runs interactive Claude. They don't interfere — different processes, different working directories, different tasks.

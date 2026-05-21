@@ -5,7 +5,7 @@ title: "Codex on a Loop"
 subtitle: "The Second Opinion, Proof-Checked While You Sleep"
 tldr: "Codex isn't a better Claude Code — it's a second prior I run on a loop. Pointed at Sentry + PostHog + BetterStack via MCP and crons, it fixes fresh signals in worktree-isolated PRs, proof-checks the day driver's diffs by running the tests CC didn't think to run, and — one afternoon, in about ten minutes — hatched a desktop pet from a cross-vendor skill. Best execution is always a second opinion plus a proof check, never one agent trusted blind."
 keyConcepts: ["second opinion", "proof-checking", "design-system loop", "worktree isolation", "PostHog", "BetterStack", "cross-vendor skill", "hatch-pet"]
-readingMinutes: 11
+readingMinutes: 12
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
@@ -37,6 +37,20 @@ The loop is only as good as what it watches. Codex is wired to three sources via
 
 Sentry tells you it broke. PostHog tells you it stopped working without breaking. BetterStack tells you it's slow or down. Three different definitions of "wrong," one night-shift agent watching all three.
 
+The `.mcp.json` for the LinguaLive web repo — the product-analytics trio, nothing the Belkins portal in [Ch 35](/chapters/35-codex-and-cc) carries:
+
+```json
+{
+  "mcpServers": {
+    "sentry":      { "command": "npx", "args": ["-y", "@sentry/mcp-server"], "env": { "SENTRY_AUTH": "${SENTRY_AUTH}" } },
+    "posthog":     { "command": "npx", "args": ["-y", "@posthog/mcp"],        "env": { "POSTHOG_API_KEY": "${POSTHOG_API_KEY}" } },
+    "betterstack": { "command": "npx", "args": ["-y", "@betterstack/mcp"],    "env": { "BETTERSTACK_TOKEN": "${BETTERSTACK_TOKEN}" } }
+  }
+}
+```
+
+Package names move — `@posthog/mcp` and `@betterstack/mcp` are the shape, not a promise; verify the current server package on each vendor's MCP docs before you wire it. Tokens come from the env, never inline — same rule as everywhere else in this book.
+
 The cron cadence matters more than the wiring. I don't poll Sentry every minute — that's noise, and noise trains you to ignore the channel. Errors get a tight loop because a trace is actionable the second it lands. PostHog gets a slow loop — once or twice a day — because a funnel number needs a window of data before a "drop" is real and not just an hour of low traffic. BetterStack sits in the middle. The wrong cadence is its own bug: too fast and Codex opens a PR against a blip that self-corrects; too slow and the day shift is already firefighting by the time the night shift notices. Verify the cadence against your own signal volume — a repo that throws twice a week wants a different loop than one that throws twice an hour.
 
 <ScreenshotPlaceholder
@@ -53,6 +67,20 @@ This is the [Ch 20](/chapters/20-terminal-windows) pattern doing exactly what it
 ## The loop
 
 The standing prompt I actually run is `/loop` with a goal like *"simplify, follow my design system."* Codex churns the codebase against that one constraint — finds a component that drifted off the design tokens, a duplicated utility, a div soup that should be three semantic elements — and opens a small PR. Then it does it again. Small diff, small diff, small diff, against a single design-system north star.
+
+```bash
+# one worktree per fix — never touches the tree I'm working in live
+git worktree add ../linguallive-codex -b codex/simplify-tokens
+
+# the standing loop, with the fence that makes it safe to leave running:
+# a goal, a diff ceiling, and a stop condition — not just "simplify"
+codex loop \
+  --goal      "simplify; match the tokens in DESIGN.md" \
+  --max-files 4 \
+  --stop-when "lint passes && visual-diff clean"
+```
+
+Flags drift between Codex versions — that's the shape, check it against your own `codex --help`. The load-bearing parts aren't the flags, they're the three constraints: a goal, a ceiling, a stop condition. Strip any one and you've got a loop running until *tired*, not until done.
 
 The honest part, and the part [Ch 38](/chapters/38-run-until-done) is the whole reference for: a loop drifts and over-reaches without an evaluator that tells it to stop and a diff ceiling that caps the blast radius. "Simplify" with no stop condition is a vibe-eval — the agent will helpfully "simplify" your auth flow into a security hole on turn 14 while you're at lunch. The constraint that makes `/loop` safe isn't the goal, it's the *fence*: a measurable stop condition and a hard cap on how many files one PR can touch. A four-file simplification is a simplification. A nine-file one is a re-architecture wearing a fix's clothes — close it unread.
 

@@ -49,7 +49,7 @@ The autonomous-work surface in Claude Code now reads as a clean three-way. Each 
 
 **`/goal` — evaluator-driven.** "Run until this condition is met." The Haiku evaluator decides. Use it when the finish line is measurable in transcript output — tests pass, file count below N, all PRs labeled, lint clean.
 
-**`/loop [interval] [prompt]` — interval-driven.** "Run this prompt every N minutes." No evaluator. Claude executes the prompt, sleeps, executes again. Use it for polling — `/loop 5m check if the deploy finished` is the canonical example. Pre-2026 you'd have rigged this with [cron](/chapters/07-cron); now it's a slash command.
+**`/loop [interval] [prompt]` — interval-driven.** "Run this prompt every N minutes." No evaluator. Claude executes the prompt, sleeps, executes again. Use it for polling — `/loop 5m check if the deploy finished` is the canonical example. Pre-2026 you'd have rigged this with [cron](/chapters/07-cron); now it's a slash command. For a real operator loop running this way — Codex on a standing "simplify, follow my design system" prompt, fenced by a diff ceiling — see [Chapter 42](/chapters/42-codex-on-a-loop).
 
 **Stop hooks — custom-logic-driven.** The engineer-flavored version — covered in detail in [Ch 16](/chapters/16-hooks-subagents). Use when you want determinism — "stop when this script returns 0" — rather than a model judging the transcript. For curated community skills and the install audit pattern, see [Ch 39](/chapters/39-skills-you-should-steal).
 
