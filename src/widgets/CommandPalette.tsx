@@ -130,6 +130,7 @@ const CHAPTER_SYNONYMS: Record<string, string> = {
   '40-prompting-knob':  'prompting prompt engineering chain of thought few-shot role play act as ladder skills swarms memory data layer rigor enforcer ultimate prompt cot zero-shot magic phrases anthropic karpathy benchmark tuesday repeatability schema not answer multiple instances',
   '41-send-the-link':   'html htmlization html-first link not file pdf dead file living link artifact deliverable deploy private repo github pages vercel afc folderly audit qbr board update brief operator distribution',
   '42-codex-on-a-loop': 'codex openai loop /loop second opinion second prior proof-checking proof check verify worktree worktrees sentry posthog betterstack mcp cron crons design system simplify pet emberling hatch-pet desktop pet cross-vendor skill night shift two priors',
+  '43-codex-saviour':   'codex saviour refactor refactoring simplification folderly delete deletion 90000 ninety thousand lines net reduction repositioning swarm bench fermat harvey pauli planck explorer agents veto lens north star four buckets surface split preserve before pruning route registry harden while simplifying second prior verified layers',
 };
 
 const RESOURCES_SECTIONS: { id: string; label: string }[] = [

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- header -->
+  <text x="80" y="62" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 43 · SPLIT THE SURFACE</text>
+  <text x="80" y="120" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">Four buckets — and no route doing all four jobs</text>
+  <text x="80" y="156" fill="#AAA79A" font-size="18">Classify every major route into exactly one bucket. The old surface let one route be acquisition, utility, workspace, and API all at once. That is the bug.</text>
+
+  <!-- four columns -->
+  <g transform="translate(80, 230)">
+    <!-- 1 public acquisition -->
+    <g>
+      <rect width="340" height="560" rx="14" fill="#14181C" stroke="#2A3138" stroke-width="1"/>
+      <rect width="340" height="8" rx="4" fill="#FF8E54"/>
+      <text x="28" y="64" fill="#FF8E54" font-size="13" letter-spacing="2" font-weight="700">01 · PUBLIC ACQUISITION</text>
+      <text x="28" y="98" fill="#FAFAF7" font-size="19">The first promise</text>
+      <g font-size="15.5" fill="#AAA79A">
+        <text x="28" y="150">Homepage — one promise</text>
+        <text x="28" y="186">The public generator</text>
+        <text x="28" y="222">Pricing</text>
+      </g>
+      <line x1="28" y1="260" x2="312" y2="260" stroke="#2A3138"/>
+      <text x="28" y="300" fill="#71717A" font-size="14">asks only:</text>
+      <g font-size="14.5" fill="#E5E5E5" font-family="JetBrains Mono, monospace">
+        <text x="28" y="334">what do you offer?</text>
+        <text x="28" y="366">who is it for?</text>
+        <text x="28" y="398">what happens next?</text>
+      </g>
+      <text x="28" y="470" fill="#FF8E54" font-size="14.5" font-weight="600">value before concepts</text>
+      <text x="28" y="500" fill="#71717A" font-size="14">no credits, no history, no teams</text>
+    </g>
+
+    <!-- 2 public utility -->
+    <g transform="translate(370,0)">
+      <rect width="340" height="560" rx="14" fill="#14181C" stroke="#2A3138" stroke-width="1"/>
+      <rect width="340" height="8" rx="4" fill="#A78BFA"/>
+      <text x="28" y="64" fill="#A78BFA" font-size="13" letter-spacing="2" font-weight="700">02 · PUBLIC UTILITY</text>
+      <text x="28" y="98" fill="#FAFAF7" font-size="19">The indexed long tail</text>
+      <g font-size="15.5" fill="#AAA79A">
+        <text x="28" y="150">Industry generators</text>
+        <text x="28" y="186">Tool guides · comparisons</text>
+        <text x="28" y="222">Template collections</text>
+      </g>
+      <line x1="28" y1="260" x2="312" y2="260" stroke="#2A3138"/>
+      <text x="28" y="300" fill="#71717A" font-size="14">preserve before pruning:</text>
+      <g font-size="14.5" fill="#E5E5E5" font-family="JetBrains Mono, monospace">
+        <text x="28" y="334">route-registry.ts</text>
+        <text x="28" y="366">shared templates</text>
+        <text x="28" y="398">301, not blind delete</text>
+      </g>
+      <text x="28" y="470" fill="#A78BFA" font-size="14.5" font-weight="600">hundreds of pages → one product</text>
+      <text x="28" y="500" fill="#71717A" font-size="14">canonical, consistent, prunable</text>
+    </g>
+
+    <!-- 3 authenticated workspace -->
+    <g transform="translate(740,0)">
+      <rect width="340" height="560" rx="14" fill="#14181C" stroke="#2A3138" stroke-width="1"/>
+      <rect width="340" height="8" rx="4" fill="#195EE6"/>
+      <text x="28" y="64" fill="#2B6FEE" font-size="13" letter-spacing="2" font-weight="700">03 · AUTH WORKSPACE</text>
+      <text x="28" y="98" fill="#FAFAF7" font-size="19">Power behind intent</text>
+      <g font-size="15.5" fill="#AAA79A">
+        <text x="28" y="150">Create</text>
+        <text x="28" y="186">Library · Integrations</text>
+        <text x="28" y="222">Billing · Settings</text>
+      </g>
+      <line x1="28" y1="260" x2="312" y2="260" stroke="#2A3138"/>
+      <text x="28" y="300" fill="#71717A" font-size="14">moved here from public:</text>
+      <g font-size="14.5" fill="#E5E5E5" font-family="JetBrains Mono, monospace">
+        <text x="28" y="334">save · history</text>
+        <text x="28" y="366">templates · settings</text>
+        <text x="28" y="398">immature areas hidden</text>
+      </g>
+      <text x="28" y="470" fill="#2B6FEE" font-size="14.5" font-weight="600">the user already decided</text>
+      <text x="28" y="500" fill="#71717A" font-size="14">advanced ≠ bad — just not first</text>
+    </g>
+
+    <!-- 4 integration / api contract -->
+    <g transform="translate(1110,0)">
+      <rect width="340" height="560" rx="14" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1.5"/>
+      <rect width="340" height="8" rx="4" fill="#6EE7B7"/>
+      <text x="28" y="64" fill="#6EE7B7" font-size="13" letter-spacing="2" font-weight="700">04 · API CONTRACT</text>
+      <text x="28" y="98" fill="#FAFAF7" font-size="19">Touch last, break never</text>
+      <g font-size="15.5" fill="#AAA79A">
+        <text x="28" y="150">/api/generate · /api/v1</text>
+        <text x="28" y="186">HubSpot · Zapier · Clay</text>
+        <text x="28" y="222">webhooks · health</text>
+      </g>
+      <line x1="28" y1="260" x2="312" y2="260" stroke="#1F3A2C"/>
+      <text x="28" y="300" fill="#71717A" font-size="14">the rule:</text>
+      <g font-size="14.5" fill="#E5E5E5" font-family="JetBrains Mono, monospace">
+        <text x="28" y="334">preserve response</text>
+        <text x="28" y="366">shape FIRST</text>
+        <text x="28" y="398">then change the UI</text>
+      </g>
+      <text x="28" y="470" fill="#6EE7B7" font-size="14.5" font-weight="600">clients never noticed</text>
+      <text x="28" y="500" fill="#71717A" font-size="14">a cleaner UI must not break automation</text>
+    </g>
+  </g>
+
+  <text x="80" y="848" fill="#71717A" font-size="14">If a route is trying to do all four jobs, that is the first thing to fix — before a single line is deleted.</text>
+</svg>

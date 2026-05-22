@@ -91,7 +91,7 @@ pre code {
 .chapter-body li { margin-top: 0.5rem; margin-bottom: 0.5rem; }
 .chapter-body li > p { margin: 0; }
 
-.chapter-body table { width: 100%; margin: 1.5rem 0; border-collapse: collapse; }
+.chapter-body table { width: 100%; margin: 1.5rem 0; border-collapse: collapse; display: block; overflow-x: auto; max-width: 100%; }
 .chapter-body th { text-align: left; font-weight: 500; border-bottom: 1px solid rgb(var(--line)); padding: 0.75rem; }
 .chapter-body td { padding: 0.75rem; vertical-align: top; border-bottom: 1px solid rgb(var(--line) / 0.6); }
 

@@ -10,6 +10,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.5',
+    date: '2026-05-23',
+    tagline: 'Forty-three chapters. The Codex loop from Ch 42 runs for real — a 90,000-line product refactor, proof-checked.',
+    shipped: [
+      'New Chapter 43 — "Codex as Saviour" (~2,390 words, 13-min read). The full-scale payoff of Ch 42\'s standing loop ("simplify, follow my design system"): pointed at a real shipping product (Folderly Email Generator), a bench of fourteen named explorer agents deleted a net 91,874 lines across 718 files, repositioned the product from seven surfaces to one promise, and HARDENED the risky paths the simplification exposed — all behind real build, CI, browser, and API checks. The thesis: simplification and security are the same phase.',
+      'The numbers, reconciled — hero stat is the final shipped release (718 files, +43,092 / −134,966, net −91,874, 243 commits, 106 begin with "Simplify", 27 hardening). The mid-run screenshot counter (585 files / +30,928 / −55,984) is framed explicitly as the diff mid-flight before the branch finished, not a contradiction. Plus the real cost receipt — 46% of one week\'s usage — and the human-steer receipt: the operator told the loop to checkpoint mid-run ("test the build, commit and push if no regressions").',
+      'The bench — the literal swarm (Pauli, Planck, Hume, Ramanujan, Averroes, Gibbs, Fermat, Sagan, Hooke, Socrates, Feynman, Beauvoir, Franklin, Mill) mapped onto a conceptual ten-lens decision model with veto power. The insight you steal: the lenses disagree productively — a delete that helps UX can hurt SEO, a security fix can break an integration — so the swarm forces each tradeoff explicit before code lands. Cross-links Ch 6 (the swarm).',
+      'The paste-able artifact — the eight-phase simplification playbook as a copy-paste block (name the product in one sentence → split the surface into four buckets → preserve before pruning → reduce first-use decisions → move power behind intent → delete by category → harden while simplifying → ship in verified layers).',
+      'Harden while simplifying — Phase 7 written as a generalized bug-class checklist an operator runs on ANY product (does a route mutate on GET? are OAuth states signed? are entitlements server-side? do protected APIs return JSON 401 or a confusing redirect? does cron auth fail closed?), not a Folderly incident report. Sanitized for public publication.',
+      'Four authored house-style SVG diagrams (the dark/orange book palette crossed with Folderly blue #195EE6 to encode before→after): the bench roster + veto lenses + the Emberling pet from Ch 42, the seven-surfaces→one-promise repositioning, the delete-by-the-numbers stat card, and the four-bucket surface split.',
+      'Placed in Part VI (Frontier + Tier) next to Ch 35 and Ch 42, and in the SECTIONS "AI agents" group. Cmd-K entry + synonyms. Three inbound cross-links so Ch 43 is a node, not a dead end: Ch 42 (the pet-joke payoff — "the loop actually ran it"), Ch 35 (the full-scale receipt of the day/night-shift loop), Ch 38 (what the fence looks like at 90,000 lines).',
+      'Executed as a swarm — voice-calibrated drafting agent (read Ch 35/42/38/6 first) + parallel SVG authoring + adversarial proof-check. Chapter-count stat swept 42 → 43 across the user-facing pages.',
+    ],
+    receipts: [
+      { label: 'New chapter', value: 'Ch 43 · 43-codex-saviour · Part VI · ~2,390 words' },
+      { label: 'Chapter count', value: '42 → 43' },
+      { label: 'The delete', value: '718 files · net −91,874 lines · 243 commits' },
+      { label: 'Authored diagrams', value: '4 house-style SVGs (book palette × Folderly blue)' },
+    ],
+  },
+  {
     edition: 'Edition 9.4',
     date: '2026-05-21',
     tagline: 'Forty-two chapters. Codex gets the hands-on companion — second opinion, on a loop, proof-checked.',

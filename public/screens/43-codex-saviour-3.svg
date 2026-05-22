@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- header -->
+  <text x="80" y="62" fill="#FF6B2C" font-size="15" letter-spacing="6" font-weight="500">CHAPTER 43 · THE MEASURED OUTCOME</text>
+  <text x="80" y="120" fill="#FAFAF7" font-size="50" font-weight="500" font-family="Source Serif 4, Georgia, serif" letter-spacing="-1">The delete, by the numbers</text>
+  <text x="80" y="156" fill="#AAA79A" font-size="18">Base commit 4eeff580 → production head b2caa86d. The win wasn't the deletion count — it was reducing decision load while the contracts underneath stayed intact.</text>
+
+  <!-- hero number -->
+  <g transform="translate(80, 250)">
+    <text x="0" y="40" fill="#71717A" font-size="16" letter-spacing="3">NET CODE REDUCTION</text>
+    <text x="0" y="150" fill="#6EE7B7" font-size="130" font-weight="700" font-family="Source Serif 4, Georgia, serif" letter-spacing="-3">−91,874</text>
+    <text x="0" y="190" fill="#AAA79A" font-size="20">lines, across 718 files changed · 243 commits · 106 begin with "Simplify"</text>
+  </g>
+
+  <!-- add vs delete bars -->
+  <g transform="translate(80, 470)">
+    <text x="0" y="0" fill="#71717A" font-size="14" letter-spacing="2">DELETED vs ADDED</text>
+    <rect x="0" y="20" width="720" height="40" rx="6" fill="#FF6B6B"/>
+    <text x="736" y="48" fill="#FF6B6B" font-size="20" font-weight="600">−134,966</text>
+    <rect x="0" y="74" width="230" height="40" rx="6" fill="#6EE7B7"/>
+    <text x="246" y="102" fill="#6EE7B7" font-size="20" font-weight="600">+43,092</text>
+  </g>
+
+  <!-- stat chips -->
+  <g transform="translate(80, 620)">
+    <g><rect width="200" height="92" rx="10" fill="#14181C" stroke="#2A3138"/><text x="20" y="42" fill="#FAFAF7" font-size="34" font-weight="700">305</text><text x="20" y="70" fill="#71717A" font-size="14">files deleted</text></g>
+    <g transform="translate(220,0)"><rect width="200" height="92" rx="10" fill="#14181C" stroke="#2A3138"/><text x="20" y="42" fill="#FAFAF7" font-size="34" font-weight="700">50</text><text x="20" y="70" fill="#71717A" font-size="14">removal commits</text></g>
+    <g transform="translate(440,0)"><rect width="200" height="92" rx="10" fill="#14181C" stroke="#2A3138"/><text x="20" y="42" fill="#FF8E54" font-size="34" font-weight="700">27</text><text x="20" y="70" fill="#71717A" font-size="14">hardening commits</text></g>
+    <g transform="translate(660,0)"><rect width="220" height="92" rx="10" fill="#14181C" stroke="#2A3138"/><text x="20" y="42" fill="#FAFAF7" font-size="34" font-weight="700">86</text><text x="20" y="70" fill="#71717A" font-size="14">files added</text></g>
+  </g>
+
+  <!-- mid-run receipt + contracts intact -->
+  <g transform="translate(1040, 250)">
+    <rect x="0" y="0" width="480" height="200" rx="12" fill="#14181C" stroke="#FF6B2C" stroke-width="1.5"/>
+    <text x="28" y="44" fill="#FF6B2C" font-size="12" letter-spacing="3" font-weight="600">THE COUNTER, MID-FLIGHT</text>
+    <text x="28" y="92" fill="#FAFAF7" font-size="30" font-weight="700" font-family="JetBrains Mono, monospace">585 files</text>
+    <text x="28" y="128" fill="#E5E5E5" font-size="22" font-family="JetBrains Mono, monospace"><tspan fill="#6EE7B7">+30,928</tspan>  <tspan fill="#FF6B6B">−55,984</tspan></text>
+    <text x="28" y="170" fill="#AAA79A" font-size="15">before the branch finished · 46% of one week's usage</text>
+  </g>
+
+  <g transform="translate(1040, 480)">
+    <rect x="0" y="0" width="480" height="232" rx="12" fill="#0F1A14" stroke="#6EE7B7" stroke-width="1.5"/>
+    <text x="28" y="44" fill="#6EE7B7" font-size="12" letter-spacing="3" font-weight="600">CONTRACTS KEPT INTACT</text>
+    <g font-size="17" fill="#E5E5E5" font-family="JetBrains Mono, monospace">
+      <text x="28" y="86">/api/generate · /api/v1</text>
+      <text x="28" y="120">HubSpot · Zapier · Clay</text>
+      <text x="28" y="154">webhooks · SEO URLs</text>
+    </g>
+    <text x="28" y="200" fill="#AAA79A" font-size="15">UI changed first; the contract never did.</text>
+  </g>
+
+  <text x="80" y="868" fill="#71717A" font-size="13">Preserve before pruning: a route registry, sitemap behavior, canonical URLs, and 301 redirects — not blind deletes of indexed pages.</text>
+</svg>
