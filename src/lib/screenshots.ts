@@ -69,7 +69,7 @@ export const SCREENSHOTS: Record<string, string> = {
   "42-codex-on-a-loop-3": "42-codex-on-a-loop-3.gif",
   "42-codex-on-a-loop-4": "42-codex-on-a-loop-4.png",
   "42-codex-on-a-loop-5": "42-codex-on-a-loop-5.svg",
-  "43-codex-saviour-1": "43-codex-saviour-1.svg",
+  "43-codex-saviour-1": "43-codex-saviour-1.png",
   "43-codex-saviour-2": "43-codex-saviour-2.svg",
   "43-codex-saviour-3": "43-codex-saviour-3.svg",
   "43-codex-saviour-4": "43-codex-saviour-4.svg",
