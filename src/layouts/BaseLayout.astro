@@ -30,6 +30,7 @@ const isChapter = Astro.url.pathname.startsWith('/chapters/');
 // network calls. Set the var on Vercel to turn analytics on without code changes.
 const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY as string | undefined;
 const posthogHost = (import.meta.env.PUBLIC_POSTHOG_HOST as string | undefined) ?? 'https://us.i.posthog.com';
+const googleAnalyticsId = 'G-CJRSLCSK8H';
 const isRoot = Astro.url.pathname === '/' || Astro.url.pathname === '';
 const jsonLd: Record<string, unknown> = isChapter
   ? {
@@ -95,6 +96,33 @@ const jsonLd: Record<string, unknown> = isChapter
     <link rel="alternate" type="application/rss+xml" title="Research notes RSS" href="https://dive.vladyslavpodoliako.com/rss/research-notes.xml" />
     <link rel="alternate" type="application/rss+xml" title="Changelog RSS" href="https://dive.vladyslavpodoliako.com/rss/changelog.xml" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
+    <script is:inline define:vars={{ googleAnalyticsId }}>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function gtag(){ window.dataLayer.push(arguments); };
+
+      if (!window.__vladsGoogleAnalyticsStarted) {
+        window.gtag('js', new Date());
+        window.__vladsGoogleAnalyticsStarted = true;
+      }
+
+      const trackGoogleAnalyticsPageView = () => {
+        const pagePath = window.location.pathname + window.location.search;
+        if (window.__vladsLastGoogleAnalyticsPageView === pagePath) return;
+        window.__vladsLastGoogleAnalyticsPageView = pagePath;
+        window.gtag('config', googleAnalyticsId, {
+          page_path: pagePath,
+          page_title: document.title,
+        });
+      };
+
+      trackGoogleAnalyticsPageView();
+
+      if (!window.__vladsGoogleAnalyticsBound) {
+        window.__vladsGoogleAnalyticsBound = true;
+        document.addEventListener('astro:page-load', trackGoogleAnalyticsPageView);
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
