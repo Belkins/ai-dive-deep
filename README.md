@@ -4,11 +4,11 @@
 
 ### The Ultimate AI Dive Deep
 
-**A 39-chapter operator field manual where every artifact is live, clickable, and forwardable.**
+**A 43-chapter operator field manual where every artifact is live, clickable, and forwardable.**
 
 ### → [**Read it: dive.vladyslavpodoliako.com**](https://dive.vladyslavpodoliako.com) ←
 
-[![Edition](https://img.shields.io/badge/edition-6-FF6B2C?style=flat-square)](https://dive.vladyslavpodoliako.com/changelog) &nbsp;
+[![Edition](https://img.shields.io/badge/edition-9.5-FF6B2C?style=flat-square)](https://dive.vladyslavpodoliako.com/changelog) &nbsp;
 [![Live](https://img.shields.io/badge/site-live-22D3A0?style=flat-square)](https://dive.vladyslavpodoliako.com) &nbsp;
 [![License: code MIT, content CC BY-NC-SA 4.0](https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY--NC--SA-71717A?style=flat-square)](./LICENSE)
 
@@ -38,11 +38,11 @@ The repo is how it's built. The site is what it IS.
 
 | Surface | What's there | Live link |
 |---|---|---|
-| **All 39 chapters** | The whole book, MDX-rendered, with TL;DRs, glossary tooltips, code blocks, and the receipts behind every claim | [`/chapters`](https://dive.vladyslavpodoliako.com/sections) |
+| **All 43 chapters** | The whole book, MDX-rendered, with TL;DRs, glossary tooltips, code blocks, and the receipts behind every claim | [`/chapters`](https://dive.vladyslavpodoliako.com/sections) |
 | **HTML-ization** | The flagship — thesis + 3 embedded live artifacts (AFC pitch deck, AFC robot stable, sanitized client deliverability audit) | [`/html-first`](https://dive.vladyslavpodoliako.com/html-first) |
 | **Tier list** | Every tool ranked without diplomatic phrasing, plus the live LMArena leaderboard widget | [`/tier-list`](https://dive.vladyslavpodoliako.com/tier-list) |
 | **Cheat sheet** | 16 reference sections — slash commands, settings keys, hook JSON shape, permission syntax, model routing — printable | [`/cheat-sheet`](https://dive.vladyslavpodoliako.com/cheat-sheet) |
-| **Glossary** | 52 terms, A–Z, linked inline throughout the chapters | [`/glossary`](https://dive.vladyslavpodoliako.com/glossary) |
+| **Glossary** | 56 terms, A–Z, linked inline throughout the chapters | [`/glossary`](https://dive.vladyslavpodoliako.com/glossary) |
 | **Resources** | Copy-paste templates: CLAUDE.md skeletons, .mcp.json, hooks, SKILL.md, subagent .md, Docker sandbox + devcontainer, 18 reusable prompts | [`/resources`](https://dive.vladyslavpodoliako.com/resources) |
 | **Research notes** | 9 external signals that shift what to do Monday — sourced, dated, signal-vs-receipt discipline | [`/research-notes`](https://dive.vladyslavpodoliako.com/research-notes) |
 | **The 12-rule CLAUDE.md** | Karpathy's 4 + 8 operator additions, with a receipt per rule | [`/claude-md-rules`](https://dive.vladyslavpodoliako.com/claude-md-rules) |
@@ -74,10 +74,10 @@ real artifacts the operator-Claude workflow produced:
 
 ## What's in this repo (the receipts)
 
-- **39 chapters** in `src/content/chapters/*.mdx`
+- **43 chapters** in `src/content/chapters/*.mdx`
 - **25 React/Astro widgets** in `src/widgets/` (live LMArena leaderboard, sortable tier list, command palette, token-burn calculator, swarm visualizer, persona-agent walkthrough, …)
 - **25 standalone pages** in `src/pages/` (the surfaces in the table above + the journey, sections index, showcase, vault starter, weekend builds, and more)
-- **52 glossary terms** in `src/lib/glossary.ts`
+- **56 glossary terms** in `src/lib/glossary.ts`
 - **9 dated research notes** in `src/lib/research-notes.ts`
 - **3 embedded interactive artifacts** in `public/artifacts/` — single-file, self-contained, sandboxed-iframe-embedded on `/html-first`
 - **18 copy-paste prompt templates + 9 hook templates + 5 CLAUDE.md skeletons + 8 SKILL.md templates** in `src/lib/snippets.ts`

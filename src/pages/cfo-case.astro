@@ -3,6 +3,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const cfoShareUrl = 'https://dive.vladyslavpodoliako.com/cfo-case/';
+const cfoMailto = `mailto:?subject=${encodeURIComponent('The case for our AI spend')}&body=${encodeURIComponent(`I want to expand our AI tooling budget. Here's the case in 600 words:
+
+${cfoShareUrl}
+
+The short version: one mid-senior engineer costs $120K/year fully loaded. At Sonnet pricing, that same money buys ~24 billion tokens. Even at heavy use, the AI does 5-10x the volume for the same dollar. Math + receipts at the link.`)}`;
 ---
 <BaseLayout title="The case for the AI spend" description="600 words for your CFO. Forward in Slack. Defend the spend. Unblock the budget.">
   <section class="container-prose pt-16 pb-4">
@@ -13,7 +19,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </p>
 
     <div class="mt-3 flex flex-wrap gap-2">
-      <a href="mailto:?subject=The%20case%20for%20our%20AI%20spend&body=I%20want%20to%20expand%20our%20AI%20tooling%20budget.%20Here%27s%20the%20case%20in%20600%20words%3A%0A%0Ahttps%3A%2F%2Fbelkins.github.io%2Fai-dive-deep%2Fcfo-case%2F%0A%0AThe%20short%20version%3A%20one%20mid-senior%20engineer%20costs%20%24120K%2Fyear%20fully%20loaded.%20At%20Sonnet%20pricing%2C%20that%20same%20money%20buys%20~24%20billion%20tokens.%20Even%20at%20heavy%20use%2C%20the%20AI%20does%205-10x%20the%20volume%20for%20the%20same%20dollar.%20Math%20%2B%20receipts%20at%20the%20link." class="btn-flame text-sm">Send via email →</a>
+      <a href={cfoMailto} class="btn-flame text-sm">Send via email →</a>
       <a href="https://www.linkedin.com/messaging/" target="_blank" rel="noopener" class="btn-ghost text-sm">Open LinkedIn DM</a>
       <button onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Link copied'; setTimeout(()=>this.textContent='Copy link',1500)" class="btn-ghost text-sm" type="button">Copy link</button>
     </div>

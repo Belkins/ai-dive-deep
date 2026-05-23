@@ -10,7 +10,7 @@ export const GET: APIRoute = async () => {
   const lines: string[] = [];
   lines.push("# Vlad's Playbook — The Ultimate AI Dive Deep");
   lines.push('');
-  lines.push("> A 36-chapter operator field manual for using AI tools in production.");
+  lines.push(`> A ${sorted.length}-chapter operator field manual for using AI tools in production.`);
   lines.push("> By Vlad Podoliako — CEO Belkins (B2B email outreach, $30M+ ARR); founder of Folderly, LinguaLive, NoCancer AI, 404 Model Agency.");
   lines.push('> Newsletter at vladsnewsletter.com (10K+ subscribers).');
   lines.push('>');

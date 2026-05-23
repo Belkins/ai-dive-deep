@@ -155,11 +155,11 @@ export default function TierListBuilder() {
   };
 
   return (
-    <div className="container-prose" style={{ marginTop: '2.5rem', marginBottom: '2.5rem' }}>
+    <div className="container-wide" style={{ marginTop: '2.5rem', marginBottom: '2.5rem' }}>
       <div className="rounded-xl overflow-hidden" style={{ background: 'rgb(var(--paper))', border: '1px solid rgb(var(--line))' }}>
-        <div className="px-5 py-3 border-b text-xs uppercase tracking-wider flex items-center justify-between relative" style={{ borderColor: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>
+        <div className="px-5 py-3 border-b text-xs uppercase tracking-wider flex items-center justify-between gap-3 flex-wrap relative" style={{ borderColor: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>
           <span>Build your own tier list</span>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap justify-end">
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setShareOpen((v) => !v); }}

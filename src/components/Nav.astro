@@ -1,10 +1,10 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
 import { CHANGELOG } from '@/lib/changelog';
+import { CHAPTERS } from '@/lib/chapters';
 const edition = CHANGELOG[0].edition;
+const chapterCount = CHAPTERS.length;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const path = Astro.url.pathname;
-const isHome = path === base + '/' || path === base || path === '/';
 ---
 <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-ink-900/70 border-b" style="border-color: rgb(var(--line))">
   <nav class="container-wide flex items-center justify-between h-14">
@@ -21,13 +21,14 @@ const isHome = path === base + '/' || path === base || path === '/';
       <a href={`${base}/tier-list`} class="hidden lg:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Tier list</a>
       <span
         id="read-counter"
+        data-chapter-total={chapterCount}
         class="hidden items-center gap-1.5 text-xs px-2 py-1 rounded font-mono"
         style="border: 1px solid rgb(var(--accent-2) / 0.4); background: rgb(var(--accent-2) / 0.08); color: rgb(var(--accent-2));"
         aria-label="Reading progress"
         title="Chapters you've scrolled to ≥85% of. Stored locally in your browser."
       >
         <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span id="read-counter-text">0 / 36</span>
+        <span id="read-counter-text">0 / {chapterCount}</span>
       </span>
       <button
         type="button"
@@ -77,10 +78,11 @@ const isHome = path === base + '/' || path === base || path === '/';
       const counter = document.getElementById('read-counter');
       const counterText = document.getElementById('read-counter-text');
       if (counter && counterText) {
+        const total = counter.dataset.chapterTotal || '43';
         if (readSlugs.size > 0) {
           counter.classList.remove('hidden');
           counter.classList.add('inline-flex');
-          counterText.textContent = `${readSlugs.size} / 36`;
+          counterText.textContent = `${readSlugs.size} / ${total}`;
         } else {
           counter.classList.add('hidden');
           counter.classList.remove('inline-flex');

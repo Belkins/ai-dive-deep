@@ -3,6 +3,7 @@ import '@/styles/global.css';
 import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
+import { CHAPTERS } from '@/lib/chapters';
 
 interface Props {
   title: string;
@@ -13,10 +14,11 @@ interface Props {
 
 const BRAND = "Vlad's Playbook";
 const FULL = "Vlad's Playbook — The Ultimate AI Dive Deep";
+const chapterCount = CHAPTERS.length;
 
 const { title, description, ogImage, noNav } = Astro.props;
 const fullTitle = title === BRAND || title === FULL ? FULL : `${title} — ${BRAND}`;
-const desc = description ?? 'Thirty-nine chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.';
+const desc = description ?? `${chapterCount} chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.`;
 const og = new URL(ogImage ?? '/og-default.png', Astro.site).toString();
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 
@@ -52,7 +54,7 @@ const jsonLd: Record<string, unknown> = isChapter
         description: desc,
         image: og,
         bookFormat: 'EBook',
-        numberOfPages: 39,
+        numberOfPages: chapterCount,
         inLanguage: 'en',
         license: 'https://dive.vladyslavpodoliako.com/llms.txt',
       }
