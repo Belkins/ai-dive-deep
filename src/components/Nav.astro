@@ -6,7 +6,7 @@ const edition = CHANGELOG[0].edition;
 const chapterCount = CHAPTERS.length;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
-<header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-ink-900/70 border-b" style="border-color: rgb(var(--line))">
+<header class="sticky top-0 z-40 backdrop-blur border-b" style="border-color: rgb(var(--line)); background: rgb(var(--bg) / 0.78);">
   <nav class="container-wide flex items-center justify-between h-14">
     <a href={`${base}/`} class="flex items-center gap-2 group" style="color: rgb(var(--fg))">
       <span class="font-display text-lg tracking-tight font-medium">Vlad's Playbook</span>

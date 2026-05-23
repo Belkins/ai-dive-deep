@@ -104,14 +104,74 @@ const jsonLd: Record<string, unknown> = isChapter
     />
 
     <script is:inline>
-      // Theme bootstrap — runs before paint to avoid flash
+      // Theme bootstrap + controller. Astro swaps the <html> element during
+      // client-side navigation, so the selected theme must be copied forward.
       (function () {
-        try {
-          const saved = localStorage.getItem('theme');
-          const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          const t = saved || 'dark'; // dark default for operators
-          document.documentElement.dataset.theme = t;
-        } catch (e) {}
+        const KEY = 'theme';
+        const FALLBACK = 'dark';
+        const valid = (theme) => theme === 'dark' || theme === 'light';
+        const readStored = () => {
+          try {
+            const saved = localStorage.getItem(KEY);
+            return valid(saved) ? saved : null;
+          } catch (e) {
+            return null;
+          }
+        };
+        const currentTheme = () => {
+          const current = document.documentElement.dataset.theme;
+          return valid(current) ? current : readStored() || FALLBACK;
+        };
+        const syncControls = (theme) => {
+          const dark = theme === 'dark';
+          document.querySelectorAll('[data-theme-icon="sun"]').forEach((el) => {
+            el.classList.toggle('hidden', !dark);
+          });
+          document.querySelectorAll('[data-theme-icon="moon"]').forEach((el) => {
+            el.classList.toggle('hidden', dark);
+          });
+          document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
+            const label = dark ? 'Switch to light theme' : 'Switch to dark theme';
+            el.setAttribute('aria-label', label);
+            el.setAttribute('title', label);
+          });
+        };
+        const applyTheme = (theme) => {
+          const next = valid(theme) ? theme : FALLBACK;
+          document.documentElement.dataset.theme = next;
+          document.documentElement.style.colorScheme = next;
+          syncControls(next);
+        };
+        const storeTheme = (theme) => {
+          applyTheme(theme);
+          try { localStorage.setItem(KEY, theme); } catch (e) {}
+        };
+        const syncTheme = () => applyTheme(readStored() || currentTheme());
+
+        syncTheme();
+
+        if (window.__vladsThemeBound) return;
+        window.__vladsThemeBound = true;
+
+        document.addEventListener('click', (event) => {
+          const target = event.target instanceof Element
+            ? event.target.closest('[data-theme-toggle]')
+            : null;
+          if (!target) return;
+          event.preventDefault();
+          storeTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+        });
+
+        document.addEventListener('astro:before-swap', (event) => {
+          const theme = currentTheme();
+          if (event.newDocument?.documentElement) {
+            event.newDocument.documentElement.dataset.theme = theme;
+            event.newDocument.documentElement.style.colorScheme = theme;
+          }
+        });
+        document.addEventListener('astro:after-swap', syncTheme);
+        document.addEventListener('astro:page-load', syncTheme);
+        document.addEventListener('DOMContentLoaded', syncTheme);
       })();
     </script>
 

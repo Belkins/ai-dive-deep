@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: dark;
   --bg: 14 15 17;
   --fg: 250 250 247;
   --muted: 170 167 154;
@@ -13,6 +14,7 @@
 }
 
 [data-theme='light'] {
+  color-scheme: light;
   --bg: 250 250 247;
   --fg: 14 15 17;
   --muted: 86 84 75;

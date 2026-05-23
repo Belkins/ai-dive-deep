@@ -2,26 +2,12 @@
 ---
 <button
   type="button"
-  id="theme-toggle"
-  aria-label="Toggle theme"
+  data-theme-toggle
+  aria-label="Switch to light theme"
+  title="Switch to light theme"
   class="inline-flex items-center justify-center h-8 w-8 rounded transition"
   style="border: 1px solid rgb(var(--line)); color: rgb(var(--fg) / 0.85)"
 >
-  <svg id="ti-moon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-  <svg id="ti-sun" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+  <svg data-theme-icon="sun" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+  <svg data-theme-icon="moon" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>
-
-<script>
-  function syncIcons() {
-    const dark = document.documentElement.dataset.theme === 'dark';
-    document.getElementById('ti-moon')?.classList.toggle('hidden', !dark);
-    document.getElementById('ti-sun')?.classList.toggle('hidden', dark);
-  }
-  syncIcons();
-  document.getElementById('theme-toggle')?.addEventListener('click', () => {
-    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('theme', next); } catch {}
-    syncIcons();
-  });
-</script>
