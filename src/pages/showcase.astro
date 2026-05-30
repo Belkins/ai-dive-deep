@@ -39,7 +39,7 @@ const swarmCompositions = [
       { label: 'Wave 1 — 6 parallel reviewers', detail: 'security · types · performance · dependencies · test coverage · dead code. Each gets Read + Grep + Glob (read-only). Each returns findings as file:line with severity.' },
       { label: 'Wave 2 — synthesis (mine)', detail: 'I dedupe overlapping findings, prioritize by blast radius × fix cost, write the fix order. Subagents do not edit — the main session applies fixes in one pass.' },
     ],
-    receipt: 'Partner Connector pre-launch audit: 10+ real bugs surfaced per pass — 3 NestJS injection footguns, a BSON cast that nuked auth on a specific email shape, two dead workspace routes. Wall-clock ~9 min vs. half a day of manual grep.',
+    receipt: 'A B2B SaaS pre-launch audit: 10+ real bugs surfaced per pass — 3 NestJS injection footguns, a BSON cast that nuked auth on a specific email shape, two dead workspace routes. Wall-clock ~9 min vs. half a day of manual grep.',
     antiPattern: "Don't run this on a 200-line repo — the per-agent overhead dwarfs the work. Use bughunter solo under ~500 LOC.",
     chapterLink: { href: '16-hooks-subagents', label: 'Ch 16 — Hooks + subagents' },
   },
@@ -63,7 +63,7 @@ const swarmCompositions = [
       { label: 'Wave 1 — 3 designers in parallel', detail: 'Same data inlined into each prompt (never read from disk — variance kills comparison). Agent A: Bold. Agent B: Editorial. Agent C: Dashboard. Each gets Read + Write + a self-contained design brief from the 11-brief reference library.' },
       { label: 'Wave 2 — comparison (mine)', detail: 'View the three variants side-by-side, pick one, or fuse (Bold typography + Editorial spacing is a common steal).' },
     ],
-    receipt: '404 Model Agency proposal page: spawned Bold/Editorial/Brutalist variants in one wave. Editorial won the agency vote, Bold won the client click-through, shipped the hybrid. Each variant cost ~$0.40 in tokens.',
+    receipt: 'A creative-agency proposal page: spawned Bold/Editorial/Brutalist variants in one wave. Editorial won the agency vote, Bold won the client click-through, shipped the hybrid. Each variant cost ~$0.40 in tokens.',
     antiPattern: "Don't use this when you already know the constraint (e.g. \"must match Belkins brand\"). Variant swarms are for exploring — not for executing.",
     chapterLink: { href: '06-the-swarm', label: 'Ch 6 — The swarm' },
   },
@@ -183,11 +183,11 @@ const skillChains = [
     when: 'Monday 08:30 ET',
     title: 'The cross-portfolio hygiene check',
     skills: [
-      "friday-wrapup — Friday's aggregated state across Belkins / Folderly / LinguaLive / 404 Model Agency / NoCancer AI",
+      "friday-wrapup — Friday's aggregated state across Belkins / Folderly / LinguaLive",
       "cross-portfolio-check — runs context-leak detection: did a Belkins-flavored prompt accidentally reach a Folderly customer-facing draft, and vice versa",
       "claude-md-portfolio — verifies the portfolio CLAUDE.md instructions haven't drifted from the actual project state",
     ],
-    scene: "Monday 08:30. friday-wrapup memo from Apr 26 still pinned, summarizes the 5 portfolio cos at end-of-week. cross-portfolio-check fires at 08:32, reads through draft Slack messages, draft emails, draft newsletter pieces from the weekend — flags one: Vlad's weekend draft for a Folderly partner outreach quoted a Belkins-internal closed-won number that's confidential. claude-md-portfolio at 08:45 — checks the per-project CLAUDE.md files against current state: catches that LinguaLive's CLAUDE.md still references the old payment provider (swapped to Stripe Connect on May 4), Partner Connector's still says \"v10.46.12\" when prod is on 10.47.8.",
+    scene: "Monday 08:30. friday-wrapup memo from Apr 26 still pinned, summarizes the 5 portfolio cos at end-of-week. cross-portfolio-check fires at 08:32, reads through draft Slack messages, draft emails, draft newsletter pieces from the weekend — flags one: Vlad's weekend draft for a Folderly partner outreach quoted a Belkins-internal closed-won number that's confidential. claude-md-portfolio at 08:45 — checks the per-project CLAUDE.md files against current state: catches that LinguaLive's CLAUDE.md still references the old payment provider (swapped to Stripe Connect on May 4), a B2B SaaS project's still says \"v10.46.12\" when prod is on 10.47.8.",
     receipt: '1 confidential-number leak caught before send — would have been a Monday-morning lawyer email otherwise. 2 stale CLAUDE.md drifts fixed in 11 minutes. Cross-portfolio hygiene done before 09:00, instead of being the thing Vlad notices Wednesday when something has already shipped.',
     brittle: 'cross-portfolio-check matches on entity names (Belkins, Folderly, etc.) but doesn\'t catch paraphrased leaks — "an agency client of mine closed $X" reads as generic, fails the regex, ships. The chain catches the obvious leaks; the lawyer-grade ones still need a human eye.',
   },
@@ -571,7 +571,7 @@ artifact + segment-specific hook per channel.`,
         Most operators discover skills by need. They explain a workflow to Claude three times, write a SKILL.md, drop it in <code>~/.claude/skills/</code>, and never explain it again. That's how the list above grew. Every line in it started as a paragraph Vlad got tired of retyping.
       </p>
       <p class="text-sm leading-relaxed mt-3 m-0" style="color: rgb(var(--fg) / 0.92)">
-        The custom agents in <code>~/.claude/agents/</code> serve a different job — they're specialized subagents you spawn from a main session. <code>code-reviewer</code> reviews code. <code>tdd-guide</code> enforces test-first. <code>pc-api-lead</code> owns the Partner Connector backend. Pick read-only tools for the agents that should never edit; broader tool surfaces for the ones that ship.
+        The custom agents in <code>~/.claude/agents/</code> serve a different job — they're specialized subagents you spawn from a main session. <code>code-reviewer</code> reviews code. <code>tdd-guide</code> enforces test-first. <code>pc-api-lead</code> owns a B2B SaaS backend. Pick read-only tools for the agents that should never edit; broader tool surfaces for the ones that ship.
       </p>
       <p class="text-sm leading-relaxed mt-3 m-0" style="color: rgb(var(--fg) / 0.92)">
         Plugins are bundles — skills + agents + slash commands + MCP servers, distributed as one. Browse the marketplace inside Claude Code with <code>/plugins</code>.

@@ -84,7 +84,7 @@ Switch repos with `tmux switch-client -t <repo>` or just `Ctrl-b s` for the pick
 
 Don't run anonymous sessions. When you have six sessions open and need to attach back, `tmux ls` showing `0:`, `1:`, `2:` is useless. Worse — it's actively dangerous, because you'll guess wrong and start typing the Belkins migration into the Folderly shell.
 
-Use the repo name. Use the company name. Use the project. `belkins`, `folderly-deliverability`, `newsletter-issue-47`, `nocancer-prod`. Treat sessions like tabs in a browser — you'd never have six unnamed tabs.
+Use the repo name. Use the company name. Use the project. `belkins`, `folderly-deliverability`, `newsletter-issue-47`, `diagnostics-prod`. Treat sessions like tabs in a browser — you'd never have six unnamed tabs.
 
 This is a discipline thing, not a tooling thing. Five seconds of typing on session create saves twenty minutes of "wait, which one was the staging one?" later.
 
@@ -158,7 +158,7 @@ Running six CC sessions doesn't make you six times as productive. It makes you t
 
 - **One primary session at a time.** Eyes on one, glances at the others. Don't try to read three streams of model output simultaneously — you'll absorb none of them.
 - **Five-minute timer between context switches.** Don't ping-pong faster than that or you lose your thread. Set a literal timer if you have to.
-- **Color-code by company.** Belkins = blue prompt. Folderly = orange. Newsletter = green. NoCancer = red. Set it in the iTerm profile per session. Visual cue prevents "oh shit, I just pushed Belkins code to Folderly's main."
+- **Color-code by company.** Belkins = blue prompt. Folderly = orange. Newsletter = green. Diagnostics = red. Set it in the iTerm profile per session. Visual cue prevents "oh shit, I just pushed Belkins code to Folderly's main."
 - **Commit before switching.** Always. Even WIP. `git add -A && git commit -m "wip"` costs you nothing and saves you from "where was I?" when you come back two hours later.
 
 ## Closing — the real unlock

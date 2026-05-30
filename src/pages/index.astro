@@ -112,6 +112,11 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
 
   <section class="container-wide pt-6 pb-24">
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <a href={`${base}/dynamic-workflows`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Dynamic Workflows</div>
+        <h3 class="m-0 font-display text-2xl">Opus 4.8 — the swarm that runs itself</h3>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Claude writes a script that plans, fans out hundreds of parallel subagents, and verifies its own work. What it is, the validator loop, how to turn it on, and when not to.</p>
+      </a>
       <a href={`${base}/sovereign-stack`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Sovereign Stack</div>
         <h3 class="m-0 font-display text-2xl">Don't get deprecated</h3>

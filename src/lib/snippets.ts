@@ -584,7 +584,7 @@ export const CLAUDE_MD_PORTFOLIO_CEO = `# CLAUDE.md — Portfolio CEO convention
 > Multiple companies, one head, zero tolerance for cross-portfolio data leak. The job is allocation and sequencing — not running any one company.
 
 ## Me
-- CEO / founder of a portfolio. Currently active: [Belkins, Folderly, LinguaLive, 404 Model Agency, NoCancer AI — adjust].
+- CEO / founder of a portfolio. Currently active: [Belkins, Folderly, LinguaLive — adjust].
 - Board-level conversations on most. Operating role on some. Investor on others.
 - Default mode: aggregate across companies, decide where capital + attention go this week.
 

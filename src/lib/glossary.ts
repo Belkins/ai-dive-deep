@@ -319,6 +319,30 @@ export const glossary: Record<string, GlossaryEntry> = {
       'A technique (coined by FailSpy in 2024, automated by the Heretic CLI in 2025) for permanently removing a model\'s refusal behavior by orthogonalizing every weight matrix that writes into the residual stream against the empirically-found refusal direction. Produces a "<a href="/glossary#Heretic+model">heretic model</a>" — same weights minus one specific behavior. See <a href="/sovereign-stack#heretic">The heretic question</a>.',
     related: ['Heretic model', 'Sovereign stack'],
   },
+  'Dynamic workflows': {
+    term: 'Dynamic workflows',
+    definition:
+      'Opus 4.8\'s headline Claude Code feature: Claude writes a JavaScript script that plans a big task, fans out subagents (up to 16 at once, 1,000 per run), runs an adversarial verifier pass, and returns one answer — the orchestration runs in the background, outside your context. A research preview. See <a href="/dynamic-workflows">Dynamic Workflows</a>.',
+    related: ['ultracode', '/effort', 'Agent teams', 'Subagent'],
+  },
+  'Agent teams': {
+    term: 'Agent teams',
+    definition:
+      'The other shape of Claude Code parallelism: a roster you define up front (one lead session plus named roles like Frontend Specialist, Backend Engineer) — for work that decomposes cleanly into domains. Contrast <a href="/dynamic-workflows#teams-vs-workflows">dynamic workflows</a>, where Claude writes the decomposition itself.',
+    related: ['Dynamic workflows', 'Subagent'],
+  },
+  '/effort': {
+    term: '/effort',
+    definition:
+      'The Opus 4.8 slash command that sets how hard the model thinks before it acts: low → medium → high (the default) → xhigh → max, with a separate <a href="/glossary#ultracode">ultracode</a> notch. Most people leave it on the default and never feel the ceiling. See <a href="/dynamic-workflows#the-on-ramp">Dynamic Workflows — turning it on</a>.',
+    related: ['ultracode', 'Dynamic workflows'],
+  },
+  'ultracode': {
+    term: 'ultracode',
+    definition:
+      'The top notch of the Opus 4.8 <a href="/glossary#%2Feffort">/effort</a> dial — xhigh reasoning plus workflows (parallel agents, a deeper plan). A Claude Code setting, not a model effort level: a mode, not a volume knob. See <a href="/dynamic-workflows#the-loop">Dynamic Workflows</a>.',
+    related: ['/effort', 'Dynamic workflows'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);

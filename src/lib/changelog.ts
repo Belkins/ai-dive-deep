@@ -10,6 +10,23 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.6',
+    date: '2026-05-28',
+    tagline: 'Dynamic Workflows — a standalone page on Opus 4.8\'s headline feature: the swarm that runs itself.',
+    shipped: [
+      'New standalone page /dynamic-workflows — Opus 4.8 ships dynamic workflows: Claude writes a JS script that plans a big task, fans out up to 16 parallel subagents (1,000 per run), runs an adversarial verifier pass, and reports one answer. Part explainer (what it is, agent-teams vs workflows, the generator->validator loop), part operator\'s read, part reference.',
+      'The validator loop is the spine — one set of agents builds, another tries to break it, a fixer closes the gap. The /effort dial + ultracode are the on-ramp (ultracode = xhigh + automatic workflow orchestration). With a first-person take and a "when not to run a workflow" section so it reads as judgment, not hype.',
+      'Receipts over claims — every number is from Anthropic\'s announcement or the Claude Code docs (16 concurrent / 1,000 per run, research preview, v2.1.154+, the Bun Zig->Rust port: 750k lines in 11 days at 99.8% tests). The /effort slider screenshots + a clip of the dial in motion + a house-style agent-teams-vs-workflows diagram.',
+      'Full 6-surface wiring — page, Cmd-K entry + section deep-links, Ch 40 cross-link, glossary terms (Dynamic workflows, Agent teams, /effort, ultracode), homepage flagship tile, and this changelog entry.',
+    ],
+    receipts: [
+      { label: 'New page', value: '/dynamic-workflows · explainer + operator read + reference' },
+      { label: 'Glossary terms', value: 'Dynamic workflows · Agent teams · /effort · ultracode' },
+      { label: 'Scale documented', value: '16 concurrent · 1,000 agents / run' },
+      { label: 'Wiring surfaces', value: '6/6' },
+    ],
+  },
+  {
     edition: 'Edition 9.5',
     date: '2026-05-23',
     tagline: 'Forty-three chapters. The Codex loop from Ch 42 runs for real — a 90,000-line product refactor, proof-checked.',

@@ -1,0 +1,263 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+
+const navItems = [
+  { id: 'what-it-is', label: 'What it is' },
+  { id: 'teams-vs-workflows', label: 'Teams vs workflows' },
+  { id: 'the-loop', label: 'The validator loop' },
+  { id: 'the-on-ramp', label: 'Turning it on' },
+  { id: 'operators-read', label: 'My read' },
+  { id: 'jobs', label: 'Where I point it' },
+  { id: 'anthropic', label: 'What Anthropic says' },
+  { id: 'not-for', label: 'When not to' },
+  { id: 'appendix', label: 'Reference' },
+  { id: 'monday', label: 'Do this Monday' },
+];
+---
+<BaseLayout
+  title="Dynamic Workflows"
+  description="Opus 4.8's headline feature: Claude writes a script that plans a big task, fans out hundreds of parallel subagents, and verifies its own work before reporting back. What it is, how the generator→validator loop works, how to turn it on, where I point it, and when not to."
+>
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Dynamic Workflows</div>
+    <h1>Claude writes the plan, runs the swarm, and checks its own work.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">
+      The headline of Opus 4.8 isn't the weights — it's a new way of working. You hand Claude a task too big for one conversation. It writes a script that breaks the work into subtasks, fans out up to 16 agents at a time, has other agents try to break what the first ones built, fixes what they find, and comes back with one answer. The proof point already on the table: Jarred Sumner ported Bun from Zig to Rust — 750,000 lines, 11 days, 99.8% of the test suite still green.
+    </p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">
+      The Playbook already has the swarm you run by hand. This is the swarm that runs itself — the plan moves into code, the orchestration happens outside your context, and work that used to be scoped in quarters lands in days. This page is what it is, how the generator→validator loop actually works, how you turn it on, where I point it across the portfolio, and the part nobody writes down — when not to.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="what-it-is" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">What it is</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>A dynamic workflow is a JavaScript script Claude writes to orchestrate subagents at scale. You describe the task; Claude writes the script; a runtime executes it in the background while your session stays responsive. That last part is the whole trick — the plan moves <em>into code</em>. The script holds the loop, the branches, and the intermediate results, so your context window only ever sees the final answer instead of every agent's scratch pad.</p>
+            <p>That's the line between this and what came before. With <a href="/chapters/06-the-swarm">subagents and skills</a>, Claude is the orchestrator — it decides turn by turn what to spawn, and every result lands back in its context, eating the window. A workflow is a script the runtime executes: dozens to hundreds of agents per run, resumable mid-session, with the coordination happening outside the conversation so the plan stays on track no matter how big the task gets. Opus 4.8 shipped it as a research preview — needs Claude Code v2.1.154+, runs on every paid plan (on Pro you flip it on in <code>/config</code>).</p>
+            <PullQuote>Subagents put the plan in Claude's head. A workflow puts the plan in code — which is why it doesn't fall over when the task gets big.</PullQuote>
+          </div>
+        </div>
+
+        <div id="teams-vs-workflows" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Agent teams vs dynamic workflows</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Anthropic shipped two shapes of parallelism, and the difference is who writes the org chart. <b>Agent teams</b> are a roster you define up front — one session as lead, then named roles: Frontend Specialist, Backend Engineer, Quality Engineer, each with a brief. That's the right tool when the work decomposes cleanly into domains you can name before you start.</p>
+            <p><b>Dynamic workflows</b> are for when you <em>can't</em> name the decomposition yet. Claude writes the org chart itself: how many agents to spawn, how to split the work, when to run an adversarial verification pass, and when the results have converged enough to stop. Per task it's an implementer, then verifiers, then a fixer — fanned out across as many tasks as the job needs.</p>
+          </div>
+          <ScreenshotPlaceholder
+            id="dynamic-workflows-flow"
+            ratio="16/9"
+            caption="Two shapes of parallelism: an agent team is a roster you define; a dynamic workflow is a decomposition Claude writes — implementer → verifiers → fixer, fanned across N tasks."
+            note="House rendering of Anthropic's announcement diagram. N can be in the hundreds."
+          />
+        </div>
+
+        <div id="the-loop" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The validator loop — the part that matters</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Here's the part that took me a beat to feel: the value isn't that a pile of parallel agents burns more tokens. It's the loop. One set of agents makes the change — code, refactor, tests. Another set tries to break it — reads the diff, hunts for errors, thinks through the edge cases. Generate, then validate, then fix what validation caught. It's a little like a GAN, only pointed at an engineering workflow instead of pixels.</p>
+            <p>Because the plan lives in the script, a workflow can apply a repeatable quality pattern instead of just running more agents: have independent agents adversarially review each other's findings before anything is reported, or draft a plan from several angles and weigh them against each other. One request can become several workflows in a row — one to understand the code, one to make the change, one to verify it. The model stops being a single answer and becomes an orchestration that has already argued with itself before it reaches you.</p>
+            <p>The mechanics of orchestrating parallel agents by hand — the wave pattern, the between-wave audit, the skill shelf — live in <a href="/swarms">The Swarm</a>. Dynamic workflows is that, automated: you get the chain of command without writing the dispatch prompts yourself.</p>
+          </div>
+        </div>
+
+        <div id="the-on-ramp" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Turning it on — the /effort dial</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Three ways in. Drop the word <b>workflow</b> anywhere in a prompt and Claude writes one for that single task. Run the bundled <code>/deep-research</code> to watch one work end to end. Or set the dial: <code>/effort</code> runs low → medium → high (the 4.8 default) → xhigh → max, and then a separate notch, <b>ultracode</b> — xhigh reasoning plus standing permission to orchestrate workflows. With ultracode on, Claude plans a workflow for every substantive task in the session instead of waiting for you to ask.</p>
+            <p>So ultracode is the on-ramp: it's how you tell Claude "you decide when this job is big enough to fan out." It's session-only — it resets when you start fresh, and you drop back with <code>/effort high</code> when you return to routine work. (The full notch-by-notch table is in the <a href="#appendix">reference</a> below.)</p>
+          </div>
+          <ScreenshotPlaceholder
+            id="dynamic-workflows-1"
+            ratio="16/5"
+            caption="The /effort slider, set to high — the default on Opus 4.8."
+            note="low → max sets reasoning depth; ultracode adds workflow orchestration on top."
+          />
+          <ScreenshotPlaceholder
+            id="dynamic-workflows-2"
+            ratio="5/2"
+            caption="The full /effort menu — low through max, then ultracode (xhigh + workflows) at the smart end."
+            note="ultracode is session-only. It's the switch that lets Claude plan a workflow per task."
+          />
+          <ScreenshotPlaceholder
+            id="dynamic-workflows-slider"
+            ratio="1148/794"
+            caption="The dial in motion — dragging up to ultracode."
+            note="Past this point, a single request can turn into several workflows in a row."
+          />
+        </div>
+
+        <div id="operators-read" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">My read, after actually running it</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>I gave it a real task and it went away for forty minutes — wrote code, fixed its own errors, checked itself, kept going. It's one of the first "agent swarm" features that reads like a working tool instead of a demo. You stop typing prompts and start handing off jobs.</p>
+            <p>The cherry, for me, isn't the parallelism — it's the generator→validator cycle I described above. One half builds, the other half tries to prove it wrong. The tests it writes aren't always ones I'd trust yet, but it already catches its own mistakes at a rate that changes how much I have to babysit. That's the unlock.</p>
+            <p>My one complaint going in was the planning stage — it felt like "here's the task, go," when what I wanted was: Claude proposes a plan, I edit it, I add constraints and success criteria and the files that matter, <em>then</em> it runs. Turns out that's mostly already there. Before a run, Claude Code shows the planned phases and lets you <b>View raw script</b>, hit <code>Tab</code> to adjust the prompt, or <code>Ctrl+G</code> to open the script in your editor before you approve it. The gap between "go do it" and "let me shape the plan first" is narrower than it felt on day one — you just have to know the approval screen is the seam.</p>
+            <PullQuote>Generate, validate, fix — it argues with its own first draft before it shows you anything. That's the part that earns the token bill.</PullQuote>
+            <p>Verdict: the direction is very strong. This is the first version of "let the swarm run itself" I'd actually put on a real codebase.</p>
+          </div>
+        </div>
+
+        <div id="jobs" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Where I point it</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>A workflow earns its cost on a specific shape of job: one with a plan worth writing and branches worth running in parallel. Here's where it goes across the portfolio.</p>
+
+            <div class="rounded-xl border p-5 my-4" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Belkins · the gnarly refactor</div>
+              <p class="m-0">The multi-file refactor that used to eat a sprint — the kind where the risk isn't writing the code, it's holding twelve files in your head at once. A workflow plans it, fans out across the files, runs the verifier pass, and comes back with a diff I can read top to bottom. I still read every line. It does the holding-in-its-head part I'm bad at after the third coffee.</p>
+            </div>
+
+            <div class="rounded-xl border p-5 my-4" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Folderly · the audit sweep</div>
+              <p class="m-0">Point a workflow at a batch of sending-domain findings and it organizes the collection, runs the analysis in parallel, cross-checks the results, and synthesizes a client-ready report — a fan-out over many items with a reconcile at the end, exactly what the script form is built for. A day of copy-paste-and-format becomes a review pass over something already assembled.</p>
+            </div>
+
+            <div class="rounded-xl border p-5 my-4" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>The Newsletter · research, then I take the pen</div>
+              <p class="m-0">A workflow for the research-and-structure pass — pull the sources, cross-check them against each other, argue the angles, lay out the skeleton. Then I take the voice pass myself, because the one thing the swarm can't do is sound like me. It does the work that parallelizes; I do the work that doesn't.</p>
+            </div>
+
+            <p>The pattern under all three: a workflow pays off when the job has a plan worth writing and branches worth running in parallel. A one-file fix doesn't. A twelve-file decision — or a 750,000-line port — does.</p>
+          </div>
+        </div>
+
+        <div id="anthropic" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What Anthropic says</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>I run it the way an operator runs it. Anthropic ships it with their own framing — worth reading next to mine.</p>
+            <Callout type="tip">
+              From the Opus 4.8 announcement and the Claude Code docs: for the hardest tasks, Claude "makes a plan, runs hundreds of parallel subagents, and verifies its work before reporting back." The flagship use is <b>codebase-scale migration</b> — "across hundreds of thousands of lines of code from kickoff to merge, with the existing test suite as its bar." Other built-for cases: <b>codebase-wide bug sweeps</b> with independent verification on every finding, <b>large framework/API migrations</b> spanning hundreds of files, and <b>research that cross-checks sources against each other</b> (the bundled <code>/deep-research</code>). Their one-line pitch: work "normally planned in quarters now finishes in days."
+            </Callout>
+            <p>The short version: they built it for hard, multi-step, verify-as-you-go work at a scale one conversation can't hold. That's the same place I land — I just have the receipts and a "when not to" section they'd never write.</p>
+          </div>
+        </div>
+
+        <div id="not-for" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">When not to run a workflow</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>The fastest way to look like you don't understand the feature is to fire a workflow at everything. It spawns many agents, so a single run uses meaningfully more tokens than working the same task in conversation — and most of the day doesn't need it.</p>
+            <p><b>Don't run it on simple tasks.</b> A rename, a one-line fix, "what's the syntax for X" — a workflow will plan, fan out, and reconcile a job that wanted a single edit. You pay for a swarm to convene on an answer a single turn would have streamed back before you finished reading the question.</p>
+            <p><b>Mind the seams.</b> A run takes no mid-flight input — only agent permission prompts can pause it, so if you need sign-off between stages, run each stage as its own workflow. And add the shell commands and MCP tools the agents need to your allowlist before you start, or a long run stalls on a prompt mid-flight.</p>
+            <Callout type="warn">
+              A workflow's superpower is doing a great deal of work before you look — which is also its risk. It's a research preview, the tests it writes aren't always ones to trust blind, and a bigger pile of unverified work is worse than a small one. The plan-approval screen and the diff are not optional. Read the script before you approve the big runs.
+            </Callout>
+            <p>The operator move: default to high effort, reach for a workflow when you can name the plan and the branches. If you can't name them, you don't need one yet.</p>
+          </div>
+        </div>
+
+        <div id="appendix" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Reference</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>The lookup tail — who holds the plan, the <code>/effort</code> notches, and the limits — so you can come back and skip the prose.</p>
+
+            <p class="font-semibold mt-2" style={{ color: 'rgb(var(--fg) / 0.95)' }}>Subagents vs skills vs workflows</p>
+            <div class="overflow-x-auto my-2">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border))' }}>
+                    <th class="text-left py-2 pr-3 font-semibold"></th>
+                    <th class="text-left py-2 pr-3 font-semibold">Subagents</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Skills</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Workflows</th>
+                  </tr>
+                </thead>
+                <tbody style={{ color: 'rgb(var(--fg) / 0.85)' }}>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">What it is</td>
+                    <td class="py-2 pr-3">a worker Claude spawns</td>
+                    <td class="py-2 pr-3">instructions Claude follows</td>
+                    <td class="py-2 pr-3">a script the runtime executes</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">Who decides next</td>
+                    <td class="py-2 pr-3">Claude, turn by turn</td>
+                    <td class="py-2 pr-3">Claude, per the prompt</td>
+                    <td class="py-2 pr-3">the script</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">Intermediate results</td>
+                    <td class="py-2 pr-3">Claude's context</td>
+                    <td class="py-2 pr-3">Claude's context</td>
+                    <td class="py-2 pr-3">script variables</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">Scale</td>
+                    <td class="py-2 pr-3">a few per turn</td>
+                    <td class="py-2 pr-3">a few per turn</td>
+                    <td class="py-2 pr-3">dozens to hundreds per run</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3">Interruption</td>
+                    <td class="py-2 pr-3">restarts the turn</td>
+                    <td class="py-2 pr-3">restarts the turn</td>
+                    <td class="py-2 pr-3">resumable in-session</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="font-semibold mt-4" style={{ color: 'rgb(var(--fg) / 0.95)' }}>The /effort dial</p>
+            <div class="overflow-x-auto my-2">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border))' }}>
+                    <th class="text-left py-2 pr-3 font-semibold">Notch</th>
+                    <th class="text-left py-2 pr-3 font-semibold">What it's for</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Persists?</th>
+                  </tr>
+                </thead>
+                <tbody style={{ color: 'rgb(var(--fg) / 0.85)' }}>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3"><code>low</code></td><td class="py-2 pr-3">throwaway one-liners, syntax lookups, subagents</td><td class="py-2 pr-3">saved</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3"><code>medium</code></td><td class="py-2 pr-3">light edits, quick questions, cost-sensitive work</td><td class="py-2 pr-3">saved</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3"><code>high</code> <span style={{ color: 'rgb(var(--muted))' }}>(default)</span></td><td class="py-2 pr-3">the daily driver — edits, reviews, focused features</td><td class="py-2 pr-3">saved</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3"><code>xhigh</code></td><td class="py-2 pr-3">traps — multi-file refactors, risky migrations, &gt;30-min agentic work</td><td class="py-2 pr-3">saved</td>
+                  </tr>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3"><code>max</code></td><td class="py-2 pr-3">one model thinking as hard as it can; prone to overthinking</td><td class="py-2 pr-3">session only</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3"><b><code>ultracode</code></b></td><td class="py-2 pr-3"><b>xhigh + workflows</b> — Claude plans a workflow per substantive task</td><td class="py-2 pr-3">session only</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-sm" style={{ color: 'rgb(var(--muted))' }}>Limits: up to <b>16 concurrent agents</b>, <b>1,000 per run</b>, no mid-run input, resumable in-session. Research preview — requires Claude Code <b>v2.1.154+</b>, on all paid plans (Pro: enable in <code>/config</code>). Opus 4.8 itself: $5/$25 per M tokens, 1M context auto on Max/Team/Enterprise, agentic coding 64.3% → 69.2%, and 4× less likely than 4.7 to let code flaws pass. A workflow run uses substantially more tokens than the same task in conversation.</p>
+          </div>
+        </div>
+
+        <div id="monday" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Don't take my use cases. Take the feature. Tomorrow, pick the gnarliest thing on your list — the migration, the codebase-wide audit, the spec you've been avoiding — and start the prompt with the word <code>workflow</code>. When the approval screen comes up, don't just hit yes. Read the planned phases. Open the script. Adjust the prompt. <em>Then</em> let it run, and go do something else for forty minutes.</p>
+            <p>You're not learning a command. You're learning where the seam is between "go do it" and "let me shape the plan first" — and once you've felt the validator loop catch its own mistake, you won't want to refactor a big thing by hand again.</p>
+            <PullQuote>The swarm used to be something you conducted. Now it's something you brief, approve, and check. The job moved up a level.</PullQuote>
+            <p class="mt-6 text-sm" style={{ color: 'rgb(var(--muted))' }}>
+              Related: <a href="/swarms">The Swarm — orchestrating parallel agents by hand</a> · <a href="/chapters/06-the-swarm">Ch 6 — the swarm</a> · <a href="/sovereign-stack">The Sovereign Stack — the model under it</a> · <a href="/chapters/40-prompting-knob">Ch 40 — the prompting knob</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

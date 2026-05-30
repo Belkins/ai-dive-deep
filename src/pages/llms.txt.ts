@@ -11,7 +11,7 @@ export const GET: APIRoute = async () => {
   lines.push("# Vlad's Playbook — The Ultimate AI Dive Deep");
   lines.push('');
   lines.push(`> A ${sorted.length}-chapter operator field manual for using AI tools in production.`);
-  lines.push("> By Vlad Podoliako — CEO Belkins (B2B email outreach, $30M+ ARR); founder of Folderly, LinguaLive, NoCancer AI, 404 Model Agency.");
+  lines.push("> By Vlad Podoliako — CEO Belkins (B2B email outreach, $30M+ ARR); founder of Folderly and LinguaLive.");
   lines.push('> Newsletter at vladsnewsletter.com (10K+ subscribers).');
   lines.push('>');
   lines.push("> Voice: operator, anti-hype, real numbers per claim, failure receipts included.");

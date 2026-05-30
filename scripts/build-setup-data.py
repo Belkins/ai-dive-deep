@@ -5,6 +5,20 @@ Run from repo root: python3 scripts/build-setup-data.py
 """
 import json, os, re, sys
 
+# --- private-venture scrub (durable): applied to all emitted descriptions ---
+_PRIVATE_VENTURE_MAP = {
+    'Partner Connector': 'a B2B SaaS',
+}
+def _scrub_private_ventures(s):
+    """Replace private-venture brand names in any string before it is emitted."""
+    if not isinstance(s, str):
+        return s
+    for _k, _v in _PRIVATE_VENTURE_MAP.items():
+        s = s.replace(_k, _v)
+    return s
+# --- end scrub ---
+
+
 HOME = os.path.expanduser('~')
 SKILLS_DIR = os.path.join(HOME, '.claude/skills')
 AGENTS_DIR = os.path.join(HOME, '.claude/agents')

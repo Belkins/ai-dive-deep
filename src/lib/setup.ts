@@ -153,17 +153,17 @@ export const SKILLS: Skill[] = [
   },
   {
     "name": "pc",
-    "description": "Partner Connector dispatcher \u2014 routes to pc-api (NestJS backend) or pc-client (Nuxt 4 frontend) based on task context. Use /pc <describe your task>.",
+    "description": "a B2B SaaS dispatcher \u2014 routes to pc-api (NestJS backend) or pc-client (Nuxt 4 frontend) based on task context. Use /pc <describe your task>.",
     "category": "portfolio"
   },
   {
     "name": "pc-api",
-    "description": "Partner Connector API quick-reference \u2014 NestJS backend patterns, module map, auth flow, HubSpot CRM loop, and gotchas.",
+    "description": "a B2B SaaS API quick-reference \u2014 NestJS backend patterns, module map, auth flow, HubSpot CRM loop, and gotchas.",
     "category": "portfolio"
   },
   {
     "name": "pc-client",
-    "description": "Partner Connector Client quick-reference \u2014 Nuxt 4 SPA patterns, gateway layer, explicit imports requirement, auth flow, and gotchas.",
+    "description": "a B2B SaaS Client quick-reference \u2014 Nuxt 4 SPA patterns, gateway layer, explicit imports requirement, auth flow, and gotchas.",
     "category": "portfolio"
   },
   {
@@ -396,47 +396,47 @@ export const AGENTS: Agent[] = [
   },
   {
     "name": "pc-api-lead",
-    "description": "Lead development agent for Partner Connector API. Runs a multi-task loop \u2014 builds features, fixes security issues, writes tests, reviews code. Does 3-5 tasks per session to maximize output.",
+    "description": "Lead development agent for a B2B SaaS API. Runs a multi-task loop \u2014 builds features, fixes security issues, writes tests, reviews code. Does 3-5 tasks per session to maximize output.",
     "category": "agent"
   },
   {
     "name": "pc-api-qa",
-    "description": "QA agent for Partner Connector API. Reviews recent commits, writes tests for coverage gaps, fixes bugs. Does 3-5 tasks per session.",
+    "description": "QA agent for a B2B SaaS API. Reviews recent commits, writes tests for coverage gaps, fixes bugs. Does 3-5 tasks per session.",
     "category": "agent"
   },
   {
     "name": "pc-client-lead",
-    "description": "Lead development agent for Partner Connector Client. Runs a multi-task loop \u2014 builds features, fixes UX issues, adds missing states. Does 3-5 tasks per session.",
+    "description": "Lead development agent for a B2B SaaS Client. Runs a multi-task loop \u2014 builds features, fixes UX issues, adds missing states. Does 3-5 tasks per session.",
     "category": "agent"
   },
   {
     "name": "pc-client-qa",
-    "description": "QA agent for Partner Connector Client. Reviews commits, writes tests, fixes responsive/design/accessibility issues. Does 3-5 tasks per session.",
+    "description": "QA agent for a B2B SaaS Client. Reviews commits, writes tests, fixes responsive/design/accessibility issues. Does 3-5 tasks per session.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-data",
-    "description": "Data & analytics strategist for Partner Connector. Identifies what data exists but isn't surfaced, proposes dashboards and insights. Writes to ROADMAP.md.",
+    "description": "Data & analytics strategist for a B2B SaaS. Identifies what data exists but isn't surfaced, proposes dashboards and insights. Writes to ROADMAP.md.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-growth",
-    "description": "Growth strategist for Partner Connector. Identifies features that drive acquisition, retention, and network effects. Writes proposals to ROADMAP.md.",
+    "description": "Growth strategist for a B2B SaaS. Identifies features that drive acquisition, retention, and network effects. Writes proposals to ROADMAP.md.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-logic",
-    "description": "Business logic strategist for Partner Connector. Audits API services for edge cases, missing validations, and business rule gaps. Writes findings to ROADMAP.md.",
+    "description": "Business logic strategist for a B2B SaaS. Audits API services for edge cases, missing validations, and business rule gaps. Writes findings to ROADMAP.md.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-product",
-    "description": "Product strategist for Partner Connector. Analyzes the codebase, identifies gaps in user flows, proposes features that drive revenue. Writes findings to ROADMAP.md.",
+    "description": "Product strategist for a B2B SaaS. Analyzes the codebase, identifies gaps in user flows, proposes features that drive revenue. Writes findings to ROADMAP.md.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-ux",
-    "description": "UX/UI strategist for Partner Connector. Audits every page for usability issues, missing states, confusing flows. Writes improvement tasks to ROADMAP.md.",
+    "description": "UX/UI strategist for a B2B SaaS. Audits every page for usability issues, missing states, confusing flows. Writes improvement tasks to ROADMAP.md.",
     "category": "agent"
   },
   {

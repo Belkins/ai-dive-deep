@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif">
+  <rect width="800" height="450" fill="#FAF9F6"/>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#B5B0A6"/>
+    </marker>
+  </defs>
+
+  <!-- divider -->
+  <line x1="252" y1="60" x2="252" y2="396" stroke="#E2DFD8" stroke-width="1" stroke-dasharray="3 5"/>
+
+  <!-- ============ LEFT: AGENT TEAMS ============ -->
+  <text x="126" y="424" text-anchor="middle" font-size="12" letter-spacing="1.5" font-weight="700" fill="#8A857B">AGENT TEAMS</text>
+  <text x="126" y="84" text-anchor="middle" font-size="11" fill="#A8A296">you define the roster</text>
+
+  <!-- triangle peers -->
+  <line x1="126" y1="158" x2="70" y2="250" stroke="#B5B0A6" stroke-width="1.5"/>
+  <line x1="126" y1="158" x2="182" y2="250" stroke="#B5B0A6" stroke-width="1.5"/>
+  <line x1="86" y1="262" x2="166" y2="262" stroke="#B5B0A6" stroke-width="1.5"/>
+
+  <g>
+    <rect x="84" y="128" width="84" height="34" rx="8" fill="#fff" stroke="#D9480F" stroke-width="1.6"/>
+    <text x="126" y="150" text-anchor="middle" font-size="13" fill="#D9480F" font-weight="600">claude</text>
+    <rect x="28" y="248" width="84" height="34" rx="8" fill="#fff" stroke="#C9C4B8" stroke-width="1.4"/>
+    <text x="70" y="270" text-anchor="middle" font-size="13" fill="#1A1A1A">claude</text>
+    <rect x="140" y="248" width="84" height="34" rx="8" fill="#fff" stroke="#C9C4B8" stroke-width="1.4"/>
+    <text x="182" y="270" text-anchor="middle" font-size="13" fill="#1A1A1A">claude</text>
+  </g>
+  <text x="126" y="318" text-anchor="middle" font-size="10.5" fill="#A8A296">named roles, fixed up front</text>
+
+  <!-- ============ RIGHT: DYNAMIC WORKFLOWS ============ -->
+  <text x="528" y="424" text-anchor="middle" font-size="12" letter-spacing="1.5" font-weight="700" fill="#8A857B">DYNAMIC WORKFLOWS</text>
+
+  <!-- top orchestrator -->
+  <rect x="484" y="58" width="92" height="36" rx="8" fill="#1A1A1A"/>
+  <text x="530" y="81" text-anchor="middle" font-size="13" fill="#FAF9F6" font-weight="600">claude</text>
+  <text x="592" y="73" font-size="10.5" fill="#A8A296">kicks off N tasks</text>
+  <text x="592" y="87" font-size="10.5" fill="#A8A296">N can be in the 100s</text>
+
+  <!-- row labels -->
+  <text x="266" y="172" font-size="10.5" font-style="italic" fill="#8A857B">implementer</text>
+  <text x="266" y="240" font-size="10.5" font-style="italic" fill="#8A857B">verifiers</text>
+  <text x="266" y="312" font-size="10.5" font-style="italic" fill="#8A857B">fixer</text>
+
+  <!-- fan-out arrows from orchestrator -->
+  <line x1="510" y1="94" x2="370" y2="150" stroke="#B5B0A6" stroke-width="1.3" marker-end="url(#ar)"/>
+  <line x1="530" y1="94" x2="530" y2="150" stroke="#B5B0A6" stroke-width="1.3" marker-end="url(#ar)"/>
+  <line x1="550" y1="94" x2="690" y2="150" stroke="#B5B0A6" stroke-width="1.3" marker-end="url(#ar)"/>
+
+  <!-- task column generator -->
+  <g font-size="12" fill="#1A1A1A" text-anchor="middle">
+    <!-- column x-centers: 370, 530, 690 -->
+    <!-- TASK 1 -->
+    <text x="370" y="142" font-size="9.5" letter-spacing="1" fill="#A8A296">TASK 1</text>
+    <text x="530" y="142" font-size="9.5" letter-spacing="1" fill="#A8A296">TASK 2</text>
+    <text x="690" y="142" font-size="9.5" letter-spacing="1" fill="#A8A296">TASK N</text>
+
+    <!-- implementer row -->
+    <rect x="334" y="150" width="72" height="30" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.3"/><text x="370" y="170">claude</text>
+    <rect x="494" y="150" width="72" height="30" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.3"/><text x="530" y="170">claude</text>
+    <rect x="654" y="150" width="72" height="30" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.3"/><text x="690" y="170">claude</text>
+
+    <!-- verifiers row (two per task) -->
+    <rect x="328" y="218" width="42" height="28" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.2"/><text x="349" y="237" font-size="10">claude</text>
+    <rect x="374" y="218" width="42" height="28" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.2"/><text x="395" y="237" font-size="10">claude</text>
+    <rect x="488" y="218" width="42" height="28" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.2"/><text x="509" y="237" font-size="10">claude</text>
+    <rect x="534" y="218" width="42" height="28" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.2"/><text x="555" y="237" font-size="10">claude</text>
+    <rect x="648" y="218" width="42" height="28" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.2"/><text x="669" y="237" font-size="10">claude</text>
+    <rect x="694" y="218" width="42" height="28" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.2"/><text x="715" y="237" font-size="10">claude</text>
+
+    <!-- fixer row -->
+    <rect x="334" y="290" width="72" height="30" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.3"/><text x="370" y="310">claude</text>
+    <rect x="494" y="290" width="72" height="30" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.3"/><text x="530" y="310">claude</text>
+    <rect x="654" y="290" width="72" height="30" rx="7" fill="#fff" stroke="#C9C4B8" stroke-width="1.3"/><text x="690" y="310">claude</text>
+  </g>
+
+  <!-- implementer -> verifiers -->
+  <g stroke="#B5B0A6" stroke-width="1.2" marker-end="url(#ar)">
+    <line x1="362" y1="180" x2="349" y2="216"/><line x1="378" y1="180" x2="395" y2="216"/>
+    <line x1="522" y1="180" x2="509" y2="216"/><line x1="538" y1="180" x2="555" y2="216"/>
+    <line x1="682" y1="180" x2="669" y2="216"/><line x1="698" y1="180" x2="715" y2="216"/>
+    <!-- verifiers -> fixer -->
+    <line x1="349" y1="246" x2="362" y2="288"/><line x1="395" y1="246" x2="378" y2="288"/>
+    <line x1="509" y1="246" x2="522" y2="288"/><line x1="555" y1="246" x2="538" y2="288"/>
+    <line x1="669" y1="246" x2="682" y2="288"/><line x1="715" y1="246" x2="698" y2="288"/>
+    <!-- fixer -> return -->
+    <line x1="370" y1="320" x2="512" y2="360"/><line x1="530" y1="320" x2="530" y2="360"/><line x1="690" y1="320" x2="548" y2="360"/>
+  </g>
+
+  <text x="612" y="238" font-size="16" fill="#C9C4B8">· · ·</text>
+
+  <!-- bottom orchestrator -->
+  <rect x="484" y="358" width="92" height="36" rx="8" fill="#1A1A1A"/>
+  <text x="530" y="381" text-anchor="middle" font-size="13" fill="#FAF9F6" font-weight="600">claude</text>
+  <text x="592" y="380" font-size="10.5" fill="#A8A296">returns when done</text>
+
+  <text x="528" y="342" text-anchor="middle" font-size="10.5" fill="#A8A296">Claude writes the decomposition — generator → validator → fix</text>
+</svg>

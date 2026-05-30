@@ -73,10 +73,15 @@ export const SCREENSHOTS: Record<string, string> = {
   "43-codex-saviour-2": "43-codex-saviour-2.svg",
   "43-codex-saviour-3": "43-codex-saviour-3.svg",
   "43-codex-saviour-4": "43-codex-saviour-4.svg",
+  "ad-x-90k-delete": "ad-x-90k-delete.svg",
   "claude-md-rules-1": "claude-md-rules-1.svg",
+  "dynamic-workflows-1": "dynamic-workflows-1.png",
+  "dynamic-workflows-2": "dynamic-workflows-2.png",
+  "dynamic-workflows-flow": "dynamic-workflows-flow.svg",
+  "dynamic-workflows-slider": "dynamic-workflows-slider.gif",
   "swarms-1": "swarms-1.png",
   "swarms-2": "swarms-2.png",
   "swarms-3": "swarms-3.png"
 };
 
-export const SCREENSHOT_COUNT = 74;
+export const SCREENSHOT_COUNT = 79;

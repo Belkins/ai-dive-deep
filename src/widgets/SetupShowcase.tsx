@@ -8,7 +8,7 @@ const SKILL_CATS: { key: string; label: string; tagline: string }[] = [
   { key: 'review',    label: 'Code review + QA',   tagline: 'Audits, security passes, bug hunts, debugging.' },
   { key: 'build',     label: 'Build + ship',       tagline: 'Scaffolding, deploys, env flips, framework-specific muscle.' },
   { key: 'strategy',  label: 'Strategy + research',tagline: 'Office hours, competitor intel, ultra-plans, monetization.' },
-  { key: 'portfolio', label: 'Portfolio-specific', tagline: "Belkins/Folderly/Partner Connector/LinguaLive — Vlad's actual book of business." },
+  { key: 'portfolio', label: 'Portfolio-specific', tagline: "Belkins/Folderly/LinguaLive — Vlad's actual book of business." },
   { key: 'meta',      label: 'Meta',               tagline: 'Skills that build other skills, verify other agents, etc.' },
 ];
 

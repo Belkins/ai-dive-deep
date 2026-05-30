@@ -85,6 +85,18 @@ const SOVEREIGN_SECTIONS: { id: string; label: string }[] = [
   { id: 'watch', label: 'The 6-month watch' },
   { id: 'monday', label: 'Do this Monday' },
 ];
+const WORKFLOWS_SECTIONS: { id: string; label: string }[] = [
+  { id: 'what-it-is', label: 'What it is' },
+  { id: 'teams-vs-workflows', label: 'Teams vs workflows' },
+  { id: 'the-loop', label: 'The validator loop' },
+  { id: 'the-on-ramp', label: 'Turning it on' },
+  { id: 'operators-read', label: 'My read' },
+  { id: 'jobs', label: 'Where I point it' },
+  { id: 'anthropic', label: 'What Anthropic says' },
+  { id: 'not-for', label: 'When not to' },
+  { id: 'appendix', label: 'Reference' },
+  { id: 'monday', label: 'Do this Monday' },
+];
 // Per-chapter synonyms — model names, company names, competing tools, people,
 // and adjacent topics that readers type into Cmd-K but don't appear in chapter
 // titles/subtitles.
@@ -183,13 +195,14 @@ export default function CommandPalette() {
       { type: 'page', title: 'Launch week — live receipts', href: `${base}/launch-week`, subtitle: 'The launch as its own experiment in the thesis. Numbers as they come in.',                          keywords: 'launch week numbers receipts day-by-day live metrics analytics' },
       { type: 'page', title: 'HTML-ization',          href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies',                                            keywords: 'html-ization htmlization html-first html first interactive artifact deliverable single-file static page case study clickable afc folderly audit' },
       { type: 'page', title: 'The Sovereign Stack',   href: `${base}/sovereign-stack`, subtitle: 'Open-weights LLMs that survive the deprecation calendar — Ollama, hardware, the heretic question, nano-gpt', keywords: 'sovereign stack open source weights local llm on-device edge ollama lm studio kimi qwen glm deepseek llama mistral grok gpt-oss heretic abliteration nano-gpt nanogpt karpathy mythos hardware mac studio rtx 3090 4090 mythos meta google deepmind anthropic openai xai zhipu alibaba' },
+      { type: 'page', title: 'Dynamic Workflows',     href: `${base}/dynamic-workflows`, subtitle: 'Opus 4.8 dynamic workflows — Claude plans, fans out parallel subagents, and verifies its own work',     keywords: 'dynamic workflows workflow opus 4.8 parallel subagents agents ultracode effort generator validator orchestration deep-research agent teams anthropic claude code swarm automated' },
       { type: 'page', title: 'GitHub Playbook',       href: `${base}/github-playbook`, subtitle: 'GitHub for non-developers — 5 non-code uses, 8 gh commands, what to ignore, 6 worked examples',                              keywords: 'github gh git non-developer non-coder operator pages readme issues releases discussions linkedin karpathy simonw willison nanogpt nanochat profile readme private repo public repo deploy artifacts' },
       { type: 'page', title: 'Swarms — deep dive',     href: `${base}/swarms`,          subtitle: '10 swarm skills, 7 patterns, the prompts to steal, the 3 things that break',                                                          keywords: 'swarm swarms parallel subagents fan-out pipeline map-reduce adversarial wave orchestration agent-wave-verify swarm-strategic-plan debug-swarm audit bughunter ultrareview cross-trio-audit folderly orchestrator conductor brief canon-lock red-team' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.',                                                       keywords: 'claude.md rules karpathy twelve 12 conventions context file always-loaded operator overlay' },
       { type: 'page', title: 'Tier list',             href: `${base}/tier-list`,       subtitle: 'Drag-and-drop yours',                                                                                 keywords: 'tier list ranking compare which model best leaderboard lmarena chatgpt gpt gpt-5 gpt-4 o1 o3 claude opus sonnet haiku gemini grok deepseek qwen llama mistral kimi glm anthropic openai google meta xai cohere perplexity' },
       { type: 'page', title: 'Cheat sheet',           href: `${base}/cheat-sheet`,     subtitle: 'Print + tape it up',                                                                                  keywords: 'cheat sheet reference quick cmd-k command palette search slash commands settings shortcut keyboard print' },
       { type: 'page', title: '30-day plan',           href: `${base}/thirty-day-plan`, subtitle: 'Custom roadmap',                                                                                      keywords: '30 day thirty plan roadmap onboarding schedule monthly week-by-week' },
-      { type: 'page', title: 'About',                 href: `${base}/about`,           subtitle: 'Vlad + portfolio + newsletter',                                                                       keywords: 'about vlad podoliako belkins folderly lingualive nocancer portfolio playbook author bio newsletter contact who' },
+      { type: 'page', title: 'About',                 href: `${base}/about`,           subtitle: 'Vlad + portfolio + newsletter',                                                                       keywords: 'about vlad podoliako belkins folderly lingualive portfolio playbook author bio newsletter contact who' },
       { type: 'page', title: 'Changelog',             href: `${base}/changelog`,       subtitle: "What's new in each edition",                                                                          keywords: 'changelog edition history versions updates release notes whats new' },
     ];
     const glossaryItems: Item[] = Object.keys(glossary).map((term) => ({
@@ -242,6 +255,13 @@ export default function CommandPalette() {
         href: `${base}/swarms#${s.id}`,
         keywords: `swarm parallel subagents fan-out pipeline map-reduce adversarial wave orchestration agent-wave-verify swarm-strategic-plan debug-swarm audit ${s.label} ${s.id}`.toLowerCase(),
       })),
+      ...WORKFLOWS_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'Dynamic Workflows',
+        href: `${base}/dynamic-workflows#${s.id}`,
+        keywords: `dynamic workflows opus 4.8 ultracode workflow parallel subagents ${s.label} ${s.id}`.toLowerCase(),
+      })),
     ];
     const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({
       type: 'note',
@@ -257,8 +277,8 @@ export default function CommandPalette() {
   // first-N by array order. Keep this list under 10; render with a "Popular"
   // header so users see they're not search results.
   const POPULAR_HREFS = useMemo(() => [
-    '/day-zero', '/cheat-sheet', '/tier-list', '/sovereign-stack',
-    '/html-first', '/showcase', '/glossary', '/resources',
+    '/dynamic-workflows', '/day-zero', '/cheat-sheet', '/tier-list', '/sovereign-stack',
+    '/html-first', '/showcase', '/glossary',
   ].map((p) => `${base}${p}`), [base]);
 
   const popularDefaults = useMemo(() => {
