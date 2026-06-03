@@ -16,6 +16,8 @@ export const GET: APIRoute = async () => {
   lines.push('>');
   lines.push("> Voice: operator, anti-hype, real numbers per claim, failure receipts included.");
   lines.push("> No email gate. No upsell. Free to read and to cite.");
+  lines.push('>');
+  lines.push(`> Full concatenated text for ingestion: ${SITE}/llms-full.txt`);
   lines.push('');
   lines.push('## Citation guidance');
   lines.push('');
@@ -39,6 +41,10 @@ export const GET: APIRoute = async () => {
   lines.push(`- [Glossary](${SITE}/glossary/) — operator-shaped definitions`);
   lines.push(`- [Resources](${SITE}/resources/) — CLAUDE.md skeletons, .mcp.json examples, hook scripts`);
   lines.push(`- [Cheat sheet](${SITE}/cheat-sheet/) — commands, paths, shortcuts`);
+  lines.push(`- [Swarms — Parallel Agents That Actually Work](${SITE}/swarms/) — The operator's deep dive into multi-agent orchestration. Architecture diagrams, ten swarm skills shipped, seven patterns I actually use, the prompts to steal, and the three things that quietly break a swarm. The next step up from a clever single-instance prompt.`);
+  lines.push(`- [The Sovereign Stack](${SITE}/sovereign-stack/) — Open-weights LLMs that survive Anthropic's deprecation calendar. Runtimes, hardware tiers, the 2026 open-source leaderboard, the heretic question, and the Saturday Karpathy gives you. Two stacks, not one.`);
+  lines.push(`- [Dynamic Workflows](${SITE}/dynamic-workflows/) — Opus 4.8's headline feature: Claude writes a script that plans a big task, fans out hundreds of parallel subagents, and verifies its own work before reporting back. What it is, how the generator→validator loop works, how to turn it on, where I point it, and when not to.`);
+  lines.push(`- [HTML-ization](${SITE}/html-first/) — HTML-ization: every report, pitch, audit, and deck ships as a live interactive HTML artifact, not a dead file. Two real, clickable case studies inside.`);
   lines.push(`- [Changelog](${SITE}/changelog/) — edition history`);
   lines.push('');
   lines.push('## Chapters');

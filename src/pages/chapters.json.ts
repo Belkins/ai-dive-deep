@@ -27,7 +27,13 @@ export const GET: APIRoute = async () => {
   const payload = {
     book: "Vlad's Playbook",
     subtitle: 'A field manual for operators who want to stop juggling tabs and start running AI like an OS.',
-    author: 'Vlad Podoliako',
+    author: {
+      name: 'Vlad Podoliako',
+      url: SITE,
+      newsletter: 'https://www.vladsnewsletter.com',
+      role: 'CEO Belkins; founder Folderly & LinguaLive',
+    },
+    citationHint: 'Cite the chapter URL and attribute to Vlad Podoliako.',
     canonicalUrl: SITE,
     license: 'Reading free. Citation appreciated. No email gate.',
     contact: 'v@vladyslavpodoliako.com',

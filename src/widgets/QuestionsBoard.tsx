@@ -8,7 +8,7 @@ type Q = {
   category: 'getting-started' | 'building' | 'security' | 'agents' | 'team' | 'cost';
 };
 
-const QUESTIONS: Q[] = [
+export const QUESTIONS: Q[] = [
   // Getting started
   {
     q: "What's the difference between Chat, Cowork, Claude Code, and the API?",

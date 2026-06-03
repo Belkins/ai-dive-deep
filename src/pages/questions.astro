@@ -1,9 +1,28 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import QuestionsBoard from '@/widgets/QuestionsBoard.tsx';
+import QuestionsBoard, { QUESTIONS } from '@/widgets/QuestionsBoard.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+
+// Reduce an answer to plain text for the schema (strip any stray tags, collapse whitespace).
+const toPlainText = (s: string) =>
+  s.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: QUESTIONS.map((q) => ({
+    '@type': 'Question',
+    name: toPlainText(q.q),
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: toPlainText(q.answer),
+    },
+  })),
+};
 ---
 <BaseLayout title="Questions people ask me" description="The questions I answer most weeks. Each one mapped to the chapter that goes deep.">
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
   <section class="container-prose pt-16 pb-4">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">From the inbox</div>
     <h1>Questions people ask me.</h1>

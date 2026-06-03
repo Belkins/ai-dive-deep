@@ -18,8 +18,25 @@ for (const e of entries) {
   else groups.push({ letter: L, items: [e] });
 }
 const navItems = groups.map((g) => ({ id: `letter-${g.letter === '#' ? 'num' : g.letter}`, label: g.letter }));
+
+const SITE = 'https://dive.vladyslavpodoliako.com';
+const GLOSSARY_URL = `${SITE}/glossary`;
+const definedTermSetJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  name: 'Glossary — Vlads Playbook',
+  url: GLOSSARY_URL,
+  hasDefinedTerm: entries.map((e) => ({
+    '@type': 'DefinedTerm',
+    name: e.term,
+    description: e.definition,
+    inDefinedTermSet: GLOSSARY_URL,
+    url: `${GLOSSARY_URL}#${encodeURIComponent(e.term)}`,
+  })),
+};
 ---
 <BaseLayout title="Glossary" description="Vocabulary you'll need across the book — agent, MCP, skill, swarm, vault, and more.">
+  <script type="application/ld+json" set:html={JSON.stringify(definedTermSetJsonLd)} />
   <section class="container-wide pt-16 pb-8">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Glossary</div>
     <h1>Vocabulary you'll need.</h1>

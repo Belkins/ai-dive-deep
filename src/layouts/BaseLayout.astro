@@ -3,7 +3,8 @@ import '@/styles/global.css';
 import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
-import { CHAPTERS } from '@/lib/chapters';
+import { CHAPTERS, getPart } from '@/lib/chapters';
+import { AUTHOR, PUBLISHER } from '@/lib/author';
 
 interface Props {
   title: string;
@@ -26,6 +27,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 // LLMs and search engines read this for citation-grade structured data.
 const isChapter = Astro.url.pathname.startsWith('/chapters/');
 
+// Chapter slug = path segment after /chapters/ (e.g. "01-killed-my-tabs").
+// getPart maps it to its Part label for articleSection; null when unmapped.
+const chapterSlug = isChapter
+  ? Astro.url.pathname.replace(/^\/chapters\//, '').replace(/\/$/, '')
+  : '';
+const chapterPart = isChapter ? getPart(chapterSlug) : null;
+
 // PostHog: gated on PUBLIC_POSTHOG_KEY env var. Absent = no init, no events, no
 // network calls. Set the var on Vercel to turn analytics on without code changes.
 const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY as string | undefined;
@@ -38,10 +46,12 @@ const jsonLd: Record<string, unknown> = isChapter
       '@type': 'Article',
       headline: title,
       description: desc,
-      author: { '@type': 'Person', name: 'Vlad Podoliako', url: 'https://www.vladsnewsletter.com' },
-      publisher: { '@type': 'Organization', name: BRAND, url: 'https://dive.vladyslavpodoliako.com' },
+      author: AUTHOR,
+      publisher: PUBLISHER,
       image: og,
       url: canonical,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+      ...(chapterPart ? { articleSection: chapterPart.label } : {}),
       isPartOf: { '@type': 'Book', name: BRAND, url: 'https://dive.vladyslavpodoliako.com' },
       inLanguage: 'en',
     }
@@ -50,7 +60,7 @@ const jsonLd: Record<string, unknown> = isChapter
         '@context': 'https://schema.org',
         '@type': 'Book',
         name: BRAND,
-        author: { '@type': 'Person', name: 'Vlad Podoliako', url: 'https://www.vladsnewsletter.com' },
+        author: AUTHOR,
         url: 'https://dive.vladyslavpodoliako.com',
         description: desc,
         image: og,
@@ -81,7 +91,7 @@ const jsonLd: Record<string, unknown> = isChapter
 
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
-    <meta property="og:type" content="article" />
+    <meta property="og:type" content={isChapter ? 'article' : 'website'} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
     <meta property="og:image" content={og} />
