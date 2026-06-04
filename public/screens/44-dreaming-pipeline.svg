@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Title -->
+  <text x="80" y="96" fill="#71717A" font-size="13" letter-spacing="3" font-family="JetBrains Mono, monospace">DREAMING · THE PIPELINE</text>
+  <text x="80" y="146" fill="#FAFAF7" font-size="38" font-weight="500" font-family="Source Serif 4, Georgia, serif">Five stages. Only one of them is the model.</text>
+  <text x="80" y="186" fill="#AAA79A" font-size="16">A 5-megabyte transcript cannot enter an agent — so code does the heavy lifting and the model only judges what it&#39;s handed.</text>
+
+  <!-- Legend -->
+  <g transform="translate(80, 240)">
+    <circle cx="8" cy="0" r="7" fill="#22D3A0"/>
+    <text x="26" y="5" fill="#AAA79A" font-size="14" font-family="JetBrains Mono, monospace">code · deterministic</text>
+    <circle cx="300" cy="0" r="7" fill="#FF6B2C"/>
+    <text x="318" y="5" fill="#AAA79A" font-size="14" font-family="JetBrains Mono, monospace">model · judgment</text>
+  </g>
+
+  <!-- Nodes: centers at x = 200, 500, 800, 1100, 1400 ; box 240 wide -->
+  <!-- 1 SELECT (code) -->
+  <g transform="translate(80, 360)">
+    <rect x="0" y="0" width="240" height="170" rx="12" fill="#161B1F" stroke="#22D3A0" stroke-width="1.5"/>
+    <text x="20" y="34" fill="#22D3A0" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">1 · SELECT</text>
+    <text x="20" y="74" fill="#FAFAF7" font-size="18" font-weight="600">Pick sessions</text>
+    <text x="20" y="104" fill="#AAA79A" font-size="13">skip the live one +</text>
+    <text x="20" y="124" fill="#AAA79A" font-size="13">already-dreamed</text>
+    <text x="20" y="150" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">window + cap, never all</text>
+  </g>
+  <!-- 2 DIGEST (code) -->
+  <g transform="translate(380, 360)">
+    <rect x="0" y="0" width="240" height="170" rx="12" fill="#161B1F" stroke="#22D3A0" stroke-width="1.5"/>
+    <text x="20" y="34" fill="#22D3A0" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">2 · DIGEST</text>
+    <text x="20" y="74" fill="#FAFAF7" font-size="18" font-weight="600">Strip to signal</text>
+    <text x="20" y="104" fill="#AAA79A" font-size="13">keep prompts + prose,</text>
+    <text x="20" y="124" fill="#AAA79A" font-size="13">drop tool plumbing</text>
+    <text x="20" y="150" fill="#FF8E54" font-size="12" font-family="JetBrains Mono, monospace">5.8MB → 24K · Rule 5</text>
+  </g>
+  <!-- 3 EXTRACT (MODEL) -->
+  <g transform="translate(680, 360)">
+    <rect x="0" y="0" width="240" height="170" rx="12" fill="#2A1810" stroke="#FF6B2C" stroke-width="2.5"/>
+    <text x="20" y="34" fill="#FF6B2C" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">3 · EXTRACT</text>
+    <text x="20" y="74" fill="#FAFAF7" font-size="18" font-weight="600">Fan out, propose</text>
+    <text x="20" y="104" fill="#FFB48C" font-size="13">read-only agents,</text>
+    <text x="20" y="124" fill="#FFB48C" font-size="13">one per session</text>
+    <text x="20" y="150" fill="#FF6B2C" font-size="12" font-family="JetBrains Mono, monospace">each cites a quote</text>
+  </g>
+  <!-- 4 VERIFY (code) -->
+  <g transform="translate(980, 360)">
+    <rect x="0" y="0" width="240" height="170" rx="12" fill="#161B1F" stroke="#22D3A0" stroke-width="1.5"/>
+    <text x="20" y="34" fill="#22D3A0" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">4 · VERIFY</text>
+    <text x="20" y="74" fill="#FAFAF7" font-size="18" font-weight="600">Re-grep the raw</text>
+    <text x="20" y="104" fill="#AAA79A" font-size="13">quote vs RAW .jsonl,</text>
+    <text x="20" y="124" fill="#AAA79A" font-size="13">not the digest</text>
+    <text x="20" y="150" fill="#71717A" font-size="12" font-family="JetBrains Mono, monospace">invented quotes drop</text>
+  </g>
+  <!-- 5 REVIEW (code) -->
+  <g transform="translate(1280, 360)">
+    <rect x="0" y="0" width="240" height="170" rx="12" fill="#161B1F" stroke="#22D3A0" stroke-width="1.5"/>
+    <text x="20" y="34" fill="#22D3A0" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">5 · REVIEW</text>
+    <text x="20" y="74" fill="#FAFAF7" font-size="18" font-weight="600">Write the file</text>
+    <text x="20" y="104" fill="#AAA79A" font-size="13">a dated review-md,</text>
+    <text x="20" y="124" fill="#AAA79A" font-size="13">human runs /learn</text>
+    <text x="20" y="150" fill="#FF8E54" font-size="12" font-family="JetBrains Mono, monospace">never writes memory/</text>
+  </g>
+
+  <!-- Arrows between node right (x) and next node left -->
+  <g stroke="#56544B" stroke-width="2" fill="none">
+    <path d="M320 445 L380 445" marker-end="url(#arrow)"/>
+    <path d="M620 445 L680 445" marker-end="url(#arrow)"/>
+    <path d="M920 445 L980 445" marker-end="url(#arrow)"/>
+    <path d="M1220 445 L1280 445" marker-end="url(#arrow)"/>
+  </g>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#56544B"/>
+    </marker>
+  </defs>
+
+  <!-- The punchline band -->
+  <g transform="translate(80, 640)">
+    <rect x="0" y="0" width="1440" height="92" rx="10" fill="#161B1F" stroke="#26251F" stroke-width="1"/>
+    <text x="28" y="38" fill="#FAFAF7" font-size="17" font-weight="600" font-family="Source Serif 4, Georgia, serif">The whole trick: the model never reads the transcript — code does. The model only judges what code hands it.</text>
+    <text x="28" y="68" fill="#AAA79A" font-size="14">Four of five stages are deterministic. The one model stage is propose-only — it cannot write, only suggest a quote-backed candidate.</text>
+  </g>
+
+  <text x="1520" y="864" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 44 · the dreaming pipeline</text>
+</svg>

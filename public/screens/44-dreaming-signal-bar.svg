@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Title -->
+  <text x="80" y="96" fill="#71717A" font-size="13" letter-spacing="3" font-family="JetBrains Mono, monospace">DREAMING · WHY THE DIGEST IS POSSIBLE</text>
+  <text x="80" y="146" fill="#FAFAF7" font-size="38" font-weight="500" font-family="Source Serif 4, Georgia, serif">Most of a transcript is plumbing. ~16% is the lesson.</text>
+  <text x="80" y="186" fill="#AAA79A" font-size="16">One 5.8&#160;MB session, measured. Keep the prompts and the prose; drop the tool calls, results, and thinking. What&#39;s left fits in an agent.</text>
+
+  <!-- The bar -->
+  <g transform="translate(80, 280)">
+    <text x="0" y="-14" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">5.8 MB session · conversational mass</text>
+    <!-- signal ~16% of 1440 = 230 -->
+    <rect x="0" y="0" width="230" height="120" fill="#22D3A0" rx="6"/>
+    <!-- noise ~84% = 1210 -->
+    <rect x="240" y="0" width="1200" height="120" fill="#1A1B1F" stroke="#26251F" stroke-width="1" rx="6"/>
+    <text x="115" y="66" fill="#03281D" font-size="20" font-weight="700" text-anchor="middle" font-family="JetBrains Mono, monospace">~16%</text>
+    <text x="115" y="92" fill="#064433" font-size="13" text-anchor="middle" font-family="JetBrains Mono, monospace">SIGNAL</text>
+    <text x="840" y="58" fill="#8C897C" font-size="18" font-weight="600" text-anchor="middle" font-family="JetBrains Mono, monospace">~84% · NOISE (dropped)</text>
+    <text x="840" y="84" fill="#56544B" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">tool_use · tool_result · thinking · system-reminders</text>
+  </g>
+
+  <!-- Callouts -->
+  <g transform="translate(80, 470)">
+    <rect x="0" y="0" width="440" height="150" fill="#12161A" stroke="#22D3A0" stroke-width="1.5" rx="8"/>
+    <text x="28" y="44" fill="#22D3A0" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">KEPT</text>
+    <text x="28" y="84" fill="#FAFAF7" font-size="22" font-weight="600">Human prompts +</text>
+    <text x="28" y="112" fill="#FAFAF7" font-size="22" font-weight="600">assistant prose</text>
+    <text x="28" y="138" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">the actual reasoning</text>
+
+    <rect x="500" y="0" width="440" height="150" fill="#1A1510" stroke="#56544B" stroke-width="1.5" rx="8"/>
+    <text x="528" y="44" fill="#8C897C" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">BIGGEST DROPPED BLOCK</text>
+    <text x="528" y="84" fill="#8C897C" font-size="22" font-weight="600">toolUseResult</text>
+    <text x="528" y="118" fill="#FF8E54" font-size="22" font-weight="700" font-family="JetBrains Mono, monospace">732 KB</text>
+    <text x="528" y="140" fill="#56544B" font-size="13" font-family="JetBrains Mono, monospace">in a single 5.8 MB session</text>
+
+    <rect x="1000" y="0" width="440" height="150" fill="#161B1F" stroke="#FF6B2C" stroke-width="2" rx="8"/>
+    <text x="1028" y="44" fill="#FF6B2C" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">RESULT</text>
+    <text x="1028" y="84" fill="#FAFAF7" font-size="22" font-weight="600">5.8 MB → 24 KB</text>
+    <text x="1028" y="118" fill="#FF8E54" font-size="22" font-weight="700" font-family="JetBrains Mono, monospace">~240×</text>
+    <text x="1028" y="140" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">small enough to enter an agent</text>
+  </g>
+
+  <text x="1520" y="700" fill="#56544B" font-size="14" text-anchor="end" font-style="italic" font-family="Source Serif 4, Georgia, serif">One session I measured — not a universal constant.</text>
+  <text x="1520" y="864" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 44 · signal vs noise</text>
+</svg>

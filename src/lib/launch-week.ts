@@ -31,7 +31,7 @@ export const LAUNCH_TIMELINE: LaunchEntry[] = [
     surface: 'Site',
     title: '/launch — the launch artifact is the demo',
     url: '/launch',
-    prep: 'Page-as-proof: typewriter hero, animated stat odometer, 3 live embedded artifacts, all 43 chapters as a click-anywhere mosaic, the 13-day timeline, post-credit AFC tease.',
+    prep: 'Page-as-proof: typewriter hero, animated stat odometer, 3 live embedded artifacts, all 44 chapters as a click-anywhere mosaic, the 13-day timeline, post-credit AFC tease.',
     result: 'Shipped. Live since this morning.',
   },
   {

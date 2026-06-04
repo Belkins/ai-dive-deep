@@ -69,6 +69,8 @@ What does NOT go in:
 
 Practical shape: one MEMORY.md index file at the root, individual `.md` files for each lesson. The index points to the lessons. The agent reads the index on wake-up, decides which lessons apply, loads only those. That's how you keep the memory layer from becoming the next CLAUDE.md bloat problem.
 
+{/* [VLAD: forward-pointer seam to Ch 44. The clause above — "updates it when something worth remembering happens" — hides the hard problem this chapter doesn't solve: across hundreds of sessions, how does the memory layer stay curated, deduped, and *true*? Suggested ~2 sentences in your voice, linking [Chapter 44](/chapters/44-dreaming): the propose-only loop that surfaces candidate memories without ever letting an agent write a hallucinated one. Delete this comment when voiced. */}
+
 ### Layer 3 — skills/ (procedural memory, loaded on demand)
 
 <GlossaryTerm term="Skill">Skills</GlossaryTerm> are folders with a SKILL.md inside. The full body never loads at session start — only the description loads, as a trigger. When you say something that matches, the agent pulls the body into context and follows the runbook. See [Chapter 5](/chapters/05-skills) for the why and [Chapter 11](/chapters/11-build-a-skill) for the how.

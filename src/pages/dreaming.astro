@@ -1,0 +1,209 @@
+---
+/*
+  /dreaming — flagship deep-dive page, sibling to Chapter 44.
+  SCAFFOLD by the assistant (design swarm, 2026-06-04). Content-freeze altitude:
+  the STRUCTURE, the factual receipts/refusals/pipeline, the figures, and the
+  cross-links are placed. Every reader-visible NARRATIVE string is a marked
+  [VLAD: ...] slot for you to voice. Honesty guards match Ch 44 — do not loosen
+  the receipts ("15 verified, 0 dropped, 14 net-new, 1 tool-flagged dup"; the
+  twist is the disk-verified "caught one it could see, missed two it couldn't").
+*/
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+
+const navItems = [
+  { id: 'thesis', label: 'The loop pointed inward' },
+  { id: 'pipeline', label: 'The pipeline' },
+  { id: 'refusals', label: 'The 5 refusals' },
+  { id: 'receipts', label: 'The receipts' },
+  { id: 'exception', label: 'The exception to Ch 7' },
+  { id: 'not-for', label: 'When not to' },
+  { id: 'monday', label: 'Do this Monday' },
+];
+---
+<BaseLayout
+  title="Dreaming"
+  description="A local, propose-only twin of Anthropic's Managed-Agents Dreaming: it digests your sessions outside the model, fans out read-only agents that must cite a verbatim quote, re-verifies every quote against the raw transcript, and writes a review file — it never writes to memory itself. The first autonomous loop in the Playbook pointed at the agent's own memory, and the only one forbidden to write."
+>
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Memory · Dreaming</div>
+    <h1>Dreaming — the loop pointed inward.</h1>
+    {/* [VLAD: hero — 2 short paragraphs. Beat 1: every autonomous loop in this book points OUTWARD — the swarm reads the codebase, cron reads the calendar, run-until-done reads the task. Dreaming is the first one pointed at the agent's own memory. Beat 2: Anthropic shipped Dreaming (Managed Agents, research preview, mid-2026) as a thing that can auto-write memory; I built the local twin deliberately weaker — propose-only — because the one index I can't afford to corrupt is the one I curate by hand. This page is the operator's runbook: the pipeline, the refusals, the receipts, and when not to.] */}
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))"><em>[VLAD: hero paragraph 1 — the autonomy inversion.]</em></p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))"><em>[VLAD: hero paragraph 2 — propose-only twin; what this page is. The narrative version lives in <a href="/chapters/44-dreaming">Chapter 44</a>.]</em></p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="thesis" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The loop pointed inward</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p><em>[VLAD: the thesis — the autonomy inversion. The book gives the swarm (Ch 6), cron (Ch 7), and run-until-done (Ch 38) more and more rope: Ch 43 let a second prior delete 90,000 lines unsupervised. But all of those point at something external — code, a schedule, a task. Dreaming points at the agent's own memory, the one index a wrong write quietly poisons. So this is the loop that gets LESS rope, not more — on purpose.]</em></p>
+            <PullQuote>{/* [VLAD: pull-quote candidate] Every loop in this book points at something. The swarm reads the codebase. Cron reads the calendar. Run-until-done reads the task. Dreaming is the first one pointed at the agent's own memory — which is exactly why it's the only one I forbade to write. */}<em>[VLAD: pull-quote — the swarm reads the codebase; dreaming reads the swarm.]</em></PullQuote>
+          </div>
+        </div>
+
+        <div id="pipeline" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The pipeline — five stages, one model</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p><em>[VLAD: one-line intro — digest → extract → verify → review, and the only stage the model touches is extract.]</em></p>
+
+            <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>1 · Select <span style="opacity:.6">— code</span></div>
+              <p class="m-0">Pick recent sessions deterministically: skip the live, still-being-written session and any already-dreamed (a ledger keyed on file mtime + bytes). Window and cap — default five sessions, seven days. Never "all." 483 transcripts in a week is a token bomb for near-zero yield on a stale corpus; defer the rest loudly.</p>
+            </div>
+            <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>2 · Digest <span style="opacity:.6">— code, not the model</span></div>
+              <p class="m-0">A plain Python pass turns a 5.8&nbsp;MB session transcript into ~24,000 characters by keeping the human prompts and the assistant's prose and dropping the tool plumbing. This happens <em>outside</em> the agents, because a 5&nbsp;MB transcript cannot enter one — that's Rule 5: code does the heavy deterministic work, the model only judges what code hands it.</p>
+            </div>
+            <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>3 · Extract <span style="opacity:.6">— the model</span></div>
+              <p class="m-0">Read-only Explore agents fan out, one per session. Each candidate must cite a verbatim quote from the digest. The agents are propose-only — they have no write tool and structurally cannot touch memory.</p>
+            </div>
+            <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>4 · Verify <span style="opacity:.6">— the load-bearing gate</span></div>
+              <p class="m-0">Re-grep each cited quote against the <strong>raw</strong> <code>.jsonl</code> — not the lossy digest the agent read — decode-aware, because the transcript stores text JSON-escaped. "Grounded in the digest" is not "grounded in what happened." Real quotes survive; invented ones drop.</p>
+            </div>
+            <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>5 · Review <span style="opacity:.6">— the only output</span></div>
+              <p class="m-0">Write a dated <code>review-&lt;date&gt;.md</code> — each candidate as Claim / Why / How-to-apply / the verified quote + source session, grouped NEW vs ⚠DUP — and update the ledger. It never writes to <code>memory/</code>. The human, plus the existing <code>/learn</code> skill, stays the writer.</p>
+            </div>
+          </div>
+          <ScreenshotPlaceholder
+            id="44-dreaming-pipeline"
+            ratio="16/9"
+            caption="The pipeline: five stages, and only one of them is the model."
+            note="SELECT → DIGEST → EXTRACT → VERIFY → REVIEW. EXTRACT is the only stage where a model runs."
+          />
+        </div>
+
+        <div id="refusals" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The five refusals — the safety architecture</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p><em>[VLAD: one-line intro — the refusals aren't guardrails bolted on; they're the design. The max-destructive action the whole pipeline can take is writing one markdown file.]</em></p>
+            <ol class="space-y-3 list-none p-0 m-0">
+              <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--border))' }}><strong>1 — Never auto-write, delete, overwrite, or consolidate a memory.</strong> Propose-only is both the default and the ceiling; the most it can do is surface a review file.</li>
+              <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--border))' }}><strong>2 — Never schedule it via cloud cron.</strong> Cloud schedulers run in a remote sandbox with no access to local <code>~/.claude/</code> — a scheduled dream wakes to an empty disk and mis-reports. Local <code>launchd</code> only, still propose-only.</li>
+              <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--border))' }}><strong>3 — Never process "all" sessions.</strong> Window, cap, and defer loudly. No silent truncation.</li>
+              <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--border))' }}><strong>4 — Never trust an agent's self-report.</strong> Agents have no write tool; only the main loop writes, and it ground-truths by re-statting the file it wrote.</li>
+              <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--border))' }}><strong>5 — A candidate with no raw-transcript quote match is dropped.</strong> No exceptions.</li>
+            </ol>
+            <ScreenshotPlaceholder
+              id="44-dreaming-safety-ladder"
+              ratio="16/9"
+              caption="Propose-only isn't the default. It's the ceiling — nailed to the floor."
+              note="Floor = surface a review file (where it lives AND its max). Auto-write is earned later. Auto-delete/overwrite: no code path exists."
+            />
+          </div>
+        </div>
+
+        <div id="receipts" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The receipts — two runs, stated honestly</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p><em>[VLAD: narrate. HONESTY GUARD: "15 candidates, 15 verified, 0 dropped, 14 net-new, 1 the tool flagged as a dup." Do NOT write "0 hallucinations" — the fabricated-quote-drops proof was a separate adversarial test.]</em></p>
+            <div class="overflow-x-auto my-2">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border))' }}>
+                    <th class="text-left py-2 pr-3 font-semibold">Run</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Sessions</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Candidates</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Verified</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Net-new</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Flagged dup</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Missed dup</th>
+                  </tr>
+                </thead>
+                <tbody style={{ color: 'rgb(var(--fg) / 0.85)' }}>
+                  <tr style={{ borderBottom: '1px solid rgb(var(--border) / 0.5)' }}>
+                    <td class="py-2 pr-3">Single-project</td><td class="py-2 pr-3">3</td><td class="py-2 pr-3">3</td><td class="py-2 pr-3">3</td><td class="py-2 pr-3">3</td><td class="py-2 pr-3">0</td><td class="py-2 pr-3">0</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3">Cross-project</td><td class="py-2 pr-3">6</td><td class="py-2 pr-3">15</td><td class="py-2 pr-3">15</td><td class="py-2 pr-3">14</td><td class="py-2 pr-3">1</td><td class="py-2 pr-3">2</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-sm" style={{ color: 'rgb(var(--muted))' }}>Digest economics: largest single transcript 5.8&nbsp;MB → ~24,000-char digest (~240×). Roughly 16% of conversational mass was signal in the one session measured; <code>toolUseResult</code> alone was 732&nbsp;KB. The <code>MEMORY.md</code> index it protects sits at 170/200 lines.</p>
+
+            <ScreenshotPlaceholder
+              id="44-dreaming-signal-bar"
+              ratio="16/9"
+              caption="Most of a transcript is plumbing. About 16% is the lesson — one session, measured."
+              note="Keep prompts + assistant prose, drop the tool plumbing. 5.8MB → ~24K (~240×)."
+            />
+
+            <ScreenshotPlaceholder
+              id="44-dreaming-review-file"
+              ratio="16/9"
+              caption="The entire output on one screen — a human skims it in two minutes."
+              note="A dated review file: each candidate is Claim / Why / How-to-apply / verified quote + source session."
+            />
+
+            <h3 class="font-semibold mt-6" style={{ color: 'rgb(var(--fg) / 0.95)' }}>The run where it told me the truth about its own blind spot</h3>
+            <p><em>[VLAD: the twist — DISK-VERIFIED version. It caught the duplicate it could see (a workflow rate-limit lesson, flagged ⚠DUP against the home index) and missed two it couldn't (two HubSpot rotation lessons already filed in a project's own detailed memory). The portfolio index it checks holds one-line pointers, not detail, so it couldn't see a lesson filed one level down. It didn't lie — it told the truth about the edge of its own vision. Operator takeaway: dedup-check a candidate against its DESTINATION project's memory before you /learn it.]</em></p>
+            <PullQuote>{/* [VLAD: pull-quote candidate] It caught the duplicate it could see and missed the two it couldn't — they were filed one level down, in a project's own memory. It didn't lie to me; it told me the truth about the edge of its own vision. That's exactly why I let it near my memory. */}<em>[VLAD: pull-quote — the humility was the feature.]</em></PullQuote>
+
+            <p class="font-semibold mt-6" style={{ color: 'rgb(var(--fg) / 0.95)' }}>The method, shown</p>
+            <p><em>[VLAD: optional — this page (and Chapter 44) was itself planned by a swarm: five perspective agents in parallel, then a reconciler + red-team, then synthesis. Same read-only fan-out /dream points at session transcripts, pointed here at the book. The red-team caught a real error in the brief — it corrected an over-stated receipt against disk. The fan-out is the method, not just the subject.]</em></p>
+            <ScreenshotPlaceholder
+              id="44-dreaming-swarm-1"
+              ratio="1444/386"
+              caption="The fan-out that planned this page — five perspective agents in parallel."
+              note="Each carries its own lens; the same read-only fan-out /dream points at session transcripts."
+            />
+            <ScreenshotPlaceholder
+              id="44-dreaming-swarm-2"
+              ratio="1470/386"
+              caption="The /workflows view: Propose → Stress-test → Synthesize. Generate, adversarially verify, then synthesize."
+              note="Eight agents, one answer — the red-team stage is where an over-stated receipt got corrected against disk."
+            />
+          </div>
+        </div>
+
+        <div id="exception" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The exception to Chapter 7</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p><em>[VLAD: the contrarian beat. Chapter 7 ("Scheduled Tasks") teaches "make AI work while you sleep" — put it on a cron. Dreaming is the obvious cron candidate (run it nightly), and refusal #2 forbids exactly that. Reconcile it with the data-locality rule: schedule a task where its data lives, or don't schedule it. A cloud scheduler wakes in a sandbox that can't see your local ~/.claude/ disk, so it reports a confident FALSE GREEN — "0 candidates" — on an empty disk. Dreaming runs locally (launchd) or not at all.]</em></p>
+            <Callout type="warn">
+              {/* [VLAD: voice this] */}The rule that resolves it: <strong>schedule a task where its data lives, or don't schedule it.</strong> A cloud cron pointed at a local-disk corpus wakes to an empty disk and reports success on nothing — the most dangerous kind of green.
+            </Callout>
+            <p class="text-sm" style={{ color: 'rgb(var(--muted))' }}>Two-way link: <a href="/chapters/07-cron">Ch 7 — Scheduled Tasks</a> · <a href="/chapters/44-dreaming">Ch 44 — Dreaming</a>.</p>
+          </div>
+        </div>
+
+        <div id="not-for" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">When not to run it</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p><em>[VLAD: when NOT to. Don't dream a fresh/empty corpus (nothing to surface). Don't dream the live session. Don't dream "everything" after a long gap — window it. And the deeper one: don't promote it to auto-write until you've earned it.]</em></p>
+            <Callout type="note">
+              {/* [VLAD: voice] */}Auto-write ("apply-new") is earned, not assumed — only after the memory frontmatter is normalized to one schema, the ledger is proven stable, and ~30 days of accept/reject data show the extractor is right at least 80% of the time. Until then it surfaces; you write.
+            </Callout>
+            <p><em>[VLAD: the failure mode that actually kills it — quiet abandonment. The yield-floor tripwire: three runs in a row that surface zero new candidates and it prints "DREAM IS PROPOSING NOTHING," so abandonment is a decision, not a drift.]</em></p>
+          </div>
+        </div>
+
+        <div id="monday" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p><em>[VLAD: the smallest first step a reader takes. Don't build the whole pipeline — start with the principle: at the end of a heavy session, have the agent re-read the transcript and propose, in writing, what's worth remembering — and make it cite the exact line for each. You verify, you /learn the keepers. That's dreaming, by hand, before you automate it.]</em></p>
+            <PullQuote>{/* [VLAD: pull-quote candidate — closer] The max-destructive thing this whole pipeline can do is write one markdown file. That's not a limitation. That's the design. */}<em>[VLAD: closer pull-quote.]</em></PullQuote>
+            <p class="mt-6 text-sm" style={{ color: 'rgb(var(--muted))' }}>
+              Related: <a href="/chapters/44-dreaming">Ch 44 — Dreaming (the narrative)</a> · <a href="/chapters/37-context-files">Ch 37 — the memory layers it curates</a> · <a href="/chapters/03-temp-agency">Ch 3 — why it forgets you</a> · <a href="/swarms">The Swarm — the fan-out it runs on</a> · <a href="/chapters/38-run-until-done">Ch 38 — the loop family</a> · <a href="/chapters/07-cron">Ch 7 — and why not to cloud-cron this one</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

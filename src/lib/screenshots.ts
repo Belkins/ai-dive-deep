@@ -73,6 +73,12 @@ export const SCREENSHOTS: Record<string, string> = {
   "43-codex-saviour-2": "43-codex-saviour-2.svg",
   "43-codex-saviour-3": "43-codex-saviour-3.svg",
   "43-codex-saviour-4": "43-codex-saviour-4.svg",
+  "44-dreaming-pipeline": "44-dreaming-pipeline.svg",
+  "44-dreaming-review-file": "44-dreaming-review-file.svg",
+  "44-dreaming-safety-ladder": "44-dreaming-safety-ladder.svg",
+  "44-dreaming-signal-bar": "44-dreaming-signal-bar.svg",
+  "44-dreaming-swarm-1": "44-dreaming-swarm-1.png",
+  "44-dreaming-swarm-2": "44-dreaming-swarm-2.png",
   "ad-x-90k-delete": "ad-x-90k-delete.svg",
   "claude-md-rules-1": "claude-md-rules-1.svg",
   "dynamic-workflows-1": "dynamic-workflows-1.png",
@@ -84,4 +90,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "swarms-3": "swarms-3.png"
 };
 
-export const SCREENSHOT_COUNT = 79;
+export const SCREENSHOT_COUNT = 85;

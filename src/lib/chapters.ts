@@ -50,6 +50,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 41, slug: '41-send-the-link', title: 'Send the Link, Not the File', subtitle: 'Every Deliverable as a Live Artifact' },
   { number: 42, slug: '42-codex-on-a-loop', title: 'Codex on a Loop', subtitle: 'The Second Opinion, Proof-Checked While You Sleep' },
   { number: 43, slug: '43-codex-saviour', title: 'Codex as Saviour', subtitle: 'When a Second Prior Deletes 90,000 Lines and Hardens What\'s Left' },
+  { number: 44, slug: '44-dreaming', title: 'Dreaming — Memory That Curates Itself', subtitle: 'The Surfacer That Proposes, Never Writes' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -69,7 +70,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part II — Working Memory',
     tagline: 'The handbook every new instance reads on wake-up.',
     intro: 'The model is the genius with amnesia. The vault is the journal you hand it every morning. Skills are the recipe cards. Connectors are the kitchen. Without these four, every session starts from zero.',
-    slugs: ['04-the-vault', '05-skills', '11-build-a-skill', '12-connectors-mcp', '40-prompting-knob'],
+    slugs: ['04-the-vault', '44-dreaming', '05-skills', '11-build-a-skill', '12-connectors-mcp', '40-prompting-knob'],
   },
   {
     key: 'III',
@@ -117,13 +118,13 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'general',
     label: 'General',
     description: "Mental models. The temp-agency frame. Five tools, not fifty. The vault that makes any model durable.",
-    slugs: ['01-killed-my-tabs', '02-five-tools', '03-temp-agency', '04-the-vault', '05-skills', '37-context-files', '17-tips-tricks'],
+    slugs: ['01-killed-my-tabs', '02-five-tools', '03-temp-agency', '04-the-vault', '05-skills', '37-context-files', '44-dreaming', '17-tips-tricks'],
   },
   {
     key: 'claude',
     label: 'Claude',
     description: 'Three doors (Chat / Cowork / Code), the swarm, the modes, sessions, the cheat sheet.',
-    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp', '37-context-files', '38-run-until-done', '40-prompting-knob'],
+    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp', '37-context-files', '38-run-until-done', '44-dreaming', '40-prompting-knob'],
   },
   {
     key: 'security',

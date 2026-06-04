@@ -97,6 +97,15 @@ const WORKFLOWS_SECTIONS: { id: string; label: string }[] = [
   { id: 'appendix', label: 'Reference' },
   { id: 'monday', label: 'Do this Monday' },
 ];
+const DREAMING_SECTIONS: { id: string; label: string }[] = [
+  { id: 'thesis', label: 'The loop pointed inward' },
+  { id: 'pipeline', label: 'The pipeline' },
+  { id: 'refusals', label: 'The 5 refusals' },
+  { id: 'receipts', label: 'The receipts' },
+  { id: 'exception', label: 'The exception to Ch 7' },
+  { id: 'not-for', label: 'When not to' },
+  { id: 'monday', label: 'Do this Monday' },
+];
 // Per-chapter synonyms — model names, company names, competing tools, people,
 // and adjacent topics that readers type into Cmd-K but don't appear in chapter
 // titles/subtitles.
@@ -143,6 +152,7 @@ const CHAPTER_SYNONYMS: Record<string, string> = {
   '41-send-the-link':   'html htmlization html-first link not file pdf dead file living link artifact deliverable deploy private repo github pages vercel afc folderly audit qbr board update brief operator distribution',
   '42-codex-on-a-loop': 'codex openai loop /loop second opinion second prior proof-checking proof check verify worktree worktrees sentry posthog betterstack mcp cron crons design system simplify pet emberling hatch-pet desktop pet cross-vendor skill night shift two priors',
   '43-codex-saviour':   'codex saviour refactor refactoring simplification folderly delete deletion 90000 ninety thousand lines net reduction repositioning swarm bench fermat harvey pauli planck explorer agents veto lens north star four buckets surface split preserve before pruning route registry harden while simplifying second prior verified layers',
+  '44-dreaming':        'dreaming dream memory curation agent memory propose-only surfacer anthropic managed agents memory hygiene self-improve session transcripts verify quote raw jsonl hallucination yield-floor tripwire /learn /dream digest extract review apply-new auto-update memory loop pointed inward',
 };
 
 const RESOURCES_SECTIONS: { id: string; label: string }[] = [
@@ -196,6 +206,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'HTML-ization',          href: `${base}/html-first`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies',                                            keywords: 'html-ization htmlization html-first html first interactive artifact deliverable single-file static page case study clickable afc folderly audit' },
       { type: 'page', title: 'The Sovereign Stack',   href: `${base}/sovereign-stack`, subtitle: 'Open-weights LLMs that survive the deprecation calendar — Ollama, hardware, the heretic question, nano-gpt', keywords: 'sovereign stack open source weights local llm on-device edge ollama lm studio kimi qwen glm deepseek llama mistral grok gpt-oss heretic abliteration nano-gpt nanogpt karpathy mythos hardware mac studio rtx 3090 4090 mythos meta google deepmind anthropic openai xai zhipu alibaba' },
       { type: 'page', title: 'Dynamic Workflows',     href: `${base}/dynamic-workflows`, subtitle: 'Opus 4.8 dynamic workflows — Claude plans, fans out parallel subagents, and verifies its own work',     keywords: 'dynamic workflows workflow opus 4.8 parallel subagents agents ultracode effort generator validator orchestration deep-research agent teams anthropic claude code swarm automated' },
+      { type: 'page', title: 'Dreaming',              href: `${base}/dreaming`,        subtitle: "A local, propose-only twin of Anthropic's Dreaming — digest, surface, verify against the raw transcript, never write", keywords: 'dreaming dream memory curation agent memory propose-only surfacer anthropic managed agents self-improve session transcripts verify quote raw jsonl hallucination yield-floor /learn /dream digest extract review apply-new claude code loop pointed inward' },
       { type: 'page', title: 'GitHub Playbook',       href: `${base}/github-playbook`, subtitle: 'GitHub for non-developers — 5 non-code uses, 8 gh commands, what to ignore, 6 worked examples',                              keywords: 'github gh git non-developer non-coder operator pages readme issues releases discussions linkedin karpathy simonw willison nanogpt nanochat profile readme private repo public repo deploy artifacts' },
       { type: 'page', title: 'Swarms — deep dive',     href: `${base}/swarms`,          subtitle: '10 swarm skills, 7 patterns, the prompts to steal, the 3 things that break',                                                          keywords: 'swarm swarms parallel subagents fan-out pipeline map-reduce adversarial wave orchestration agent-wave-verify swarm-strategic-plan debug-swarm audit bughunter ultrareview cross-trio-audit folderly orchestrator conductor brief canon-lock red-team' },
       { type: 'page', title: 'The 12-rule CLAUDE.md', href: `${base}/claude-md-rules`, subtitle: 'Karpathy at 11%. Operator overlay gets to 3%.',                                                       keywords: 'claude.md rules karpathy twelve 12 conventions context file always-loaded operator overlay' },
@@ -262,6 +273,13 @@ export default function CommandPalette() {
         href: `${base}/dynamic-workflows#${s.id}`,
         keywords: `dynamic workflows opus 4.8 ultracode workflow parallel subagents ${s.label} ${s.id}`.toLowerCase(),
       })),
+      ...DREAMING_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'Dreaming',
+        href: `${base}/dreaming#${s.id}`,
+        keywords: `dreaming dream memory curation propose-only agent memory verify quote anthropic managed agents ${s.label} ${s.id}`.toLowerCase(),
+      })),
     ];
     const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({
       type: 'note',
@@ -277,8 +295,8 @@ export default function CommandPalette() {
   // first-N by array order. Keep this list under 10; render with a "Popular"
   // header so users see they're not search results.
   const POPULAR_HREFS = useMemo(() => [
-    '/dynamic-workflows', '/day-zero', '/cheat-sheet', '/tier-list', '/sovereign-stack',
-    '/html-first', '/showcase', '/glossary',
+    '/dynamic-workflows', '/dreaming', '/day-zero', '/cheat-sheet', '/tier-list',
+    '/sovereign-stack', '/html-first', '/showcase', '/glossary',
   ].map((p) => `${base}${p}`), [base]);
 
   const popularDefaults = useMemo(() => {

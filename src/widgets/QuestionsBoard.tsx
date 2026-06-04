@@ -9,6 +9,27 @@ type Q = {
 };
 
 export const QUESTIONS: Q[] = [
+  // Agents — memory & dreaming  [VLAD: answers below are factual drafts from the design swarm — revoice in your register]
+  {
+    q: "Does Claude Code remember what it learned in past sessions?",
+    short: "Only what got written down — or dreamed.",
+    answer: "Between sessions the agent reads CLAUDE.md, the memory/ files, and skills — but it only knows what was written there. A lesson that stayed in a transcript is gone. 'Dreaming' is the pass that closes that gap: an agent re-reads recent sessions, surfaces candidate lessons, and (in the local build) proposes them for you to save — it never edits memory on its own.",
+    chapters: [
+      { slug: '44-dreaming', label: 'Ch 44 — Dreaming' },
+      { slug: '37-context-files', label: 'Ch 37 — Context files' },
+    ],
+    category: 'agents',
+  },
+  {
+    q: "Is Anthropic's Dreaming safe — does it auto-edit my memory?",
+    short: "Theirs can. The local build can't, on purpose.",
+    answer: "Anthropic's Dreaming (Managed Agents, a research preview as of mid-2026) can auto-update memory or ask for review. The local Claude Code build is deliberately propose-only — it surfaces candidates into a dated review file and structurally cannot write to memory. The most it can do is suggest; you stay the writer via /learn.",
+    chapters: [
+      { slug: '44-dreaming', label: 'Ch 44 — Dreaming' },
+    ],
+    category: 'agents',
+  },
+
   // Getting started
   {
     q: "What's the difference between Chat, Cowork, Claude Code, and the API?",

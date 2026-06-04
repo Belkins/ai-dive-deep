@@ -44,6 +44,31 @@ export const glossary: Record<string, GlossaryEntry> = {
     definition:
       'A scheduling syntax. `0 7 * * 1-5` = 7 AM weekdays. Most modern surfaces hide it behind a UI.',
   },
+  // [VLAD: the four definitions below are factual drafts from the design swarm — revoice in your register. Keys/related-wiring are infra.]
+  Dreaming: {
+    term: 'Dreaming',
+    definition:
+      'An automated memory-curation pass — an agent reads its own recent sessions, finds patterns, and improves its persistent memory. Anthropic ships it in Managed Agents (a research preview as of mid-2026), where it can auto-update memory; the local Claude Code build in <a href="/chapters/44-dreaming">Ch 44</a> is deliberately propose-only — it surfaces candidates and never writes.',
+    related: ['Agent memory', 'Memory curation', 'Propose-only', 'CLAUDE.md'],
+  },
+  'Agent memory': {
+    term: 'Agent memory',
+    definition:
+      'What an agent carries between sessions. In Claude Code it is four layers — CLAUDE.md, memory/, skills, and the session itself. The hard part is not writing it; it is curating it so it stays deduped and true.',
+    related: ['Dreaming', 'Memory curation', 'CLAUDE.md'],
+  },
+  'Memory curation': {
+    term: 'Memory curation',
+    definition:
+      'Keeping the memory layer clean across hundreds of sessions — deduping, verifying each lesson against its source, and holding the index under its bloat ceiling. The failure modes are a confident duplicate write and quiet abandonment.',
+    related: ['Dreaming', 'Agent memory', 'Propose-only'],
+  },
+  'Propose-only': {
+    term: 'Propose-only',
+    definition:
+      'A tool that can read and recommend but structurally cannot write. The safety ceiling, not just the default — the most a propose-only dreaming pass can do is surface a review file a human acts on.',
+    related: ['Dreaming', 'Memory curation', 'Hallucination'],
+  },
   Eval: {
     term: 'Eval',
     definition:

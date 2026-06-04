@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- window chrome -->
+  <rect x="60" y="40" width="1480" height="820" fill="#161B1F" stroke="#26251F" stroke-width="1" rx="10"/>
+  <rect x="60" y="40" width="1480" height="44" fill="#1A1B1F" rx="10"/>
+  <rect x="60" y="70" width="1480" height="14" fill="#1A1B1F"/>
+  <circle cx="84" cy="62" r="6" fill="#FF5F57"/>
+  <circle cx="104" cy="62" r="6" fill="#FEBC2E"/>
+  <circle cx="124" cy="62" r="6" fill="#28C840"/>
+  <text x="800" y="66" fill="#71717A" font-size="13" text-anchor="middle" font-family="JetBrains Mono, monospace">~/.claude/dream/review-2026-06-04-crossproject.md</text>
+
+  <!-- title block -->
+  <text x="100" y="132" fill="#FAFAF7" font-size="26" font-weight="600" font-family="Source Serif 4, Georgia, serif">🌙 Dream review — 2026-06-04 · cross-project</text>
+  <text x="100" y="166" fill="#22D3A0" font-size="16" font-family="JetBrains Mono, monospace">6 sessions · 15 candidates · 15 quote-VERIFIED · 0 dropped · 1 trivial</text>
+  <text x="100" y="192" fill="#AAA79A" font-size="14" font-family="JetBrains Mono, monospace">14 NEW · 1 UPDATE-existing (dup-flagged) · dream wrote NO memory — run /learn on the keepers</text>
+
+  <!-- NEW candidate card -->
+  <g transform="translate(100, 220)">
+    <rect x="0" y="0" width="1340" height="250" fill="#12161A" stroke="#22D3A0" stroke-width="1.5" rx="8"/>
+    <rect x="0" y="0" width="6" height="250" fill="#22D3A0" rx="3"/>
+    <text x="28" y="40" fill="#22D3A0" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">NEW · feedback</text>
+    <text x="28" y="74" fill="#FAFAF7" font-size="20" font-weight="700" font-family="JetBrains Mono, monospace">email-dns-registrar-not-code</text>
+    <text x="28" y="110" fill="#E5E3DA" font-size="15"><tspan fill="#AAA79A" font-family="JetBrains Mono, monospace">Claim · </tspan>Email-auth DNS lives at the registrar, not in code — a repo with no DNS records is a false signal.</text>
+    <text x="28" y="140" fill="#E5E3DA" font-size="15"><tspan fill="#AAA79A" font-family="JetBrains Mono, monospace">How  · </tspan>Diagnosing auth-email delivery? Check DKIM/SPF/DMARC at the registrar dashboard first, not the codebase.</text>
+    <text x="28" y="178" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">VERIFIED QUOTE · session fa236230</text>
+    <rect x="28" y="190" width="1284" height="44" fill="#0E0F11" stroke="#26251F" stroke-width="1" rx="6"/>
+    <text x="44" y="218" fill="#FFB48C" font-size="14" font-style="italic" font-family="Source Serif 4, Georgia, serif">“…DNS lives at the registrar (dashboard-managed), so that was a false signal. The fix is therefore NOT a DNS change.”</text>
+  </g>
+
+  <!-- DUP-flagged card -->
+  <g transform="translate(100, 500)">
+    <rect x="0" y="0" width="1340" height="250" fill="#1A1510" stroke="#FF8E54" stroke-width="1.5" rx="8"/>
+    <rect x="0" y="0" width="6" height="250" fill="#FF8E54" rx="3"/>
+    <text x="28" y="40" fill="#FF8E54" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">⚠ DUP-SUSPECT · feedback</text>
+    <text x="1312" y="40" fill="#FF8E54" font-size="13" text-anchor="end" font-family="JetBrains Mono, monospace">amend, don&#39;t duplicate</text>
+    <text x="28" y="74" fill="#FAFAF7" font-size="20" font-weight="700" font-family="JetBrains Mono, monospace">workflow-concurrent-agent-rate-limit-silent-failure</text>
+    <text x="28" y="110" fill="#E5E3DA" font-size="15"><tspan fill="#AAA79A" font-family="JetBrains Mono, monospace">Dup of · </tspan>feedback_workflow_result_in_output_file.md</text>
+    <text x="28" y="140" fill="#E5E3DA" font-size="15"><tspan fill="#AAA79A" font-family="JetBrains Mono, monospace">Claim  · </tspan>A fan-out that rate-limits at ~21 agents reports “completed” while returning zero results — a masked total failure.</text>
+    <text x="28" y="178" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">VERIFIED QUOTE · session 32ef1090</text>
+    <rect x="28" y="190" width="1284" height="44" fill="#0E0F11" stroke="#26251F" stroke-width="1" rx="6"/>
+    <text x="44" y="218" fill="#FFB48C" font-size="14" font-style="italic" font-family="Source Serif 4, Georgia, serif">“…~21 concurrent schema agents → subagent_tokens:0, all failed… A ‘completed’ notification was actually a failure.”</text>
+  </g>
+
+  <text x="1520" y="864" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 44 · a dream review file — skimmed in two minutes</text>
+</svg>

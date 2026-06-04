@@ -10,6 +10,26 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.7',
+    date: '2026-06-04',
+    tagline: 'Forty-four chapters. Dreaming — the autonomous loop pointed inward: a local, propose-only twin of Anthropic\'s memory feature that surfaces candidate lessons from your own sessions and verifies every quote against the raw transcript, but never writes to memory itself.',
+    shipped: [
+      'New Chapter 44 — "Dreaming — Memory That Curates Itself" (Part II, Working Memory; also in the General + Claude sections). The curation layer Ch 37 leaves open: it teaches the four memory layers but never how memory stays deduped, true, and under its bloat ceiling across hundreds of sessions. Dreaming is that loop — and the one autonomous loop in the book that is structurally forbidden to write.',
+      'New standalone page /dreaming — the operator runbook: the five-stage pipeline (select → digest → extract → verify → review, and only extract is the model), the five refusals, the receipts, the data-locality "exception to Chapter 7" (why you never cloud-cron a local-disk corpus), and when not to run it.',
+      'The thesis — every autonomous loop in the Playbook points outward (the swarm reads the codebase, cron reads the calendar, run-until-done reads the task); Dreaming is the first pointed at the agent\'s own memory, so it gets less rope, not more. Propose-only is the ceiling, not just the default: the most the pipeline can do is write one review file a human acts on via /learn.',
+      'Receipts, stated honestly — two real runs: single-project (3 sessions → 3 candidates → 3 verified) and cross-project (6 sessions across 3 projects → 15 candidates → 15 verified, 0 dropped, 14 net-new, 1 the tool flagged as a duplicate). The failure kept in: it caught the dup it could see (against the portfolio index) and honestly missed two that lived one level down in a project\'s own memory — the design\'s open question #10, confirmed in the wild on run one.',
+      'The method shown — Chapter 44 and the page were themselves planned by an 8-agent design swarm (five perspective architects → reconciler + red-team → synthesis); the red-team caught and corrected an over-stated receipt against disk before it could ship. Two real /workflows screenshots wired in.',
+      'Full 6-surface wiring — chapter + page, Cmd-K entry + section deep-links + synonyms, glossary terms (Dreaming, Agent memory, Memory curation, Propose-only), homepage flagship "Memory" tile, llms.txt + entity graph (author knowsAbout), and this changelog. Chapter-count stat swept 43 → 44 across the user-facing pages.',
+    ],
+    receipts: [
+      { label: 'New chapter', value: 'Ch 44 · 44-dreaming · Part II — Working Memory' },
+      { label: 'New page', value: '/dreaming · pipeline + 5 refusals + receipts + runbook' },
+      { label: 'Chapter count', value: '43 → 44' },
+      { label: 'The run', value: '6 sessions · 15 verified · 0 dropped · 14 net-new · 1 flagged dup' },
+      { label: 'Glossary terms', value: 'Dreaming · Agent memory · Memory curation · Propose-only' },
+    ],
+  },
+  {
     edition: 'Edition 9.6',
     date: '2026-05-28',
     tagline: 'Dynamic Workflows — a standalone page on Opus 4.8\'s headline feature: the swarm that runs itself.',
