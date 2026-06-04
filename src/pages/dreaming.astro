@@ -1,13 +1,4 @@
 ---
-/*
-  /dreaming — flagship deep-dive page, sibling to Chapter 44.
-  SCAFFOLD by the assistant (design swarm, 2026-06-04). Content-freeze altitude:
-  the STRUCTURE, the factual receipts/refusals/pipeline, the figures, and the
-  cross-links are placed. Every reader-visible NARRATIVE string is a marked
-  [VLAD: ...] slot for you to voice. Honesty guards match Ch 44 — do not loosen
-  the receipts ("15 verified, 0 dropped, 14 net-new, 1 tool-flagged dup"; the
-  twist is the disk-verified "caught one it could see, missed two it couldn't").
-*/
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SectionNav from '@/components/SectionNav.astro';
@@ -32,9 +23,12 @@ const navItems = [
   <section class="container-wide pt-16 pb-8">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Memory · Dreaming</div>
     <h1>Dreaming — the loop pointed inward.</h1>
-    {/* [VLAD: hero — 2 short paragraphs. Beat 1: every autonomous loop in this book points OUTWARD — the swarm reads the codebase, cron reads the calendar, run-until-done reads the task. Dreaming is the first one pointed at the agent's own memory. Beat 2: Anthropic shipped Dreaming (Managed Agents, research preview, mid-2026) as a thing that can auto-write memory; I built the local twin deliberately weaker — propose-only — because the one index I can't afford to corrupt is the one I curate by hand. This page is the operator's runbook: the pipeline, the refusals, the receipts, and when not to.] */}
-    <p class="mt-3 text-lg" style="color: rgb(var(--muted))"><em>[VLAD: hero paragraph 1 — the autonomy inversion.]</em></p>
-    <p class="mt-2 text-sm" style="color: rgb(var(--muted))"><em>[VLAD: hero paragraph 2 — propose-only twin; what this page is. The narrative version lives in <a href="/chapters/44-dreaming">Chapter 44</a>.]</em></p>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">
+      Every autonomous loop in this book points outward. The swarm reads the codebase. Cron reads the calendar. Run-until-done reads the task. Dreaming is the first one pointed at the agent's own memory — the one index a wrong write quietly poisons. So it gets less rope, not more.
+    </p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">
+      Anthropic shipped Dreaming in Managed Agents as a thing that can auto-write memory. I built the local Claude Code twin deliberately weaker — propose-only — because the one record I can't afford to corrupt is the one I curate by hand. This page is the operator's runbook: the pipeline, the refusals, the receipts, and when not to. The story lives in <a href="/chapters/44-dreaming">Chapter 44</a>.
+    </p>
   </section>
 
   <section class="container-wide pb-24">
@@ -45,15 +39,16 @@ const navItems = [
         <div id="thesis" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The loop pointed inward</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p><em>[VLAD: the thesis — the autonomy inversion. The book gives the swarm (Ch 6), cron (Ch 7), and run-until-done (Ch 38) more and more rope: Ch 43 let a second prior delete 90,000 lines unsupervised. But all of those point at something external — code, a schedule, a task. Dreaming points at the agent's own memory, the one index a wrong write quietly poisons. So this is the loop that gets LESS rope, not more — on purpose.]</em></p>
-            <PullQuote>{/* [VLAD: pull-quote candidate] Every loop in this book points at something. The swarm reads the codebase. Cron reads the calendar. Run-until-done reads the task. Dreaming is the first one pointed at the agent's own memory — which is exactly why it's the only one I forbade to write. */}<em>[VLAD: pull-quote — the swarm reads the codebase; dreaming reads the swarm.]</em></PullQuote>
+            <p>The book has spent forty-three chapters handing agents more rope. The <a href="/swarms">swarm</a> fans out across a codebase. Cron runs while you sleep. Run-until-done loops until an evaluator says stop. Chapter 43 let a second model delete ninety thousand lines unsupervised. Every one of those points at something external — code, a schedule, a task — where a mistake is visible and reversible.</p>
+            <p>Dreaming points at your <em>memory</em>. The curated index every future session reboots into. A wrong write there isn't a bad diff you revert; it's a confident lie your agent reads back to you for weeks. So this is the loop I gave the least rope, on purpose. It reads everything and writes nothing.</p>
+            <PullQuote>Every loop in this book points at something. The swarm reads the codebase. Cron reads the calendar. Run-until-done reads the task. Dreaming is the first one pointed at the agent's own memory — which is exactly why it's the only one I forbade to write.</PullQuote>
           </div>
         </div>
 
         <div id="pipeline" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The pipeline — five stages, one model</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p><em>[VLAD: one-line intro — digest → extract → verify → review, and the only stage the model touches is extract.]</em></p>
+            <p>Digest, extract, verify, review. The model runs in exactly one of those stages. Everything else is plain deterministic code — which is the only reason a week of 5-megabyte transcripts is even tractable.</p>
 
             <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
               <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>1 · Select <span style="opacity:.6">— code</span></div>
@@ -65,7 +60,7 @@ const navItems = [
             </div>
             <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
               <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>3 · Extract <span style="opacity:.6">— the model</span></div>
-              <p class="m-0">Read-only Explore agents fan out, one per session. Each candidate must cite a verbatim quote from the digest. The agents are propose-only — they have no write tool and structurally cannot touch memory.</p>
+              <p class="m-0">Read-only Explore agents fan out, one per session — OpenClaw logic, the read-broadly-summarize-cite shape from <a href="/chapters/32-archetypes-rick">Rick</a>. Each candidate lesson must cite a verbatim quote from the digest. The agents have no write tool and structurally cannot touch memory.</p>
             </div>
             <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
               <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>4 · Verify <span style="opacity:.6">— the load-bearing gate</span></div>
@@ -82,12 +77,18 @@ const navItems = [
             caption="The pipeline: five stages, and only one of them is the model."
             note="SELECT → DIGEST → EXTRACT → VERIFY → REVIEW. EXTRACT is the only stage where a model runs."
           />
+          <ScreenshotPlaceholder
+            id="44-dreaming-signal-bar"
+            ratio="16/9"
+            caption="Most of a transcript is plumbing. About 16% is the lesson — one session, measured."
+            note="Keep prompts + assistant prose, drop the tool plumbing. 5.8MB → ~24K (~240×)."
+          />
         </div>
 
         <div id="refusals" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The five refusals — the safety architecture</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p><em>[VLAD: one-line intro — the refusals aren't guardrails bolted on; they're the design. The max-destructive action the whole pipeline can take is writing one markdown file.]</em></p>
+            <p>These aren't guardrails bolted onto a writer. They're the architecture. The single most destructive thing the whole pipeline can do is write one markdown file — and that's by design, not by limitation.</p>
             <ol class="space-y-3 list-none p-0 m-0">
               <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--border))' }}><strong>1 — Never auto-write, delete, overwrite, or consolidate a memory.</strong> Propose-only is both the default and the ceiling; the most it can do is surface a review file.</li>
               <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--border))' }}><strong>2 — Never schedule it via cloud cron.</strong> Cloud schedulers run in a remote sandbox with no access to local <code>~/.claude/</code> — a scheduled dream wakes to an empty disk and mis-reports. Local <code>launchd</code> only, still propose-only.</li>
@@ -107,7 +108,7 @@ const navItems = [
         <div id="receipts" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The receipts — two runs, stated honestly</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p><em>[VLAD: narrate. HONESTY GUARD: "15 candidates, 15 verified, 0 dropped, 14 net-new, 1 the tool flagged as a dup." Do NOT write "0 hallucinations" — the fabricated-quote-drops proof was a separate adversarial test.]</em></p>
+            <p>Two real runs the day it was finished. Read the numbers in their honest form: fifteen candidates surfaced, fifteen quote-verified, zero dropped, fourteen net-new, and one the tool itself flagged as a duplicate. Zero dropped means nothing on these runs was fabricated — not that the verifier caught a hallucination. Its anti-hallucination power (fabricated quotes drop, real ones survive the raw re-check) I proved in a separate adversarial test, not here.</p>
             <div class="overflow-x-auto my-2">
               <table class="w-full text-sm border-collapse">
                 <thead>
@@ -148,11 +149,14 @@ const navItems = [
             />
 
             <h3 class="font-semibold mt-6" style={{ color: 'rgb(var(--fg) / 0.95)' }}>The run where it told me the truth about its own blind spot</h3>
-            <p><em>[VLAD: the twist — DISK-VERIFIED version. It caught the duplicate it could see (a workflow rate-limit lesson, flagged ⚠DUP against the home index) and missed two it couldn't (two HubSpot rotation lessons already filed in a project's own detailed memory). The portfolio index it checks holds one-line pointers, not detail, so it couldn't see a lesson filed one level down. It didn't lie — it told the truth about the edge of its own vision. Operator takeaway: dedup-check a candidate against its DESTINATION project's memory before you /learn it.]</em></p>
-            <PullQuote>{/* [VLAD: pull-quote candidate] It caught the duplicate it could see and missed the two it couldn't — they were filed one level down, in a project's own memory. It didn't lie to me; it told me the truth about the edge of its own vision. That's exactly why I let it near my memory. */}<em>[VLAD: pull-quote — the humility was the feature.]</em></PullQuote>
+            <p>On the cross-project run it flagged one duplicate — a workflow rate-limit lesson — against the home index, and missed two: two HubSpot credential-rotation lessons came back as clean net-new, even though I'd saved both by hand days earlier. That looks like a failure. It's the opposite. The tool dedup-checks against the portfolio index, which holds one-line pointers, not detail; the two lessons lived one level down inside a project's own memory, a place that index points at but never reads. It didn't miss a duplicate it could see — it correctly returned "new" for two candidates it had no structural way to know were already filed. And the cost asymmetry is the whole case for propose-only: the worst that miss did was put two suggestions in a file I delete in three seconds. The auto-writing version, with the identical blind spot, writes a confident duplicate into an index I don't find corrupted for three weeks.</p>
+            <Callout type="warn">
+              The operator rule it taught me: before you <code>/learn</code> a candidate, dedup-check it against its <em>destination project's</em> memory, not just the portfolio index. A pointer file can't catch a duplicate that lives inside a sub-project.
+            </Callout>
+            <PullQuote>It caught the duplicate it could see and missed the two it couldn't. It didn't lie to me; it told me the truth about the edge of its own vision. That's exactly why I let it near my memory.</PullQuote>
 
             <p class="font-semibold mt-6" style={{ color: 'rgb(var(--fg) / 0.95)' }}>The method, shown</p>
-            <p><em>[VLAD: optional — this page (and Chapter 44) was itself planned by a swarm: five perspective agents in parallel, then a reconciler + red-team, then synthesis. Same read-only fan-out /dream points at session transcripts, pointed here at the book. The red-team caught a real error in the brief — it corrected an over-stated receipt against disk. The fan-out is the method, not just the subject.]</em></p>
+            <p>This page and Chapter 44 were themselves planned by a swarm: five perspective agents in parallel, then a reconciler, then a red team whose job was to attack the result. The red team caught me overstating one of the receipts above and made me verify it against disk — the exact discipline this page preaches, applied to itself. The fan-out below is the method, not just the subject.</p>
             <ScreenshotPlaceholder
               id="44-dreaming-swarm-1"
               ratio="1444/386"
@@ -163,7 +167,7 @@ const navItems = [
               id="44-dreaming-swarm-2"
               ratio="1470/386"
               caption="The /workflows view: Propose → Stress-test → Synthesize. Generate, adversarially verify, then synthesize."
-              note="Eight agents, one answer — the red-team stage is where an over-stated receipt got corrected against disk."
+              note="Eight agents, one answer — the red-team stage is where the overstated receipt got caught."
             />
           </div>
         </div>
@@ -171,9 +175,9 @@ const navItems = [
         <div id="exception" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The exception to Chapter 7</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p><em>[VLAD: the contrarian beat. Chapter 7 ("Scheduled Tasks") teaches "make AI work while you sleep" — put it on a cron. Dreaming is the obvious cron candidate (run it nightly), and refusal #2 forbids exactly that. Reconcile it with the data-locality rule: schedule a task where its data lives, or don't schedule it. A cloud scheduler wakes in a sandbox that can't see your local ~/.claude/ disk, so it reports a confident FALSE GREEN — "0 candidates" — on an empty disk. Dreaming runs locally (launchd) or not at all.]</em></p>
+            <p><a href="/chapters/07-cron">Chapter 7</a> tells you to make AI work while you sleep — put it on a cron. Dreaming is the obvious nightly cron, and refusal number two forbids exactly that. The two aren't in conflict; they're resolved by a rule the cron chapter doesn't have to state because most tasks read cloud data: <strong>schedule a task where its data lives, or don't schedule it.</strong></p>
             <Callout type="warn">
-              {/* [VLAD: voice this] */}The rule that resolves it: <strong>schedule a task where its data lives, or don't schedule it.</strong> A cloud cron pointed at a local-disk corpus wakes to an empty disk and reports success on nothing — the most dangerous kind of green.
+              A cloud scheduler runs in a sandbox that can't see your local <code>~/.claude/</code> disk. Point a cloud cron at a local-disk corpus and it wakes to an empty disk and reports success on nothing — a confident false green, the most dangerous kind. Dreaming runs locally, on <code>launchd</code>, or it doesn't run.
             </Callout>
             <p class="text-sm" style={{ color: 'rgb(var(--muted))' }}>Two-way link: <a href="/chapters/07-cron">Ch 7 — Scheduled Tasks</a> · <a href="/chapters/44-dreaming">Ch 44 — Dreaming</a>.</p>
           </div>
@@ -182,21 +186,21 @@ const navItems = [
         <div id="not-for" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">When not to run it</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p><em>[VLAD: when NOT to. Don't dream a fresh/empty corpus (nothing to surface). Don't dream the live session. Don't dream "everything" after a long gap — window it. And the deeper one: don't promote it to auto-write until you've earned it.]</em></p>
+            <p>Don't dream a fresh or empty corpus — there's nothing to surface. Don't dream the live session; it's still being written. Don't dream "everything" after a long gap — window it, or you pay for a swarm to convene on a stale pile for near-zero yield. And don't promote it to auto-write before you've earned it.</p>
             <Callout type="note">
-              {/* [VLAD: voice] */}Auto-write ("apply-new") is earned, not assumed — only after the memory frontmatter is normalized to one schema, the ledger is proven stable, and ~30 days of accept/reject data show the extractor is right at least 80% of the time. Until then it surfaces; you write.
+              Auto-write ("apply-new") is earned, not assumed — only after the memory frontmatter is normalized to one schema, the ledger is proven stable, and ~30 days of accept/reject data show the extractor is right at least 80% of the time. Until then it surfaces; you write.
             </Callout>
-            <p><em>[VLAD: the failure mode that actually kills it — quiet abandonment. The yield-floor tripwire: three runs in a row that surface zero new candidates and it prints "DREAM IS PROPOSING NOTHING," so abandonment is a decision, not a drift.]</em></p>
+            <p>The failure mode that actually kills a tool like this isn't a crash — it's quiet abandonment. It surfaces nothing useful for a few weeks and you drift away from running it. So it ships a yield-floor tripwire: three runs in a row that surface zero new candidates and it prints "DREAM IS PROPOSING NOTHING — extractor may be mis-tuned or the corpus is saturated." Now abandonment is a decision, not a drift.</p>
           </div>
         </div>
 
         <div id="monday" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p><em>[VLAD: the smallest first step a reader takes. Don't build the whole pipeline — start with the principle: at the end of a heavy session, have the agent re-read the transcript and propose, in writing, what's worth remembering — and make it cite the exact line for each. You verify, you /learn the keepers. That's dreaming, by hand, before you automate it.]</em></p>
-            <PullQuote>{/* [VLAD: pull-quote candidate — closer] The max-destructive thing this whole pipeline can do is write one markdown file. That's not a limitation. That's the design. */}<em>[VLAD: closer pull-quote.]</em></PullQuote>
+            <p>Don't build the pipeline yet. Steal the principle. At the end of your next heavy session, tell the agent: re-read this whole transcript and propose, in writing, what's worth remembering — and make it quote the exact line for each one. Then you read the list, throw out the noise, and save the keepers yourself. That's dreaming, by hand, before you ever automate it — and it's the version that teaches you whether the automated one is worth building for how you actually work.</p>
+            <PullQuote>The most destructive thing this whole pipeline can do is write one markdown file. That's not a limitation. That's the design.</PullQuote>
             <p class="mt-6 text-sm" style={{ color: 'rgb(var(--muted))' }}>
-              Related: <a href="/chapters/44-dreaming">Ch 44 — Dreaming (the narrative)</a> · <a href="/chapters/37-context-files">Ch 37 — the memory layers it curates</a> · <a href="/chapters/03-temp-agency">Ch 3 — why it forgets you</a> · <a href="/swarms">The Swarm — the fan-out it runs on</a> · <a href="/chapters/38-run-until-done">Ch 38 — the loop family</a> · <a href="/chapters/07-cron">Ch 7 — and why not to cloud-cron this one</a>
+              Related: <a href="/chapters/44-dreaming">Ch 44 — Dreaming (the narrative)</a> · <a href="/chapters/37-context-files">Ch 37 — the memory layers it curates</a> · <a href="/chapters/03-temp-agency">Ch 3 — why it forgets you</a> · <a href="/chapters/32-archetypes-rick">Ch 32 — Rick &amp; OpenClaw</a> · <a href="/swarms">The Swarm — the fan-out it runs on</a> · <a href="/chapters/07-cron">Ch 7 — and why not to cloud-cron this one</a>
             </p>
           </div>
         </div>

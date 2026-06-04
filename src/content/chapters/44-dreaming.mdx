@@ -1,13 +1,11 @@
 ---
 number: 44
 slug: "44-dreaming"
-# [VLAD: title/subtitle are candidates from the design swarm — confirm or replace]
 title: "Dreaming — Memory That Curates Itself"
 subtitle: "The Surfacer That Proposes, Never Writes"
-# [VLAD: tldr below is a factual draft (it doubles as the meta description + the TL;DR card + the llms.txt entry). Revoice in your register.]
-tldr: "Anthropic shipped Dreaming in Managed Agents — an agent that reads its own past sessions and can auto-update its memory. I built the local, propose-only twin for Claude Code: it digests sessions outside the model, fans out read-only agents that each must cite a verbatim quote, re-verifies every quote against the raw transcript, and writes a review file I skim — it never writes to memory itself. Every loop in this book points outward; this is the first one pointed at the agent's own memory, which is exactly why it's the one I forbade to write."
-keyConcepts: ["Dreaming", "agent memory", "memory curation", "propose-only", "verify gate", "yield-floor tripwire", "Managed Agents"]
-readingMinutes: 11
+tldr: "Dynamic workflows impressed me by holding a whole task's memory in a two-hundred-line script. That made me ask the harder question: what holds MY memory across hundreds of sessions? Rick's been dreaming on a Mac mini for months — OpenClaw logic, multiple models, dated files. Anthropic shipped Dreaming as an agent that writes its own memory. I built the Claude Code version deliberately weaker: propose-only. It digests sessions outside the model, fans out read-only agents that each cite a verbatim quote, re-verifies every quote against the raw transcript, and writes a review file I skim — it never writes to memory itself. Memory is the moat, and the moat is a lot of work."
+keyConcepts: ["Dreaming", "agent memory", "memory curation", "propose-only", "verify gate", "yield-floor tripwire", "OpenClaw", "Managed Agents"]
+readingMinutes: 12
 draft: false
 ---
 
@@ -16,80 +14,58 @@ import PullQuote from '@/components/PullQuote.astro';
 import Callout from '@/components/Callout.astro';
 import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
-{/*
-  ============================================================================
-  SCAFFOLD — built by the assistant (design swarm, 2026-06-04). Content-freeze:
-  structure + factual receipts + figure slots are placed; the VOICE is yours.
-  Fill each {/* [VLAD: ...] *​/} slot and delete this banner before shipping.
-  Honesty guards baked into the receipts below — do NOT loosen them:
-   • Say "15 verified, 0 dropped, 14 net-new, 1 the tool flagged as a dup."
-     Do NOT say "15/15, 0 hallucinations." The fabricated-quote-drops proof
-     was a SEPARATE adversarial test, not these two runs.
-   • The twist is the DISK-VERIFIED version: it CAUGHT the dup it could see
-     (the workflow rate-limit one, ⚠DUP vs the home index) and MISSED two it
-     couldn't (the HubSpot ones, filed in a sub-project's memory). Don't tell
-     the looser "it flagged HubSpot as a dup" version — disk says it did not.
-   • Date-stamp Anthropic's feature ("as of mid-2026, a research preview").
-   • "~16% signal" is ONE measured session — hedge it.
-  ============================================================================
-*/}
+I have been running [dynamic workflows](/dynamic-workflows) since Opus 4.8 shipped them, and the thing that actually impressed me wasn't the parallelism. Everyone fixates on the swarm — dozens of agents at once, the token bill, the speed. That's not the part that stayed with me. The part that stayed with me is that the *script* held the memory.
 
-{/* ───────────────────────── BEAT 0 — COLD OPEN ───────────────────────── */}
-## The week I learned things I can't name
+Watch one run closely. Claude writes a few hundred lines of JavaScript that plans the job, then fans out a crowd of micro-agents. Each agent spins up, does one read, returns one quote-backed finding, and vanishes — it remembers nothing, because it doesn't have to. The plan, the intermediate results, the running state, all of it lives in the script. Dozens of disposable agents, coordinated by a file small enough to read on one screen, and the file is the only thing that remembers anything. The orchestration is genuinely impressive, and it's impressive for a reason nobody puts on the announcement slide: it solved working memory for a single task by writing it down in code and throwing the agents away.
 
-{/* [VLAD: cold open. The two real facts to land the feeling: my MEMORY.md index sits at 170/200 lines (85% of the ceiling I set myself), and 483 session transcripts were written in the last 7 days (995 all-time). No human reads 483 transcripts. So every lesson I learned this week and didn't stop to write down is already gone. Callback to Ch 3 — the temp agency that forgets you every morning.] */}
+Then the script finishes and gets deleted. The task's memory was perfect and temporary.
 
-<PullQuote>{/* [VLAD: pull-quote candidate] 483 transcripts a week. No human reads 483 transcripts. So every lesson I didn't stop to write down this week is already gone. */}</PullQuote>
+<PullQuote>A dynamic workflow solves a task's memory by holding it in two hundred lines of JavaScript. Then it throws the script away. So what's holding mine?</PullQuote>
 
-{/* ───────────────────────── BEAT 1 — NAME THE ENEMY ──────────────────── */}
+That's the question this chapter is about. A workflow remembers a job. The vault remembers a project. But the thing I learn across hundreds of sessions — the gotchas, the corrections, the "we tried that, don't do it again" — what holds *that*, after the script for each job is gone? For a long time the honest answer was: nothing did.
+
 ## The enemy isn't forgetting. It's curation.
 
-{/* [VLAD: forgetting was the Ch 37 problem — the four memory layers (CLAUDE.md / memory/ / skills / session). That's solved. The UNSOLVED problem is curation across hundreds of sessions: how does the memory layer stay deduped, true, and under its bloat ceiling? Ch 37 says memory "updates when something worth remembering happens" — and stops there. This chapter is the part it stopped at.] */}
+We already solved forgetting, three different ways. [Chapter 3](/chapters/03-temp-agency) named the problem — the model is a temp agency, it forgets you every morning. [Chapter 4](/chapters/04-the-vault) gave you the fix — the vault is the journal you hand it back on wake-up. [Chapter 37](/chapters/37-context-files) gave you the architecture — the four layers, CLAUDE.md and `memory/` and skills and the session, and which one wins when they disagree.
 
-{/* ───────────────────────── BEAT 2 — THE TURN ────────────────────────── */}
-## Anthropic shipped it. Then it tried to write my memory.
+Every one of those is about *writing* memory and *handing it over*. None of them answers the question that shows up once you've actually been doing this for a year: across hundreds of sessions, how does that memory stay *curated* — deduplicated, verified, true, and under its own ceiling?
 
-{/* [VLAD: the turn. Anthropic's Dreaming (Managed Agents, a research preview AS OF MID-2026) reads an agent's own sessions, finds patterns, self-improves memory — and can auto-update it or ask for review. It's on-thesis: the fourth "define success and walk away" move after /goal, Outcomes, and multi-agent orchestration (your own research note in notes/trends/ called this out). I wanted Dreaming. I did NOT want an autonomous writer pointed at the one curated index I can't afford to corrupt. So I built the local twin, deliberately weaker — propose-only. A surfacer, not a writer.] */}
+Here are my real numbers. My `MEMORY.md` index sits at 170 of the 200 lines I capped it at — 85% full, the brake already engaged. I wrote 483 session transcripts last week. Nine hundred and ninety-five all-time. No human reads 483 transcripts. So every lesson I learned this week and didn't stop to hand-write into a memory file is, right now, already gone — sitting in a transcript no one will ever open.
 
-<PullQuote>{/* [VLAD: pull-quote candidate] Anthropic shipped Dreaming as a thing that writes its own memory. I built the same thing, deliberately weaker — a surfacer, not a writer. The most dangerous tool you can point at a 170-line curated index is an autonomous writer. */}</PullQuote>
+Forgetting was solved. Curation wasn't. That's the gap.
 
-{/* ───────────────────────── BEAT 3 — THE BUILD ───────────────────────── */}
+## Rick's been dreaming on a Mac mini for months
+
+Here's what's funny: I wasn't starting from zero. I'd just never made it safe.
+
+[Rick](/chapters/32-archetypes-rick) — my agent platform — has an OpenClaw, the research-and-synthesis archetype, the one built to read broadly, summarize, and cite. I've had one running on a Mac mini in the corner of the office for months, on a rotation of models rather than a single one, doing a version of exactly this every night: it reads back over what happened that day, looks for the patterns, and writes a dated file into a `dreams/` folder. It has been dreaming, quietly, on local hardware, the whole time. The idea was never the hard part. I had a working one humming in the next room.
+
+Then Anthropic shipped Dreaming in Managed Agents — a research preview, as of mid-2026 — an agent that reads its own past sessions, finds patterns, and can **auto-update its own memory**. That's the fourth time in ninety days they've shipped the same move: define success, then walk away. `/goal` was one. Outcomes was another. The swarm in [Chapter 38](/chapters/38-run-until-done) was a third. Dreaming is the fourth, and it pointed the autonomy somewhere new — at the agent's own memory. Seeing a frontier lab ship it was the validation that the idea was right.
+
+It was also exactly where I got off the train.
+
+The Mac-mini Rick writes dream *files* — I read them, I decide. Anthropic's version writes the *memory*. And the single most dangerous thing you can hand an autonomous writer is the one curated index you cannot afford to corrupt. So when I built the Claude Code version, I built it deliberately weaker than the two things that inspired it: propose-only. A surfacer, not a writer.
+
+<PullQuote>Anthropic shipped Dreaming as a thing that writes its own memory. I built the same thing on purpose weaker — a surfacer, not a writer. The most dangerous tool you can point at a curated index is an autonomous one.</PullQuote>
+
 ## Four pieces, and the model only touches one
 
-{/* [VLAD: voice the walk through the four pieces. Factual skeleton you can lean on:
-   1. SELECT — pick recent sessions deterministically: skip the LIVE/newest one (still being written) and any already-dreamed (a ledger keyed on mtime+bytes). Window + cap (default 5 sessions / 7 days). Never "all."
-   2. DIGEST — a plain Python pass turns a 5.8 MB session .jsonl into ~24K chars by keeping human prompts + assistant prose and dropping the tool plumbing. This happens OUTSIDE the agents because a 5 MB transcript cannot enter an agent — that's Rule 5: code answers, the model judges.
-   3. EXTRACT — read-only Explore agents fan out, one per session. Each candidate MUST cite a verbatim quote. The agents are propose-only; they structurally cannot write.
-   4. VERIFY — the load-bearing gate. Re-grep each cited quote against the RAW .jsonl (not the lossy digest the agent read). Real quotes survive; invented ones drop.
-   Then it writes a dated review file and updates the ledger. It never touches memory/.] */}
+The whole thing is four pieces — digest, extract, verify, review — and the model runs in exactly one of them.
+
+**Digest** is the load-bearing move, and it's plain Python, not a model. The largest session transcript I had was 5.8 megabytes. A 5.8-megabyte file cannot enter an agent — it doesn't fit, and it shouldn't try. So before any model sees anything, code strips the transcript down: keep the human prompts and the assistant's prose, drop the tool calls, the tool results, the thinking blocks, the system reminders. In the one session I measured, the signal — the actual reasoning — was about 16% of the mass. `toolUseResult` alone was 732 kilobytes of it. What's left after the strip is roughly 24,000 characters, small enough to hand to an agent. That's the rule the whole book keeps coming back to: the model is for judgment, code is for everything code can do.
+
+**Extract** is the one model stage, and it's OpenClaw logic — the same read-broadly-summarize-cite shape Rick's been running on the Mac mini. Read-only Explore agents fan out, one per session. Each candidate lesson must quote a real line from the transcript. The agents have no write tool. They cannot touch memory if they tried.
+
+**Verify** is the gate that earns the whole thing. The agent read the *digest* — a lossy, truncated summary — so "grounded in the digest" is not the same as "grounded in what happened." Before any candidate survives, its quote gets re-checked against the *raw* `.jsonl`, decode-aware, because the transcript stores text JSON-escaped and a naive search would miss it. Real quotes survive. Invented ones die.
+
+**Review** is the only output: a dated `review-<date>.md` where each survivor is a claim, a why, a how-to-apply, and the verified quote with its source session. Then the ledger updates so nothing gets dreamed twice. It never writes to `memory/`. I do, with the existing `/learn` skill.
 
 <ScreenshotPlaceholder
   id="44-dreaming-pipeline"
   ratio="16/9"
-  caption="The pipeline: five stages, and only one of them is the model."
-  note="SELECT → DIGEST → EXTRACT → VERIFY → REVIEW. EXTRACT is the only stage where a model runs; the rest is deterministic code."
+  caption="The pipeline: five stages, and only EXTRACT is the model."
+  note="SELECT → DIGEST → EXTRACT → VERIFY → REVIEW. Four of five are deterministic code."
 />
-
-<PullQuote>{/* [VLAD: pull-quote candidate — Rule 5] A 5-megabyte transcript cannot enter an agent. So the model never reads the transcript — code does. The model only judges what code hands it. That's the whole trick. */}</PullQuote>
-
-<Callout type="note">
-{/* [VLAD: the verify-gate lesson, in your voice] "Grounded in the digest" is not the same as "grounded in what happened." The agent read a truncated summary, so before any candidate is trusted, its quote is re-checked against the raw transcript — decode-aware, because the .jsonl stores text JSON-escaped and a naive grep would false-negative. */}
-</Callout>
-
-{/* ───────────────────────── BEAT 4 — THE PROOF ───────────────────────── */}
-## Two runs, stated honestly
-
-{/* [VLAD: narrate the table. HONESTY GUARD (see banner): "15 candidates, 15 verified, 0 dropped, 14 net-new, 1 the tool flagged as a dup." Do NOT write "0 hallucinations." */}
-
-| Run | Sessions | Candidates | Verified | Dropped | Net-new | Tool-flagged dup | Missed dup | Trivial (correctly nothing) |
-|---|---|---|---|---|---|---|---|---|
-| Single-project (same day) | 3 | 3 | 3 | 0 | 3 | 0 | 0 | 1 — "how many LOC in 30 days lol" |
-| Cross-project | 6 | 15 | 15 | 0 | 14 | 1 | 2 | 1 — an Obsidian session |
-
-{/* [VLAD: the digest economics, if you want the "why this is even possible" beat:
-   • largest single transcript: 5.8 MB · digest cap: ~24,000 chars (~240× compression)
-   • ~16% of conversational mass is signal — ONE measured session, hedge it
-   • toolUseResult alone was 732 KB in that 5 MB session — the biggest droppable block ] */}
 
 <ScreenshotPlaceholder
   id="44-dreaming-signal-bar"
@@ -98,70 +74,77 @@ import GlossaryTerm from '@/components/GlossaryTooltip.astro';
   note="Keep prompts + assistant prose, drop tool_use / tool_result / thinking. 5.8MB → ~24K (~240×)."
 />
 
+<PullQuote>A five-megabyte transcript cannot enter an agent. So the model never reads the transcript — code does. The model only judges what code hands it. That's the whole trick.</PullQuote>
+
+## Two runs, stated honestly
+
+I ran it twice the day I finished it.
+
+| Run | Sessions | Candidates | Verified | Dropped | Net-new | Tool-flagged dup | Missed dup | Trivial (correctly nothing) |
+|---|---|---|---|---|---|---|---|---|
+| Single-project | 3 | 3 | 3 | 0 | 3 | 0 | 0 | 1 — "how many LOC in 30 days lol" |
+| Cross-project | 6 | 15 | 15 | 0 | 14 | 1 | 2 | 1 — an idle session |
+
+Read those numbers carefully, because the honest version matters here. Fifteen candidates surfaced, fifteen quote-verified, zero dropped, fourteen net-new, and one the tool itself flagged as a duplicate of a memory I already had. Zero dropped means nothing on *that run* was fabricated — it does not mean the verifier caught a hallucination, because there wasn't one to catch. The anti-hallucination power is real, but I proved it separately: I fed the verifier fabricated quotes that read perfectly plausible, and watched every one of them drop. Real quotes survive the raw-transcript re-check. Invented ones don't. That's the test that earns the gate, and it's a different test than these two runs.
+
 <ScreenshotPlaceholder
   id="44-dreaming-review-file"
   ratio="16/9"
-  caption="The entire output on one screen — a human skims it in two minutes."
-  note="A dated review-<date>.md: each candidate is Claim / Why / How-to-apply / the verified quote + source session, grouped NEW vs ⚠DUP."
+  caption="The entire output on one screen — I skim it in two minutes."
+  note="A dated review file: each candidate is Claim / Why / How-to-apply / the verified quote + source session, grouped NEW vs ⚠DUP."
 />
 
-{/* ─────────────────── BEAT 4.5 — THE METHOD, SHOWN ─────────────────────
-    The two screenshots below are real: the /workflows view of the swarm that
-    PLANNED this very chapter — five perspective agents in parallel, then a
-    reconciler + red-team, then synthesis. Same read-only fan-out shape /dream
-    uses to read sessions, pointed here at the book instead of the transcripts.
-    [VLAD: optional — a sentence noting "this chapter was itself planned by a
-    swarm; the fan-out is the method, not just the subject."] */}
+There's a receipt hiding in how this chapter got made, too. The plan for it — format, outline, the honesty guards you just read — came out of a swarm: five agents arguing different angles, then a reconciler, then a red team whose entire job was to attack the result. The red team caught me overstating one of these numbers and made me check it against disk. The thing this chapter is about — verify against ground truth, not the summary — is the thing that saved the chapter from shipping a wrong receipt about itself.
 
 <ScreenshotPlaceholder
   id="44-dreaming-swarm-1"
   ratio="1444/386"
-  caption="The fan-out that planned this chapter — five perspective agents running in parallel."
-  note="Each agent carries its own lens (narrative-fit, receipts, teaching, positioning, connective-tissue); the same read-only fan-out /dream points at session transcripts."
+  caption="The fan-out that planned this chapter — five perspective agents in parallel."
+  note="The same read-only fan-out /dream points at session transcripts, pointed here at the book."
 />
 
 <ScreenshotPlaceholder
   id="44-dreaming-swarm-2"
   ratio="1470/386"
-  caption="The /workflows view: Propose → Stress-test → Synthesize, eight agents, one answer."
-  note="Propose (5 agents) done; Stress-test (reconciler + red-team) and Synthesize follow. Generate, then adversarially verify, then synthesize."
+  caption="Propose → Stress-test → Synthesize. Generate, adversarially verify, then synthesize."
+  note="Eight agents, one answer — the red-team stage is where the overstated receipt got caught."
 />
 
-{/* ───────────────────────── BEAT 5 — THE TWIST ───────────────────────── */}
 ## The run where it told me the truth about its own blind spot
 
-{/* [VLAD: the soul of the chapter — DISK-VERIFIED version (see banner). On the cross-project run the tool CAUGHT the duplicate it could see — a workflow rate-limit lesson it flagged ⚠DUP against the home index. And it MISSED two it couldn't: two HubSpot credential-rotation candidates came back as clean NEW, even though I'd saved those exact lessons days earlier inside the Partner-Connector project's own detailed memory. It didn't lie. The portfolio index it dedup-checks against holds one-line pointers, not the detail, so it structurally couldn't see a lesson filed one level down. The humility was the feature: the worst thing a propose-only tool does is suggest a dup I delete in three seconds — not corrupt an index I discover broken in three weeks.] */}
+The second run is the one that made me trust it, and I want to walk the logic carefully because it's the opposite of what it looks like at a glance.
+
+On the cross-project run, the tool flagged one duplicate — a lesson about a fan-out workflow that rate-limits and reports "completed" while having done nothing — against my home index. Good catch. And it *missed* two: two lessons about rotating HubSpot credentials came back as clean, net-new candidates. They were not net-new. I'd saved both of them, by hand, days earlier.
+
+At a glance that's a failure. It isn't, and the reason is the whole argument for propose-only.
+
+The tool deduplicates against the portfolio index — `MEMORY.md`, the one-line-per-memory pointer file. The portfolio index holds pointers, not detail. The two HubSpot lessons lived one level down, inside a single project's own memory file — a place the portfolio index points *at* but never *reads*. So the tool did not fail to notice a duplicate it could see. It correctly returned "new" for two candidates it had no structural way to know were already filed. The miss was a function of where I'd put the originals, not a flaw in its judgment. It told me the exact truth about the edge of its own vision.
+
+Now hold that next to the cost. The worst thing that miss did was put two suggestions in a review file that I delete in three seconds. The worst thing the *auto-writing* version does, with the identical blind spot, is write a confident duplicate into an index I don't discover is corrupted for three weeks. Same blind spot. Two completely different blast radii. One of them I can see and dismiss; the other I find out about long after it's done its damage.
 
 <Callout type="warn">
-{/* [VLAD: the operator takeaway] Always dedup-check a candidate against its DESTINATION project's memory before you /learn it — a portfolio-level pointer index can't catch a duplicate that lives inside a sub-project. (This was the design's open question #10, confirmed in the wild on run one.) */}
+The operator takeaway, the one I now follow: before you `/learn` a candidate, dedup-check it against its *destination project's* memory, not just the portfolio index. A pointer file can't catch a duplicate that lives inside a sub-project. This was the design's open question number ten, and run one confirmed it in the wild.
 </Callout>
 
-<PullQuote>{/* [VLAD: pull-quote candidate] It caught the duplicate it could see and missed the two it couldn't — they were filed one level down, in a project's own memory. It didn't lie to me; it told me the truth about the edge of its own vision. That's exactly why I let it near my memory. */}</PullQuote>
+<PullQuote>It caught the duplicate it could see and missed the two it couldn't — they were filed one level down. It didn't lie to me. It told me the truth about the edge of its own vision. That's exactly why I let it near my memory.</PullQuote>
 
-{/* ───────────────────────── BEAT 6 — THE THESIS ──────────────────────── */}
-## Memory tools don't crash. They get abandoned.
+## Memory is the moat. The moat is a lot of work.
 
-{/* [VLAD: the closing law. Memory-hygiene tooling doesn't die in a crash — it dies by quiet abandonment, surfacing nothing useful until you stop running it. So it ships with a yield-floor tripwire: three consecutive runs that surface zero NEW candidates and it prints "DREAM IS PROPOSING NOTHING — extractor may be mis-tuned or the corpus is saturated," which turns abandonment into a decision instead of a drift. And auto-write is EARNED, not assumed: only after the frontmatter is normalized to one schema, the ledger is proven stable, and ~30 days of accept/reject data show the extractor is right ≥ 80% of the time. Tie back to the four Anthropic manifestations — the industry is converging on walk-away autonomy; the discipline is knowing which job you don't hand it yet. The loop pointed at the agent's own memory is that job.] */}
+Here's the part I'd keep if you keep nothing else from this chapter.
+
+Everyone has the same model. You, me, your competitor down the street — we are all renting the same Opus by the token. The frontier model is not a moat; it's a commodity with a price list. What compounds, what actually separates one operator from another a year in, is the curated record their sessions leave behind. Your memory layer is the only part of your stack the vendor can't ship to your competitor next Tuesday. **Memory is the moat.**
+
+And the moat is a lot of work. That's not a footnote — it's the catch. [Chapter 3](/chapters/03-temp-agency) told you the model forgets you. [Chapter 4](/chapters/04-the-vault) gave you the vault to hand it back. [Chapter 37](/chapters/37-context-files) gave you the layers and the rules. This chapter is the maintenance loop that keeps all of that from quietly rotting while you're busy shipping. The operator who wins with AI isn't the one with the cleverest prompt or the biggest context window. It's the one whose memory is the deepest and the cleanest a year from now. Memory is the key to succeeding with this — full stop.
+
+Which is why the failure mode I built against isn't a crash. Memory tools don't crash; they get abandoned. They quietly surface nothing useful for a few weeks until you stop running them, and you never decide to stop — you just drift. So this one has a yield-floor tripwire: three runs in a row that surface zero new candidates and it prints, in plain text, *"DREAM IS PROPOSING NOTHING — extractor may be mis-tuned or the corpus is saturated."* Now abandonment is a decision I make on purpose, not a drift I sleepwalk into.
+
+And auto-write — letting it skip the review file and write memory itself — is earned, not assumed. It gets that promotion only after the frontmatter is normalized to one schema, the ledger is proven stable, and thirty days of accept/reject data show the extractor is right at least 80% of the time. Until then it surfaces, and I write. The loop pointed at your own memory is the one job you don't hand to autonomy yet — precisely because it's the one place a confident mistake is most expensive.
 
 <ScreenshotPlaceholder
   id="44-dreaming-safety-ladder"
   ratio="16/9"
   caption="Propose-only isn't the default. It's the ceiling — nailed to the floor."
-  note="Floor = surface a review file (where it lives AND the max it can do). Auto-write is greyed, earned later. Auto-delete/overwrite: no code path exists."
+  note="Floor = surface a review file (where it lives AND its max). Auto-write is earned later. Auto-delete/overwrite: no code path exists."
 />
 
-<PullQuote>{/* [VLAD: pull-quote candidate — closer] The max-destructive thing this whole pipeline can do is write one markdown file. That's not a limitation. That's the design. */}</PullQuote>
-
-## What I'd keep if you keep nothing else
-
-{/* [VLAD: distill the transferable lessons in your voice. Lead with the NET-NEW ones (the ones this chapter adds, not restatements of Rule 5):
-   • Verify against ground truth — the raw transcript — not the lossy summary the model read.
-   • Propose-only is the safety CEILING, not just the default: "auto-update with human review" degrades to "auto-update" the first busy week; only structural impossibility survives.
-   • Hygiene tools die by quiet abandonment — so build a yield-floor tripwire that announces its own irrelevance.
-   And the spine ones you can restate briefly: memory is the moat not the model; do the heavy deterministic work outside the model (Rule 5); the human + the existing /learn skill stay the writer.] */}
-
-{/* Cross-links so this chapter is a node, not a dead end:
-   → Ch 37 (the four memory layers this curates) · Ch 3 (why it forgets you) ·
-     Ch 4 (the vault you write to) · Ch 6 (the fan-out it runs on) ·
-     Ch 7 (the "while you sleep" promise — and why NOT cloud-cron this one) ·
-     Ch 38 (the loop family) · /dreaming (the operator runbook + the 5 refusals). */}
+<PullQuote>The most destructive thing this entire pipeline can do is write one markdown file. That's not a limitation. That's the design.</PullQuote>
