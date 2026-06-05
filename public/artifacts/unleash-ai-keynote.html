@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Build an AI Generalist Skill Set — Vlad Podoliako · Unleash AI 2026</title>
+<meta name="description" content="Keynote deck — Vlad Podoliako at Unleash AI for Business Summit. 10 slides, entry-level, from the operator who wrote the 44-chapter Ultimate AI Dive Deep." />
+<meta name="theme-color" content="#0E0F11" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-950:#08090B;
+    --ink-900:#0E0F11;
+    --ink-800:#1A1916;
+    --ink-700:#26251F;
+    --ink-600:#3A3933;
+    --ink-500:#56544B;
+    --ink-400:#8C897C;
+    --ink-300:#C9C6B8;
+    --ink-200:#E5E3DA;
+    --ink-100:#F2F1EC;
+    --ink-50:#FAFAF7;
+    --flame:#FF6B2C;
+    --flame-deep:#E0521A;
+    --flame-soft:#FFB48C;
+    --terminal:#22D3A0;
+    --serif:'Source Serif 4','Source Serif Pro',Georgia,serif;
+    --sans:'Inter',system-ui,-apple-system,sans-serif;
+    --mono:'JetBrains Mono','Fira Code',ui-monospace,monospace;
+    --h1:clamp(3rem,8.5vw,7.5rem);
+    --h2:clamp(2rem,4.5vw,4rem);
+    --big-stat:clamp(4.5rem,13vw,12rem);
+    --lead:clamp(1.25rem,2vw,2rem);
+    --body:clamp(1.05rem,1.4vw,1.5rem);
+    --mono-sm:clamp(0.7rem,0.8vw,0.85rem);
+    --mono-md:clamp(0.78rem,0.95vw,1rem);
+    --quote:clamp(1.75rem,3.5vw,3rem);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  html{scroll-behavior:smooth;background:var(--ink-900)}
+  body{
+    background:var(--ink-900);
+    color:var(--ink-300);
+    font-family:var(--sans);
+    font-size:var(--body);
+    line-height:1.5;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    pointer-events:none;
+    z-index:1;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+    opacity:.05;
+    mix-blend-mode:overlay;
+  }
+
+  /* ─────────── progress + chrome ─────────── */
+  .progress{
+    position:fixed;top:0;left:0;height:2px;width:0%;
+    background:var(--flame);
+    z-index:60;
+    transition:width 280ms cubic-bezier(.2,.7,.2,1);
+  }
+  .progress-track{
+    position:fixed;top:0;left:0;right:0;height:2px;
+    background:rgba(255,255,255,.04);
+    z-index:59;
+  }
+  .counter{
+    position:fixed;bottom:24px;right:32px;z-index:50;
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-500);letter-spacing:.16em;text-transform:uppercase;
+    user-select:none;
+  }
+  .counter .current{color:var(--ink-300)}
+  .clock{
+    position:fixed;bottom:24px;left:32px;z-index:50;
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-500);letter-spacing:.16em;text-transform:uppercase;
+    display:flex;align-items:center;gap:10px;user-select:none;
+  }
+  .clock .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--terminal);
+    box-shadow:0 0 8px rgba(34,211,160,.6);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .brand-corner{
+    position:fixed;top:22px;left:32px;z-index:50;
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-500);letter-spacing:.18em;text-transform:uppercase;
+  }
+  .brand-corner b{color:var(--ink-300);font-weight:500}
+  .brand-corner .sep{color:var(--ink-700);margin:0 12px}
+
+  /* ─────────── slide engine ─────────── */
+  .deck{position:fixed;inset:0;z-index:2}
+  .slide{
+    position:absolute;inset:0;
+    display:grid;place-items:center;
+    padding:clamp(72px,9vh,140px) clamp(28px,7vw,120px);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 320ms ease-out;
+    pointer-events:none;
+  }
+  .slide[aria-current="true"]{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    z-index:5;
+  }
+  .slide[aria-current="true"] .rise{
+    animation:rise 540ms cubic-bezier(.2,.7,.2,1) both;
+  }
+  .slide[aria-current="true"] .rise:nth-child(2){animation-delay:90ms}
+  .slide[aria-current="true"] .rise:nth-child(3){animation-delay:160ms}
+  .slide[aria-current="true"] .rise:nth-child(4){animation-delay:220ms}
+  .slide[aria-current="true"] .rise:nth-child(5){animation-delay:280ms}
+  .slide[aria-current="true"] .rise:nth-child(6){animation-delay:340ms}
+  @keyframes rise{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .container{
+    width:100%;max-width:1280px;
+    display:flex;flex-direction:column;gap:clamp(20px,2.6vh,40px);
+  }
+  .kicker{
+    font-family:var(--mono);font-size:var(--mono-md);
+    color:var(--ink-500);letter-spacing:.22em;text-transform:uppercase;
+    display:flex;align-items:center;gap:14px;
+  }
+  .kicker::before{
+    content:'';display:block;width:36px;height:1px;background:var(--ink-500);
+  }
+  .kicker .accent{color:var(--flame)}
+  h1.hero{
+    font-family:var(--serif);font-weight:600;
+    font-size:var(--h1);line-height:.95;letter-spacing:-.02em;
+    color:var(--ink-100);
+    max-width:18ch;
+  }
+  h1.hero .flame{color:var(--flame)}
+  h2.section-title{
+    font-family:var(--serif);font-weight:500;
+    font-size:var(--h2);line-height:1;letter-spacing:-.01em;
+    color:var(--ink-100);
+    max-width:22ch;
+  }
+  h2.section-title .flame{color:var(--flame)}
+  .lead{
+    font-family:var(--sans);font-weight:400;
+    font-size:var(--lead);line-height:1.4;
+    color:var(--ink-300);
+    max-width:42ch;
+  }
+  .lead em{font-family:var(--serif);font-style:italic;color:var(--ink-200)}
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:clamp(20px,4vw,72px);
+    padding-top:clamp(16px,3vh,32px);
+    border-top:1px solid var(--ink-700);
+    margin-top:auto;
+  }
+  .meta-row .field{
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-500);letter-spacing:.16em;text-transform:uppercase;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .meta-row .field b{
+    color:var(--ink-100);font-weight:500;
+    font-size:clamp(.85rem,1vw,1rem);letter-spacing:.08em;
+  }
+
+  /* big stat slide */
+  .big-stat{
+    font-family:var(--serif);font-weight:700;
+    font-size:var(--big-stat);line-height:.86;letter-spacing:-.04em;
+    color:var(--ink-100);
+  }
+  .big-stat .arrow{color:var(--ink-500);font-weight:400;margin:0 .15em}
+  .big-stat .after{color:var(--flame)}
+  .stat-cap{
+    font-family:var(--serif);font-style:italic;
+    font-size:clamp(1.4rem,2.2vw,2.1rem);
+    color:var(--ink-200);max-width:30ch;line-height:1.3;
+  }
+  .stat-cap .src{
+    display:block;
+    font-family:var(--mono);font-style:normal;
+    font-size:var(--mono-sm);color:var(--ink-500);
+    letter-spacing:.16em;text-transform:uppercase;
+    margin-top:14px;
+  }
+
+  /* numbered list */
+  .num-list{display:flex;flex-direction:column;gap:0}
+  .num-list .row{
+    display:grid;grid-template-columns:auto 1fr;
+    gap:clamp(20px,3vw,48px);align-items:baseline;
+    padding:clamp(14px,2vh,22px) 0;
+    border-bottom:1px solid var(--ink-700);
+  }
+  .num-list .row:last-child{border-bottom:0}
+  .num-list .n{
+    font-family:var(--mono);font-weight:700;
+    font-size:clamp(1rem,1.4vw,1.4rem);
+    color:var(--ink-500);letter-spacing:.12em;
+  }
+  .num-list .label{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(1.4rem,2.6vw,2.4rem);
+    color:var(--ink-100);line-height:1.15;
+  }
+  .num-list .label .dim{color:var(--ink-400);font-family:var(--sans);font-weight:400;font-size:.7em;display:block;margin-top:6px;letter-spacing:0;text-transform:none}
+  .num-list .label .flame{color:var(--flame)}
+
+  /* two column */
+  .two-col{
+    display:grid;grid-template-columns:1fr 1px 1fr;
+    gap:clamp(24px,4vw,80px);align-items:start;
+  }
+  .two-col .divider{background:var(--ink-700);align-self:stretch}
+  .two-col .col{display:flex;flex-direction:column;gap:18px}
+  .two-col .col-label{
+    font-family:var(--mono);font-size:var(--mono-sm);
+    letter-spacing:.18em;text-transform:uppercase;
+  }
+  .two-col .col-label.dim{color:var(--ink-500)}
+  .two-col .col-label.accent{color:var(--flame)}
+  .two-col .col h3{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.1;
+    color:var(--ink-100);
+  }
+  .two-col .col.dim h3{color:var(--ink-400)}
+  .two-col .col p{color:var(--ink-300);font-size:clamp(1rem,1.2vw,1.25rem)}
+  .two-col .col.dim p{color:var(--ink-500)}
+  .two-col .col em{font-family:var(--serif);font-style:italic}
+
+  /* tool grid */
+  .tool-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:clamp(8px,1.4vw,24px);
+  }
+  .tool-grid .tool{
+    padding:clamp(16px,2.4vh,28px) clamp(12px,1.6vw,22px);
+    border:1px solid var(--ink-700);
+    background:var(--ink-800);
+    display:flex;flex-direction:column;gap:10px;
+    min-height:clamp(140px,18vh,200px);
+  }
+  .tool-grid .tool .role{
+    font-family:var(--mono);font-size:var(--mono-sm);
+    letter-spacing:.18em;text-transform:uppercase;
+    color:var(--flame);
+  }
+  .tool-grid .tool .name{
+    font-family:var(--serif);font-weight:600;
+    font-size:clamp(1.2rem,1.8vw,1.7rem);
+    color:var(--ink-100);line-height:1.05;
+  }
+  .tool-grid .tool .gloss{
+    font-family:var(--sans);font-size:clamp(.85rem,1vw,1rem);
+    color:var(--ink-400);line-height:1.4;margin-top:auto;
+  }
+  @media (max-width:880px){
+    .tool-grid{grid-template-columns:repeat(2,1fr)}
+  }
+
+  /* method flow */
+  .flow{
+    display:grid;grid-template-columns:1fr auto 1fr auto 1fr;
+    gap:clamp(12px,2vw,28px);align-items:stretch;
+  }
+  .flow .step{
+    padding:clamp(20px,3vh,32px);
+    border:1px solid var(--ink-700);
+    display:flex;flex-direction:column;gap:10px;
+    background:var(--ink-800);
+  }
+  .flow .step .when{
+    font-family:var(--mono);font-size:var(--mono-sm);
+    letter-spacing:.18em;text-transform:uppercase;
+    color:var(--flame);
+  }
+  .flow .step .what{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(1.3rem,2vw,1.8rem);
+    color:var(--ink-100);line-height:1.1;
+  }
+  .flow .step .how{
+    font-family:var(--sans);font-size:clamp(.9rem,1.1vw,1.05rem);
+    color:var(--ink-400);line-height:1.4;
+  }
+  .flow .arrow{
+    color:var(--ink-500);font-family:var(--mono);font-size:1.4rem;
+    display:flex;align-items:center;justify-content:center;
+  }
+  @media (max-width:880px){
+    .flow{grid-template-columns:1fr;gap:8px}
+    .flow .arrow{transform:rotate(90deg);padding:8px 0}
+  }
+
+  /* monday list */
+  .check-list{display:flex;flex-direction:column;gap:clamp(12px,2vh,22px)}
+  .check-list .item{
+    display:grid;grid-template-columns:auto auto 1fr;
+    gap:clamp(16px,2vw,32px);
+    align-items:center;
+    padding:clamp(16px,2.4vh,28px) clamp(18px,2.2vw,28px);
+    border:1px solid var(--ink-700);
+    background:var(--ink-800);
+  }
+  .check-list .box{
+    width:clamp(20px,1.8vw,28px);height:clamp(20px,1.8vw,28px);
+    border:1.5px solid var(--ink-500);
+    display:inline-block;
+  }
+  .check-list .time{
+    font-family:var(--mono);font-weight:700;
+    font-size:clamp(1rem,1.4vw,1.4rem);
+    color:var(--flame);letter-spacing:.06em;min-width:6ch;
+  }
+  .check-list .what{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(1.2rem,2vw,1.8rem);
+    color:var(--ink-100);line-height:1.1;
+  }
+  .check-list .what em{font-family:var(--serif);font-style:italic;color:var(--ink-300);font-size:.7em;display:block;margin-top:4px;font-weight:400}
+
+  /* receipts list */
+  .receipts{display:flex;flex-direction:column;gap:0}
+  .receipts .row{
+    display:grid;grid-template-columns:1fr auto 1fr;
+    gap:clamp(20px,4vw,80px);
+    align-items:baseline;
+    padding:clamp(18px,2.8vh,28px) 0;
+    border-bottom:1px solid var(--ink-700);
+  }
+  .receipts .row:last-child{border-bottom:0}
+  .receipts .what{
+    font-family:var(--mono);font-size:var(--mono-md);
+    color:var(--ink-500);letter-spacing:.14em;text-transform:uppercase;
+  }
+  .receipts .before{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(1.6rem,2.6vw,2.4rem);
+    color:var(--ink-400);text-align:right;
+  }
+  .receipts .arrow-cell{
+    font-family:var(--mono);color:var(--ink-500);
+    font-size:1.2rem;text-align:center;
+  }
+  .receipts .after{
+    font-family:var(--serif);font-weight:600;
+    font-size:clamp(1.8rem,3vw,2.7rem);
+    color:var(--flame);
+  }
+  @media (max-width:880px){
+    .receipts .row{grid-template-columns:1fr;gap:6px;text-align:left}
+    .receipts .before,.receipts .after{text-align:left}
+    .receipts .arrow-cell{text-align:left}
+  }
+
+  /* pull quote */
+  .pullquote{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:var(--quote);line-height:1.18;
+    color:var(--ink-100);
+    max-width:22ch;
+  }
+  .pullquote .flame{color:var(--flame);font-style:italic}
+  .pullquote-source{
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-500);letter-spacing:.18em;text-transform:uppercase;
+    margin-top:8px;
+  }
+
+  /* closing slide */
+  .close-grid{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:clamp(28px,4vw,80px);
+    align-items:center;
+  }
+  .qr-tile{
+    background:var(--ink-100);
+    padding:clamp(14px,1.8vw,22px);
+    width:clamp(180px,22vw,260px);
+    height:clamp(180px,22vw,260px);
+    display:grid;place-items:center;
+  }
+  .qr-tile svg{width:100%;height:100%;display:block}
+  .close-text h2{
+    font-family:var(--serif);font-weight:600;
+    font-size:clamp(2.2rem,5vw,4rem);line-height:.96;letter-spacing:-.015em;
+    color:var(--ink-100);max-width:18ch;
+  }
+  .close-text h2 .flame{color:var(--flame)}
+  .close-url{
+    font-family:var(--mono);font-size:clamp(.9rem,1.2vw,1.15rem);
+    color:var(--ink-300);letter-spacing:.08em;
+    margin-top:14px;display:block;
+  }
+  .close-meta{
+    display:flex;flex-wrap:wrap;gap:clamp(18px,3vw,48px);
+    margin-top:clamp(20px,3vh,32px);
+    padding-top:clamp(16px,2vh,24px);
+    border-top:1px solid var(--ink-700);
+  }
+  .close-meta .field{
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-500);letter-spacing:.16em;text-transform:uppercase;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .close-meta .field b{color:var(--ink-100);font-weight:500;font-size:clamp(.85rem,1vw,1rem);letter-spacing:.08em}
+  .close-meta .field a{color:var(--ink-100);text-decoration:none;border-bottom:1px solid var(--ink-500);padding-bottom:2px;transition:color .2s,border-color .2s}
+  .close-meta .field a:hover{color:var(--flame);border-bottom-color:var(--flame)}
+
+  /* hero stat slide (slide 2) */
+  .stat-hero{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,80px);align-items:center}
+  .stat-hero .num{
+    font-family:var(--serif);font-weight:700;
+    font-size:clamp(6rem,16vw,15rem);line-height:.82;letter-spacing:-.04em;
+    color:var(--ink-100);white-space:nowrap;
+  }
+  .stat-hero .num .small{font-size:.55em;color:var(--ink-400);font-weight:400;letter-spacing:0}
+  .stat-hero .num .arr{color:var(--ink-500);font-weight:400}
+  .stat-hero .num .new{color:var(--flame)}
+  .stat-hero .copy{display:flex;flex-direction:column;gap:14px}
+  .stat-hero .copy .head{
+    font-family:var(--serif);font-style:italic;font-weight:500;
+    font-size:clamp(1.4rem,2.4vw,2.2rem);line-height:1.2;
+    color:var(--ink-200);max-width:22ch;
+  }
+  .stat-hero .copy .body{
+    font-family:var(--sans);font-size:clamp(1rem,1.2vw,1.2rem);
+    color:var(--ink-400);line-height:1.5;max-width:32ch;
+  }
+  .stat-hero .copy .src{
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-500);letter-spacing:.16em;text-transform:uppercase;
+  }
+  @media (max-width:880px){
+    .stat-hero{grid-template-columns:1fr}
+    .stat-hero .num{font-size:clamp(4rem,14vw,7rem)}
+  }
+
+  /* presenter notes drawer */
+  .notes-drawer{
+    position:fixed;top:0;right:0;bottom:0;
+    width:min(420px,40vw);
+    background:var(--ink-800);
+    border-left:1px solid var(--ink-700);
+    transform:translateX(100%);
+    transition:transform 280ms cubic-bezier(.2,.7,.2,1);
+    z-index:80;
+    display:flex;flex-direction:column;
+    box-shadow:-12px 0 32px rgba(0,0,0,.4);
+  }
+  .notes-drawer.open{transform:translateX(0)}
+  .notes-head{
+    padding:18px 24px;
+    border-bottom:1px solid var(--ink-700);
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-300);letter-spacing:.18em;text-transform:uppercase;
+  }
+  .notes-head .close-btn{
+    background:transparent;border:0;color:var(--ink-500);
+    font-family:var(--mono);cursor:pointer;font-size:1rem;
+    padding:4px 8px;
+  }
+  .notes-head .close-btn:hover{color:var(--flame)}
+  .notes-body{
+    padding:24px;overflow-y:auto;flex:1;
+    font-family:var(--sans);font-size:.95rem;line-height:1.55;
+    color:var(--ink-300);
+  }
+  .notes-body h4{
+    font-family:var(--mono);font-size:.7rem;
+    color:var(--flame);letter-spacing:.18em;text-transform:uppercase;
+    margin:18px 0 8px;font-weight:600;
+  }
+  .notes-body h4:first-child{margin-top:0}
+  .notes-body p{margin-bottom:12px}
+  .notes-body .receipt{
+    font-family:var(--mono);font-size:.78rem;
+    color:var(--ink-500);letter-spacing:.06em;
+    padding:8px 12px;background:var(--ink-900);
+    border-left:2px solid var(--flame);
+    margin:8px 0;
+  }
+
+  /* help overlay */
+  .help-overlay{
+    position:fixed;inset:0;z-index:90;
+    background:rgba(8,9,11,.92);
+    backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;
+    padding:40px;
+  }
+  .help-overlay.open{display:flex}
+  .help-panel{
+    background:var(--ink-800);
+    border:1px solid var(--ink-700);
+    padding:clamp(28px,4vw,48px);
+    max-width:560px;width:100%;
+  }
+  .help-panel h3{
+    font-family:var(--serif);font-size:1.6rem;color:var(--ink-100);
+    margin-bottom:24px;font-weight:500;
+  }
+  .help-panel dl{display:grid;grid-template-columns:auto 1fr;gap:14px 24px}
+  .help-panel dt{
+    font-family:var(--mono);color:var(--flame);font-size:.85rem;
+    letter-spacing:.06em;
+  }
+  .help-panel dd{
+    font-family:var(--sans);color:var(--ink-300);font-size:.95rem;
+  }
+  .help-hint{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    z-index:50;
+    font-family:var(--mono);font-size:var(--mono-sm);
+    color:var(--ink-600);letter-spacing:.16em;text-transform:uppercase;
+    pointer-events:none;
+    transition:opacity .4s;
+  }
+  .help-hint.faded{opacity:0}
+
+  /* nav dots */
+  .dots{
+    position:fixed;right:24px;top:50%;transform:translateY(-50%);
+    z-index:50;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .dots button{
+    width:6px;height:24px;border:0;padding:0;background:var(--ink-700);
+    cursor:pointer;transition:background .2s,height .2s;
+  }
+  .dots button:hover{background:var(--ink-500)}
+  .dots button[aria-current="true"]{background:var(--flame);height:32px}
+
+  /* a11y */
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  *:focus-visible{outline:2px solid var(--flame);outline-offset:3px}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:.01ms!important;
+      animation-iteration-count:1!important;
+      transition-duration:.01ms!important;
+    }
+  }
+
+  @media print{
+    .notes-drawer,.dots,.help-overlay,.help-hint{display:none!important}
+    .slide{position:relative!important;opacity:1!important;visibility:visible!important;page-break-after:always;height:100vh}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-track" aria-hidden="true"></div>
+<div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+
+<div class="brand-corner" aria-hidden="true">
+  <b>UNLEASH&nbsp;AI</b><span class="sep">·</span>2026<span class="sep">·</span>KEYNOTE
+</div>
+
+<div class="clock" aria-label="presenter clock">
+  <span class="dot"></span><span id="clock">00:00</span>
+</div>
+
+<div class="counter" aria-live="polite">
+  <span class="current" id="curNum">01</span> / 12
+</div>
+
+<nav class="dots" aria-label="slide navigation">
+  <button data-go="1" aria-label="slide 1" aria-current="true"></button>
+  <button data-go="2" aria-label="slide 2"></button>
+  <button data-go="3" aria-label="slide 3"></button>
+  <button data-go="4" aria-label="slide 4"></button>
+  <button data-go="5" aria-label="slide 5"></button>
+  <button data-go="6" aria-label="slide 6"></button>
+  <button data-go="7" aria-label="slide 7"></button>
+  <button data-go="8" aria-label="slide 8"></button>
+  <button data-go="9" aria-label="slide 9"></button>
+  <button data-go="10" aria-label="slide 10"></button>
+  <button data-go="11" aria-label="slide 11"></button>
+  <button data-go="12" aria-label="slide 12"></button>
+</nav>
+
+<div class="help-hint" id="helpHint">PRESS&nbsp;&nbsp;<b style="color:var(--ink-400)">→</b>&nbsp;&nbsp;TO&nbsp;START&nbsp;&nbsp;·&nbsp;&nbsp;<b style="color:var(--ink-400)">?</b>&nbsp;&nbsp;FOR&nbsp;KEYS&nbsp;&nbsp;·&nbsp;&nbsp;<b style="color:var(--ink-400)">N</b>&nbsp;&nbsp;FOR&nbsp;NOTES</div>
+
+<main class="deck">
+
+<!-- SLIDE 1 — TITLE -->
+<section class="slide" data-slide="1" aria-current="true" role="group" aria-roledescription="slide" aria-label="Slide 1 of 10: Title">
+  <div class="container">
+    <div class="kicker rise">UNLEASH&nbsp;AI&nbsp;FOR&nbsp;BUSINESS&nbsp;SUMMIT&nbsp;·&nbsp;<span class="accent">2026</span></div>
+    <h1 class="hero rise">build an AI generalist skill set<br>that keeps you <span class="flame">competitive</span>.</h1>
+    <p class="lead rise"><em>specialists are losing. generalists with AI are winning.</em>&nbsp;&nbsp;what to learn, in what order, starting monday.</p>
+    <div class="meta-row rise">
+      <div class="field">SPEAKER<b>VLAD PODOLIAKO</b></div>
+      <div class="field">RUNS<b>BELKINS · FOLDERLY · THE NEWSLETTER</b></div>
+      <div class="field">BOOK<b>THE ULTIMATE AI DIVE DEEP · 44 CHAPTERS</b></div>
+      <div class="field">LENGTH<b>20 MIN · 12 SLIDES</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2 — STAKES / HOOK NUMBER -->
+<section class="slide" data-slide="2" role="group" aria-roledescription="slide" aria-label="Slide 2 of 10: The stakes">
+  <div class="container">
+    <div class="kicker rise">01&nbsp;·&nbsp;THE&nbsp;NUMBER&nbsp;THAT&nbsp;OPENS&nbsp;THE&nbsp;TALK</div>
+    <div class="stat-hero rise">
+      <div class="num"><span>38</span><span class="arr">&nbsp;→&nbsp;</span><span class="new">9</span></div>
+      <div class="copy">
+        <div class="head">median open tabs, our SDR desk, six months after the AI rollout.</div>
+        <div class="body">we didn't ship more tools. we shipped fewer. that's the move. the floor moved &mdash; "AI literate" is a hiring filter now. the ceiling stayed where it was. the middle is where the bodies are.</div>
+        <div class="src">SOURCE&nbsp;·&nbsp;BELKINS&nbsp;FLOOR&nbsp;DATA&nbsp;·&nbsp;CHAPTER&nbsp;26</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3 — THE TRAP -->
+<section class="slide" data-slide="3" role="group" aria-roledescription="slide" aria-label="Slide 3 of 10: The trap">
+  <div class="container">
+    <div class="kicker rise">02&nbsp;·&nbsp;THE&nbsp;TRAP&nbsp;EVERYONE&nbsp;WALKS&nbsp;INTO</div>
+    <h2 class="section-title rise">&ldquo;i&rsquo;ll get really good at ChatGPT.&rdquo;<br><span class="flame">that's the wrong sentence.</span></h2>
+    <p class="lead rise">one tool, used at ten percent of its capability, is not a skill set &mdash; it&rsquo;s a hobby. the market is paying for <em>range</em>, not depth in one chatbot. you&rsquo;re not learning AI. you&rsquo;re learning a stack.</p>
+    <div class="meta-row rise">
+      <div class="field">RECEIPT<b>100+ SAAS TOOLS ACROSS OUR PORTFOLIO &mdash; THAT&rsquo;S NOT A FLEX, THAT&rsquo;S A TAX.</b></div>
+      <div class="field">CHAPTER<b>01 &mdash; AI AS AN OPERATING SYSTEM</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4 — THE REFRAME -->
+<section class="slide" data-slide="4" role="group" aria-roledescription="slide" aria-label="Slide 4 of 10: The reframe">
+  <div class="container">
+    <div class="kicker rise">03&nbsp;·&nbsp;THE&nbsp;ONE&nbsp;REFRAME&nbsp;THAT&nbsp;CHANGES&nbsp;EVERYTHING</div>
+    <h2 class="section-title rise">AI is your <span class="flame">operating system</span>.<br>not your chatbot.</h2>
+    <div class="two-col rise">
+      <div class="col dim">
+        <div class="col-label dim">YESTERDAY</div>
+        <h3>you, the user, asking a magic box for one answer.</h3>
+        <p>open ChatGPT. type. copy. paste. repeat. forty tabs by lunch.</p>
+        <p><em>"the genius with amnesia."</em></p>
+      </div>
+      <div class="divider" aria-hidden="true"></div>
+      <div class="col">
+        <div class="col-label accent">NOW</div>
+        <h3>you, the foreman, running a small temp agency.</h3>
+        <p>same model, three surfaces, five jobs. you assign work. you check work. you ship work.</p>
+        <p><em>"continuity is a chain of artifacts, not a chain of brains."</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5 — FIVE-TOOL STACK -->
+<section class="slide" data-slide="5" role="group" aria-roledescription="slide" aria-label="Slide 5 of 10: Five-tool stack">
+  <div class="container">
+    <div class="kicker rise">04&nbsp;·&nbsp;THE&nbsp;TOOLBOX</div>
+    <h2 class="section-title rise">five tools. <span class="flame">not fifty.</span></h2>
+    <div class="tool-grid rise">
+      <div class="tool">
+        <div class="role">STRATEGIST</div>
+        <div class="name">Claude</div>
+        <div class="gloss">positioning, hiring, long thinking, board emails. slow, nuanced, deep.</div>
+      </div>
+      <div class="tool">
+        <div class="role">WRITER</div>
+        <div class="name">ChatGPT&nbsp;/&nbsp;Gemini</div>
+        <div class="gloss">drafts, short form, fast turns. the first-draft engine.</div>
+      </div>
+      <div class="tool">
+        <div class="role">BUILDER</div>
+        <div class="name">Cursor&nbsp;/&nbsp;v0</div>
+        <div class="gloss">landing page in an afternoon. no engineering hire required.</div>
+      </div>
+      <div class="tool">
+        <div class="role">AUTOMATOR</div>
+        <div class="name">n8n&nbsp;/&nbsp;Zapier</div>
+        <div class="gloss">the boring loop. one flow replaces four hours of clicking a week.</div>
+      </div>
+      <div class="tool">
+        <div class="role">MEMORY</div>
+        <div class="name">Obsidian&nbsp;/&nbsp;Notion</div>
+        <div class="gloss">the vault. the journal you hand the temp every morning.</div>
+      </div>
+    </div>
+    <p class="lead rise" style="margin-top:8px"><em>swap the names. keep the slots.</em>&nbsp;&nbsp;stack envy is the new tab-trash.</p>
+  </div>
+</section>
+
+<!-- SLIDE 6 — FIVE BEGINNER MOVES -->
+<section class="slide" data-slide="6" role="group" aria-roledescription="slide" aria-label="Slide 6 of 12: Five beginner moves">
+  <div class="container">
+    <div class="kicker rise">05&nbsp;·&nbsp;WHAT&nbsp;YOU&nbsp;CAN&nbsp;DO&nbsp;TODAY&nbsp;&mdash;&nbsp;JUST&nbsp;CHATGPT</div>
+    <h2 class="section-title rise">five beginner moves. one tool. <span class="flame">zero new logins.</span></h2>
+    <div class="num-list rise">
+      <div class="row"><div class="n">01</div><div class="label">BRIEF &mdash; write the prompt like a <span class="flame">contract</span>.<span class="dim">"you are [role]. context: 3 lines about my situation. constraint: 1 line. write 3 versions in different tones."</span></div></div>
+      <div class="row"><div class="n">02</div><div class="label">PASTE &mdash; use your real work, not toy examples.<span class="dim">paste the actual email, doc, deck draft. ask: what&rsquo;s missing? what&rsquo;s weak? what would a skeptic say?</span></div></div>
+      <div class="row"><div class="n">03</div><div class="label">STEAL &mdash; reverse-engineer something good.<span class="dim">paste a competitor&rsquo;s landing page or email. ask: what&rsquo;s the structure? now rewrite it for my topic.</span></div></div>
+      <div class="row"><div class="n">04</div><div class="label">TEACH-BACK &mdash; the <span class="flame">cheat code</span> nobody uses.<span class="dim">after any complex answer: "explain that back to me like i&rsquo;m in 5th grade." if it can&rsquo;t, you didn&rsquo;t understand it.</span></div></div>
+      <div class="row"><div class="n">05</div><div class="label">SAVE &mdash; start a "prompts that worked" doc.<span class="dim">one google doc. paste the winners in. that&rsquo;s your skill set &mdash; written down. six months from now, the most valuable doc in your career.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7 — WHAT TO ASK BY JOB -->
+<section class="slide" data-slide="7" role="group" aria-roledescription="slide" aria-label="Slide 7 of 12: What to ask, by job">
+  <div class="container">
+    <div class="kicker rise">06&nbsp;·&nbsp;WHAT&nbsp;TO&nbsp;ASK&nbsp;&mdash;&nbsp;REAL&nbsp;PROMPTS,&nbsp;REAL&nbsp;ROLES</div>
+    <h2 class="section-title rise">you&rsquo;re not stuck on the tool.<br>you&rsquo;re stuck on <span class="flame">the question.</span></h2>
+    <div class="num-list rise">
+      <div class="row"><div class="n">SALES</div><div class="label">"draft 5 cold openers for the CFO of a 50-person SaaS. one line each. tones: blunt, curious, helpful, contrarian, transactional."<span class="dim">90 seconds in. you&rsquo;ve just done a junior SDR&rsquo;s morning of work.</span></div></div>
+      <div class="row"><div class="n">MARKETING</div><div class="label">"review this landing page. flag 3 trust-killers. propose a one-sentence fix for each."<span class="dim">a $0 teardown instead of a $5K conversion audit.</span></div></div>
+      <div class="row"><div class="n">OPS</div><div class="label">"i run weekly status meetings. give me a notion template that captures decisions, blockers, owner, deadline."<span class="dim">your meeting cadence, standardized in one prompt.</span></div></div>
+      <div class="row"><div class="n">EXEC&nbsp;ASST</div><div class="label">"summarize this 30-page PDF into a 1-page briefing for my boss. cut the fluff. surface the trade-offs."<span class="dim">you&rsquo;ve just bought your boss an hour back.</span></div></div>
+      <div class="row"><div class="n">HR</div><div class="label">"rewrite this JD for senior engineers. less corporate. honest about the team&rsquo;s actual trade-offs."<span class="dim">attract the people who&rsquo;d thrive. repel the rest. faster.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8 — FIVE CAPABILITIES -->
+<section class="slide" data-slide="8" role="group" aria-roledescription="slide" aria-label="Slide 8 of 12: Five capabilities">
+  <div class="container">
+    <div class="kicker rise">07&nbsp;·&nbsp;THE&nbsp;OPERATOR&nbsp;TRAJECTORY</div>
+    <h2 class="section-title rise">five capabilities. <span class="flame">compound in order.</span></h2>
+    <div class="num-list rise">
+      <div class="row"><div class="n">01</div><div class="label">FRAME &mdash; write the brief like a <span class="flame">contract</span>, not a request.<span class="dim">context, constraint, format, deadline. if your prompt is shorter than your last slack to a junior, you&rsquo;re doing it wrong.</span></div></div>
+      <div class="row"><div class="n">02</div><div class="label">ROUTE &mdash; pick the right door.<span class="dim">chat for the phone. cowork for daily ops. claude code for swarms. wrong tool = wrong answer.</span></div></div>
+      <div class="row"><div class="n">03</div><div class="label">REMEMBER &mdash; hand the worker the journal every morning.<span class="dim">a folder of markdown files. the model is amnesiac; the vault is your continuity.</span></div></div>
+      <div class="row"><div class="n">04</div><div class="label">PARALLELIZE &mdash; spawn the swarm in <span class="flame">one message</span>.<span class="dim">ten agents sequential = 100 minutes. ten agents parallel = 10 minutes. same model, ten times the speed.</span></div></div>
+      <div class="row"><div class="n">05</div><div class="label">ENCODE &mdash; when you&rsquo;ve explained it three times, it becomes a skill.<span class="dim">skills are the difference between using AI and operating AI.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 9 — THE METHOD -->
+<section class="slide" data-slide="9" role="group" aria-roledescription="slide" aria-label="Slide 9 of 12: The method">
+  <div class="container">
+    <div class="kicker rise">08&nbsp;·&nbsp;HOW&nbsp;THE&nbsp;GENERALIST&nbsp;ACTUALLY&nbsp;LEARNS</div>
+    <h2 class="section-title rise">one weekend. one shipped artifact. <span class="flame">repeat.</span></h2>
+    <div class="flow rise">
+      <div class="step">
+        <div class="when">FRIDAY NIGHT</div>
+        <div class="what">pick a real problem</div>
+        <div class="how">from your actual job. not a toy. write it on a sticky note.</div>
+      </div>
+      <div class="arrow">&rarr;</div>
+      <div class="step">
+        <div class="when">SATURDAY</div>
+        <div class="what">build the ugly version</div>
+        <div class="how">whatever tool fits. v0, cursor, n8n, obsidian. ugly is fine. broken is fine. <em>shipped is the bar.</em></div>
+      </div>
+      <div class="arrow">&rarr;</div>
+      <div class="step">
+        <div class="when">SUNDAY</div>
+        <div class="what">show it to one human</div>
+        <div class="how">your manager. a friend. someone on X. note what broke. fix it or kill it.</div>
+      </div>
+    </div>
+    <p class="lead rise"><em>twelve weekends = twelve shipped artifacts = a portfolio.</em>&nbsp;&nbsp;a portfolio outranks a resume every single time in 2026. i wrote a 44-chapter book this way while running five companies.</p>
+  </div>
+</section>
+
+<!-- SLIDE 10 — MONDAY -->
+<section class="slide" data-slide="10" role="group" aria-roledescription="slide" aria-label="Slide 10 of 12: Monday morning">
+  <div class="container">
+    <div class="kicker rise">09&nbsp;·&nbsp;WHAT&nbsp;YOU&nbsp;DO&nbsp;MONDAY</div>
+    <h2 class="section-title rise">three moves. <span class="flame">ninety minutes.</span> done before lunch.</h2>
+    <div class="check-list rise">
+      <div class="item"><span class="box" aria-hidden="true"></span><span class="time">20&nbsp;MIN</span><span class="what">pick the boring loop you&rsquo;ll automate first.<em>weekly report. inbox triage. standup notes. the one you hate every week.</em></span></div>
+      <div class="item"><span class="box" aria-hidden="true"></span><span class="time">30&nbsp;MIN</span><span class="what">install Claude + Cursor next to ChatGPT.<em>three apps. don&rsquo;t add a fourth. three apps total.</em></span></div>
+      <div class="item"><span class="box" aria-hidden="true"></span><span class="time">40&nbsp;MIN</span><span class="what">write one prompt like you&rsquo;re briefing a new hire.<em>context, constraint, format, deadline. paste. compare to what you would&rsquo;ve written in an hour.</em></span></div>
+    </div>
+    <p class="lead rise" style="color:var(--ink-400);font-size:1.1rem"><em>no course. no certification. no $2,000 bootcamp.</em>&nbsp;&nbsp;by tuesday you&rsquo;ve moved further than 90% of this room.</p>
+  </div>
+</section>
+
+<!-- SLIDE 11 — RECEIPTS -->
+<section class="slide" data-slide="11" role="group" aria-roledescription="slide" aria-label="Slide 11 of 12: Thirty-day receipts">
+  <div class="container">
+    <div class="kicker rise">10&nbsp;·&nbsp;THIRTY&nbsp;DAYS&nbsp;IN&nbsp;&mdash;&nbsp;THE&nbsp;RECEIPTS</div>
+    <h2 class="section-title rise">not predictions. <span class="flame">receipts.</span></h2>
+    <div class="receipts rise">
+      <div class="row">
+        <div class="before">38&nbsp;open&nbsp;tabs</div>
+        <div class="arrow-cell">&rarr;</div>
+        <div class="after">9</div>
+      </div>
+      <div class="row">
+        <div class="before">~50&nbsp;hrs/wk&nbsp;of&nbsp;triage</div>
+        <div class="arrow-cell">&rarr;</div>
+        <div class="after">$40/mo</div>
+      </div>
+      <div class="row">
+        <div class="before">3-week&nbsp;landing&nbsp;page</div>
+        <div class="arrow-cell">&rarr;</div>
+        <div class="after">one&nbsp;afternoon</div>
+      </div>
+      <div class="row">
+        <div class="before">PDF&nbsp;attachment</div>
+        <div class="arrow-cell">&rarr;</div>
+        <div class="after">live&nbsp;link</div>
+      </div>
+    </div>
+    <p class="lead rise" style="font-size:1.15rem"><em>and the failure receipts?</em>&nbsp;&nbsp;$1,847 in one night when i forgot a spend cap. 86 zombie subagents. nine days of docs written to the wrong folder. those are in the book too &mdash; chapter 28. <em>every operator running AI seriously has a billing alert with a story behind it.</em></p>
+  </div>
+</section>
+
+<!-- SLIDE 12 — CLOSE -->
+<section class="slide" data-slide="12" role="group" aria-roledescription="slide" aria-label="Slide 12 of 12: Close">
+  <div class="container">
+    <div class="kicker rise">11&nbsp;·&nbsp;KEEP&nbsp;DIVING</div>
+    <div class="close-grid rise">
+      <div class="qr-tile">
+        <!-- QR generated by qrencode for https://dive.vladyslavpodoliako.com -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges"><path fill="#0E0F11" d="M7 0h1v1h-1zM10 0h2v1h-2zM16 0h1v1h-1zM18 0h4v1h-4zM1 1h5v1h-5zM7 1h4v1h-4zM12 1h3v1h-3zM16 1h6v1h-6zM23 1h5v1h-5zM1 2h1v1h-1zM5 2h1v1h-1zM7 2h1v1h-1zM9 2h1v1h-1zM11 2h2v1h-2zM14 2h3v1h-3zM19 2h3v1h-3zM23 2h1v1h-1zM27 2h1v1h-1zM1 3h1v1h-1zM5 3h1v1h-1zM7 3h3v1h-3zM12 3h3v1h-3zM16 3h1v1h-1zM19 3h1v1h-1zM21 3h1v1h-1zM23 3h1v1h-1zM27 3h1v1h-1zM1 4h1v1h-1zM5 4h1v1h-1zM7 4h2v1h-2zM10 4h2v1h-2zM13 4h2v1h-2zM17 4h1v1h-1zM19 4h3v1h-3zM23 4h1v1h-1zM27 4h1v1h-1zM1 5h5v1h-5zM7 5h1v1h-1zM9 5h2v1h-2zM12 5h1v1h-1zM15 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM23 5h5v1h-5zM7 6h1v1h-1zM9 6h1v1h-1zM11 6h1v1h-1zM13 6h1v1h-1zM15 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM21 6h1v1h-1zM0 7h9v1h-9zM11 7h1v1h-1zM14 7h2v1h-2zM17 7h1v1h-1zM19 7h10v1h-10zM1 8h1v1h-1zM3 8h3v1h-3zM8 8h1v1h-1zM11 8h2v1h-2zM14 8h2v1h-2zM17 8h2v1h-2zM21 8h2v1h-2zM24 8h2v1h-2zM27 8h1v1h-1zM1 9h6v1h-6zM8 9h1v1h-1zM10 9h1v1h-1zM13 9h2v1h-2zM17 9h2v1h-2zM21 9h1v1h-1zM23 9h4v1h-4zM0 10h1v1h-1zM2 10h1v1h-1zM7 10h4v1h-4zM16 10h1v1h-1zM18 10h1v1h-1zM21 10h3v1h-3zM27 10h1v1h-1zM0 11h2v1h-2zM3 11h2v1h-2zM6 11h2v1h-2zM10 11h1v1h-1zM13 11h1v1h-1zM17 11h3v1h-3zM21 11h1v1h-1zM24 11h1v1h-1zM26 11h3v1h-3zM0 12h5v1h-5zM8 12h1v1h-1zM15 12h1v1h-1zM17 12h3v1h-3zM21 12h1v1h-1zM24 12h4v1h-4zM0 13h1v1h-1zM3 13h2v1h-2zM6 13h2v1h-2zM12 13h1v1h-1zM18 13h1v1h-1zM24 13h3v1h-3zM1 14h2v1h-2zM8 14h1v1h-1zM11 14h1v1h-1zM13 14h2v1h-2zM16 14h3v1h-3zM20 14h2v1h-2zM24 14h4v1h-4zM0 15h2v1h-2zM3 15h1v1h-1zM5 15h3v1h-3zM9 15h3v1h-3zM14 15h1v1h-1zM16 15h2v1h-2zM20 15h2v1h-2zM24 15h5v1h-5zM1 16h3v1h-3zM7 16h1v1h-1zM11 16h2v1h-2zM14 16h1v1h-1zM17 16h2v1h-2zM20 16h2v1h-2zM23 16h5v1h-5zM0 17h2v1h-2zM4 17h1v1h-1zM6 17h2v1h-2zM9 17h3v1h-3zM13 17h2v1h-2zM18 17h1v1h-1zM21 17h1v1h-1zM24 17h2v1h-2zM4 18h2v1h-2zM8 18h1v1h-1zM12 18h1v1h-1zM18 18h1v1h-1zM20 18h4v1h-4zM26 18h2v1h-2zM0 19h2v1h-2zM3 19h1v1h-1zM5 19h3v1h-3zM10 19h4v1h-4zM17 19h7v1h-7zM25 19h4v1h-4zM3 20h1v1h-1zM7 20h1v1h-1zM10 20h1v1h-1zM15 20h1v1h-1zM17 20h3v1h-3zM26 20h1v1h-1zM28 20h1v1h-1zM0 21h8v1h-8zM9 21h3v1h-3zM16 21h1v1h-1zM18 21h1v1h-1zM21 21h3v1h-3zM27 21h1v1h-1zM7 22h1v1h-1zM9 22h1v1h-1zM12 22h3v1h-3zM16 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM23 22h1v1h-1zM25 22h3v1h-3zM1 23h5v1h-5zM7 23h3v1h-3zM11 23h2v1h-2zM14 23h1v1h-1zM17 23h1v1h-1zM21 23h3v1h-3zM25 23h2v1h-2zM1 24h1v1h-1zM5 24h1v1h-1zM7 24h3v1h-3zM12 24h1v1h-1zM14 24h2v1h-2zM17 24h2v1h-2zM26 24h1v1h-1zM1 25h1v1h-1zM5 25h1v1h-1zM7 25h3v1h-3zM12 25h3v1h-3zM17 25h4v1h-4zM22 25h2v1h-2zM27 25h1v1h-1zM1 26h1v1h-1zM5 26h1v1h-1zM7 26h1v1h-1zM12 26h3v1h-3zM16 26h1v1h-1zM19 26h1v1h-1zM22 26h2v1h-2zM25 26h2v1h-2zM1 27h5v1h-5zM7 27h2v1h-2zM10 27h1v1h-1zM16 27h2v1h-2zM19 27h1v1h-1zM21 27h4v1h-4zM26 27h3v1h-3zM7 28h1v1h-1zM9 28h2v1h-2zM14 28h2v1h-2zM17 28h3v1h-3zM21 28h1v1h-1zM23 28h1v1h-1zM26 28h2v1h-2z"/></svg>
+      </div>
+      <div class="close-text">
+        <h2>the link is the book. <span class="flame">take it.</span></h2>
+        <span class="close-url">dive.vladyslavpodoliako.com</span>
+        <div class="close-meta">
+          <div class="field">BOOK<b>44 CHAPTERS · FREE · NO EMAIL GATE</b></div>
+          <div class="field">SITE<b><a href="https://vladyslavpodoliako.com" target="_blank" rel="noopener">vladyslavpodoliako.com</a></b></div>
+          <div class="field">NEWSLETTER<b><a href="https://vladsnewsletter.com" target="_blank" rel="noopener">vladsnewsletter.com</a></b></div>
+          <div class="field">ASSIGNMENT<b>ONE CHAPTER · ONE WEEKEND · ONE ARTIFACT</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- presenter notes drawer -->
+<aside class="notes-drawer" id="notesDrawer" aria-hidden="true">
+  <div class="notes-head">
+    <span>PRESENTER&nbsp;NOTES&nbsp;·&nbsp;<span id="notesNum" style="color:var(--flame)">01</span>/10</span>
+    <button class="close-btn" id="closeNotes" aria-label="close notes">[ ESC ]</button>
+  </div>
+  <div class="notes-body" id="notesBody"></div>
+</aside>
+
+<!-- help overlay -->
+<div class="help-overlay" id="helpOverlay" role="dialog" aria-label="keyboard shortcuts">
+  <div class="help-panel">
+    <h3>keyboard</h3>
+    <dl>
+      <dt>→ Space PgDn j</dt><dd>next slide</dd>
+      <dt>← PgUp k</dt><dd>previous slide</dd>
+      <dt>Home / End</dt><dd>first / last slide</dd>
+      <dt>1–9, 0</dt><dd>jump to slide N (0 = slide 10)</dd>
+      <dt>-, =</dt><dd>jump to slide 11 / 12</dd>
+      <dt>n</dt><dd>toggle presenter notes (visible to you only)</dd>
+      <dt>f</dt><dd>toggle fullscreen</dd>
+      <dt>r</dt><dd>reset presenter clock</dd>
+      <dt>?</dt><dd>show this panel</dd>
+      <dt>Esc</dt><dd>close panel / notes</dd>
+    </dl>
+  </div>
+</div>
+
+<script>
+(() => {
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dots button');
+  const progress = document.getElementById('progress');
+  const curNum = document.getElementById('curNum');
+  const notesDrawer = document.getElementById('notesDrawer');
+  const notesBody = document.getElementById('notesBody');
+  const notesNum = document.getElementById('notesNum');
+  const closeNotes = document.getElementById('closeNotes');
+  const helpOverlay = document.getElementById('helpOverlay');
+  const helpHint = document.getElementById('helpHint');
+  const clockEl = document.getElementById('clock');
+  const total = slides.length;
+  let current = 1;
+  let clockStart = 0;
+  let clockRunning = false;
+
+  const NOTES = {
+    1: `<h4>opener moment</h4>
+      <p>walk on stage, hold for two beats, then:</p>
+      <p><em>"6:47 a.m. on a tuesday. laptop closed. three things had already shipped &mdash; my morning brief in slack, my mentee prep doc, a deal-advancement alert. i hadn't opened a browser. i hadn't typed a prompt. that's what twenty minutes from now is about. not how to use AI. how to <strong>operate</strong> it."</em></p>
+      <h4>positioning</h4>
+      <p>name belkins (200+ people, B2B lead-gen, since 2017), folderly (deliverability SaaS), the newsletter (10K+ subscribers). do NOT brag. one line each. "i run a few companies and i wrote the book this talk is from."</p>
+      <h4>setup</h4>
+      <p>"i'm going to give you the receipts, the frame, and the monday plan. ninety minutes monday. if you can't carve out ninety minutes, that's the actual problem we need to talk about. okay &mdash; let's go."</p>
+      <div class="receipt">title slide. 30s max. advance.</div>`,
+
+    2: `<h4>the number that opens it</h4>
+      <p>let the 38&rarr;9 breathe. don't talk for five seconds. let them read it.</p>
+      <p><em>"38 tabs &mdash; that was the median open-tab count on our SDR desk before we rolled out AI. six months later: 9. we didn't add more tools. we added fewer. and the people on that desk close more meetings now than they did before."</em></p>
+      <h4>the stakes</h4>
+      <p><em>"the floor moved. entry-level used to mean 'i can use excel.' now it means 'i can orchestrate four tools to do the job of three people.' the ceiling &mdash; judgment, taste, strategy &mdash; that didn't move. it got more valuable. the middle is where the bodies are. that's where you don't want to be."</em></p>
+      <div class="receipt">90s. don't moralize. just say the number.</div>`,
+
+    3: `<h4>the trap</h4>
+      <p><em>"here's the trap. almost everyone walks into it. you decide &mdash; okay, i'll learn AI. you open ChatGPT. you write better prompts. you watch some YouTube. six months later you're 'good at ChatGPT.' and you feel like you leveled up."</em></p>
+      <p>pause. <em>"you didn't. you learned one tool. the people getting hired learned a stack."</em></p>
+      <h4>the receipt</h4>
+      <p><em>"i run a portfolio. we touch a hundred-plus SaaS tools. that's not a flex &mdash; that's a tax. the job isn't depth in one chatbot. the job is range across an operating system."</em></p>
+      <div class="receipt">90s. land the sentence "that's not a flex, that's a tax." it's the chapter 1 line.</div>`,
+
+    4: `<h4>the one reframe</h4>
+      <p>this is the slide they'll quote. say it slowly.</p>
+      <p><em>"stop thinking of yourself as a person who uses ChatGPT. start thinking of yourself as a person who runs a small team. you have a strategist. a writer. a builder. an automator. a memory. you don't do the work anymore. you assign the work. you check the work. you ship the work."</em></p>
+      <h4>the temp-agency framing</h4>
+      <p><em>"every chat is a fresh temp on day one. sharp suit, zero memory. end of shift, they die. you're not hiring a genius &mdash; you're running a temp agency. start acting like the foreman."</em></p>
+      <p>that's chapter 3. credit the book in one line. don't sell it &mdash; just name it.</p>
+      <div class="receipt">2 min. THIS is the photo-this-slide slide. let it land.</div>`,
+
+    5: `<h4>the stack reveal</h4>
+      <p><em>"i get asked every week &mdash; what's your stack. people expect a list of forty. it's five."</em></p>
+      <p>walk through each tile fast. one sentence each.</p>
+      <p><strong>strategist &mdash; claude.</strong> slow, thoughtful, deep. positioning, hiring, hard emails.<br><strong>writer &mdash; ChatGPT or gemini.</strong> fast first drafts.<br><strong>builder &mdash; cursor or v0.</strong> i'm not an engineer. i ship landing pages in an afternoon.<br><strong>automator &mdash; n8n or zapier.</strong> the one everyone skips. four hours of clicking back, every week.<br><strong>memory &mdash; obsidian or notion.</strong> the vault. where prompts and meetings live forever.</p>
+      <h4>the punchline</h4>
+      <p><em>"swap the names. keep the slots. the names will change every six months. the slots won't. write these down."</em></p>
+      <div class="receipt">2 min. they'll photograph this. let them.</div>`,
+
+    6: `<h4>permission slide &mdash; what beginners can do TODAY</h4>
+      <p><em>"before we get to the operator stuff, here's what you can do tonight. with just ChatGPT. for free."</em></p>
+      <p>walk all five in 90 seconds.</p>
+      <p><strong>BRIEF.</strong> forget "prompt engineering." write it like a brief to a new hire. context. constraint. format. that's it.</p>
+      <p><strong>PASTE.</strong> stop typing made-up examples. paste your REAL email, deck, doc. ask &mdash; "what's weak? what would a skeptic say?"</p>
+      <p><strong>STEAL.</strong> find something good &mdash; a competitor's page, a great email. paste it. ask "what's the structure?" then rewrite for your topic.</p>
+      <p><strong>TEACH-BACK.</strong> the cheat code. after any complex answer: "explain that back like i'm in 5th grade." if it can't &mdash; YOU didn't understand it.</p>
+      <p><strong>SAVE.</strong> open a google doc. call it "prompts that worked." paste the winners in. six months from now &mdash; the most valuable doc in your career.</p>
+      <div class="receipt">2 min. this is the slide that says "you can already start." read each line out loud. don't over-explain.</div>`,
+
+    7: `<h4>the question is the bottleneck, not the tool</h4>
+      <p><em>"you're not stuck on the tool. you're stuck on the question."</em>&nbsp;&nbsp;most people open ChatGPT and freeze.</p>
+      <p><strong>say:</strong> <em>"read the role closest to yours. then steal the prompt, swap the nouns, that's your monday."</em></p>
+      <p><strong>SALES.</strong> "5 cold openers, 5 tones, one line each." &mdash; you've just done a junior SDR's morning in 90 seconds.</p>
+      <p><strong>MARKETING.</strong> "3 trust-killers on this landing page, one-sentence fixes." &mdash; that's a $5K conversion audit for $0.</p>
+      <p><strong>OPS.</strong> "notion template &mdash; decisions, blockers, owner, deadline." &mdash; your meeting cadence standardized in one prompt.</p>
+      <p><strong>EXEC ASST.</strong> "30-page PDF into a 1-page briefing. cut fluff. surface trade-offs." &mdash; an hour of your boss's life, back.</p>
+      <p><strong>HR.</strong> "JD for senior engineers. less corporate. honest about trade-offs." &mdash; attract the right people. repel the rest. faster.</p>
+      <p><em>read one prompt out loud, slowly.</em>&nbsp;&nbsp;the audience needs to HEAR a real prompt to believe it.</p>
+      <div class="receipt">2 min. point at the role nearest the dominant audience. read its prompt out loud. they'll photograph it.</div>`,
+
+    8: `<h4>the meat &mdash; five capabilities</h4>
+      <p>this is the slide a manager will photograph. say each one, then ONE sentence. don't over-explain.</p>
+      <p><strong>01 FRAME.</strong> <em>"write the brief like a contract, not a request. if your prompt is shorter than your average slack to a junior, you're doing it wrong."</em></p>
+      <p><strong>02 ROUTE.</strong> <em>"chat for the phone. cowork for daily ops. claude code for swarms. wrong tool, wrong answer."</em></p>
+      <p><strong>03 REMEMBER.</strong> <em>"the model is the genius with amnesia. the vault is the journal you hand it every morning."</em></p>
+      <p><strong>04 PARALLELIZE.</strong> <em>"ten agents sequential is 100 minutes. ten agents parallel is 10 minutes. it's free leverage."</em></p>
+      <p><strong>05 ENCODE.</strong> <em>"when you've explained the same workflow three times, it stops being a chat and becomes a skill. that's the line between using AI and operating AI."</em></p>
+      <div class="receipt">3 min. this is the spine of the talk. take the time.</div>`,
+
+    9: `<h4>the method</h4>
+      <p><em>"this is the method. it's not a course. it's not a certification. nobody cares about your certifications."</em></p>
+      <p><em>"friday night, pick a real problem from your actual job. saturday, build the ugly version &mdash; ugly is fine, broken is fine, shipped is the bar. sunday, show it to one human. note what broke. fix it or kill it."</em></p>
+      <h4>the proof</h4>
+      <p><em>"i wrote a 44-chapter book this way while running five companies. one weekend, one chapter, ship the link. twelve weekends a year = twelve shipped artifacts. that's a portfolio. and a portfolio outranks a resume every single time in 2026."</em></p>
+      <div class="receipt">90s. don't let it become a motivational speech. keep it operational.</div>`,
+
+    10: `<h4>monday</h4>
+      <p><em>"i hate keynotes that end with 'go forth and learn AI.' here are three things you do monday. they total ninety minutes. if you can't carve out ninety minutes, that's the actual problem."</em></p>
+      <p><strong>20 min:</strong> pick the boring loop you'll automate first. the thing you do every week that you hate.</p>
+      <p><strong>30 min:</strong> install claude and cursor next to ChatGPT. three apps total. don't add a fourth.</p>
+      <p><strong>40 min:</strong> write one prompt the way you'd brief a new hire. context, constraint, format, deadline. compare to what you would've written in an hour.</p>
+      <h4>land it</h4>
+      <p><em>"no course, no certification, no $2,000 bootcamp. by tuesday morning you've moved further than 90% of people in this room."</em></p>
+      <div class="receipt">90s. point at the slide. let them photograph it.</div>`,
+
+    11: `<h4>real receipts</h4>
+      <p>walk down the column. each one in five seconds.</p>
+      <p><em>"38 tabs to 9 &mdash; belkins SDR desk. 50 hours a week of manual triage to $40 a month &mdash; an automated morning brief replacing eight operators' triage. 3-week landing page to one afternoon &mdash; v0 + cursor. PDF attachment to a live link &mdash; the whole book is the proof."</em></p>
+      <h4>the credibility move (do not skip)</h4>
+      <p><em>"and the failure receipts? $1,847 in one night when i forgot to set a spend cap on an agent. 86 zombie subagents from a hook firing on every keystroke. nine days of mentoring docs written to the wrong vault folder before anyone noticed. those are in the book too &mdash; chapter 28. every operator running AI seriously has a billing alert with a story behind it. if you don't have that alert yet, you don't have a stack &mdash; you have a demo."</em></p>
+      <div class="receipt">2 min. the failure receipts SELL the credibility. do not skip them.</div>`,
+
+    12: `<h4>the close</h4>
+      <p><em>"i'm not doing the 'five lessons learned' thing. you'll forget it by the elevator."</em></p>
+      <p><em>"one thing. point your phone at the QR. forty-four chapters, free, no email gate, no upsell. it's the operator field manual i wished existed when i started. how i run belkins, folderly, the newsletter, all of it &mdash; with the five tools we talked about."</em></p>
+      <p><em>"the book is called dive deep because that's the assignment. pick one chapter that scares you. read it this weekend. ship the artifact at the end of it."</em></p>
+      <p><em>"specialists are losing. generalists with AI are winning. ninety minutes monday. one weekend a month. that's the whole thing."</em></p>
+      <p><strong>last line, slow, then stop:</strong></p>
+      <p><em>"scan the code."</em></p>
+      <h4>Q&A</h4>
+      <p>stay on this slide for Q&A. the QR is up the whole time. if a question is in the book, name the chapter.</p>
+      <div class="receipt">60-90s. then stop. do not add a "thank you" slide. the QR IS the thank you.</div>`
+  };
+
+  function pad(n){return String(n).padStart(2,'0')}
+
+  function show(n){
+    n = Math.max(1, Math.min(total, n));
+    current = n;
+    slides.forEach(s => {
+      const idx = parseInt(s.dataset.slide,10);
+      s.setAttribute('aria-current', idx === n ? 'true' : 'false');
+    });
+    dots.forEach(d => {
+      const idx = parseInt(d.dataset.go,10);
+      d.setAttribute('aria-current', idx === n ? 'true' : 'false');
+    });
+    progress.style.width = ((n/total)*100) + '%';
+    progress.setAttribute('aria-valuenow', String(Math.round((n/total)*100)));
+    curNum.textContent = pad(n);
+    notesNum.textContent = pad(n);
+    notesBody.innerHTML = NOTES[n] || '<p>no notes for this slide.</p>';
+    if (location.hash !== '#' + n) history.replaceState(null,'','#' + n);
+    if (!clockRunning && n > 1) startClock();
+    helpHint.classList.add('faded');
+  }
+
+  function next(){ show(current + 1) }
+  function prev(){ show(current - 1) }
+
+  function startClock(){
+    if (clockRunning) return;
+    clockStart = Date.now();
+    clockRunning = true;
+    tickClock();
+  }
+  function tickClock(){
+    if (!clockRunning) return;
+    const sec = Math.floor((Date.now() - clockStart) / 1000);
+    const m = Math.floor(sec/60), s = sec % 60;
+    clockEl.textContent = pad(m) + ':' + pad(s);
+    setTimeout(tickClock, 1000);
+  }
+  function resetClock(){
+    clockStart = Date.now();
+    clockEl.textContent = '00:00';
+  }
+
+  function toggleNotes(force){
+    const open = force === undefined ? !notesDrawer.classList.contains('open') : force;
+    notesDrawer.classList.toggle('open', open);
+    notesDrawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+  }
+  function toggleHelp(force){
+    const open = force === undefined ? !helpOverlay.classList.contains('open') : force;
+    helpOverlay.classList.toggle('open', open);
+  }
+  function toggleFullscreen(){
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    const k = e.key;
+    if (helpOverlay.classList.contains('open')) {
+      if (k === 'Escape' || k === '?') { toggleHelp(false); e.preventDefault(); }
+      return;
+    }
+    switch(k){
+      case 'ArrowRight': case ' ': case 'PageDown': case 'j': case 'l': next(); e.preventDefault(); break;
+      case 'ArrowLeft': case 'PageUp': case 'k': case 'h': prev(); e.preventDefault(); break;
+      case 'Home': show(1); e.preventDefault(); break;
+      case 'End': show(total); e.preventDefault(); break;
+      case 'n': case 'N': toggleNotes(); e.preventDefault(); break;
+      case 'f': case 'F': toggleFullscreen(); e.preventDefault(); break;
+      case 'r': case 'R': resetClock(); e.preventDefault(); break;
+      case '?': toggleHelp(true); e.preventDefault(); break;
+      case 'Escape': toggleNotes(false); toggleHelp(false); break;
+      default:
+        if (/^[1-9]$/.test(k)) { show(parseInt(k,10)); e.preventDefault(); }
+        if (k === '0') { show(10); e.preventDefault(); }
+        if (k === '-' || k === '_') { show(11); e.preventDefault(); }
+        if (k === '=' || k === '+') { show(12); e.preventDefault(); }
+    }
+  });
+
+  closeNotes.addEventListener('click', () => toggleNotes(false));
+  dots.forEach(d => d.addEventListener('click', () => show(parseInt(d.dataset.go,10))));
+
+  // touch swipe
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX }, {passive:true});
+  document.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 60) (dx < 0 ? next : prev)();
+    touchX = null;
+  }, {passive:true});
+
+  // initial slide from hash
+  const fromHash = parseInt(location.hash.replace('#',''), 10);
+  if (fromHash >= 1 && fromHash <= total) show(fromHash);
+  else show(1);
+
+  window.addEventListener('hashchange', () => {
+    const n = parseInt(location.hash.replace('#',''), 10);
+    if (n >= 1 && n <= total && n !== current) show(n);
+  });
+
+  // hide hint after 8s no matter what
+  setTimeout(() => helpHint.classList.add('faded'), 8000);
+})();
+</script>
+
+</body>
+</html>
