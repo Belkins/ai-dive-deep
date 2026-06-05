@@ -15,6 +15,37 @@ export type ResearchNote = {
 
 export const RESEARCH_NOTES: ResearchNote[] = [
   {
+    title: 'When AI builds itself — the lab-scale proof of the operator posture',
+    source: 'Anthropic Institute essay (anthropic.com/institute) · first-party, frontier-lab vantage',
+    date: '2026-06-04',
+    tagline: 'Define success, walk away — done at lab scale. Ch 44 is the same move, your scale.',
+    takeaway:
+      "In June 2026 the Anthropic Institute published \"When AI builds itself\" (Favaro & Clark, ed. Ruiz), arguing AI is increasingly automating AI development — and that if capability scaling and compute hold, systems could reach recursive self-improvement: autonomously designing, training, and developing their successors without human direction. Read it as a forecast and you miss the part that matters to you. The receipts underneath the forecast are the macro proof of the exact posture this whole book teaches. The line that names it: \"humans have ideas, and models implement, test and evaluate them an order of magnitude faster.\" That is define-success-then-walk-away (Ch 38) at the scale of a frontier lab — and the numbers are first-party: the task length a model can reliably complete is doubling roughly every four months; >80% of production code merged at Anthropic was authored by Claude as of May 2026 (up from low single digits in early 2025); their first autonomous end-to-end research run recovered 97% of a performance gap for ~$18k of compute over ~800 hours. The operator read is sharp: this is not a prophecy you wait on, it's a mirror you already have. Ch 44 'Dreaming' — the surfacer that proposes and never writes — is the personal-scale version of the same arc, with the same gate the essay names under Amdahl's law: the bottleneck shifts to human review, judgment, and direction-setting. The autonomy completes only as fast as your evaluator does. Source-confidence is split on purpose: the *evidence* is high (first-party, the highest-vantage internal data anyone publishes), but the RSI *prediction* is a claim, not a receipt — the essay itself gates it on whether judgment tasks become automatable, and the book's benchmark skepticism (Ch 24, reward-hacking) applies to the capability curves too. The Institute even backs a verifiable global slowdown over unilateral pauses — that's a policy stance, not a product datasheet. So: take the receipts, run the same play one level down, and keep your hand on the gate. The lab is proving the posture. You just operate it at your scale.",
+    implications: [
+      'Run the Ch 38 loop on your own work the way the lab runs it on theirs: define a hard success condition, let the agent iterate, and put your judgment ONLY at the evaluator gate — Amdahl says that gate is the whole bottleneck, so invest there, not in babysitting turns.',
+      'Treat Ch 44 Dreaming as your personal-scale RSI: a surfacer that proposes memory-learnings and never writes. The essay is the lab-scale endpoint; the chapter is the version you can ship Monday — keep the propose-only / human-approves line exactly where the essay puts the human-judgment gate.',
+      'Read the essay\'s economics as cost-per-outcome receipts, not per-token (Ch 29): first autonomous end-to-end research at ~$18k over ~800 hours, 8× code shipped per quarter, code-optimization 3×→52× in under a year. The bill is a rounding error on the labor it deletes — measure per finished task.',
+      'Do not re-route or re-tier on the capability curves alone. These are first-party lab numbers framed as proof of self-improvement; the book\'s own reward-hacking caveat (Ch 24) applies — take them as high-vantage evidence of the trend, treat the RSI endpoint as a claim, and keep the live leaderboard as the source of truth.',
+    ],
+    receipts: [
+      { label: 'Task length AI completes reliably', value: 'doubling ~every 4 months (was ~7)' },
+      { label: 'Anthropic production code authored by Claude', value: '>80% (May 2026, up from low single digits in early 2025)' },
+      { label: 'First autonomous end-to-end research', value: 'recovered 97% of a perf gap · ~$18k / ~800h' },
+      { label: 'Code-optimization speedup', value: '3× → 52× in under a year (superhuman)' },
+      { label: 'Claude judgment on next research step vs humans', value: '51% (Nov 2025) → 64% (Apr 2026)' },
+      { label: 'Source confidence', value: 'high (first-party lab evidence) — but the RSI forecast is a claim, not a receipt' },
+    ],
+    chapters: [
+      { slug: '38-run-until-done', ref: 'Ch 38', why: 'the essay IS run-until-done at lab scale — define success, walk away, iterate to done — and names the same Amdahl gate (human judgment) that this chapter\'s evaluator primitive guards' },
+      { slug: '44-dreaming', ref: 'Ch 44', why: 'Dreaming is the personal-scale mirror of the lab-scale story — propose-never-write memory curation draws the exact human-judgment line the essay says gates autonomy' },
+      { slug: '29-cost-economics', ref: 'Ch 29', why: 'the essay\'s first-party economics (~$18k/800h autonomous research, 8× code/quarter, 3×→52×) are cost-per-outcome receipts — read the bill per finished task, not per token' },
+      { slug: '06-the-swarm', ref: 'Ch 6', why: 'the essay\'s mechanism is AI automating AI dev compounding through orchestration and tooling, not raw model IQ alone — the conductor-not-bigger-model thesis at lab scale' },
+    ],
+    links: [
+      { label: 'Anthropic Institute — When AI builds itself', href: 'https://www.anthropic.com/institute/recursive-self-improvement' },
+    ],
+  },
+  {
     title: 'Gemini 3.5 Flash announced — a Flash outrunning last-gen Pros',
     source: 'Google launch presentation + DeepMind evals-methodology page · announced, not independently benchmarked',
     date: '2026-05-19',
