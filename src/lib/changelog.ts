@@ -19,6 +19,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Four house-style inline SVG diagrams (palette-correct, viewBox-only, mobile-legible): the learning ladder, chatbot-vs-OS, the agent loop, and the ecosystem map. A "what you will build" section points at real receipts (the HTML-ization weekend, the one-day product, the twelve-file workflow refactor) plus Anthropic\'s own customer numbers.',
       'Designed and built by a deep multi-agent workflow — research across every vendor learning ecosystem (links HTTP-verified), curriculum + IA + diagram design, Vlad-voice copy, then an adversarial red-team that cut a mis-sourced stat, two stale "free" cards, and a 31-card wall before any of it shipped.',
       'Wiring — new Learn tab in the nav, a flagship homepage tile + hero CTA, Cmd-K entry + section deep-links + popular default, and this changelog. Chapter count unchanged.',
+      'Fact-checked post-ship — all 28 course/resource links re-verified live; corrected the Satispay descriptor (the headcount was not on the cited source), reframed the one-day build to the honest "shipped in a Saturday" per Ch 19, added paid-plan/beta caveats to the Cowork + two DeepLearning.AI cards, and added a "stuck? paste the error back into Claude" line.',
     ],
     receipts: [
       { label: 'New page', value: '/learn · onboarding on-ramp · 7 sections, 4 diagrams' },

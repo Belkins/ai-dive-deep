@@ -21,7 +21,7 @@ const toc = [
 const GROUP_A = [
   { name: 'Claude 101', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/claude-101', level: 'Beginner', track: 'no-code', time: '~1 hr', free: true, oneLiner: 'Use Claude for real work — writing, data, documents, projects.', official: true },
   { name: 'Claude Code 101', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/claude-code-101', level: 'Beginner', track: 'builder', time: 'Self-paced', free: true, oneLiner: 'Install to daily workflow — the Explore, Plan, Code, Commit loop.', official: true, note: 'Hands-on exercises need a Pro/Max plan or API key.' },
-  { name: 'Introduction to Claude Cowork', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/introduction-to-claude-cowork', level: 'Beginner', track: 'no-code', time: 'Self-paced', free: true, oneLiner: 'First launch to daily use — task loops, skills, real file output.', official: true },
+  { name: 'Introduction to Claude Cowork', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/introduction-to-claude-cowork', level: 'Beginner', track: 'no-code', time: 'Self-paced', free: true, oneLiner: 'First launch to daily use — task loops, skills, real file output.', official: true, note: 'Cowork runs on a paid Claude plan.' },
 ];
 
 // GROUP B — Go deeper with Claude (default-closed drawer)
@@ -55,8 +55,8 @@ const GROUP_D = [
   { name: 'AI Prompting for Everyone', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/ai-prompting-for-everyone/', level: 'Beginner', track: 'no-code', time: '3 hrs', free: 'core', oneLiner: 'Andrew Ng teaches non-technical people to prompt ChatGPT and Claude.', note: 'Watch free; graded certificate is paid.' },
   { name: 'Generative AI for Everyone', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/generative-ai-for-everyone/', level: 'Beginner', track: 'no-code', time: '5 hrs', free: 'core', oneLiner: 'Andrew Ng: how generative AI works and where to use it. No coding.', note: 'Watch free; certificate is paid.' },
   { name: 'How Transformer LLMs Work', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/how-transformer-llms-work/', level: 'Beginner', track: 'both', time: '1.5 hrs', free: 'core', oneLiner: '90-minute look under the hood: tokens, attention, prediction.', note: 'Watch free; certificate is paid.' },
-  { name: 'Claude Code: A Highly Agentic Coding Assistant', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/claude-code-a-highly-agentic-coding-assistant/', level: 'Intermediate', track: 'builder', time: '2 hrs', free: 'core', oneLiner: "Anthropic's own course on driving Claude Code across a real codebase.", note: 'Watch free; certificate is paid.' },
-  { name: 'MCP: Build Rich-Context AI Apps with Anthropic', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/mcp-build-rich-context-ai-apps-with-anthropic/', level: 'Intermediate', track: 'builder', time: '2 hrs', free: 'core', oneLiner: "Anthropic's Elie Schoppik shows you how to build and deploy an MCP server.", note: 'Watch free; certificate is paid.' },
+  { name: 'Claude Code: A Highly Agentic Coding Assistant', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/claude-code-a-highly-agentic-coding-assistant/', level: 'Intermediate', track: 'builder', time: '2 hrs', free: 'core', oneLiner: "Anthropic's own course on driving Claude Code across a real codebase.", note: 'Free during beta; certificate is paid.' },
+  { name: 'MCP: Build Rich-Context AI Apps with Anthropic', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/mcp-build-rich-context-ai-apps-with-anthropic/', level: 'Intermediate', track: 'builder', time: '2 hrs', free: 'core', oneLiner: "Anthropic's Elie Schoppik shows you how to build and deploy an MCP server.", note: 'Free during beta; certificate is paid.' },
   { name: 'AI Agents Course', vendor: 'Hugging Face', url: 'https://huggingface.co/learn/agents-course', level: 'Beginner', track: 'both', time: 'Self-paced', free: true, oneLiner: 'Free course, free certificate — what agents are and how to build them.', note: 'Hands-on units need basic Python.' },
   { name: 'Generative AI for Beginners', vendor: 'Microsoft', url: 'https://github.com/microsoft/generative-ai-for-beginners', level: 'Beginner', track: 'builder', time: 'Self-paced', free: true, oneLiner: '21 free lessons covering prompts, RAG, agents, and more.', note: 'Assumes basic Python or TypeScript.' },
 ];
@@ -461,8 +461,8 @@ const GROUP_D = [
             </a>
             <a href={`${base}/chapters/19-build-products`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
               <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Ship</div>
-              <h3 class="m-0 font-display text-xl leading-tight">A real product, deployed, in one day</h3>
-              <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">Problem statement by 9 AM, spec by 10, repo by 10:30, MVP by 1 PM, deployed by 5. Four hours of hands-on work, $80 in tokens, a real cron, a real URL, real users. <span style="color: rgb(var(--fg) / 0.8)">That's "I shipped." →</span></p>
+              <h3 class="m-0 font-display text-xl leading-tight">A real product, shipped in a Saturday</h3>
+              <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">An idea over coffee Saturday at 9 AM; four hours of actual hands-on work spread across a weekend of brunch and walks; by Sunday night a real URL, a real cron, and a 90-second audio brief that plays on the walk. $80 in tokens, zero salary — a senior engineer would've billed $2,000 and shipped in a week. <span style="color: rgb(var(--fg) / 0.8)">That's "I shipped." →</span></p>
             </a>
             <a href={`${base}/dynamic-workflows`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
               <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Scale</div>
@@ -475,7 +475,7 @@ const GROUP_D = [
                 <span class="text-[0.55rem] uppercase tracking-[0.14em] px-1.5 py-0.5 rounded" style="border: 1px solid rgb(var(--accent-2) / 0.4); color: rgb(var(--accent-2))">Official ↗</span>
               </div>
               <h3 class="m-0 font-display text-xl leading-tight">A whole company runs on it</h3>
-              <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">Satispay — a 200+ person fintech — now writes 75% of its code with Claude. And Lovable, built on Claude, lets anyone ship software 20x faster. <span style="color: rgb(var(--fg) / 0.8)">That's "my operation runs on this." →</span></p>
+              <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">Satispay — Italy's leading fintech — now writes 75%+ of its code with Claude. And Lovable, built on Claude, lets anyone create software 20x faster. <span style="color: rgb(var(--fg) / 0.8)">That's "my operation runs on this." →</span></p>
             </a>
           </div>
           <div class="space-y-4 leading-relaxed mt-6" style="color: rgb(var(--fg) / 0.88)">
@@ -505,6 +505,9 @@ const GROUP_D = [
               <div class="font-display text-lg mt-2">Read chapter 1, and build</div>
               <p class="mt-1 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">The day I killed my tabs. Read it with your terminal open and do the thing it describes.</p>
             </a>
+          </div>
+          <div class="rounded-lg p-4 mt-6" style="background: rgb(var(--accent-2) / 0.06); border: 1px solid rgb(var(--accent-2) / 0.3)">
+            <p class="m-0 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.85)"><strong style="color: rgb(var(--accent-2))">Stuck?</strong> Install won't run, "command not found," no API key — it happens to everyone on day one. Paste the exact error back into Claude and ask it to walk you through the fix, one step at a time. The tool that's confusing you is also the best support agent you have.</p>
           </div>
           <div class="space-y-4 leading-relaxed mt-8" style="color: rgb(var(--fg) / 0.88)">
             <p>You've crossed the line — AI as an OS, not a chatbot. Now pick one job you do every week and hand it to Claude. Ship it. Watch it run once without you. That's the whole move. Turn the page.</p>
