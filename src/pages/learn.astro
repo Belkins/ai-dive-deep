@@ -1,0 +1,520 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import CourseCard from '@/components/CourseCard.astro';
+import { CHAPTERS } from '@/lib/chapters';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const toc = [
+  { id: 'is-this-you',       label: 'Is this you?' },
+  { id: 'concepts',          label: 'Five words first' },
+  { id: 'ladder',            label: 'The learning ladder' },
+  { id: 'anthropic-courses', label: 'Official courses' },
+  { id: 'going-further',     label: 'Going further' },
+  { id: 'what-youll-build',  label: "What you'll build" },
+  { id: 'next-3-clicks',     label: 'Your next 3 clicks' },
+];
+
+// GROUP A — Do these first (default-visible)
+const GROUP_A = [
+  { name: 'Claude 101', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/claude-101', level: 'Beginner', track: 'no-code', time: '~1 hr', free: true, oneLiner: 'Use Claude for real work — writing, data, documents, projects.', official: true },
+  { name: 'Claude Code 101', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/claude-code-101', level: 'Beginner', track: 'builder', time: 'Self-paced', free: true, oneLiner: 'Install to daily workflow — the Explore, Plan, Code, Commit loop.', official: true, note: 'Hands-on exercises need a Pro/Max plan or API key.' },
+  { name: 'Introduction to Claude Cowork', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/introduction-to-claude-cowork', level: 'Beginner', track: 'no-code', time: 'Self-paced', free: true, oneLiner: 'First launch to daily use — task loops, skills, real file output.', official: true },
+];
+
+// GROUP B — Go deeper with Claude (default-closed drawer)
+const GROUP_B = [
+  { name: 'Introduction to Agent Skills', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/introduction-to-agent-skills', level: 'Beginner', track: 'both', time: 'Self-paced', free: true, oneLiner: 'Write reusable markdown Skills Claude auto-applies. No coding.', official: true },
+  { name: 'Claude Code in Action', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/claude-code-in-action', level: 'Intermediate', track: 'builder', time: 'Self-paced', free: true, oneLiner: 'Drive Claude Code inside a real development process.', official: true },
+  { name: 'Introduction to Subagents', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/introduction-to-subagents', level: 'Intermediate', track: 'builder', time: 'Self-paced', free: true, oneLiner: 'Delegate work and manage context by splitting tasks across subagents.', official: true },
+  { name: 'Building with the Claude API', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/claude-with-the-anthropic-api', level: 'Intermediate', track: 'builder', time: 'Self-paced', free: true, oneLiner: 'API auth, prompting, structured output, tool use, RAG, caching.', official: true, note: 'Requires Python proficiency.' },
+  { name: 'Introduction to Model Context Protocol', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/introduction-to-model-context-protocol', level: 'Intermediate', track: 'builder', time: 'Self-paced', free: true, oneLiner: 'Build MCP servers and clients in Python — tools, resources, prompts.', official: true, note: 'Requires Python.' },
+  { name: 'Claude Code Documentation', vendor: 'Anthropic', url: 'https://code.claude.com/docs/en/overview', level: 'Beginner', track: 'builder', time: 'Reference', free: true, oneLiner: 'Official Claude Code docs — install, CLAUDE.md, hooks, MCP, subagents.', official: true },
+  { name: 'Claude Platform Docs', vendor: 'Anthropic', url: 'https://platform.claude.com/docs/en/home', level: 'Beginner', track: 'builder', time: 'Reference', free: true, oneLiner: 'Official platform docs — API, models, prompting, agents.', official: true },
+  { name: 'Claude Cookbooks', vendor: 'Anthropic', url: 'https://github.com/anthropics/claude-cookbooks', level: 'Intermediate', track: 'builder', time: 'Reference', free: true, oneLiner: 'Official code recipes — runnable notebooks for API, tools, RAG.', official: true },
+  { name: 'Model Context Protocol Docs', vendor: 'MCP · Anthropic-stewarded', url: 'https://modelcontextprotocol.io/docs/getting-started/intro', level: 'Intermediate', track: 'builder', time: 'Reference', free: true, oneLiner: 'The open MCP spec — the standard behind connectors.', official: true, note: 'Open standard, not on anthropic.com.' },
+];
+
+// GROUP C — Other ecosystems: OpenAI & Google (default-closed drawer)
+const GROUP_C = [
+  { name: 'Getting started with ChatGPT', vendor: 'OpenAI', url: 'https://openai.com/academy/getting-started/', level: 'Beginner', track: 'no-code', time: '30-60 min', free: true, oneLiner: 'Your first conversation — write, brainstorm, solve problems.', official: true },
+  { name: 'Prompting fundamentals', vendor: 'OpenAI', url: 'https://openai.com/academy/prompting/', level: 'Beginner', track: 'no-code', time: '1 hr', free: true, oneLiner: 'Write clear, effective prompts — the core everyday skill.', official: true },
+  { name: 'OpenAI Academy', vendor: 'OpenAI', url: 'https://academy.openai.com/', level: 'Beginner', track: 'both', time: 'Self-paced', free: true, oneLiner: "OpenAI's free learning hub — videos, guides, live events.", official: true },
+  { name: 'OpenAI Developer Quickstart', vendor: 'OpenAI', url: 'https://developers.openai.com/api/docs/quickstart', level: 'Beginner', track: 'builder', time: '1-2 hrs', free: true, oneLiner: 'Your first API call — keys, SDK, text, tools, streaming.', official: true, note: 'API usage needs paid credits.' },
+  { name: 'OpenAI Cookbook', vendor: 'OpenAI', url: 'https://developers.openai.com/cookbook', level: 'Intermediate', track: 'builder', time: 'Reference', free: true, oneLiner: 'Runnable recipes — agents, evals, RAG, function calling.', official: true },
+  { name: 'Google AI Studio', vendor: 'Google', url: 'https://aistudio.google.com/', level: 'Beginner', track: 'no-code', time: 'Self-paced', free: true, oneLiner: 'Browser playground — type a prompt, set a system instruction, Run.', official: true },
+  { name: 'Introduction to Generative AI', vendor: 'Google', url: 'https://www.skills.google/course_templates/536', level: 'Beginner', track: 'no-code', time: '45 min', free: true, oneLiner: '45-minute primer on what generative AI actually is. Free badge.', official: true },
+  { name: 'Gemini API quickstart', vendor: 'Google', url: 'https://ai.google.dev/gemini-api/docs/quickstart', level: 'Intermediate', track: 'builder', time: '30 min', free: true, oneLiner: 'Free API key, install the SDK, first call in under five minutes.', official: true },
+  { name: 'Gemini API documentation', vendor: 'Google', url: 'https://ai.google.dev/gemini-api/docs', level: 'Intermediate', track: 'builder', time: 'Reference', free: true, oneLiner: 'Full developer reference — text, tools, function calling.', official: true },
+];
+
+// GROUP D — Hand-picked extras (default-closed drawer; independent hosts)
+const GROUP_D = [
+  { name: 'AI Prompting for Everyone', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/ai-prompting-for-everyone/', level: 'Beginner', track: 'no-code', time: '3 hrs', free: 'core', oneLiner: 'Andrew Ng teaches non-technical people to prompt ChatGPT and Claude.', note: 'Watch free; graded certificate is paid.' },
+  { name: 'Generative AI for Everyone', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/generative-ai-for-everyone/', level: 'Beginner', track: 'no-code', time: '5 hrs', free: 'core', oneLiner: 'Andrew Ng: how generative AI works and where to use it. No coding.', note: 'Watch free; certificate is paid.' },
+  { name: 'How Transformer LLMs Work', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/how-transformer-llms-work/', level: 'Beginner', track: 'both', time: '1.5 hrs', free: 'core', oneLiner: '90-minute look under the hood: tokens, attention, prediction.', note: 'Watch free; certificate is paid.' },
+  { name: 'Claude Code: A Highly Agentic Coding Assistant', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/claude-code-a-highly-agentic-coding-assistant/', level: 'Intermediate', track: 'builder', time: '2 hrs', free: 'core', oneLiner: "Anthropic's own course on driving Claude Code across a real codebase.", note: 'Watch free; certificate is paid.' },
+  { name: 'MCP: Build Rich-Context AI Apps with Anthropic', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/mcp-build-rich-context-ai-apps-with-anthropic/', level: 'Intermediate', track: 'builder', time: '2 hrs', free: 'core', oneLiner: "Anthropic's Elie Schoppik shows you how to build and deploy an MCP server.", note: 'Watch free; certificate is paid.' },
+  { name: 'AI Agents Course', vendor: 'Hugging Face', url: 'https://huggingface.co/learn/agents-course', level: 'Beginner', track: 'both', time: 'Self-paced', free: true, oneLiner: 'Free course, free certificate — what agents are and how to build them.', note: 'Hands-on units need basic Python.' },
+  { name: 'Generative AI for Beginners', vendor: 'Microsoft', url: 'https://github.com/microsoft/generative-ai-for-beginners', level: 'Beginner', track: 'builder', time: 'Self-paced', free: true, oneLiner: '21 free lessons covering prompts, RAG, agents, and more.', note: 'Assumes basic Python or TypeScript.' },
+];
+---
+<BaseLayout
+  title="Learn"
+  description="Never run an AI agent? Start here. The official free courses, in the right order — then the book."
+>
+  <!-- HERO (above the grid) -->
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Learn</div>
+    <h1 class="max-w-[18ch]">You've used ChatGPT. Now learn to run it.</h1>
+    <p class="mt-4 text-lg md:text-xl max-w-[60ch]" style="color: rgb(var(--fg) / 0.9)">
+      You don't need a bootcamp. You need an afternoon, the official free courses, and an order to take them in. That's this page. Then the book.
+    </p>
+    <blockquote class="mt-6 border-l-2 pl-5 font-display text-2xl md:text-3xl leading-snug max-w-[24ch]" style="border-color: rgb(var(--accent)); color: rgb(var(--fg))">
+      Stop using AI like a chatbot. Start using it like an OS.
+    </blockquote>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">
+      The full reframe is the prologue. <a href={`${base}/how-to-read`} style="color: rgb(var(--accent))">Read it →</a>
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="#ladder" class="btn-flame">Start the ladder ↓</a>
+      <a href="#anthropic-courses" class="btn-ghost">I just want the courses ↓</a>
+    </div>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={toc} title="The on-ramp" />
+      <div class="max-w-3xl">
+
+        <!-- IS THIS YOU -->
+        <div id="is-this-you" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">Is this you?</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>You opened ChatGPT, asked it a few things, and closed the tab. It was fine. It didn't change how you work. That's because you used it like a chatbot — a thing you visit. This page is the other door.</p>
+            <p>Two ways in. Pick yours. The page serves both — it splits at the right moment and meets back up at the end.</p>
+          </div>
+
+          <div class="rounded-xl overflow-hidden my-6" style="border: 1px solid rgb(var(--line))">
+            <svg viewBox="0 0 720 460" role="img" aria-labelledby="ladder-title" class="w-full h-auto block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" xmlns="http://www.w3.org/2000/svg">
+              <title id="ladder-title">The learning ladder: absolute beginner to operator, splitting into a no-code and a builder track, then reconverging into the Playbook.</title>
+              <rect x="0" y="0" width="720" height="460" fill="#0e0f11"/>
+              <text x="40" y="42" fill="#ff6b2c" font-size="11" letter-spacing="3" font-weight="600">THE LEARNING LADDER</text>
+              <g>
+                <rect x="40" y="64" width="640" height="56" rx="10" fill="#16171b" stroke="#262521"/>
+                <circle cx="74" cy="92" r="5" fill="#ff6b2c"/>
+                <text x="92" y="88" fill="#fafaf7" font-size="15" font-weight="600">Absolute beginner</text>
+                <text x="92" y="108" fill="#aaa79a" font-size="12">You've only used a chatbot. Start with one official free course.</text>
+                <text x="660" y="98" fill="#262521" font-size="13" text-anchor="end" font-family="ui-monospace, Menlo, monospace">01</text>
+              </g>
+              <path d="M360 120 L360 138 M360 138 L200 138 L200 156 M360 138 L520 138 L520 156" stroke="#262521" stroke-width="1.5" fill="none"/>
+              <g>
+                <rect x="40" y="156" width="300" height="120" rx="10" fill="#16171b" stroke="#262521"/>
+                <text x="62" y="182" fill="#22d3a0" font-size="10" letter-spacing="2" font-weight="600">NO-CODE TRACK</text>
+                <text x="62" y="206" fill="#fafaf7" font-size="13.5">Operator. Memory + scheduled jobs.</text>
+                <text x="62" y="228" fill="#aaa79a" font-size="11.5">Run Claude like an OS, not a chat box.</text>
+                <text x="62" y="248" fill="#aaa79a" font-size="11.5">Wire your tools. Set tasks that run</text>
+                <text x="62" y="265" fill="#aaa79a" font-size="11.5">without you.</text>
+                <text x="318" y="180" fill="#262521" font-size="13" text-anchor="end" font-family="ui-monospace, Menlo, monospace">02</text>
+              </g>
+              <g>
+                <rect x="380" y="156" width="300" height="120" rx="10" fill="#16171b" stroke="#262521"/>
+                <text x="402" y="182" fill="#ff6b2c" font-size="10" letter-spacing="2" font-weight="600">BUILDER TRACK</text>
+                <text x="402" y="206" fill="#fafaf7" font-size="13.5">Builder. Agentic coding.</text>
+                <text x="402" y="228" fill="#aaa79a" font-size="11.5">Claude Code in the terminal. Skills,</text>
+                <text x="402" y="248" fill="#aaa79a" font-size="11.5">MCP, hooks. Ship from a prompt</text>
+                <text x="402" y="265" fill="#aaa79a" font-size="11.5">to a running thing.</text>
+                <text x="658" y="180" fill="#262521" font-size="13" text-anchor="end" font-family="ui-monospace, Menlo, monospace">02</text>
+              </g>
+              <path d="M200 276 L200 296 L360 296 M520 276 L520 296 L360 296 M360 296 L360 314" stroke="#262521" stroke-width="1.5" fill="none"/>
+              <g>
+                <rect x="40" y="314" width="640" height="56" rx="10" fill="#16171b" stroke="#262521"/>
+                <circle cx="74" cy="342" r="5" fill="#22d3a0"/>
+                <text x="92" y="338" fill="#fafaf7" font-size="15" font-weight="600">Orient, then set up</text>
+                <text x="92" y="358" fill="#aaa79a" font-size="12">Read /how-to-read to orient. Run /day-zero to get your machine running.</text>
+                <text x="660" y="348" fill="#262521" font-size="13" text-anchor="end" font-family="ui-monospace, Menlo, monospace">03</text>
+              </g>
+              <path d="M360 370 L360 388" stroke="#262521" stroke-width="1.5" fill="none"/>
+              <g>
+                <rect x="40" y="388" width="640" height="52" rx="10" fill="#16171b" stroke="#ff6b2c"/>
+                <rect x="40" y="388" width="4" height="52" rx="2" fill="#ff6b2c"/>
+                <text x="74" y="412" fill="#fafaf7" font-size="15" font-weight="700">The Playbook</text>
+                <text x="74" y="430" fill="#aaa79a" font-size="12">The book is the keys. Read it and build.</text>
+                <text x="660" y="420" fill="#ff6b2c" font-size="13" text-anchor="end" font-family="ui-monospace, Menlo, monospace">04</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4 mt-6">
+            <div class="card" style="background: rgba(var(--fg) / 0.02)">
+              <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent-2))">Operator · no-code</div>
+              <p class="m-0 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.85)">You run a business, a team, or your own calendar. You don't want a terminal. You want Claude doing real work — drafting, sorting, summarizing, running a job every morning so it's done before you sit down. You'll never write a line of code. You'll still ship things that run without you.</p>
+            </div>
+            <div class="card" style="background: rgba(var(--fg) / 0.02)">
+              <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Builder · Claude Code</div>
+              <p class="m-0 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.85)">You're comfortable in an editor and a command line. You want Claude inside your repo — reading the codebase, planning a change, writing it, committing it. You want subagents, connectors, the API when it's time to ship software. This track gets you there.</p>
+            </div>
+          </div>
+
+          <div class="space-y-4 leading-relaxed mt-6" style="color: rgb(var(--fg) / 0.88)">
+            <p>The full who-and-why — who this book is for and who it isn't — lives in the prologue. <a href={`${base}/how-to-read`} style="color: rgb(var(--accent))">Read it →</a> Then come back and start the ladder.</p>
+          </div>
+        </div>
+
+        <!-- CONCEPTS -->
+        <div id="concepts" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Five words you need first</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Five words show up everywhere from here on. Learn them now, in one breath each. These are the beginner-grade lines — the <a href={`${base}/glossary`} style="color: rgb(var(--accent))">full glossary</a> has the depth.</p>
+          </div>
+
+          <div class="mt-6 space-y-3">
+            <div class="rounded-lg p-4 flex flex-col sm:flex-row sm:gap-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+              <div class="font-display text-lg shrink-0 sm:w-44">Model</div>
+              <p class="m-0 text-sm leading-relaxed mt-1 sm:mt-0" style="color: rgb(var(--muted))">The brain. Claude is a model. So is the thing under ChatGPT. It reads text and predicts what comes next, trained on a huge amount of writing. You don't manage the model — you direct it. <a href={`${base}/glossary`} style="color: rgb(var(--accent))">glossary →</a></p>
+            </div>
+            <div class="rounded-lg p-4 flex flex-col sm:flex-row sm:gap-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+              <div class="font-display text-lg shrink-0 sm:w-44">Chat vs Agent</div>
+              <p class="m-0 text-sm leading-relaxed mt-1 sm:mt-0" style="color: rgb(var(--muted))">A window vs a worker. Chat answers and waits. An agent takes actions — runs tools, reads and writes your files, loops until the job is done, then comes back. The whole jump in this book is from chat to agent. <a href={`${base}/glossary#Agent`} style="color: rgb(var(--accent))">glossary →</a></p>
+            </div>
+            <div class="rounded-lg p-4 flex flex-col sm:flex-row sm:gap-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+              <div class="font-display text-lg shrink-0 sm:w-44">Claude Code</div>
+              <p class="m-0 text-sm leading-relaxed mt-1 sm:mt-0" style="color: rgb(var(--muted))">The agent in your terminal. It works inside your files and your code: explore, plan, write, commit. This is the builder's surface. <a href={`${base}/glossary#Claude%20Code`} style="color: rgb(var(--accent))">glossary →</a></p>
+            </div>
+            <div class="rounded-lg p-4 flex flex-col sm:flex-row sm:gap-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+              <div class="font-display text-lg shrink-0 sm:w-44">Cowork</div>
+              <p class="m-0 text-sm leading-relaxed mt-1 sm:mt-0" style="color: rgb(var(--muted))">The agent in your browser. Same worker, no terminal. It runs a task, writes the file, comes back. This is the operator's surface — Claude with a desk and a filing cabinet. <a href={`${base}/glossary#Cowork`} style="color: rgb(var(--accent))">glossary →</a></p>
+            </div>
+            <div class="rounded-lg p-4 flex flex-col sm:flex-row sm:gap-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+              <div class="font-display text-lg shrink-0 sm:w-44">MCP / connectors</div>
+              <p class="m-0 text-sm leading-relaxed mt-1 sm:mt-0" style="color: rgb(var(--muted))">The standard plug. It's how an agent reaches your tools and data — your calendar, your files, a database. Plug it in once; the agent can use it from then on. <a href={`${base}/glossary#MCP`} style="color: rgb(var(--accent))">glossary →</a></p>
+            </div>
+          </div>
+
+          <div class="rounded-xl overflow-hidden my-6" style="border: 1px solid rgb(var(--line))">
+            <svg viewBox="0 0 720 380" role="img" aria-labelledby="cvo-title" class="w-full h-auto block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" xmlns="http://www.w3.org/2000/svg">
+              <title id="cvo-title">Chatbot versus OS: a single throwaway chat window contrasted with an operating system that has persistent memory, scheduled jobs, and workers.</title>
+              <rect x="0" y="0" width="720" height="380" fill="#0e0f11"/>
+              <text x="40" y="42" fill="#ff6b2c" font-size="11" letter-spacing="3" font-weight="600">CHATBOT vs OS</text>
+              <g>
+                <text x="40" y="78" fill="#aaa79a" font-size="11" letter-spacing="2" font-weight="600">USING IT LIKE A CHATBOT</text>
+                <rect x="40" y="92" width="290" height="248" rx="12" fill="#16171b" stroke="#262521"/>
+                <rect x="64" y="116" width="242" height="20" rx="6" fill="#0e0f11" stroke="#262521"/>
+                <circle cx="78" cy="126" r="3" fill="#262521"/>
+                <circle cx="90" cy="126" r="3" fill="#262521"/>
+                <text x="186" y="130" fill="#aaa79a" font-size="9.5" text-anchor="middle">one chat window</text>
+                <rect x="120" y="152" width="166" height="26" rx="8" fill="#0e0f11" stroke="#262521"/>
+                <text x="276" y="169" fill="#aaa79a" font-size="11" text-anchor="end">you ask</text>
+                <rect x="64" y="186" width="186" height="26" rx="8" fill="#1c1d22" stroke="#262521"/>
+                <text x="76" y="203" fill="#fafaf7" font-size="11">it answers</text>
+                <rect x="120" y="220" width="166" height="26" rx="8" fill="#0e0f11" stroke="#262521"/>
+                <text x="276" y="237" fill="#aaa79a" font-size="11" text-anchor="end">you ask again</text>
+                <line x1="64" y1="270" x2="306" y2="270" stroke="#262521" stroke-dasharray="3 4"/>
+                <text x="185" y="294" fill="#aaa79a" font-size="11.5" text-anchor="middle">Close the tab —</text>
+                <text x="185" y="312" fill="#aaa79a" font-size="11.5" text-anchor="middle">it forgets everything.</text>
+              </g>
+              <text x="360" y="220" fill="#262521" font-size="22" text-anchor="middle" font-weight="700">→</text>
+              <g>
+                <text x="390" y="78" fill="#22d3a0" font-size="11" letter-spacing="2" font-weight="600">USING IT LIKE AN OS</text>
+                <rect x="390" y="92" width="290" height="248" rx="12" fill="#16171b" stroke="#22d3a0"/>
+                <rect x="498" y="126" width="74" height="40" rx="9" fill="#0e0f11" stroke="#262521"/>
+                <text x="535" y="151" fill="#fafaf7" font-size="12" text-anchor="middle" font-weight="600">Claude</text>
+                <rect x="410" y="200" width="118" height="48" rx="9" fill="#0e0f11" stroke="#262521"/>
+                <text x="469" y="222" fill="#fafaf7" font-size="11.5" text-anchor="middle">Memory</text>
+                <text x="469" y="238" fill="#aaa79a" font-size="9.5" text-anchor="middle">it remembers you</text>
+                <rect x="542" y="200" width="118" height="48" rx="9" fill="#0e0f11" stroke="#262521"/>
+                <text x="601" y="222" fill="#fafaf7" font-size="11.5" text-anchor="middle">Scheduled jobs</text>
+                <text x="601" y="238" fill="#aaa79a" font-size="9.5" text-anchor="middle">runs without you</text>
+                <rect x="476" y="276" width="118" height="48" rx="9" fill="#0e0f11" stroke="#262521"/>
+                <text x="535" y="298" fill="#fafaf7" font-size="11.5" text-anchor="middle">Workers</text>
+                <text x="535" y="314" fill="#aaa79a" font-size="9.5" text-anchor="middle">many at once</text>
+                <path d="M520 166 L469 200 M550 166 L601 200 M535 166 L535 276" stroke="#22d3a0" stroke-width="1.5" fill="none" opacity="0.55"/>
+              </g>
+            </svg>
+          </div>
+
+          <div class="rounded-xl overflow-hidden my-6" style="border: 1px solid rgb(var(--line))">
+            <svg viewBox="0 0 720 400" role="img" aria-labelledby="loop-title" class="w-full h-auto block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" xmlns="http://www.w3.org/2000/svg">
+              <title id="loop-title">The agent loop: a model thinks, calls tools, reads the result, and updates its memory, cycling until it reaches the goal.</title>
+              <rect x="0" y="0" width="720" height="400" fill="#0e0f11"/>
+              <text x="40" y="42" fill="#ff6b2c" font-size="11" letter-spacing="3" font-weight="600">THE AGENT LOOP</text>
+              <defs>
+                <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#ff6b2c"/>
+                </marker>
+              </defs>
+              <g>
+                <rect x="296" y="84" width="128" height="58" rx="11" fill="#16171b" stroke="#262521"/>
+                <text x="360" y="110" fill="#fafaf7" font-size="13.5" text-anchor="middle" font-weight="600">Think</text>
+                <text x="360" y="128" fill="#aaa79a" font-size="10.5" text-anchor="middle">the model plans</text>
+              </g>
+              <g>
+                <rect x="512" y="190" width="148" height="58" rx="11" fill="#16171b" stroke="#262521"/>
+                <text x="586" y="216" fill="#fafaf7" font-size="13.5" text-anchor="middle" font-weight="600">Act — call a tool</text>
+                <text x="586" y="234" fill="#aaa79a" font-size="10.5" text-anchor="middle">read, write, run, fetch</text>
+              </g>
+              <g>
+                <rect x="296" y="298" width="128" height="58" rx="11" fill="#16171b" stroke="#262521"/>
+                <text x="360" y="324" fill="#fafaf7" font-size="13.5" text-anchor="middle" font-weight="600">Observe</text>
+                <text x="360" y="342" fill="#aaa79a" font-size="10.5" text-anchor="middle">read the result</text>
+              </g>
+              <g>
+                <rect x="60" y="190" width="148" height="58" rx="11" fill="#16171b" stroke="#262521"/>
+                <text x="134" y="216" fill="#fafaf7" font-size="13.5" text-anchor="middle" font-weight="600">Remember</text>
+                <text x="134" y="234" fill="#aaa79a" font-size="10.5" text-anchor="middle">update memory</text>
+              </g>
+              <path d="M424 113 C500 122 540 150 555 188" stroke="#ff6b2c" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+              <path d="M560 248 C535 300 470 327 426 330" stroke="#ff6b2c" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+              <path d="M294 330 C228 326 170 300 150 248" stroke="#ff6b2c" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+              <path d="M152 188 C172 150 230 121 294 113" stroke="#ff6b2c" stroke-width="1.8" fill="none" marker-end="url(#ah)"/>
+              <g>
+                <circle cx="360" cy="220" r="46" fill="#0e0f11" stroke="#22d3a0" stroke-width="1.5"/>
+                <text x="360" y="216" fill="#22d3a0" font-size="12.5" text-anchor="middle" font-weight="700">GOAL</text>
+                <text x="360" y="234" fill="#aaa79a" font-size="9.5" text-anchor="middle">loop until done</text>
+              </g>
+              <text x="360" y="384" fill="#aaa79a" font-size="11.5" text-anchor="middle">A chatbot answers once. An agent loops — toward a goal you set.</text>
+            </svg>
+          </div>
+
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Want the deeper version of any of these? The vault and connectors get a full chapter → <a href={`${base}/chapters/04-the-vault`} style="color: rgb(var(--accent))">Ch 4 — the vault</a>. Otherwise, keep going — next is the order to take it all in.</p>
+          </div>
+        </div>
+
+        <!-- LADDER -->
+        <div id="ladder" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The learning ladder</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Four rungs. Every rung tells you the level, the why, the time, and whether it's mandatory or optional. Nothing here is a wall of forty links. Take them in order.</p>
+          </div>
+          <ol class="mt-6 space-y-3 list-none p-0">
+            <li class="card" style="background: rgba(var(--fg) / 0.02)">
+              <div class="flex gap-4">
+                <span class="font-display text-3xl tabular-nums shrink-0" style="color: rgb(var(--accent))">1</span>
+                <div class="min-w-0">
+                  <div class="font-display text-lg">Get the concepts</div>
+                  <div class="text-[0.7rem] uppercase tracking-wider mt-1" style="color: rgb(var(--muted))">Everyone · Mandatory · You just did it</div>
+                  <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.82)">The five words above and the reframe. That's the floor. You're standing on it now.</p>
+                </div>
+              </div>
+            </li>
+            <li class="card" style="background: rgba(var(--fg) / 0.02)">
+              <div class="flex gap-4">
+                <span class="font-display text-3xl tabular-nums shrink-0" style="color: rgb(var(--accent))">2</span>
+                <div class="min-w-0">
+                  <div class="font-display text-lg">Take the official courses</div>
+                  <div class="text-[0.7rem] uppercase tracking-wider mt-1" style="color: rgb(var(--muted))">Everyone · Mandatory · ~1 hour to start</div>
+                  <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.82)">The free, official Anthropic courses, in order. One course everyone takes; then one track-specific course; then your first reusable Skill. This is the rung that does the real teaching. <a href="#anthropic-courses" style="color: rgb(var(--accent))">Jump to the courses →</a></p>
+                </div>
+              </div>
+            </li>
+            <li class="card" style="background: rgba(var(--fg) / 0.02)">
+              <div class="flex gap-4">
+                <span class="font-display text-3xl tabular-nums shrink-0" style="color: rgb(var(--accent))">3</span>
+                <div class="min-w-0">
+                  <div class="font-display text-lg">Orient, then set up</div>
+                  <div class="text-[0.7rem] uppercase tracking-wider mt-1" style="color: rgb(var(--muted))">Everyone · Mandatory · self-paced</div>
+                  <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.82)">Read why this matters → <a href={`${base}/how-to-read`} style="color: rgb(var(--accent))">how to read this book</a>. Then set up your machine — twelve concrete steps, install to first scheduled task → <a href={`${base}/day-zero`} style="color: rgb(var(--accent))">day zero</a>. Builders do the hands-on here. The ladder routes you to the setup; it doesn't repeat it.</p>
+                </div>
+              </div>
+            </li>
+            <li class="card" style="background: rgba(var(--fg) / 0.02)">
+              <div class="flex gap-4">
+                <span class="font-display text-3xl tabular-nums shrink-0" style="color: rgb(var(--accent))">4</span>
+                <div class="min-w-0">
+                  <div class="font-display text-lg">Read and build</div>
+                  <div class="text-[0.7rem] uppercase tracking-wider mt-1" style="color: rgb(var(--muted))">Everyone · The point of all of it</div>
+                  <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.82)">Open chapter 1 and build alongside it → <a href={`${base}/chapters/01-killed-my-tabs`} style="color: rgb(var(--accent))">Ch 1 — the day I killed my tabs</a>. Courses end. Building starts. Ship one thing that runs without you.</p>
+                </div>
+              </div>
+            </li>
+          </ol>
+          <div class="space-y-4 leading-relaxed mt-6" style="color: rgb(var(--fg) / 0.88)">
+            <p>That's the climb. Concepts, courses, setup, build. Start the courses now.</p>
+          </div>
+        </div>
+
+        <!-- ANTHROPIC COURSES -->
+        <div id="anthropic-courses" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Official courses — Anthropic first</h2>
+
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 text-xs" style="color: rgb(var(--muted))">
+            <span>Links verified 2026-06-05</span>
+            <span class="inline-flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded text-[0.6rem] uppercase tracking-wider" style="border: 1px solid rgb(var(--accent-2) / 0.4); color: rgb(var(--accent-2))">Official</span> on the toolmaker's own domain</span>
+            <span class="inline-flex items-center gap-1.5"><span class="px-1.5 py-0.5 rounded text-[0.6rem] uppercase tracking-wider" style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted))">Independent</span> third-party, still legit</span>
+          </div>
+
+          <a href="#next-3-clicks" class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm no-underline mb-5" style="border: 1px solid rgb(var(--accent-2) / 0.4); background: rgb(var(--accent-2) / 0.06); color: rgb(var(--accent-2))">
+            No-code? You're done after the Skills course — skip to your next 3 clicks →
+          </a>
+
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>These are free, on Anthropic's own domain, and ordered. No third-party rehashes — go straight to the people who built the tools. Each course earns its slot: a reason, a level, a track.</p>
+            <p><strong>Do these first — the foundation.</strong> Everyone starts with <strong>Claude 101</strong>. Free, email signup, no card. By the end you've used Claude to do one piece of real work — not asked it a trivia question. That's the line. Cross it here. Then take the course for your track: <strong>Introduction to Claude Cowork</strong> if you're operating no-code, <strong>Claude Code 101</strong> if you're building. One catch on Claude Code 101 — the course is free, but the hands-on exercises want a Pro/Max plan or an API key. Have one ready before you start.</p>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4 mt-4">
+            {GROUP_A.map((c) => <CourseCard {...c} />)}
+          </div>
+
+          <div class="space-y-4 leading-relaxed mt-6" style="color: rgb(var(--fg) / 0.88)">
+            <p><strong>Go deeper with Claude.</strong> Both tracks take <strong>Introduction to Agent Skills</strong> next — Skills are markdown, no code, the first reusable thing you'll own. Builders keep going: <strong>Claude Code in Action</strong>, <strong>Introduction to Subagents</strong>, then <strong>Building with the Claude API</strong> and <strong>Model Context Protocol</strong> when you need them. The API and MCP courses need Python — take them when the work calls for it, not all at once. The docs and cookbooks sit alongside as the manuals: reach for them, don't read them cover to cover.</p>
+          </div>
+
+          <details class="mt-4 rounded-lg border" style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
+            <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between text-sm font-medium select-none">
+              <span>Go deeper with Claude — 9 more (courses, docs, cookbooks)</span>
+              <span class="text-xs" style="color: rgb(var(--muted))">tap to open</span>
+            </summary>
+            <div class="grid sm:grid-cols-2 gap-3 px-4 pb-4">
+              {GROUP_B.map((c) => <CourseCard {...c} />)}
+            </div>
+          </details>
+
+          <div class="space-y-4 leading-relaxed mt-6" style="color: rgb(var(--fg) / 0.88)">
+            <p>Take Claude 101, then the one for your track. Then write your first Skill. That's operator-grade.</p>
+          </div>
+        </div>
+
+        <!-- GOING FURTHER -->
+        <div id="going-further" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Going further</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Most people arrive knowing one tool — usually ChatGPT. If that's you, these are the concept on-ramps. They teach you what a model and a prompt are; then you come back to Claude for the rest of the ladder. Take <strong>one</strong> path to the reframe, not all of them.</p>
+            <p><strong>If you live in OpenAI's world:</strong> start with <em>Getting started with ChatGPT</em> and <em>Prompting fundamentals</em> on OpenAI Academy. Concept-equivalent to Claude 101 — then converge back here.</p>
+            <p><strong>If you live in Google's world:</strong> open <em>Google AI Studio</em>, type a prompt, set a system instruction, hit Run. Then the 45-minute <em>Introduction to Generative AI</em> badge on Google Skills. Same idea, different stack.</p>
+            <p><strong>Want the under-the-hood version:</strong> Andrew Ng's <em>Generative AI for Everyone</em> and <em>AI Prompting for Everyone</em> on DeepLearning.AI explain how this works without code — the courses are watchable free; the graded certificate is paid. Hugging Face's <em>AI Agents Course</em> goes hands-on if you've got basic Python. These are independent of the labs — legit, but not on a toolmaker's own domain. Flagged as such on the cards.</p>
+          </div>
+
+          <div class="rounded-xl overflow-hidden my-6" style="border: 1px solid rgb(var(--line))">
+            <svg viewBox="0 0 720 330" role="img" aria-labelledby="eco-title" class="w-full h-auto block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" xmlns="http://www.w3.org/2000/svg">
+              <title id="eco-title">The ecosystem map: Anthropic, OpenAI, and Google official free academies are the three on-ramps that lead into the Playbook.</title>
+              <rect x="0" y="0" width="720" height="330" fill="#0e0f11"/>
+              <text x="40" y="42" fill="#ff6b2c" font-size="11" letter-spacing="3" font-weight="600">THE ECOSYSTEM MAP</text>
+              <text x="40" y="66" fill="#aaa79a" font-size="12">Free and official first. Learn from the vendors' own academies, not paid rehashes.</text>
+              <g>
+                <rect x="40" y="92" width="200" height="84" rx="11" fill="#16171b" stroke="#262521"/>
+                <text x="62" y="120" fill="#fafaf7" font-size="14" font-weight="700">Anthropic</text>
+                <text x="62" y="142" fill="#aaa79a" font-size="11">Claude + Claude Code.</text>
+                <text x="62" y="160" fill="#22d3a0" font-size="9.5" letter-spacing="1.5" font-weight="600">OFFICIAL ACADEMY</text>
+              </g>
+              <g>
+                <rect x="260" y="92" width="200" height="84" rx="11" fill="#16171b" stroke="#262521"/>
+                <text x="282" y="120" fill="#fafaf7" font-size="14" font-weight="700">OpenAI</text>
+                <text x="282" y="142" fill="#aaa79a" font-size="11">ChatGPT + the API.</text>
+                <text x="282" y="160" fill="#22d3a0" font-size="9.5" letter-spacing="1.5" font-weight="600">OFFICIAL ACADEMY</text>
+              </g>
+              <g>
+                <rect x="480" y="92" width="200" height="84" rx="11" fill="#16171b" stroke="#262521"/>
+                <text x="502" y="120" fill="#fafaf7" font-size="14" font-weight="700">Google</text>
+                <text x="502" y="142" fill="#aaa79a" font-size="11">Gemini + the cloud.</text>
+                <text x="502" y="160" fill="#22d3a0" font-size="9.5" letter-spacing="1.5" font-weight="600">OFFICIAL ACADEMY</text>
+              </g>
+              <path d="M140 176 C140 212 360 210 360 236 M360 176 L360 236 M580 176 C580 212 360 210 360 236" stroke="#262521" stroke-width="1.5" fill="none"/>
+              <g>
+                <rect x="220" y="236" width="280" height="62" rx="11" fill="#16171b" stroke="#ff6b2c"/>
+                <rect x="220" y="236" width="4" height="62" rx="2" fill="#ff6b2c"/>
+                <text x="360" y="264" fill="#fafaf7" font-size="14.5" text-anchor="middle" font-weight="700">The Playbook</text>
+                <text x="360" y="284" fill="#aaa79a" font-size="11" text-anchor="middle">where the on-ramps lead. Read it and build.</text>
+              </g>
+            </svg>
+          </div>
+
+          <details class="mt-4 rounded-lg border" style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
+            <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between text-sm font-medium select-none">
+              <span>Other ecosystems — OpenAI &amp; Google (9)</span>
+              <span class="text-xs" style="color: rgb(var(--muted))">tap to open</span>
+            </summary>
+            <div class="grid sm:grid-cols-2 gap-3 px-4 pb-4">
+              {GROUP_C.map((c) => <CourseCard {...c} />)}
+            </div>
+          </details>
+
+          <details class="mt-3 rounded-lg border" style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
+            <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between text-sm font-medium select-none">
+              <span>Hand-picked extras — DeepLearning.AI, Hugging Face, Microsoft (7)</span>
+              <span class="text-xs" style="color: rgb(var(--muted))">tap to open</span>
+            </summary>
+            <div class="grid sm:grid-cols-2 gap-3 px-4 pb-4">
+              {GROUP_D.map((c) => <CourseCard {...c} independent={true} />)}
+            </div>
+          </details>
+
+          <div class="space-y-4 leading-relaxed mt-6" style="color: rgb(var(--fg) / 0.88)">
+            <p>One thing this section is not: a template library. If you came looking for CLAUDE.md skeletons, hooks, or Skill files to copy-paste, those aren't courses — <a href={`${base}/resources`} style="color: rgb(var(--accent))">templates to copy, not courses →</a></p>
+          </div>
+        </div>
+
+        <!-- WHAT YOU'LL BUILD -->
+        <div id="what-youll-build" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What you'll be able to do</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>This is the payoff. Not theory — things people shipped with this exact stack. Each one is a rung on the same ladder you're climbing.</p>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 mt-6">
+            <a href={`${base}/html-first`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+              <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Idea → artifact</div>
+              <h3 class="m-0 font-display text-xl leading-tight">An idea becomes a company artifact — in a weekend</h3>
+              <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">A wild pitch sat in someone's head for weeks. One Saturday, two linked interactive HTML documents shipped — a deck and a profit calculator — and the artifact existed before the next meeting did. <span style="color: rgb(var(--fg) / 0.8)">That's "I have an idea and a real thing now." →</span></p>
+            </a>
+            <a href={`${base}/chapters/19-build-products`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+              <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Ship</div>
+              <h3 class="m-0 font-display text-xl leading-tight">A real product, deployed, in one day</h3>
+              <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">Problem statement by 9 AM, spec by 10, repo by 10:30, MVP by 1 PM, deployed by 5. Four hours of hands-on work, $80 in tokens, a real cron, a real URL, real users. <span style="color: rgb(var(--fg) / 0.8)">That's "I shipped." →</span></p>
+            </a>
+            <a href={`${base}/dynamic-workflows`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+              <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Scale</div>
+              <h3 class="m-0 font-display text-xl leading-tight">A refactor across twelve files — the swarm holds it in its head</h3>
+              <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">Work that used to eat a sprint: a dynamic workflow planned the decomposition, fanned out across the files in parallel, ran verifier passes to catch its own mistakes, and came back with a diff you could read top to bottom. You still read every line. <span style="color: rgb(var(--fg) / 0.8)">That's "I scaled it." →</span></p>
+            </a>
+            <a href="https://claude.com/customers" target="_blank" rel="noopener noreferrer" class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="text-[0.65rem] uppercase tracking-[0.18em]" style="color: rgb(var(--accent))">Run on it</span>
+                <span class="text-[0.55rem] uppercase tracking-[0.14em] px-1.5 py-0.5 rounded" style="border: 1px solid rgb(var(--accent-2) / 0.4); color: rgb(var(--accent-2))">Official ↗</span>
+              </div>
+              <h3 class="m-0 font-display text-xl leading-tight">A whole company runs on it</h3>
+              <p class="mt-2 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">Satispay — a 200+ person fintech — now writes 75% of its code with Claude. And Lovable, built on Claude, lets anyone ship software 20x faster. <span style="color: rgb(var(--fg) / 0.8)">That's "my operation runs on this." →</span></p>
+            </a>
+          </div>
+          <div class="space-y-4 leading-relaxed mt-6" style="color: rgb(var(--fg) / 0.88)">
+            <p>That's the progression — idea, ship, scale, operation. You start at rung one. These are where it goes.</p>
+          </div>
+        </div>
+
+        <!-- NEXT 3 CLICKS -->
+        <div id="next-3-clicks" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Your next 3 clicks</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Courses gave you the tools. The book is the keys. Three clicks, in order.</p>
+          </div>
+          <div class="grid gap-4 mt-6 sm:grid-cols-3">
+            <a href={`${base}/how-to-read`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+              <span class="font-display text-3xl tabular-nums" style="color: rgb(var(--accent))">1</span>
+              <div class="font-display text-lg mt-2">Orient</div>
+              <p class="mt-1 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">Read the prologue. Who this is for, the reframe in full, the six-part map. Fifteen minutes.</p>
+            </a>
+            <a href={`${base}/day-zero`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+              <span class="font-display text-3xl tabular-nums" style="color: rgb(var(--accent))">2</span>
+              <div class="font-display text-lg mt-2">Set up the machine</div>
+              <p class="mt-1 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">Twelve steps, clean machine to first scheduled task. Tick the boxes. You'll have something running in your name before the coffee's cold.</p>
+            </a>
+            <a href={`${base}/chapters/01-killed-my-tabs`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+              <span class="font-display text-3xl tabular-nums" style="color: rgb(var(--accent))">3</span>
+              <div class="font-display text-lg mt-2">Read chapter 1, and build</div>
+              <p class="mt-1 m-0 text-sm leading-relaxed" style="color: rgb(var(--muted))">The day I killed my tabs. Read it with your terminal open and do the thing it describes.</p>
+            </a>
+          </div>
+          <div class="space-y-4 leading-relaxed mt-8" style="color: rgb(var(--fg) / 0.88)">
+            <p>You've crossed the line — AI as an OS, not a chatbot. Now pick one job you do every week and hand it to Claude. Ship it. Watch it run once without you. That's the whole move. Turn the page.</p>
+            <p class="text-sm" style="color: rgb(var(--muted))">The whole arc is {CHAPTERS.length} chapters. Start with one. → <a href={`${base}/journey`} style="color: rgb(var(--accent))">the journey</a></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

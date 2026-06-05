@@ -10,6 +10,24 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.8',
+    date: '2026-06-05',
+    tagline: 'Learn — the on-ramp before the book. A new /learn page routes total beginners through the official free courses, in order, then hands them to the Playbook.',
+    shipped: [
+      'New standalone page /learn — the entry point for anyone new to AI, Claude, Claude Code, or Cowork. A staged learning ladder (concepts → official courses → orient + set up → read and build), a five-word concepts primer that links the glossary instead of redefining it, and a no-code vs builder split that meets back up at the end.',
+      'The full official course catalog, verified live and ordered — not dumped. Anthropic Academy first (Claude 101, Claude Code 101, Cowork, Agent Skills, Subagents, the Claude API, MCP, docs + cookbooks), then OpenAI and Google official academies, then hand-picked independents (DeepLearning.AI, Hugging Face, Microsoft). 28 resources; only the 3-card foundation shows by default, the rest behind drawers so it never becomes a wall.',
+      'Four house-style inline SVG diagrams (palette-correct, viewBox-only, mobile-legible): the learning ladder, chatbot-vs-OS, the agent loop, and the ecosystem map. A "what you will build" section points at real receipts (the HTML-ization weekend, the one-day product, the twelve-file workflow refactor) plus Anthropic\'s own customer numbers.',
+      'Designed and built by a deep multi-agent workflow — research across every vendor learning ecosystem (links HTTP-verified), curriculum + IA + diagram design, Vlad-voice copy, then an adversarial red-team that cut a mis-sourced stat, two stale "free" cards, and a 31-card wall before any of it shipped.',
+      'Wiring — new Learn tab in the nav, a flagship homepage tile + hero CTA, Cmd-K entry + section deep-links + popular default, and this changelog. Chapter count unchanged.',
+    ],
+    receipts: [
+      { label: 'New page', value: '/learn · onboarding on-ramp · 7 sections, 4 diagrams' },
+      { label: 'Courses', value: '28 verified-live (Anthropic · OpenAI · Google · independents)' },
+      { label: 'Built by', value: 'deep multi-agent workflow + adversarial red-team' },
+      { label: 'Wiring surfaces', value: 'Nav · homepage tile + hero CTA · Cmd-K · changelog' },
+    ],
+  },
+  {
     edition: 'Edition 9.7',
     date: '2026-06-04',
     tagline: 'Forty-four chapters. Dreaming — the autonomous loop pointed inward: a local, propose-only twin of Anthropic\'s memory feature that surfaces candidate lessons from your own sessions and verifies every quote against the raw transcript, but never writes to memory itself.',

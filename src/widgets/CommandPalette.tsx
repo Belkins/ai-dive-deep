@@ -106,6 +106,15 @@ const DREAMING_SECTIONS: { id: string; label: string }[] = [
   { id: 'not-for', label: 'When not to' },
   { id: 'monday', label: 'Do this Monday' },
 ];
+const LEARN_SECTIONS: { id: string; label: string }[] = [
+  { id: 'is-this-you', label: 'Is this you? (no-code vs builder)' },
+  { id: 'concepts', label: 'Five words you need first' },
+  { id: 'ladder', label: 'The learning ladder' },
+  { id: 'anthropic-courses', label: 'Official courses (Anthropic first)' },
+  { id: 'going-further', label: 'Going further (OpenAI, Google, more)' },
+  { id: 'what-youll-build', label: "What you'll be able to do" },
+  { id: 'next-3-clicks', label: 'Your next 3 clicks' },
+];
 // Per-chapter synonyms — model names, company names, competing tools, people,
 // and adjacent topics that readers type into Cmd-K but don't appear in chapter
 // titles/subtitles.
@@ -187,6 +196,7 @@ export default function CommandPalette() {
     }));
     const pages: Item[] = [
       { type: 'page', title: 'How to read this book', href: `${base}/how-to-read`,     subtitle: 'The prologue — start here if new',                                                                  keywords: 'prologue start beginner first time intro reading guide' },
+      { type: 'page', title: 'Learn — the on-ramp',    href: `${base}/learn`,           subtitle: 'New to AI? Official free courses in order, then the book',                                            keywords: 'learn onboarding beginner new courses curriculum anthropic academy claude 101 claude code 101 cowork agent skills mcp openai academy chatgpt google gemini deeplearning hugging face microsoft start here getting started fundamentals tutorial how to learn' },
       { type: 'page', title: 'Day zero',              href: `${base}/day-zero`,        subtitle: 'First 30 minutes, 12 steps',                                                                          keywords: 'day zero getting started onboarding first install setup quickstart' },
       { type: 'page', title: 'Starter skills',         href: `${base}/starter-skills`,  subtitle: 'Six drop-in SKILL.md files',                                                                          keywords: 'starter skill SKILL.md template recipe drop-in' },
       { type: 'page', title: 'Vault starter',          href: `${base}/vault-starter`,   subtitle: 'PARA vs 7 others. Project-as-entity. Working vault to clone.',                                       keywords: 'vault obsidian PARA notes zettelkasten knowledge graph clone' },
@@ -280,6 +290,13 @@ export default function CommandPalette() {
         href: `${base}/dreaming#${s.id}`,
         keywords: `dreaming dream memory curation propose-only agent memory verify quote anthropic managed agents ${s.label} ${s.id}`.toLowerCase(),
       })),
+      ...LEARN_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'Learn',
+        href: `${base}/learn#${s.id}`,
+        keywords: `learn onboarding beginner new courses curriculum anthropic academy openai google gemini deeplearning hugging face getting started fundamentals ${s.label} ${s.id}`.toLowerCase(),
+      })),
     ];
     const noteItems: Item[] = RESEARCH_NOTES.map((n) => ({
       type: 'note',
@@ -295,8 +312,8 @@ export default function CommandPalette() {
   // first-N by array order. Keep this list under 10; render with a "Popular"
   // header so users see they're not search results.
   const POPULAR_HREFS = useMemo(() => [
-    '/dynamic-workflows', '/dreaming', '/day-zero', '/cheat-sheet', '/tier-list',
-    '/sovereign-stack', '/html-first', '/showcase', '/glossary',
+    '/learn', '/dynamic-workflows', '/dreaming', '/day-zero', '/cheat-sheet',
+    '/tier-list', '/sovereign-stack', '/html-first', '/showcase',
   ].map((p) => `${base}${p}`), [base]);
 
   const popularDefaults = useMemo(() => {
