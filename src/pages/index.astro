@@ -190,9 +190,64 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">External findings that move what an operator does Monday — model releases, deprecations, benchmark shifts. Dated, sourced, signal-not-receipt discipline.</p>
       </a>
     </div>
-    <p class="text-center mt-6 text-sm" style="color: rgb(var(--muted))">
-      Also: <a href={`${base}/build-vs-buy`} style="color: rgb(var(--accent))">Build vs Buy</a> · <a href={`${base}/cfo-case`} style="color: rgb(var(--accent))">For your CFO</a> · <a href={`${base}/claude-md-rules`} style="color: rgb(var(--accent))">CLAUDE.md rules</a> · <a href={`${base}/cowork-setup`} style="color: rgb(var(--accent))">Cowork setup</a> · <a href={`${base}/vault-starter`} style="color: rgb(var(--accent))">Vault starter</a> · <a href={`${base}/weekend-builds`} style="color: rgb(var(--accent))">Weekend builds</a> · <a href={`${base}/starter-skills`} style="color: rgb(var(--accent))">Starter skills</a> · <a href={`${base}/thirty-day-plan`} style="color: rgb(var(--accent))">30-day plan</a> · <a href={`${base}/sections`} style="color: rgb(var(--accent))">Sections</a> · <a href={`${base}/about`} style="color: rgb(var(--accent))">About</a>
-    </p>
+    <div class="mt-12">
+      <div class="flex items-baseline justify-between mb-6 flex-wrap gap-3">
+        <h2 class="m-0 font-display text-2xl md:text-3xl">More from the shelf</h2>
+        <p class="text-sm" style="color: rgb(var(--muted))">Decisions, setups, and reference — the rest of the Playbook.</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <a href={`${base}/build-vs-buy`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Decision</div>
+          <h3 class="m-0 font-display text-lg leading-tight">Build vs Buy</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Sequencing wedge, cost ladder, and a 5-question matrix for what to make vs buy.</p>
+        </a>
+        <a href={`${base}/cfo-case`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">The case</div>
+          <h3 class="m-0 font-display text-lg leading-tight">For your CFO</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">600 words to defend the spend — Claude as a labor line, not a SaaS line.</p>
+        </a>
+        <a href={`${base}/claude-md-rules`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Rules</div>
+          <h3 class="m-0 font-display text-lg leading-tight">The 12-rule CLAUDE.md</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Karpathy's template at 11% mistakes; the operator overlay gets it to 3%.</p>
+        </a>
+        <a href={`${base}/cowork-setup`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Setup</div>
+          <h3 class="m-0 font-display text-lg leading-tight">Cowork setup</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Vlad's Cowork connectors and scheduled tasks — sanitized and cloneable.</p>
+        </a>
+        <a href={`${base}/vault-starter`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Vault</div>
+          <h3 class="m-0 font-display text-lg leading-tight">Vault starter</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">PARA vs 7 other systems, project-as-entity, and a working vault to clone.</p>
+        </a>
+        <a href={`${base}/weekend-builds`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Recipes</div>
+          <h3 class="m-0 font-display text-lg leading-tight">Weekend builds</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Eight Saturday-ship recipes — plus the one that's a trap.</p>
+        </a>
+        <a href={`${base}/starter-skills`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Skills</div>
+          <h3 class="m-0 font-display text-lg leading-tight">Starter skills</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Six drop-in SKILL.md files to paste into ~/.claude and run today.</p>
+        </a>
+        <a href={`${base}/thirty-day-plan`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Roadmap</div>
+          <h3 class="m-0 font-display text-lg leading-tight">30-day plan</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">A day-by-day roadmap from clean machine to operator in a month.</p>
+        </a>
+        <a href={`${base}/sections`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Index</div>
+          <h3 class="m-0 font-display text-lg leading-tight">Sections</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Every chapter grouped by theme — the table of contents, by topic.</p>
+        </a>
+        <a href={`${base}/about`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">About</div>
+          <h3 class="m-0 font-display text-lg leading-tight">About</h3>
+          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Vlad, the portfolio, and the newsletter behind the Playbook.</p>
+        </a>
+      </div>
+    </div>
   </section>
 
   <CommandPaletteMount />

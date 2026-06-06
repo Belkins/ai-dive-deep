@@ -8,18 +8,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <header class="sticky top-0 z-40 backdrop-blur border-b" style="border-color: rgb(var(--line)); background: rgb(var(--bg) / 0.78);">
   <nav class="container-wide flex items-center justify-between h-14">
-    <a href={`${base}/`} class="flex items-center gap-2 group" style="color: rgb(var(--fg))">
-      <span class="font-display text-lg tracking-tight font-medium">Vlad's Playbook</span>
-      <span class="hidden md:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">{edition}</span>
+    <a href={`${base}/`} class="flex items-center gap-2 group shrink-0" style="color: rgb(var(--fg))">
+      <span class="font-display text-lg tracking-tight font-medium whitespace-nowrap">Vlad's Playbook</span>
+      <span class="hidden lg:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">{edition}</span>
     </a>
-    <div class="flex items-center gap-1 sm:gap-3">
-      <a href={`${base}/day-zero`} class="hidden sm:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent))">Start here</a>
-      <a href={`${base}/learn`} class="hidden sm:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Learn</a>
-      <a href={`${base}/journey`} class="hidden sm:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Journey</a>
-      <a href={`${base}/questions`} class="hidden md:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Questions</a>
-      <a href={`${base}/showcase`} class="hidden md:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Setup</a>
-      <a href={`${base}/resources`} class="hidden lg:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Resources</a>
-      <a href={`${base}/tier-list`} class="hidden lg:inline-flex text-sm px-3 py-2.5 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Tier list</a>
+    <div class="flex items-center gap-0.5 sm:gap-1.5 min-w-0">
+      <a href={`${base}/day-zero`} class="hidden sm:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent))">Start here</a>
+      <a href={`${base}/learn`} class="hidden sm:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Learn</a>
+      <a href={`${base}/journey`} class="hidden md:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Journey</a>
+      <a href={`${base}/questions`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Questions</a>
+      <a href={`${base}/showcase`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Setup</a>
+      <a href={`${base}/resources`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Resources</a>
+      <a href={`${base}/tier-list`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Tier list</a>
       <span
         id="read-counter"
         data-chapter-total={chapterCount}
@@ -34,7 +34,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <button
         type="button"
         id="open-palette-btn"
-        class="inline-flex items-center gap-2 text-xs rounded sm:min-w-[180px] sm:max-w-[220px] px-2 sm:px-2.5 py-1.5"
+        class="inline-flex items-center gap-2 text-xs rounded sm:min-w-[140px] sm:max-w-[200px] lg:min-w-[170px] px-2 sm:px-2.5 py-1.5"
         style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted)); background: rgb(var(--bg) / 0.4)"
         aria-label="Search (Cmd-K)"
         title="Search (⌘K / Ctrl-K)"
