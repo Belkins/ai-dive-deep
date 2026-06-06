@@ -5,17 +5,51 @@ import { CHAPTERS } from '@/lib/chapters';
 const edition = CHANGELOG[0].edition;
 const chapterCount = CHAPTERS.length;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Full navigation for the mobile/tablet drawer (< lg). Inline desktop tabs
+// below only show a subset (lg = 5, xl = 7); the drawer is the catch-all so
+// every destination is reachable on a phone. Keep in sync when pages change.
+const mobileNav = [
+  { group: 'Start', links: [
+    { href: '/day-zero', label: 'Start here' },
+    { href: '/learn', label: 'Learn' },
+    { href: '/how-to-read', label: 'How to read' },
+  ]},
+  { group: 'Read', links: [
+    { href: '/journey', label: 'Journey' },
+    { href: '/questions', label: 'Questions' },
+    { href: '/sections', label: 'Sections' },
+  ]},
+  { group: 'Reference', links: [
+    { href: '/showcase', label: 'Setup' },
+    { href: '/resources', label: 'Resources' },
+    { href: '/cheat-sheet', label: 'Cheat sheet' },
+    { href: '/glossary', label: 'Glossary' },
+    { href: '/tier-list', label: 'Tier list' },
+  ]},
+  { group: 'More', links: [
+    { href: '/build-vs-buy', label: 'Build vs Buy' },
+    { href: '/cfo-case', label: 'For your CFO' },
+    { href: '/claude-md-rules', label: 'CLAUDE.md rules' },
+    { href: '/cowork-setup', label: 'Cowork setup' },
+    { href: '/vault-starter', label: 'Vault starter' },
+    { href: '/weekend-builds', label: 'Weekend builds' },
+    { href: '/starter-skills', label: 'Starter skills' },
+    { href: '/thirty-day-plan', label: '30-day plan' },
+    { href: '/about', label: 'About' },
+  ]},
+];
 ---
 <header class="sticky top-0 z-40 backdrop-blur border-b" style="border-color: rgb(var(--line)); background: rgb(var(--bg) / 0.78);">
   <nav class="container-wide flex items-center justify-between h-14">
     <a href={`${base}/`} class="flex items-center gap-2 group shrink-0" style="color: rgb(var(--fg))">
       <span class="font-display text-lg tracking-tight font-medium whitespace-nowrap">Vlad's Playbook</span>
-      <span class="hidden lg:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">{edition}</span>
+      <span class="hidden xl:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">{edition}</span>
     </a>
     <div class="flex items-center gap-0.5 sm:gap-1.5 min-w-0">
-      <a href={`${base}/day-zero`} class="hidden sm:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent))">Start here</a>
-      <a href={`${base}/learn`} class="hidden sm:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Learn</a>
-      <a href={`${base}/journey`} class="hidden md:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Journey</a>
+      <a href={`${base}/day-zero`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent))">Start here</a>
+      <a href={`${base}/learn`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Learn</a>
+      <a href={`${base}/journey`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Journey</a>
       <a href={`${base}/questions`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Questions</a>
       <a href={`${base}/showcase`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Setup</a>
       <a href={`${base}/resources`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Resources</a>
@@ -46,8 +80,35 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <kbd id="palette-kbd-hint" class="hidden sm:inline-flex items-center gap-0.5 text-[10px] px-1 py-0 rounded font-mono" style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted))">⌘K</kbd>
       </button>
       <ThemeToggle />
+      <button
+        type="button"
+        id="mobile-menu-btn"
+        class="inline-flex lg:hidden items-center justify-center rounded p-2"
+        style="border: 1px solid rgb(var(--line)); color: rgb(var(--fg))"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
+      </button>
     </div>
   </nav>
+
+  <!-- Mobile / tablet drawer (< lg). The full nav — every destination reachable on a phone. -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t" style="border-color: rgb(var(--line)); background: rgb(var(--bg))">
+    <div class="container-wide py-4 max-h-[calc(100dvh-3.5rem)] overflow-y-auto">
+      {mobileNav.map((g) => (
+        <div class="mb-4 last:mb-1">
+          <div class="text-[0.62rem] uppercase tracking-[0.22em] mb-1.5 px-2" style="color: rgb(var(--muted))">{g.group}</div>
+          <div class="grid grid-cols-2 gap-1">
+            {g.links.map((l) => (
+              <a href={`${base}${l.href}`} class="block px-2.5 py-2 rounded text-sm hover:bg-white/5 transition no-underline" style="color: rgb(var(--fg) / 0.9)">{l.label}</a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
 </header>
 
 <script>
@@ -57,6 +118,26 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   // Platform-aware ⌘K vs Ctrl-K hint
   const kbdHint = document.getElementById('palette-kbd-hint');
   if (kbdHint && !/Mac|iPhone|iPad/.test(navigator.platform)) kbdHint.textContent = 'Ctrl K';
+
+  // Mobile / tablet drawer toggle (< lg). Mirrors the palette-button binding style.
+  const mobBtn = document.getElementById('mobile-menu-btn');
+  const mobMenu = document.getElementById('mobile-menu');
+  if (mobBtn && mobMenu) {
+    mobBtn.addEventListener('click', () => {
+      const nowHidden = mobMenu.classList.toggle('hidden');
+      mobBtn.setAttribute('aria-expanded', String(!nowHidden));
+    });
+    mobMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+      mobMenu.classList.add('hidden');
+      mobBtn.setAttribute('aria-expanded', 'false');
+    }));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !mobMenu.classList.contains('hidden')) {
+        mobMenu.classList.add('hidden');
+        mobBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 
   // Read-state surfacing: walks the page, decorates [data-chapter-slug] cards
   // based on cc-progress localStorage (already written to by ProgressBar.astro
