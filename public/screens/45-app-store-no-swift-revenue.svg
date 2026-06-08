@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Header -->
+  <text x="80" y="86" fill="#FF6B2C" font-size="13" letter-spacing="3" font-family="JetBrains Mono, monospace">CHAPTER 45 · THE RECEIPT, READ HONESTLY</text>
+  <text x="80" y="138" fill="#FAFAF7" font-size="46" font-weight="500" font-family="Source Serif 4, Georgia, serif">A renewal, not a download</text>
+  <text x="80" y="176" fill="#AAA79A" font-size="16">App Store · two products in one subscription group · IAP via StoreKit, tracked in RevenueCat.</text>
+  <text x="80" y="200" fill="#AAA79A" font-size="16">Apple is the merchant of record, not RevenueCat. The dollars are gross estimates from the receipt, not a bank deposit.</text>
+
+  <!-- Table card -->
+  <g transform="translate(80, 240)">
+    <rect x="0" y="0" width="1000" height="300" rx="12" fill="#14181C" stroke="#2A3138" stroke-width="1.5"/>
+    <!-- header -->
+    <text x="28" y="42" fill="#71717A" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">STORE</text>
+    <text x="190" y="42" fill="#71717A" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">PRODUCT</text>
+    <text x="560" y="42" fill="#71717A" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">PRICE</text>
+    <text x="690" y="42" fill="#71717A" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">EVENT</text>
+    <text x="858" y="42" fill="#71717A" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">CUSTOMER</text>
+    <line x1="20" y1="58" x2="980" y2="58" stroke="#2A3138" stroke-width="1"/>
+
+    <!-- row 1: Pro Annual RENEWAL -->
+    <text x="28" y="106" fill="#E5E5E5" font-size="15">App Store</text>
+    <text x="190" y="106" fill="#FAFAF7" font-size="15" font-weight="600">LinguaLive – Pro Annual</text>
+    <text x="560" y="106" fill="#FAFAF7" font-size="15">$79.99</text>
+    <rect x="686" y="88" width="124" height="26" rx="13" fill="#12231C"/>
+    <text x="700" y="106" fill="#6EE7B7" font-size="12" letter-spacing="1" font-family="JetBrains Mono, monospace">RENEWAL</text>
+    <text x="858" y="106" fill="#AAA79A" font-size="13" font-family="JetBrains Mono, monospace">777c…84e0</text>
+    <line x1="20" y1="128" x2="980" y2="128" stroke="#1F242A" stroke-width="1"/>
+
+    <!-- row 2: Monthly Pro RENEWAL -->
+    <text x="28" y="176" fill="#E5E5E5" font-size="15">App Store</text>
+    <text x="190" y="176" fill="#FAFAF7" font-size="15" font-weight="600">LinguaLive – Monthly Pro</text>
+    <text x="560" y="176" fill="#FAFAF7" font-size="15">$7.99</text>
+    <rect x="686" y="158" width="124" height="26" rx="13" fill="#12231C"/>
+    <text x="700" y="176" fill="#6EE7B7" font-size="12" letter-spacing="1" font-family="JetBrains Mono, monospace">RENEWAL</text>
+    <text x="858" y="176" fill="#FAFAF7" font-size="13" font-family="JetBrains Mono, monospace">392e…ff42</text>
+    <line x1="20" y1="198" x2="980" y2="198" stroke="#1F242A" stroke-width="1"/>
+
+    <!-- row 3: Monthly Pro NEW SUB -->
+    <text x="28" y="246" fill="#E5E5E5" font-size="15">App Store</text>
+    <text x="190" y="246" fill="#FAFAF7" font-size="15" font-weight="600">LinguaLive – Monthly Pro</text>
+    <text x="560" y="246" fill="#FAFAF7" font-size="15">$7.99</text>
+    <rect x="686" y="228" width="150" height="26" rx="13" fill="#2A1810"/>
+    <text x="700" y="246" fill="#FF8E54" font-size="12" letter-spacing="1" font-family="JetBrains Mono, monospace">NEW SUB</text>
+    <text x="858" y="246" fill="#FAFAF7" font-size="13" font-family="JetBrains Mono, monospace">392e…ff42</text>
+
+    <!-- bracket linking the 392e rows -->
+    <path d="M992 158 q14 0 14 14 v44 q0 14 -14 14" fill="none" stroke="#FF6B2C" stroke-width="2"/>
+  </g>
+
+  <!-- Right-rail annotations -->
+  <g transform="translate(1120, 250)">
+    <text x="0" y="0" fill="#FF6B2C" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">READ IT HONESTLY</text>
+
+    <circle cx="6" cy="44" r="4" fill="#6EE7B7"/>
+    <text x="22" y="40" fill="#FAFAF7" font-size="14" font-weight="600">392e…ff42 entered once, came back</text>
+    <text x="22" y="62" fill="#AAA79A" font-size="13">a NEW SUB that became a RENEWAL —</text>
+    <text x="22" y="80" fill="#AAA79A" font-size="13">a stacking renewal, the real proof.</text>
+
+    <circle cx="6" cy="124" r="4" fill="#71717A"/>
+    <text x="22" y="120" fill="#FAFAF7" font-size="14" font-weight="600">RENEWAL ≠ new customer</text>
+    <text x="22" y="142" fill="#AAA79A" font-size="13">auto-renewed, recurring revenue —</text>
+    <text x="22" y="160" fill="#AAA79A" font-size="13">not new ARR, not a signup.</text>
+
+    <circle cx="6" cy="204" r="4" fill="#71717A"/>
+    <text x="22" y="200" fill="#FAFAF7" font-size="14" font-weight="600">$RCAnonymousID, not a redaction</text>
+    <text x="22" y="222" fill="#AAA79A" font-size="13">these IDs are anonymous buyers who</text>
+    <text x="22" y="240" fill="#AAA79A" font-size="13">never logged in — not blurred for the shot.</text>
+  </g>
+
+  <!-- Honesty strip -->
+  <g transform="translate(80, 600)">
+    <rect x="0" y="0" width="1460" height="118" rx="10" fill="#161B1F" stroke="#26251F" stroke-width="1"/>
+    <rect x="0" y="0" width="5" height="118" fill="#FF6B2C"/>
+    <text x="28" y="40" fill="#6EE7B7" font-size="14" font-weight="700" letter-spacing="1" font-family="JetBrains Mono, monospace">PROVES</text>
+    <text x="140" y="40" fill="#FAFAF7" font-size="16" font-family="Source Serif 4, Georgia, serif">real recurring revenue · a stacking renewal — a real card on a real device, a month later.</text>
+    <text x="28" y="82" fill="#FF8E54" font-size="14" font-weight="700" letter-spacing="1" font-family="JetBrains Mono, monospace">DOESN&#39;T</text>
+    <text x="140" y="82" fill="#FAFAF7" font-size="16" font-family="Source Serif 4, Georgia, serif">total subscriber count · MRR · ARR · churn. The view is filtered; the dollars are gross estimates.</text>
+    <text x="28" y="104" fill="#71717A" font-size="13" font-family="JetBrains Mono, monospace">The operator move: state the smaller true claim — &#34;this renewed&#34; — not the bigger false one — &#34;we&#39;re at $X MRR.&#34;</text>
+  </g>
+
+  <text x="80" y="772" fill="#AAA79A" font-size="14" font-family="JetBrains Mono, monospace">RevenueCat is the meter, not the till — free under $2,500 monthly tracked revenue, 1% above.</text>
+
+  <text x="1520" y="864" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 45 · the receipt, read honestly</text>
+</svg>

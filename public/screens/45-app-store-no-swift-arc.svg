@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <defs>
+    <marker id="a45arc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#56544B"/>
+    </marker>
+    <marker id="a45orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#FF6B2C"/>
+    </marker>
+  </defs>
+
+  <!-- Header -->
+  <text x="80" y="84" fill="#71717A" font-size="13" letter-spacing="3" font-family="JetBrains Mono, monospace">CHAPTER 45 · TWO LIVES · ONE APP</text>
+  <text x="80" y="134" fill="#FAFAF7" font-size="40" font-weight="500" font-family="Source Serif 4, Georgia, serif">The web version you can send. The native one you can&#39;t.</text>
+
+  <!-- WEB lane -->
+  <text x="80" y="206" fill="#22D3A0" font-size="14" font-weight="700" letter-spacing="2" font-family="JetBrains Mono, monospace">WEB · LINK-SHAREABLE</text>
+  <g transform="translate(80, 224)">
+    <rect x="0" y="0" width="360" height="78" rx="10" fill="#101B18" stroke="#1F3A33" stroke-width="1.5"/>
+    <text x="22" y="34" fill="#FAFAF7" font-size="16" font-weight="600">Next.js + Gemini Live (WS)</text>
+    <text x="22" y="58" fill="#9FBCB3" font-size="13">+ Supabase · Claude Opus for edge cases</text>
+
+    <rect x="420" y="0" width="190" height="78" rx="10" fill="#101B18" stroke="#1F3A33" stroke-width="1.5"/>
+    <text x="442" y="34" fill="#FAFAF7" font-size="16" font-weight="600">one weekend</text>
+    <text x="442" y="58" fill="#9FBCB3" font-size="13">build, then see</text>
+
+    <rect x="640" y="0" width="190" height="78" rx="10" fill="#101B18" stroke="#1F3A33" stroke-width="1.5"/>
+    <text x="662" y="34" fill="#FAFAF7" font-size="16" font-weight="600">50 users / 48h</text>
+    <text x="662" y="58" fill="#9FBCB3" font-size="13">demand was real</text>
+
+    <rect x="860" y="14" width="200" height="50" rx="25" fill="#12231C" stroke="#22D3A0" stroke-width="1.5"/>
+    <text x="960" y="44" fill="#6EE7B7" font-size="15" font-weight="600" text-anchor="middle">send the link ↗</text>
+
+    <g stroke="#3F5A52" stroke-width="2" fill="none">
+      <path d="M360 39 L420 39" marker-end="url(#a45arc)"/>
+      <path d="M610 39 L640 39" marker-end="url(#a45arc)"/>
+      <path d="M830 39 L860 39" marker-end="url(#a45arc)"/>
+    </g>
+  </g>
+
+  <!-- second-move arrow -->
+  <g transform="translate(0,0)">
+    <path d="M520 320 L520 392" stroke="#FF6B2C" stroke-width="3" fill="none" marker-end="url(#a45orange)"/>
+    <text x="540" y="364" fill="#FF8E54" font-size="14" font-weight="600">second move: distribution + IAP revenue</text>
+  </g>
+
+  <!-- NATIVE lane -->
+  <text x="80" y="430" fill="#FF6B2C" font-size="14" font-weight="700" letter-spacing="2" font-family="JetBrains Mono, monospace">NATIVE · GATED</text>
+  <g transform="translate(80, 448)">
+    <rect x="0" y="0" width="250" height="78" rx="10" fill="#161B1F" stroke="#2A2A2A" stroke-width="1.5"/>
+    <text x="22" y="34" fill="#FAFAF7" font-size="16" font-weight="600">SwiftUI</text>
+    <text x="22" y="58" fill="#AAA79A" font-size="13">Claude Code, one-shot</text>
+
+    <rect x="310" y="0" width="250" height="78" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <rect x="332" y="26" width="18" height="14" rx="2" fill="none" stroke="#FF8E54" stroke-width="2"/>
+    <path d="M337 26 v-6 a5 5 0 0 1 10 0 v6" fill="none" stroke="#FF8E54" stroke-width="2"/>
+    <text x="368" y="34" fill="#FAFAF7" font-size="16" font-weight="600">Mac + Xcode</text>
+    <text x="368" y="58" fill="#AAA79A" font-size="13">operator-owned</text>
+
+    <rect x="620" y="0" width="300" height="78" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <rect x="642" y="26" width="18" height="14" rx="2" fill="none" stroke="#FF8E54" stroke-width="2"/>
+    <path d="M647 26 v-6 a5 5 0 0 1 10 0 v6" fill="none" stroke="#FF8E54" stroke-width="2"/>
+    <text x="688" y="34" fill="#FAFAF7" font-size="16" font-weight="600">$99/yr · signing · App Review</text>
+    <text x="688" y="58" fill="#AAA79A" font-size="13">the doorman the agent can&#39;t pass</text>
+
+    <rect x="980" y="14" width="180" height="50" rx="10" fill="#161B1F" stroke="#FF6B2C" stroke-width="1.5"/>
+    <text x="1070" y="44" fill="#FAFAF7" font-size="16" font-weight="600" text-anchor="middle">App Store</text>
+
+    <g stroke="#56544B" stroke-width="2" fill="none">
+      <path d="M250 39 L310 39" marker-end="url(#a45arc)"/>
+      <path d="M560 39 L620 39" marker-end="url(#a45arc)"/>
+      <path d="M920 39 L980 39" marker-end="url(#a45arc)"/>
+    </g>
+  </g>
+
+  <!-- money path -->
+  <text x="80" y="592" fill="#71717A" font-size="13" letter-spacing="2" font-family="JetBrains Mono, monospace">HOW ONE DOLLAR BECOMES A ROW</text>
+  <g transform="translate(80, 608)" font-family="JetBrains Mono, monospace">
+    <rect x="0" y="0" width="250" height="64" rx="10" fill="#161B1F" stroke="#2A2A2A" stroke-width="1"/>
+    <text x="125" y="30" fill="#FAFAF7" font-size="14" text-anchor="middle">tap on a real phone</text>
+    <text x="125" y="50" fill="#71717A" font-size="12" text-anchor="middle">no simulator can fake it</text>
+
+    <rect x="320" y="0" width="330" height="64" rx="10" fill="#161B1F" stroke="#2A2A2A" stroke-width="1"/>
+    <text x="485" y="30" fill="#FAFAF7" font-size="14" text-anchor="middle">StoreKit → Apple charges the card</text>
+    <text x="485" y="50" fill="#71717A" font-size="12" text-anchor="middle">Apple is the merchant of record</text>
+
+    <rect x="700" y="0" width="300" height="64" rx="10" fill="#161B1F" stroke="#2A2A2A" stroke-width="1"/>
+    <text x="850" y="30" fill="#FAFAF7" font-size="14" text-anchor="middle">signed receipt → RevenueCat</text>
+    <text x="850" y="50" fill="#71717A" font-size="12" text-anchor="middle">validates · records the event</text>
+
+    <rect x="1050" y="7" width="200" height="50" rx="25" fill="#12231C" stroke="#22D3A0" stroke-width="1.5"/>
+    <text x="1150" y="38" fill="#6EE7B7" font-size="15" font-weight="700" text-anchor="middle">RENEWAL · $7.99</text>
+
+    <g stroke="#56544B" stroke-width="2" fill="none">
+      <path d="M250 32 L320 32" marker-end="url(#a45arc)"/>
+      <path d="M650 32 L700 32" marker-end="url(#a45arc)"/>
+      <path d="M1000 32 L1050 32" marker-end="url(#a45arc)"/>
+    </g>
+  </g>
+
+  <!-- caption -->
+  <g transform="translate(80, 716)">
+    <rect x="0" y="0" width="1460" height="84" rx="10" fill="#161B1F" stroke="#26251F" stroke-width="1"/>
+    <text x="28" y="36" fill="#FAFAF7" font-size="16" font-family="Source Serif 4, Georgia, serif">Same core, a new door — you go native for the storefront and the recurring rail the browser can&#39;t give you,</text>
+    <text x="28" y="62" fill="#AAA79A" font-size="15" font-family="Source Serif 4, Georgia, serif">and for the dashboard that rail generates. RevenueCat never touches the money; it only reads the receipt.</text>
+  </g>
+
+  <text x="1520" y="858" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 45 · two lives, one app</text>
+</svg>

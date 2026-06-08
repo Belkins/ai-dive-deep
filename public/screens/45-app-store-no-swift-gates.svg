@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <!-- Header -->
+  <text x="80" y="84" fill="#FF6B2C" font-size="13" letter-spacing="3" font-family="JetBrains Mono, monospace">CHAPTER 45 · WHO WALKS THROUGH THE GATE</text>
+  <text x="80" y="134" fill="#FAFAF7" font-size="40" font-weight="500" font-family="Source Serif 4, Georgia, serif">The agent wrote every line. The operator owns every gate.</text>
+  <text x="80" y="172" fill="#AAA79A" font-size="16">The code is the easy part. The gates have your name on them, not the model&#39;s.</text>
+
+  <!-- Gate line -->
+  <line x1="800" y1="210" x2="800" y2="812" stroke="#FF6B2C" stroke-width="3"/>
+  <g transform="translate(800, 470)">
+    <rect x="-92" y="-16" width="184" height="32" rx="16" fill="#2A1810" stroke="#FF6B2C" stroke-width="1.5"/>
+    <text x="0" y="5" fill="#FF8E54" font-size="12" letter-spacing="1" text-anchor="middle" font-family="JetBrains Mono, monospace">the agent stops here</text>
+  </g>
+
+  <!-- LEFT column: AGENT OWNS -->
+  <text x="80" y="244" fill="#22D3A0" font-size="15" font-weight="700" letter-spacing="1" font-family="JetBrains Mono, monospace">THE AGENT OWNS</text>
+  <text x="290" y="244" fill="#71717A" font-size="14">— the code is the easy part</text>
+
+  <g font-size="15" fill="#FAFAF7">
+    <!-- row template: card + check -->
+    <g transform="translate(80, 262)">
+      <rect x="0" y="0" width="660" height="74" rx="10" fill="#161B1F" stroke="#1F2A24" stroke-width="1"/>
+      <path d="M28 37 l10 10 l18 -22" fill="none" stroke="#22D3A0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="72" y="35" font-weight="600">SwiftUI views</text>
+      <text x="72" y="56" fill="#AAA79A" font-size="13">declarative — maps almost 1:1 to plain-English intent</text>
+    </g>
+    <g transform="translate(80, 348)">
+      <rect x="0" y="0" width="660" height="74" rx="10" fill="#161B1F" stroke="#1F2A24" stroke-width="1"/>
+      <path d="M28 37 l10 10 l18 -22" fill="none" stroke="#22D3A0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="72" y="35" font-weight="600">StoreKit 2 · URLSession · Codable boilerplate</text>
+      <text x="72" y="56" fill="#AAA79A" font-size="13">the paywall plumbing and the data models</text>
+    </g>
+    <g transform="translate(80, 434)">
+      <rect x="0" y="0" width="660" height="74" rx="10" fill="#161B1F" stroke="#1F2A24" stroke-width="1"/>
+      <path d="M28 37 l10 10 l18 -22" fill="none" stroke="#22D3A0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="72" y="35" font-weight="600">Multi-file refactors + unit tests</text>
+      <text x="72" y="56" fill="#AAA79A" font-size="13">mechanical work across the whole project</text>
+    </g>
+    <g transform="translate(80, 520)">
+      <rect x="0" y="0" width="660" height="74" rx="10" fill="#161B1F" stroke="#1F2A24" stroke-width="1"/>
+      <path d="M28 37 l10 10 l18 -22" fill="none" stroke="#22D3A0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="72" y="35" font-weight="600">Explains cryptic Xcode errors in plain English</text>
+      <text x="72" y="56" fill="#AAA79A" font-size="13">instead of a Stack Overflow archaeology dig</text>
+    </g>
+    <g transform="translate(80, 606)">
+      <rect x="0" y="0" width="660" height="74" rx="10" fill="#161B1F" stroke="#1F2A24" stroke-width="1"/>
+      <path d="M28 37 l10 10 l18 -22" fill="none" stroke="#22D3A0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="72" y="35" font-weight="600">Xcode 26.3 in-IDE agent</text>
+      <text x="72" y="56" fill="#AAA79A" font-size="13">builds, runs tests, snapshots the UI, reads the logs</text>
+    </g>
+  </g>
+
+  <!-- RIGHT column: OPERATOR OWNS -->
+  <text x="840" y="244" fill="#FF6B2C" font-size="15" font-weight="700" letter-spacing="1" font-family="JetBrains Mono, monospace">THE OPERATOR OWNS</text>
+  <text x="1078" y="244" fill="#71717A" font-size="14">— locked out of the agent by design</text>
+
+  <g font-size="15" fill="#FAFAF7">
+    <g transform="translate(840, 262)">
+      <rect x="0" y="0" width="680" height="74" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <rect x="26" y="28" width="20" height="16" rx="2" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <path d="M30 28 v-6 a6 6 0 0 1 12 0 v6" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <text x="68" y="32" font-weight="600">GATE 0 · Mac + Xcode</text>
+      <text x="68" y="55" fill="#AAA79A" font-size="13">macOS-only · the silent largest gate — blocks Windows before line 1</text>
+    </g>
+    <g transform="translate(840, 348)">
+      <rect x="0" y="0" width="680" height="74" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <rect x="26" y="28" width="20" height="16" rx="2" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <path d="M30 28 v-6 a6 6 0 0 1 12 0 v6" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <text x="68" y="32" font-weight="600">GATE 1 · $99/yr membership</text>
+      <text x="68" y="55" fill="#AAA79A" font-size="13">recurring rent · let it lapse and your live apps are delisted</text>
+    </g>
+    <g transform="translate(840, 434)">
+      <rect x="0" y="0" width="680" height="74" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <rect x="26" y="28" width="20" height="16" rx="2" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <path d="M30 28 v-6 a6 6 0 0 1 12 0 v6" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <text x="68" y="32" font-weight="600">GATE 2 · the signing maze</text>
+      <text x="68" y="55" fill="#AAA79A" font-size="13">cert + Bundle ID + entitlements + profile — match exactly or it won&#39;t install</text>
+    </g>
+    <g transform="translate(840, 520)">
+      <rect x="0" y="0" width="680" height="74" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <rect x="26" y="28" width="20" height="16" rx="2" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <path d="M30 28 v-6 a6 6 0 0 1 12 0 v6" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <text x="68" y="32" font-weight="600">GATE 3 · App Store Connect + privacy label</text>
+      <text x="68" y="55" fill="#AAA79A" font-size="13">a web record you attest to — not the Xcode binary; two surfaces, two jobs</text>
+    </g>
+    <g transform="translate(840, 606)">
+      <rect x="0" y="0" width="680" height="74" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <rect x="26" y="28" width="20" height="16" rx="2" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <path d="M30 28 v-6 a6 6 0 0 1 12 0 v6" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <text x="68" y="32" font-weight="600">GATE 4 · account deletion 5.1.1(v) + demo login 2.1</text>
+      <text x="68" y="55" fill="#AAA79A" font-size="13">the silent rejections — ship the login, forget the delete, and you fail review</text>
+    </g>
+    <g transform="translate(840, 692)">
+      <rect x="0" y="0" width="680" height="74" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <rect x="26" y="28" width="20" height="16" rx="2" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <path d="M30 28 v-6 a6 6 0 0 1 12 0 v6" fill="none" stroke="#FF8E54" stroke-width="2"/>
+      <text x="68" y="32" font-weight="600">GATE 5 · Xcode 26 / iOS 26 SDK (since Apr 28 2026)</text>
+      <text x="68" y="55" fill="#AAA79A" font-size="13">a stale Mac fails at upload — after everything else passed</text>
+    </g>
+  </g>
+
+  <!-- bottom caption -->
+  <text x="80" y="852" fill="#AAA79A" font-size="15" font-family="Source Serif 4, Georgia, serif">Every right-column item is an identity, an attestation, or a policy act. No model can <tspan fill="#FAFAF7" font-style="italic">be</tspan> the legal entity.</text>
+  <text x="1520" y="852" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 45 · who walks through the gate</text>
+</svg>

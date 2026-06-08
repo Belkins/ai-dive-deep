@@ -10,6 +10,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 9.9',
+    date: '2026-06-08',
+    tagline: 'Forty-five chapters. The App Store Without Swift — Claude Code one-shot a native iOS app for LinguaLive, and shipping it to the App Store meant walking through the gates the operator, not the agent, has to own. The proof is a RevenueCat renewal, read honestly.',
+    shipped: [
+      'New Chapter 45 — "The App Store Without Swift" (Part V, The Building Site; Building Products section). The apex of the build-a-product arc: Claude Code one-shot every line of native SwiftUI for LinguaLive and still could not ship it. The App Store is just another deploy target — with the strictest gates in the book, and the operator owns every one: a Mac + Xcode, the $99/yr Developer Program, the signing maze, account deletion (Guideline 5.1.1(v)), the App Privacy label, and a working demo login for the reviewer.',
+      'The reframe, Ch 43-style: the lesson is not "you can build iOS without Swift" — the code is the easy part now. It is that shipping native means owning the platform-and-policy surface the agent is structurally locked out of. Ties straight to Ch 41 (proof is a live artifact, not a file) and Ch 43 (verify with real behavior is the whole game).',
+      'The proof is recurring revenue, read honestly. Real App Store numbers — LinguaLive Monthly Pro $7.99 and Pro Annual $79.99, an INITIAL_PURCHASE that became a RENEWAL — recreated as an on-brand dashboard that teaches the reader to read it without inflating it: a RENEWAL is recurring revenue not a new customer, $RCAnonymousID is an anonymous buyer not a redaction, the dollars are gross estimates not a bank deposit, and the row proves recurring revenue and a stacking renewal, NOT total scale. Apple\'s cut is stated correctly (never a flat 30% — 30% year one, 15% after, or 15% flat under the Small Business Program).',
+      'Three house-style inline SVG diagrams (palette-correct, librsvg render-verified, mobile-legible): the receipt read honestly, the agent-owns-the-code / operator-owns-the-gates map, and the web→native arc tracing one dollar from a real-phone tap through StoreKit and Apple to the dashboard row.',
+      'Built by the deep multi-agent workflow chain — a four-researcher swarm verified the App-Store-without-Swift reality against Apple\'s own docs (signing, IAP / Guideline 3.1.1, account deletion, the tiered commission, RevenueCat) plus a completeness critic, then a three-perspective design swarm (reframe / receipts / journey) reconciled by a synthesis judge. Every platform fact is primary-sourced; every lived LinguaLive number is sourced or left to the author, never invented.',
+      'Wiring — chapters.ts (CHAPTERS + Part V + the Building section), Cmd-K synonyms, and this changelog. Chapter-count stat swept 44 → 45 across the user-facing pages and the lint-invisible OG/ad cards (og-default, og-launch, the −90k ad).',
+    ],
+    receipts: [
+      { label: 'New chapter', value: 'Ch 45 · 45-app-store-no-swift · Part V — The Building Site' },
+      { label: 'Subject', value: 'LinguaLive — native iOS, App Store, real recurring revenue' },
+      { label: 'Proof', value: 'RevenueCat renewal · $7.99/mo + $79.99/yr · read honestly' },
+      { label: 'Built by', value: 'research swarm (Apple-sourced) → design swarm → synthesis' },
+    ],
+  },
+  {
     edition: 'Edition 9.8',
     date: '2026-06-05',
     tagline: 'Learn — the on-ramp before the book. A new /learn page routes total beginners through the official free courses, in order, then hands them to the Playbook.',

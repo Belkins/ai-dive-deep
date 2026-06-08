@@ -162,6 +162,7 @@ const CHAPTER_SYNONYMS: Record<string, string> = {
   '42-codex-on-a-loop': 'codex openai loop /loop second opinion second prior proof-checking proof check verify worktree worktrees sentry posthog betterstack mcp cron crons design system simplify pet emberling hatch-pet desktop pet cross-vendor skill night shift two priors',
   '43-codex-saviour':   'codex saviour refactor refactoring simplification folderly delete deletion 90000 ninety thousand lines net reduction repositioning swarm bench fermat harvey pauli planck explorer agents veto lens north star four buckets surface split preserve before pruning route registry harden while simplifying second prior verified layers',
   '44-dreaming':        'dreaming dream memory curation agent memory propose-only surfacer anthropic managed agents memory hygiene self-improve session transcripts verify quote raw jsonl hallucination yield-floor tripwire /learn /dream digest extract review apply-new auto-update memory loop pointed inward',
+  '45-app-store-no-swift': 'app store ios iphone native swift swiftui xcode no code without swift mobile app lingualive revenuecat storekit in-app purchase iap subscription renewal apple developer program signing provisioning profile certificate app review guideline 4.2 3.1.1 5.1.1 account deletion privacy nutrition label testflight small business program 30% 15% commission merchant of record recurring revenue dashboard ship native deploy target gates doorman',
 };
 
 const RESOURCES_SECTIONS: { id: string; label: string }[] = [

@@ -51,6 +51,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 42, slug: '42-codex-on-a-loop', title: 'Codex on a Loop', subtitle: 'The Second Opinion, Proof-Checked While You Sleep' },
   { number: 43, slug: '43-codex-saviour', title: 'Codex as Saviour', subtitle: 'When a Second Prior Deletes 90,000 Lines and Hardens What\'s Left' },
   { number: 44, slug: '44-dreaming', title: 'Dreaming — Memory That Curates Itself', subtitle: 'The Surfacer That Proposes, Never Writes' },
+  { number: 45, slug: '45-app-store-no-swift', title: 'The App Store Without Swift', subtitle: 'A Native iOS App, Real Recurring Revenue, and Not One Line of Swift I Wrote' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -91,7 +92,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part V — The Building Site',
     tagline: 'From Saturday idea to deployed URL with receipts.',
     intro: "Six stages: ideation → foundation → creation → polishing → security → deploy. Plus cron, headless, vibe coding, evals, the bill. This is the part that turns reading into shipping.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done', '41-send-the-link'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done', '41-send-the-link', '45-app-store-no-swift'],
   },
   {
     key: 'VI',
@@ -142,7 +143,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'building',
     label: 'Building Products',
     description: "From Saturday idea to deployed URL. Six stages. Cron. Headless. Vibe coding. The bill, demystified.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '41-send-the-link'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '41-send-the-link', '45-app-store-no-swift'],
   },
   {
     key: 'resources',
