@@ -6,12 +6,20 @@ export type ChangelogEntry = {
   tagline: string;
   shipped: string[];
   receipts?: { label: string; value: string }[];
+  // Optional site-wide announcement bar. Set on the LATEST entry only.
+  // bannerText = a short, scannable headline (≤ ~90 chars). bannerHref = where
+  // "read more" points. The AnnouncementBar reads CHANGELOG[0]; dismissal is
+  // keyed on `edition`, so a new edition auto-resurfaces the bar.
+  bannerText?: string;
+  bannerHref?: string;
 };
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
     edition: 'Edition 10.0',
     date: '2026-06-09',
+    bannerText: 'Fable 5 / Mythos 5 is here — the full model file, plus the system card read honestly.',
+    bannerHref: '/fable-5',
     tagline: 'Fable 5 / Mythos 5 — the withheld model shipped, and the Playbook files it the day it lands: a research note that corrects the May 6 call, a ten-page model file (incl. the system-card episodes), and the three evergreen pages the keyword map has been waiting for.',
     shipped: [
       'New research note (top of the timeline) — "Fable 5 / Mythos 5 — the withheld model shipped, split in two." The May 6 note read the Mythos disclosure as a capability ceiling Anthropic would not productize; the correction is the mechanism nobody predicted: one model, two names (Latin fabula / Greek mythos), the raw twin gated behind Project Glasswing, the safeguarded twin sold to everyone at $10/$50 per Mtok with classifier fallback to Opus 4.8.',

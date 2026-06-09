@@ -1,6 +1,7 @@
 ---
 import '@/styles/global.css';
 import Nav from '@/components/Nav.astro';
+import AnnouncementBar from '@/components/AnnouncementBar.astro';
 import Footer from '@/components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
 import { CHAPTERS, getPart } from '@/lib/chapters';
@@ -217,6 +218,7 @@ const jsonLd: Record<string, unknown> = isChapter
   </head>
   <body class="min-h-screen flex flex-col">
     <a href="#main-content" class="skip-link">Skip to main content</a>
+    {!noNav && <AnnouncementBar />}
     {!noNav && <Nav />}
     <main id="main-content" class="flex-1">
       <slot />
