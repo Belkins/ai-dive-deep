@@ -1,0 +1,159 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const navItems = [
+  { id: 'the-claim', label: 'The claim' },
+  { id: 'why-it-rots', label: 'Why it rots' },
+  { id: 'the-harness', label: 'The harness' },
+  { id: 'the-refutations', label: 'The two refutations' },
+  { id: 'the-numbers', label: 'The numbers' },
+  { id: 'silent-failures', label: 'Everything fails silently' },
+  { id: 'the-spine', label: 'The layer the agent can\'t own' },
+  { id: 'run-it', label: 'Run it Monday' },
+];
+
+const receipts = [
+  { metric: 'Findings', before: '—', after: '41', note: '5 parallel auditors, one evening' },
+  { metric: 'Red-team verdicts', before: '—', after: '29 confirmed · 4 weakened · 2 refuted', note: 'plus 8 issues every auditor missed' },
+  { metric: 'Skills', before: '81', after: '66', note: '15 archived (not deleted) on telemetry evidence' },
+  { metric: 'Permission grants', before: '162', after: '49', note: 'incl. a live bot token and an auto-approved keychain read' },
+  { metric: 'Memory index', before: '26.6 KB (truncating)', after: '18.2 KB', note: 'the tail had been invisible to every session for weeks' },
+  { metric: 'Hooks', before: '1 typecheck per edit', after: '0', note: 'it scanned a 15k-file tree per edit and never once finished' },
+  { metric: 'Scheduled jobs silently dead', before: '2', after: '0 unknown', note: 'one exit-126 for weeks, one plist never loaded' },
+];
+---
+<BaseLayout
+  title="The Self-Audit"
+  description="The Self-Audit: point a multi-agent audit and an adversarial red-team at the agent's own setup — skills, hooks, memory, permissions, schedulers. One evening: 41 findings, 2 refutations that would have broken the system if executed, and a config that finally tells the truth."
+>
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Method</div>
+    <h1>Audit the auditor.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">You audit your codebase with agent swarms. Your agent's own setup — the skills, hooks, memory, and permissions it runs on — rots faster than your code and never throws an error. Point the same machinery at it.</p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Everything below happened in one session, on my real setup, with the numbers kept. Sanitized where it has to be; honest everywhere.</p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="the-claim" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The claim</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Here's the move, and it's the whole move: the multi-agent audit you already run against codebases — parallel domain reviewers, adversarial verification of every finding, a synthesis you can act on — works on the agent's <em>own configuration</em>. Skills are code. Hooks are code. The memory index, the permission grants, the launchd jobs — all of it is a system you built incrementally, never reviewed holistically, and trust completely.</p>
+            <p>I ran it on mine. Five auditors in parallel, one per surface: the skill library, the per-session context budget, the memory system, hooks-and-permissions, and the automation layer. Then a red-team pass that re-verified every high and medium finding empirically and listed what all five auditors missed. Forty-one findings. The red-team confirmed twenty-nine, weakened four, and <strong>refuted two outright</strong> — and those two refutations are the most important part of this page, because I would have executed both.</p>
+            <p>This is <a href="/chapters/06-the-swarm">the swarm</a> and <a href="/dynamic-workflows">dynamic workflows</a> pointed inward, the same way <a href="/dreaming">Dreaming</a> points the loop at the agent's memory. The codebase was never the only system that rots.</p>
+          </div>
+        </div>
+
+        <div id="why-it-rots" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Why it rots</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Your agent config accretes the way a junk drawer does — one reasonable deposit at a time. Every incident leaves a skill. Every "just this once" leaves a permission grant. Every experiment leaves a hook. None of it ever gets removed, because removal has no trigger: nothing fails when a dead skill sits in the listing, it just quietly taxes every session and occasionally misroutes one.</p>
+            <p>Then the model under it all leapfrogs the scaffolding. Anthropic's own Fable 5 migration guidance says it flat out: <em>skills developed for prior models are often too prescriptive and can degrade output quality</em>. The workarounds you wrote for last year's model — agent-count ceilings, watchdog timers, token budgets per task — aren't just dead weight on the new one. They're instructions the model will dutifully follow into worse behavior. A capability jump is a standing audit trigger, and almost nobody treats it as one.</p>
+            <p>And the failure mode of config rot is never a crash. It's a skill that fires when it shouldn't. A memory index one byte over its load limit, silently dropping its tail. A hook that burns sixty seconds per file edit producing output nobody — human or model — ever sees. You will not notice any of this from inside a session. That's the point.</p>
+          </div>
+        </div>
+
+        <div id="the-harness" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The harness</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>One workflow script, two phases. Phase one: five auditors in parallel, each owning one surface, each forced to return structured findings — title, evidence with file paths and byte counts, severity, a specific fix, and an effort estimate. Vague findings are useless findings; the schema is the discipline.</p>
+            <ul class="space-y-2">
+              <li><strong>Skills inventory</strong> — overlap clusters, dead skills, misfire-prone trigger descriptions, name collisions with built-ins, cross-referenced against actual usage telemetry.</li>
+              <li><strong>Context budget</strong> — what loads into every session before any work happens: context files, rules, the memory index, skill-listing bytes, plugin fleets, session-start injections. Measured in bytes, not vibes.</li>
+              <li><strong>Memory system</strong> — index size vs. its load limit, stale entries contradicted by later events, broken cross-references, orphaned files.</li>
+              <li><strong>Hooks + permissions</strong> — what every hook actually costs per invocation, whether its output ever reaches the model, and what the permission allowlist quietly auto-approves.</li>
+              <li><strong>Automation layer</strong> — scheduled jobs: which exist, which run, which <em>claim</em> to run. Last-exit codes don't lie.</li>
+            </ul>
+            <p>Phase two is the part most people skip and the part that pays: an adversarial red-team that takes every high and medium finding and tries to <em>kill it</em> — re-running the measurements, re-reading the configs, checking what breaks if the recommendation executes. It also answers a separate question no individual auditor can: <strong>what did all five miss?</strong> Mine found eight things, including an internal contradiction between two auditors that would have broken the system (next section) and the fact that the security work motivating the whole session was sitting undeployed on a branch.</p>
+            <PullQuote>A single-pass audit produces confident, well-evidenced, wrong advice. The red-team is not a luxury pass — it's the price of trusting anything the first pass said.</PullQuote>
+          </div>
+        </div>
+
+        <div id="the-refutations" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The two refutations that paid for everything</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p><strong>Refutation one: the engines behind the keepers.</strong> The automation auditor recommended retiring six workflow scripts as "redundant with native features" — zero usage, plausible story. The skills auditor, independently, recommended keeping three skills as the consolidated review surface. The red-team caught what neither saw: those three keeper skills <em>dispatch exactly those six scripts</em>. Execute both recommendations as written and you delete the engines of the things you decided to keep. Two individually-reasonable audits, one system-breaking combination — this is why reconciliation is a phase, not a hope.</p>
+            <p><strong>Refutation two: the wrong denominator.</strong> The context auditor computed the per-session overhead as a percentage of a 200k-token window and framed it as a crisis. The sessions run on a 1M-token model. Every urgency figure was overstated five-fold. The trims were still worth doing — bytes are real money and tight skill descriptions route better — but "worth doing" and "on fire" are different plans, and only one of them has you deleting things in a hurry.</p>
+            <p>One more catch worth naming: an auditor cited a months-old memory note as evidence for a security claim that a later commit had already fixed. The red-team re-verified against the filesystem and killed it. <strong>Your agent's memory is part of the audit surface, not a source of ground truth about it.</strong></p>
+          </div>
+        </div>
+
+        <div id="the-numbers" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The numbers</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>From one evening, on a setup I'd have described as "well maintained" that morning:</p>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="text-left" style="color: rgb(var(--muted))">
+                    <th class="py-2 pr-4 font-semibold">Surface</th>
+                    <th class="py-2 pr-4 font-semibold">Before</th>
+                    <th class="py-2 pr-4 font-semibold">After</th>
+                    <th class="py-2 font-semibold">The detail that stings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {receipts.map((r) => (
+                    <tr class="border-t" style="border-color: rgb(var(--fg) / 0.1)">
+                      <td class="py-2 pr-4 font-semibold">{r.metric}</td>
+                      <td class="py-2 pr-4" style="color: rgb(var(--muted))">{r.before}</td>
+                      <td class="py-2 pr-4">{r.after}</td>
+                      <td class="py-2" style="color: rgb(var(--muted))">{r.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p>The single best finding wasn't a number. It was a hook — added months earlier, perfectly reasonable at the time — that ran a full typecheck of a fifteen-thousand-file tree on <em>every file edit</em>. Forensics showed it had never completed once: no incremental build cache existed despite the flag being set. And because its output piped through a truncator that always exited clean, even a successful run would have been invisible to the model. Maximum cost, zero benefit, zero errors. That's config rot in one artifact.</p>
+          </div>
+        </div>
+
+        <div id="silent-failures" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Everything fails silently</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Walk the list again and notice what's common: the over-limit memory index didn't warn — it just stopped loading its tail, which happened to include reference data I "knew" was loaded. The live token in the allowlist didn't leak — it just sat in a plaintext file that rides along in every backup. The dead scheduled job didn't alert — it recorded exit 126 in a table nobody reads. The misfire-prone skill didn't crash — it occasionally grabbed requests meant for something else, which reads as "the model being dumb," not "my trigger description claims every deployment on earth."</p>
+            <p>Config failures are silent <em>by construction</em>, because configs don't have users — they have a single operator who trusts them. Which yields the two operating rules:</p>
+            <p><strong>Telemetry before deletion.</strong> One tiny hook logging every skill invocation to a JSONL file turned "I think I use this" into "zero fires in seven weeks, across two independent telemetry sources." Every kill decision in the audit cited usage evidence and stated its observation window. Without the log, pruning is vibes — and vibes keep everything.</p>
+            <p><strong>Archive, don't delete.</strong> Every removed skill moved to an archive directory the loader can't see. Reversible removal converts each kill from a debate into an experiment: if something was secretly load-bearing, the restore is a <code>mv</code>.</p>
+          </div>
+        </div>
+
+        <div id="the-spine" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The layer the agent can't own</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>One class of finding no in-session audit can fix: things that must happen when no session is open. The audit found a health heartbeat fifty-two days stale — the on-demand model for "check the state of my systems" had simply stopped being invoked, which is itself the lesson. Anything that depends on you remembering to ask will eventually not be asked.</p>
+            <p>The fix is the OS scheduler — <a href="/chapters/07-cron">Chapter 7's</a> answer, still — running the agent headless on a calendar: a weekday health pulse that rewrites the heartbeat and alerts only on state <em>transitions</em>, and a weekly <a href="/dreaming">Dreaming</a> run. The agent does the judgment; launchd does the showing up.</p>
+            <Callout type="warn">macOS gotcha that cost a job weeks of silent failure: launchd cannot read scripts under <code>~/Desktop</code> (or Documents/Downloads) — privacy protection denies the read and the job dies with exit 126 while looking perfectly configured. Entry scripts live outside the protected folders; the working jobs all do.</Callout>
+            <p>And close the loop: the health pulse's first duty is sweeping the scheduler itself for non-zero exit codes and configured-but-unloaded jobs — the automation watches the automation, on a clock no one has to remember.</p>
+          </div>
+        </div>
+
+        <div id="run-it" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Run it Monday</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The whole recipe, model-agnostic:</p>
+            <ol class="space-y-2 list-decimal pl-5">
+              <li><strong>Instrument first.</strong> One pre-tool hook appending <code>{'{skill, timestamp}'}</code> to a JSONL. Let it run two weeks before you trust it; state the window whenever you cite it.</li>
+              <li><strong>Fan out five auditors</strong> — skills, context budget, memory, hooks + permissions, automation. Structured findings only: evidence with paths and bytes, severity, a specific fix.</li>
+              <li><strong>Red-team every high/medium finding.</strong> The prompt that matters: <em>"Refute or weaken findings that are wrong, overstated, or whose recommendation would backfire — verify empirically. Then list what every auditor missed."</em></li>
+              <li><strong>Reconcile before executing.</strong> Specifically hunt for cross-auditor contradictions — the keep-list of one against the kill-list of another.</li>
+              <li><strong>Execute with the kill-rules:</strong> archive over delete, telemetry over intuition, and re-verify the load-bearing invariants (does the memory index fit its limit? do the smoke probes still pass?) after, in the transcript, not on faith.</li>
+              <li><strong>Install the spine.</strong> Whatever must outlive the session goes on the OS scheduler, and the scheduled job's first task is checking its siblings.</li>
+            </ol>
+            <p>Then put it on a cadence. Mine is: every model-generation jump (the scaffolding audit), plus whenever the setup "feels slow" — which, I now know, is about two months after the last time.</p>
+            <p class="text-sm" style="color: rgb(var(--muted))">Related: <a href="/showcase">the setup this ran against</a> · <a href="/swarms">Swarms — the fan-out patterns</a> · <a href="/dynamic-workflows">Dynamic Workflows — the harness that runs it</a> · <a href="/chapters/39-skills-you-should-steal">Ch 39 — the 73% problem, the same rot in public libraries</a></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>

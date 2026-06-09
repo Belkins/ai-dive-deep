@@ -386,6 +386,12 @@ export const glossary: Record<string, GlossaryEntry> = {
       'The top notch of the Opus 4.8 <a href="/glossary#%2Feffort">/effort</a> dial — xhigh reasoning plus workflows (parallel agents, a deeper plan). A Claude Code setting, not a model effort level: a mode, not a volume knob. See <a href="/dynamic-workflows#the-loop">Dynamic Workflows</a>.',
     related: ['/effort', 'Dynamic workflows'],
   },
+  'Self-Audit': {
+    term: 'Self-Audit',
+    definition:
+      'The multi-agent code audit pointed at the agent\'s own configuration — skills, hooks, memory, permissions, schedulers — with an adversarial red-team re-verifying every finding before anything executes. Config rot is silent by construction; the audit is what makes it visible. Method and receipts: <a href="/self-audit">The Self-Audit</a>.',
+    related: ['Dynamic workflows', 'Agent teams'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);

@@ -16,10 +16,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.1',
+    date: '2026-06-09',
+    bannerText: 'New: The Self-Audit — the swarm pointed at the agent\'s own setup. 41 findings, 2 refutations, the kill-rules.',
+    bannerHref: '/self-audit',
+    tagline: 'The Self-Audit — the multi-agent audit pointed at the layer nobody reviews: the agent\'s own configuration. Run the same evening Fable 5 landed, on the thesis that a capability jump is a standing audit trigger for the scaffolding under it.',
+    shipped: [
+      'New method page: /self-audit — five parallel auditors (skill library, per-session context budget, memory system, hooks + permissions, automation layer) followed by an adversarial red-team that re-verifies every high/medium finding empirically and lists what all five auditors missed. The session\'s real numbers kept as receipts: 41 findings, 29 confirmed, 4 weakened, 2 refuted, 8 missed-by-all.',
+      'The two refutations argued in full — the engines-behind-the-keepers catch (two individually-reasonable auditor recommendations whose combination would have deleted the engines of the skills marked "keep") and the wrong-denominator catch (context-budget urgency computed against a 200k window on a 1M-context model, overstating the crisis five-fold). The lesson the page is built around: a single-pass audit produces confident, well-evidenced, wrong advice.',
+      'The operating rules distilled: telemetry before deletion (a one-line usage-logging hook turns "I think I use this" into "zero fires in seven weeks"), archive over delete (reversible removal converts each kill from a debate into an experiment), memory is part of the audit surface (an auditor cited a stale memory note as evidence for a claim a later commit had already fixed), and the OS-scheduler spine for everything that must outlive the session — including the launchd-vs-Desktop privacy gotcha that kept a job silently dead at exit 126 for weeks.',
+      'Full wiring — homepage tile, Cmd-K page + 8 section entries, a cross-link from Chapter 39\'s "73% problem" (the same rot, public vs. private), a Self-Audit glossary term, and the llms.txt entry.',
+    ],
+    receipts: [
+      { label: 'Findings', value: '41 — 29 confirmed · 4 weakened · 2 refuted · 8 missed-by-all' },
+      { label: 'Skills', value: '81 → 66, on telemetry, archived not deleted' },
+      { label: 'Permission grants', value: '162 → 49, incl. a live token and a keychain read' },
+      { label: 'Memory index', value: '26.6 KB (silently truncating) → 18.2 KB' },
+    ],
+  },
+  {
     edition: 'Edition 10.0',
     date: '2026-06-09',
-    bannerText: 'Fable 5 / Mythos 5 is here — the full model file, plus the system card read honestly.',
-    bannerHref: '/fable-5',
     tagline: 'Fable 5 / Mythos 5 — the withheld model shipped, and the Playbook files it the day it lands: a research note that corrects the May 6 call, a ten-page model file (incl. the system-card episodes), and the three evergreen pages the keyword map has been waiting for.',
     shipped: [
       'New research note (top of the timeline) — "Fable 5 / Mythos 5 — the withheld model shipped, split in two." The May 6 note read the Mythos disclosure as a capability ceiling Anthropic would not productize; the correction is the mechanism nobody predicted: one model, two names (Latin fabula / Greek mythos), the raw twin gated behind Project Glasswing, the safeguarded twin sold to everyone at $10/$50 per Mtok with classifier fallback to Opus 4.8.',

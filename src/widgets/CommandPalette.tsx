@@ -106,6 +106,16 @@ const DREAMING_SECTIONS: { id: string; label: string }[] = [
   { id: 'not-for', label: 'When not to' },
   { id: 'monday', label: 'Do this Monday' },
 ];
+const SELFAUDIT_SECTIONS: { id: string; label: string }[] = [
+  { id: 'the-claim', label: 'The claim' },
+  { id: 'why-it-rots', label: 'Why it rots' },
+  { id: 'the-harness', label: 'The harness' },
+  { id: 'the-refutations', label: 'The two refutations' },
+  { id: 'the-numbers', label: 'The numbers' },
+  { id: 'silent-failures', label: 'Everything fails silently' },
+  { id: 'the-spine', label: "The layer the agent can't own" },
+  { id: 'run-it', label: 'Run it Monday' },
+];
 const LEARN_SECTIONS: { id: string; label: string }[] = [
   { id: 'is-this-you', label: 'Is this you? (no-code vs builder)' },
   { id: 'concepts', label: 'Five words you need first' },
@@ -218,6 +228,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'The Sovereign Stack',   href: `${base}/sovereign-stack`, subtitle: 'Open-weights LLMs that survive the deprecation calendar — Ollama, hardware, the heretic question, nano-gpt', keywords: 'sovereign stack open source weights local llm on-device edge ollama lm studio kimi qwen glm deepseek llama mistral grok gpt-oss heretic abliteration nano-gpt nanogpt karpathy mythos hardware mac studio rtx 3090 4090 mythos meta google deepmind anthropic openai xai zhipu alibaba' },
       { type: 'page', title: 'Dynamic Workflows',     href: `${base}/dynamic-workflows`, subtitle: 'Opus 4.8 dynamic workflows — Claude plans, fans out parallel subagents, and verifies its own work',     keywords: 'dynamic workflows workflow opus 4.8 parallel subagents agents ultracode effort generator validator orchestration deep-research agent teams anthropic claude code swarm automated' },
       { type: 'page', title: 'Dreaming',              href: `${base}/dreaming`,        subtitle: "A local, propose-only twin of Anthropic's Dreaming — digest, surface, verify against the raw transcript, never write", keywords: 'dreaming dream memory curation agent memory propose-only surfacer anthropic managed agents self-improve session transcripts verify quote raw jsonl hallucination yield-floor /learn /dream digest extract review apply-new claude code loop pointed inward' },
+      { type: 'page', title: 'The Self-Audit',          href: `${base}/self-audit`,      subtitle: "The swarm pointed at the agent's own setup — 41 findings, 2 refutations, the kill-rules", keywords: 'self-audit self audit config rot skills hooks memory permissions allowlist red-team adversarial verification telemetry prune archive launchd spine health pulse maintenance hygiene setup audit' },
       { type: 'page', title: 'Fable 5 — the model file', href: `${base}/fable-5`,       subtitle: 'The withheld Mythos, buyable — pricing, benchmarks, the June 22 clock',                              keywords: 'fable 5 fable-5 claude fable mythos 5 mythos-class new model frontier launch claude-fable-5 model id june 22 plan limits usage credits safeguards fallback opus 4.8 pokemon firered vision' },
       { type: 'page', title: 'Fable 5 vs Mythos 5',   href: `${base}/fable-5/vs-mythos-5`, subtitle: 'One model, two names, three safeguards',                                                          keywords: 'mythos 5 fable vs mythos safeguards classifiers fallback glasswing biology cyber distillation retention gated' },
       { type: 'page', title: 'Fable 5 benchmarks',    href: `${base}/fable-5/benchmarks`, subtitle: 'The full launch table, read honestly',                                                             keywords: 'fable 5 benchmarks swe-bench pro frontiercode gdpval osworld terminal-bench exploitbench humanity last exam launch table discount reward hacking' },
@@ -303,6 +314,13 @@ export default function CommandPalette() {
         subtitle: 'Dreaming',
         href: `${base}/dreaming#${s.id}`,
         keywords: `dreaming dream memory curation propose-only agent memory verify quote anthropic managed agents ${s.label} ${s.id}`.toLowerCase(),
+      })),
+      ...SELFAUDIT_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'The Self-Audit',
+        href: `${base}/self-audit#${s.id}`,
+        keywords: `self-audit config rot skills hooks memory permissions red-team telemetry prune ${s.label} ${s.id}`.toLowerCase(),
       })),
       ...LEARN_SECTIONS.map((s) => ({
         type: 'section' as const,
