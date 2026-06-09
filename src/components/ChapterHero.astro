@@ -17,9 +17,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div class="flex items-baseline gap-6">
     <div class="chapter-num">{padded}</div>
     <div>
-      <div class="text-xs uppercase tracking-[0.2em]" style="color: rgb(var(--muted))">Chapter {number} · {readingMinutes} min read</div>
+      <div class="text-xs uppercase tracking-[0.2em] text-muted">Chapter {number} · {readingMinutes} min read</div>
       {part && (
-        <a href={`${base}/journey#part-${part.key.toLowerCase()}`} class="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider mt-1 no-underline" style="color: rgb(var(--accent))">
+        <a href={`${base}/journey#part-${part.key.toLowerCase()}`} class="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider mt-1 no-underline text-accent">
           <span>{part.label}</span>
           <span style="opacity: 0.6">·</span>
           <span style="opacity: 0.7">see the journey →</span>
@@ -28,7 +28,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
   </div>
   <h1 class="mt-6 max-w-[20ch]">{title}</h1>
-  <p class="mt-3 text-lg md:text-xl max-w-[42ch]" style="color: rgb(var(--muted))">{subtitle}</p>
+  <p class="mt-3 text-lg md:text-xl max-w-[42ch] text-muted">{subtitle}</p>
   {keyConcepts.length > 0 && (
     <div class="mt-6 flex flex-wrap gap-2 items-center">
       {keyConcepts.map((c) => <span class="pill">{c}</span>)}

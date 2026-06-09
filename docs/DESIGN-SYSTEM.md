@@ -685,11 +685,20 @@ Parsed from the live code. The system is coherent at the *token* level but has d
 ### HIGH — token-system integrity
 - [x] **H1. ✅ Shipped** (`tailwind.config.ts`). Added semantic color utilities (`text-accent`,
   `bg-paper`, `border-line`, `text-muted`, `text-fg`, `bg-bg`, `text-accent-2`) wired to the vars —
-  theme-aware + alpha-aware. Build-verified they generate as `rgb(var(--x) / <alpha>)`. **Next:**
-  migrate the 999 inline `style=` attrs onto these utilities (the larger, page-touching follow-up).
-- [ ] **H2.** Decide the fate of the `ink`/`flame`/`terminal` numbered scales — **delete** (keep
-  only vars + `flame`/`terminal` DEFAULT) **or** adopt + migrate.
-- [ ] **H3.** Create `.eyebrow` (+`.eyebrow--loud`) and collapse 108 ad-hoc labels to ≤2 sizes/trackings.
+  theme-aware + alpha-aware. Build-verified they generate as `rgb(var(--x) / <alpha>)`.
+  **Migration started:** 32 clean `color:` styles in the *out-of-prose* components
+  (ChapterHero/ChapterFooter/CourseCard/SectionNav/site Footer) converted as the reference —
+  build-verified no-op. **Deliberately NOT swept:** the remaining ~1,470 (esp. the 1,048 in
+  authored pages) — migrate **incrementally as files are touched**, not in one blind pass. They're
+  working, already-theme-aware code (Rule 3: don't refactor what isn't broken), and in-prose
+  elements carry `.chapter-body *` specificity that an inline→class swap can silently lose.
+- [x] **H2. ✅ Resolved → adopt** (`tailwind.config.ts`). Kept the `ink`/`flame`/`terminal` ramps
+  as the documented reference palette. Rationale: Tailwind JIT emits only *used* classes, so the
+  unused numbered steps cost **0 bytes** in output — deleting has no runtime benefit, only risk.
+  `border-flame` (43×) + the DEFAULT accents stay live; new code uses the semantic utilities (H1).
+- [x] **H3. ✅ Shipped** (`global.css`). Added `.eyebrow` (11px / 0.18em / --muted) + `.eyebrow-loud`
+  (0.25em). Color via the semantic utilities (`text-accent` topic, `text-accent-2` new). **Next:**
+  migrate the ~108 ad-hoc labels onto it (incremental, as files are touched).
 - [ ] **H4.** Add `--success/--warning/--error/--info` (+ a `--chart-*` purple ramp); replace raw hexes.
 - [ ] **H5.** Replace hard-coded `#FF6B2C`/`#22d3a0`/`#aaa79a` in ~9 widgets with tokens (document the SVG-fill exception).
 

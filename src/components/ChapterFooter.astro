@@ -30,37 +30,37 @@ const fbHref = `mailto:v@vladyslavpodoliako.com?subject=${fbSubject}&body=${fbBo
 ---
 <nav class="container-prose mt-16 mb-8 grid gap-4 sm:grid-cols-2">
   {prev ? (
-    <a href={`${base}/chapters/${prev.slug}`} class="card hover:border-flame transition-colors no-underline" style="color: rgb(var(--fg))">
-      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">← Previous · Ch {prev.number}</div>
+    <a href={`${base}/chapters/${prev.slug}`} class="card hover:border-flame transition-colors no-underline text-fg">
+      <div class="text-xs uppercase tracking-wider mb-1.5 text-muted">← Previous · Ch {prev.number}</div>
       <div class="font-display text-lg leading-tight">{prev.title}</div>
     </a>
   ) : (
-    <a href={`${base}/how-to-read`} class="card hover:border-flame transition-colors no-underline" style="color: rgb(var(--fg))">
-      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">← Prologue</div>
+    <a href={`${base}/how-to-read`} class="card hover:border-flame transition-colors no-underline text-fg">
+      <div class="text-xs uppercase tracking-wider mb-1.5 text-muted">← Prologue</div>
       <div class="font-display text-lg leading-tight">How to read this book</div>
     </a>
   )}
   {next ? (
-    <a href={`${base}/chapters/${next.slug}`} class="card hover:border-flame transition-colors no-underline text-right" style="color: rgb(var(--fg))">
-      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent))">
+    <a href={`${base}/chapters/${next.slug}`} class="card hover:border-flame transition-colors no-underline text-right text-fg">
+      <div class="text-xs uppercase tracking-wider mb-1.5 text-accent">
         {crossingPart && partInfo ? `Next: ${partInfo.label.replace('Part ', 'Part ')} →` : `Most readers go here next · Ch ${next.number} →`}
       </div>
       <div class="font-display text-lg leading-tight">{next.title}</div>
       {crossingPart && partInfo && (
-        <p class="text-xs mt-2 italic m-0" style="color: rgb(var(--muted))">{partInfo.tagline}</p>
+        <p class="text-xs mt-2 italic m-0 text-muted">{partInfo.tagline}</p>
       )}
     </a>
   ) : (
-    <a href={`${base}/journey`} class="card hover:border-flame transition-colors no-underline text-right" style="color: rgb(var(--fg))">
-      <div class="text-xs uppercase tracking-wider mb-1.5" style="color: rgb(var(--accent))">You finished the book →</div>
+    <a href={`${base}/journey`} class="card hover:border-flame transition-colors no-underline text-right text-fg">
+      <div class="text-xs uppercase tracking-wider mb-1.5 text-accent">You finished the book →</div>
       <div class="font-display text-lg leading-tight">See the full journey</div>
     </a>
   )}
 </nav>
 
-<div class="container-prose mt-2 mb-12 text-center text-sm" style="color: rgb(var(--muted))">
+<div class="container-prose mt-2 mb-12 text-center text-sm text-muted">
   Spotted something wrong, missing, or sharper?
-  <a href={fbHref} class="ml-1 inline-flex items-center gap-1" style="color: rgb(var(--accent))">
+  <a href={fbHref} class="ml-1 inline-flex items-center gap-1 text-accent">
     Email Vlad with feedback on this chapter →
   </a>
 </div>

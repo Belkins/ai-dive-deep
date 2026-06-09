@@ -127,6 +127,23 @@ pre code {
   border: 1px solid rgb(var(--line));
 }
 
+/* Eyebrow / micro-label — the canonical uppercase label. Collapses the ~108
+   ad-hoc `text-[10px] uppercase tracking-[..]` clusters into one class.
+   Default color = --muted; override for meaning with the semantic utilities
+   (text-accent = topic/intent, text-accent-2 = new/system). Use .eyebrow-loud
+   for hero/band labels. See docs/DESIGN-SYSTEM.md §2.2 + §10 (H3). */
+.eyebrow {
+  font-size: 0.6875rem; /* 11px */
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgb(var(--muted));
+}
+.eyebrow-loud {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;

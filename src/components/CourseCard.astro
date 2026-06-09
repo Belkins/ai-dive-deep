@@ -24,11 +24,10 @@ const freeLabel = free === 'core' ? 'Core free · cert paid' : 'Free';
   href={url}
   target="_blank"
   rel="noopener noreferrer"
-  class="card hover:border-flame no-underline block h-full"
-  style="color: rgb(var(--fg))"
+  class="card hover:border-flame no-underline block h-full text-fg"
 >
   <div class="flex items-center justify-between gap-2 mb-1.5">
-    <span class="text-[0.62rem] uppercase tracking-[0.18em]" style="color: rgb(var(--accent))">{vendor}</span>
+    <span class="text-[0.62rem] uppercase tracking-[0.18em] text-accent">{vendor}</span>
     {independent ? (
       <span class="text-[0.55rem] uppercase tracking-[0.14em] px-1.5 py-0.5 rounded" style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted))">Independent</span>
     ) : official ? (
@@ -39,7 +38,7 @@ const freeLabel = free === 'core' ? 'Core free · cert paid' : 'Free';
     <span>{name}</span>
     <span class="text-[0.7rem] opacity-50" aria-hidden="true">↗</span>
   </div>
-  <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">{oneLiner}</p>
+  <p class="mt-1.5 text-sm leading-snug text-muted">{oneLiner}</p>
   <div class="mt-3 flex flex-wrap gap-1.5">
     <span class="text-[0.62rem] px-1.5 py-0.5 rounded" style="background: rgb(var(--line) / 0.7); color: rgb(var(--fg) / 0.8)">{level}</span>
     <span class="text-[0.62rem] px-1.5 py-0.5 rounded" style="background: rgb(var(--line) / 0.7); color: rgb(var(--fg) / 0.8)">{trackLabel}</span>
@@ -52,6 +51,6 @@ const freeLabel = free === 'core' ? 'Core free · cert paid' : 'Free';
     >{freeLabel}</span>
   </div>
   {note && (
-    <p class="mt-2 text-[0.72rem] leading-snug" style="color: rgb(var(--muted))">↳ {note}</p>
+    <p class="mt-2 text-[0.72rem] leading-snug text-muted">↳ {note}</p>
   )}
 </a>

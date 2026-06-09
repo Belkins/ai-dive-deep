@@ -11,14 +11,14 @@ const { items, title = 'On this page' } = Astro.props;
 <details class="lg:hidden mb-6 rounded-lg border" style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
   <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between text-sm font-medium select-none">
     <span>Jump to section</span>
-    <span class="text-xs" style="color: rgb(var(--muted))">tap to open</span>
+    <span class="text-xs text-muted">tap to open</span>
   </summary>
   <nav class="px-2 pb-3">
     <ol class="space-y-1 text-sm">
       {items.map((s, i) => (
         <li>
-          <a href={`#${s.id}`} data-toc-link={s.id} class="block px-3 py-2 rounded transition" style="color: rgb(var(--fg) / 0.85)">
-            <span class="font-mono text-xs mr-2" style="color: rgb(var(--muted))">{String(i + 1).padStart(2, '0')}</span>
+          <a href={`#${s.id}`} data-toc-link={s.id} class="block px-3 py-2 rounded transition text-fg/85">
+            <span class="font-mono text-xs mr-2 text-muted">{String(i + 1).padStart(2, '0')}</span>
             {s.label}
           </a>
         </li>
@@ -30,7 +30,7 @@ const { items, title = 'On this page' } = Astro.props;
 <!-- Sticky desktop rail (≥ 1024px) -->
 <aside class="hidden lg:block">
   <nav class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2">
-    <div class="text-xs uppercase tracking-[0.2em] mb-3" style="color: rgb(var(--muted))">{title}</div>
+    <div class="text-xs uppercase tracking-[0.2em] mb-3 text-muted">{title}</div>
     <ol class="space-y-0.5 text-sm">
       {items.map((s, i) => (
         <li>
@@ -40,7 +40,7 @@ const { items, title = 'On this page' } = Astro.props;
             class="toc-link block pl-3 pr-2 py-1.5 border-l-2 transition"
             style="border-color: rgb(var(--line)); color: rgb(var(--fg) / 0.75)"
           >
-            <span class="font-mono text-[0.7rem] mr-2" style="color: rgb(var(--muted))">{String(i + 1).padStart(2, '0')}</span>
+            <span class="font-mono text-[0.7rem] mr-2 text-muted">{String(i + 1).padStart(2, '0')}</span>
             {s.label}
           </a>
         </li>

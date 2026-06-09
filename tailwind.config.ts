@@ -6,6 +6,14 @@ export default {
   theme: {
     extend: {
       colors: {
+        // DECISION (DS backlog H2 — adopt, not delete): the ink/flame/terminal
+        // ramps below are the documented REFERENCE palette the semantic vars were
+        // sampled from. Their numbered steps are unused at runtime, but Tailwind
+        // JIT only emits used classes, so they cost 0 bytes in output — deleting
+        // them has no runtime benefit and only risk. Retained as the reference
+        // ramp + `border-flame` (43×) + the flame/terminal DEFAULT accents. New
+        // code should prefer the semantic utilities (text-accent / bg-paper /
+        // border-line / …) defined below. See docs/DESIGN-SYSTEM.md §10 (H2).
         ink: {
           50:  '#FAFAF7',
           100: '#F2F1EC',
