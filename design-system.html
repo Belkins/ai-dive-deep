@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vlad's Playbook — Design System</title>
+<meta name="description" content="Living style guide for Vlad's Playbook: the warm-dark editorial field-manual design system." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet" />
+<style>
+/* ───────────────────────── TOKENS (verbatim from the live site) ───────────────────────── */
+:root{
+  color-scheme:dark;
+  --bg:14 15 17; --fg:250 250 247; --muted:170 167 154; --line:38 37 31; --paper:22 23 27;
+  --accent:255 107 44; --accent-2:34 211 160;
+  /* proposed status (shown labelled as proposed) */
+  --success:34 197 94; --warning:255 170 0; --error:239 68 68; --info:139 92 246;
+}
+[data-theme="light"]{
+  color-scheme:light;
+  --bg:250 250 247; --fg:14 15 17; --muted:86 84 75; --line:229 227 218; --paper:242 241 236;
+}
+*{box-sizing:border-box}
+html{
+  background:rgb(var(--bg)); color:rgb(var(--fg));
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility; scroll-behavior:smooth;
+}
+body{margin:0;min-height:100dvh;background:rgb(var(--bg));color:rgb(var(--fg));font-size:16px}
+@media(min-width:640px){body{font-size:17px}}
+::selection{background:rgb(var(--accent)/0.25);color:rgb(var(--fg))}
+h1,h2,h3,h4{font-family:'Source Serif 4','Source Serif Pro',Georgia,serif;letter-spacing:-.015em;color:rgb(var(--fg));margin:0}
+h1{font-size:clamp(2.5rem,6vw,4rem);font-weight:500;line-height:1.05}
+h2{font-size:clamp(1.75rem,3vw,2.25rem);font-weight:500;line-height:1.2}
+h3{font-size:clamp(1.25rem,2vw,1.5rem);font-weight:500;line-height:1.3}
+h4{font-size:1.125rem;font-weight:500}
+a{color:rgb(var(--accent));text-underline-offset:4px}
+code,kbd{font-family:'JetBrains Mono','Fira Code',ui-monospace,monospace;font-size:.86em;background:rgb(var(--line)/0.6);padding:.12rem .4rem;border-radius:4px}
+:focus-visible{outline:2px solid rgb(var(--accent));outline-offset:2px;border-radius:4px}
+
+/* ───────── live component primitives (replicated from global.css) ───────── */
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1rem;border-radius:.375rem;font-weight:500;transition:background-color 150ms;background:rgb(var(--fg));color:rgb(var(--bg));text-decoration:none;border:0;cursor:pointer;font:inherit;font-weight:500}
+.btn:hover{background:rgb(var(--fg)/0.9)}
+.btn-ghost{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1rem;border-radius:.375rem;font-weight:500;border:1px solid rgb(var(--line));color:rgb(var(--fg));transition:background-color 150ms;text-decoration:none;background:transparent;cursor:pointer;font:inherit;font-weight:500}
+.btn-ghost:hover{background:rgb(var(--line)/0.4)}
+.btn-flame{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1rem;border-radius:.375rem;font-weight:500;transition:background-color 150ms;background:rgb(var(--accent));color:#fff;text-decoration:none;border:0;cursor:pointer;font:inherit;font-weight:500}
+.btn-flame:hover{background:rgb(var(--accent)/0.9)}
+.pill{display:inline-flex;align-items:center;gap:.375rem;padding:.25rem .625rem;border-radius:9999px;font-size:.75rem;font-weight:500;background:rgb(var(--line)/0.7);color:rgb(var(--fg)/0.85);border:1px solid rgb(var(--line))}
+.card{border-radius:.75rem;padding:1.5rem;transition:border-color 150ms;background:rgb(var(--paper));border:1px solid rgb(var(--line))}
+.card:hover{border-color:rgb(var(--accent)/0.6)}
+.chapter-num{font-family:'Source Serif 4',Georgia,serif;font-feature-settings:'lnum';font-size:clamp(4rem,8vw,6rem);font-weight:500;line-height:1;color:rgb(var(--accent))}
+.glossary-term{border-bottom:1px dotted rgb(var(--accent)/0.6);cursor:help;color:inherit}
+.glossary-term:hover{color:rgb(var(--accent))}
+.chapter-card{position:relative}
+.chapter-card .read-check{position:absolute;top:.875rem;right:.875rem;display:none;align-items:center;justify-content:center;width:1.25rem;height:1.25rem;border-radius:9999px;background:rgb(var(--accent-2));color:rgb(var(--bg));box-shadow:0 0 0 3px rgb(var(--bg))}
+.chapter-card .read-check svg{width:.75rem;height:.75rem}
+.chapter-card[data-read="true"] .read-check{display:inline-flex}
+.chapter-card[data-read="true"]{border-color:rgb(var(--accent-2)/0.35)}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:500;color:rgb(var(--muted))}
+.eyebrow--loud{font-size:.75rem;text-transform:uppercase;letter-spacing:.25em}
+
+/* ───────── animations (verbatim) ───────── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseSoft{0%,100%{opacity:.6}50%{opacity:1}}
+.anim-fade{animation:fadeIn 600ms ease-out forwards}
+.anim-rise{animation:rise 600ms cubic-bezier(.2,.7,.2,1) forwards}
+.anim-pulse{animation:pulseSoft 2.4s ease-in-out infinite}
+
+/* ───────── style-guide chrome ───────── */
+.wrap{max-width:1152px;margin:0 auto;padding:0 1.5rem}
+@media(min-width:640px){.wrap{padding:0 2rem}}
+header.sg{position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);background:rgb(var(--bg)/0.82);border-bottom:1px solid rgb(var(--line))}
+header.sg .bar{display:flex;align-items:center;justify-content:space-between;height:3.5rem;gap:1rem;max-width:1152px;margin:0 auto;padding:0 1.5rem}
+.brand{font-family:'Source Serif 4',serif;font-size:1.125rem;font-weight:500;letter-spacing:-.01em;display:flex;align-items:center;gap:.6rem}
+.brand .tag{font-size:.62rem;text-transform:uppercase;letter-spacing:.18em;color:rgb(var(--muted));border:1px solid rgb(var(--line));padding:.15rem .4rem;border-radius:4px}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;height:2rem;width:2rem;border-radius:.375rem;border:1px solid rgb(var(--line));color:rgb(var(--fg)/0.85);background:transparent;cursor:pointer}
+.theme-btn:hover{background:rgb(var(--line)/0.4)}
+
+.hero{padding:4rem 0 2.5rem}
+.hero h1{font-size:clamp(3rem,8vw,6rem);line-height:.95;letter-spacing:-.02em}
+.lede{max-width:60ch;margin-top:1.25rem;font-size:1.125rem;color:rgb(var(--fg)/0.85)}
+.statbar{margin-top:1.25rem;display:flex;flex-wrap:wrap;gap:.25rem .75rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:rgb(var(--muted))}
+.statbar b{color:rgb(var(--accent));font-weight:500}
+.statbar .dot{opacity:.4}
+
+nav.toc{position:sticky;top:3.5rem;z-index:30;background:rgb(var(--bg)/0.9);backdrop-filter:blur(6px);border-bottom:1px solid rgb(var(--line));overflow-x:auto}
+nav.toc .inner{display:flex;gap:.25rem;max-width:1152px;margin:0 auto;padding:.5rem 1.5rem}
+nav.toc a{white-space:nowrap;font-size:.8rem;color:rgb(var(--fg)/0.7);text-decoration:none;padding:.35rem .6rem;border-radius:.375rem}
+nav.toc a:hover{background:rgb(var(--line)/0.5);color:rgb(var(--fg))}
+
+section.sg{padding:3.5rem 0;border-top:1px solid rgb(var(--line))}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem}
+.sec-head .n{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:rgb(var(--accent))}
+.sec-head p{margin:0;font-size:.9rem;color:rgb(var(--muted));max-width:46ch}
+.sub{font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;color:rgb(var(--muted));margin:2rem 0 .9rem}
+
+.grid{display:grid;gap:1rem}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* swatches */
+.swatch{border:1px solid rgb(var(--line));border-radius:.5rem;overflow:hidden;cursor:pointer;background:rgb(var(--paper))}
+.swatch .chip{height:84px}
+.swatch .meta{padding:.55rem .7rem}
+.swatch .nm{font-size:.82rem;font-weight:500}
+.swatch .hx{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgb(var(--muted));margin-top:.15rem}
+.swatch .role{font-size:.7rem;color:rgb(var(--muted));margin-top:.2rem}
+.ramp{display:flex;border:1px solid rgb(var(--line));border-radius:.5rem;overflow:hidden}
+.ramp .step{flex:1;height:56px;position:relative;cursor:pointer}
+.ramp .step span{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.56rem;color:rgb(0 0 0 /0.55)}
+.ramp .step.dk span{color:rgb(255 255 255 /0.7)}
+
+/* spec tables */
+table.spec{width:100%;border-collapse:collapse;font-size:.85rem}
+table.spec th{text-align:left;font-weight:500;color:rgb(var(--muted));border-bottom:1px solid rgb(var(--line));padding:.5rem .6rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
+table.spec td{padding:.5rem .6rem;border-bottom:1px solid rgb(var(--line)/0.6);vertical-align:top}
+table.spec td code{font-size:.78rem}
+
+/* type specimens */
+.specimen{border:1px solid rgb(var(--line));border-radius:.5rem;padding:1.1rem 1.25rem;margin-bottom:.6rem;background:rgb(var(--paper))}
+.specimen .lab{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:rgb(var(--muted));margin-bottom:.5rem}
+
+/* spacing + radius visualizers */
+.spacing-row{display:flex;align-items:center;gap:1rem;margin-bottom:.5rem}
+.spacing-row .bar{height:18px;background:rgb(var(--accent)/0.75);border-radius:3px}
+.spacing-row .l{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgb(var(--muted));width:120px}
+.radius-box{height:96px;border:1px solid rgb(var(--line));background:linear-gradient(180deg,rgb(var(--accent)/0.1),rgb(var(--paper)));display:flex;align-items:flex-end;justify-content:center;padding:.4rem;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:rgb(var(--muted))}
+
+/* badges/chips */
+.badge{font-size:.55rem;text-transform:uppercase;letter-spacing:.14em;padding:.15rem .4rem;border-radius:4px}
+.badge.official{border:1px solid rgb(var(--accent-2)/0.4);color:rgb(var(--accent-2))}
+.badge.independent{border:1px solid rgb(var(--line));color:rgb(var(--muted))}
+.chip{font-size:.62rem;padding:.1rem .45rem;border-radius:4px;background:rgb(var(--line)/0.7);color:rgb(var(--fg)/0.8)}
+.chip.free{background:rgb(var(--accent-2)/0.12);color:rgb(var(--accent-2))}
+.chip.paid{background:rgb(var(--accent)/0.12);color:rgb(var(--accent))}
+
+/* callouts replica */
+.callout{border-radius:.5rem;padding:1.25rem;background:rgb(var(--paper))}
+.callout .ce{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+.callout.note{border-left:3px solid rgb(var(--muted))}.callout.note .ce{color:rgb(var(--muted))}
+.callout.warn{border-left:3px solid rgb(var(--accent))}.callout.warn .ce{color:rgb(var(--accent))}
+.callout.tip{border-left:3px solid rgb(var(--accent-2))}.callout.tip .ce{color:rgb(var(--accent-2))}
+
+/* newsletter input replica */
+.nl{display:flex;gap:.75rem;flex-wrap:wrap}
+.nl input{flex:1;min-width:200px;background:rgb(var(--bg));border:1px solid rgb(var(--line));color:rgb(var(--fg));border-radius:.625rem;padding:.75rem 1rem;font:inherit;font-size:.95rem;outline:none;transition:border-color .15s,box-shadow .15s}
+.nl input::placeholder{color:rgb(var(--muted));opacity:.7}
+.nl input:focus{border-color:rgb(var(--accent));box-shadow:0 0 0 3px rgb(var(--accent)/0.18)}
+.nl button{background:rgb(var(--accent));color:#fff;border:0;border-radius:.625rem;padding:.75rem 1.5rem;font:inherit;font-size:.95rem;font-weight:600;cursor:pointer}
+
+/* icons */
+.icon-cell{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem;border:1px solid rgb(var(--line));border-radius:.5rem;background:rgb(var(--paper))}
+.icon-cell svg{width:24px;height:24px}
+.icon-cell .l{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:rgb(var(--muted))}
+
+/* motion demos */
+.motion-box{border:1px solid rgb(var(--line));border-radius:.5rem;padding:1.25rem;background:rgb(var(--paper));text-align:center}
+.motion-box .demo{height:54px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem}
+.motion-box .dot{width:42px;height:42px;border-radius:10px;background:rgb(var(--accent))}
+.motion-box .nm{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:rgb(var(--fg))}
+.motion-box .meta{font-size:.7rem;color:rgb(var(--muted));margin-top:.2rem}
+.replay{margin-top:.6rem;font-size:.7rem;color:rgb(var(--accent));background:none;border:0;cursor:pointer;font-family:'JetBrains Mono',monospace}
+
+/* pattern frame */
+.frame{border:1px dashed rgb(var(--line));border-radius:.6rem;padding:1.25rem;background:rgb(var(--bg))}
+.frame .flab{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:rgb(var(--muted));margin-bottom:1rem}
+
+.note-line{font-size:.78rem;color:rgb(var(--muted));margin-top:.6rem}
+.copyhint{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:rgb(var(--muted))}
+.toast{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(20px);background:rgb(var(--accent));color:#fff;padding:.5rem .9rem;border-radius:.5rem;font-size:.8rem;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer.sg{border-top:1px solid rgb(var(--line));padding:2.5rem 0;color:rgb(var(--muted));font-size:.8rem}
+.flag{color:rgb(var(--accent));font-weight:500}
+ul.drift{list-style:none;padding:0;margin:0;display:grid;gap:.5rem}
+ul.drift li{border:1px solid rgb(var(--line));border-radius:.5rem;padding:.7rem .9rem;font-size:.82rem;background:rgb(var(--paper))}
+ul.drift li b{color:rgb(var(--accent))}
+.kbd{font-family:'JetBrains Mono',monospace;font-size:.7rem;border:1px solid rgb(var(--line));border-radius:4px;padding:.1rem .35rem;color:rgb(var(--muted))}
+</style>
+</head>
+<body>
+
+<header class="sg">
+  <div class="bar">
+    <div class="brand">Vlad's Playbook <span class="tag">Design System</span></div>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle light / dark">
+      <svg id="iSun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg id="iMoon" class="hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="inner">
+    <a href="#principles">Principles</a>
+    <a href="#color">Color</a>
+    <a href="#type">Type</a>
+    <a href="#space">Spacing</a>
+    <a href="#radius">Radius</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#labels">Labels</a>
+    <a href="#cards">Cards</a>
+    <a href="#forms">Forms</a>
+    <a href="#icons">Icons</a>
+    <a href="#motion">Motion</a>
+    <a href="#patterns">Patterns</a>
+    <a href="#drift">Drift</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eyebrow--loud" style="color:rgb(var(--accent));margin-bottom:1rem">A design system</div>
+    <h1 style="font-family:'Source Serif 4',serif;font-weight:500">The warm-dark<br><span style="color:rgb(var(--accent))">field manual.</span></h1>
+    <p class="lede">Serif display + sans body + monospace machine-voice, set in ink "paper" lit by a single hot flame-orange, with terminal-green as the system secondary. <strong>Book meets terminal.</strong> Every token below is parsed and verified against the live site.</p>
+    <div class="statbar">
+      <span><b>7</b> semantic tokens</span><span class="dot">·</span>
+      <span><b>3</b> typefaces</span><span class="dot">·</span>
+      <span><b>1</b> hot accent</span><span class="dot">·</span>
+      <span><b>0</b> shadows</span><span class="dot">·</span>
+      <span><b>dark</b>-first</span>
+    </div>
+    <div style="margin-top:1.5rem;display:flex;gap:.75rem;flex-wrap:wrap">
+      <button class="btn-flame" onclick="document.getElementById('color').scrollIntoView()">Jump to tokens →</button>
+      <a class="btn-ghost" href="./docs/DESIGN-SYSTEM.md">Read the full spec</a>
+    </div>
+  </div>
+
+  <!-- PRINCIPLES -->
+  <section class="sg" id="principles">
+    <div class="sec-head"><div><span class="n">01</span> &nbsp; <h2 style="display:inline">Principles</h2></div><p>The ten rules the whole system obeys. Express hierarchy with size, serif-vs-sans, and the single accent — never weight or shadow.</p></div>
+    <div class="grid g3">
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">01 · Dark-first</div><p style="margin:.5rem 0 0;font-size:.88rem">:root <em>is</em> the dark theme. Light is a 5-of-7-var override. Design on near-black first.</p></div>
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">02 · One hot accent</div><p style="margin:.5rem 0 0;font-size:.88rem">Flame is the only warm accent — links, primary CTA, focus, numerals. If everything's orange, nothing is.</p></div>
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent-2))">03 · Mono = machine</div><p style="margin:.5rem 0 0;font-size:.88rem">Serif = author, sans = reader, mono = the machine talking. Set commands & read-outs in mono.</p></div>
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent-2))">04 · Green = system state</div><p style="margin:.5rem 0 0;font-size:.88rem">Flame = what <em>you</em> do; terminal-green = what the <em>system</em> knows. Don't cross the wires.</p></div>
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">05 · Generous measure</div><p style="margin:.5rem 0 0;font-size:.88rem">Prose lives in a fixed 760px column, 17px, line-height 1.75. Reading is the core UX.</p></div>
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">06 · Restraint over ornament</div><p style="margin:.5rem 0 0;font-size:.88rem">Headings always 500, hairline borders, modest radii, <strong>no shadows</strong>.</p></div>
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">07 · Motion is an accent</div><p style="margin:.5rem 0 0;font-size:.88rem">Three entrances + one 150ms micro-transition. Nothing bounces or parallaxes.</p></div>
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">08 · Warm neutrals</div><p style="margin:.5rem 0 0;font-size:.88rem">The ramp is warm "ink", never #000/#888/#fff. Warmth makes it feel like paper.</p></div>
+      <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">09 · Accessible by default</div><p style="margin:.5rem 0 0;font-size:.88rem">Focus rings, skip-link, reduced-motion, print — requirements, not extras.</p></div>
+    </div>
+  </section>
+
+  <!-- COLOR -->
+  <section class="sg" id="color">
+    <div class="sec-head"><div><span class="n">02</span> &nbsp; <h2 style="display:inline">Color</h2></div><p>All real color flows through 7 semantic CSS vars as RGB triplets → <code>rgb(var(--x) / α)</code>. Click any swatch to copy. Toggle the theme (top-right) to watch them flip.</p></div>
+
+    <div class="sub">Semantic tokens — surfaces &amp; text</div>
+    <div class="grid g4" id="semGrid"></div>
+
+    <div class="sub">Accent tokens — theme-invariant (do not change in light mode)</div>
+    <div class="grid g2" id="accGrid"></div>
+
+    <div class="sub">Bespoke palette ramps <span style="text-transform:none;letter-spacing:0;color:rgb(var(--muted))">— the reference ramps the vars were sampled from (numbered utilities are ~95% unused)</span></div>
+    <div style="display:grid;gap:.8rem">
+      <div><div class="copyhint" style="margin-bottom:.3rem">ink · neutral (50→950)</div><div class="ramp" id="rampInk"></div></div>
+      <div><div class="copyhint" style="margin-bottom:.3rem">flame · primary accent (50→900, DEFAULT=400)</div><div class="ramp" id="rampFlame"></div></div>
+      <div><div class="copyhint" style="margin-bottom:.3rem">terminal · secondary accent (50→900, DEFAULT=400)</div><div class="ramp" id="rampTerm"></div></div>
+    </div>
+
+    <div class="sub">Status — <span class="flag">proposed</span> (today these are hard-coded raw hexes)</div>
+    <div class="grid g4" id="statusGrid"></div>
+    <p class="note-line">A categorical purple ramp (<code>#7A2EE6→#C77DFF</code>) also exists for data-viz in the leaderboard / sovereign-stack charts — promote it to a documented <code>--chart-*</code> set.</p>
+  </section>
+
+  <!-- TYPE -->
+  <section class="sg" id="type">
+    <div class="sec-head"><div><span class="n">03</span> &nbsp; <h2 style="display:inline">Typography</h2></div><p>Source Serif 4 (display), Inter (body/UI), JetBrains Mono (machine). Headings are fluid <code>clamp()</code> and always weight 500.</p></div>
+
+    <div class="specimen"><div class="lab">.chapter-num · clamp(4rem,8vw,6rem) · --accent</div><div class="chapter-num">07</div></div>
+    <div class="specimen"><div class="lab">h1 · Source Serif 4 · clamp(2.5rem,6vw,4rem) · 500 · -0.015em</div><h1>Stop juggling tabs.</h1></div>
+    <div class="specimen"><div class="lab">h2 · clamp(1.75rem,3vw,2.25rem) · 500</div><h2>Run AI like an operating system</h2></div>
+    <div class="specimen"><div class="lab">h3 · clamp(1.25rem,2vw,1.5rem) · 500</div><h3>The conductor, not the player</h3></div>
+    <div class="specimen"><div class="lab">body · Inter · 17px · line-height 1.75 · --fg/0.92</div><p style="margin:0;line-height:1.75;color:rgb(var(--fg)/0.92)">A field manual for operators who want to stop juggling tabs and start running AI like an OS. The bones are a book; the accents are a terminal. <span class="glossary-term">Glossary term</span> and <a href="#">a flame link</a> live inline.</p></div>
+    <div class="specimen"><div class="lab">mono · JetBrains Mono · the machine voice</div><code>~/.claude/CLAUDE.md · 3-10B tokens/mo · /dream</code></div>
+    <div class="specimen"><div class="lab">.eyebrow (proposed standard) · 11px · uppercase · 0.18em</div><div class="eyebrow" style="color:rgb(var(--accent))">A field manual</div><div style="height:.5rem"></div><div class="eyebrow--loud" style="color:rgb(var(--accent-2))">.eyebrow--loud · 0.25em</div></div>
+
+    <div class="sub">Heading scale</div>
+    <table class="spec"><thead><tr><th>Element</th><th>Size</th><th>px</th><th>Line</th><th>Margins (t / b)</th></tr></thead><tbody>
+      <tr><td><code>h1</code></td><td><code>clamp(2.5rem,6vw,4rem)</code></td><td>40→64</td><td>1.05</td><td>— / —</td></tr>
+      <tr><td><code>h2</code></td><td><code>clamp(1.75rem,3vw,2.25rem)</code></td><td>28→36</td><td>1.2</td><td>3rem / 1rem</td></tr>
+      <tr><td><code>h3</code></td><td><code>clamp(1.25rem,2vw,1.5rem)</code></td><td>20→24</td><td>1.3</td><td>2.5rem / .75rem</td></tr>
+      <tr><td><code>h4</code></td><td><code>1.125rem</code></td><td>18</td><td>—</td><td>2rem / .5rem</td></tr>
+    </tbody></table>
+  </section>
+
+  <!-- SPACING -->
+  <section class="sg" id="space">
+    <div class="sec-head"><div><span class="n">04</span> &nbsp; <h2 style="display:inline">Spacing</h2></div><p>Tailwind's 4px scale, used tight. Empirically it clusters into micro / component / block / section tiers.</p></div>
+    <div id="spacingViz"></div>
+    <p class="note-line">Most-used: <code>gap-3</code> (12px), <code>p-3</code> (12px), <code>py-2</code> (8px) inside components · <code>mt-16</code>/<code>mb-8</code> section headers · <code>mt-24</code> big bands.</p>
+  </section>
+
+  <!-- RADIUS -->
+  <section class="sg" id="radius">
+    <div class="sec-head"><div><span class="n">05</span> &nbsp; <h2 style="display:inline">Radius &amp; elevation</h2></div><p>Canonical card = <code>rounded-xl</code> (0.75rem); buttons = <code>rounded-md</code>; pills = full. Elevation is borders + paper fill, <strong>not shadows</strong>.</p></div>
+    <div class="grid g4">
+      <div><div class="radius-box" style="border-radius:.25rem">rounded · 0.25rem</div></div>
+      <div><div class="radius-box" style="border-radius:.375rem">rounded-md · 0.375 (btn)</div></div>
+      <div><div class="radius-box" style="border-radius:.5rem">rounded-lg · 0.5rem</div></div>
+      <div><div class="radius-box" style="border-radius:.75rem">rounded-xl · 0.75 (.card)</div></div>
+    </div>
+    <p class="note-line">Z-index stack: <span class="kbd">progress 30</span> <span class="kbd">header 40</span> <span class="kbd">palette 50</span> <span class="kbd">modal 60</span> <span class="kbd">skip-link 100</span>. The only real shadow in the app is the artifact modal.</p>
+  </section>
+
+  <!-- BUTTONS -->
+  <section class="sg" id="buttons">
+    <div class="sec-head"><div><span class="n">06</span> &nbsp; <h2 style="display:inline">Buttons</h2></div><p>Three button classes. <code>.btn-flame</code> is the <em>one</em> accent CTA per view; <code>.btn-ghost</code> for everything secondary.</p></div>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
+      <button class="btn-flame">Read the prologue →</button>
+      <button class="btn">Primary (inverted)</button>
+      <button class="btn-ghost">Secondary ghost</button>
+      <button class="btn-ghost" disabled style="opacity:.45;cursor:not-allowed">Disabled</button>
+    </div>
+    <table class="spec" style="margin-top:1.5rem"><thead><tr><th>Class</th><th>Fill</th><th>Radius</th><th>Hover</th></tr></thead><tbody>
+      <tr><td><code>.btn</code></td><td><code>--fg</code> bg / <code>--bg</code> text</td><td>.375rem</td><td><code>--fg/0.9</code></td></tr>
+      <tr><td><code>.btn-ghost</code></td><td>transparent + <code>1px --line</code></td><td>.375rem</td><td>bg <code>--line/0.4</code></td></tr>
+      <tr><td><code>.btn-flame</code></td><td><code>--accent</code> bg / #fff text</td><td>.375rem</td><td><code>--accent/0.9</code></td></tr>
+    </tbody></table>
+  </section>
+
+  <!-- LABELS -->
+  <section class="sg" id="labels">
+    <div class="sec-head"><div><span class="n">07</span> &nbsp; <h2 style="display:inline">Pills, badges &amp; eyebrows</h2></div><p>The <code>.pill</code> chip, status badges, the <code>.eyebrow</code> micro-label, and the dotted glossary term.</p></div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1.25rem">
+      <span class="pill">subagents</span><span class="pill">CLAUDE.md</span><span class="pill">MCP</span><span class="pill">hooks</span>
+    </div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1.25rem">
+      <span class="badge official">Official</span><span class="badge independent">Independent</span>
+      <span class="chip">Beginner</span><span class="chip">No-code</span><span class="chip free">Free</span><span class="chip paid">Core free · cert paid</span>
+    </div>
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center">
+      <span class="eyebrow" style="color:rgb(var(--accent))">Decision</span>
+      <span class="eyebrow" style="color:rgb(var(--accent-2))">New here? Start here</span>
+      <span class="eyebrow" style="color:rgb(var(--muted))">Reference</span>
+      <span>Hover the <span class="glossary-term">glossary term</span> →</span>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="sg" id="cards">
+    <div class="sec-head"><div><span class="n">08</span> &nbsp; <h2 style="display:inline">Cards &amp; content blocks</h2></div><p>The <code>.card</code> surface (hover = flame border) is the workhorse. Chapter cards add a terminal-green read-state. Callouts use a 3px left border colored by type.</p></div>
+
+    <div class="grid g3" style="margin-bottom:1.25rem">
+      <a class="card" href="#" style="text-decoration:none;color:rgb(var(--fg))">
+        <div class="eyebrow" style="color:rgb(var(--accent))">Method</div>
+        <h3 style="margin:.4rem 0 0">HTML-ization</h3>
+        <p style="margin:.5rem 0 0;font-size:.85rem;color:rgb(var(--muted))">Stop sending dead files. Every report ships as a live interactive artifact.</p>
+      </a>
+      <a class="card chapter-card" href="#" style="text-decoration:none;color:rgb(var(--fg))">
+        <div style="display:flex;gap:.75rem;align-items:baseline">
+          <span style="font-family:'Source Serif 4',serif;font-size:1.5rem;color:rgb(var(--accent))">01</span>
+          <span style="font-family:'Source Serif 4',serif;font-size:1.125rem">It killed my tabs</span>
+        </div>
+        <p style="margin:.5rem 0 0;font-size:.85rem;color:rgb(var(--muted))">Default chapter card (unread).</p>
+        <span class="read-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a class="card chapter-card" href="#" data-read="true" style="text-decoration:none;color:rgb(var(--fg))">
+        <div style="display:flex;gap:.75rem;align-items:baseline">
+          <span style="font-family:'Source Serif 4',serif;font-size:1.5rem;color:rgb(var(--accent))">02</span>
+          <span style="font-family:'Source Serif 4',serif;font-size:1.125rem;color:rgb(var(--fg)/0.7)">The conductor</span>
+        </div>
+        <p style="margin:.5rem 0 0;font-size:.85rem;color:rgb(var(--muted))">Read state → green check + border.</p>
+        <span class="read-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+    </div>
+
+    <div class="grid g3">
+      <div class="callout note"><div class="ce">Note</div><div style="font-size:.88rem">Neutral aside. Border = <code>--muted</code>.</div></div>
+      <div class="callout warn"><div class="ce">Warning</div><div style="font-size:.88rem">Caution. Border = <code>--accent</code> (flame).</div></div>
+      <div class="callout tip"><div class="ce">Tip</div><div style="font-size:.88rem">Helpful. Border = <code>--accent-2</code> (terminal).</div></div>
+    </div>
+
+    <div style="margin-top:1.25rem;max-width:760px;border-left:2px solid rgb(var(--accent));padding-left:1.5rem">
+      <p style="font-family:'Source Serif 4',serif;font-size:1.6rem;line-height:1.25;margin:0">"It has always given me satisfaction to be able to create what I have in mind."</p>
+      <div style="margin-top:.75rem;font-size:.85rem;color:rgb(var(--muted))">— PullQuote / ManifestoQuote pattern</div>
+    </div>
+  </section>
+
+  <!-- FORMS -->
+  <section class="sg" id="forms">
+    <div class="sec-head"><div><span class="n">09</span> &nbsp; <h2 style="display:inline">Forms</h2></div><p>The newsletter capture is the canonical input pattern: <code>0.625rem</code> radius, flame focus ring (<code>box-shadow 3px --accent/0.18</code>).</p></div>
+    <div class="card" style="max-width:560px">
+      <div class="eyebrow" style="color:rgb(var(--accent));margin-bottom:.75rem">Stay close</div>
+      <div class="nl">
+        <input type="email" placeholder="you@company.com" aria-label="Email (demo)"/>
+        <button type="button">Subscribe</button>
+      </div>
+      <p style="margin:.75rem 0 0;font-size:.78rem;color:rgb(var(--muted))">Free · weekly · click the field to see the focus ring.</p>
+    </div>
+  </section>
+
+  <!-- ICONS -->
+  <section class="sg" id="icons">
+    <div class="sec-head"><div><span class="n">10</span> &nbsp; <h2 style="display:inline">Icons</h2></div><p>No icon font, no library — inline 24×24 SVG, <code>fill=none stroke=currentColor stroke-width=2</code>. <span class="flag">lucide-react is a dead dependency (0 imports).</span></p></div>
+    <div class="grid g4" id="iconGrid"></div>
+  </section>
+
+  <!-- MOTION -->
+  <section class="sg" id="motion">
+    <div class="sec-head"><div><span class="n">11</span> &nbsp; <h2 style="display:inline">Motion</h2></div><p>The entire vocabulary. Click replay to re-trigger.</p></div>
+    <div class="grid g3">
+      <div class="motion-box"><div class="demo"><div class="dot" id="m1"></div></div><div class="nm">animate-fade-in</div><div class="meta">600ms · ease-out</div><button class="replay" data-t="m1" data-c="anim-fade">↻ replay</button></div>
+      <div class="motion-box"><div class="demo"><div class="dot" id="m2"></div></div><div class="nm">animate-rise</div><div class="meta">600ms · cubic-bezier(.2,.7,.2,1)</div><button class="replay" data-t="m2" data-c="anim-rise">↻ replay</button></div>
+      <div class="motion-box"><div class="demo"><div class="dot anim-pulse" id="m3"></div></div><div class="nm">animate-pulse-soft</div><div class="meta">2.4s · ease-in-out · ∞</div><button class="replay" data-t="m3" data-c="anim-pulse">↻ restart</button></div>
+    </div>
+    <p class="note-line">Micro-interactions: a single <strong>150ms</strong> transition on color/border/background/opacity. All of it is neutralized under <code>prefers-reduced-motion</code>.</p>
+  </section>
+
+  <!-- PATTERNS -->
+  <section class="sg" id="patterns">
+    <div class="sec-head"><div><span class="n">12</span> &nbsp; <h2 style="display:inline">Page patterns</h2></div><p>The named, reusable page recipes. Assemble these instead of inventing layout.</p></div>
+
+    <div class="frame" style="margin-bottom:1rem">
+      <div class="flab">P1 · Hero — container-wide · pt-16 md:pt-24</div>
+      <div class="eyebrow--loud" style="color:rgb(var(--accent));margin-bottom:.75rem">A field manual</div>
+      <div style="font-family:'Source Serif 4',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:500;line-height:.95;letter-spacing:-.02em">VLAD'S<br><span style="color:rgb(var(--accent))">PLAYBOOK</span></div>
+      <div class="statbar" style="margin-top:1rem"><span><b>3-10B</b> tokens/mo</span><span class="dot">·</span><span><b>5</b> companies</span><span class="dot">·</span><span><b>45</b> chapters</span><span class="dot">·</span><span><b>$0</b> to read</span></div>
+      <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn-flame">Read the prologue →</button><button class="btn-ghost">The journey</button></div>
+    </div>
+
+    <div class="frame" style="margin-bottom:1rem">
+      <div class="flab">P2 · Section header + P4 · Feature-tile grid (md:grid-cols-2 lg:grid-cols-4)</div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.25rem"><h3 style="margin:0">Forty-Four Chapters</h3><span style="font-size:.82rem;color:rgb(var(--muted))">Read straight or jump where you need it.</span></div>
+      <div class="grid g4">
+        <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">Method</div><h4 style="margin:.3rem 0 0;font-family:'Source Serif 4',serif">HTML-ization</h4></div>
+        <div class="card"><div class="eyebrow" style="color:rgb(var(--accent-2))">New</div><h4 style="margin:.3rem 0 0;font-family:'Source Serif 4',serif">Learn first</h4></div>
+        <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">Stack</div><h4 style="margin:.3rem 0 0;font-family:'Source Serif 4',serif">Sovereign</h4></div>
+        <div class="card"><div class="eyebrow" style="color:rgb(var(--accent))">Orchestration</div><h4 style="margin:.3rem 0 0;font-family:'Source Serif 4',serif">Swarms</h4></div>
+      </div>
+    </div>
+
+    <div class="frame">
+      <div class="flab">P5 · Promo / "Now" banner — gradient border accent/0.45</div>
+      <div style="border:1px solid rgb(var(--accent)/0.45);border-radius:.75rem;background:linear-gradient(180deg,rgb(var(--accent)/0.05),rgb(var(--paper)));padding:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+        <div><div class="eyebrow" style="color:rgb(var(--accent));letter-spacing:.28em">Now · Ed 9.9 · June 2026</div><div style="font-family:'Source Serif 4',serif;font-size:1.4rem;margin-top:.4rem"><strong>Vlad's Playbook is public.</strong> The source is the recipe.</div></div>
+        <div style="color:rgb(var(--accent));font-weight:600;white-space:nowrap">Read the launch →</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRIFT -->
+  <section class="sg" id="drift">
+    <div class="sec-head"><div><span class="n">13</span> &nbsp; <h2 style="display:inline">Drift &amp; backlog</h2></div><p>The system is coherent at the token level but drifted at the application level. Top items to standardize — full list in the spec.</p></div>
+    <ul class="drift">
+      <li><b>H1</b> · Add semantic color utilities (<code>text-accent</code>, <code>bg-paper</code>, <code>border-line</code>) → kill the 999 inline <code>style=</code> attrs.</li>
+      <li><b>H2</b> · The numbered <code>ink/flame/terminal</code> palette is ~95% dead (0 uses) — delete or adopt.</li>
+      <li><b>H3</b> · Standardize the eyebrow: ~108 ad-hoc labels across 9 sizes × 9 trackings → one <code>.eyebrow</code> class.</li>
+      <li><b>H4</b> · Add <code>--success/--warning/--error/--info</code> + a <code>--chart-*</code> ramp; replace raw status hexes.</li>
+      <li><b>H5</b> · Replace hard-coded <code>#FF6B2C/#22d3a0/#aaa79a</code> in ~9 widgets with tokens.</li>
+      <li><b>M1–M3</b> · One card radius (<code>rounded-xl</code>); consolidate the pill (~10 reimplementations); collapse 3 reading widths → 760px.</li>
+      <li><b>L6</b> · Decide on <code>lucide-react</code> — delete the dead dependency or adopt with the 24/currentColor/stroke-2 conventions.</li>
+    </ul>
+  </section>
+
+</div>
+
+<footer class="sg"><div class="wrap">
+  Reverse-engineered from the live source · 2026-06-09 · documentation only, changes no source files.
+  Full spec → <a href="./docs/DESIGN-SYSTEM.md">docs/DESIGN-SYSTEM.md</a> · Live site → <a href="https://dive.vladyslavpodoliako.com">dive.vladyslavpodoliako.com</a>
+</div></footer>
+
+<div class="toast" id="toast">Copied</div>
+
+<script>
+/* ── data ── */
+const SEM = [
+  ['--bg','#0E0F11','#FAFAF7','Page background'],
+  ['--fg','#FAFAF7','#0E0F11','Primary text'],
+  ['--muted','#AAA79A','#56544B','Secondary text / labels'],
+  ['--line','#26251F','#E5E3DA','Hairline borders'],
+  ['--paper','#16171B','#F2F1EC','Elevated surface (cards)'],
+];
+const ACC = [
+  ['--accent','#FF6B2C','Flame — human intent (links, CTA, focus, numerals)'],
+  ['--accent-2','#22D3A0','Terminal — system state (read-state, official, done)'],
+];
+const INK = [['50','#FAFAF7'],['100','#F2F1EC'],['200','#E5E3DA'],['300','#C9C6B8'],['400','#8C897C'],['500','#56544B'],['600','#3A3933'],['700','#26251F'],['800','#1A1916'],['900','#0E0F11'],['950','#08090B']];
+const FLAME = [['50','#FFF1E9'],['100','#FFD9C4'],['200','#FFB48C'],['300','#FF8E54'],['400','#FF6B2C'],['500','#E0521A'],['600','#B33E10'],['700','#85300C'],['800','#5C2108'],['900','#3D1604']];
+const TERM = [['50','#E6FBF3'],['100','#BFF4DD'],['200','#7AE9BF'],['300','#3CDCA8'],['400','#22D3A0'],['500','#15B387'],['600','#0E8E6A'],['700','#0A684E'],['800','#064433'],['900','#03281D']];
+const STATUS = [['--success','#22C55E','success / verified'],['--warning','#FFAA00','warning / caution'],['--error','#EF4444','error / destructive'],['--info','#8B5CF6','info / data-viz']];
+const SPACING = [['gap-1 / p-1','4px',6],['gap-2 / py-2','8px',12],['gap-3 / p-3','12px',18],['p-4','16px',24],['p-5','20px',30],['gap-6','24px',36],['gap-10','40px',60],['mt-16','64px',96],['mt-24','96px',144]];
+const ICONS = {
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/>',
+  check:'<path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/>',
+  menu:'<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',
+  moon:'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>',
+  external:'<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3" stroke-linecap="round"/>'
+};
+
+/* ── render ── */
+const el = (h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstChild;};
+const toast=(msg)=>{const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),1100);};
+const copy=(s)=>{navigator.clipboard?.writeText(s).then(()=>toast('Copied '+s)).catch(()=>toast(s));};
+
+const semGrid=document.getElementById('semGrid');
+SEM.forEach(([v,dk,lt,role])=>{
+  const n=el(`<div class="swatch"><div class="chip" style="background:${dk}"></div><div class="meta"><div class="nm">${v}</div><div class="hx">${dk} <span style="opacity:.6">· lt ${lt}</span></div><div class="role">${role}</div></div></div>`);
+  n.onclick=()=>copy(v); semGrid.appendChild(n);
+});
+const accGrid=document.getElementById('accGrid');
+ACC.forEach(([v,hx,role])=>{
+  const n=el(`<div class="swatch"><div class="chip" style="background:${hx}"></div><div class="meta"><div class="nm">${v}</div><div class="hx">${hx}</div><div class="role">${role}</div></div></div>`);
+  n.onclick=()=>copy(v); accGrid.appendChild(n);
+});
+const statusGrid=document.getElementById('statusGrid');
+STATUS.forEach(([v,hx,role])=>{
+  const n=el(`<div class="swatch"><div class="chip" style="background:${hx}"></div><div class="meta"><div class="nm">${v}</div><div class="hx">${hx}</div><div class="role">${role}</div></div></div>`);
+  n.onclick=()=>copy(hx); statusGrid.appendChild(n);
+});
+const lum=(hex)=>{const c=hex.replace('#','');const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);return (0.299*r+0.587*g+0.114*b)/255;};
+const ramp=(id,arr)=>{const w=document.getElementById(id);arr.forEach(([step,hx])=>{const s=el(`<div class="step ${lum(hx)<0.5?'dk':''}" style="background:${hx}"><span>${step}</span></div>`);s.title=hx;s.onclick=()=>copy(hx);w.appendChild(s);});};
+ramp('rampInk',INK);ramp('rampFlame',FLAME);ramp('rampTerm',TERM);
+
+const sv=document.getElementById('spacingViz');
+SPACING.forEach(([l,px,w])=>{sv.appendChild(el(`<div class="spacing-row"><span class="l">${l}</span><span class="bar" style="width:${w}px"></span><span class="copyhint">${px}</span></div>`));});
+
+const ig=document.getElementById('iconGrid');
+Object.entries(ICONS).forEach(([nm,path])=>{ig.appendChild(el(`<div class="icon-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${path}</svg><span class="l">${nm}</span></div>`));});
+
+/* ── motion replay ── */
+document.querySelectorAll('.replay').forEach(b=>{b.onclick=()=>{const t=document.getElementById(b.dataset.t),c=b.dataset.c;t.classList.remove(c);void t.offsetWidth;t.classList.add(c);};});
+document.getElementById('m1').classList.add('anim-fade');document.getElementById('m2').classList.add('anim-rise');
+
+/* ── theme toggle ── */
+const tb=document.getElementById('themeBtn'),sun=document.getElementById('iSun'),moon=document.getElementById('iMoon');
+const setTheme=(t)=>{document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;sun.style.display=t==='dark'?'':'none';moon.style.display=t==='dark'?'none':'';try{localStorage.setItem('ds-theme',t);}catch(e){}};
+tb.onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+try{const s=localStorage.getItem('ds-theme');if(s==='light')setTheme('light');}catch(e){}
+</script>
+</body>
+</html>
