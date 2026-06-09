@@ -10,6 +10,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.0',
+    date: '2026-06-09',
+    tagline: 'Fable 5 / Mythos 5 — the withheld model shipped, and the Playbook files it the day it lands: a research note that corrects the May 6 call, a nine-page model file, and the three evergreen pages the keyword map has been waiting for.',
+    shipped: [
+      'New research note (top of the timeline) — "Fable 5 / Mythos 5 — the withheld model shipped, split in two." The May 6 note read the Mythos disclosure as a capability ceiling Anthropic would not productize; the correction is the mechanism nobody predicted: one model, two names (Latin fabula / Greek mythos), the raw twin gated behind Project Glasswing, the safeguarded twin sold to everyone at $10/$50 per Mtok with classifier fallback to Opus 4.8.',
+      'New model file: /fable-5 — a hub plus eight spokes, each owning one question. vs-mythos-5 (one model, two names, three safeguards), benchmarks (the full 13-row launch table with the Berkeley-RDI discount applied), vs-opus-4-8 (upgrade or wait), vs-gpt-5-5 (cross-vendor, incl. Gemini 3.1 Pro), pricing (sticker vs cost-per-task), use-cases (Stripe\'s 50M-line day, drug design, genomics — vendor-curated and labeled as such), claude-code (the banner, the June 22 clock, the routing), api (claude-fable-5, the one new 400).',
+      'The two launch demos embedded — Fable 5 beating Pokémon FireRed on raw screenshots (vision only, no maps, no navigation aids — previous Claude models could not finish it even with helper harnesses) and the solar-system/eclipse simulation.',
+      'The developer-facing fine print folded in: blocked API requests return an unbilled error with fallback-to-Opus-4.8 opt-in at Opus pricing (built into the apps and Managed Agents); Fable 5 as an advisor model — cheap workers call it mid-task to check plans, the book\'s conductor-and-judge split as an API primitive; the 30-day misuse-only retention and the Console terms gate.',
+      'Three evergreen pages from the SEO/AEO keyword map, every claim chapter-sourced: /claude-code-best-practices (the practices that survived production, distilled from 45 chapters), /claude-code-vs-cursor (the comparison the answer engines currently source from Reddit), /what-is-agentic-coding (the operator\'s definition, with the 90k-line worked example).',
+      'Full wiring — homepage model-file tile, mobile-nav entries, 12 Cmd-K entries, four glossary terms (Fable 5, Mythos 5, Mythos-class, and a disambiguated Mythos), three new inbox questions with FAQPage schema, llms.txt entries for every new page, and this changelog.',
+    ],
+    receipts: [
+      { label: 'New pages', value: '12 — /fable-5 hub + 8 spokes + 3 evergreen' },
+      { label: 'The model', value: 'claude-fable-5 · $10/$50 per Mtok · 1M context' },
+      { label: 'The correction', value: 'May 6 "Mythos isn\'t coming" → it came, split in two' },
+      { label: 'The clock', value: 'included in plan limits Jun 9–22, then usage credits' },
+    ],
+  },
+  {
     edition: 'Edition 9.9',
     date: '2026-06-08',
     tagline: 'Forty-five chapters. The App Store Without Swift — Claude Code one-shot a native iOS app for LinguaLive, and shipping it to the App Store meant walking through the gates the operator, not the agent, has to own. The proof is a RevenueCat renewal, read honestly.',

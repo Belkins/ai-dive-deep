@@ -1,0 +1,172 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'banner', label: 'The banner, clause by clause' },
+  { id: 'switch', label: 'How to switch' },
+  { id: 'first-runs', label: 'What to point it at first' },
+  { id: 'routing', label: 'Routing discipline' },
+  { id: 'june-22', label: 'The June 22 decision' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'series', label: 'The Fable 5 files' },
+];
+
+const faqItems = [
+  {
+    q: 'How do I enable Fable 5 in Claude Code?',
+    a: "You don't enable it — it's already there. From June 9, 2026, Fable 5 is available everywhere, Claude Code included. Run /model and pick it; the model id is claude-fable-5. No install, no flag, no config file. On Pro, Max, Team, and seat-based Enterprise plans it's included in plan limits until June 22, 2026, then needs usage credits.",
+  },
+  {
+    q: 'Does Fable 5 cost extra on my Claude plan?',
+    a: 'Not until June 22, 2026. On Pro, Max, Team, and seat-based Enterprise plans, Fable 5 is included in plan limits from June 9 to June 22. After that it requires usage credits — Anthropic says it aims to restore Fable 5 as standard when capacity allows. API pricing is $10 per million input tokens and $50 per million output, exactly 2× Opus 4.8.',
+  },
+  {
+    q: 'What happens to Fable 5 after June 22?',
+    a: 'It stays — the accounting changes. Subscription plans switch to usage credits to keep using it; the Claude API and consumption-based Enterprise are fully available throughout and unaffected. Anthropic aims to restore Fable 5 as standard in plan limits when capacity allows. Opus 4.8 is not deprecated and stays a valid default at $5/$25.',
+  },
+  {
+    q: 'Should subagents use Fable 5 too?',
+    a: "Usually no. The main loop — the seat holding the plan, the context, and the merge — earns the bigger model. Fan-out subagents doing bounded extraction, triage, or verification stay on Sonnet and Haiku tiers. That's the Ch 29 routing split, and at $10/$50 per million tokens, putting ten subagents on Fable 5 is paying frontier rates for work a cheaper tier finishes fine.",
+  },
+  {
+    q: 'Why did my session say it fell back to Opus 4.8?',
+    a: "Fable 5 ships with classifiers in three areas — offensive cyber, biology/chemistry, and capability distillation. When one trips, the response comes from Claude Opus 4.8 instead, and Anthropic states users are informed when that happens. More than 95% of Fable sessions involve no fallback at all. If your sessions keep tripping it, that work belongs on Opus 4.8 directly — at half the rate, with none of Fable's classifiers in the path.",
+  },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<BaseLayout
+  title="Fable 5 in Claude Code — the banner, the clock, the routing"
+  description="How to use Fable 5 in Claude Code: what the June 9 banner means, the June 22 plan-limits clock, switching via /model, and which work earns the 2× model."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="eyebrow eyebrow-loud mb-3 text-accent">Model file · Fable 5 in Claude Code</div>
+    <h1>Fable 5 in Claude Code — what the banner means.</h1>
+    <p class="mt-3 text-lg text-muted">
+      On June 9 a banner appeared at the top of my Claude Code session. One sentence of marketing, one sentence of routing advice, one sentence of billing. Most operators will read the first and skip the other two — the other two are the ones that cost money.
+    </p>
+    <p class="mt-2 text-sm text-muted">
+      Sourced from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a> and the banner in my own terminal. The full model file lives on <a href="/fable-5">the Fable 5 hub</a>; the cost math on <a href="/fable-5/pricing">the pricing page</a>.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="rounded-xl border p-5 border-line bg-accent/5">
+            <p class="m-0 leading-relaxed"><strong>Fable 5 is live in Claude Code since June 9, 2026.</strong> Included in paid-plan limits until June 22, usage credits after. Switch via <code>/model</code> — the id is <code>claude-fable-5</code>. Anthropic's own routing advice is in the banner: complex, long-running work. Point it at the gnarly stuff; keep fan-out subagents on cheaper tiers.</p>
+          </div>
+        </div>
+
+        <div id="banner" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The banner, clause by clause</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Verbatim, from my own session:</p>
+            <figure class="my-3 m-0">
+              <img src="/screens/fable-5-cc-banner.png" alt="Claude Code banner: Fable 5 is here! Our newest model for complex, long-running work. Included in your plan limits until Jun 22, then switch to usage credits to continue." class="rounded-xl border border-line w-full" loading="lazy" />
+              <figcaption class="mt-2 text-sm text-muted">The banner as it appeared in my terminal, June 9, 2026.</figcaption>
+            </figure>
+            <p><strong>"Complex, long-running work."</strong> That's Anthropic's routing table compressed to a single clause — not "for everything," not "your new default." The launch receipts back the phrasing (vendor-curated, so weigh accordingly): Stripe ran a 50-million-line Ruby codebase migration in one day that was scoped at two months by hand. Long horizon, one seat, run until finished. That's the workload class the banner is naming.</p>
+            <p><strong>"Included in your plan limits until Jun 22."</strong> The free-eval clock. Two weeks of frontier capacity inside the subscription you already pay for — which is a private-eval window someone else is funding (<a href="/chapters/25-evals-or-hope">Ch 25</a>). The window covers Pro, Max, Team, and seat-based Enterprise; API and consumption-based Enterprise pay per token from day one.</p>
+            <p><strong>"Then switch to usage credits to continue."</strong> The meter. After June 22 the model doesn't leave — the accounting changes. Anthropic says it aims to restore Fable 5 as standard when capacity allows, but you plan on the clause in front of you, not the one promised. The per-token math is on <a href="/fable-5/pricing">the pricing page</a>: $10/$50 per million, 2× Opus 4.8.</p>
+            <PullQuote>The banner is three clauses: the pitch, the clock, the meter. Operators who only read the pitch find out about the meter on their bill.</PullQuote>
+          </div>
+        </div>
+
+        <div id="switch" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">How to switch</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Run <code>/model</code>, pick Fable 5. That's the whole migration inside Claude Code — no API key dance, no settings file. The model id is <code>claude-fable-5</code>; what you get is a 1M-token context window and 128K max output.</p>
+            <p>If you drive the model through the SDK instead, there's one new sharp edge: an explicit <code>thinking: disabled</code> returns a 400 on Fable 5 even though Opus 4.7/4.8 accept it — omit the param entirely. The full surface, including effort levels and the cache-prefix change, is on <a href="/fable-5/api">the API page</a>. For <code>/model</code> and the rest of the slash-command keyboard, <a href="/cheat-sheet">the cheat sheet</a> stays the reference.</p>
+          </div>
+        </div>
+
+        <div id="first-runs" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What to point it at first</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>You have until June 22 to learn what this model does on <em>your</em> work, free. Don't spend the window on tasks Sonnet already finishes. Spend it where Opus 4.8 makes you wait, retry, or pre-chew the problem:</p>
+            <ol class="space-y-3 list-none p-0 m-0">
+              <li class="rounded-lg border p-4 border-line"><strong>The refactor you've been splitting into chunks for Opus.</strong> Hand it the whole thing in one seat and see if the pre-chunking ritual was for the model or for you. SWE-Bench Pro says 80.3% vs Opus 4.8's 69.2% — a signal, not a receipt; your repo is the eval.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>An overnight run-until-done loop.</strong> <a href="/chapters/38-run-until-done">Ch 38</a>'s pattern: <code>/goal</code> with a finish line the transcript can prove, Haiku evaluator deciding "done," a turn-cap tail. The chapter's receipt — a model-bump goal cleared in twelve turns, eighteen minutes, $0.04 of evaluator spend — was the shape with Opus in the main seat. Now put the loop your weaker runs kept failing on the frontier model and check the morning diff.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>A <a href="/dynamic-workflows">dynamic-workflows</a> orchestration.</strong> The conductor seat holds the plan, the budget, and the merge — that seat earns the bigger model. The fan-out underneath it doesn't (next section).</li>
+              <li class="rounded-lg border p-4 border-line"><strong>The gnarliest bug-hunt in your backlog.</strong> The one with three dead hypotheses pinned to it. Long-horizon investigation is the category the banner names, and FrontierCode Diamond at 29.3% vs 13.4% is the launch table's version of the claim — discount it, then test it.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div id="routing" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Routing discipline — who gets the expensive seat</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p><a href="/chapters/29-cost-economics">Ch 29</a> calls model routing the second-biggest cost lever after caching, and Fable 5 doesn't change the rule — it raises the stakes on it. The split: the main loop, the seat that holds context across the whole task and makes the judgment calls, goes to Fable 5. Fan-out subagents doing bounded work — extract this, verify that, grep those — stay on Sonnet and Haiku. Ch 29's diagnostic was a skill "calling Sonnet 60 times in a row when it should be one Sonnet call orchestrating Haiku tool calls." Same disease one tier up: one Fable 5 conductor orchestrating cheap calls, not ten Fable 5 subagents doing Haiku's job at $10/$50 per million.</p>
+            <p>And one routing input most operators will misread as a bug: Fable 5 carries classifiers on offensive-cyber, bio/chem, and distillation requests. Trip one and the response comes from Opus 4.8 — Anthropic states users are informed when it happens, and more than 95% of Fable sessions involve no fallback at all. If your security tooling or bio-adjacent sessions keep getting bounced, the product is telling you where that workload lives: on Opus 4.8 directly, at half the rate, with none of Fable's classifiers in the path.</p>
+            <PullQuote>The fallback notice is not an error message. It's routing information — the product telling you this session belonged on Opus 4.8 before you paid 2× to find out.</PullQuote>
+          </div>
+        </div>
+
+        <div id="june-22" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The June 22 decision</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Keep the transcripts from the free window. Every Fable 5 session between June 9 and June 22 is a private-eval data point you didn't pay for — which tasks finished, in how many turns, with how many of your interventions. That archive is what you decide with on June 23, instead of vibes (<a href="/chapters/25-evals-or-hope">Ch 25</a>).</p>
+            <p>The decision itself is <a href="/chapters/29-cost-economics">Ch 29</a> math, not sticker math. The price of a model is not the price of a task — if your turn count collapsed on long-horizon work, 2× per token can be net cheaper per finished task. If it didn't collapse on your workload, that's a clean answer too: Opus 4.8 is not deprecated, it stays excellent, and it costs $5/$25.</p>
+            <Callout type="note">
+              Either way you win — but only if you measured. The operator who ran three hard workloads through the window knows the answer on June 23. The operator who kept defaults learns it from the bill.
+            </Callout>
+            <p>The banner gave you the routing advice and the deadline in one sentence. The only thing it didn't give you is your own numbers. That part's on you — and until June 22, it's free.</p>
+          </div>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <div class="space-y-3">
+            {faqItems.map((f) => (
+              <details class="rounded-lg border p-4 border-line">
+                <summary class="font-semibold cursor-pointer">{f.q}</summary>
+                <p class="mt-2 mb-0 text-fg/85 leading-relaxed">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <div id="series" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The Fable 5 files</h2>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <a href="/fable-5/vs-mythos-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
+            <a href="/fable-5/benchmarks" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
+            <a href="/fable-5/vs-opus-4-8" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></a>
+            <a href="/fable-5/vs-gpt-5-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
+            <a href="/fable-5/pricing" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
+            <a href="/fable-5/use-cases" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
+            <div class="card text-fg opacity-60"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></div>
+            <a href="/fable-5/api" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
+          </div>
+          <p class="mt-6 text-sm text-muted">
+            Related: <a href="/fable-5">The Fable 5 hub</a> · <a href="/chapters/29-cost-economics">Ch 29 — cost economics</a> · <a href="/chapters/38-run-until-done">Ch 38 — run until done</a> · <a href="/dynamic-workflows">Dynamic workflows</a> · <a href="/cheat-sheet">The cheat sheet</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

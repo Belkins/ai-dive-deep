@@ -335,8 +335,26 @@ export const glossary: Record<string, GlossaryEntry> = {
   'Mythos': {
     term: 'Mythos',
     definition:
-      'Vlad\'s private name for Claude Opus 3 — the model his team had learned to write against, retired by Anthropic on January 5, 2026. The Mythos lesson: any model you build a moat around is on someone else\'s calendar. Treat as a tail risk; eval-suite the alternative before the deprecation email arrives, not after. See <a href="/sovereign-stack#mythos">The Mythos lesson</a>.',
-    related: ['Sovereign stack'],
+      'Vlad\'s private name for Claude Opus 3 — the model his team had learned to write against, retired by Anthropic on January 5, 2026. The Mythos lesson: any model you build a moat around is on someone else\'s calendar. Treat as a tail risk; eval-suite the alternative before the deprecation email arrives, not after. See <a href="/sovereign-stack#mythos">The Mythos lesson</a>. Not the same thing as <a href="/glossary#Mythos+5">Claude Mythos 5</a>, the model Anthropic shipped in June 2026 — three uses of one name, kept apart on purpose.',
+    related: ['Sovereign stack', 'Mythos 5', 'Fable 5'],
+  },
+  'Fable 5': {
+    term: 'Fable 5',
+    definition:
+      'Anthropic\'s most capable generally available model (released June 9, 2026; model id <code>claude-fable-5</code>). A Mythos-class model made safe for general use: safety classifiers gate offensive-cyber, bio/chem, and distillation requests — fallback to Opus 4.8 is built into the Claude apps and Managed Agents, opt-in on the API (blocked API requests error, unbilled). $10/$50 per Mtok, 1M context, 128K output. Also available as an advisor model cheaper workers call mid-task. See <a href="/fable-5">the model file</a>.',
+    related: ['Mythos 5', 'Mythos-class'],
+  },
+  'Mythos 5': {
+    term: 'Mythos 5',
+    definition:
+      'The raw twin of <a href="/glossary#Fable+5">Fable 5</a> — same underlying model, safeguards lifted in some areas, restricted to Project Glasswing partners and (next) vetted biology researchers. Reported scores sit within 1–3 points of Fable 5 except where the safeguards bite. Not Vlad\'s "Mythos" (that was Opus 3), and not Mythos Preview (the withheld March 2026 disclosure). See <a href="/fable-5/vs-mythos-5">Fable 5 vs Mythos 5</a>.',
+    related: ['Fable 5', 'Mythos'],
+  },
+  'Mythos-class': {
+    term: 'Mythos-class',
+    definition:
+      'Anthropic\'s tier above Opus — currently Fable 5 (generally available) and Mythos 5 (gated). Mythos-class traffic carries a limited 30-day retention requirement (misuse detection only, not training) and the classifier-plus-fallback safety architecture. See <a href="/fable-5">Fable 5</a>.',
+    related: ['Fable 5', 'Mythos 5'],
   },
   'Abliteration': {
     term: 'Abliteration',

@@ -1,0 +1,173 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'decision-table', label: 'The decision table' },
+  { id: 'claude-code', label: 'Where Claude Code wins' },
+  { id: 'cursor', label: 'Where Cursor wins' },
+  { id: 'codex', label: 'The third door: Codex' },
+  { id: 'how-i-run-it', label: 'How I actually run it' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+const faqItems = [
+  {
+    q: 'Is Claude Code better than Cursor?',
+    a: '"Better at what" is the only honest framing. Claude Code is terminal-first and built for agentic depth — long autonomous runs, subagents, hooks, headless CI. Cursor is IDE-first and built for inline editing — visual diff review in the buffer, low activation energy. Both reach the same frontier models, so the choice is about where you want to review work: edit by edit as you type, or as a finished diff at the end of a run.',
+  },
+  {
+    q: 'Can you use Claude Code and Cursor together?',
+    a: "Yes — plenty of developers run Cursor as the editor and Claude Code in a terminal alongside it, splitting by job: inline iteration in the IDE, long-horizon runs in the terminal. The discipline that makes any two-tool setup work is the dual-agent contract from Ch 35: one source of truth for context, branch protection on main, explicit file ownership. The contract doesn't care which harness fills which seat.",
+  },
+  {
+    q: 'Is Cursor worth it in 2026?',
+    a: "If your day is in-editor iteration on a codebase you know, yes — visual inline diff review and IDE ergonomics are real advantages, and Cursor ships frontier Claude models (it called Fable 5 the state of the art model on its internal CursorBench at the June 9, 2026 launch). If your day is long-horizon agentic work — multi-hour refactors, CI automation, parallel agents — the terminal-first shape wins. Operators who run both split by job, not by loyalty.",
+  },
+  {
+    q: 'Does Cursor use Claude models?',
+    a: 'Yes. Cursor offers frontier Claude models, and at the Claude Fable 5 launch on June 9, 2026, Cursor called it "the state of the art model on CursorBench" — its own internal benchmark. That quote is vendor-curated, but the practical point stands: the same frontier model is reachable from either tool. The model layer converged; the harness is what you are choosing.',
+  },
+  {
+    q: "What about OpenAI's Codex?",
+    a: "A third seat, not a third rival. The setup in Ch 35 runs Codex as the night shift — watching Sentry and issues, opening PRs against tight contracts — while Claude Code drives the day. At full scale the receipt is Ch 43: a Codex run deleted a net 91,874 lines across 718 files behind real build, CI, and browser checks. A second prior proof-checks the first; that is the whole reason to run it.",
+  },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<BaseLayout
+  title="Claude Code vs Cursor — which one, for which job"
+  description="Claude Code vs Cursor, settled by job instead of vibes: terminal-first agentic depth vs IDE-first inline editing, where each wins, and where Codex fits in."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="eyebrow eyebrow-loud mb-3 text-accent">Versus file · Claude Code / Cursor</div>
+    <h1>Claude Code vs Cursor: which one, for which job (and where Codex fits).</h1>
+    <p class="mt-3 text-lg text-muted">
+      This comparison is usually argued like a sports rivalry. It's a staffing question. Two harnesses, the same frontier models underneath, and the only decision that matters is which seat each one fills in your day. This page is the operator's answer — with the receipts from running this stack on real companies.
+    </p>
+    <p class="mt-2 text-sm text-muted">
+      The dual-agent contract lives in <a href="/chapters/35-codex-and-cc">Ch 35</a>, the second-prior discipline in <a href="/chapters/42-codex-on-a-loop">Ch 42</a>, the 90,000-line receipt in <a href="/chapters/43-codex-saviour">Ch 43</a>, the cost math in <a href="/chapters/29-cost-economics">Ch 29</a>.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="rounded-xl border p-5 border-line bg-accent/5">
+            <p class="m-0 leading-relaxed"><strong>Claude Code</strong> is terminal-first and built for agentic depth — long autonomous runs, subagents, hooks, CI. <strong>Cursor</strong> is IDE-first and built for inline editing — visual diffs, low activation energy. Most operators split by job: Claude Code for long-horizon work, Cursor for in-editor iteration. Both ride the same frontier models — Cursor calls Fable 5 state of the art on CursorBench.</p>
+          </div>
+        </div>
+
+        <div id="decision-table" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The decision table</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Strip the discourse and five dimensions decide it. None of them is "which model is smarter" — that question dissolved when both tools started shipping the same frontier models within days of release.</p>
+            <div class="overflow-x-auto my-2">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr class="border-b border-line">
+                    <th class="text-left py-2 pr-3 font-semibold">Dimension</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Claude Code</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Cursor</th>
+                  </tr>
+                </thead>
+                <tbody class="text-fg/85">
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3 font-semibold">Surface</td><td class="py-2 pr-3">Terminal — plus headless mode for CI and cron</td><td class="py-2 pr-3">IDE — the editor is the product</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3 font-semibold">Interaction model</td><td class="py-2 pr-3">Brief → autonomous run → review the diff or PR at the end</td><td class="py-2 pr-3">Inline edits in the buffer — accept or reject as you type</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3 font-semibold">Agentic depth</td><td class="py-2 pr-3">Long-horizon runs, subagents and swarms, hooks, scheduled jobs</td><td class="py-2 pr-3">Tight inline loops; agent runs exist, the native shape is shorter</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3 font-semibold">Where it wins</td><td class="py-2 pr-3">Multi-hour refactors, parallel agents, anything unattended</td><td class="py-2 pr-3">Visual diff review, in-flow editing, day one feels familiar</td></tr>
+                  <tr><td class="py-2 pr-3 font-semibold">Where it bites</td><td class="py-2 pr-3">No visual diff UI; the terminal is the contract; permissions discipline is on you</td><td class="py-2 pr-3">Keeps you at the keyboard; unattended long runs aren't its home turf</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <Callout type="note">
+              The model layer is shared, and Anthropic's June 9 launch made it explicit: Cursor called Claude Fable 5 "the state of the art model on CursorBench" — Cursor's own internal benchmark. Vendor-curated quote, but the structural read is solid. You are not choosing a brain. You are choosing the harness around it, and the harness is a contract about where you review work.
+            </Callout>
+          </div>
+        </div>
+
+        <div id="claude-code" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Where Claude Code wins</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p><strong>Long-horizon autonomy.</strong> The defining receipt in this book isn't a snippet completion — it's <a href="/chapters/45-app-store-no-swift">Ch 45</a>: Claude Code one-shot a full native SwiftUI app for LinguaLive, every line of a language I can't read, and the proof is a RevenueCat row where a $7.99 purchase became a renewal. That's the shape of work the terminal harness is built for: hand it a brief, let it run, review the finished thing. The discipline that keeps those runs safe — a goal, a diff ceiling, a stop condition — is <a href="/chapters/38-run-until-done">Ch 38</a>.</p>
+            <p><strong>Parallelism.</strong> One Cursor window is one pair of hands. Claude Code fans out — <a href="/chapters/06-the-swarm">Ch 6</a> is the reference for the parallel-subagent patterns, <a href="/chapters/20-terminal-windows">Ch 20</a> for running parallel sessions across git worktrees — four panes, four agents — without them stepping on each other. The <a href="/swarms">swarms page</a> carries the live patterns. An IDE's inline loop has no equivalent of "fourteen agents, each reading a slice of the repo, report back."</p>
+            <p><strong>Enforcement, not preference.</strong> Hooks (<a href="/chapters/16-hooks-subagents">Ch 16</a>) turn rules into code that runs on every tool call — a lint gate the agent can't talk its way past. Context files are suggestions; hooks are law. That distinction is what lets you leave an agent running while you do something else.</p>
+            <p><strong>Headless and CI.</strong> <code>claude --print</code> runs in a pipeline with no human at the keyboard (<a href="/chapters/18-headless-ci">Ch 18</a>). The same harness that pairs with you in the morning runs your CI checks at night. An IDE can't follow you into a GitHub Action.</p>
+            <p>One model-layer signal, read with the standing discipline: the Fable 5 launch table puts Terminal-Bench 2.1 at 88.0% — against 83.4% for GPT 5.5 through Codex CLI. A signal that terminal-harness agentic work is where this model family is strongest, not proof; <a href="/chapters/24-tier-list">Ch 24</a>'s benchmark discount applies, and your private eval is the receipt (<a href="/chapters/25-evals-or-hope">Ch 25</a>).</p>
+            <PullQuote>One Cursor window is one pair of hands. The terminal harness fans out — and follows you into CI, where no IDE can go.</PullQuote>
+          </div>
+        </div>
+
+        <div id="cursor" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Where Cursor wins</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>No strawman here — the IDE-first shape has honest advantages, and pretending otherwise would make this page useless to you.</p>
+            <p><strong>Visual diff review, in place.</strong> Reviewing an edit in the buffer where it lands — syntax-highlighted, in context, accept or reject per hunk — is a better review surface for small and medium edits than reading a terminal diff. Claude Code's answer is "review the PR," which is right for a 40-file run and clunky for a 4-line one.</p>
+            <p><strong>IDE ergonomics stay yours.</strong> Your keybindings, your jump-to-definition, your debugger — the agent moved into your house instead of asking you to move into its terminal. For developers whose flow is built around an editor, that continuity is worth a lot.</p>
+            <p><strong>Activation energy.</strong> An IDE-native developer is productive in Cursor in minutes. Claude Code asks you to accept a terminal contract first — permissions, context files, a different review rhythm. That's a real onboarding tax, and pretending it's zero is how evangelists lose rooms.</p>
+            <p><strong>They run their own evals.</strong> CursorBench is Cursor grading frontier models on its own internal benchmark before shipping them — which is exactly the private-eval discipline <a href="/chapters/25-evals-or-hope">Ch 25</a> argues every operator should copy. A tool vendor that doesn't trust public leaderboards is a tool vendor thinking clearly.</p>
+            <p>The honest summary: if your work is mostly in-editor iteration on a codebase you know — and you want to watch every edit land — Cursor is the right default. The case for the terminal only opens when the work outgrows the buffer.</p>
+          </div>
+        </div>
+
+        <div id="codex" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The third door: Codex</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>The versus framing collapses once you meet the third tool. <a href="/chapters/35-codex-and-cc">Ch 35</a>'s answer to "Codex or Claude Code?" is neither — it's shifts. Codex works the night: it watches Sentry, catches the 3 AM null-pointer, opens a PR with a test on its own branch, posts one line to Slack, goes back to watching. Claude Code drives the day: features, migrations, the architecture argument. Same repo, same <code>.mcp.json</code>, same CLAUDE.md — two agents, two contracts, one hand-off.</p>
+            <p>And the scale receipt, because "second agent" sounds like a toy until you see one at full size: <a href="/chapters/43-codex-saviour">Ch 43</a> documents a Codex run pointed at Folderly with one constraint — simplify, follow the design system. It deleted a net 91,874 lines across 718 files, 243 commits on the branch, 106 of them beginning with "Simplify," 27 of them hardening commits — all behind real build, CI, browser, and API checks. That run cost 46% of one week's usage, and it still needed a human hand on the wheel mid-run telling it to checkpoint. The loop discipline that makes this safe — worktree per fix, evaluator gates, the human as the only door to main — is <a href="/chapters/42-codex-on-a-loop">Ch 42</a>.</p>
+            <p>The reason to run a second prior isn't capacity. It's that a different model reaches for different edge cases — Codex proof-checks Claude Code's diffs by running the tests CC didn't think to run. Best execution is a second opinion plus a proof check, never one agent trusted blind.</p>
+            <PullQuote>Stop comparing tools like rivals. Assign shifts. The day driver makes the calls; the night shift keeps the lights on; the human is the gate between them.</PullQuote>
+          </div>
+        </div>
+
+        <div id="how-i-run-it" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">How I actually run it</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>My split, from <a href="/chapters/35-codex-and-cc">Ch 35</a>, unchanged since it shipped: Claude Code is the day driver — it's where I bring opinion, where the swarm runs, where headless mode runs CI. Codex is the night shift — incident response from logs, regression catching, doc updates that lag the code. The work it does best has a tight scope, a clear signal, and a deterministic test. The moment the contract gets fuzzy — a nine-file PR, an architecture call — I close it unread and reopen the problem in Claude Code, where I can argue.</p>
+            <p>Three rules keep the shifts from stepping on each other. Branch protection on main — Codex never pushes there, enforced at the GitHub level, not the social one. File ownership written into CLAUDE.md — both agents read the contract before their first tool call. And no agent merges its own PR, ever. That last rule has a bill attached: a Codex auto-merge I'd permitted during a maintenance push and forgotten to revoke once suppressed an exception that was the only signal a customer's SMTP creds had rotated. Eleven days to notice. The customer churned.</p>
+            <p>Two things that make the setup cheaper than it sounds. Both agents share one <code>.mcp.json</code> and one CLAUDE.md — no second source of truth to drift. And since May 2026 the SKILL.md format is cross-vendor: the same skill file fires in both CLIs, so the skill library is written once.</p>
+            <p>Where's Cursor in this? Honestly — nowhere, and that's a fact about my workflow, not a verdict on the tool. My day-driver seat went to the terminal because my work skews long-horizon and parallel. Nothing in the shift contract cares which harness fills the day seat. If yours is Cursor, keep the contract and swap the chair: branch protection, file ownership, human merge. The architecture survives the substitution; that's how you know it's the architecture doing the work, not the brand.</p>
+            <p>No closing framework. The tools will leapfrog each other again before this page needs updating — both rode Fable 5 within a day of launch, and the <a href="/tier-list">tier list</a> stays the live ranking. The thing that won't move: you're not picking a winner, you're staffing a shop. Seats, contracts, and one human gate.</p>
+          </div>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <div class="space-y-3">
+            {faqItems.map((f) => (
+              <details class="rounded-lg border p-4 border-line">
+                <summary class="font-semibold cursor-pointer">{f.q}</summary>
+                <p class="mt-2 mb-0 text-fg/85 leading-relaxed">{f.a}</p>
+              </details>
+            ))}
+          </div>
+          <p class="mt-8 text-sm text-muted">
+            Related: <a href="/what-is-agentic-coding">What is agentic coding</a> · <a href="/claude-code-best-practices">Claude Code best practices</a> · <a href="/tier-list">The tier list</a> · <a href="/swarms">Swarms</a> · <a href="/dynamic-workflows">Dynamic workflows</a> · <a href="/the-bill">The bill</a> · <a href="/fable-5">Claude Fable 5</a> · <a href="/chapters/35-codex-and-cc">Ch 35 — Codex or Claude Code, or both</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

@@ -9,6 +9,37 @@ type Q = {
 };
 
 export const QUESTIONS: Q[] = [
+  // Fable 5 / Mythos 5 (June 9, 2026 launch)
+  {
+    q: "Should I switch from Opus 4.8 to Fable 5?",
+    short: "Eval it free before June 22. Decide on cost per task.",
+    answer: "Fable 5 is included in paid-plan limits June 9–22, 2026, then moves to usage credits — that window is a free private eval. The sticker is 2× Opus 4.8 ($10/$50 vs $5/$25 per million tokens), but the launch receipts are about turn-count collapse on long-horizon work: Stripe ran a 50-million-line Ruby migration in one day. Point it at the three workloads where Opus makes you wait or retry, keep the transcripts, and read total-billed-per-finished-task — never dollars per token. Opus 4.8 is not deprecated; for cyber/bio-adjacent work Fable behaves like Opus by design, so keep that on Opus directly.",
+    chapters: [
+      { slug: '29-cost-economics', label: 'Ch 29 — Cost economics' },
+      { slug: '25-evals-or-hope', label: 'Ch 25 — Evals or hope' },
+    ],
+    category: 'cost',
+  },
+  {
+    q: "What's the difference between Fable 5 and Mythos 5?",
+    short: "Same model. Different safeguards, different door.",
+    answer: "One underlying model, two names — fabula and mythos are the same word in Latin and Greek. Fable 5 is the generally available version with safety classifiers on offensive-cyber, bio/chem, and distillation requests. Mythos 5 keeps the raw capability and stays gated: Project Glasswing partners now, vetted biology researchers next. Anthropic reports their scores within 1–3 points of each other except where the safeguards bite. And no — neither is the 'Mythos' from the sovereign-stack chapter; that was my name for Opus 3.",
+    chapters: [
+      { slug: '24-tier-list', label: 'Ch 24 — Tier list' },
+    ],
+    category: 'getting-started',
+  },
+  {
+    q: "Why did my Fable 5 session fall back to Opus 4.8?",
+    short: "A safety classifier fired. It's routing information, not a bug.",
+    answer: "Fable 5 gates three areas — offensive cyber, biology/chemistry, and capability distillation. In the Claude apps and Managed Agents, a tripped classifier falls back to Opus 4.8 and tells you. On the raw API, a blocked request returns an error you aren't charged for; fallback to Opus 4.8 at Opus pricing is opt-in. More than 95% of sessions never see a classifier, per Anthropic. If your domain trips them regularly, route that work to Opus 4.8 directly and stop paying 2× to be bounced.",
+    chapters: [
+      { slug: '24-tier-list', label: 'Ch 24 — Tier list' },
+      { slug: '29-cost-economics', label: 'Ch 29 — Cost economics' },
+    ],
+    category: 'security',
+  },
+
   // Agents — memory & dreaming  [VLAD: answers below are factual drafts from the design swarm — revoice in your register]
   {
     q: "Does Claude Code remember what it learned in past sessions?",

@@ -1,0 +1,206 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'two-names', label: 'Why two names' },
+  { id: 'who-gets-mythos', label: 'Who gets Mythos 5' },
+  { id: 'classifiers', label: 'The three classifiers' },
+  { id: 'fallback', label: 'Fallback mechanics' },
+  { id: 'methodology', label: 'The starred-row problem' },
+  { id: 'timeline', label: 'The timeline' },
+  { id: 'routing', label: 'Operator routing' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'series', label: 'The Fable 5 files' },
+];
+
+const faqItems = [
+  {
+    q: 'What is Claude Mythos 5?',
+    a: "Claude Mythos 5 is the raw version of Anthropic's frontier model released June 9, 2026 — the same underlying model as Claude Fable 5, with safeguards lifted in some areas. It is restricted to Project Glasswing partners (cyber safeguards lifted), expanding next to select biology researchers (bio/chem safeguards lifted, cyber intact). All Mythos-class traffic carries mandatory 30-day data retention.",
+  },
+  {
+    q: 'Can I get access to Mythos 5?',
+    a: 'Not unless you are a Project Glasswing partner. Anthropic plans to expand access to select biology researchers next, and a broader trusted-access program is planned after that. For everyone else, Fable 5 is the same model with classifiers on — Anthropic reports scores within 1-3 percentage points on most benchmarks, and both models carry identical $10/$50 per-million-token pricing.',
+  },
+  {
+    q: 'Why did my Fable 5 session fall back to Opus 4.8?',
+    a: 'One of three classifiers tripped: offensive cyber, biology/chemistry dual-use, or capability distillation. In the Claude apps and Managed Agents, fallback to Opus 4.8 is built in and you are told it happened. On the raw API, a blocked request returns an error you are not charged for, with fallback to Opus 4.8 at Opus pricing available as an opt-in. More than 95% of Fable sessions involve no fallback at all — if yours trip often, your workload sits in classifier territory and you should route it to Opus 4.8 directly.',
+  },
+  {
+    q: 'Is Fable 5 weaker than Mythos 5?',
+    a: "Same underlying model, so mostly no. Anthropic reports a 1-3 percentage-point difference on most benchmarks, with the launch table showing the higher of the two. On starred rows — ExploitBench, BioMysteryBench, Humanity's Last Exam, HealthBench, Terminal-Bench 2.1 — Fable 5 performs closer to Opus 4.8, because the blocking safeguards trigger fallbacks on cyber- and bio-related questions. Weaker only where the classifiers bite.",
+  },
+  {
+    q: 'Does Fable 5 train on my data?',
+    a: 'No. All Mythos-class traffic carries a required 30-day retention window, and Anthropic states the data is not used for model training or non-safety purposes. Human access to the data is logged, and deletion happens after 30 days in almost all cases.',
+  },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<BaseLayout
+  title="Fable 5 vs Mythos 5 — one model, two names, three safeguards"
+  description="Fable 5 vs Mythos 5: same model, two names. The three classifiers, the Opus 4.8 fallback, who gets the gated twin, and what the starred benchmark rows measure."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="eyebrow eyebrow-loud mb-3 text-accent">Fable 5 files · the split</div>
+    <h1>Fable 5 vs Mythos 5 — one model, two names.</h1>
+    <p class="mt-3 text-lg text-muted">
+      On June 9, 2026 Anthropic shipped its frontier model twice on the same day — once gated, once wearing a seatbelt. This page is the file on the split: who gets which, what the classifiers block, and why some launch-table rows describe a model you can't buy.
+    </p>
+    <p class="mt-2 text-sm text-muted">
+      Sourced from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a>. The full model file is the <a href="/fable-5">Fable 5 hub</a>; the timeline this page corrects is in <a href="/research-notes">research notes</a>.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="rounded-xl border p-5 border-line bg-accent/5">
+            <p class="m-0 leading-relaxed"><strong>Claude Fable 5</strong> and <strong>Claude Mythos 5</strong> are the same underlying model, released June 9, 2026. Mythos 5 is the raw version, gated to Project Glasswing partners. Fable 5 adds three classifiers — offensive cyber, bio/chem, distillation. In the Claude apps a tripped classifier falls back to Opus 4.8; on the API a blocked request errors, unbilled, with fallback opt-in. More than 95% of Fable sessions never see a fallback.</p>
+          </div>
+        </div>
+
+        <div id="two-names" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Why two names — fabula, mythos, one model</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>The names are the same word in two languages. <em>Fabula</em> is Latin, <em>mythos</em> is Greek — both mean "that which is told." That's the architecture stated as etymology: one story, two tellings. Anthropic's own framing is that Fable 5 is "a Mythos-class model made safe for general use," and Mythos 5 is the same model with safeguards lifted in some areas.</p>
+            <p>The split is the product decision. In March, Anthropic disclosed a model this capable and said it wouldn't ship. In June it shipped twice — the raw capability for the vetted, the classified version for everyone with an API key. Not a big model and a small model, not a pro tier and a cheap tier. One model, two trust postures. Both priced at $10/$50 per million tokens — the gate is vetting, not money.</p>
+            <PullQuote>Mythos 5 and Fable 5 are not two models. They are one model and a question: how much does Anthropic trust the person asking?</PullQuote>
+          </div>
+        </div>
+
+        <div id="who-gets-mythos" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Who gets Mythos 5</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Today: <strong>Project Glasswing partners</strong>, with the cyber safeguards lifted. Next: <strong>select biology researchers</strong>, with bio/chem safeguards lifted but cyber intact. After that: a broader trusted-access program, planned but not detailed.</p>
+            <p>Read the sequence carefully — access isn't all-or-nothing. The biology expansion lifts a <em>different</em> safeguard for a different audience; a vetted virologist gets the bio capability and still hits the cyber classifier. Anthropic is unbundling the model's danger surface and granting it back one domain at a time, per audience. The early receipts from that gated lane are in the announcement: Mythos 5 ran autonomous genomics research across 138 animal species, and scientists preferred its hypotheses ~80% of the time in blinded comparisons against Opus-class models — vendor-curated numbers, flagged as such.</p>
+            <p>For everyone else, Fable 5 <em>is</em> the access program. Available everywhere June 9: full availability on the API and consumption-based Enterprise, included in paid-plan limits until June 22, usage credits after. The clock math lives on the <a href="/fable-5">hub</a>.</p>
+          </div>
+        </div>
+
+        <div id="classifiers" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The three classifiers, in depth</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p><strong>1 — Cybersecurity.</strong> Blocks queries on some exploitation and offensive-cyber topics. This is the classifier with receipts attached: external testing found zero harmful single-turn cyberattack-planning requests succeeded, and 1,000+ hours of external red-teaming found no universal jailbreaks. Those are vendor-reported security results — the same <a href="/chapters/24-tier-list">Ch 24</a> rule applies to safety numbers as to capability numbers: a signal, not a receipt.</p>
+            <p><strong>2 — Biology/chemistry.</strong> Blocks most bio/chem requests on dual-use concern. The dual-use example is stated plainly in the announcement: a model that can design a gene therapy can design a dangerous virus. The separate receipt: Anthropic's internal protein experts report it accelerated their drug-design work by around 10x. The classifier doesn't distinguish your intent; it gates the domain.</p>
+            <p><strong>3 — Distillation.</strong> Flags attempts to extract Claude's capabilities for competing models, particularly in authoritarian countries. The least discussed of the three and the most telling — it treats the model's own behavior as the asset being stolen, not just the harm being caused.</p>
+          </div>
+        </div>
+
+        <div id="fallback" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Fallback mechanics — what happens when one trips</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Trip a classifier and what happens depends on the surface. In the Claude apps and Managed Agents, fallback is built in — the response comes from <strong>Claude Opus 4.8</strong> and you're told it happened. On the raw Messages API, a blocked request <strong>returns an error rather than a model response, and you aren't charged for it</strong>; fallback to Opus 4.8 is an opt-in, billed at Opus pricing, or you roll your own with the SDK's support for exactly this. The base rate matters more than the mechanism: more than 95% of Fable sessions involve no fallback at all. If your sessions are in the other slice, that's routing information, not bad luck — see <a href="#routing">the operator move below</a>.</p>
+            <p>The data terms ride along with the safeguards: Fable 5 requires a limited 30-day retention window — retained data is used only to detect and prevent serious misuse, never to train Claude — and admins must accept updated terms in the Claude Console before the model works. Human access to retained data is logged; deletion happens after 30 days in almost all cases. And on alignment, Anthropic reports Mythos 5's misaligned-behavior level as low and similar to Opus 4.8 — Fable 5 similar, same underlying model.</p>
+            <Callout type="note">
+              The fallback target is not deprecated hardware. Opus 4.8 remains a current, supported model at $5/$25 — half of Fable 5's sticker. Falling back to it costs you the frontier delta on that response, not correctness. API behavior, including Fable 5's one new 400, is on <a href="/fable-5/api">the API page</a>.
+            </Callout>
+          </div>
+        </div>
+
+        <div id="methodology" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The starred-row problem — which model are you benchmarking?</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Anthropic's table footnote is the most operator-relevant sentence in the launch: reported scores are within 1–3 percentage points between Mythos 5 and Fable 5, <em>and the table shows the higher of the two</em>. On most rows that's a rounding argument. On the starred rows it isn't — those show a larger gap because the blocking safeguards trigger on cyber- and bio-related questions, and Fable 5 performs closer to Opus 4.8 there due to fallbacks.</p>
+            <div class="overflow-x-auto my-2">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr class="border-b border-line">
+                    <th class="text-left py-2 pr-3 font-semibold">Starred row</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Table score*</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Opus 4.8</th>
+                  </tr>
+                </thead>
+                <tbody class="text-fg/85">
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">ExploitBench Cap% (cybersecurity)</td><td class="py-2 pr-3 text-accent font-semibold">78.0%</td><td class="py-2 pr-3">40.0%</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">HealthBench Professional</td><td class="py-2 pr-3 text-accent font-semibold">66.0%</td><td class="py-2 pr-3">56.9%</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">BioMysteryBench, hard</td><td class="py-2 pr-3 text-accent font-semibold">46.1%</td><td class="py-2 pr-3">40.0%</td></tr>
+                  <tr><td class="py-2 pr-3">Humanity's Last Exam, no tools</td><td class="py-2 pr-3 text-accent font-semibold">59.0%</td><td class="py-2 pr-3">49.8%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-sm text-muted">* "Higher of the two" — on starred rows, the published number leans toward the gated model. The full table — thirteen benchmarks, including the starred Terminal-Bench 2.1 at 88.0% — is on the <a href="/fable-5/benchmarks">benchmarks page</a>.</p>
+            <p>So read ExploitBench honestly: 78.0% is in practice the score of a model you can't buy. The model you <em>can</em> buy sits closer to Opus 4.8's 40.0% on that work — by design, that's the safeguard functioning. A starred launch number is partly an ad for the gated twin. The fix is the book's standing one (<a href="/chapters/25-evals-or-hope">Ch 25</a>): your private eval runs against <code>claude-fable-5</code> with the classifiers on, which makes it the only benchmark measuring the product you'll pay for.</p>
+          </div>
+        </div>
+
+        <div id="timeline" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The timeline — leak, refusal, split</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <ul class="space-y-3 list-none p-0 m-0">
+              <li class="rounded-lg border p-4 border-line"><strong>March 2026 —</strong> a Fortune leak discloses an internal model code-named Mythos; formal references follow in Anthropic's safety materials. Disclosed Preview numbers: SWE-bench Verified 93.9%, SWE-bench Pro 77.8%, OSWorld 81%.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>Then —</strong> Anthropic states Mythos Preview will <em>not</em> be made generally available. Project Glasswing ships instead as the operator-facing successor.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>May 6, 2026 —</strong> this site's <a href="/research-notes">research note</a> reads the disclosure as a capability ceiling Anthropic won't productize: "Mythos isn't coming." Wrong call, kept on the record.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>June 9, 2026 —</strong> it comes — split in two. Mythos 5 stays gated, Fable 5 goes on sale at less than half the price Mythos Preview cost its partners.</li>
+            </ul>
+            <p>The mechanism behind the wrong call is worth keeping: "disclosed but withheld" wasn't a refusal, it was staging. Anthropic didn't choose between shipping and withholding — they built the architecture that lets them do both. Expect the next frontier release to wear the same shape: raw model gated, classified twin sold, fallback to the previous Opus.</p>
+            <Callout type="note">
+              Name collision, on the record: this book has used "Mythos" three ways. My private name for Claude Opus 3, retired January 5, 2026 (the <a href="/sovereign-stack#mythos">sovereign-stack lesson</a>); the withheld March preview; and now the shipped, gated product. Three different things — conflate them and half the sentences on this page read wrong. The <a href="/glossary">glossary</a> keeps them straight.
+            </Callout>
+          </div>
+        </div>
+
+        <div id="routing" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Operator routing — don't pay 2× to be bounced</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Here's the move the split hands you. Fable 5 costs $10/$50 — exactly 2× Opus 4.8's $5/$25. When a classifier trips, you get an unbilled error on the API or an Opus 4.8 answer in the apps — either way, the frontier delta you came for is gone mid-task. So if your workload is cyber- or bio-adjacent — security research, exploit analysis, anything in the domains the starred rows flag — the cost isn't double-billing, it's disruption. Route it to <strong>Opus 4.8 directly</strong> and keep the 2× for work that stays out of classifier territory.</p>
+            <p>This is <a href="/chapters/09-dont-get-owned">Ch 9</a>'s discipline pointed at model choice: map your blast radius before the incident, not during. Know which of your workloads sit near the three classifiers before a mid-task fallback maps it for you. Everything else — the 95%-plus of sessions that never trip a classifier — goes to Fable 5 during the June 9–22 plan window, where the eval is free and the transcripts are yours (<a href="/chapters/25-evals-or-hope">Ch 25</a>). The <a href="/tier-list">tier list</a> stays the live routing table.</p>
+            <PullQuote>The fallback isn't a penalty — it's pricing information. If Anthropic keeps handing your workload to Opus 4.8, take the hint and call Opus 4.8.</PullQuote>
+          </div>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <div class="space-y-3">
+            {faqItems.map((f) => (
+              <details class="rounded-lg border p-4 border-line">
+                <summary class="font-semibold cursor-pointer">{f.q}</summary>
+                <p class="mt-2 mb-0 text-fg/85 leading-relaxed">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <div id="series" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The Fable 5 files</h2>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div class="card text-fg opacity-60"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></div>
+            <a href="/fable-5/benchmarks" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
+            <a href="/fable-5/vs-opus-4-8" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></a>
+            <a href="/fable-5/vs-gpt-5-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
+            <a href="/fable-5/pricing" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
+            <a href="/fable-5/use-cases" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
+            <a href="/fable-5/claude-code" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
+            <a href="/fable-5/api" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
+          </div>
+          <p class="mt-6 text-sm text-muted">
+            Related: <a href="/fable-5">The Fable 5 hub</a> · <a href="/research-notes">Research notes (the Mythos timeline)</a> · <a href="/sovereign-stack">The sovereign stack</a> · <a href="/chapters/24-tier-list">Ch 24 — the tier list</a> · <a href="/chapters/25-evals-or-hope">Ch 25 — evals or hope</a> · <a href="/glossary">Glossary</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

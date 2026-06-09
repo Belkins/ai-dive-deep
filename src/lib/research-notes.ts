@@ -15,6 +15,42 @@ export type ResearchNote = {
 
 export const RESEARCH_NOTES: ResearchNote[] = [
   {
+    title: 'Fable 5 / Mythos 5 — the withheld model shipped, split in two',
+    source: 'Anthropic launch announcement (anthropic.com/news) · first-party · 2026-06-09',
+    date: '2026-06-09',
+    tagline: 'The May 6 note said Mythos isn\'t coming. It came — as two names, one model, and a fallback architecture nobody predicted.',
+    takeaway:
+      "On 2026-06-09 Anthropic shipped Claude Fable 5 and Claude Mythos 5 — and the research note this page ran on May 6 needs a correction. That note read the Mythos disclosure as a capability ceiling Anthropic would not productize: \"Mythos isn't coming.\" Wrong call, interesting mechanism. Anthropic didn't choose between shipping and withholding — they split the model. Fable 5 and Mythos 5 are the same underlying model (the names are the same word: Latin fabula, Greek mythos — \"that which is told\"). Mythos 5 keeps the raw capability and stays gated — Project Glasswing partners with cyber safeguards lifted, select biology researchers next. Fable 5 is the version anyone can buy today: classifiers sit in front of three areas (offensive cyber, biology/chemistry, capability distillation), and what happens when one trips depends on the surface — in the Claude apps and Managed Agents the response falls back to Claude Opus 4.8 and you're told; on the raw Messages API a blocked request returns an error you aren't charged for, with fallback-to-Opus-4.8 an opt-in billed at Opus pricing. Anthropic's own number: more than 95% of Fable sessions involve no fallback at all. The numbers explain why the May 6 read missed: SWE-Bench Pro 80.3% vs Opus 4.8's 69.2%; FrontierCode Diamond 29.3% vs 13.4% — more than double the previous frontier on the eval built to be unsaturated; GDPval-AA 1932 vs 1890 on knowledge work. First-party launch numbers, so the Ch 24 discount applies — but unlike the Mythos Preview disclosure, this model is buyable, which means it belongs on the tier list and in your private eval suite, not just in a forecast. Sticker: $10/$50 per million tokens — exactly 2× Opus 4.8's $5/$25 — with a 1M context window. And the operator clock that matters: Fable 5 is included in paid-plan limits June 9–22, then moves to usage credits. Two free weeks to find out what it one-shots that Opus 4.8 couldn't. One housekeeping note: this book has now used 'Mythos' three ways — my private name for Opus 3 (the sovereign-stack lesson), the withheld preview, and now the shipped product. The glossary disambiguates; the timeline here is the record.",
+    implications: [
+      'Run your own eval on Fable 5 before June 22 — it\'s inside plan limits until then, usage credits after. Two weeks of free frontier capacity is the cheapest private-eval window you\'ll get this year (Ch 25: evals or hope). Decide on YOUR workload, not the launch table.',
+      'Read the price as cost-per-task, not sticker (Ch 29). $10/$50 is 2× Opus 4.8 — but the launch receipts are about turn-count collapse: Stripe ran a 50-million-line Ruby codebase migration in one day that was scoped at two months by hand. A model that one-shots a long-horizon task at 2× the rate beats one that needs five turns at 1×.',
+      'Update the May 6 posture: "capability-disclosed-but-withheld" was a staging pattern, not a refusal. The new recurring shape is ship-with-classifiers — raw model gated (Mythos 5), safeguarded twin sold (Fable 5), fallback to the previous Opus when a classifier trips. Expect the next frontier release to wear the same architecture.',
+      'The fallback is an operator-visible event, not fine print. If your work touches security tooling or bio-adjacent domains, the starred benchmarks tell you Fable 5 behaves closer to Opus 4.8 there by design — route those workloads accordingly instead of debugging a "regression" that is actually a safeguard.',
+      'Model id is claude-fable-5 — if you followed Ch 2 and made the model id a swappable variable, trying it is a one-line change. Same API surface as Opus 4.8 with one new 400: an explicit thinking:{type:"disabled"} is rejected — omit the param instead. SDK-direct paths (Ch 30) test it today; framework paths wait for the wrapper release, again. One admin gate: updated terms must be accepted in the Claude Console before the model works.',
+      'The advisor pattern just went first-party: Fable 5 is available as an advisor model — faster, cheaper worker models call it mid-task to check their plan and grade their work. That is the conductor-and-judge split this book runs everywhere (Ch 6, Ch 42), sold as an API primitive. Keep workers on Sonnet-tier; spend the 2× model at the judgment gate only.',
+    ],
+    receipts: [
+      { label: 'SWE-Bench Pro', value: '80.3% (Opus 4.8: 69.2% · GPT 5.5: 58.6%)' },
+      { label: 'FrontierCode (Diamond), xhigh', value: '29.3% vs Opus 4.8\'s 13.4% — 2.2×' },
+      { label: 'Price', value: '$10 / $50 per Mtok — 2× Opus 4.8 · 1M context' },
+      { label: 'Fallback architecture', value: '3 classifier areas → Opus 4.8 (built-in on apps/CMA, opt-in on the API) · >95% of sessions no fallback' },
+      { label: 'Plan window', value: 'included in plan limits Jun 9–22, then usage credits' },
+      { label: 'Source confidence', value: 'high (first-party) — benchmarks are launch numbers, discount per Ch 24' },
+    ],
+    chapters: [
+      { slug: '24-tier-list', ref: 'Ch 24', why: 'unlike Mythos Preview, this one is buyable — it goes on the tier list, with the Berkeley-RDI discount applied to the launch numbers' },
+      { slug: '29-cost-economics', ref: 'Ch 29', why: '2× sticker vs turn-count collapse is the chapter\'s exact argument — the Stripe 50M-line-in-a-day receipt is the strongest cost-per-task case any launch has shipped' },
+      { slug: '25-evals-or-hope', ref: 'Ch 25', why: 'the June 9–22 plan window is a free private-eval window — run yours before the meter starts' },
+      { slug: '30-sdk-direct', ref: 'Ch 30', why: 'SDK-direct paths swap one model-id string today; framework paths wait for the wrapper release — the Mythos saga keeps proving the same thesis' },
+      { slug: '02-five-tools', ref: 'Ch 2', why: 'claude-fable-5 as a swappable variable — the discipline that turns a frontier launch into a one-line diff' },
+    ],
+    links: [
+      { label: 'Anthropic — Claude Fable 5 and Mythos 5', href: 'https://www.anthropic.com/news/claude-fable-5-mythos-5' },
+      { label: 'Demo — Fable 5 beats Pokémon FireRed, vision only', href: 'https://www.youtube.com/watch?v=CIQBP1w4B1M' },
+      { label: 'Demo — Fable 5 simulates the solar system, predicts an eclipse', href: 'https://www.youtube.com/watch?v=5f5JYLZHdhw' },
+    ],
+  },
+  {
     title: 'When AI builds itself — the lab-scale proof of the operator posture',
     source: 'Anthropic Institute essay (anthropic.com/institute) · first-party, frontier-lab vantage',
     date: '2026-06-04',

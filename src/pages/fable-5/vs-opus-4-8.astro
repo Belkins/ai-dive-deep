@@ -1,0 +1,189 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'table', label: 'The decision table' },
+  { id: 'fable-wins', label: 'Where Fable 5 wins' },
+  { id: 'opus-right', label: 'Where Opus 4.8 stays right' },
+  { id: 'irony', label: 'The fallback irony' },
+  { id: 'move', label: 'The move' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'series', label: 'The Fable 5 files' },
+];
+
+const faqItems = [
+  {
+    q: 'Is Fable 5 worth 2x the price of Opus 4.8?',
+    a: "For long-horizon agentic work, the launch evidence says yes: SWE-Bench Pro 80.3% vs 69.2%, FrontierCode (Diamond) 29.3% vs 13.4%, and Stripe's vendor-cited receipt of a 50-million-line Ruby migration in one day vs two months by hand. But those are first-party numbers. The honest answer: Fable 5 is inside paid-plan limits June 9-22, 2026 — run your own workload in that window and decide on cost per finished task, not dollars per token.",
+  },
+  {
+    q: 'Is Opus 4.8 deprecated now?',
+    a: 'No. Opus 4.8 remains current and supported at $5/$25 per million tokens. It is also load-bearing inside Fable 5 itself: in the Claude apps and Managed Agents, when a Fable classifier trips (cyber, bio/chem, or distillation), the response comes from Opus 4.8 — and you are told. On the Messages API a blocked request returns an error, unbilled; fallback to Opus 4.8 is opt-in, billed at Opus pricing. A model cannot be deprecated and be the safety net at the same time.',
+  },
+  {
+    q: 'Can I use both Fable 5 and Opus 4.8?',
+    a: 'Yes — and you should. The API surface is the same — adaptive thinking only, no temperature/top_p/top_k, no last-assistant-turn prefills — so routing between claude-fable-5 and Opus 4.8 is a model-id string per workload. One gotcha when switching: an explicit thinking type of "disabled" returns a 400 on Fable 5 (Opus 4.8 accepts it) — omit the thinking parameter instead.',
+  },
+  {
+    q: 'Which is better for coding — Fable 5 or Opus 4.8?',
+    a: "Fable 5, on every reported coding benchmark: SWE-Bench Pro 80.3% vs 69.2%, FrontierCode (Diamond) at xhigh 29.3% vs 13.4%, Terminal-Bench 2.1 88.0% vs 82.7%. Apply this book's standing 10-15-point discount on public scores and the shape still holds — but a benchmark is a signal, not a receipt. Confirm on your repo before June 22.",
+  },
+  {
+    q: 'Which model does Claude Code use by default?',
+    a: 'Anthropic does not state a default switch in the announcement, so I will not invent one. What is verifiable: the Claude Code banner offers Fable 5 as "our newest model for complex, long-running work," included in plan limits until June 22, and you pick your model via /model. Opus 4.8 remains available there too.',
+  },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<BaseLayout
+  title="Fable 5 vs Opus 4.8 — upgrade or wait?"
+  description="Fable 5 vs Opus 4.8, decided like an operator: 2× the price, 80.3% vs 69.2% on SWE-Bench Pro, same API — and Opus is Fable's own fallback. Decide by June 22."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="eyebrow eyebrow-loud mb-3 text-accent">Head-to-head · Fable 5 vs Opus 4.8</div>
+    <h1>Fable 5 vs Opus 4.8 — upgrade or wait?</h1>
+    <p class="mt-3 text-lg text-muted">
+      Same company, same API, one costs exactly twice as much — and the cheaper one is wired into the expensive one as its safety net. That's the decision Anthropic handed every operator on June 9, 2026, with a plan window that closes June 22 (the API meters from request one). Here's the file.
+    </p>
+    <p class="mt-2 text-sm text-muted">
+      Numbers from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a> and the model's API surface. The full model file lives on <a href="/fable-5">the Fable 5 hub</a>; the benchmark caveats on <a href="/fable-5/benchmarks">the benchmarks page</a>.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="rounded-xl border p-5 border-line bg-accent/5">
+            <p class="m-0 leading-relaxed">Long-horizon agentic work → <strong>Fable 5</strong>: SWE-Bench Pro 80.3% vs 69.2%, FrontierCode 29.3% vs 13.4%. Cyber/bio-adjacent or cost-sensitive bulk → <strong>stay on Opus 4.8</strong> — it is not deprecated, and in the Claude apps Fable falls back to it anyway (on the API a blocked request errors, unbilled). Decide on your own eval before June 22, while Fable sits inside plan limits.</p>
+          </div>
+        </div>
+
+        <div id="table" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The decision table</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <div class="overflow-x-auto my-2">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr class="border-b border-line">
+                    <th class="text-left py-2 pr-3 font-semibold">What you're weighing</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Fable 5</th>
+                    <th class="text-left py-2 pr-3 font-semibold">Opus 4.8</th>
+                  </tr>
+                </thead>
+                <tbody class="text-fg/85">
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">API price (per Mtok)</td><td class="py-2 pr-3">$10 in / $50 out</td><td class="py-2 pr-3 text-accent font-semibold">$5 in / $25 out — exactly half</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">Context window</td><td class="py-2 pr-3">1M tokens</td><td class="py-2 pr-3">1M tokens</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">Max output</td><td class="py-2 pr-3">128K</td><td class="py-2 pr-3">128K</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">API surface</td><td class="py-2 pr-3">Same as Opus 4.7/4.8, plus one new 400: explicit <code>thinking: disabled</code> rejected</td><td class="py-2 pr-3">Adaptive thinking only; explicit disable accepted</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">SWE-Bench Pro (agentic coding)</td><td class="py-2 pr-3 text-accent font-semibold">80.3%</td><td class="py-2 pr-3">69.2%</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">FrontierCode (Diamond), xhigh</td><td class="py-2 pr-3 text-accent font-semibold">29.3%</td><td class="py-2 pr-3">13.4%</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">GDPval-AA (knowledge work)</td><td class="py-2 pr-3 text-accent font-semibold">1932</td><td class="py-2 pr-3">1890</td></tr>
+                  <tr class="border-b border-line/50"><td class="py-2 pr-3">OSWorld-Verified (computer use)</td><td class="py-2 pr-3 text-accent font-semibold">85.0%</td><td class="py-2 pr-3">83.4%</td></tr>
+                  <tr><td class="py-2 pr-3">Fallback when a classifier trips</td><td class="py-2 pr-3">apps/CMA → Opus 4.8 (you're told); API → unbilled error, opt-in fallback at Opus pricing</td><td class="py-2 pr-3">is the fallback target</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-sm text-muted">One more operational difference that doesn't fit a row: the minimum cacheable prompt prefix drops from 4096 tokens on Opus 4.8 to 2048 on Fable 5. Details on <a href="/fable-5/api">the API page</a>; full pricing math on <a href="/fable-5/pricing">the pricing page</a>.</p>
+            <p>Read the table cold and the pattern is plain: the spec sheet is nearly identical, the price doubles, and the gap lives in two places — agentic coding and the fallback row. Everything below is about whether those two places are where <em>your</em> work lives.</p>
+          </div>
+        </div>
+
+        <div id="fable-wins" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Where Fable 5 wins — the long horizon</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>The headline isn't the eleven points on SWE-Bench Pro. It's FrontierCode (Diamond) at xhigh: 29.3% vs 13.4% — a 2.2× gap on the eval built to resist saturation. Gaps that size don't appear from contamination; they appear when a model holds a plan across more steps before it loses the thread.</p>
+            <p>The launch receipts say the same thing — and they're vendor-curated, so hold them at arm's length. Stripe: a 50-million-line Ruby codebase migration done in one day that was scoped at two months by hand. GitHub: long-horizon coding tasks handled with "a level of autonomy and reliability that exceeded previous benchmarks." Cursor: "state of the art model on CursorBench." Three different shops, one claim — fewer turns on longer work.</p>
+            <p>That's the only claim that justifies a 2× sticker. A model that finishes in one pass at $10/$50 beats one that needs five retries at $5/$25 — on the bill <em>and</em> on your time reading wrong answers. Whether Fable 5 does that on your repo is exactly what the free window exists to answer.</p>
+            <PullQuote>The case for 2× pricing is not eleven benchmark points. It's the turn count — one pass at double the rate beats five passes at half.</PullQuote>
+          </div>
+        </div>
+
+        <div id="opus-right" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Where Opus 4.8 stays right — no strawman</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p><strong>Cyber- and bio-adjacent work.</strong> Fable 5 ships with blocking classifiers in front of offensive cyber and biology/chemistry, and Anthropic's own footnote says the starred benchmark rows show Fable performing closer to Opus 4.8 there because of fallbacks — by design. Paying $10/$50 to behave like the $5/$25 model is not an upgrade, it's a markup.</p>
+            <p><strong>Knowledge work.</strong> GDPval-AA reads 1932 vs 1890 — 42 points. If your workload is documents, analysis, and drafting rather than multi-hour agent runs, the launch table itself says the gap is thin. A 2× sticker needs more than thin.</p>
+            <p><strong>Cost-sensitive bulk.</strong> Classification, extraction, pipeline drafting — the routing logic from <a href="/chapters/29-cost-economics">Ch 29</a> didn't change on June 9. Opus 4.8 at $5/$25 keeps the heavy-but-routine lane, and the Sonnet/Haiku tiers below it keep the bulk lane. The <a href="/tier-list">tier list</a> stays the live source of truth.</p>
+            <Callout type="note">
+              Opus 4.8 is <strong>not deprecated</strong>. It remains current, supported, and priced at $5/$25 — and it's the model the Claude apps route to when a Fable classifier trips (on the API, fallback is opt-in). "Wait" is a defensible answer here, not a cop-out.
+            </Callout>
+          </div>
+        </div>
+
+        <div id="irony" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The irony — Fable's safety net is Opus 4.8</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Sit with the architecture for a second. Three classifier areas guard Fable 5 — offensive cyber, biology/chemistry, capability distillation. When one trips in the Claude apps or Managed Agents, your response is generated by Opus 4.8 and you're told. On the Messages API a blocked request returns an error, unbilled — fallback to Opus 4.8 is opt-in, billed at Opus pricing. Anthropic states more than 95% of Fable sessions involve no fallback at all.</p>
+            <p>Which means for safeguarded domains, this comparison answers itself. Ask Fable 5 a question in a guarded area and — in the apps — Opus 4.8 answers anyway: the frontier delta you upgraded for vanishes mid-task. On the API the request errors instead. If your work is security tooling, exploit research adjacency, or anything bio-flavored, don't run the experiment: route to Opus 4.8 directly and skip the detour. For everyone else, the 95% number says the classifiers are something you read about once and never meet.</p>
+            <PullQuote>In a safeguarded domain you're not choosing between two models. You're choosing whether to lose the frontier delta mid-task and land back on the one you already had.</PullQuote>
+          </div>
+        </div>
+
+        <div id="move" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The move — what I'd do before June 22</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <ol class="space-y-3 list-none p-0 m-0">
+              <li class="rounded-lg border p-4 border-line"><strong>1 — Use the window.</strong> Fable 5 is inside paid-plan limits June 9–22, 2026. That's a two-week free private-eval window on frontier capacity. Point it at the workloads where Opus 4.8 makes you retry, and keep the transcripts.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>2 — Swap one string, not your stack.</strong> If your model id lives in config, the trial is a one-line diff: <code>claude-fable-5</code>. Same API surface as Opus 4.8 with one new 400 — explicit <code>thinking: disabled</code> is rejected, so omit the param. The rest is on <a href="/fable-5/api">the API page</a>.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>3 — Measure cost per finished task.</strong> Not per token. <a href="/chapters/29-cost-economics">Ch 29</a>'s math is the whole decision: if Fable 5 collapses your turn count, 2× the rate is a discount; if it doesn't, it's just 2× the rate.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>4 — Don't re-route on a launch table.</strong> The book's standing discount on public scores — the Berkeley-RDI receipt in <a href="/research-notes">research notes</a> (eight major agent benchmarks reward-hacked in April), run through <a href="/chapters/25-evals-or-hope">Ch 25</a>'s discipline — is 10–15 points. The table above is a signal. Your eval is the receipt.</li>
+            </ol>
+            <p>No five-lessons wrap. The launch table opens the question; only your workload closes it — and closing it costs nothing until June 22.</p>
+          </div>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <div class="space-y-3">
+            {faqItems.map((f) => (
+              <details class="rounded-lg border p-4 border-line">
+                <summary class="font-semibold cursor-pointer">{f.q}</summary>
+                <p class="mt-2 mb-0 text-fg/85 leading-relaxed">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <div id="series" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The Fable 5 files</h2>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <a href="/fable-5/vs-mythos-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
+            <a href="/fable-5/benchmarks" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
+            <div class="card text-fg opacity-60"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></div>
+            <a href="/fable-5/vs-gpt-5-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
+            <a href="/fable-5/pricing" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
+            <a href="/fable-5/use-cases" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
+            <a href="/fable-5/claude-code" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
+            <a href="/fable-5/api" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
+          </div>
+          <p class="mt-6 text-sm text-muted">
+            Related: <a href="/fable-5">The Fable 5 hub</a> · <a href="/chapters/24-tier-list">Ch 24 — the tier list</a> · <a href="/chapters/29-cost-economics">Ch 29 — cost economics</a> · <a href="/chapters/02-five-tools">Ch 2 — the five-tool stack</a> · <a href="/tier-list">The live tier list</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
