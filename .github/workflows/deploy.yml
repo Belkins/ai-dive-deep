@@ -45,3 +45,13 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Announce the deployed corpus to IndexNow (Bing/Brave/Yandex ingestion —
+  # the indexes ChatGPT and Claude search retrieve from). Runs after deploy,
+  # so a failure here never blocks the site; red job = visible signal only.
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/indexnow-ping.py
