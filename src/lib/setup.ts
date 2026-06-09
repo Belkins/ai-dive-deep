@@ -23,23 +23,23 @@ export const SKILLS: Skill[] = [
   },
   {
     "name": "apps-script-clasp-push",
-    "description": "Push a local .gs source file to a Google Apps Script project and bump an existing deployment to the new version \u2014 no Apps Script editor UI needed. Handles one-time clasp install, OAuth login, Apps Script API enablement, cloning, push, and deployment-by-ID update. Use when you need a local Apps Script code change live on a deployed webhook URL, or when som\u2026",
+    "description": "Push a local .gs file to a Google Apps Script project and bump an existing deployment \u2014 no editor UI. Handles clasp install/login/API enablement. Use on 'push/redeploy/update the apps script' or 'run clasp push'.",
     "category": "build"
   },
   {
     "name": "audit",
-    "description": "",
+    "description": "Parallel multi-dimension codebase audit \u2014 finds bugs, security issues, and silent failures across the repo, with adversarial verification of every finding. Use before deploying, after big feature sprints, or when suspicious bugs keep recurring.",
     "category": "review"
   },
   {
-    "name": "bughunter",
-    "description": "Inspect a scope (file, module, or full repo) and identify likely bugs \u2014 returns concrete findings with file paths, severity, and fix suggestions",
-    "category": "review"
+    "name": "bulk-rename-scoped",
+    "description": "Pre-flight + scoped bulk rename for identifier-like strings (emails, brands, domains, keys): greps the portfolio, breaks down matches by dir, flags DB-lookup contexts, BLOCKS for scope confirmation before writing. Use on 'replace X with Y across/everywhere'.",
+    "category": "meta"
   },
   {
-    "name": "build-feature",
-    "description": "Build a feature with parallel agents for backend, tests, and API layer",
-    "category": "build"
+    "name": "claude-md-hygiene",
+    "description": "Audit CLAUDE.md files for size bloat and the prepend-cascade accretion pattern (PRIOR ENTRY stacks, multi-date table-cell rows). Reports specific files, lines, and sections to compress. Run biweekly or when CLAUDE.md feels slow.",
+    "category": "meta"
   },
   {
     "name": "competitor-intel",
@@ -47,9 +47,19 @@ export const SKILLS: Skill[] = [
     "category": "strategy"
   },
   {
+    "name": "compound-launch",
+    "description": "Multi-surface launch pattern: Day 0 simultaneous newsletter/X/LinkedIn with different openers, Day 1-6 live receipts-diary, Day 7 'Numbers.' post-mortem. Use when launching a public artifact whose thesis touches distribution. Not for quiet ships.",
+    "category": "meta"
+  },
+  {
     "name": "content-draft",
     "description": "Draft LinkedIn post, newsletter section, or blog article from recent work \u2014 turns technical insights into engaging content.",
     "category": "strategy"
+  },
+  {
+    "name": "cross-trio-audit",
+    "description": "Audit consistency across the 3 docs a paying customer touches \u2014 landing page, Day-1 fulfillment page, welcome email \u2014 catching tier/price/refund/cadence contradictions before money moves. Use before any preorder Stripe link or tier change.",
+    "category": "meta"
   },
   {
     "name": "daily",
@@ -67,28 +77,33 @@ export const SKILLS: Skill[] = [
     "category": "review"
   },
   {
-    "name": "deploy-check",
-    "description": "Run pre-deployment validation checks",
-    "category": "build"
+    "name": "design-system-extractor",
+    "description": "Reverse-engineer a verified design system (DTCG-flavored tokens, css, playbooks, component inventory, kitchen-sink page) from an existing site/app/repo/screenshots. Use on 'extract/build the design system or tokens from <X>'. Not for from-scratch design or restyling an existing surface (\u2192 frontend-design).",
+    "category": "meta"
   },
   {
     "name": "device-logs",
-    "description": "",
+    "description": "Stream and filter logs from a connected iOS device for debugging (purchase/StoreKit/RevenueCat, Sentry/errors, or all app logs). Use when debugging an iOS app on a physical device.",
     "category": "build"
   },
   {
     "name": "diagnose-iap",
-    "description": "",
+    "description": "Systematic In-App Purchase failure diagnosis \u2014 checks the 6-link IAP config chain before code. Use when iOS IAP/StoreKit/RevenueCat purchases fail or products won't load.",
     "category": "build"
   },
   {
-    "name": "git-ship",
-    "description": "Commit all changes with a smart message, push to remote, and optionally create a PR \u2014 all in one command.",
-    "category": "build"
+    "name": "dream",
+    "description": "Dreaming for CC \u2014 surface candidate memory-learnings from recent session transcripts (digest -> extract agents -> quote re-verification -> dated REVIEW file). PROPOSE-ONLY, never writes memory. Use on /dream or 'what did we learn lately'.",
+    "category": "meta"
+  },
+  {
+    "name": "folderly-external-audit",
+    "description": "External read-only email-deliverability audit of a domain list -> client-ready report + action register + HTML. Fire on 'Folderly audit', 'deliverability audit', or a domain/mailbox spreadsheet to audit. Not for Folderly app internals or generic Q&A.",
+    "category": "meta"
   },
   {
     "name": "google-apps-script-debug",
-    "description": "Diagnose Google Apps Script web app webhooks that look broken from outside \u2014 covers the non-obvious 302 redirect, Deploy-vs-Manage-Deployments distinction, doPost-in-editor failure, getActiveSheet footgun, and status-field drift. Use when a Next.js/React frontend posts to a `script.google.com/macros/s/.../exec` URL and data isn't arriving, or when an Apps\u2026",
+    "description": "Diagnose Apps Script web-app webhooks that look broken from outside: 302 redirect, Deploy-vs-Manage-Deployments, doPost-in-editor, getActiveSheet, status drift. Use when posts to script.google.com/macros/.../exec aren't arriving.",
     "category": "build"
   },
   {
@@ -102,29 +117,19 @@ export const SKILLS: Skill[] = [
     "category": "review"
   },
   {
-    "name": "gstack-office-hours",
-    "description": "YC Office Hours \u2014 two modes. Startup mode: six forcing questions that expose demand reality, status quo, desperate specificity, narrowest wedge, observation, and future-fit. Builder mode: design thinking brainstorming for side projects, hackathons, learning, and open source. Saves a design doc. Use when asked to \"brainstorm this\", \"I have an idea\", \"help\u2026",
-    "category": "strategy"
-  },
-  {
     "name": "gstack-qa",
-    "description": "Systematically QA test a web application and fix bugs found. Runs QA testing, then iteratively fixes bugs in source code, committing each fix atomically and re-verifying. Use when asked to \"qa\", \"QA\", \"test this site\", \"find bugs\", \"test and fix\", or \"fix what's broken\". Proactively suggest when the user says a feature is ready for testing or asks \"does t\u2026",
-    "category": "review"
-  },
-  {
-    "name": "gstack-review",
-    "description": "Pre-landing PR review. Analyzes diff against the base branch for SQL safety, LLM trust boundary violations, conditional side effects, and other structural issues. Use when asked to \"review this PR\", \"code review\", \"pre-landing review\", or \"check my diff\". Proactively suggest when the user is about to merge or land code changes. (gstack)",
-    "category": "review"
-  },
-  {
-    "name": "harden",
-    "description": "Audit and harden Supabase edge functions \u2014 CORS lockdown, JWT auth, secret cleanup, rate limiting",
+    "description": "Systematically QA a web app and fix the bugs found: test, fix atomically, re-verify; tiers Quick/Standard/Exhaustive; before/after health scores. Use on 'qa', 'test this site', 'find bugs', 'test and fix', 'quality check'. (gstack)",
     "category": "review"
   },
   {
     "name": "health-pulse",
     "description": "Check CI, deploy, and cron health across all active projects. Updates ~/.claude/health/heartbeat-state.json. Alerts via Telegram on state transitions.",
     "category": "ops"
+  },
+  {
+    "name": "hub-edit",
+    "description": "DEPRECATED redirect \u2014 belkins.app hub changes go through the manifest, not hand-edits. Fires only to point at the correct flow.",
+    "category": "meta"
   },
   {
     "name": "learn",
@@ -152,48 +157,53 @@ export const SKILLS: Skill[] = [
     "category": "strategy"
   },
   {
+    "name": "newsletter-draft",
+    "description": "Draft a newsletter/longform post in the author's real voice: fetches 2-3 archive issues FIRST as voice calibration before writing a word. Use on 'draft me a newsletter/Substack/longform' or prose 'in my style' for a named publication.",
+    "category": "meta"
+  },
+  {
     "name": "pc",
-    "description": "a B2B SaaS dispatcher \u2014 routes to pc-api (NestJS backend) or pc-client (Nuxt 4 frontend) based on task context. Use /pc <describe your task>.",
+    "description": "Partner Connector dispatcher \u2014 routes to pc-api (NestJS backend) or pc-client (Nuxt 4 frontend) based on task context. Use /pc <describe your task>.",
     "category": "portfolio"
   },
   {
     "name": "pc-api",
-    "description": "a B2B SaaS API quick-reference \u2014 NestJS backend patterns, module map, auth flow, HubSpot CRM loop, and gotchas.",
+    "description": "Partner Connector API quick-reference \u2014 NestJS backend patterns, module map, auth flow, HubSpot CRM loop, and gotchas.",
     "category": "portfolio"
   },
   {
     "name": "pc-client",
-    "description": "a B2B SaaS Client quick-reference \u2014 Nuxt 4 SPA patterns, gateway layer, explicit imports requirement, auth flow, and gotchas.",
+    "description": "Partner Connector Client quick-reference \u2014 Nuxt 4 SPA patterns, gateway layer, explicit imports requirement, auth flow, and gotchas.",
     "category": "portfolio"
   },
   {
-    "name": "perf-check",
-    "description": "Performance audit \u2014 finds N+1 queries, missing indexes, blocking operations, memory issues, and pagination gaps.",
-    "category": "review"
-  },
-  {
     "name": "pitch-html",
-    "description": "Generate a single-file interactive HTML pitch artifact from a project's strategic docs (BRIEF + MONETIZATION + REVENUE-MODEL + BRAND-IDENTITY). Use when Vlad says \"create me a beautiful artifact to send to friends\" / \"make me an HTML pitch\" / \"build interactive [slide deck / 1-pager]\". Output: a self-contained .html file, email-attachable, no build step,\u2026",
+    "description": "Generate a single-file interactive HTML pitch artifact from a project's strategic docs. Use on 'beautiful artifact to send to friends', 'make me an HTML pitch', 'interactive slide deck / 1-pager'. Self-contained .html, brand-locked, no build step.",
     "category": "build"
   },
   {
-    "name": "plan-only",
-    "description": "Enter plan-only mode \u2014 analyze and design without creating, editing, or modifying any files.",
-    "category": "strategy"
+    "name": "playbook-new-page",
+    "description": "Add a standalone page to Vlad's Playbook (ai-dive-deep) via the 6 mandatory wiring surfaces \u2014 page, Cmd-K index, cross-link, glossary, homepage tile, changelog. Use on 'add a new page' / 'create a /<slug> page' for dive.vladyslavpodoliako.com.",
+    "category": "meta"
+  },
+  {
+    "name": "portfolio-product-scaffold",
+    "description": "Scaffold a new 10K-MRR portfolio product end-to-end: mirror 09-receiptradar's 18-file pattern, wire the fulfillment trio, hub tile via products.json + make hub, first Vercel deploy, register in github_push.sh. Use when Vlad says 'add product'.",
+    "category": "meta"
+  },
+  {
+    "name": "posthog-wizard-followup",
+    "description": "Run the PostHog wizard on a Nuxt or Vitest-tested codebase with baseline-test capture before/after \u2014 auto-applies the defensive trackEvent() wrapper if the wizard's `useNuxtApp()` injections break unit tests.",
+    "category": "meta"
   },
   {
     "name": "preflight-external-deps",
-    "description": "Audit external data sources and API integrations for 2026 viability BEFORE writing code. Spawn parallel research agents to verify each dependency still works as documented, catch deprecations, rate-limit changes, and policy shifts. Use when starting a project with listed data feeds, external APIs, or third-party integrations. Saves 2-3 weeks of wasted sca\u2026",
+    "description": "Audit external data sources/APIs for current-year viability BEFORE writing code \u2014 parallel research agents verify each dependency, catching deprecations, rate-limit and policy changes. Use when starting a project with listed feeds/APIs/integrations.",
     "category": "meta"
   },
   {
     "name": "preflight-ios",
-    "description": "",
-    "category": "build"
-  },
-  {
-    "name": "quick-fix",
-    "description": "Rapid bug fix \u2014 finds root cause, implements minimal fix, and verifies with tests. From bug report to verified fix.",
+    "description": "Pre-submission App Store Review checklist \u2014 catches the config issues that cause Apple rejections. Use before submitting an iOS build to App Store Connect.",
     "category": "build"
   },
   {
@@ -212,24 +222,9 @@ export const SKILLS: Skill[] = [
     "category": "ops"
   },
   {
-    "name": "review-and-fix",
-    "description": "Implement a change with parallel code review and testing",
-    "category": "review"
-  },
-  {
     "name": "scaffold",
     "description": "Scaffold a new module or component for any framework \u2014 detects project type and generates all boilerplate following existing patterns.",
     "category": "build"
-  },
-  {
-    "name": "security-audit",
-    "description": "Run a 4-agent security audit on any codebase \u2014 client exposure, auth, secrets, injection",
-    "category": "review"
-  },
-  {
-    "name": "security-review",
-    "description": "Security audit of a file, module, or full codebase \u2014 OWASP Top 10, auth issues, injection, secret exposure, and access control gaps",
-    "category": "review"
   },
   {
     "name": "seo-check",
@@ -237,14 +232,14 @@ export const SKILLS: Skill[] = [
     "category": "strategy"
   },
   {
-    "name": "ship-ios",
-    "description": "",
-    "category": "build"
+    "name": "ship-feature",
+    "description": "Pre-ship gate \u2014 run a deep code review AND a multi-dimension audit on the current change in parallel, merge into one ship-readiness verdict, then fix blockers before commit. Use when Vlad says \"is this ready to ship\", \"pre-ship check\", \"review + audit this change\", or before committing a non-trivial feature.",
+    "category": "meta"
   },
   {
-    "name": "sprint-kickoff",
-    "description": "Break down a sprint goal into tasks with estimates",
-    "category": "ops"
+    "name": "ship-ios",
+    "description": "Build and upload an iOS release IPA to App Store Connect \u2014 bumps the build number, builds a release IPA, opens Transporter. Use when shipping an iOS build for TestFlight or review.",
+    "category": "build"
   },
   {
     "name": "supabase-state-check",
@@ -253,18 +248,13 @@ export const SKILLS: Skill[] = [
   },
   {
     "name": "swarm-strategic-plan",
-    "description": "Generate a complete 25-document strategic plan for a greenfield venture using a 5-wave \u00d7 4-agent swarm. Use when Vlad says \"draft me plans for [new venture]\" or \"build me a complete strategy for X\" and the project does not yet exist. Outputs: scaffolded folder + master BRIEF + 20 specialist docs + 8 brainstorming personas + cross-cutting synthesis.",
+    "description": "Multi-wave swarm planning for greenfield ventures or deep planning on existing decisions. Use on /swarm-strategic-plan, 'mega ultrathink', 'full plan on X', 'design swarm for Y'. Modes: full-swarm / lite-mode / solo-deep-think.",
     "category": "strategy"
   },
   {
     "name": "tdd-workflow",
     "description": "Test-driven development methodology \u2014 red-green-refactor cycle, test patterns, and TDD best practices for any project.",
     "category": "review"
-  },
-  {
-    "name": "telegram-report",
-    "description": "Send a formatted report or message to a Telegram chat using the Telegram MCP plugin.",
-    "category": "ops"
   },
   {
     "name": "teleport",
@@ -282,6 +272,11 @@ export const SKILLS: Skill[] = [
     "category": "review"
   },
   {
+    "name": "use-railway",
+    "description": ">",
+    "category": "meta"
+  },
+  {
     "name": "vault-audit",
     "description": "Audit the Obsidian vault \u2014 find orphan notes, broken links, empty notes, duplicate titles, and tag inventory.",
     "category": "ops"
@@ -297,14 +292,29 @@ export const SKILLS: Skill[] = [
     "category": "build"
   },
   {
+    "name": "verify-deploy",
+    "description": "Post-push verification for GITHUB PAGES / Actions-built static sites: polls Actions for the pushed SHA, probes live content + exposure patterns + HTTP 200, prints evidence into the transcript. Use after a push to a Pages/Actions site.",
+    "category": "meta"
+  },
+  {
     "name": "verify-file-durability",
     "description": "Detect silent file reversion (bindfs mirrors, overlay mounts, sync agents, watchdog skills) by capturing a snapshot, waiting, then re-checking. Use after writing to any path where an upstream process might re-sync and overwrite the edit \u2014 Claude.ai Cowork /mnt/skills/, Codex worktrees, Dropbox/iCloud folders, network mounts.",
     "category": "build"
   },
   {
     "name": "verify-next-public-env",
-    "description": "Verify a NEXT_PUBLIC_* env var actually made it into the live production bundle. NEXT_PUBLIC_* vars bake at build time, so changing them on Vercel has zero effect until a redeploy rebuilds the client JS. This skill pulls Vercel env, checks for formatting issues (trailing whitespace, dupes), and greps the currently-deployed bundle to confirm the new value\u2026",
+    "description": "Verify a NEXT_PUBLIC_* var actually reached the live prod bundle (they bake at build time; changing on Vercel does nothing until redeploy). Pulls env, checks formatting, greps the deployed bundle. Use after changing any NEXT_PUBLIC_* var.",
     "category": "build"
+  },
+  {
+    "name": "verify-static-deploy",
+    "description": "Verify a static one-file VERCEL site is actually live after vercel --prod: custom-domain check (not deployment URL), served-bytes match, inline-script lint, re-alias if stale. Use after deploying any static landing/hub to Vercel.",
+    "category": "meta"
+  },
+  {
+    "name": "visibility-flip-check",
+    "description": "Pre-flight before flipping a GitHub repo public->private: checks Pages tier breakage, committed secrets, lost collab signals. Fire whenever Vlad says make/flip the repo private or runs gh repo edit --visibility private.",
+    "category": "meta"
   },
   {
     "name": "webhook-guide",
@@ -315,6 +325,16 @@ export const SKILLS: Skill[] = [
     "name": "weekly",
     "description": "Weekly review across all projects \u2014 git activity summary, metrics, memory cleanup, and next-week planning.",
     "category": "ops"
+  },
+  {
+    "name": "wf",
+    "description": "Front door to the compiled Workflow library. /wf lists workflows with token estimates; /wf <name> [scope] resolves the scriptPath, assembles args as real JSON, and launches (lite tier default). Use on '/wf' or 'run the <X> workflow'.",
+    "category": "meta"
+  },
+  {
+    "name": "workflow-forge",
+    "description": "Author, lint, list, and audit the compiled Workflow library at ~/.claude/workflows/. Use when Vlad says \"add a workflow\", \"new workflow for X\", \"lint the workflows\", \"what workflows do I have\", \"compile this skill into a workflow\", or when a workflow script misbehaves. Encodes the verified DSL gotchas so new scripts don't repeat them.",
+    "category": "meta"
   }
 ];
 
@@ -396,47 +416,47 @@ export const AGENTS: Agent[] = [
   },
   {
     "name": "pc-api-lead",
-    "description": "Lead development agent for a B2B SaaS API. Runs a multi-task loop \u2014 builds features, fixes security issues, writes tests, reviews code. Does 3-5 tasks per session to maximize output.",
+    "description": "Lead development agent for Partner Connector API. Runs a multi-task loop \u2014 builds features, fixes security issues, writes tests, reviews code. Does 3-5 tasks per session to maximize output.",
     "category": "agent"
   },
   {
     "name": "pc-api-qa",
-    "description": "QA agent for a B2B SaaS API. Reviews recent commits, writes tests for coverage gaps, fixes bugs. Does 3-5 tasks per session.",
+    "description": "QA agent for Partner Connector API. Reviews recent commits, writes tests for coverage gaps, fixes bugs. Does 3-5 tasks per session.",
     "category": "agent"
   },
   {
     "name": "pc-client-lead",
-    "description": "Lead development agent for a B2B SaaS Client. Runs a multi-task loop \u2014 builds features, fixes UX issues, adds missing states. Does 3-5 tasks per session.",
+    "description": "Lead development agent for Partner Connector Client. Runs a multi-task loop \u2014 builds features, fixes UX issues, adds missing states. Does 3-5 tasks per session.",
     "category": "agent"
   },
   {
     "name": "pc-client-qa",
-    "description": "QA agent for a B2B SaaS Client. Reviews commits, writes tests, fixes responsive/design/accessibility issues. Does 3-5 tasks per session.",
+    "description": "QA agent for Partner Connector Client. Reviews commits, writes tests, fixes responsive/design/accessibility issues. Does 3-5 tasks per session.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-data",
-    "description": "Data & analytics strategist for a B2B SaaS. Identifies what data exists but isn't surfaced, proposes dashboards and insights. Writes to ROADMAP.md.",
+    "description": "Data & analytics strategist for Partner Connector. Identifies what data exists but isn't surfaced, proposes dashboards and insights. Writes to ROADMAP.md.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-growth",
-    "description": "Growth strategist for a B2B SaaS. Identifies features that drive acquisition, retention, and network effects. Writes proposals to ROADMAP.md.",
+    "description": "Growth strategist for Partner Connector. Identifies features that drive acquisition, retention, and network effects. Writes proposals to ROADMAP.md.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-logic",
-    "description": "Business logic strategist for a B2B SaaS. Audits API services for edge cases, missing validations, and business rule gaps. Writes findings to ROADMAP.md.",
+    "description": "Business logic strategist for Partner Connector. Audits API services for edge cases, missing validations, and business rule gaps. Writes findings to ROADMAP.md.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-product",
-    "description": "Product strategist for a B2B SaaS. Analyzes the codebase, identifies gaps in user flows, proposes features that drive revenue. Writes findings to ROADMAP.md.",
+    "description": "Product strategist for Partner Connector. Analyzes the codebase, identifies gaps in user flows, proposes features that drive revenue. Writes findings to ROADMAP.md.",
     "category": "agent"
   },
   {
     "name": "pc-strategist-ux",
-    "description": "UX/UI strategist for a B2B SaaS. Audits every page for usability issues, missing states, confusing flows. Writes improvement tasks to ROADMAP.md.",
+    "description": "UX/UI strategist for Partner Connector. Audits every page for usability issues, missing states, confusing flows. Writes improvement tasks to ROADMAP.md.",
     "category": "agent"
   },
   {
@@ -545,4 +565,4 @@ export const PLUGINS: Plugin[] = [
 ];
 
 // Stats
-export const SETUP_STATS = { skills: 62, agents: 32, plugins: 12 } as const;
+export const SETUP_STATS = { skills: 66, agents: 32, plugins: 12 } as const;

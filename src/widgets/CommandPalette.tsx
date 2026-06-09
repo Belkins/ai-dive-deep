@@ -5,6 +5,7 @@ type Item = { type: 'chapter' | 'page' | 'section' | 'glossary' | 'note'; title:
 // These are populated at module load — small enough to inline.
 import { CHAPTERS } from '@/lib/chapters';
 import { glossary } from '@/lib/glossary';
+import { SETUP_STATS } from '@/lib/setup';
 import { RESEARCH_NOTES } from '@/lib/research-notes';
 
 const slugify = (s: string) =>
@@ -217,7 +218,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Research notes',         href: `${base}/research-notes`,  subtitle: 'External findings that shift what to do Monday',                                                      keywords: 'research notes findings external signal evidence gemini claude anthropic openai mythos karpathy' },
       { type: 'page', title: 'The journey',           href: `${base}/journey`,         subtitle: 'Six parts. One arc.',                                                                                 keywords: 'journey arc path roadmap parts' },
       { type: 'page', title: 'Questions people ask',  href: `${base}/questions`,       subtitle: "Top questions from Vlad's inbox",                                                                     keywords: 'faq questions common asked help' },
-      { type: 'page', title: "Vlad's CC setup",        href: `${base}/showcase`,        subtitle: '62 skills + 32 agents + 12 plugins',                                                                  keywords: 'showcase claude code setup skills agents plugins configuration mine cursor codex aider windsurf' },
+      { type: 'page', title: "Vlad's CC setup",        href: `${base}/showcase`,        subtitle: `${SETUP_STATS.skills} skills + ${SETUP_STATS.agents} agents + ${SETUP_STATS.plugins} plugins`,         keywords: 'showcase claude code setup skills agents plugins configuration mine cursor codex aider windsurf' },
       { type: 'page', title: "Vlad's Cowork setup",    href: `${base}/cowork-setup`,    subtitle: 'Connectors + scheduled tasks (sanitized)',                                                            keywords: 'cowork claude.ai setup connectors scheduled tasks routines' },
       { type: 'page', title: 'Sections',              href: `${base}/sections`,        subtitle: 'Chapters by theme',                                                                                   keywords: 'sections themes chapters parts table of contents toc' },
       { type: 'page', title: 'Glossary',              href: `${base}/glossary`,        subtitle: `${Object.keys(glossary).length} terms, A–Z`,                                                          keywords: 'glossary terms definitions vocabulary a-z dictionary' },

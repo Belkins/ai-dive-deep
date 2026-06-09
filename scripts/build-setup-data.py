@@ -142,9 +142,23 @@ def collect_plugins():
         return []
     with open(PLUGINS_JSON) as f:
         data = json.load(f)
+    # Installed != running: settings.json's enabledPlugins can disable an
+    # installed plugin. The page claims "running live right now", so filter
+    # out anything explicitly disabled there.
+    disabled = set()
+    settings_path = os.path.join(HOME, '.claude/settings.json')
+    if os.path.isfile(settings_path):
+        try:
+            with open(settings_path) as f:
+                enabled_map = json.load(f).get('enabledPlugins', {})
+            disabled = {k for k, v in enabled_map.items() if v is False}
+        except Exception:
+            pass
     out = []
     for full_name in sorted(data.get('plugins', {}).keys()):
         # full name: 'github@claude-plugins-official' or 'revenue-os@local'
+        if full_name in disabled:
+            continue
         name, _, source = full_name.partition('@')
         out.append({
             'name': name,
