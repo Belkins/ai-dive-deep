@@ -45,6 +45,20 @@ export default {
           800: '#064433',
           900: '#03281D',
         },
+        // Semantic color utilities → the CSS custom properties in global.css
+        // (:root = dark, [data-theme="light"] overrides). These make
+        // text-accent / bg-paper / border-line / text-muted / text-fg /
+        // bg-bg / text-accent-2 the var-backed, theme-aware alternative to the
+        // ~999 inline style="rgb(var(--x))" attrs across the app.
+        // Alpha works (e.g. bg-accent/10, border-line/60). See
+        // docs/DESIGN-SYSTEM.md §10 (backlog item H1).
+        bg: 'rgb(var(--bg) / <alpha-value>)',
+        fg: 'rgb(var(--fg) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
+        line: 'rgb(var(--line) / <alpha-value>)',
+        paper: 'rgb(var(--paper) / <alpha-value>)',
+        accent: 'rgb(var(--accent) / <alpha-value>)',
+        'accent-2': 'rgb(var(--accent-2) / <alpha-value>)',
       },
       fontFamily: {
         display: ['"Source Serif 4"', '"Source Serif Pro"', 'Georgia', 'serif'],

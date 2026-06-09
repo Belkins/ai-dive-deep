@@ -386,18 +386,21 @@ promotions from the [drift backlog](#10-drift--standardization-backlog).
 }
 ```
 
-**Recommended Tailwind addition** — wire the vars into utilities so the 999 inline `style=`
-attrs can become `text-accent` / `bg-paper` / `border-line` (MISSING-1):
+**Tailwind addition — ✅ shipped** (`tailwind.config.ts`, branch `design-system`). The vars are now
+wired into utilities, so the 999 inline `style=` attrs can become `text-accent` / `bg-paper` /
+`border-line` (MISSING-1). These are theme-aware (they resolve to the CSS vars, so they flip in
+light mode) and alpha-modifier-aware (`bg-accent/10` → `rgb(var(--accent) / .1)`). The live config:
 
 ```ts
 // tailwind.config.ts → theme.extend.colors
-const v = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
-colors: {
-  bg: v('bg'), fg: v('fg'), muted: v('muted'),
-  line: v('line'), paper: v('paper'),
-  accent: v('accent'), 'accent-2': v('accent-2'),
-  // …keep ink/flame/terminal only if you actually adopt them
-}
+bg:        'rgb(var(--bg) / <alpha-value>)',
+fg:        'rgb(var(--fg) / <alpha-value>)',
+muted:     'rgb(var(--muted) / <alpha-value>)',
+line:      'rgb(var(--line) / <alpha-value>)',
+paper:     'rgb(var(--paper) / <alpha-value>)',
+accent:    'rgb(var(--accent) / <alpha-value>)',
+'accent-2':'rgb(var(--accent-2) / <alpha-value>)',
+// ink/flame/terminal retained for now — see H2 (delete-or-adopt)
 ```
 
 ### DTCG (W3C Design Tokens) — abridged
@@ -680,8 +683,10 @@ Parsed from the live code. The system is coherent at the *token* level but has d
 3. **Status colors are invented per-use** — `#FFAA00`/`#ef4444`/`#22c55e`/purple ramp, no tokens.
 
 ### HIGH — token-system integrity
-- [ ] **H1.** Add semantic color utilities (`text-accent`, `bg-paper`, `border-line`, `text-muted`,
-  `text-fg`, `bg-bg`, `text-accent-2`) wired to the vars → unblocks killing the 999 inline styles.
+- [x] **H1. ✅ Shipped** (`tailwind.config.ts`). Added semantic color utilities (`text-accent`,
+  `bg-paper`, `border-line`, `text-muted`, `text-fg`, `bg-bg`, `text-accent-2`) wired to the vars —
+  theme-aware + alpha-aware. Build-verified they generate as `rgb(var(--x) / <alpha>)`. **Next:**
+  migrate the 999 inline `style=` attrs onto these utilities (the larger, page-touching follow-up).
 - [ ] **H2.** Decide the fate of the `ink`/`flame`/`terminal` numbered scales — **delete** (keep
   only vars + `flame`/`terminal` DEFAULT) **or** adopt + migrate.
 - [ ] **H3.** Create `.eyebrow` (+`.eyebrow--loud`) and collapse 108 ad-hoc labels to ≤2 sizes/trackings.
@@ -741,5 +746,7 @@ Reverse-engineered from the live source on 2026-06-09 by parsing `tailwind.confi
 `src/styles/global.css`, `astro.config.mjs`, all 17 `src/components/*.astro`, the `src/widgets/`
 React islands, `src/layouts/BaseLayout.astro`, and the page set in `src/pages/` — cross-checked
 with frequency-ranked `grep` sweeps over `src` (spacing, radius, shadow, grid, breakpoints,
-tracking, arbitrary values, hex literals, icon usage). Working extracts: `notes/.ds-extract/`.
-This is documentation of the *existing* system; it changes **no** source files.
+tracking, arbitrary values, hex literals, icon usage). Working extracts: `notes/.ds-extract/`
+(gitignored — local provenance). This is documentation of the *existing* system; the only code
+change made alongside it is the additive, var-backed token config for H1 (above) — **no authored
+content was touched.**
