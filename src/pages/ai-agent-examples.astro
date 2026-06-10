@@ -1,0 +1,182 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Every number on this page traces to a chapter or page in this repo.
+// Costs as of 2026-06; quarterly sweep inherits Ch 27's vendor re-benchmark cadence.
+const COSTS_AS_OF = '2026-06';
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'rule', label: 'What counts' },
+  { id: 'swarms', label: 'Multi-agent swarms' },
+  { id: 'overnight', label: 'While you sleep' },
+  { id: 'voice', label: 'Talk and write as you' },
+  { id: 'ship', label: 'Ship a product' },
+  { id: 'memory', label: 'Manage its own memory' },
+  { id: 'costs', label: 'Costs, side by side' },
+  { id: 'failures', label: 'Where they fail' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+const EXAMPLES = [
+  'The 15-agent book swarm', 'The strategic-plan swarm', 'The 6-agent codebase audit', 'The pre-flight dependency swarm',
+  'The 4 AM browser pricing watcher', 'The Codex night shift', 'The headless Sentry-fix cron',
+  'The voice agent', 'The write-on-behalf persona agent',
+  'The one-shot native iOS app', 'The $81 Saturday product build',
+  'The Dreaming memory curator',
+];
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Real AI agent examples with costs and failure modes',
+  itemListElement: EXAMPLES.map((name, i) => ({ '@type': 'ListItem', position: i + 1, name })),
+};
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'What is a real example of an AI agent?', acceptedAnswer: { '@type': 'Answer', text: 'A 15-agent swarm that wrote a 25,000-word book in about six minutes for under $40 — dispatched in one message, each agent writing one chapter to a file.' } },
+    { '@type': 'Question', name: 'What do AI agents cost to run?', acceptedAnswer: { '@type': 'Answer', text: 'On this page\'s receipts: $3.16 for an 18-minute two-repo migration, $6.20 for a 20-document strategic plan, under $40 for a book, about $81 for a shipped product. Failure is priced too: one unmeasurable goal burned $11 across 41 turns for nothing.' } },
+    { '@type': 'Question', name: 'Can AI agents run unattended?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, with gates — a Playwright agent diffs competitor pricing at 4 AM and a Codex loop opens worktree-isolated PRs from Sentry and PostHog signals. The same unattended browser agent once posted a competitor screenshot into the wrong Slack channel.' } },
+    { '@type': 'Question', name: 'Can an AI agent build an entire app?', acceptedAnswer: { '@type': 'Answer', text: 'Claude Code one-shot a native SwiftUI app — but could not cross a single App Store gate (signing, the $99 membership, review). The proof is a $7.99 renewal row, not a download count.' } },
+    { '@type': 'Question', name: 'What is the difference between an AI agent and a multi-agent swarm?', acceptedAnswer: { '@type': 'Answer', text: 'One agent is one worker with tools; a swarm is parallel agents coordinated in waves — three to four per wave, dispatched in one message, with a verification pass between waves.' } },
+  ],
+};
+---
+<BaseLayout
+  title="AI Agent Examples: 12 Real Agents I Run — Costs, Architecture, Failures (2026)"
+  description="12 real AI agent examples from one operator's stack: a 15-agent swarm that wrote a book for under $40, a 4 AM browser agent, a $0.40/min voice agent. Every example ran in production — with the cost and the failure on record."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(itemList)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Examples</div>
+    <h1>Every agent on this page actually ran. Here's what each one cost — and how each one broke.</h1>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="card">
+            <p class="m-0">Real AI agent examples from Vlad's Playbook include a 15-agent swarm that wrote a 25,000-word book in about six minutes for under $40, a Playwright browser agent that diffs competitor pricing at 4 AM, a $0.40-per-minute voice agent, and a propose-only memory-curation agent. Every example ran in production and carries a measured cost and a documented failure.</p>
+          </div>
+        </div>
+
+        <div id="rule" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What counts as a real AI agent example?</h2>
+          <p>The bar on this page: a run date, a cost, and a failure mode. Without all three it's a demo — and the internet does not need another demo. (Definitions live at <a href={`${base}/what-is-agentic-coding`}>what is agentic coding</a>; this page is what the definitions look like with money attached.)</p>
+        </div>
+
+        <div id="swarms" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What does a multi-agent swarm look like in practice?</h2>
+          <h3>1. The book swarm</h3>
+          <p><strong>15 agents, 25,000 words, ~6 minutes, under $40.</strong> One dispatch message, each agent writing one chapter to a file, a verification pass after. The artifact you're reading started this way (<a href={`${base}/chapters/06-the-swarm`}>Ch 6</a>).</p>
+          <h3>2. The strategic-plan swarm</h3>
+          <p>Specialist agents fan out against a locked brief, then a reconciler and a red-team attack the result. Two runs on record: 20 documents in 11 minutes for $6.20, and 25 documents in ~14 minutes for ~$8 (<a href={`${base}/showcase`}>/showcase</a>).</p>
+          <h3>3. The 6-agent codebase audit</h3>
+          <p>Six dimensions in parallel — 47 raw findings deduped to 12 unique, 4 of them P0, in about 9 minutes a pass (<a href={`${base}/showcase`}>/showcase</a>).</p>
+          <h3>4. The pre-flight dependency swarm</h3>
+          <p>One research agent per external dependency before any code gets written: 8 dependencies checked, 6 show-stoppers surfaced — including a Reddit API quote of $0.24 per 1K calls that re-priced the whole build (<a href={`${base}/showcase`}>/showcase</a>).</p>
+          <p>Orchestration patterns — waves, verification passes, when a swarm beats a single agent — are the job of <a href={`${base}/swarms`}>/swarms</a>; the self-orchestrating version is <a href={`${base}/dynamic-workflows`}>/dynamic-workflows</a>, which has run 40 minutes unattended within its published limits (16 concurrent, 1,000 agents per run).</p>
+        </div>
+
+        <div id="overnight" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Which agents run while you sleep?</h2>
+          <h3>5. The 4 AM browser pricing watcher</h3>
+          <p>A Playwright agent walks competitor pricing pages nightly — one 4:11 AM run caught a $79→$89 move and posted a 47-word Slack summary, in under 30 seconds of runtime (<a href={`${base}/chapters/33-browser-agents`}>Ch 33</a>).</p>
+          <h3>6. The Codex night shift</h3>
+          <p>A second vendor's agent on a loop against Sentry, PostHog, and BetterStack signals — it opened a PostHog funnel-fix PR in an isolated worktree overnight, and once built a desktop pet in ten minutes as a side effect (<a href={`${base}/chapters/42-codex-on-a-loop`}>Ch 42</a>).</p>
+          <h3>7. The headless Sentry-fix cron</h3>
+          <p>Headless Claude Code on a timer: read the newest Sentry issue, reproduce, patch, open a PR for human review (<a href={`${base}/chapters/18-headless-ci`}>Ch 18</a>). The 7:30 AM morning brief that summarizes all of it into one message is its sibling (<a href={`${base}/chapters/07-cron`}>Ch 7</a>).</p>
+        </div>
+
+        <div id="voice" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Can an agent talk — or write — as you?</h2>
+          <h3>8. The voice agent</h3>
+          <p>$0.06–$0.40 per minute depending on the stack; a 90-second tier-1 support resolution at $0.40 against a $14 human-handled ticket. The failure that taught the most: a 1.4-second silence on a cold call — cold start 2.6s versus 900ms warm — long enough for the caller to say "hello?" (<a href={`${base}/chapters/27-voice-agents`}>Ch 27</a>).</p>
+          <h3>9. The write-on-behalf persona agent</h3>
+          <p>Drafts outbound in the operator's voice behind an approval gate: 60 drafts a week, 70% approved on first pass, median 6–9 minutes from signal to draft — numbers as published in <a href={`${base}/chapters/34-write-on-behalf`}>Ch 34</a>. The gate exists because one unsendable post triggered a co-founder phone call in four minutes.</p>
+        </div>
+
+        <div id="ship" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Can an agent ship a whole product?</h2>
+          <h3>10. The one-shot native iOS app</h3>
+          <p>Claude Code one-shot a native SwiftUI language-partner app from a single prompt. What it couldn't do: cross a single App Store gate — signing, the $99/year membership, review. The proof of the whole story is a $7.99 subscription <em>renewal</em> row, not a download count (<a href={`${base}/chapters/45-app-store-no-swift`}>Ch 45</a>).</p>
+          <h3>11. The $81 Saturday build</h3>
+          <p>A working voice-brief product in a weekend for ~$81 in tokens, against a $2,000–8,000 contractor quote for the same scope (<a href={`${base}/chapters/19-build-products`}>Ch 19</a>).</p>
+        </div>
+
+        <div id="memory" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What about an agent that manages its own memory?</h2>
+          <h3>12. The Dreaming pipeline</h3>
+          <p>A weekly agent that digests 483 session transcripts (995 all-time), compresses 5.8MB of logs to a ~24K-token digest — about 16% signal — and <em>proposes</em> memory updates it is structurally forbidden to write itself. 15 of 15 proposals verified in the first reviewed cycle; the tool still missed 2 duplicates, which is why the human stays in the loop (<a href={`${base}/chapters/44-dreaming`}>Ch 44</a>).</p>
+        </div>
+
+        <div id="costs" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What do these agents cost, side by side?</h2>
+          <p class="text-sm" style="color: rgb(var(--muted))">Costs as of {COSTS_AS_OF}; every row traces to its linked chapter.</p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead><tr><th>Agent</th><th>Cost</th><th>Wall-clock</th><th>The human-equivalent line</th></tr></thead>
+              <tbody>
+                <tr><td>Book swarm (Ch 6)</td><td>&lt;$40</td><td>~6 min</td><td>25,000 words drafted</td></tr>
+                <tr><td>Strategic plan (showcase)</td><td>$6.20</td><td>11 min</td><td>20 strategy documents</td></tr>
+                <tr><td>Two-repo migration via /goal (Ch 38)</td><td>$3.16</td><td>18 min / 12 turns</td><td>branch pushed, tests green</td></tr>
+                <tr><td>Voice support ticket (Ch 27)</td><td>$0.40</td><td>90 sec</td><td>vs a $14 human-handled ticket</td></tr>
+                <tr><td>Saturday product (Ch 19)</td><td>~$81</td><td>one weekend</td><td>vs a $2,000–8,000 quote</td></tr>
+                <tr><td>SDR onboarding agent (Ch 32)</td><td>~2–4% of an $80–120K SDR</td><td>3 days to ramp</td><td>vs an 11-day baseline</td></tr>
+                <tr><td>The failure twin (Ch 38)</td><td>$11, wasted</td><td>41 turns</td><td>nothing — the goal wasn't measurable</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <PullQuote attribution="Ch 6, The Swarm">Fifteen AI agents wrote a 25,000-word book in about six minutes of wall-clock time for under $40.</PullQuote>
+        </div>
+
+        <div id="failures" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Where do AI agents fail?</h2>
+          <p>The other half of every receipt above — the section a vendor page will never publish:</p>
+          <ul>
+            <li>The browser watcher posted a competitor pricing screenshot into the <strong>wrong Slack channel</strong> — a customer saw another company's pricing (<a href={`${base}/chapters/33-browser-agents`}>Ch 33</a>).</li>
+            <li>The same /goal harness that cleared a migration for $3.16 burned <strong>$11 across 41 turns</strong> when "done" couldn't be measured (<a href={`${base}/chapters/38-run-until-done`}>Ch 38</a>).</li>
+            <li>The voice agent's <strong>1.4-second silence</strong> on a cold start — the caller heard dead air on an investor call (<a href={`${base}/chapters/27-voice-agents`}>Ch 27</a>).</li>
+            <li>The persona agent produced an <strong>unsendable post</strong> that triggered a co-founder phone call in four minutes — the approval gate is the product now (<a href={`${base}/chapters/34-write-on-behalf`}>Ch 34</a>).</li>
+            <li>The iOS one-shot hit the <strong>signing maze</strong>: plausible-looking, wrong fixes for provisioning errors — the one part of shipping the agent couldn't brute-force (<a href={`${base}/chapters/45-app-store-no-swift`}>Ch 45</a>).</li>
+          </ul>
+          <Callout type="tip">
+            If it has no cost and no failure on record, it's a demo. Hold every "AI agent examples" list — including this one — to that bar.
+          </Callout>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <h3>What is a real example of an AI agent?</h3>
+          <p>A 15-agent swarm that wrote this 25,000-word book in ~6 minutes for under $40 — dispatched in one message, each agent writing one chapter to a file.</p>
+          <h3>What do AI agents cost to run?</h3>
+          <p>On this page's receipts: $3.16 for an 18-minute migration, $6.20 for a 20-document strategic plan, under $40 for a book, ~$81 for a shipped product — and $11 wasted on one unmeasurable goal.</p>
+          <h3>Can AI agents run unattended?</h3>
+          <p>Yes, with gates. The 4 AM watcher and the Codex night shift both run unsupervised — and the wrong-Slack-channel incident is why every unattended agent here posts to a human-reviewed surface first.</p>
+          <h3>Can an AI agent build an entire app?</h3>
+          <p>The code, yes — one shot. The platform gates (signing, $99 membership, review), no. The operator owns the gates; that's the honest division of labor.</p>
+          <h3>What's the difference between an AI agent and a multi-agent swarm?</h3>
+          <p>One agent is one worker with tools. A swarm is parallel agents in waves — 3–4 per wave, one dispatch message, a verification pass between waves.</p>
+          <p class="mt-6 text-sm" style="color: rgb(var(--muted))">Related: <a href={`${base}/swarms`}>swarm orchestration</a> · <a href={`${base}/dynamic-workflows`}>dynamic workflows</a> · <a href={`${base}/showcase`}>the live setup snapshot</a> · <a href={`${base}/what-is-agentic-coding`}>what is agentic coding</a></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>

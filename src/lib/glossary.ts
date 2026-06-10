@@ -94,7 +94,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   Hook: {
     term: 'Hook',
     definition:
-      'A command, HTTP endpoint, or short LLM prompt Claude Code runs automatically at lifecycle points (PreToolUse, PostToolUse, Stop, SessionStart, …). Lives in <code>settings.json</code>, not the chat — the model can\'t skip it.',
+      'A command, HTTP endpoint, or short LLM prompt Claude Code runs automatically at lifecycle points (PreToolUse, PostToolUse, Stop, SessionStart, …). Lives in <code>settings.json</code>, not the chat — the model can\'t skip it. Ten real configs with verdicts and failure receipts: <a href="/claude-code-hooks">Claude Code hooks</a>.',
     related: ['PreToolUse', 'PostToolUse', 'Stop hook'],
   },
   Inference: {

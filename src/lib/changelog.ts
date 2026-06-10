@@ -16,10 +16,26 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.2',
+    date: '2026-06-10',
+    bannerText: 'New: 5 reference pages — Claude Code pricing, hooks, MCP, vs Codex, and 12 real agent examples. Receipts included.',
+    bannerHref: '/claude-code-pricing',
+    tagline: 'The reference layer — five search-facing pages distilled from the corpus, each built on receipts the official docs can\'t print: the real bills, the configs that fired, the agents that broke. Plus the machine plumbing: every deploy now announces itself to the indexes ChatGPT and Claude actually read from.',
+    shipped: [
+      'Five new reference pages, every claim traced to a chapter or a first-party source verified on ship day: /claude-code-pricing (every plan + API rate, verified 2026-06-10, beside the real monthly bill and the $1,108→$4,312 cache-void week), /claude-code-vs-codex (ran both in anger — verdict per job), /claude-code-mcp (the setup guide grounded in a real server roster), /claude-code-hooks (ten configs with verdicts, including the exit-1-doesn\'t-block correction the chapter version missed), /ai-agent-examples (12 agents that actually ran, each with a cost and a failure on record).',
+      'Title re-aims on three existing pages — the sovereign stack now leads with "Local LLM & Self-Hosted Models", the cheat sheet with "Claude Code Commands", swarms with "AI Agent Orchestration". Title slot only; every human-readable word unchanged.',
+      'IndexNow on deploy — the site announces all of its URLs to Bing/Brave/Yandex on every push. Bing\'s index is what ChatGPT search retrieves from; Brave\'s is Claude\'s. The site was invisible to both pipelines until this week.',
+    ],
+    receipts: [
+      { label: 'New reference pages', value: '5' },
+      { label: 'Real agent examples, each with a cost and a failure', value: '12' },
+      { label: 'Hook configs judged', value: '10' },
+      { label: 'URLs announced per deploy via IndexNow', value: '~95' },
+    ],
+  },
+  {
     edition: 'Edition 10.1',
     date: '2026-06-09',
-    bannerText: 'New: The Self-Audit — the swarm pointed at the agent\'s own setup. 41 findings, 2 refutations, the kill-rules.',
-    bannerHref: '/self-audit',
     tagline: 'The Self-Audit — the multi-agent audit pointed at the layer nobody reviews: the agent\'s own configuration. Run the same evening Fable 5 landed, on the thesis that a capability jump is a standing audit trigger for the scaffolding under it.',
     shipped: [
       'New method page: /self-audit — five parallel auditors (skill library, per-session context budget, memory system, hooks + permissions, automation layer) followed by an adversarial red-team that re-verifies every high/medium finding empirically and lists what all five auditors missed. The session\'s real numbers kept as receipts: 41 findings, 29 confirmed, 4 weakened, 2 refuted, 8 missed-by-all.',

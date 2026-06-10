@@ -1,0 +1,187 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import CopyBlock from '@/widgets/CopyBlock.tsx';
+import { HOOK_BLOCK_PUSH_TO_MAIN, HOOK_SECRETS_SCAN } from '@/lib/snippets';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Exit-code semantics verified against code.claude.com/docs/en/hooks on 2026-06-10.
+// Ch 16's published examples predate the exit-2 special-casing — this page is exact.
+const CONFIGS_VERIFIED = '2026-06-10';
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'what', label: 'What a hook is' },
+  { id: 'config', label: 'The config contract' },
+  { id: 'which', label: 'The ten configs, judged' },
+  { id: 'caught', label: 'What they caught' },
+  { id: 'failed', label: 'The ones that blew up' },
+  { id: 'goal', label: 'Stop hooks vs /goal' },
+  { id: 'rot', label: 'Keeping hooks honest' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What are hooks in Claude Code?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Shell commands, HTTP endpoints, or short LLM prompts that run automatically at lifecycle events (PreToolUse, PostToolUse, Stop, SessionStart and ~26 others). They are defined in settings.json — the model cannot skip or forget them.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Where do Claude Code hooks go?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Two places: ~/.claude/settings.json (global — every session on your machine) or <repo>/.claude/settings.json (committed — the whole team inherits the guardrails).' },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I block Claude Code from pushing to main?',
+      acceptedAnswer: { '@type': 'Answer', text: 'A PreToolUse hook on Bash that greps the tool input for "git push origin main" and exits 2. The stderr message is fed back into the model context, so the agent reads the reason and adapts instead of blindly retrying. Note: exit 2, not exit 1 — Claude Code treats exit 1 as a non-blocking error and proceeds.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can a hook stop Claude Code from leaking secrets?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Yes — a PreToolUse hook on Write|Edit scanning for live key patterns (Anthropic, OpenAI, Stripe, AWS, GitHub PAT). Honest caveat: it only sees the tool-input payload; content passed another way is silently allowed. Re-verify after every harness update.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the difference between a Stop hook and /goal?',
+      acceptedAnswer: { '@type': 'Answer', text: '/goal is a wrapper around a prompt-based Stop hook with a Haiku evaluator judging the transcript. A raw Stop hook is deterministic — your script returns the verdict. If you can measure "done" with code, use the hook.' },
+    },
+  ],
+};
+---
+<BaseLayout
+  title="Claude Code Hooks: 10 Real Configs, What They Caught, What Failed"
+  description="Claude Code hooks from a real operator setup: 10 copy-paste configs (PreToolUse, PostToolUse, Stop, SessionStart), what each one caught in production, and the hook ideas that failed expensively."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Reference</div>
+    <h1>Hooks: the rules my agent can't talk its way out of.</h1>
+    <p class="mt-3 max-w-2xl" style="color: rgb(var(--muted))">Ten published configs, three production saves, three expensive failures. Configs verified against the official hooks reference on {CONFIGS_VERIFIED}.</p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="card">
+            <p class="m-0">Claude Code hooks are shell commands (or HTTP endpoints, or short LLM prompts) that Claude Code runs automatically at lifecycle events — PreToolUse, PostToolUse, Stop, SessionStart. They live in settings.json, not the chat, so the model can't skip or forget them. CLAUDE.md is preference; hooks are enforcement. Most operators need three events and about five hooks.</p>
+          </div>
+        </div>
+
+        <div id="what" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What is a Claude Code hook?</h2>
+          <p>A hook is a command that fires at a lifecycle event, outside the model's control. The official event list has grown to roughly thirty — <code>SubagentStop</code>, <code>PreCompact</code>, <code>WorktreeCreate</code>, the works — but three cover most operator needs:</p>
+          <ul>
+            <li><strong>PreToolUse</strong> — fires before any tool call. Validate, block, audit-log.</li>
+            <li><strong>PostToolUse</strong> — fires after. Format, test, notify.</li>
+            <li><strong>Stop</strong> — fires when the agent thinks it's done. Your script gets the last word.</li>
+          </ul>
+          <p>They live in two places: <code>~/.claude/settings.json</code> (global — every session on your machine) or <code>&lt;repo&gt;/.claude/settings.json</code> (committed — the whole team inherits the guardrails). The full mental model is in <a href={`${base}/chapters/16-hooks-subagents`}>Chapter 16</a>; this page is the reference card.</p>
+          <p>The line that earns the page: I typed "please run prettier on this file" 47 times in one week. Then I wrote one PostToolUse hook. I haven't typed it since (<a href={`${base}/chapters/16-hooks-subagents`}>Ch 16</a>).</p>
+        </div>
+
+        <div id="config" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What does a hook config actually look like?</h2>
+          <p>A matcher (which tool, regex'd) plus a command. The contract — verified against the <a href="https://code.claude.com/docs/en/hooks">official hooks reference</a> on {CONFIGS_VERIFIED} — is stricter than it looks:</p>
+          <ul>
+            <li><strong>Exit 0</strong> — success; stdout is parsed for JSON output fields.</li>
+            <li><strong>Exit 2</strong> — blocking error; stderr is fed back into the model's context, so the agent reads the reason and adapts.</li>
+            <li><strong>Exit 1 (and everything else)</strong> — a <em>non-blocking</em> error. The action proceeds.</li>
+          </ul>
+          <Callout type="warn">
+            That last line is the one that bites. Exit 1 is the conventional Unix failure code, and Claude Code ignores it for enforcement purposes — only exit 2 blocks. The block-push hook below originally shipped in Ch 16 with <code>exit 1</code>, and the semantics moved under it. If a hook is meant to enforce a policy, <code>exit 2</code> — and re-verify your configs quarterly, because this page is the proof they drift.
+          </Callout>
+          <CopyBlock client:visible text={HOOK_BLOCK_PUSH_TO_MAIN} filename="hook-block-push-main.json" language="json" />
+        </div>
+
+        <div id="which" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Which hooks should you actually run?</h2>
+          <p>All ten configs published across the Playbook, one verdict each. The five team hooks are in <a href={`${base}/chapters/16-hooks-subagents`}>Ch 16</a>; the five operator scripts live on <a href={`${base}/resources`}>/resources</a> as copy-paste blocks.</p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead><tr><th>Hook</th><th>Event</th><th>What it does</th><th>Verdict</th></tr></thead>
+              <tbody>
+                <tr><td>format-on-save</td><td>PostToolUse</td><td>prettier on every Write|Edit</td><td><strong>keep</strong> — killed the 47×/week nag</td></tr>
+                <tr><td>test-on-write</td><td>PostToolUse</td><td>run the matching test file</td><td><strong>keep</strong> on small trees; see the 15k-file failure below</td></tr>
+                <tr><td>block-push-to-main</td><td>PreToolUse</td><td>greps tool input for <code>git push origin main</code></td><td><strong>keep, everywhere</strong> — three "oh no" saves at Belkins (Ch 16)</td></tr>
+                <tr><td>commit-message-template</td><td>PreToolUse</td><td>enforce commit format</td><td>situational — teams yes, solo it's friction</td></tr>
+                <tr><td>slack-notify-on-long-task</td><td>Stop</td><td>ping when a long run ends</td><td>situational — only if you actually walk away</td></tr>
+                <tr><td>secrets-scan</td><td>PreToolUse Write|Edit</td><td>8 live-key patterns, blocks the write</td><td><strong>keep, everywhere</strong> — it has fired on a real Anthropic key</td></tr>
+                <tr><td>claude-md-size-guard</td><td>SessionStart</td><td>warn past 300 lines</td><td><strong>keep</strong> — a 340-line CLAUDE.md doubled a token bill in a week</td></tr>
+                <tr><td>prompt-cache-guard</td><td>UserPromptSubmit</td><td>warn before blowing a warm cache</td><td>situational — matters at API spend, noise on Max</td></tr>
+                <tr><td>agent-watchdog-stall-detect</td><td>PreToolUse Task</td><td>JSONL log of agent spawns</td><td>keep if you run swarms; it's telemetry, not a gate</td></tr>
+                <tr><td>commit-msg-enforcer</td><td>Stop</td><td>lint the final commit message</td><td>situational — warn-only, never block on style</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="caught" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What did these hooks catch in production?</h2>
+          <ul>
+            <li><strong>block-push-to-main:</strong> three "oh no" moments at Belkins in a year — each one a force of habit the model talked itself into, stopped by a grep (<a href={`${base}/chapters/16-hooks-subagents`}>Ch 16</a>).</li>
+            <li><strong>format-on-save:</strong> "please run prettier" went from 47 times a week to zero.</li>
+            <li><strong>secrets-scan:</strong> caught an Anthropic key a subagent helpfully "moved into the example" — five seconds of grep versus rotating a key across four projects (<a href={`${base}/resources`}>/resources</a>). Its documented blind spot: it only scans the tool-input payload; content passed another way is silently allowed.</li>
+            <li><strong>claude-md-size-guard:</strong> a 340-line CLAUDE.md was doubling the token bill — the file reads on every turn. Warn-only at 300 lines.</li>
+          </ul>
+        </div>
+
+        <div id="failed" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Which hook ideas failed?</h2>
+          <p>The section the official docs will never have: my own cleverness, priced.</p>
+          <p><strong>The keystroke storm.</strong> An on-save syntax-check hook met a 1.5-second autosave. Each check spawned a 6–8-second subagent; by minute three there were 90 running concurrently. Hooks have no rate limiter unless you build one in. The fix was two lines of discipline: a 30-second per-file debounce, plus a <code>~/.claude/hooks/disabled</code> kill-switch file every hook checks first (<a href={`${base}/chapters/28-failure-receipts`}>Ch 28</a>).</p>
+          <p><strong>The typecheck that never finished.</strong> A typecheck-on-every-edit hook on a 15,000-file tree ran for months and never completed once — its output piped through a truncator that always exited clean. Maximum cost, zero benefit, zero errors. Found only by the <a href={`${base}/self-audit`}>self-audit</a>, not by any alert.</p>
+          <p><strong>The 2× evaluator.</strong> Forcing a /goal evaluator up to Opus via a custom hook config: a 47-turn session at roughly twice the expected cost, for judgment Haiku was already delivering (<a href={`${base}/chapters/38-run-until-done`}>Ch 38</a>).</p>
+          <PullQuote attribution="Ch 28, Failure receipts">One autosave-triggered hook spawned 90 concurrent subagents in three minutes. Autosave fires every 1.5 seconds, and hooks have no rate limiter unless you build one in.</PullQuote>
+        </div>
+
+        <div id="goal" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">How do hooks relate to /goal and /loop?</h2>
+          <p>A Stop hook is the loop primitive: the agent thinks it's done, your script disagrees, the agent keeps going. <code>/goal</code> is literally a wrapper around a prompt-based Stop hook with a Haiku evaluator reading the transcript (<a href={`${base}/chapters/38-run-until-done`}>Ch 38</a>). Two consequences worth knowing: enterprises that lock hooks (<code>disableAllHooks</code>, <code>allowManagedHooksOnly</code>) lose /goal with them; and if you can measure "done" with code, skip the evaluator entirely — a real script returning the verdict is more honest than a Haiku judging a feeling. Determinism beats vibes when the vibes can cost $11.</p>
+        </div>
+
+        <div id="rot" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">How do you stop hooks from rotting?</h2>
+          <ul>
+            <li><strong>Telemetry before deletion.</strong> A one-line JSONL invocation logger per hook. "Zero fires in seven weeks, across two independent telemetry sources" is kill evidence; a feeling isn't (<a href={`${base}/self-audit`}>/self-audit</a>).</li>
+            <li><strong>Warn-only for heuristics.</strong> Anything that can false-positive (size guards, style lints) warns; only deterministic policy (push-to-main, live keys) blocks with exit 2.</li>
+            <li><strong>Never break the parent agent because logging broke.</strong> Every script ends in a way that degrades to exit 0 when its own plumbing fails.</li>
+            <li><strong>Quarterly re-verify against the official reference.</strong> The exit-code semantics under this page's own Ch 16 examples moved once already. Re-stamp the verified date or assume drift.</li>
+          </ul>
+          <p>Want the next hook to write? List the three corrections you've typed more than five times this month — those are your next three hooks (<a href={`${base}/chapters/17-tips-tricks`}>Ch 17</a>).</p>
+          <CopyBlock client:visible text={HOOK_SECRETS_SCAN} filename="secrets-scan.sh" language="bash" />
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <h3>What are hooks in Claude Code?</h3>
+          <p>Shell commands, HTTP endpoints, or short LLM prompts that run automatically at lifecycle events. Defined in settings.json — the model can't skip them.</p>
+          <h3>Where do Claude Code hooks go?</h3>
+          <p><code>~/.claude/settings.json</code> for global, <code>&lt;repo&gt;/.claude/settings.json</code> committed for the team.</p>
+          <h3>How do I block Claude Code from pushing to main?</h3>
+          <p>A PreToolUse hook on Bash that greps the tool input and exits 2 — the stderr message goes back into the model's context, so it adapts instead of retrying.</p>
+          <h3>Can a hook stop Claude Code from leaking secrets?</h3>
+          <p>Yes — PreToolUse on Write|Edit scanning live-key patterns. It only sees the tool-input payload; re-verify the blind spot after harness updates.</p>
+          <h3>What's the difference between a Stop hook and /goal?</h3>
+          <p>/goal wraps a prompt-based Stop hook with a Haiku evaluator. A raw Stop hook is deterministic — if you can measure "done" with code, use the hook.</p>
+          <p class="mt-6 text-sm" style="color: rgb(var(--muted))">Related: <a href={`${base}/claude-code-best-practices`}>best practices</a> · <a href={`${base}/resources`}>the full copy-paste vault</a> · <a href={`${base}/cheat-sheet`}>command cheat sheet</a> · <a href={`${base}/chapters/16-hooks-subagents`}>Ch 16: Hooks and Custom Subagents</a></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>
