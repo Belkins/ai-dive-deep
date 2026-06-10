@@ -227,7 +227,7 @@ const slug = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 const navItems = sections.map((s) => ({ id: slug(s.h), label: s.h }));
 ---
-<BaseLayout title="Cheat sheet" description="Slash commands, settings, env vars, file paths, keyboard shortcuts. Tape it next to your monitor.">
+<BaseLayout title="Claude Code Commands — The Cheat Sheet" description="Slash commands, settings, env vars, file paths, keyboard shortcuts. Tape it next to your monitor.">
   <section class="container-wide pt-12 pb-6 print:pt-2 print:pb-2">
     <div class="flex items-baseline justify-between gap-4 flex-wrap">
       <div>
