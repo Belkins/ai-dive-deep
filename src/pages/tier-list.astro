@@ -3,6 +3,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import TierListBuilder from '@/widgets/TierListBuilder.tsx';
 import LMArenaLeaderboard from '@/widgets/LMArenaLeaderboard.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import { LAB_CLAIMS, VENDOR_META } from '@/lib/lmarena';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout title="The Tier List" description="Drag-and-drop your own AI tools tier list. Share via URL. Public benchmarks vs operator usefulness, side by side.">
   <section class="container-prose pt-16 pb-4">
@@ -19,6 +22,33 @@ import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 
   <section class="pt-4 pb-2">
     <LMArenaLeaderboard client:load />
+  </section>
+
+  <section class="container-prose pt-12 pb-2">
+    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the labs claim</div>
+    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Launch-deck numbers — discounted on arrival</h2>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is crowd votes on chat prompts. The boards below are what vendors shipped on launch day for the question operators actually ask — agentic work — which LMArena doesn't measure. Read every row as a claim, not a receipt: Berkeley RDI reward-hacked 8 of 8 major agent benchmarks, so launch numbers carry a 10–15 point discount until your own eval confirms them. Models you can't buy don't appear — capability ceilings are not tier-list entries. Dated sourcing for every figure lives on <a href={`${base}/research-notes`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {LAB_CLAIMS.map((c) => (
+        <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+          <div class="flex items-baseline justify-between gap-2 flex-wrap">
+            <div class="font-display text-lg leading-tight">{c.bench}</div>
+          </div>
+          <div class="text-xs mt-1" style="color: rgb(var(--muted))">{c.what}</div>
+          <div class="mt-3 flex flex-col gap-1.5">
+            {c.entries.map((e) => (
+              <div class="flex items-baseline justify-between gap-3">
+                <span class="font-mono text-sm" style={`color: ${VENDOR_META[e.vendor].color}`}>{e.model}</span>
+                <span class="font-mono text-sm font-semibold">{e.score}</span>
+              </div>
+            ))}
+          </div>
+          <div class="mt-3 pt-3 text-[11px] leading-relaxed" style="border-top: 1px solid rgb(var(--line)); color: rgb(var(--muted))">
+            {c.source}<br />{c.caveat}
+          </div>
+        </div>
+      ))}
+    </div>
   </section>
 
   <section class="container-prose pt-12 pb-2">
