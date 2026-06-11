@@ -16,10 +16,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.3',
+    date: '2026-06-11',
+    bannerText: 'New: the subscription subsidy quantified — SemiAnalysis prices a $200 plan at up to $8,000 of compute. Plus a full tier-list benchmark refresh.',
+    bannerHref: '/research-notes',
+    tagline: 'The economics week — the research timeline gets the grid that turns "this plan can\'t be profitable on me" into numbers, and the tier list catches up to the Fable 5 era with a fresh LMArena snapshot and a new lab-claims panel.',
+    shipped: [
+      'New research note (top of the timeline) — "The subscription subsidy, quantified." SemiAnalysis\'s Tokenomics model: a $20 claude-pro can draw ~$400/mo of API-equivalent compute, a $200 claude-max-20x ~$8,000, a $200 chatgpt-pro-20x ~$14,000. Break-even utilization per tier, the −900%/−1,650% full-utilization gross margins, and the three honest discounts to apply before quoting any of it. The operator read: every limit you\'ve ever hit is the mechanism that drags the average back into the green columns.',
+      'Tier-list benchmark refresh — LMArena snapshot 2026-05-18 → 2026-06-11, pulled from the same HF dataset the widget fetches live. Fable 5 debuts at #1 WebDev (1665, ~100 Elo clear of #2) and #1 Vision; Opus 4.8 enters the boards. Freshness strings are now absolute board-publish dates; the two boards stuck at 05-18 say so instead of pretending.',
+      'New "What the labs claim" panel on the tier list — the missing third axis next to crowd votes and operator usefulness: SWE-Bench Pro, FrontierCode Diamond, OSWorld, and Terminal-Bench launch numbers, every figure corpus-traceable to a dated research note and framed with the Berkeley-RDI discount. Mythos excluded — tier the models you can buy.',
+      'Homepage repair + banner history — the stack tile was rendering broken (an anchor nested inside the card anchor; browsers force-close the outer one and eject the description into a floating fragment — invalid HTML, now a span). The announcement bar grew a history toggle: click the clock to see the last few editions and when they shipped, without leaving the page.',
+    ],
+    receipts: [
+      { label: 'API-equivalent compute a $200 max-20x plan can draw', value: '~$8,000/mo' },
+      { label: 'Break-even utilization, claude-max-20x', value: '10% of cap' },
+      { label: 'Fable 5 LMArena WebDev debut', value: '#1 · 1665 Elo' },
+      { label: 'Nested-anchor bugs found by the site-wide scan', value: '1 of 1 fixed' },
+    ],
+  },
+  {
     edition: 'Edition 10.2',
     date: '2026-06-10',
-    bannerText: 'New: 5 reference pages — Claude Code pricing, hooks, MCP, vs Codex, and 12 real agent examples. Receipts included.',
-    bannerHref: '/claude-code-pricing',
     tagline: 'The reference layer — five search-facing pages distilled from the corpus, each built on receipts the official docs can\'t print: the real bills, the configs that fired, the agents that broke. Plus the machine plumbing: every deploy now announces itself to the indexes ChatGPT and Claude actually read from.',
     shipped: [
       'Five new reference pages, every claim traced to a chapter or a first-party source verified on ship day: /claude-code-pricing (every plan + API rate, verified 2026-06-10, beside the real monthly bill and the $1,108→$4,312 cache-void week), /claude-code-vs-codex (ran both in anger — verdict per job), /claude-code-mcp (the setup guide grounded in a real server roster), /claude-code-hooks (ten configs with verdicts, including the exit-1-doesn\'t-block correction the chapter version missed), /ai-agent-examples (12 agents that actually ran, each with a cost and a failure on record).',

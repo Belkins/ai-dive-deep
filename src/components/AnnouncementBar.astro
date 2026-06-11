@@ -14,6 +14,14 @@ const when = latest
 const href = `${base}${latest?.bannerHref ?? '/changelog'}`;
 // Key dismissal on the edition so a new ship re-shows the bar.
 const dismissKey = latest?.edition ?? '';
+// Click-to-open history: the few editions before the current one, date-stamped.
+const fmtDate = (d: string) =>
+  new Date(d + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const history = CHANGELOG.slice(1, 6).map((e) => ({
+  edition: e.edition,
+  when: fmtDate(e.date),
+  blurb: e.bannerText ?? e.tagline,
+}));
 ---
 {show && (
   <div
@@ -37,6 +45,20 @@ const dismissKey = latest?.edition ?? '';
         <span class="truncate" style="color: rgb(var(--fg) / 0.9)">{latest.bannerText}</span>
         <span class="shrink-0 hidden md:inline font-semibold group-hover:underline whitespace-nowrap" style="color: rgb(var(--accent))">Read what's new →</span>
       </a>
+      {history.length > 0 && (
+        <button
+          type="button"
+          id="announce-history-toggle"
+          class="shrink-0 inline-flex items-center justify-center h-6 w-6 rounded hover:bg-white/10 transition"
+          style="color: rgb(var(--muted))"
+          aria-label="Show update history"
+          aria-expanded="false"
+          aria-controls="announce-history"
+          title="Update history"
+        >
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      )}
       <button
         type="button"
         id="announce-dismiss"
@@ -48,6 +70,21 @@ const dismissKey = latest?.edition ?? '';
         <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
       </button>
     </div>
+    {history.length > 0 && (
+      <div id="announce-history" class="hidden border-t" style="border-color: rgb(var(--accent) / 0.2)">
+        <div class="container-wide py-3">
+          <ul class="m-0 list-none p-0 flex flex-col gap-2">
+            {history.map((h) => (
+              <li class="flex items-baseline gap-2 sm:gap-3 text-sm min-w-0">
+                <span class="shrink-0 font-mono text-xs" style="color: rgb(var(--accent))">{h.edition} · {h.when}</span>
+                <span class="truncate" style="color: rgb(var(--fg) / 0.8)">{h.blurb}</span>
+              </li>
+            ))}
+          </ul>
+          <a href={`${base}/changelog`} class="mt-2 inline-block text-xs font-semibold no-underline hover:underline" style="color: rgb(var(--accent))">Full changelog →</a>
+        </div>
+      </div>
+    )}
   </div>
 )}
 
@@ -77,6 +114,16 @@ const dismissKey = latest?.edition ?? '';
       btn.addEventListener('click', () => {
         bar.classList.add('hidden');
         try { localStorage.setItem(STORAGE, key); } catch {}
+      });
+    }
+
+    const toggle = document.getElementById('announce-history-toggle');
+    const panel = document.getElementById('announce-history');
+    if (toggle && panel && toggle.dataset.bound !== '1') {
+      toggle.dataset.bound = '1';
+      toggle.addEventListener('click', () => {
+        const open = panel.classList.toggle('hidden') === false;
+        toggle.setAttribute('aria-expanded', String(open));
       });
     }
   }
