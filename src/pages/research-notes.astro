@@ -3,78 +3,125 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SemiAnalysisSubsidyPanel from '@/components/SemiAnalysisSubsidyPanel.astro';
 import { RESEARCH_NOTES } from '@/lib/research-notes';
+import type { ResearchNote } from '@/lib/research-notes';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const latest = RESEARCH_NOTES[0];
 const paragraphs = (t: string | string[]) => (Array.isArray(t) ? t : [t]);
 // Mirrors slugify in rss/research-notes.xml.ts — feed deep-links must land on the right note.
 const slugify = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+// The data file is append-at-top in SHIP order; the page renders in DATE order.
+const sorted = [...RESEARCH_NOTES].sort((a, b) => b.date.localeCompare(a.date));
+const latest = sorted[0];
+
+// Deep-link ids must be unique — fail the build, not the reader.
+const ids = sorted.map((n) => slugify(n.title));
+if (new Set(ids).size !== ids.length) throw new Error('research-notes: duplicate slugified titles');
+
+// Month interstitials: emit a divider whenever the month changes going down the timeline.
+const monthLabel = (ym: string) =>
+  new Date(`${ym}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+type Row = { kind: 'month'; label: string; count: number } | { kind: 'note'; note: ResearchNote; id: string; open: boolean };
+const rows: Row[] = [];
+let prevMonth = '';
+for (const note of sorted) {
+  const ym = note.date.slice(0, 7);
+  if (ym !== prevMonth) {
+    prevMonth = ym;
+    rows.push({ kind: 'month', label: monthLabel(ym), count: sorted.filter((x) => x.date.slice(0, 7) === ym).length });
+  }
+  rows.push({ kind: 'note', note, id: slugify(note.title), open: note === latest });
+}
+
+const words = (note: ResearchNote) =>
+  [...paragraphs(note.takeaway), ...note.implications].join(' ').split(/\s+/).length;
+const readMins = (note: ResearchNote) => Math.max(1, Math.round(words(note) / 220));
+// Confidence chip: verbatim first word of an existing "source confidence" receipt — never invented.
+const confidence = (note: ResearchNote) => {
+  const r = note.receipts?.find((x) => /confidence/i.test(x.label));
+  return r ? r.value.split(/[\s(]/)[0] : null;
+};
 ---
 <BaseLayout title="Research notes" description="External research findings that materially inform the book. The stack moves; the operator implications get folded in.">
   <section class="container-prose pt-16 pb-4">
-    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Research notes</div>
+    <div class="eyebrow eyebrow-loud mb-3" style="color: rgb(var(--accent))">Research notes</div>
     <h1>What the labs ship, and what it changes for operators.</h1>
     <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
       External papers and benchmarks that materially shift how the book's patterns hold up. Not a literature review — only the findings that change what you should do Monday morning. Each note has the receipt, the operator implications, and the chapters it informs.
     </p>
     <p class="mt-4 text-sm font-mono" style="color: rgb(var(--muted))">
-      {RESEARCH_NOTES.length} notes · latest {latest.date} · the newest is open, the rest unfold on click · <a href={`${base}/rss/research-notes.xml`} style="color: rgb(var(--accent))">RSS</a>
+      {sorted.length} notes · latest {latest.date} · <a href={`${base}/rss/research-notes.xml`} style="color: rgb(var(--accent))">RSS</a><span id="rn-new-delta" class="hidden" style="color: rgb(var(--accent-2))"></span>
     </p>
   </section>
 
   <section class="container-wide pb-24">
-    <ol class="list-none p-0 m-0 max-w-3xl mx-auto">
-      {RESEARCH_NOTES.map((note, idx) => {
-        const noteId = slugify(note.title);
-        return (
-          <li class="relative m-0 pl-7 sm:pl-9 pb-3 last:pb-0" style={idx < RESEARCH_NOTES.length - 1 ? "border-left: 2px solid rgb(var(--line));" : ""}>
-            <span class="absolute -left-[7px] top-5 inline-block h-3 w-3 rounded-full" style="background: rgb(var(--accent)); border: 2px solid rgb(var(--bg));"></span>
+    <div id="rn-toolbar" class="max-w-3xl mx-auto mb-2 flex justify-end gap-1 font-mono text-xs" style="color: rgb(var(--muted))">
+      <button id="rn-expand" type="button" class="px-2 py-1 rounded hover:bg-[rgb(var(--fg)/0.05)] transition-colors" style="color: inherit">Expand all</button>
+      <span aria-hidden="true" class="py-1" style="opacity: 0.4">·</span>
+      <button id="rn-collapse" type="button" class="px-2 py-1 rounded hover:bg-[rgb(var(--fg)/0.05)] transition-colors" style="color: inherit">Collapse all</button>
+    </div>
 
-            <details id={noteId} open={idx === 0} class="note rounded-lg" style="border: 1px solid transparent;">
-              <summary class="cursor-pointer rounded-lg px-3 py-3 -mx-3 transition-colors hover:bg-white/[0.04]">
-                <div class="flex items-center gap-3 text-xs" style="color: rgb(var(--muted))">
-                  <span class="font-mono">{note.date}</span>
+    <ol role="list" class="list-none p-0 m-0 max-w-3xl mx-auto">
+      {rows.map((row, ridx) =>
+        row.kind === 'month' ? (
+          <li class="m-0 pl-7 sm:pl-9 pt-3 pb-4 list-none">
+            <div class="eyebrow">{row.label} · {row.count} {row.count === 1 ? 'note' : 'notes'}</div>
+          </li>
+        ) : (
+          <li class="relative m-0 pl-7 sm:pl-9 pb-3" style={ridx < rows.length - 1 ? 'border-left: 1px solid rgb(var(--line));' : ''}>
+            <span class="absolute -left-[4.5px] top-[1.15rem] inline-block h-2 w-2 rounded-full" style="background: rgb(var(--accent)); border: 1px solid rgb(var(--bg));"></span>
+
+            <details id={row.id} open={row.open} class="note rounded-lg" data-note-date={row.note.date}>
+              <summary class="cursor-pointer rounded-lg px-3 py-3 transition-colors hover:bg-[rgb(var(--fg)/0.04)]" aria-labelledby={`${row.id}-h`}>
+                <div class="flex items-center gap-2.5 text-xs" style="color: rgb(var(--muted))">
+                  <span class="font-mono">{row.note.date}</span>
+                  {row.note.kind && (
+                    <span class="px-1.5 py-px rounded font-mono text-[10px] uppercase tracking-wider" style="color: rgb(var(--accent-2)); border: 1px solid rgb(var(--accent-2) / 0.35)">{row.note.kind}</span>
+                  )}
+                  <span class="new-pill hidden px-1.5 py-px rounded-full font-mono text-[10px] font-semibold" style="background: rgb(var(--accent-2) / 0.15); color: rgb(var(--accent-2))" data-d={row.note.date}>NEW</span>
                   <span class="chev ml-auto inline-flex h-5 w-5 items-center justify-center rounded-full shrink-0 transition-transform" style="border: 1px solid rgb(var(--line)); color: rgb(var(--accent))" aria-hidden="true">
                     <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </span>
                 </div>
-                <h2 class="mt-1.5 m-0 font-display text-xl md:text-2xl leading-snug">{note.title}</h2>
-                <p class="mt-2 mb-0 italic text-base leading-snug" style="color: rgb(var(--accent))">{note.tagline}</p>
-                <p class="note-cta mt-2 mb-0 text-xs" style="color: rgb(var(--muted))">Open the note — the finding, the receipts, {note.implications.length} operator implications ↓</p>
+                <h2 id={`${row.id}-h`} class="note-title mt-1.5 m-0 font-display text-xl md:text-2xl leading-snug">{row.note.title}</h2>
+                <p class="mt-2 mb-0 font-display italic text-base leading-snug" style="color: rgb(var(--fg) / 0.78)">{row.note.tagline}</p>
+                <p class="note-cta mt-2 mb-0 font-mono text-xs" style="color: rgb(var(--muted))">{row.note.receipts?.length ?? 0} receipts · {row.note.implications.length} implications · {row.note.chapters.length} chapters · ~{readMins(row.note)} min{confidence(row.note) ? ` · confidence: ${confidence(row.note)}` : ''}</p>
               </summary>
 
-              <div class="pb-8">
-                <div class="text-xs mb-4" style="color: rgb(var(--muted))">{note.source}</div>
+              <div class="px-3 sm:px-4 pb-6">
+                <div class="text-xs mb-4" style="color: rgb(var(--muted))">{row.note.source}</div>
 
                 <!-- The finding -->
                 <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
-                  <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">The finding</div>
-                  {paragraphs(note.takeaway).map((para, i) => (
+                  <div class="eyebrow mb-2" style="color: rgb(var(--accent-2))">The finding</div>
+                  {paragraphs(row.note.takeaway).map((para, i) => (
                     <p class={`text-base leading-relaxed ${i === 0 ? 'mt-0' : 'mt-3'} mb-0`} style="color: rgb(var(--fg) / 0.92)">{para}</p>
                   ))}
                 </div>
 
-                {note.slug === 'semianalysis-subsidy' && <SemiAnalysisSubsidyPanel />}
+                {row.note.slug === 'semianalysis-subsidy' && <SemiAnalysisSubsidyPanel />}
 
-                <!-- Receipts — spec sheet, not card soup -->
-                {note.receipts && note.receipts.length > 0 && (
+                <!-- Receipts — spec sheet -->
+                {row.note.receipts && row.note.receipts.length > 0 && (
                   <div class="mt-5 rounded-lg overflow-hidden" style="border: 1px solid rgb(var(--line));">
-                    <div class="px-4 py-2 text-[10px] uppercase tracking-wider" style="background: rgb(var(--paper)); color: rgb(var(--muted)); border-bottom: 1px solid rgb(var(--line));">Receipts</div>
-                    {note.receipts.map((r) => (
-                      <div class="receipt-row grid sm:grid-cols-[12rem_1fr] gap-x-4 gap-y-1 px-4 py-2.5">
-                        <div class="text-[11px] uppercase tracking-wider sm:pt-0.5" style="color: rgb(var(--muted))">{r.label}</div>
-                        <div class="font-mono text-sm leading-relaxed" style="color: rgb(var(--accent))">{r.value}</div>
-                      </div>
-                    ))}
+                    <div class="eyebrow px-4 py-2" style="background: rgb(var(--paper)); border-bottom: 1px solid rgb(var(--line));">Receipts</div>
+                    <dl class="m-0">
+                      {row.note.receipts.map((r) => (
+                        <div class="receipt-row grid sm:grid-cols-[minmax(9rem,13rem)_1fr] gap-x-4 gap-y-1 px-4 py-2.5">
+                          <dt class="text-[11px] uppercase tracking-wider sm:pt-0.5 font-medium" style="color: rgb(var(--muted))">{r.label}</dt>
+                          <dd class="receipt-val m-0 font-mono text-sm leading-relaxed">{r.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
                 )}
 
                 <!-- Operator implications -->
                 <div class="mt-6">
-                  <div class="text-[10px] uppercase tracking-wider mb-3" style="color: rgb(var(--muted))">Operator implications</div>
-                  <ol class="space-y-3 list-none p-0 m-0">
-                    {note.implications.map((item, i) => (
+                  <div class="eyebrow mb-3">Operator implications</div>
+                  <ol role="list" class="space-y-3 list-none p-0 m-0">
+                    {row.note.implications.map((item, i) => (
                       <li class="flex items-start gap-3 text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">
                         <span class="shrink-0 font-mono text-xs mt-0.5 w-6" style="color: rgb(var(--accent-2))">{String(i + 1).padStart(2, '0')}</span>
                         <span>{item}</span>
@@ -84,11 +131,11 @@ const slugify = (s: string) =>
                 </div>
 
                 <!-- Chapters informed -->
-                {note.chapters.length > 0 && (
+                {row.note.chapters.length > 0 && (
                   <div class="mt-6">
-                    <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">Chapters this informs</div>
+                    <div class="eyebrow mb-2">Chapters this informs</div>
                     <div class="grid gap-2 sm:grid-cols-2">
-                      {note.chapters.map((c) => (
+                      {row.note.chapters.map((c) => (
                         <a href={`${base}/chapters/${c.slug}`} class="card hover:border-flame transition-colors no-underline p-3" style="color: rgb(var(--fg));">
                           <div class="text-[11px] font-mono mb-1" style="color: rgb(var(--accent))">{c.ref}</div>
                           <div class="text-sm leading-snug" style="color: rgb(var(--fg) / 0.92)">{c.why}</div>
@@ -98,25 +145,28 @@ const slugify = (s: string) =>
                   </div>
                 )}
 
-                <!-- Source links + permalink -->
+                <!-- Source links + permalink + collapse -->
                 <div class="mt-5 flex flex-wrap items-center gap-3 text-sm">
-                  {note.links && note.links.length > 0 && (
+                  {row.note.links && row.note.links.length > 0 && (
                     <>
-                      <span class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted))">Source</span>
-                      {note.links.map((l) => (
+                      <span class="eyebrow">Source</span>
+                      {row.note.links.map((l) => (
                         <a href={l.href} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md no-underline" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line)); color: rgb(var(--accent))">
                           {l.label} →
                         </a>
                       ))}
                     </>
                   )}
-                  <a href={`#${noteId}`} class="ml-auto font-mono text-xs no-underline" style="color: rgb(var(--muted))" title="Link to this note">#permalink</a>
+                  <span class="ml-auto inline-flex items-center gap-3 font-mono text-xs">
+                    <button type="button" class="js-permalink no-underline bg-transparent border-0 p-0 cursor-pointer font-mono text-xs" style="color: rgb(var(--muted))" data-id={row.id} title="Copy a link to this note">#permalink</button>
+                    <button type="button" class="js-collapse bg-transparent border-0 p-0 cursor-pointer font-mono text-xs" style="color: rgb(var(--muted))" data-id={row.id} title="Collapse this note">Collapse ↑</button>
+                  </span>
                 </div>
               </div>
             </details>
           </li>
-        );
-      })}
+        )
+      )}
     </ol>
 
     <div class="max-w-3xl mx-auto mt-12 rounded-lg p-5 italic text-sm leading-relaxed" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--muted)); color: rgb(var(--fg) / 0.9)">
@@ -135,15 +185,27 @@ const slugify = (s: string) =>
   /* Custom expand affordance — hide native markers everywhere. */
   summary { list-style: none; }
   summary::-webkit-details-marker { display: none; }
+  summary:focus-visible { outline: 2px solid rgb(var(--accent)); outline-offset: 2px; }
+  details.note { border: 1px solid transparent; scroll-margin-top: 5rem; }
+  details.note > summary { scroll-margin-top: 5rem; }
+  details.note[open] { border-color: rgb(var(--line)); background: rgb(var(--paper) / 0.3); }
+  /* Open note: headline steps up into the missing middle register. */
+  details.note[open] > summary .note-title { font-size: clamp(1.6rem, 2.6vw, 2rem); line-height: 1.15; }
   details[open] .chev { transform: rotate(180deg); }
   details[open] .note-cta { display: none; }
-  details[open] > summary { background: transparent; cursor: pointer; }
   .receipt-row + .receipt-row { border-top: 1px solid rgb(var(--line) / 0.5); }
+  .receipt-val { color: rgb(var(--fg) / 0.9); }
+  .receipt-row:first-of-type .receipt-val { color: rgb(var(--accent)); }
+  @media print {
+    .chev, .note-cta, #rn-toolbar, .js-permalink, .js-collapse { display: none !important; }
+  }
 </style>
 
 <script>
-  // RSS deep-links point at #slugified-title — open that note and scroll to it.
-  // Re-runs on view-transition navs; harmless if the hash targets nothing.
+  // All document/window-level listeners bind once at module scope; per-element
+  // wiring re-runs on every astro:page-load against the fresh DOM.
+  const allNotes = () => Array.from(document.querySelectorAll<HTMLDetailsElement>('details.note'));
+
   function openNoteFromHash() {
     const id = decodeURIComponent(location.hash.slice(1));
     if (!id) return;
@@ -153,6 +215,104 @@ const slugify = (s: string) =>
       requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }));
     }
   }
-  document.addEventListener('astro:page-load', openNoteFromHash);
+
+  // Session-scoped open-state persistence: a view-transition round-trip
+  // (note → chapter → back) restores what the reader had open. Fresh
+  // sessions keep the newest-open default.
+  const OPEN_KEY = 'rn-open-v1';
+  function persistOpen() {
+    try {
+      sessionStorage.setItem(OPEN_KEY, JSON.stringify(allNotes().filter((d) => d.open).map((d) => d.id)));
+    } catch {}
+  }
+  function restoreOpen() {
+    let stored: string[] | null = null;
+    try { stored = JSON.parse(sessionStorage.getItem(OPEN_KEY) || 'null'); } catch {}
+    if (!Array.isArray(stored)) return;
+    for (const d of allNotes()) d.open = stored.includes(d.id);
+  }
+
+  // NEW-since-your-last-visit pills (localStorage; build-time badges go stale).
+  const SEEN_KEY = 'rn-last-seen';
+  function markNew() {
+    const pills = Array.from(document.querySelectorAll<HTMLElement>('.new-pill'));
+    if (pills.length === 0) return;
+    let last = '';
+    try { last = localStorage.getItem(SEEN_KEY) || ''; } catch {}
+    if (last) {
+      const fresh = pills.filter((p) => (p.dataset.d || '') > last);
+      fresh.forEach((p) => p.classList.remove('hidden'));
+      const delta = document.getElementById('rn-new-delta');
+      if (delta && fresh.length > 0) {
+        delta.textContent = ` · ${fresh.length} new since your last visit`;
+        delta.classList.remove('hidden');
+      }
+    }
+    const maxDate = pills.map((p) => p.dataset.d || '').sort().pop() || '';
+    window.setTimeout(() => {
+      try { if (!last || maxDate > last) localStorage.setItem(SEEN_KEY, maxDate); } catch {}
+    }, 5000);
+  }
+
+  function setAll(open: boolean) {
+    allNotes().forEach((d) => { d.open = open; });
+    persistOpen();
+  }
+
+  function init() {
+    if (!document.querySelector('details.note')) return;
+    restoreOpen();
+    openNoteFromHash();
+    markNew();
+
+    document.getElementById('rn-expand')?.addEventListener('click', () => setAll(true));
+    document.getElementById('rn-collapse')?.addEventListener('click', () => setAll(false));
+
+    for (const d of allNotes()) {
+      d.addEventListener('toggle', persistOpen);
+      // Selecting text in the summary shouldn't toggle the note.
+      d.querySelector('summary')?.addEventListener('click', (e) => {
+        const sel = window.getSelection();
+        if (sel && sel.toString().length > 0) e.preventDefault();
+      });
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('.js-permalink').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id || '';
+        const url = `${location.origin}${location.pathname}#${id}`;
+        history.pushState(null, '', `#${id}`);
+        navigator.clipboard?.writeText(url).then(() => {
+          const prev = btn.textContent;
+          btn.textContent = 'copied ✓';
+          window.setTimeout(() => { btn.textContent = prev; }, 1500);
+        });
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('.js-collapse').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const d = document.getElementById(btn.dataset.id || '');
+        if (d instanceof HTMLDetailsElement) {
+          d.open = false;
+          persistOpen();
+          d.scrollIntoView({ block: 'start' });
+        }
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', init);
   window.addEventListener('hashchange', openNoteFromHash);
+  // Print must include all 12 notes, not just the open ones.
+  let printSnapshot: string[] | null = null;
+  window.addEventListener('beforeprint', () => {
+    printSnapshot = allNotes().filter((d) => d.open).map((d) => d.id);
+    allNotes().forEach((d) => { d.open = true; });
+  });
+  window.addEventListener('afterprint', () => {
+    if (!printSnapshot) return;
+    allNotes().forEach((d) => { d.open = printSnapshot!.includes(d.id); });
+    printSnapshot = null;
+  });
 </script>

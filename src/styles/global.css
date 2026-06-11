@@ -20,6 +20,12 @@
   --muted: 86 84 75;
   --line: 229 227 218;
   --paper: 242 241 236;
+  /* Accents re-tinted for light: the dark-theme flame (255 107 44) and
+     terminal (34 211 160) sit at ~2.7:1 / ~1.7:1 on light bg — an AA failure
+     wherever they do text duty (eyebrows, receipt values, implication
+     numerals). Same hues, darkened to clear 4.5:1 on --bg and --paper. */
+  --accent: 194 65 12;
+  --accent-2: 4 120 87;
 }
 
 html {

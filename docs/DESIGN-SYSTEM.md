@@ -382,9 +382,16 @@ promotions from the [drift backlog](#10-drift--standardization-backlog).
   --muted: 86 84 75;     /* #56544B */
   --line: 229 227 218;   /* #E5E3DA */
   --paper: 242 241 236;  /* #F2F1EC */
-  /* --accent / --accent-2 intentionally NOT overridden */
+  --accent: 194 65 12;   /* #C2410C — flame, darkened for light */
+  --accent-2: 4 120 87;  /* #047857 — terminal, darkened for light */
 }
 ```
+
+> **Changed 2026-06-11.** The accents were originally *not* overridden in light mode. That held
+> while they only colored chrome; once they started doing text duty (eyebrows, receipt values,
+> implication numerals on /research-notes), the dark-theme values measured ~2.7:1 (flame) and
+> ~1.7:1 (terminal) on light backgrounds — an objective WCAG AA failure. Light mode now re-tints
+> both to same-hue darker steps that clear 4.5:1 on `--bg` and `--paper`. Dark theme is unchanged.
 
 **Tailwind addition — ✅ shipped** (`tailwind.config.ts`, branch `design-system`). The vars are now
 wired into utilities, so the 999 inline `style=` attrs can become `text-accent` / `bg-paper` /

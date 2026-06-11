@@ -28,7 +28,6 @@ const PLANS: PlanRow[] = [
 ];
 
 const dot = (p: PlanRow['provider']) => (p === 'anthropic' ? 'rgb(var(--accent))' : 'rgb(var(--accent-2))');
-const RED_TEXT = 'rgb(224 92 70)';
 const RED_ZONE = 'rgb(196 70 54 / 0.28)';
 ---
 <div class="mt-5 rounded-lg p-5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
@@ -98,7 +97,7 @@ const RED_ZONE = 'rgb(196 70 54 / 0.28)';
             <div class="absolute -top-0.5 -bottom-0.5 w-px" style={`left: ${p.breakEven}%; background: rgb(var(--fg) / 0.9);`}></div>
             <span class="absolute top-1/2 -translate-y-1/2 font-mono text-[10px] leading-none" style={`left: calc(${p.breakEven}% + 7px); color: rgb(var(--fg) / 0.85);`}>{p.breakEvenLabel}</span>
           </div>
-          <span class="sm:w-32 shrink-0 sm:text-right font-mono text-xs" style={`color: ${RED_TEXT}`}>{p.at100} at 100%</span>
+          <span class="uw-red sm:w-32 shrink-0 sm:text-right font-mono text-xs">{p.at100} at 100%</span>
         </div>
       ))}
       <div class="hidden sm:flex sm:items-center sm:gap-3" aria-hidden="true">
@@ -127,3 +126,9 @@ const RED_ZONE = 'rgb(196 70 54 / 0.28)';
     </div>
   </div>
 </div>
+
+<style>
+  /* Underwater-red text: readable on dark; darkened in light mode (AA). */
+  .uw-red { color: rgb(224 92 70); }
+  :global([data-theme='light']) .uw-red { color: rgb(166 50 36); }
+</style>

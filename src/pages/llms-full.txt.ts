@@ -1,7 +1,11 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { RESEARCH_NOTES } from '@/lib/research-notes';
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
+
+const slugify = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
 // Pragmatic MDX-to-plain-prose stripper. This is a corpus dump for LLM
 // ingestion, not a faithful renderer — it removes machinery a reader never
@@ -73,6 +77,38 @@ export const GET: APIRoute = async () => {
     lines.push(`URL: ${SITE}/chapters/${entry.data.slug}/`);
     lines.push('');
     lines.push(stripMdx(entry.body ?? ''));
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+  }
+
+  // Research notes — dated external findings with operator implications. The
+  // most citable, source-anchored content on the site; emitted verbatim.
+  const notes = [...RESEARCH_NOTES].sort((a, b) => b.date.localeCompare(a.date));
+  lines.push(`# Research notes (${notes.length} dated external findings)`);
+  lines.push('');
+  lines.push('> What the labs ship, and what it changes for operators. Each note: the finding, receipts, operator implications.');
+  lines.push('');
+  for (const note of notes) {
+    lines.push(`## ${note.title}`);
+    lines.push('');
+    lines.push(`Date: ${note.date} · Source: ${note.source}`);
+    lines.push(`URL: ${SITE}/research-notes/#${slugify(note.title)}`);
+    lines.push('');
+    lines.push(note.tagline);
+    lines.push('');
+    const paras = Array.isArray(note.takeaway) ? note.takeaway : [note.takeaway];
+    for (const p of paras) {
+      lines.push(p);
+      lines.push('');
+    }
+    if (note.receipts && note.receipts.length > 0) {
+      lines.push('Receipts:');
+      for (const r of note.receipts) lines.push(`- ${r.label}: ${r.value}`);
+      lines.push('');
+    }
+    lines.push('Operator implications:');
+    for (const imp of note.implications) lines.push(`- ${imp}`);
     lines.push('');
     lines.push('---');
     lines.push('');

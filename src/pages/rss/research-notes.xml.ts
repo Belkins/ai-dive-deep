@@ -34,7 +34,9 @@ function rfc822(iso: string): string {
 }
 
 export const GET: APIRoute = async () => {
-  const items = RESEARCH_NOTES.map((note) => {
+  // Data file is in ship order; the feed (like the page) is in date order.
+  const sorted = [...RESEARCH_NOTES].sort((a, b) => b.date.localeCompare(a.date));
+  const items = sorted.map((note) => {
     const link = `${PAGE_URL}#${slugify(note.title)}`;
     const guid = `${note.title}|${note.date}`;
     return `    <item>
@@ -46,7 +48,7 @@ export const GET: APIRoute = async () => {
     </item>`;
   });
 
-  const lastBuild = RESEARCH_NOTES.length > 0 ? rfc822(RESEARCH_NOTES[0].date) : rfc822(new Date().toISOString().slice(0, 10));
+  const lastBuild = sorted.length > 0 ? rfc822(sorted[0].date) : rfc822(new Date().toISOString().slice(0, 10));
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
