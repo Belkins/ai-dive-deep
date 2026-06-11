@@ -4,10 +4,12 @@ import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SemiAnalysisSubsidyPanel from '@/components/SemiAnalysisSubsidyPanel.astro';
 import { RESEARCH_NOTES } from '@/lib/research-notes';
 
-const paragraphs = (t: string | string[]) => (Array.isArray(t) ? t : [t]);
-
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const latest = RESEARCH_NOTES[0];
+const paragraphs = (t: string | string[]) => (Array.isArray(t) ? t : [t]);
+// Mirrors slugify in rss/research-notes.xml.ts — feed deep-links must land on the right note.
+const slugify = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 ---
 <BaseLayout title="Research notes" description="External research findings that materially inform the book. The stack moves; the operator implications get folded in.">
   <section class="container-prose pt-16 pb-4">
@@ -16,90 +18,105 @@ const latest = RESEARCH_NOTES[0];
     <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
       External papers and benchmarks that materially shift how the book's patterns hold up. Not a literature review — only the findings that change what you should do Monday morning. Each note has the receipt, the operator implications, and the chapters it informs.
     </p>
-    <p class="mt-3 text-base" style="color: rgb(var(--muted))">
-      Latest: <strong style="color: rgb(var(--accent))">{latest.title}</strong> · {latest.date}
+    <p class="mt-4 text-sm font-mono" style="color: rgb(var(--muted))">
+      {RESEARCH_NOTES.length} notes · latest {latest.date} · the newest is open, the rest unfold on click · <a href={`${base}/rss/research-notes.xml`} style="color: rgb(var(--accent))">RSS</a>
     </p>
   </section>
 
   <section class="container-wide pb-24">
     <ol class="list-none p-0 m-0 max-w-3xl mx-auto">
-      {RESEARCH_NOTES.map((note, idx) => (
-        <li class="relative m-0 pl-8 pb-10 last:pb-0" style={idx < RESEARCH_NOTES.length - 1 ? "border-left: 2px solid rgb(var(--line));" : ""}>
-          <span class="absolute -left-[7px] top-1.5 inline-block h-3 w-3 rounded-full" style="background: rgb(var(--accent)); border: 2px solid rgb(var(--bg));"></span>
+      {RESEARCH_NOTES.map((note, idx) => {
+        const noteId = slugify(note.title);
+        return (
+          <li class="relative m-0 pl-7 sm:pl-9 pb-3 last:pb-0" style={idx < RESEARCH_NOTES.length - 1 ? "border-left: 2px solid rgb(var(--line));" : ""}>
+            <span class="absolute -left-[7px] top-5 inline-block h-3 w-3 rounded-full" style="background: rgb(var(--accent)); border: 2px solid rgb(var(--bg));"></span>
 
-          <div class="flex items-baseline gap-3 flex-wrap mb-2">
-            <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">{note.title}</h2>
-          </div>
-          <div class="flex items-baseline gap-3 flex-wrap text-xs mb-3" style="color: rgb(var(--muted));">
-            <span class="font-mono">{note.date}</span>
-            <span style="opacity: 0.4">·</span>
-            <span>{note.source}</span>
-          </div>
-          <p class="text-lg italic" style="color: rgb(var(--accent))">{note.tagline}</p>
-
-          <!-- Receipts grid -->
-          {note.receipts && note.receipts.length > 0 && (
-            <div class="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {note.receipts.map((r) => (
-                <div class="rounded-md p-2.5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
-                  <div class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted))">{r.label}</div>
-                  <div class="font-mono text-sm mt-0.5" style="color: rgb(var(--accent))">{r.value}</div>
+            <details id={noteId} open={idx === 0} class="note rounded-lg" style="border: 1px solid transparent;">
+              <summary class="cursor-pointer rounded-lg px-3 py-3 -mx-3 transition-colors hover:bg-white/[0.04]">
+                <div class="flex items-center gap-3 text-xs" style="color: rgb(var(--muted))">
+                  <span class="font-mono">{note.date}</span>
+                  <span class="chev ml-auto inline-flex h-5 w-5 items-center justify-center rounded-full shrink-0 transition-transform" style="border: 1px solid rgb(var(--line)); color: rgb(var(--accent))" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
                 </div>
-              ))}
-            </div>
-          )}
+                <h2 class="mt-1.5 m-0 font-display text-xl md:text-2xl leading-snug">{note.title}</h2>
+                <p class="mt-2 mb-0 italic text-base leading-snug" style="color: rgb(var(--accent))">{note.tagline}</p>
+                <p class="note-cta mt-2 mb-0 text-xs" style="color: rgb(var(--muted))">Open the note — the finding, the receipts, {note.implications.length} operator implications ↓</p>
+              </summary>
 
-          <!-- Takeaway -->
-          <div class="mt-5 rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
-            <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">The finding</div>
-            {paragraphs(note.takeaway).map((para, i) => (
-              <p class={`text-base leading-relaxed ${i === 0 ? 'mt-0' : 'mt-3'} mb-0`} style="color: rgb(var(--fg) / 0.92)">{para}</p>
-            ))}
-          </div>
+              <div class="pb-8">
+                <div class="text-xs mb-4" style="color: rgb(var(--muted))">{note.source}</div>
 
-          {note.slug === 'semianalysis-subsidy' && <SemiAnalysisSubsidyPanel />}
+                <!-- The finding -->
+                <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
+                  <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">The finding</div>
+                  {paragraphs(note.takeaway).map((para, i) => (
+                    <p class={`text-base leading-relaxed ${i === 0 ? 'mt-0' : 'mt-3'} mb-0`} style="color: rgb(var(--fg) / 0.92)">{para}</p>
+                  ))}
+                </div>
 
-          <!-- Operator implications -->
-          <div class="mt-5">
-            <div class="text-[10px] uppercase tracking-wider mb-3" style="color: rgb(var(--muted))">Operator implications</div>
-            <ul class="space-y-2 list-none p-0">
-              {note.implications.map((item) => (
-                <li class="flex items-start gap-3 text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">
-                  <span class="flex-shrink-0 mt-1.5" style="color: rgb(var(--accent-2))">›</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+                {note.slug === 'semianalysis-subsidy' && <SemiAnalysisSubsidyPanel />}
 
-          <!-- Chapters informed -->
-          {note.chapters.length > 0 && (
-            <div class="mt-6">
-              <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">Chapters this informs</div>
-              <div class="grid gap-2 sm:grid-cols-2">
-                {note.chapters.map((c) => (
-                  <a href={`${base}/chapters/${c.slug}`} class="card hover:border-flame transition-colors no-underline p-3" style="color: rgb(var(--fg));">
-                    <div class="text-[11px] font-mono mb-1" style="color: rgb(var(--accent))">{c.ref}</div>
-                    <div class="text-sm leading-snug" style="color: rgb(var(--fg) / 0.92)">{c.why}</div>
-                  </a>
-                ))}
+                <!-- Receipts — spec sheet, not card soup -->
+                {note.receipts && note.receipts.length > 0 && (
+                  <div class="mt-5 rounded-lg overflow-hidden" style="border: 1px solid rgb(var(--line));">
+                    <div class="px-4 py-2 text-[10px] uppercase tracking-wider" style="background: rgb(var(--paper)); color: rgb(var(--muted)); border-bottom: 1px solid rgb(var(--line));">Receipts</div>
+                    {note.receipts.map((r) => (
+                      <div class="receipt-row grid sm:grid-cols-[12rem_1fr] gap-x-4 gap-y-1 px-4 py-2.5">
+                        <div class="text-[11px] uppercase tracking-wider sm:pt-0.5" style="color: rgb(var(--muted))">{r.label}</div>
+                        <div class="font-mono text-sm leading-relaxed" style="color: rgb(var(--accent))">{r.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <!-- Operator implications -->
+                <div class="mt-6">
+                  <div class="text-[10px] uppercase tracking-wider mb-3" style="color: rgb(var(--muted))">Operator implications</div>
+                  <ol class="space-y-3 list-none p-0 m-0">
+                    {note.implications.map((item, i) => (
+                      <li class="flex items-start gap-3 text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">
+                        <span class="shrink-0 font-mono text-xs mt-0.5 w-6" style="color: rgb(var(--accent-2))">{String(i + 1).padStart(2, '0')}</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <!-- Chapters informed -->
+                {note.chapters.length > 0 && (
+                  <div class="mt-6">
+                    <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">Chapters this informs</div>
+                    <div class="grid gap-2 sm:grid-cols-2">
+                      {note.chapters.map((c) => (
+                        <a href={`${base}/chapters/${c.slug}`} class="card hover:border-flame transition-colors no-underline p-3" style="color: rgb(var(--fg));">
+                          <div class="text-[11px] font-mono mb-1" style="color: rgb(var(--accent))">{c.ref}</div>
+                          <div class="text-sm leading-snug" style="color: rgb(var(--fg) / 0.92)">{c.why}</div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <!-- Source links + permalink -->
+                <div class="mt-5 flex flex-wrap items-center gap-3 text-sm">
+                  {note.links && note.links.length > 0 && (
+                    <>
+                      <span class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted))">Source</span>
+                      {note.links.map((l) => (
+                        <a href={l.href} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md no-underline" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line)); color: rgb(var(--accent))">
+                          {l.label} →
+                        </a>
+                      ))}
+                    </>
+                  )}
+                  <a href={`#${noteId}`} class="ml-auto font-mono text-xs no-underline" style="color: rgb(var(--muted))" title="Link to this note">#permalink</a>
+                </div>
               </div>
-            </div>
-          )}
-
-          <!-- External links -->
-          {note.links && note.links.length > 0 && (
-            <div class="mt-5 flex flex-wrap items-center gap-3 text-sm">
-              <span class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted))">Source</span>
-              {note.links.map((l) => (
-                <a href={l.href} target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md no-underline" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line)); color: rgb(var(--accent))">
-                  {l.label} →
-                </a>
-              ))}
-            </div>
-          )}
-        </li>
-      ))}
+            </details>
+          </li>
+        );
+      })}
     </ol>
 
     <div class="max-w-3xl mx-auto mt-12 rounded-lg p-5 italic text-sm leading-relaxed" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--muted)); color: rgb(var(--fg) / 0.9)">
@@ -113,3 +130,29 @@ const latest = RESEARCH_NOTES[0];
 
   <CommandPaletteMount />
 </BaseLayout>
+
+<style>
+  /* Custom expand affordance — hide native markers everywhere. */
+  summary { list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  details[open] .chev { transform: rotate(180deg); }
+  details[open] .note-cta { display: none; }
+  details[open] > summary { background: transparent; cursor: pointer; }
+  .receipt-row + .receipt-row { border-top: 1px solid rgb(var(--line) / 0.5); }
+</style>
+
+<script>
+  // RSS deep-links point at #slugified-title — open that note and scroll to it.
+  // Re-runs on view-transition navs; harmless if the hash targets nothing.
+  function openNoteFromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el instanceof HTMLDetailsElement) {
+      el.open = true;
+      requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }));
+    }
+  }
+  document.addEventListener('astro:page-load', openNoteFromHash);
+  window.addEventListener('hashchange', openNoteFromHash);
+</script>
