@@ -89,9 +89,11 @@ export const SCREENSHOTS: Record<string, string> = {
   "dynamic-workflows-flow": "dynamic-workflows-flow.svg",
   "dynamic-workflows-slider": "dynamic-workflows-slider.gif",
   "fable-5-cc-banner": "fable-5-cc-banner.png",
+  "research-semianalysis-margin-grid": "research-semianalysis-margin-grid.png",
+  "research-semianalysis-max-spend": "research-semianalysis-max-spend.png",
   "swarms-1": "swarms-1.png",
   "swarms-2": "swarms-2.png",
   "swarms-3": "swarms-3.png"
 };
 
-export const SCREENSHOT_COUNT = 89;
+export const SCREENSHOT_COUNT = 91;

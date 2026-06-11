@@ -42,7 +42,7 @@ export const GET: APIRoute = async () => {
       <link>${escapeXml(link)}</link>
       <guid isPermaLink="false">${escapeXml(guid)}</guid>
       <pubDate>${rfc822(note.date)}</pubDate>
-      <description>${escapeXml(note.takeaway)}</description>
+      <description>${escapeXml(Array.isArray(note.takeaway) ? note.takeaway.join('\n\n') : note.takeaway)}</description>
     </item>`;
   });
 

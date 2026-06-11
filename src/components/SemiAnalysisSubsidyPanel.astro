@@ -1,0 +1,129 @@
+---
+// Bespoke visual panel for the SemiAnalysis subscription-subsidy research note
+// (slug: semianalysis-subsidy). Redraws the two source tables as native elements
+// in the book palette, then embeds the source screenshots as receipts. Figures
+// transcribed 1:1 from the SemiAnalysis Tokenomics tables; the note's receipts
+// grid carries the same numbers.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+type PlanRow = {
+  plan: string;
+  provider: 'anthropic' | 'openai';
+  sticker: string;
+  draw: string;
+  drawPct: number;        // share of the largest draw ($14,000) — drives the magnitude bar
+  multiple: string;
+  breakEven: number;      // % average utilization where provider margin crosses 0
+  breakEvenLabel: string;
+  at100: string;          // provider gross margin at 100% utilization
+};
+
+const PLANS: PlanRow[] = [
+  { plan: 'claude-pro',      provider: 'anthropic', sticker: '$20/mo',  draw: '~$400/mo',    drawPct: 3,   multiple: '20×', breakEven: 20,   breakEvenLabel: '20%',   at100: '−400%' },
+  { plan: 'claude-max-5x',   provider: 'anthropic', sticker: '$100/mo', draw: '~$2,000/mo',  drawPct: 14,  multiple: '20×', breakEven: 20,   breakEvenLabel: '20%',   at100: '−400%' },
+  { plan: 'claude-max-20x',  provider: 'anthropic', sticker: '$200/mo', draw: '~$8,000/mo',  drawPct: 57,  multiple: '40×', breakEven: 10,   breakEvenLabel: '10%',   at100: '−900%' },
+  { plan: 'chatgpt-plus',    provider: 'openai',    sticker: '$20/mo',  draw: '~$700/mo',    drawPct: 5,   multiple: '35×', breakEven: 11.4, breakEvenLabel: '11.4%', at100: '−775%' },
+  { plan: 'chatgpt-pro-5x',  provider: 'openai',    sticker: '$100/mo', draw: '~$3,500/mo',  drawPct: 25,  multiple: '35×', breakEven: 11.4, breakEvenLabel: '11.4%', at100: '−775%' },
+  { plan: 'chatgpt-pro-20x', provider: 'openai',    sticker: '$200/mo', draw: '~$14,000/mo', drawPct: 100, multiple: '70×', breakEven: 5.7,  breakEvenLabel: '5.7%',  at100: '−1,650%' },
+];
+
+const dot = (p: PlanRow['provider']) => (p === 'anthropic' ? 'rgb(var(--accent))' : 'rgb(var(--accent-2))');
+const RED_TEXT = 'rgb(224 92 70)';
+const RED_ZONE = 'rgb(196 70 54 / 0.28)';
+---
+<div class="mt-5 rounded-lg p-5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+  <div class="flex items-baseline justify-between flex-wrap gap-2">
+    <div class="text-[10px] uppercase tracking-wider" style="color: rgb(var(--accent))">The grid, redrawn</div>
+    <div class="flex items-center gap-3 text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted))">
+      <span class="inline-flex items-center gap-1.5"><span class="inline-block h-2 w-2 rounded-full" style={`background: ${dot('anthropic')}`}></span>Anthropic</span>
+      <span class="inline-flex items-center gap-1.5"><span class="inline-block h-2 w-2 rounded-full" style={`background: ${dot('openai')}`}></span>OpenAI</span>
+    </div>
+  </div>
+
+  <!-- Block A — what the sticker actually buys -->
+  <div class="mt-4">
+    <h3 class="m-0 font-display text-lg">What the sticker actually buys</h3>
+    <p class="mt-1 text-xs m-0" style="color: rgb(var(--muted))">Max possible API-equivalent draw per plan, at full utilization of the cap. Bar = share of the largest draw.</p>
+    <!-- sm+: four-column grid -->
+    <div class="mt-3 hidden sm:block">
+      <div class="grid grid-cols-[1fr_5rem_8.5rem_3.5rem] items-center gap-x-3 pb-1.5 text-[10px] uppercase tracking-wider" style="color: rgb(var(--muted)); border-bottom: 1px solid rgb(var(--line));">
+        <span>Plan</span>
+        <span class="text-right">Sticker</span>
+        <span class="text-right">Max draw</span>
+        <span class="text-right">Multiple</span>
+      </div>
+      {PLANS.map((p) => (
+        <div class="grid grid-cols-[1fr_5rem_8.5rem_3.5rem] items-center gap-x-3 py-2" style="border-bottom: 1px solid rgb(var(--line) / 0.5);">
+          <span class="inline-flex items-center gap-2 font-mono text-sm" style="color: rgb(var(--fg) / 0.92)">
+            <span class="inline-block h-2 w-2 rounded-full shrink-0" style={`background: ${dot(p.provider)}`}></span>{p.plan}
+          </span>
+          <span class="text-right font-mono text-sm" style="color: rgb(var(--fg) / 0.75)">{p.sticker}</span>
+          <span class="text-right font-mono text-sm px-1.5 pt-0.5 pb-1" style={`color: rgb(var(--fg) / 0.92); background: linear-gradient(to right, rgb(var(--accent) / 0.6) ${p.drawPct}%, rgb(var(--line) / 0.5) ${p.drawPct}%) bottom left / 100% 3px no-repeat;`}>{p.draw}</span>
+          <span class="text-right font-mono text-sm font-semibold" style="color: rgb(var(--accent))">{p.multiple}</span>
+        </div>
+      ))}
+    </div>
+    <!-- mobile: stacked rows, full-width magnitude line -->
+    <div class="mt-3 sm:hidden">
+      {PLANS.map((p) => (
+        <div class="py-2.5" style="border-bottom: 1px solid rgb(var(--line) / 0.5);">
+          <div class="flex items-center justify-between gap-2">
+            <span class="inline-flex items-center gap-2 font-mono text-xs whitespace-nowrap" style="color: rgb(var(--fg) / 0.92)">
+              <span class="inline-block h-2 w-2 rounded-full shrink-0" style={`background: ${dot(p.provider)}`}></span>{p.plan}
+            </span>
+            <span class="font-mono text-xs font-semibold" style="color: rgb(var(--accent))">{p.multiple}</span>
+          </div>
+          <div class="mt-1 flex items-baseline justify-between gap-2 font-mono text-xs">
+            <span style="color: rgb(var(--fg) / 0.65)">{p.sticker} buys</span>
+            <span style="color: rgb(var(--fg) / 0.92)">{p.draw}</span>
+          </div>
+          <div class="mt-1.5 h-[3px] rounded-full" style={`background: linear-gradient(to right, rgb(var(--accent) / 0.6) ${p.drawPct}%, rgb(var(--line) / 0.5) ${p.drawPct}%);`}></div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Block B — break-even utilization -->
+  <div class="mt-7">
+    <h3 class="m-0 font-display text-lg">Where each plan flips underwater</h3>
+    <p class="mt-1 text-xs m-0" style="color: rgb(var(--muted))">Provider gross margin by average utilization, under the stated assumption (cost-to-serve = 25% of API-equivalent value). Green = provider in the money; the marker is break-even.</p>
+    <div class="mt-4 space-y-3">
+      {PLANS.map((p) => (
+        <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
+          <span class="sm:w-36 shrink-0 inline-flex items-center gap-2 font-mono text-xs" style="color: rgb(var(--fg) / 0.92)">
+            <span class="inline-block h-2 w-2 rounded-full shrink-0" style={`background: ${dot(p.provider)}`}></span>{p.plan}
+          </span>
+          <div class="relative w-full sm:w-auto sm:flex-1 h-4 rounded-sm" style={`background: ${RED_ZONE}`}>
+            <div class="absolute inset-y-0 left-0 rounded-l-sm" style={`width: ${p.breakEven}%; background: rgb(var(--accent-2) / 0.8);`}></div>
+            <div class="absolute -top-0.5 -bottom-0.5 w-px" style={`left: ${p.breakEven}%; background: rgb(var(--fg) / 0.9);`}></div>
+            <span class="absolute top-1/2 -translate-y-1/2 font-mono text-[10px] leading-none" style={`left: calc(${p.breakEven}% + 7px); color: rgb(var(--fg) / 0.85);`}>{p.breakEvenLabel}</span>
+          </div>
+          <span class="sm:w-32 shrink-0 sm:text-right font-mono text-xs" style={`color: ${RED_TEXT}`}>{p.at100} at 100%</span>
+        </div>
+      ))}
+      <div class="hidden sm:flex sm:items-center sm:gap-3" aria-hidden="true">
+        <span class="w-36 shrink-0"></span>
+        <div class="flex-1 flex justify-between font-mono text-[10px]" style="color: rgb(var(--muted))">
+          <span>0%</span><span>average utilization of plan cap</span><span>100%</span>
+        </div>
+        <span class="w-32 shrink-0"></span>
+      </div>
+    </div>
+    <p class="mt-4 text-sm italic m-0" style="color: rgb(var(--fg) / 0.8)">The green sliver is the entire business model. A heavy operator lives in the red — that's the subsidy, and the reason every meter exists.</p>
+  </div>
+
+  <!-- Block C — source screenshots -->
+  <div class="mt-7">
+    <div class="text-[10px] uppercase tracking-wider mb-3" style="color: rgb(var(--muted))">The source tables — SemiAnalysis Tokenomics</div>
+    <div class="space-y-5">
+      <figure class="m-0">
+        <img src={`${base}/screens/research-semianalysis-max-spend.png`} width="1600" height="900" loading="lazy" alt="SemiAnalysis table: plan price vs max possible spend — claude-pro $20/mo can draw ~$400/mo, claude-max-5x $100 → ~$2,000, claude-max-20x $200 → ~$8,000, chatgpt-plus $20 → ~$700, chatgpt-pro-5x $100 → ~$3,500, chatgpt-pro-20x $200 → ~$14,000" class="w-full rounded-lg" style="border: 1px solid rgb(var(--line))" />
+        <figcaption class="mt-2 text-xs" style="color: rgb(var(--muted))">Plan price vs. max possible spend (approx.) — the option value of each flat-rate tier.</figcaption>
+      </figure>
+      <figure class="m-0">
+        <img src={`${base}/screens/research-semianalysis-margin-grid.png`} width="1600" height="905" loading="lazy" alt="SemiAnalysis heatmap: provider gross margin on each plan by average utilization, from +95% at 1% utilization to −400%/−900% (Claude tiers) and −775%/−1,650% (ChatGPT tiers) at 100% utilization; break-even at 20%/10% (Anthropic) and 11.4%/5.7% (OpenAI)" class="w-full rounded-lg" style="border: 1px solid rgb(var(--line))" />
+        <figcaption class="mt-2 text-xs" style="color: rgb(var(--muted))">Subscription margin by utilization — the full grid, green to deep red. Assumption stated in the header: API list prices carry a 75% gross margin.</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>

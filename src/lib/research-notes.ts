@@ -2,11 +2,12 @@
 // Vertical timeline. New entries go at the TOP of the array.
 
 export type ResearchNote = {
+  slug?: string;           // stable key — lets the page attach a bespoke visual panel to one note
   title: string;
   source: string;
   date: string;            // ISO yyyy-mm-dd
   tagline: string;
-  takeaway: string;        // the load-bearing paragraph in Vlad's voice
+  takeaway: string | string[];  // the load-bearing prose in Vlad's voice; array = paragraphs
   implications: string[];  // operator moves derived from the finding
   receipts?: { label: string; value: string }[];
   chapters: { slug: string; ref: string; why: string }[];
@@ -15,12 +16,17 @@ export type ResearchNote = {
 
 export const RESEARCH_NOTES: ResearchNote[] = [
   {
+    slug: 'semianalysis-subsidy',
     title: 'The subscription subsidy, quantified — SemiAnalysis prices a $200 plan at up to $8,000 of compute',
     source: 'SemiAnalysis (X thread, Tokenomics model) · third-party analyst model with stated assumptions',
     date: '2026-06-10',
     tagline: 'Flat-rate plans go underwater past ~10–20% utilization. The grid explains every limit you\'ve ever hit — and why the meter is coming.',
-    takeaway:
-      "SemiAnalysis published the grid that turns a vibe every heavy operator has had — \"this plan can't possibly be profitable on me\" — into numbers. Two tables from their Tokenomics model. First, the option value: a $20 claude-pro can draw roughly $400/mo of API-equivalent compute at full utilization; claude-max-20x at $200 can draw ~$8,000; chatgpt-pro-20x at the same $200 can draw ~$14,000 — 20×, 40×, 70× the sticker. Second, margin by utilization, under one stated assumption (API list prices carry a 75% gross margin, so cost-to-serve = 25% of API-equivalent value): claude-pro and claude-max-5x break even when the average user consumes 20% of their cap; claude-max-20x at 10%; chatgpt-plus and chatgpt-pro-5x at 11.4%; chatgpt-pro-20x at just 5.7%. At full utilization the 20x tiers run −900% (Anthropic) and −1,650% (OpenAI) gross margin. Three honest discounts before you quote this anywhere: it's an analyst model, not provider financials — the 75% assumption does the heavy lifting; \"max possible spend\" is a ceiling, not a typical user; and the margin column is about the AVERAGE user — providers price on the pool, which is exactly why an individual heavy operator gets cross-subsidized by the light ones. The operator read cuts two ways. Today: if your utilization sits above the break-even row — and anyone running overnight loops or swarms does — your plan is the cheapest frontier compute on sale, full stop. Tomorrow: this is now a thrice-confirmed pattern, not a hot take. Altman said it in plain text in January 2025 (\"Insane thing: we are currently losing money on OpenAI Pro subscriptions!\"), Anthropic added weekly limits in 2025, and the Fable 5 note one entry below this one carries the date: included in plan limits June 9–22, then usage credits. The grid is why. Every limit you've ever hit — the 5-hour window, the weekly cap, the usage-credit transition — is not stinginess; it's the mechanism that drags average utilization back left into the green columns. Plan for metered.",
+    takeaway: [
+      "SemiAnalysis published the grid that turns a vibe every heavy operator has had — \"this plan can't possibly be profitable on me\" — into numbers. Two tables from their Tokenomics model, both reproduced below. First, the option value: a $20 claude-pro can draw roughly $400/mo of API-equivalent compute at full utilization; claude-max-20x at $200 can draw ~$8,000; chatgpt-pro-20x at the same $200 can draw ~$14,000 — 20×, 40×, 70× the sticker.",
+      "Second, margin by utilization, under one stated assumption: API list prices carry a 75% gross margin, so cost-to-serve = 25% of API-equivalent value. claude-pro and claude-max-5x break even when the average user consumes 20% of their cap; claude-max-20x at 10%; chatgpt-plus and chatgpt-pro-5x at 11.4%; chatgpt-pro-20x at just 5.7%. At full utilization the 20x tiers run −900% (Anthropic) and −1,650% (OpenAI) gross margin.",
+      "Three honest discounts before you quote this anywhere: it's an analyst model, not provider financials — the 75% assumption does the heavy lifting; \"max possible spend\" is a ceiling, not a typical user; and the margin column is about the AVERAGE user — providers price on the pool, which is exactly why an individual heavy operator gets cross-subsidized by the light ones.",
+      "The operator read cuts two ways. Today: if your utilization sits above the break-even row — and anyone running overnight loops or swarms does — your plan is the cheapest frontier compute on sale, full stop. Tomorrow: this is now a thrice-confirmed pattern, not a hot take. Altman said it in plain text in January 2025 (\"Insane thing: we are currently losing money on OpenAI Pro subscriptions!\"), Anthropic added weekly limits in 2025, and the Fable 5 note one entry below this one carries the date: included in plan limits June 9–22, then usage credits. The grid is why. Every limit you've ever hit — the 5-hour window, the weekly cap, the usage-credit transition — is not stinginess; it's the mechanism that drags average utilization back left into the green columns. Plan for metered.",
+    ],
     implications: [
       'Measure your own utilization before the meter does it for you. Estimate your API-equivalent burn (token-usage reporting tools make this a 5-minute job) and place yourself on the grid. Above the break-even row, you are being subsidized — bank that consciously (Ch 29), don\'t discover it when the repricing email lands.',
       'Don\'t build a business on the subsidy. If your product\'s unit economics only work at plan-subsidized inference cost, they don\'t work. Price your cost-per-task at API list (Ch 29) — then the flat-rate plan is margin you keep today, not a hole that opens when the flat-rate era ends.',
