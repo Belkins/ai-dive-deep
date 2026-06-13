@@ -1,15 +1,12 @@
 ---
-// RadarBoard — the shared render for /radar (live) and /radar/[date] (archive).
-// Direction B "Editorial Broadsheet" per the design swarm: serif titles, mono receipts,
-// a dual lead-time-gradient visual (masthead arc + per-row rail). Every colour is a
-// token (rgb(var(--x))) so it re-tints for light theme; fill-vs-hollow encodes stage as
-// SHAPE (AA-safe, not colour-alone). No JS, no shadows, no hardcoded rgb. The travelled
-// caliper is progressive enhancement only — the page is whole at zero travelled items.
-//
-// Review-swarm fixes (2026-06-13): visible FAQ + Methodology (Google FAQ policy needs
-// visible matching content; also the thin-content unique-text floor + GEO extractables),
-// Dataset is archive-aware, ItemList dropped (strategic refusal #4 / SEO-AEO-MECHANICS §4),
-// AA contrast on zero-count cells + floor caption (full --muted, no opacity dimming).
+// RadarBoard — shared render for /radar (live) and /radar/[date] (archive).
+// Direction A "Continuous Spectrum + Live Sweep" (instrument-redesign swarm): the masthead
+// is a single flame→muted lead-time band (the RULER), with one tick per item plotted at its
+// stage (the RESULT) — filled flame = early/lead-rich stage, hollow = late, hollow ring on an
+// empty station. A low-opacity oscilloscope sweep crosses the band; it parks OFF-band so a
+// reduced-motion forced-single-run lands invisible (no artifact). A "MOVING NOW" teaser sits
+// at the very top as the instrument's current reading. Token-only colours (re-tint for light;
+// grep dist/ for hardcoded rgb == 0). No JS, no shadows. All AEO/SEO/GEO substance preserved.
 
 interface RadarItem {
   rank: number; title: string; url: string; domain: string;
@@ -34,7 +31,7 @@ const { data, archiveDates = [], isArchive = false, preview = false } = Astro.pr
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const STAGES = ['Papers', 'Repos', 'Community', 'Analysis'];
-const stageRank = (s: string) => Math.max(0, STAGES.indexOf(s));
+const stageRank = (st: string) => Math.max(0, STAGES.indexOf(st));
 
 const fmtStamp = (iso: string) =>
   new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: false }) + ' UTC';
@@ -52,7 +49,28 @@ const leadClause = s.medianLeadHours != null ? `, and the sharpest lead time is 
 const oldClause = s.oldestSurvivorHours != null ? ` The oldest survivor has held the board for ${age(s.oldestSurvivorHours)}.` : '';
 const whatMoved = `Today's radar skews to ${topStage[0]} (${topStage[1]} of ${data.count}). ${heatingClause}${leadClause}. ${s.newToday} arrived in the last 24 hours.${oldClause}`;
 
-const ARC_X = [20, 153, 286, 380];
+// --- Spectrum band geometry (the signature instrument) ---
+const STATIONS = [
+  { key: 'Papers', x: 50 }, { key: 'Repos', x: 150 },
+  { key: 'Community', x: 270 }, { key: 'Analysis', x: 370 },
+];
+const stationX = (st: string) => STATIONS.find((p) => p.key === st)?.x ?? 270;
+// deterministic jitter seeded by RANK (never Math.random — server-rendered + frozen archives)
+const jitter = (rank: number) => Math.max(-28, Math.min(28, ((rank * 37) % 60) - 30));
+const ticks = data.items.map((it) => ({
+  x: Math.max(8, Math.min(392, stationX(it.stage) + jitter(it.rank))),
+  early: stageRank(it.stage) <= 1,
+  op: it.rank <= 8 ? 1 : it.rank <= 20 ? 0.78 : 0.55,
+}));
+const emptyStations = STATIONS.filter((p) => (s.byStage[p.key] ?? 0) === 0);
+
+// --- MOVING NOW teaser derived stats ---
+const feedsQuiet = Math.max(0, data.stats.feedsTotal - data.stats.feedsLive);
+const feedsClause = feedsQuiet === 0 ? 'all feeds live' : `${feedsQuiet} feeds quiet`;
+const stagesQuiet = STAGES.filter((st) => (s.byStage[st] ?? 0) === 0).length;
+const top5 = data.items.slice(0, 5);
+
+const ARC_X = [20, 153, 286, 380]; // (retained for nothing visual; band replaces the arc)
 const RAIL_Y = [12, 38, 64, 88];
 const navDates = archiveDates.filter((d) => d !== data.date).slice(0, 7);
 
@@ -70,8 +88,6 @@ const FAQ: [string, string][] = [
   ['Is Radar the newsletter?', 'No. Radar shows what is moving; the newsletter tells you what to do about it. Radar is the free, public funnel; Vlad’s Newsletter is the weekly operator read.'],
 ];
 
-// JSON-LD — Dataset (the GEO-citable lead-time corpus, archive-aware) + FAQPage (live only,
-// now mirrored by visible content). ItemList intentionally dropped (strategic refusal #4).
 const datasetLd = {
   '@context': 'https://schema.org', '@type': 'Dataset',
   name: isArchive ? `Radar — AI ecosystem lead-time index, ${data.date}` : 'Radar — AI ecosystem lead-time index',
@@ -88,6 +104,8 @@ const faqLd = {
   '@context': 'https://schema.org', '@type': 'FAQPage',
   mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
+
+const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="true"><rect x="0" y="6" width="2" height="3" fill="currentColor"/><rect x="3.5" y="3" width="2" height="6" fill="currentColor"/><rect x="7" y="0" width="2" height="9" fill="currentColor"/></svg>`;
 ---
 <script type="application/ld+json" set:html={JSON.stringify(datasetLd)} />
 {!isArchive && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
@@ -106,25 +124,62 @@ const faqLd = {
   </p>
 </section>
 
-<!-- What moved today: masthead arc + stat cluster -->
+<!-- MOVING NOW teaser — the instrument's current reading -->
+<section class="container-wide pb-6">
+  <div class="max-w-3xl mx-auto rounded-lg p-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+    <div class="flex items-center gap-2">
+      <span class="inline-block h-2 w-2 rounded-full radar-pulse" style="background: rgb(var(--accent-2))" aria-hidden="true"></span>
+      <span class="eyebrow eyebrow-loud" style="color: rgb(var(--accent))">Moving now</span>
+      <a href="#board" class="ml-auto font-mono text-xs no-underline" style="color: rgb(var(--muted))">see all {data.count} ↓</a>
+    </div>
+    <div class="mt-2 font-mono" style="font-size: 12px; color: rgb(var(--muted))">
+      <span style="color: rgb(var(--accent-2))">{data.count}</span> tracked · <span style="color: rgb(var(--accent-2))">{s.heatingNow}</span> heating · {feedsClause} · {stagesQuiet} of 4 stages quiet
+    </div>
+    <ol role="list" class="list-none p-0 mt-3 mb-0 space-y-2">
+      {top5.map((it) => (
+        <li class="grid items-baseline gap-x-3" style="grid-template-columns: 1.5rem 1fr auto">
+          <span class="font-mono text-sm tabular-nums text-right" style={`color: rgb(var(--${it.rank <= 3 ? 'fg' : 'muted'}))`}>{it.rank}</span>
+          <a href={it.url} target="_blank" rel="noopener nofollow" class="truncate min-w-0 no-underline font-display text-base md:text-lg leading-snug hover:underline" style="color: rgb(var(--fg))">{it.title}</a>
+          <span class="font-mono whitespace-nowrap inline-flex items-center gap-1.5" style="font-size: 11px; color: rgb(var(--muted))">
+            {it.domain} · {age(it.ageHours)}{it.heating && (<span style="color: rgb(var(--accent-2))" title="Heating across independent source families" set:html={heatingGlyph} />)}
+          </span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<!-- Spectrum band masthead -->
 <section class="container-wide pb-10">
   <div class="max-w-3xl mx-auto rounded-lg p-5" style="border: 1px solid rgb(var(--line))">
-    <div class="eyebrow mb-3">What moved {isArchive ? 'that day' : 'today'}</div>
+    <div class="eyebrow mb-3">Lead-time spectrum</div>
 
-    <svg viewBox="0 0 400 8" preserveAspectRatio="none" class="w-full h-2" aria-hidden="true">
+    <svg viewBox="0 0 400 56" preserveAspectRatio="none" class="radar-spectrum w-full" style="height: 56px" aria-hidden="true">
       <defs>
-        <linearGradient id="leadRamp" x1="0" x2="1" y1="0" y2="0">
+        <linearGradient id="spectrumRamp" x1="0" x2="1" y1="0" y2="0">
           <stop offset="0%" style="stop-color: rgb(var(--accent))" />
+          <stop offset="55%" style="stop-color: rgb(var(--accent) / 0.4)" />
           <stop offset="100%" style="stop-color: rgb(var(--muted))" />
         </linearGradient>
+        <clipPath id="bandClip"><rect x="0" y="24" width="400" height="8" rx="4" /></clipPath>
       </defs>
-      <line x1="0" y1="4" x2="400" y2="4" stroke="url(#leadRamp)" stroke-width="2" />
-      {ARC_X.map((x, i) => (
-        i <= 1
-          ? <circle cx={x} cy="4" r="3" style="fill: rgb(var(--accent))" />
-          : <circle cx={x} cy="4" r="3" style="fill: none; stroke: rgb(var(--muted)); stroke-width: 1.5" />
+      <rect x="0" y="24" width="400" height="8" rx="4" fill="url(#spectrumRamp)" opacity="0.85" />
+      {STATIONS.map(({ x }) => (
+        <line x1={x} y1="20" x2={x} y2="36" stroke="rgb(var(--line))" stroke-width="1" />
+      ))}
+      {emptyStations.map(({ x }) => (
+        <circle cx={x} cy="28" r="3" style="fill: none; stroke: rgb(var(--muted)); stroke-width: 1.25" />
+      ))}
+      <g clip-path="url(#bandClip)">
+        <rect class="radar-sweep" x="-56" y="24" width="48" height="8" fill="rgb(var(--fg) / 0.18)" />
+      </g>
+      {ticks.map((t) => (
+        t.early
+          ? <rect x={t.x - 1} y="16" width="2" height="24" rx="1" style="fill: rgb(var(--accent))" opacity={t.op} />
+          : <rect x={t.x - 1} y="18" width="2" height="20" rx="1" style="fill: none; stroke: rgb(var(--muted)); stroke-width: 1" />
       ))}
     </svg>
+
     <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-y-2">
       {stageEntries.map(([st, n], i) => (
         <div>
@@ -134,7 +189,7 @@ const faqLd = {
       ))}
     </div>
     {(s.byStage.Papers === 0 && s.byStage.Repos === 0) && (
-      <div class="mt-1 font-mono" style="font-size: 11px; color: rgb(var(--muted))">nothing upstream yet — everything caught at the community floor.</div>
+      <div class="mt-1 font-mono" style="font-size: 11px; color: rgb(var(--muted))">Two stations dark — {data.count} of {data.count} caught at the community floor.</div>
     )}
 
     <p class="mt-4 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.85)">{whatMoved}</p>
@@ -156,7 +211,7 @@ const faqLd = {
 </section>
 
 <!-- Ranked list -->
-<section class="container-wide pb-10">
+<section id="board" class="container-wide pb-10">
   <ol role="list" class="list-none p-0 m-0 max-w-3xl mx-auto">
     {data.items.map((it) => {
       const sr = stageRank(it.stage);
@@ -250,8 +305,8 @@ const faqLd = {
     <div class="eyebrow mb-3">How to read a row</div>
     <dl class="grid sm:grid-cols-2 gap-x-6 gap-y-3 m-0 text-sm">
       <div>
-        <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">The rail</dt>
-        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">A filled flame node marks an early, lead-time-rich stage; a hollow ring marks a later stage; a backward tick means it travelled here from upstream.</dd>
+        <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">The spectrum band</dt>
+        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">A filled flame tick is an early, lead-time-rich stage; a hollow tick is a later stage; a hollow ring on an empty span is a station with nothing on it yet.</dd>
       </div>
       <div>
         <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">Signal class</dt>
@@ -301,4 +356,19 @@ const faqLd = {
   }
   .radar-row { transition: border-color 150ms; }
   .radar-row:hover { border-color: rgb(var(--accent) / 0.3); }
+
+  /* Oscilloscope sweep: rect's own x=-56 parks it off the LEFT edge; 0% (translateX 0)
+     and the clip keep the rest frame invisible, so a reduced-motion forced single ~0ms
+     run lands clean — a calibrated static band, nothing missing. */
+  @keyframes radar-sweep {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(456px); }
+  }
+  .radar-sweep { animation: radar-sweep 6s linear infinite; will-change: transform; }
+  /* status dot: soft pulse; 0%/100% rest at full opacity = a solid dot under reduced-motion */
+  @keyframes radar-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+  .radar-pulse { animation: radar-pulse 2.4s ease-in-out infinite; }
 </style>
