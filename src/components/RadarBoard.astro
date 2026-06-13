@@ -49,20 +49,34 @@ const leadClause = s.medianLeadHours != null ? `, and the sharpest lead time is 
 const oldClause = s.oldestSurvivorHours != null ? ` The oldest survivor has held the board for ${age(s.oldestSurvivorHours)}.` : '';
 const whatMoved = `Today's radar skews to ${topStage[0]} (${topStage[1]} of ${data.count}). ${heatingClause}${leadClause}. ${s.newToday} arrived in the last 24 hours.${oldClause}`;
 
-// --- Spectrum band geometry (the signature instrument) ---
-const STATIONS = [
-  { key: 'Papers', x: 50 }, { key: 'Repos', x: 150 },
-  { key: 'Community', x: 270 }, { key: 'Analysis', x: 370 },
-];
-const stationX = (st: string) => STATIONS.find((p) => p.key === st)?.x ?? 270;
-// deterministic jitter seeded by RANK (never Math.random — server-rendered + frozen archives)
-const jitter = (rank: number) => Math.max(-28, Math.min(28, ((rank * 37) % 60) - 30));
-const ticks = data.items.map((it) => ({
-  x: Math.max(8, Math.min(392, stationX(it.stage) + jitter(it.rank))),
-  early: stageRank(it.stage) <= 1,
-  op: it.rank <= 8 ? 1 : it.rank <= 20 ? 0.78 : 0.55,
-}));
-const emptyStations = STATIONS.filter((p) => (s.byStage[p.key] ?? 0) === 0);
+// --- Ridgeline geometry (the signature instrument) — distortion-free, honest at skew ---
+// The day's distribution drawn as ONE smooth filled curve: flat on the baseline at empty
+// upstream stations, peaking at the busiest stage. Computed server-side (deterministic /
+// archive-frozen). xMidYMid meet + non-scaling strokes => nothing warps at any width.
+const RIDGE_X = [24, 121, 199, 296]; // Papers, Repos, Community, Analysis (evenly inset)
+const BASE_Y = 104, TOP_Y = 16, H = BASE_Y - TOP_Y; // usable height 88
+const ridgeCounts = stageEntries.map(([, n]) => n);
+const ridgeMax = Math.max(...ridgeCounts, 1);
+const ridgePts: [number, number][] = ridgeCounts.map((n, i) => {
+  let y = BASE_Y - (n / ridgeMax) * H;
+  if (n > 0) y = Math.min(y, BASE_Y - 10); // a non-zero stage never reads as flat
+  return [RIDGE_X[i], Math.round(y * 10) / 10];
+});
+// Catmull-Rom → cubic Bézier; control-point y CLAMPED <= BASE_Y so a 0→0→peak jump
+// never overshoots into a negative-signal notch under the flat upstream floor.
+const ridgeD = (() => {
+  const p = ridgePts, clamp = (v: number) => Math.min(v, BASE_Y);
+  let d = `M${p[0][0]},${p[0][1]}`;
+  for (let i = 0; i < p.length - 1; i++) {
+    const p0 = p[i - 1] ?? p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] ?? p[i + 1];
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = clamp(p1[1] + (p2[1] - p0[1]) / 6);
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = clamp(p2[1] - (p3[1] - p1[1]) / 6);
+    d += ` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+})();
+const ridgeFill = `${ridgeD} L${RIDGE_X[3]},${BASE_Y} L${RIDGE_X[0]},${BASE_Y} Z`;
+const darkCount = ridgeCounts.filter((n) => n === 0).length;
 
 // --- MOVING NOW teaser derived stats ---
 const feedsQuiet = Math.max(0, data.stats.feedsTotal - data.stats.feedsLive);
@@ -70,7 +84,6 @@ const feedsClause = feedsQuiet === 0 ? 'all feeds live' : `${feedsQuiet} feeds q
 const stagesQuiet = STAGES.filter((st) => (s.byStage[st] ?? 0) === 0).length;
 const top5 = data.items.slice(0, 5);
 
-const ARC_X = [20, 153, 286, 380]; // (retained for nothing visual; band replaces the arc)
 const RAIL_Y = [12, 38, 64, 88];
 const navDates = archiveDates.filter((d) => d !== data.date).slice(0, 7);
 
@@ -149,60 +162,59 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
   </div>
 </section>
 
-<!-- Spectrum band masthead -->
+<!-- Lead-time spectrum — Signal Ridgeline -->
 <section class="container-wide pb-10">
   <div class="max-w-3xl mx-auto rounded-lg p-5" style="border: 1px solid rgb(var(--line))">
-    <div class="eyebrow mb-3">Lead-time spectrum</div>
+    <div class="flex items-baseline justify-between gap-3 mb-1">
+      <div class="eyebrow">Lead-time spectrum</div>
+      <div class="font-mono tabular-nums" style="font-size: 11px; color: rgb(var(--muted))">4 stations · {darkCount} dark</div>
+    </div>
 
-    <svg viewBox="0 0 400 56" preserveAspectRatio="none" class="radar-spectrum w-full" style="height: 56px" aria-hidden="true">
+    <svg viewBox="0 0 320 120" class="radar-ridge w-full mt-1" style="height: 120px" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Lead-time ridgeline: Papers ${ridgeCounts[0]}, Repos ${ridgeCounts[1]}, Community ${ridgeCounts[2]}, Analysis ${ridgeCounts[3]}.`}>
       <defs>
-        <linearGradient id="spectrumRamp" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0%" style="stop-color: rgb(var(--accent))" />
-          <stop offset="55%" style="stop-color: rgb(var(--accent) / 0.4)" />
-          <stop offset="100%" style="stop-color: rgb(var(--muted))" />
+        <linearGradient id="ridgeFillGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="rgb(var(--accent))" stop-opacity="0.55" />
+          <stop offset="1" stop-color="rgb(var(--accent))" stop-opacity="0.08" />
         </linearGradient>
-        <clipPath id="bandClip"><rect x="0" y="24" width="400" height="8" rx="4" /></clipPath>
+        <linearGradient id="ridgeStrokeGrad" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="rgb(var(--muted))" />
+          <stop offset="0.62" stop-color="rgb(var(--accent))" />
+          <stop offset="1" stop-color="rgb(var(--muted))" />
+        </linearGradient>
       </defs>
-      <rect x="0" y="24" width="400" height="8" rx="4" fill="url(#spectrumRamp)" opacity="0.85" />
-      {STATIONS.map(({ x }) => (
-        <line x1={x} y1="20" x2={x} y2="36" stroke="rgb(var(--line))" stroke-width="1" />
+      <line x1="24" y1="104" x2="296" y2="104" stroke="rgb(var(--line))" vector-effect="non-scaling-stroke" />
+      {RIDGE_X.map((x) => (
+        <line x1={x} y1="104" x2={x} y2="98" stroke="rgb(var(--line))" vector-effect="non-scaling-stroke" />
       ))}
-      {emptyStations.map(({ x }) => (
-        <circle cx={x} cy="28" r="3" style="fill: none; stroke: rgb(var(--muted)); stroke-width: 1.25" />
-      ))}
-      <g clip-path="url(#bandClip)">
-        <rect class="radar-sweep" x="-56" y="24" width="48" height="8" fill="rgb(var(--fg) / 0.18)" />
-      </g>
-      {ticks.map((t) => (
-        t.early
-          ? <rect x={t.x - 1} y="16" width="2" height="24" rx="1" style="fill: rgb(var(--accent))" opacity={t.op} />
-          : <rect x={t.x - 1} y="18" width="2" height="20" rx="1" style="fill: none; stroke: rgb(var(--muted)); stroke-width: 1" />
+      <path d={ridgeFill} fill="url(#ridgeFillGrad)" aria-hidden="true" />
+      <path class="crest" d={ridgeD} fill="none" stroke="url(#ridgeStrokeGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" pathLength="1" aria-hidden="true" />
+      {ridgePts.map(([x, y], i) => (
+        ridgeCounts[i] > 0
+          ? <circle cx={x} cy={y} r="3" fill="rgb(var(--accent))" aria-hidden="true" />
+          : <circle cx={x} cy="104" r="4.5" fill="none" stroke="rgb(var(--muted))" stroke-width="1.25" vector-effect="non-scaling-stroke" aria-hidden="true" />
       ))}
     </svg>
 
-    <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-y-2">
+    <div class="mt-2 flex items-end gap-2">
       {stageEntries.map(([st, n], i) => (
-        <div>
-          <div class="font-mono uppercase" style="font-size: 10px; letter-spacing: 0.14em; color: rgb(var(--muted))">{st}</div>
-          <div class="font-mono text-sm" style={n === 0 ? 'color: rgb(var(--muted))' : `color: rgb(var(--${i <= 1 ? 'accent' : 'fg'}))`}>{n}</div>
+        <div class="flex-1 min-w-0 text-center">
+          <div class="font-mono tabular-nums leading-none" style={n === 0 ? 'color: rgb(var(--muted))' : `color: rgb(var(--${i <= 1 ? 'accent' : 'fg'}))`}>{n}</div>
+          <div class="font-mono uppercase mt-1 leading-tight" style="font-size: 9px; letter-spacing: 0.12em; color: rgb(var(--muted))">{st}{n === 0 ? ' · dark' : ''}</div>
         </div>
       ))}
     </div>
-    {(s.byStage.Papers === 0 && s.byStage.Repos === 0) && (
-      <div class="mt-1 font-mono" style="font-size: 11px; color: rgb(var(--muted))">Two stations dark — {data.count} of {data.count} caught at the community floor.</div>
-    )}
 
     <p class="mt-4 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.85)">{whatMoved}</p>
 
     <div class="mt-4 grid grid-cols-2 sm:grid-cols-4" style="border-top: 1px solid rgb(var(--line))">
       {[
-        { n: String(data.count), cap: 'on the board' },
-        { n: String(s.heatingNow), cap: 'heating' },
-        { n: String(s.newToday), cap: 'new in 24h' },
-        { n: s.medianLeadHours != null ? `${age(s.medianLeadHours)}` : '—', cap: 'notable lead' },
+        { n: String(data.count), cap: 'on the board', live: false },
+        { n: String(s.heatingNow), cap: 'heating', live: true },
+        { n: String(s.newToday), cap: 'new in 24h', live: false },
+        { n: s.medianLeadHours != null ? `${age(s.medianLeadHours)}` : '—', cap: 'notable lead', live: false },
       ].map((cell, i) => (
         <div class="pt-3" style={i % 2 === 1 ? 'padding-left: 1rem; border-left: 1px solid rgb(var(--line))' : 'padding-right: 1rem'}>
-          <div class="font-mono tabular-nums text-2xl" style="color: rgb(var(--accent-2))">{cell.n}</div>
+          <div class="font-mono tabular-nums text-2xl" style={`color: rgb(var(--${cell.live ? 'accent-2' : 'fg'}))`}>{cell.n}</div>
           <div class="eyebrow mt-0.5">{cell.cap}</div>
         </div>
       ))}
@@ -357,14 +369,12 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
   .radar-row { transition: border-color 150ms; }
   .radar-row:hover { border-color: rgb(var(--accent) / 0.3); }
 
-  /* Oscilloscope sweep: rect's own x=-56 parks it off the LEFT edge; 0% (translateX 0)
-     and the clip keep the rest frame invisible, so a reduced-motion forced single ~0ms
-     run lands clean — a calibrated static band, nothing missing. */
-  @keyframes radar-sweep {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(456px); }
-  }
-  .radar-sweep { animation: radar-sweep 6s linear infinite; will-change: transform; }
+  /* Ridgeline crest self-draws once on load. RESTING state = stroke-dashoffset:0 (fully
+     drawn), so the global reduced-motion block's forced single ~0ms run lands on the
+     complete curve — never a blank line. The fill path is never animated. */
+  @keyframes ridge-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  .radar-ridge .crest { stroke-dasharray: 1; stroke-dashoffset: 0; animation: ridge-draw 1.4s ease-out; }
+  @media (max-width: 480px) { .radar-ridge { height: 96px !important; } }
   /* status dot: soft pulse; 0%/100% rest at full opacity = a solid dot under reduced-motion */
   @keyframes radar-pulse {
     0%, 100% { opacity: 1; }
