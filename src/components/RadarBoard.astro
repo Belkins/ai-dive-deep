@@ -1,0 +1,290 @@
+---
+// RadarBoard — the shared render for /radar (live) and /radar/[date] (archive).
+// Direction B "Editorial Broadsheet" per the design swarm: serif titles, mono receipts,
+// a dual lead-time-gradient visual (masthead arc + per-row rail). Every colour is a
+// token (rgb(var(--x))) so it re-tints for light theme; fill-vs-hollow encodes stage as
+// SHAPE (AA-safe, not colour-alone). No JS, no shadows, no hardcoded rgb. The travelled
+// caliper is progressive enhancement only — the page is whole at zero travelled items.
+
+interface RadarItem {
+  rank: number; title: string; url: string; domain: string;
+  tier: number; tierLabel: string; stage: string; firstSource: string;
+  sources: string[]; nSources: number; nFam: number; ageHours: number;
+  firstSeen: string; heating: boolean; travelled: boolean; leadHours: number | null;
+}
+interface RadarPayload {
+  date: string; generated: string; count: number;
+  stats: { feedsTotal: number; feedsLive: number; itemsTracked: number; travellingFires: number; sinceFirstSeen: string };
+  summary: {
+    byStage: Record<string, number>; byTier: Record<string, number>;
+    newToday: number; heatingNow: number; travelledNow: number; medianLeadHours: number | null;
+    freshestHours: number | null; oldestSurvivorHours: number | null;
+    topDomains: { domain: string; count: number }[];
+  };
+  items: RadarItem[];
+}
+interface Props { data: RadarPayload; archiveDates?: string[]; isArchive?: boolean; preview?: boolean }
+
+const { data, archiveDates = [], isArchive = false, preview = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const STAGES = ['Papers', 'Repos', 'Community', 'Analysis'];
+const stageRank = (s: string) => Math.max(0, STAGES.indexOf(s));
+
+const fmtStamp = (iso: string) =>
+  new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: false }) + ' UTC';
+const fmtDay = (iso: string) =>
+  new Date(iso.length === 10 ? `${iso}T00:00:00Z` : iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const age = (h: number) => (h < 1 ? `${Math.round(h * 60)}m` : h < 48 ? `${Math.round(h)}h` : `${Math.round(h / 24)}d`);
+
+const s = data.summary;
+// "What moved today" — deterministic prose templated from observed facts (no model, no claims).
+const stageEntries = STAGES.map((st) => [st, s.byStage[st] ?? 0] as [string, number]);
+const topStage = stageEntries.reduce((a, b) => (b[1] > a[1] ? b : a), stageEntries[0]);
+const heatingClause = s.heatingNow === 0
+  ? 'No stories are corroborated across independent sources yet'
+  : `${s.heatingNow} ${s.heatingNow === 1 ? 'story is' : 'stories are'} heating across independent sources`;
+const leadClause = s.medianLeadHours != null ? `, and the sharpest lead time is ${age(s.medianLeadHours)} — caught that long before the crowd` : '';
+const oldClause = s.oldestSurvivorHours != null ? ` The oldest survivor has held the board for ${age(s.oldestSurvivorHours)}.` : '';
+const whatMoved = `Today's radar skews to ${topStage[0]} (${topStage[1]} of ${data.count}). ${heatingClause}${leadClause}. ${s.newToday} arrived in the last 24 hours.${oldClause}`;
+
+// Masthead arc: 4 node x-positions across viewBox 0..400; nodes 0-1 flame, 2-3 muted (matches the ramp).
+const ARC_X = [20, 153, 286, 380];
+// Per-row rail: 4 node y-positions across viewBox 0..96 (Papers top → Analysis bottom).
+const RAIL_Y = [12, 38, 64, 88];
+
+const maxStage = Math.max(1, ...stageEntries.map((e) => e[1]));
+
+// Archive nav: most recent dates excluding the one being viewed.
+const navDates = archiveDates.filter((d) => d !== data.date).slice(0, 7);
+
+const SITE = 'https://dive.vladyslavpodoliako.com';
+const pageUrl = isArchive ? `${SITE}/radar/${data.date}` : `${SITE}/radar`;
+
+// JSON-LD — ItemList (the ranked list genuinely IS an ordered list) + Dataset (the GEO-citable
+// lead-time corpus). FAQPage only on the canonical live page (never duplicated across archives).
+const itemListLd = {
+  '@context': 'https://schema.org', '@type': 'ItemList',
+  name: isArchive ? `Radar — ${data.date}` : 'Radar — what is moving through AI',
+  description: 'AI stories ranked by the lead-time gradient: papers to repos to community to analysis.',
+  numberOfItems: data.count, dateModified: data.generated, url: pageUrl,
+  itemListOrder: 'https://schema.org/ItemListOrderDescending',
+  itemListElement: data.items.map((it) => ({ '@type': 'ListItem', position: it.rank, url: it.url, name: it.title })),
+};
+const datasetLd = {
+  '@context': 'https://schema.org', '@type': 'Dataset',
+  name: 'Radar — AI ecosystem lead-time index',
+  description: 'An hourly index of what is moving through the AI ecosystem, ranked by the lead-time gradient (papers → repos → community → analysis), with the source provenance and first-seen time recorded for each item.',
+  creator: { '@type': 'Person', name: 'Vlad Podoliako', url: SITE },
+  isAccessibleForFree: true, license: `${SITE}/llms.txt`, url: `${SITE}/radar`,
+  temporalCoverage: `${data.stats.sinceFirstSeen}/${data.generated}`,
+  variableMeasured: ['lead-time gradient stage', 'source-family corroboration', 'first-seen timestamp', 'signal tier'],
+};
+const faqLd = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: [
+    ['What is the lead-time gradient?', 'The path a story travels through the AI ecosystem: it appears first in papers (arXiv, Hugging Face) or repos (GitHub), then surfaces in community discussion (Hacker News, Lobsters, LessWrong), then gets interpreted in analysis (operator newsletters, essays). Radar ranks by where a story sits on that path and how far it has travelled.'],
+    ['How is Radar ranked?', 'By a recency-decayed signal score: each source tier has a weight and a half-life, a story scores higher when independent source families corroborate it, and a small bonus applies when a story has visibly climbed the gradient. Stories past their tier max age expire. Popularity on a single site is not corroboration.'],
+    ['How often does Radar update?', 'Hourly. The page is server-rendered and a frozen snapshot is archived at a dated permalink each day, so the record is both current and citable.'],
+    ['What does "heating" mean?', 'A story has surfaced in two or more independent source families — not two feeds of the same site. It is corroboration, not popularity.'],
+    ['What is the lead time reading?', 'When the same story is observed first at an earlier gradient stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv 14 hours before it reached the Hacker News front page. That gap is the reader lead time.'],
+    ['Is Radar the newsletter?', 'No. Radar shows what is moving; the newsletter tells you what to do about it. Radar is the free public funnel; the newsletter is the weekly operator read.'],
+  ].map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(itemListLd)} />
+<script type="application/ld+json" set:html={JSON.stringify(datasetLd)} />
+{!isArchive && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
+
+<!-- Hero -->
+<section class="container-prose pt-16 pb-6">
+  <div class="eyebrow eyebrow-loud mb-3" style="color: rgb(var(--accent))">
+    {isArchive ? `Radar · ${data.date}` : preview ? 'Radar · private preview' : 'Radar · live'}
+  </div>
+  <h1>What's moving through AI, ranked by <span style="color: rgb(var(--accent))">lead time</span>.</h1>
+  <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+    One pipeline watches {data.stats.feedsTotal} sources and ranks what's travelling by where it sits on the lead-time gradient: papers become repos become community threads become analysis. The earlier a story is caught, the more head start you have before the crowd. The receipts are on every row, so the ranking explains itself.
+  </p>
+  <p class="mt-4 text-sm font-mono" style="color: rgb(var(--muted))">
+    {isArchive ? 'frozen' : 'snapshot'} {fmtStamp(data.generated)} · {data.stats.feedsLive}/{data.stats.feedsTotal} feeds live · {data.stats.itemsTracked.toLocaleString()} tracked since {fmtDay(data.stats.sinceFirstSeen)}
+  </p>
+</section>
+
+<!-- What moved today: masthead arc + stat cluster -->
+<section class="container-wide pb-10">
+  <div class="max-w-3xl mx-auto rounded-lg p-5" style="border: 1px solid rgb(var(--line))">
+    <div class="eyebrow mb-3">What moved {isArchive ? 'that day' : 'today'}</div>
+
+    <!-- The masthead arc: the lead-time gradient as the page's hero graphic -->
+    <svg viewBox="0 0 400 8" preserveAspectRatio="none" class="w-full h-2" aria-hidden="true">
+      <defs>
+        <linearGradient id="leadRamp" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" style="stop-color: rgb(var(--accent))" />
+          <stop offset="100%" style="stop-color: rgb(var(--muted))" />
+        </linearGradient>
+      </defs>
+      <line x1="0" y1="4" x2="400" y2="4" stroke="url(#leadRamp)" stroke-width="2" />
+      {ARC_X.map((x, i) => (
+        <circle cx={x} cy="4" r="3" style={`fill: rgb(var(--${i <= 1 ? 'accent' : 'muted'}))`} />
+      ))}
+    </svg>
+    <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-y-2">
+      {stageEntries.map(([st, n], i) => (
+        <div style={n === 0 ? 'color: rgb(var(--muted) / 0.5)' : ''}>
+          <div class="font-mono uppercase" style="font-size: 10px; letter-spacing: 0.14em; color: rgb(var(--muted))">{st}</div>
+          <div class="font-mono text-sm" style={n === 0 ? '' : `color: rgb(var(--${i <= 1 ? 'accent' : 'fg'}))`}>{n}</div>
+        </div>
+      ))}
+    </div>
+    {(s.byStage.Papers === 0 && s.byStage.Repos === 0) && (
+      <div class="mt-1 font-mono" style="font-size: 11px; color: rgb(var(--muted) / 0.7)">nothing upstream yet — everything caught at the community floor.</div>
+    )}
+
+    <!-- The unique-text "what moved" sentence (deterministic, from observed facts) -->
+    <p class="mt-4 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.85)">{whatMoved}</p>
+
+    <!-- Stat cluster -->
+    <div class="mt-4 grid grid-cols-2 sm:grid-cols-4" style="border-top: 1px solid rgb(var(--line))">
+      {[
+        { n: String(data.count), cap: 'on the board' },
+        { n: String(s.heatingNow), cap: 'heating' },
+        { n: String(s.newToday), cap: 'new in 24h' },
+        { n: s.medianLeadHours != null ? `${age(s.medianLeadHours)}` : '—', cap: 'notable lead' },
+      ].map((cell, i) => (
+        <div class="pt-3" style={i % 2 === 1 ? 'padding-left: 1rem; border-left: 1px solid rgb(var(--line))' : 'padding-right: 1rem'}>
+          <div class="font-mono tabular-nums text-2xl" style="color: rgb(var(--accent-2))">{cell.n}</div>
+          <div class="eyebrow mt-0.5">{cell.cap}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- Ranked list -->
+<section class="container-wide pb-10">
+  <ol role="list" class="list-none p-0 m-0 max-w-3xl mx-auto">
+    {data.items.map((it) => {
+      const sr = stageRank(it.stage);
+      return (
+        <li class="grid gap-x-4 px-3 py-5 radar-row" style="grid-template-columns: 2rem 1fr; border-top: 1px solid rgb(var(--line))">
+          <!-- Rail (desktop) -->
+          <svg viewBox="0 0 8 96" class="radar-rail hidden h-full w-2 self-stretch" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+            <line x1="4" y1="6" x2="4" y2="90" stroke="rgb(var(--line))" stroke-width="2" />
+            {it.travelled && sr > 0 && (
+              <line x1="4" y1={RAIL_Y[sr]} x2="4" y2={RAIL_Y[Math.max(0, sr - 1)]} stroke="rgb(var(--accent))" stroke-width="2" />
+            )}
+            {RAIL_Y.map((cy, i) => (
+              i === sr
+                ? (i <= 1
+                    ? <circle cx="4" cy={cy} r="3" style="fill: rgb(var(--accent))" />
+                    : <circle cx="4" cy={cy} r="3" style="fill: none; stroke: rgb(var(--accent)); stroke-width: 2" />)
+                : <circle cx="4" cy={cy} r="2.5" style="fill: rgb(var(--line))" />
+            ))}
+          </svg>
+          <!-- Rank -->
+          <div class="font-mono text-sm tabular-nums text-right pt-1" style={`color: rgb(var(--${it.rank <= 3 ? 'fg' : 'muted'}))`}>{it.rank}</div>
+          <!-- Body -->
+          <div class="min-w-0 radar-body">
+            <a href={it.url} target="_blank" rel="noopener nofollow" class="no-underline font-display text-lg md:text-xl leading-snug hover:underline" style="color: rgb(var(--fg))">{it.title}</a>
+            <div class="mt-1 text-xs" style="color: rgb(var(--muted))">{it.domain}</div>
+
+            <!-- Mobile pip strip -->
+            <div class="mt-1.5 flex gap-1 sm:hidden" aria-hidden="true">
+              {RAIL_Y.map((_, i) => (
+                <span class="inline-block h-1.5 w-1.5 rounded-full" style={
+                  i === sr
+                    ? (i <= 1 ? 'background: rgb(var(--accent))' : 'border: 1px solid rgb(var(--accent))')
+                    : 'background: rgb(var(--line))'
+                }></span>
+              ))}
+            </div>
+
+            <!-- Receipts footnote -->
+            <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono" style="font-size: 11px">
+              <span class="px-1.5 py-px rounded uppercase tracking-wider" style={
+                it.tier === 0 || it.tier === 3
+                  ? 'color: rgb(var(--accent)); border: 1px solid rgb(var(--accent) / 0.35)'
+                  : 'color: rgb(var(--muted)); border: 1px solid rgb(var(--line))'
+              }>{it.tierLabel}</span>
+              <span style="color: rgb(var(--muted))">{it.stage}</span>
+              <span style="opacity: 0.4">·</span>
+              <span style="color: rgb(var(--muted))">{age(it.ageHours)} old</span>
+              <span style="opacity: 0.4">·</span>
+              <span style="color: rgb(var(--muted))">{it.nSources > 1 ? `seen in ${it.nSources} sources` : `via ${it.firstSource}`}</span>
+              {it.heating && (
+                <span class="inline-flex items-center gap-1 px-1.5 py-px rounded" style="color: rgb(var(--accent-2)); border: 1px solid rgb(var(--accent-2) / 0.3); background: rgb(var(--accent-2) / 0.1); letter-spacing: 0.08em" title={`Corroborated across ${it.nFam} independent source families`}>
+                  <svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="true"><rect x="0" y="6" width="2" height="3" fill="currentColor"/><rect x="3.5" y="3" width="2" height="6" fill="currentColor"/><rect x="7" y="0" width="2" height="9" fill="currentColor"/></svg>
+                  HEATING ×{it.nFam}
+                </span>
+              )}
+              {it.travelled && it.leadHours != null && (
+                <span style="color: rgb(var(--accent-2))">+{age(it.leadHours)} lead</span>
+              )}
+            </div>
+          </div>
+        </li>
+      );
+    })}
+  </ol>
+</section>
+
+<!-- Legend -->
+<section class="container-prose pb-10">
+  <div class="rounded-lg p-5" style="border: 1px solid rgb(var(--line))">
+    <div class="eyebrow mb-3">How to read a row</div>
+    <dl class="grid sm:grid-cols-2 gap-x-6 gap-y-3 m-0 text-sm">
+      <div>
+        <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">The gradient</dt>
+        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">{STAGES.join(' → ')}. Where a story enters. Earlier = more lead time before the crowd arrives.</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">The rail</dt>
+        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">A filled flame node marks an early, lead-time-rich stage; a hollow ring marks a later stage; a backward tick means it travelled here from upstream.</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent-2))">heating</dt>
+        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">The same story in two or more independent source families — not two feeds of one site.</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--muted))">seen in / via</dt>
+        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">How many families carried it, or the single source that did. Every value here is an observed fact.</dd>
+      </div>
+    </dl>
+    <p class="mt-4 mb-0 font-mono" style="font-size: 11px; color: rgb(var(--muted))">Every value on this page is an observed fact from the feed log — no model prose.</p>
+  </div>
+</section>
+
+<!-- Dated-archive nav -->
+{navDates.length > 0 && (
+  <section class="container-prose pb-10">
+    <div class="eyebrow mb-2">The radar, dated</div>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-sm">
+      {isArchive && <a href={`${base}/radar`} class="no-underline" style="color: rgb(var(--accent))">latest →</a>}
+      {navDates.map((d, i) => (
+        <>
+          {(i > 0 || isArchive) && <span style="opacity: 0.4">·</span>}
+          <a href={`${base}/radar/${d}`} class="no-underline" style="color: rgb(var(--accent))">{fmtDay(d)}</a>
+        </>
+      ))}
+    </div>
+  </section>
+)}
+
+<!-- The single CTA -->
+<section class="container-prose pb-24">
+  <div class="rounded-lg p-6 text-center" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+    <div class="font-display text-xl md:text-2xl leading-snug" style="color: rgb(var(--fg))">Radar shows what's moving. The newsletter tells you what to do about it.</div>
+    <p class="mt-2 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.8)">Once a week, the operator read on what actually changed and the move it calls for. No digest, no hype.</p>
+    <a href="https://www.vladsnewsletter.com/?utm_source=radar&utm_medium=site&utm_campaign=radar" target="_blank" rel="noopener" class="mt-4 inline-block rounded-md px-5 py-2.5 font-medium no-underline" style="background: rgb(var(--accent)); color: rgb(var(--bg))">Read the newsletter →</a>
+  </div>
+</section>
+
+<style>
+  /* Per-row rail shows only where there's room for the topographic echo (sm+). */
+  @media (min-width: 640px) {
+    .radar-row { grid-template-columns: 1.75rem 2rem 1fr !important; }
+    .radar-rail { display: block; }
+  }
+  .radar-row { transition: border-color 150ms; }
+  .radar-row:hover { border-color: rgb(var(--accent) / 0.3); }
+</style>

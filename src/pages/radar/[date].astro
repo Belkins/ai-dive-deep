@@ -1,0 +1,28 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import RadarBoard from '@/components/RadarBoard.astro';
+
+// /radar/YYYY-MM-DD — frozen dated archives. A new indexable URL each day (the SEO engine).
+// Built statically from src/data/radar/archive/*.json, pushed hourly by the pipeline.
+export async function getStaticPaths() {
+  const archives = import.meta.glob('@/data/radar/archive/*.json', { eager: true }) as Record<string, { default: any }>;
+  const all = Object.values(archives).map((m) => m.default);
+  const dates = all.map((d) => d.date).sort().reverse();
+  return all.map((data) => ({
+    params: { date: data.date },
+    props: { data, archiveDates: dates },
+  }));
+}
+
+const { data, archiveDates } = Astro.props;
+const PREVIEW = true; // tracks the live page; flipped together at Task 19
+---
+<BaseLayout
+  noindex={PREVIEW}
+  title={`Radar — ${data.date}`}
+  description={`What was moving through the AI ecosystem on ${data.date}, ranked by the lead-time gradient. A frozen daily snapshot.`}
+>
+  <RadarBoard data={data} archiveDates={archiveDates} isArchive={true} preview={PREVIEW} />
+  <CommandPaletteMount />
+</BaseLayout>
