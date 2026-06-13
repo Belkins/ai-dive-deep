@@ -12,13 +12,14 @@ interface Props {
   description?: string;
   ogImage?: string;
   noNav?: boolean;
+  noindex?: boolean;
 }
 
 const BRAND = "Vlad's Playbook";
 const FULL = "Vlad's Playbook — The Ultimate AI Dive Deep";
 const chapterCount = CHAPTERS.length;
 
-const { title, description, ogImage, noNav } = Astro.props;
+const { title, description, ogImage, noNav, noindex } = Astro.props;
 const fullTitle = title === BRAND || title === FULL ? FULL : `${title} — ${BRAND}`;
 const desc = description ?? `${chapterCount} chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.`;
 const og = new URL(ogImage ?? '/og-default.png', Astro.site).toString();
@@ -89,6 +90,7 @@ const jsonLd: Record<string, unknown> = isChapter
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />

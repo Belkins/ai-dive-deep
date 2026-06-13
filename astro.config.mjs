@@ -25,7 +25,8 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap({
-      filter: (page) => !page.includes('/the-bill'),
+      // /radar is shipped dark (noindex + unlinked) — keep it out of the sitemap too.
+      filter: (page) => !page.includes('/the-bill') && !page.includes('/radar'),
       // Reader-invisible crawl signals only. Default daily/0.7; the homepage and
       // chapter pages are the primary content surfaces, so bump their priority.
       serialize(item) {

@@ -1,0 +1,150 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import data from '@/data/radar/today.json';
+
+// Radar — DARK PREVIEW. noindex + nofollow, unlinked from nav/homepage/sitemap.
+// Reads a static snapshot exported from the private radar-pipeline; not yet wired
+// to the live hourly push. Synthesis notes and the travelling badge stay OFF until
+// the dataset matures (the badge fires ~0/day until weeks of history accrue — per
+// the Phase-0 ranking audit). The page leads with the gradient + receipts, which
+// are honest at any data age.
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const fmtStamp = (iso: string) =>
+  new Date(iso).toLocaleString('en-GB', {
+    day: 'numeric', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: false,
+  }) + ' UTC';
+const fmtDay = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const age = (h: number) => {
+  if (h < 1) return `${Math.round(h * 60)}m`;
+  if (h < 48) return `${Math.round(h)}h`;
+  return `${Math.round(h / 24)}d`;
+};
+const stageRank: Record<string, number> = { Papers: 0, Repos: 1, Community: 2, Analysis: 3 };
+const STAGES = ['Papers', 'Repos', 'Community', 'Analysis'];
+---
+<BaseLayout
+  noindex
+  title="Radar"
+  description="What's moving through the AI ecosystem, ranked by the lead-time gradient: papers to repos to community to analysis."
+>
+  <section class="container-prose pt-16 pb-4">
+    <div class="eyebrow eyebrow-loud mb-3" style="color: rgb(var(--accent))">Radar · private preview</div>
+    <h1>What's moving through the AI ecosystem.</h1>
+    <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
+      One pipeline watches {data.stats.feedsTotal} sources and ranks what's travelling by where it sits on the lead-time gradient: papers become repos become community threads become analysis. The earlier a story is on that gradient, the more lead time you have. The receipts are on every row, so the ranking explains itself.
+    </p>
+    <p class="mt-4 text-sm font-mono" style="color: rgb(var(--muted))">
+      snapshot {fmtStamp(data.generated)} · {data.stats.feedsLive}/{data.stats.feedsTotal} feeds live · {data.stats.itemsTracked.toLocaleString()} stories tracked since {fmtDay(data.stats.sinceFirstSeen)}
+    </p>
+  </section>
+
+  <!-- Honest preview banner -->
+  <section class="container-prose pb-6">
+    <div class="rounded-lg p-4 text-sm leading-relaxed" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2)); color: rgb(var(--fg) / 0.9)">
+      <span class="eyebrow" style="color: rgb(var(--accent-2))">Preview</span>
+      <span class="ml-2">This is a private, un-indexed snapshot — the logger has only been collecting for hours. Two things stay off until the dataset matures: the one-line "why it matters" notes (pending the editorial gate) and the <em>travelling</em> badge (it needs days of history before it can fire honestly). Today it leads with the gradient and the receipts.</span>
+    </div>
+  </section>
+
+  <section class="container-wide pb-10">
+    <ol role="list" class="list-none p-0 m-0 max-w-3xl mx-auto">
+      {data.items.map((it) => (
+        <li class="relative m-0 flex gap-4 px-3 py-4" style="border-top: 1px solid rgb(var(--line));">
+          <div class="shrink-0 w-8 text-right font-mono text-sm pt-0.5" style="color: rgb(var(--muted))">{it.rank}</div>
+          <div class="min-w-0 flex-1">
+            <a
+              href={it.url}
+              target="_blank"
+              rel="noopener nofollow"
+              class="no-underline font-display text-lg md:text-xl leading-snug hover:underline"
+              style="color: rgb(var(--fg))"
+            >{it.title}</a>
+            <div class="mt-1.5 text-xs" style="color: rgb(var(--muted))">{it.domain}</div>
+
+            <!-- Receipts line -->
+            <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-[11px]">
+              <span
+                class="px-1.5 py-px rounded uppercase tracking-wider"
+                style={it.tier === 0
+                  ? 'color: rgb(var(--accent)); border: 1px solid rgb(var(--accent) / 0.35)'
+                  : 'color: rgb(var(--muted)); border: 1px solid rgb(var(--line))'}
+              >{it.tierLabel}</span>
+              <span style="color: rgb(var(--muted))">{it.stage}</span>
+              <span style="opacity: 0.4">·</span>
+              <span style="color: rgb(var(--muted))">{age(it.ageHours)} old</span>
+              <span style="opacity: 0.4">·</span>
+              <span style="color: rgb(var(--muted))">
+                {it.nSources > 1 ? `seen in ${it.nSources} sources` : `via ${it.firstSource}`}
+              </span>
+              {it.heating && (
+                <span
+                  class="px-1.5 py-px rounded-full font-semibold"
+                  style="background: rgb(var(--accent-2) / 0.15); color: rgb(var(--accent-2))"
+                  title="Corroborated across two or more independent source families"
+                >heating</span>
+              )}
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- Legend -->
+  <section class="container-prose pb-12">
+    <div class="rounded-lg p-5" style="border: 1px solid rgb(var(--line));">
+      <div class="eyebrow mb-3">How to read a row</div>
+      <dl class="grid sm:grid-cols-2 gap-x-6 gap-y-3 m-0 text-sm">
+        <div>
+          <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">The gradient</dt>
+          <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">
+            {STAGES.join(' → ')}. Where a story enters. The earlier it's caught, the more lead time before the crowd arrives.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">Signal class</dt>
+          <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">
+            Live Signal moves fast and decays fast; analysis sources move slow and stay relevant longer. The ranker weights each accordingly.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent-2))">heating</dt>
+          <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">
+            The same story surfaced in two or more independent source families — not just two feeds of the same site.
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--muted))">seen in / via</dt>
+          <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">
+            How many families carried it, or the single source that did. Every claim on the page is an observed fact, not a guess.
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- The single CTA: the newsletter (Radar is the funnel; the newsletter is the product) -->
+  <section class="container-prose pb-24">
+    <div class="rounded-lg p-6 text-center" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+      <div class="font-display text-xl md:text-2xl leading-snug" style="color: rgb(var(--fg))">
+        Radar shows what's moving. The newsletter tells you what to do about it.
+      </div>
+      <p class="mt-2 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.8)">
+        Once a week, the operator read on what actually changed and the move it calls for. No digest, no hype.
+      </p>
+      <a
+        href="https://www.vladsnewsletter.com/?utm_source=radar&utm_medium=site&utm_campaign=radar_preview"
+        target="_blank"
+        rel="noopener"
+        class="mt-4 inline-block rounded-md px-5 py-2.5 font-medium no-underline"
+        style="background: rgb(var(--accent)); color: rgb(var(--bg))"
+      >Read the newsletter →</a>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
