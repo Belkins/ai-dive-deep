@@ -3,11 +3,12 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import RadarBoard from '@/components/RadarBoard.astro';
 import today from '@/data/radar/today.json';
+import { RADAR_PUBLIC } from '@/lib/radar-config.mjs';
 
 // /radar — the live board. Auto-updated hourly by the private radar-pipeline (deploy-key
 // push of src/data/radar/*). Server-rendered; design per the Direction-B build spec.
-// PREVIEW flag controls noindex + the eyebrow until the public flip (Task 19).
-const PREVIEW = true;
+// One flip-switch (RADAR_PUBLIC) drives noindex + eyebrow + sitemap + IndexNow together.
+const PREVIEW = !RADAR_PUBLIC;
 
 const archives = import.meta.glob('@/data/radar/archive/*.json', { eager: true }) as Record<string, { default: { date: string } }>;
 const archiveDates = Object.values(archives).map((m) => m.default.date).sort().reverse();

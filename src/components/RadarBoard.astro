@@ -5,6 +5,11 @@
 // token (rgb(var(--x))) so it re-tints for light theme; fill-vs-hollow encodes stage as
 // SHAPE (AA-safe, not colour-alone). No JS, no shadows, no hardcoded rgb. The travelled
 // caliper is progressive enhancement only — the page is whole at zero travelled items.
+//
+// Review-swarm fixes (2026-06-13): visible FAQ + Methodology (Google FAQ policy needs
+// visible matching content; also the thin-content unique-text floor + GEO extractables),
+// Dataset is archive-aware, ItemList dropped (strategic refusal #4 / SEO-AEO-MECHANICS §4),
+// AA contrast on zero-count cells + floor caption (full --muted, no opacity dimming).
 
 interface RadarItem {
   rank: number; title: string; url: string; domain: string;
@@ -38,7 +43,6 @@ const fmtDay = (iso: string) =>
 const age = (h: number) => (h < 1 ? `${Math.round(h * 60)}m` : h < 48 ? `${Math.round(h)}h` : `${Math.round(h / 24)}d`);
 
 const s = data.summary;
-// "What moved today" — deterministic prose templated from observed facts (no model, no claims).
 const stageEntries = STAGES.map((st) => [st, s.byStage[st] ?? 0] as [string, number]);
 const topStage = stageEntries.reduce((a, b) => (b[1] > a[1] ? b : a), stageEntries[0]);
 const heatingClause = s.heatingNow === 0
@@ -48,51 +52,43 @@ const leadClause = s.medianLeadHours != null ? `, and the sharpest lead time is 
 const oldClause = s.oldestSurvivorHours != null ? ` The oldest survivor has held the board for ${age(s.oldestSurvivorHours)}.` : '';
 const whatMoved = `Today's radar skews to ${topStage[0]} (${topStage[1]} of ${data.count}). ${heatingClause}${leadClause}. ${s.newToday} arrived in the last 24 hours.${oldClause}`;
 
-// Masthead arc: 4 node x-positions across viewBox 0..400; nodes 0-1 flame, 2-3 muted (matches the ramp).
 const ARC_X = [20, 153, 286, 380];
-// Per-row rail: 4 node y-positions across viewBox 0..96 (Papers top → Analysis bottom).
 const RAIL_Y = [12, 38, 64, 88];
-
-const maxStage = Math.max(1, ...stageEntries.map((e) => e[1]));
-
-// Archive nav: most recent dates excluding the one being viewed.
 const navDates = archiveDates.filter((d) => d !== data.date).slice(0, 7);
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
 const pageUrl = isArchive ? `${SITE}/radar/${data.date}` : `${SITE}/radar`;
 
-// JSON-LD — ItemList (the ranked list genuinely IS an ordered list) + Dataset (the GEO-citable
-// lead-time corpus). FAQPage only on the canonical live page (never duplicated across archives).
-const itemListLd = {
-  '@context': 'https://schema.org', '@type': 'ItemList',
-  name: isArchive ? `Radar — ${data.date}` : 'Radar — what is moving through AI',
-  description: 'AI stories ranked by the lead-time gradient: papers to repos to community to analysis.',
-  numberOfItems: data.count, dateModified: data.generated, url: pageUrl,
-  itemListOrder: 'https://schema.org/ItemListOrderDescending',
-  itemListElement: data.items.map((it) => ({ '@type': 'ListItem', position: it.rank, url: it.url, name: it.title })),
-};
+// FAQ — single source of truth for BOTH the visible <dl> and the JSON-LD (can never drift).
+const FAQ: [string, string][] = [
+  ['What is the lead-time gradient?', 'The path a story travels through the AI ecosystem: it appears first in papers (arXiv, Hugging Face) or repos (GitHub), then surfaces in community discussion (Hacker News, Lobsters, LessWrong), then gets interpreted in analysis (operator newsletters, essays). Radar ranks by where a story sits on that path and how far it has travelled.'],
+  ['How is Radar ranked?', 'By a recency-decayed signal score: each source tier has a weight and a half-life, a story scores higher when independent source families corroborate it, and a small bonus applies when a story has visibly climbed the gradient. Stories past their tier max age expire from the board. Popularity on a single site is not corroboration.'],
+  ['How often does Radar update?', 'Hourly. The page is server-rendered and a frozen snapshot is archived at a dated permalink each day, so the record is both current and citable.'],
+  ['What does "heating" mean?', 'A story has surfaced in two or more independent source families — not two feeds of the same site. It is corroboration, not popularity.'],
+  ['What is the lead time reading?', 'When the same story is observed first at an earlier gradient stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv 14 hours before it reached the Hacker News front page. That gap is your lead time.'],
+  ['What sources does Radar watch?', `Around ${data.stats.feedsTotal} verified feeds across five tiers: live signal (Hacker News, Lobsters, GitHub trending, arXiv, Hugging Face papers), AI labs and firehose blogs, operator newsletters, contrarian essayists, and primary analysis. The registry is curated; aggregators are used only to corroborate a story, never to be the first to report it.`],
+  ['Is Radar the newsletter?', 'No. Radar shows what is moving; the newsletter tells you what to do about it. Radar is the free, public funnel; Vlad’s Newsletter is the weekly operator read.'],
+];
+
+// JSON-LD — Dataset (the GEO-citable lead-time corpus, archive-aware) + FAQPage (live only,
+// now mirrored by visible content). ItemList intentionally dropped (strategic refusal #4).
 const datasetLd = {
   '@context': 'https://schema.org', '@type': 'Dataset',
-  name: 'Radar — AI ecosystem lead-time index',
-  description: 'An hourly index of what is moving through the AI ecosystem, ranked by the lead-time gradient (papers → repos → community → analysis), with the source provenance and first-seen time recorded for each item.',
+  name: isArchive ? `Radar — AI ecosystem lead-time index, ${data.date}` : 'Radar — AI ecosystem lead-time index',
+  description: isArchive
+    ? `A frozen daily snapshot (${data.date}) of what was moving through the AI ecosystem, ranked by the lead-time gradient (papers → repos → community → analysis), with source provenance and first-seen time per item.`
+    : 'An hourly index of what is moving through the AI ecosystem, ranked by the lead-time gradient (papers → repos → community → analysis), with the source provenance and first-seen time recorded for each item.',
   creator: { '@type': 'Person', name: 'Vlad Podoliako', url: SITE },
-  isAccessibleForFree: true, license: `${SITE}/llms.txt`, url: `${SITE}/radar`,
-  temporalCoverage: `${data.stats.sinceFirstSeen}/${data.generated}`,
+  isAccessibleForFree: true, license: `${SITE}/llms.txt`, url: pageUrl,
+  temporalCoverage: isArchive ? data.date : `${data.stats.sinceFirstSeen}/${data.generated}`,
+  dateModified: data.generated,
   variableMeasured: ['lead-time gradient stage', 'source-family corroboration', 'first-seen timestamp', 'signal tier'],
 };
 const faqLd = {
   '@context': 'https://schema.org', '@type': 'FAQPage',
-  mainEntity: [
-    ['What is the lead-time gradient?', 'The path a story travels through the AI ecosystem: it appears first in papers (arXiv, Hugging Face) or repos (GitHub), then surfaces in community discussion (Hacker News, Lobsters, LessWrong), then gets interpreted in analysis (operator newsletters, essays). Radar ranks by where a story sits on that path and how far it has travelled.'],
-    ['How is Radar ranked?', 'By a recency-decayed signal score: each source tier has a weight and a half-life, a story scores higher when independent source families corroborate it, and a small bonus applies when a story has visibly climbed the gradient. Stories past their tier max age expire. Popularity on a single site is not corroboration.'],
-    ['How often does Radar update?', 'Hourly. The page is server-rendered and a frozen snapshot is archived at a dated permalink each day, so the record is both current and citable.'],
-    ['What does "heating" mean?', 'A story has surfaced in two or more independent source families — not two feeds of the same site. It is corroboration, not popularity.'],
-    ['What is the lead time reading?', 'When the same story is observed first at an earlier gradient stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv 14 hours before it reached the Hacker News front page. That gap is the reader lead time.'],
-    ['Is Radar the newsletter?', 'No. Radar shows what is moving; the newsletter tells you what to do about it. Radar is the free public funnel; the newsletter is the weekly operator read.'],
-  ].map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
 ---
-<script type="application/ld+json" set:html={JSON.stringify(itemListLd)} />
 <script type="application/ld+json" set:html={JSON.stringify(datasetLd)} />
 {!isArchive && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
 
@@ -103,7 +99,7 @@ const faqLd = {
   </div>
   <h1>What's moving through AI, ranked by <span style="color: rgb(var(--accent))">lead time</span>.</h1>
   <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
-    One pipeline watches {data.stats.feedsTotal} sources and ranks what's travelling by where it sits on the lead-time gradient: papers become repos become community threads become analysis. The earlier a story is caught, the more head start you have before the crowd. The receipts are on every row, so the ranking explains itself.
+    Radar is an hourly index of what's moving through the AI ecosystem, ranked by where each story sits on the lead-time gradient: papers become repos become community threads become analysis. The earlier a story is caught, the more head start you have before the crowd. Every row carries its receipts — which source saw it first, how many independent sources have it, how long ago — so the ranking explains itself. It's the public face of the same pipeline that feeds Vlad's Newsletter.
   </p>
   <p class="mt-4 text-sm font-mono" style="color: rgb(var(--muted))">
     {isArchive ? 'frozen' : 'snapshot'} {fmtStamp(data.generated)} · {data.stats.feedsLive}/{data.stats.feedsTotal} feeds live · {data.stats.itemsTracked.toLocaleString()} tracked since {fmtDay(data.stats.sinceFirstSeen)}
@@ -115,7 +111,6 @@ const faqLd = {
   <div class="max-w-3xl mx-auto rounded-lg p-5" style="border: 1px solid rgb(var(--line))">
     <div class="eyebrow mb-3">What moved {isArchive ? 'that day' : 'today'}</div>
 
-    <!-- The masthead arc: the lead-time gradient as the page's hero graphic -->
     <svg viewBox="0 0 400 8" preserveAspectRatio="none" class="w-full h-2" aria-hidden="true">
       <defs>
         <linearGradient id="leadRamp" x1="0" x2="1" y1="0" y2="0">
@@ -125,25 +120,25 @@ const faqLd = {
       </defs>
       <line x1="0" y1="4" x2="400" y2="4" stroke="url(#leadRamp)" stroke-width="2" />
       {ARC_X.map((x, i) => (
-        <circle cx={x} cy="4" r="3" style={`fill: rgb(var(--${i <= 1 ? 'accent' : 'muted'}))`} />
+        i <= 1
+          ? <circle cx={x} cy="4" r="3" style="fill: rgb(var(--accent))" />
+          : <circle cx={x} cy="4" r="3" style="fill: none; stroke: rgb(var(--muted)); stroke-width: 1.5" />
       ))}
     </svg>
     <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-y-2">
       {stageEntries.map(([st, n], i) => (
-        <div style={n === 0 ? 'color: rgb(var(--muted) / 0.5)' : ''}>
+        <div>
           <div class="font-mono uppercase" style="font-size: 10px; letter-spacing: 0.14em; color: rgb(var(--muted))">{st}</div>
-          <div class="font-mono text-sm" style={n === 0 ? '' : `color: rgb(var(--${i <= 1 ? 'accent' : 'fg'}))`}>{n}</div>
+          <div class="font-mono text-sm" style={n === 0 ? 'color: rgb(var(--muted))' : `color: rgb(var(--${i <= 1 ? 'accent' : 'fg'}))`}>{n}</div>
         </div>
       ))}
     </div>
     {(s.byStage.Papers === 0 && s.byStage.Repos === 0) && (
-      <div class="mt-1 font-mono" style="font-size: 11px; color: rgb(var(--muted) / 0.7)">nothing upstream yet — everything caught at the community floor.</div>
+      <div class="mt-1 font-mono" style="font-size: 11px; color: rgb(var(--muted))">nothing upstream yet — everything caught at the community floor.</div>
     )}
 
-    <!-- The unique-text "what moved" sentence (deterministic, from observed facts) -->
     <p class="mt-4 text-sm leading-relaxed" style="color: rgb(var(--fg) / 0.85)">{whatMoved}</p>
 
-    <!-- Stat cluster -->
     <div class="mt-4 grid grid-cols-2 sm:grid-cols-4" style="border-top: 1px solid rgb(var(--line))">
       {[
         { n: String(data.count), cap: 'on the board' },
@@ -167,7 +162,6 @@ const faqLd = {
       const sr = stageRank(it.stage);
       return (
         <li class="grid gap-x-4 px-3 py-5 radar-row" style="grid-template-columns: 2rem 1fr; border-top: 1px solid rgb(var(--line))">
-          <!-- Rail (desktop) -->
           <svg viewBox="0 0 8 96" class="radar-rail hidden h-full w-2 self-stretch" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
             <line x1="4" y1="6" x2="4" y2="90" stroke="rgb(var(--line))" stroke-width="2" />
             {it.travelled && sr > 0 && (
@@ -181,14 +175,11 @@ const faqLd = {
                 : <circle cx="4" cy={cy} r="2.5" style="fill: rgb(var(--line))" />
             ))}
           </svg>
-          <!-- Rank -->
           <div class="font-mono text-sm tabular-nums text-right pt-1" style={`color: rgb(var(--${it.rank <= 3 ? 'fg' : 'muted'}))`}>{it.rank}</div>
-          <!-- Body -->
           <div class="min-w-0 radar-body">
             <a href={it.url} target="_blank" rel="noopener nofollow" class="no-underline font-display text-lg md:text-xl leading-snug hover:underline" style="color: rgb(var(--fg))">{it.title}</a>
             <div class="mt-1 text-xs" style="color: rgb(var(--muted))">{it.domain}</div>
 
-            <!-- Mobile pip strip -->
             <div class="mt-1.5 flex gap-1 sm:hidden" aria-hidden="true">
               {RAIL_Y.map((_, i) => (
                 <span class="inline-block h-1.5 w-1.5 rounded-full" style={
@@ -199,7 +190,6 @@ const faqLd = {
               ))}
             </div>
 
-            <!-- Receipts footnote -->
             <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono" style="font-size: 11px">
               <span class="px-1.5 py-px rounded uppercase tracking-wider" style={
                 it.tier === 0 || it.tier === 3
@@ -212,7 +202,7 @@ const faqLd = {
               <span style="opacity: 0.4">·</span>
               <span style="color: rgb(var(--muted))">{it.nSources > 1 ? `seen in ${it.nSources} sources` : `via ${it.firstSource}`}</span>
               {it.heating && (
-                <span class="inline-flex items-center gap-1 px-1.5 py-px rounded" style="color: rgb(var(--accent-2)); border: 1px solid rgb(var(--accent-2) / 0.3); background: rgb(var(--accent-2) / 0.1); letter-spacing: 0.08em" title={`Corroborated across ${it.nFam} independent source families`}>
+                <span class="inline-flex items-center gap-1 px-1.5 py-px rounded" style="color: rgb(var(--accent-2)); border: 1px solid rgb(var(--accent-2) / 0.3); background: rgb(var(--accent-2) / 0.12); letter-spacing: 0.08em" title={`Corroborated across ${it.nFam} independent source families`}>
                   <svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="true"><rect x="0" y="6" width="2" height="3" fill="currentColor"/><rect x="3.5" y="3" width="2" height="6" fill="currentColor"/><rect x="7" y="0" width="2" height="9" fill="currentColor"/></svg>
                   HEATING ×{it.nFam}
                 </span>
@@ -228,18 +218,44 @@ const faqLd = {
   </ol>
 </section>
 
-<!-- Legend -->
+<!-- Methodology — visible evergreen prose: the GEO extractable layer + the thin-content floor -->
+<section class="container-prose pb-10">
+  <h2 class="font-display text-2xl leading-snug" style="color: rgb(var(--fg))">How Radar works</h2>
+  <div class="mt-4 space-y-4 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.9)">
+    <p><strong>The gradient.</strong> Stories travel through the AI ecosystem in a rough sequence: they appear first in <em>papers</em> (arXiv, Hugging Face) or <em>repos</em> (GitHub), then surface in <em>community</em> discussion (Hacker News, Lobsters, LessWrong), then get interpreted in <em>analysis</em> (operator newsletters and essays). Radar ranks by where a story sits on that gradient. The earlier it is caught, the more lead time you have before it reaches consensus.</p>
+    <p><strong>The score.</strong> Each story gets a recency-decayed signal score. Every source tier carries a weight and a half-life, so live signal moves fast and fades fast while analysis sources move slowly and stay relevant longer. A story scores higher when two or more <em>independent source families</em> carry it — corroboration, not popularity, which is why five feeds of the same site count once. A small bonus applies when a story has visibly climbed the gradient. Stories past their tier's maximum age expire from the board.</p>
+    <p><strong>Heating and lead time.</strong> A story is <em>heating</em> when it has surfaced in two or more independent source families. When the same story is observed first at an earlier stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv fourteen hours before it reached the Hacker News front page. That gap is the reader's lead time, and it is a measured span, never an estimate.</p>
+    <p><strong>The honesty rule.</strong> Every value on this page is an observed fact from the feed log — which source carried a story, when, and how many. Radar makes no claim about what a story <em>means</em>; that is the newsletter's job. When a reading does not exist yet — no stories heating, nothing upstream — the page says so rather than inventing one.</p>
+  </div>
+</section>
+
+<!-- FAQ — visible Q&A mirroring the FAQPage JSON-LD (live page only) -->
+{!isArchive && (
+  <section class="container-prose pb-10">
+    <h2 class="font-display text-2xl leading-snug" style="color: rgb(var(--fg))">Questions</h2>
+    <dl class="mt-4 space-y-5 m-0">
+      {FAQ.map(([q, a]) => (
+        <div>
+          <dt class="font-display text-lg leading-snug" style="color: rgb(var(--fg))">{q}</dt>
+          <dd class="mt-1.5 m-0 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.85)">{a}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+)}
+
+<!-- Quick key -->
 <section class="container-prose pb-10">
   <div class="rounded-lg p-5" style="border: 1px solid rgb(var(--line))">
     <div class="eyebrow mb-3">How to read a row</div>
     <dl class="grid sm:grid-cols-2 gap-x-6 gap-y-3 m-0 text-sm">
       <div>
-        <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">The gradient</dt>
-        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">{STAGES.join(' → ')}. Where a story enters. Earlier = more lead time before the crowd arrives.</dd>
-      </div>
-      <div>
         <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">The rail</dt>
         <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">A filled flame node marks an early, lead-time-rich stage; a hollow ring marks a later stage; a backward tick means it travelled here from upstream.</dd>
+      </div>
+      <div>
+        <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent))">Signal class</dt>
+        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">The tier chip: Live Signal moves fast and decays fast; analysis sources stay relevant longer. The ranker weights each accordingly.</dd>
       </div>
       <div>
         <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent-2))">heating</dt>
@@ -247,10 +263,9 @@ const faqLd = {
       </div>
       <div>
         <dt class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--muted))">seen in / via</dt>
-        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">How many families carried it, or the single source that did. Every value here is an observed fact.</dd>
+        <dd class="m-0 mt-1 leading-snug" style="color: rgb(var(--fg) / 0.85)">How many families carried it, or the single source that did.</dd>
       </div>
     </dl>
-    <p class="mt-4 mb-0 font-mono" style="font-size: 11px; color: rgb(var(--muted))">Every value on this page is an observed fact from the feed log — no model prose.</p>
   </div>
 </section>
 
@@ -280,7 +295,6 @@ const faqLd = {
 </section>
 
 <style>
-  /* Per-row rail shows only where there's room for the topographic echo (sm+). */
   @media (min-width: 640px) {
     .radar-row { grid-template-columns: 1.75rem 2rem 1fr !important; }
     .radar-rail { display: block; }

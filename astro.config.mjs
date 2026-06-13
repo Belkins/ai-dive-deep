@@ -5,6 +5,23 @@ import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { RADAR_PUBLIC } from './src/lib/radar-config.mjs';
+
+// Build a date → freeze-timestamp map from the radar archives so the sitemap can carry
+// truthful per-archive lastmod (review-swarm: build-time new Date() lies on immutable pages).
+const radarLastmod = {};
+try {
+  const dir = 'src/data/radar/archive';
+  if (existsSync(dir)) {
+    for (const f of readdirSync(dir)) {
+      if (f.endsWith('.json')) {
+        const j = JSON.parse(readFileSync(`${dir}/${f}`, 'utf8'));
+        if (j.date && j.generated) radarLastmod[j.date] = j.generated;
+      }
+    }
+  }
+} catch { /* archives optional */ }
 
 // Choose deploy target via env: DEPLOY_TARGET=vercel | gh-pages (default)
 // gh-pages now serves from custom domain dive.vladyslavpodoliako.com (root path).
@@ -25,8 +42,9 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap({
-      // /radar is shipped dark (noindex + unlinked) — keep it out of the sitemap too.
-      filter: (page) => !page.includes('/the-bill') && !page.includes('/radar'),
+      // /the-bill stays out always. /radar is excluded only while dark (RADAR_PUBLIC=false);
+      // once public it enters the sitemap so the existing IndexNow job announces it.
+      filter: (page) => !page.includes('/the-bill') && (RADAR_PUBLIC || !page.includes('/radar')),
       // Reader-invisible crawl signals only. Default daily/0.7; the homepage and
       // chapter pages are the primary content surfaces, so bump their priority.
       serialize(item) {
@@ -37,6 +55,14 @@ export default defineConfig({
         }
         if (path.startsWith('/chapters/')) {
           return { ...item, changefreq: 'weekly', priority: 0.9, lastmod };
+        }
+        // /radar: hourly-changing live board; dated archives carry their true freeze time.
+        if (path === '/radar') {
+          return { ...item, changefreq: 'hourly', priority: 0.8, lastmod };
+        }
+        const radarDate = path.startsWith('/radar/') ? path.slice('/radar/'.length) : null;
+        if (radarDate && radarLastmod[radarDate]) {
+          return { ...item, changefreq: 'never', priority: 0.6, lastmod: radarLastmod[radarDate] };
         }
         return { ...item, changefreq: 'monthly', priority: 0.7, lastmod };
       },

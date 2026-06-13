@@ -31,6 +31,7 @@ export const GET: APIRoute = async () => {
   lines.push(`- [The journey](${SITE}/journey/) — chapters in narrative order, six parts`);
   lines.push(`- [Sections](${SITE}/sections/) — chapters grouped by topic`);
   lines.push(`- [Research notes](${SITE}/research-notes/) — external papers folded into operator implications (OPS-204, Anthropic 81k-interviews, etc.)`);
+  lines.push(`- [Radar](${SITE}/radar/) — hourly index of what's moving in AI, ranked by the lead-time gradient (papers → repos → community → analysis); dated archive permalinks at /radar/YYYY-MM-DD`);
   lines.push(`- [Tier list](${SITE}/tier-list/) — operator-usefulness ranking embedded next to the public LMArena leaderboard`);
   lines.push(`- [Day zero](${SITE}/day-zero/) — first 30 minutes for a new reader`);
   lines.push(`- [Vault starter](${SITE}/vault-starter/) — Obsidian as working memory, with a cloneable starter vault`);

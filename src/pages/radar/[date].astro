@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import RadarBoard from '@/components/RadarBoard.astro';
+import { RADAR_PUBLIC, RADAR_MIN_ITEMS } from '@/lib/radar-config.mjs';
 
 // /radar/YYYY-MM-DD — frozen dated archives. A new indexable URL each day (the SEO engine).
 // Built statically from src/data/radar/archive/*.json, pushed hourly by the pipeline.
@@ -9,14 +10,19 @@ export async function getStaticPaths() {
   const archives = import.meta.glob('@/data/radar/archive/*.json', { eager: true }) as Record<string, { default: any }>;
   const all = Object.values(archives).map((m) => m.default);
   const dates = all.map((d) => d.date).sort().reverse();
-  return all.map((data) => ({
-    params: { date: data.date },
-    props: { data, archiveDates: dates },
-  }));
+  // The most-recent date is the CURRENT live day — it is byte-identical to /radar, so it
+  // gets no dated permalink (no duplicate content). A day earns its permalink only once it
+  // is FROZEN (a newer day exists). This is the daily-fresh-URL engine, one day delayed.
+  const liveDate = dates[0];
+  return all
+    .filter((data) => data.date !== liveDate)
+    .map((data) => ({ params: { date: data.date }, props: { data, archiveDates: dates } }));
 }
 
 const { data, archiveDates } = Astro.props;
-const PREVIEW = true; // tracks the live page; flipped together at Task 19
+// A degenerate/thin day fails closed (noindex) regardless of the public flip.
+const thin = (data.items?.length ?? 0) < RADAR_MIN_ITEMS;
+const PREVIEW = !RADAR_PUBLIC || thin;
 ---
 <BaseLayout
   noindex={PREVIEW}

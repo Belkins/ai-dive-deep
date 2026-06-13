@@ -114,6 +114,11 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
 
   <section class="container-wide pt-6 pb-24">
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <a href={`${base}/radar`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New · Live · Updated hourly</div>
+        <h3 class="m-0 font-display text-2xl">Radar — what's moving in AI, ranked by lead time</h3>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A self-updating index of what's travelling through the AI ecosystem, ranked by where it sits on the gradient — papers to repos to community to analysis. The receipts are on every row. See it before the crowd does.</p>
+      </a>
       <a href={`${base}/learn`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New here? Start here</div>
         <h3 class="m-0 font-display text-2xl">Learn the basics first</h3>
