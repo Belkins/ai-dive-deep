@@ -1,11 +1,11 @@
 {
   "date": "2026-06-14",
-  "generated": "2026-06-14T01:31:07.031Z",
+  "generated": "2026-06-14T03:31:10.206Z",
   "count": 40,
   "stats": {
     "feedsTotal": 78,
     "feedsLive": 67,
-    "itemsTracked": 988,
+    "itemsTracked": 1000,
     "travellingFires": 0,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
@@ -13,37 +13,59 @@
     "byStage": {
       "Papers": 0,
       "Repos": 0,
-      "Community": 39,
-      "Analysis": 1
+      "Community": 36,
+      "Analysis": 4
     },
     "byTier": {
-      "Live Signal": 39,
+      "Live Signal": 36,
+      "AI Firehose": 3,
       "Primary Analysis": 1
     },
     "newToday": 39,
-    "heatingNow": 2,
+    "heatingNow": 4,
     "travelledNow": 0,
     "medianLeadHours": null,
-    "freshestHours": 0,
-    "oldestSurvivorHours": 27.5,
+    "freshestHours": 0.5,
+    "oldestSurvivorHours": 29.5,
     "topDomains": [
       {
         "domain": "github.com",
-        "count": 11
+        "count": 8
       },
       {
         "domain": "lesswrong.com",
         "count": 4
       },
       {
-        "domain": "phoronix.com",
-        "count": 1
+        "domain": "simonwillison.net",
+        "count": 3
       }
     ]
   },
   "items": [
     {
       "rank": 1,
+      "title": "Building an serial and VGA \"everything console\"",
+      "url": "http://oldvcr.blogspot.com/2026/06/building-serial-and-vga-everything.html",
+      "domain": "oldvcr.blogspot.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters",
+        "Hacker News front"
+      ],
+      "nSources": 2,
+      "nFam": 2,
+      "ageHours": 2,
+      "firstSeen": "2026-06-14T01:30:33.006Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 2,
       "title": "ReactOS (FOSS \"Windows\") achieves 3D-accelerated Half-Life on real hardware",
       "url": "https://www.phoronix.com/news/ReactOS-Running-Half-Life",
       "domain": "phoronix.com",
@@ -57,34 +79,175 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 2.2,
+      "ageHours": 4.2,
       "firstSeen": "2026-06-14T01:30:33.006Z",
       "heating": true,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 2,
-      "title": "Building an serial and VGA \"everything console\"",
-      "url": "http://oldvcr.blogspot.com/2026/06/building-serial-and-vga-everything.html",
-      "domain": "oldvcr.blogspot.com",
+      "rank": 3,
+      "title": "Human Routers of Machine Words",
+      "url": "https://borretti.me/article/human-routers-of-machine-words",
+      "domain": "borretti.me",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
-      "firstSource": "Lobsters",
+      "firstSource": "Hacker News front",
       "sources": [
+        "Hacker News front",
         "Lobsters"
+      ],
+      "nSources": 2,
+      "nFam": 2,
+      "ageHours": 5.9,
+      "firstSeen": "2026-06-14T01:30:33.006Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 4,
+      "title": "The Redistribution of Housing Wealth Caused by Rent Control [pdf]",
+      "url": "https://www.rhawa.org/file/secure/shs-the-impact-of-rent-control-in-st-paul.pdf",
+      "domain": "rhawa.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0,
-      "firstSeen": "2026-06-14T01:30:33.006Z",
+      "ageHours": 0.5,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 3,
+      "rank": 5,
+      "title": "Show HN: Bastion – isolated Linux VMs for background coding agents",
+      "url": "https://bastion.computer/",
+      "domain": "bastion.computer",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.9,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 6,
+      "title": "Apt Encounters of the Third Kind",
+      "url": "https://igor-blue.github.io/2021/03/24/apt1.html",
+      "domain": "igor-blue.github.io",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.2,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 7,
+      "title": "Show HN: Inkwash, a watercolor sketching app and explanation",
+      "url": "https://johnowhitaker.github.io/inkwash/about",
+      "domain": "johnowhitaker.github.io",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.3,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 8,
+      "title": "Our Work is Low Skill Expression",
+      "url": "https://www.lesswrong.com/posts/wTgnbETckJcDd7qgu/our-work-is-low-skill-expression",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 9,
+      "title": "4 things to know about the new sunscreen ingredient the FDA approved",
+      "url": "https://www.npr.org/2026/06/13/nx-s1-5856385/sunscreen-skin-protection-bemotrizinol",
+      "domain": "npr.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.3,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 10,
+      "title": "10th Gen Honda Civic Updates Are Signed with AOSP Test Keys",
+      "url": "https://juniperspring.org/posts/honda-evil-valet",
+      "domain": "juniperspring.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.7,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 11,
       "title": "RS-Key: Security key. FIDO/OpenPGP firmware for RP2350",
       "url": "https://github.com/TheMaxMur/RS-Key",
       "domain": "github.com",
@@ -97,14 +260,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.9,
+      "ageHours": 2.9,
       "firstSeen": "2026-06-14T01:30:33.006Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 4,
+      "rank": 12,
       "title": "State Attorneys General Are Investigating OpenAI",
       "url": "https://www.nytimes.com/2026/06/13/technology/states-investigating-openai.html",
       "domain": "nytimes.com",
@@ -117,14 +280,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.6,
+      "ageHours": 3.6,
       "firstSeen": "2026-06-14T01:30:33.006Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 5,
+      "rank": 13,
       "title": "Show HN: A bunch of Apache2/MIT log generators",
       "url": "https://github.com/expanso-io/log-simulators",
       "domain": "github.com",
@@ -137,14 +300,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.8,
+      "ageHours": 3.8,
       "firstSeen": "2026-06-14T01:30:33.006Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 6,
+      "rank": 14,
       "title": "Show HN: I built 80 mini-games using Fable before it was shut down",
       "url": "https://minigames.world/en",
       "domain": "minigames.world",
@@ -157,14 +320,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.9,
+      "ageHours": 3.9,
       "firstSeen": "2026-06-14T01:30:33.006Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 7,
+      "rank": 15,
       "title": "Show HN: I run a vision model on every screenshot, locally, on a 4GB GPU",
       "url": "https://github.com/ayushh0110/ScreenMind",
       "domain": "github.com",
@@ -177,14 +340,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.3,
+      "ageHours": 4.3,
       "firstSeen": "2026-06-14T01:30:33.006Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 8,
+      "rank": 16,
       "title": "Ancient genome duplications laid the foundations of complex brains",
       "url": "https://www.ox.ac.uk/news/2026-06-09-ancient-genome-duplications-laid-the-foundations-of-complex-brains",
       "domain": "ox.ac.uk",
@@ -197,14 +360,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.6,
+      "ageHours": 4.6,
       "firstSeen": "2026-06-14T01:30:33.006Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 9,
+      "rank": 17,
       "title": "Derbyshire Police officer accused of using AI to 'create evidence'",
       "url": "https://www.bbc.com/news/articles/cy8wppwdxl6o",
       "domain": "bbc.com",
@@ -217,14 +380,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.8,
+      "ageHours": 4.8,
       "firstSeen": "2026-06-13T23:42:24.742Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 10,
+      "rank": 18,
       "title": "Show HN: Pebble, an open-source alternative to Minecraft: Java Edition",
       "url": "https://github.com/thebriangao/pebble",
       "domain": "github.com",
@@ -237,14 +400,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.1,
+      "ageHours": 5.2,
       "firstSeen": "2026-06-13T23:42:24.742Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 11,
+      "rank": 19,
       "title": "Show HN: How to prevent spam and disposable signups",
       "url": "https://emailverify.se/",
       "domain": "emailverify.se",
@@ -257,14 +420,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.2,
+      "ageHours": 5.2,
       "firstSeen": "2026-06-13T23:42:24.742Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 12,
+      "rank": 20,
       "title": "Show HN: Awsmap – query your AWS inventory with SQL or plain English, offline",
       "url": "https://github.com/TocConsulting/awsmap",
       "domain": "github.com",
@@ -277,14 +440,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.5,
+      "ageHours": 5.6,
       "firstSeen": "2026-06-13T22:41:28.831Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 13,
+      "rank": 21,
       "title": "Show HN: Bye-wk – Hide World Cup news from your feed",
       "url": "https://github.com/Braitenberg/bye-wk",
       "domain": "github.com",
@@ -297,14 +460,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.7,
+      "ageHours": 5.7,
       "firstSeen": "2026-06-13T22:41:28.831Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 14,
+      "rank": 22,
       "title": "Software as Craft: a First Look at Syntropy",
       "url": "https://noteflakes.com/articles/2026-06-13-syntropy",
       "domain": "noteflakes.com",
@@ -317,34 +480,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.8,
+      "ageHours": 5.8,
       "firstSeen": "2026-06-13T22:41:28.831Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 15,
-      "title": "Human Routers of Machine Words",
-      "url": "https://borretti.me/article/human-routers-of-machine-words",
-      "domain": "borretti.me",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.9,
-      "firstSeen": "2026-06-14T01:30:33.006Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 16,
+      "rank": 23,
       "title": "The adder at the heart of Intel's 8087 floating-point chip",
       "url": "http://www.righto.com/2026/06/intel-8087-adder-reverse-engineered.html",
       "domain": "righto.com",
@@ -357,14 +500,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.9,
+      "ageHours": 5.9,
       "firstSeen": "2026-06-13T22:41:28.831Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 17,
+      "rank": 24,
       "title": "Show HN: Made an online 3D Tarot reading",
       "url": "https://tarots.world/",
       "domain": "tarots.world",
@@ -377,14 +520,74 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4,
+      "ageHours": 6,
       "firstSeen": "2026-06-13T22:41:28.831Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 18,
+      "rank": 25,
+      "title": "Publishing WASM wheels to PyPI for use with Pyodide",
+      "url": "https://simonwillison.net/2026/Jun/13/publishing-wasm-wheels",
+      "domain": "simonwillison.net",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Analysis",
+      "firstSource": "Simon Willison",
+      "sources": [
+        "Simon Willison"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.6,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 26,
+      "title": "luau-wasm 0.1a0",
+      "url": "https://simonwillison.net/2026/Jun/13/luau-wasm",
+      "domain": "simonwillison.net",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Analysis",
+      "firstSource": "Simon Willison",
+      "sources": [
+        "Simon Willison"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.3,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 27,
+      "title": "Mapping SQLite result columns back to their source `table.column`",
+      "url": "https://simonwillison.net/2026/Jun/13/sqlite-column-provenance",
+      "domain": "simonwillison.net",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Analysis",
+      "firstSource": "Simon Willison",
+      "sources": [
+        "Simon Willison"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.4,
+      "firstSeen": "2026-06-14T03:30:52.171Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 28,
       "title": "Show HN: Open-Sourced Approxima, Our Agentic QA Tool to Catch Breakages Faster",
       "url": "https://github.com/Approxima-AI/Approxima-OSS",
       "domain": "github.com",
@@ -397,14 +600,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.6,
+      "ageHours": 6.6,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 19,
+      "rank": 29,
       "title": "Anthropic Is Taking AI Welfare Seriously. I’m Not Sure It Knows What It’s Measuring.",
       "url": "https://www.lesswrong.com/posts/gNtHHCh363xSGJyz3/anthropic-is-taking-ai-welfare-seriously-i-m-not-sure-it",
       "domain": "lesswrong.com",
@@ -417,14 +620,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.6,
+      "ageHours": 6.6,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 20,
+      "rank": 30,
       "title": "Show HN: GEDD – A Systematic Evidence Driven LLM as a Judge Framework",
       "url": "https://github.com/aws-samples/sample-GEDD",
       "domain": "github.com",
@@ -437,14 +640,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.7,
+      "ageHours": 6.7,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 21,
+      "rank": 31,
       "title": "Show HN: Trace, offline Mac meeting transcripts you can flag mid-call",
       "url": "https://traceapp.info/",
       "domain": "traceapp.info",
@@ -457,14 +660,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.8,
+      "ageHours": 6.8,
       "firstSeen": "2026-06-14T01:30:33.006Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 22,
+      "rank": 32,
       "title": "A cheap specialist judge gets used by agents but fails to reduce alignment audit costs",
       "url": "https://www.lesswrong.com/posts/AvyXkzAebPcWLZeju/a-cheap-specialist-judge-gets-used-by-agents-but-fails-to",
       "domain": "lesswrong.com",
@@ -477,14 +680,34 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.9,
+      "ageHours": 6.9,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 23,
+      "rank": 33,
+      "title": "FIFA's World Cup Ticketing Fiasco, explained",
+      "url": "https://www.readtrung.com/p/fifas-world-cup-ticketing-fiasco",
+      "domain": "readtrung.com",
+      "tier": 4,
+      "tierLabel": "Primary Analysis",
+      "stage": "Analysis",
+      "firstSource": "SatPost",
+      "sources": [
+        "SatPost"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 29.5,
+      "firstSeen": "2026-06-12T22:36:02.122Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 34,
       "title": "Extinction-level capitalism",
       "url": "https://matthewbutterick.com/extinction-level-capitalism.html",
       "domain": "matthewbutterick.com",
@@ -497,14 +720,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5,
+      "ageHours": 7,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 24,
+      "rank": 35,
       "title": "The Curse of Depth in Large Language Models",
       "url": "https://arxiv.org/pdf/2502.05795",
       "domain": "arxiv.org",
@@ -517,14 +740,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5.3,
+      "ageHours": 7.3,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 25,
+      "rank": 36,
       "title": "Webxdc - Secure mini apps for chats",
       "url": "https://webxdc.org/",
       "domain": "webxdc.org",
@@ -537,14 +760,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5.5,
+      "ageHours": 7.5,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 26,
+      "rank": 37,
       "title": "Show HN: I built a free hedge fund style backtest analyzer",
       "url": "https://tradechef.io/",
       "domain": "tradechef.io",
@@ -557,14 +780,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5.5,
+      "ageHours": 7.5,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 27,
+      "rank": 38,
       "title": "Banning noise will be a disaster for statistical data products",
       "url": "https://desfontain.es/blog/banning-noise.html",
       "domain": "desfontain.es",
@@ -580,14 +803,14 @@
       ],
       "nSources": 4,
       "nFam": 2,
-      "ageHours": 11.6,
+      "ageHours": 13.6,
       "firstSeen": "2026-06-13T16:50:35.365Z",
       "heating": true,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 28,
+      "rank": 39,
       "title": "Police officer investigated for using AI to 'create evidence' in multiple cases",
       "url": "https://news.sky.com/story/derbyshire-police-officer-investigated-for-using-ai-to-create-evidence-in-multiple-cases-13553661",
       "domain": "news.sky.com",
@@ -596,18 +819,19 @@
       "stage": "Community",
       "firstSource": "Hacker News front",
       "sources": [
-        "Hacker News front"
+        "Hacker News front",
+        "Hacker News best"
       ],
-      "nSources": 1,
+      "nSources": 2,
       "nFam": 1,
-      "ageHours": 5.6,
+      "ageHours": 7.6,
       "firstSeen": "2026-06-13T21:44:48.912Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 29,
+      "rank": 40,
       "title": "What is a game?",
       "url": "https://www.lesswrong.com/posts/3v4LRuML6bSYHgQws/what-is-a-game",
       "domain": "lesswrong.com",
@@ -620,228 +844,8 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5.7,
+      "ageHours": 7.7,
       "firstSeen": "2026-06-13T21:44:48.912Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 30,
-      "title": "Show HN: I am running 3 coding agents non-stop over the last 3 days. Here is how",
-      "url": "https://news.ycombinator.com/item?id=48520757",
-      "domain": "news.ycombinator.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.7,
-      "firstSeen": "2026-06-13T21:44:48.912Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 31,
-      "title": "Show HN: Web Researcher MCP – Search with verify citations and sources",
-      "url": "https://github.com/zoharbabin/web-researcher-mcp",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.7,
-      "firstSeen": "2026-06-14T01:30:33.006Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 32,
-      "title": "Show HN: Slopsome – a VRAM fit calculator and tok/s database for local LLMs",
-      "url": "https://slopsome.com/",
-      "domain": "slopsome.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.8,
-      "firstSeen": "2026-06-13T21:44:48.912Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 33,
-      "title": "American Government Takes Down Claude Fable",
-      "url": "https://www.lesswrong.com/posts/DQNSqCzuoeutoQ5RG/american-government-takes-down-claude-fable",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.8,
-      "firstSeen": "2026-06-13T19:53:25.876Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 34,
-      "title": "Emacs rec mode, an all-text database system",
-      "url": "https://www.homepages.ucl.ac.uk/~ucecesf/blog/20260602.html",
-      "domain": "homepages.ucl.ac.uk",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.9,
-      "firstSeen": "2026-06-13T19:53:25.876Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 35,
-      "title": "Show HN: Local RAG memory system that AI can write directly to",
-      "url": "https://github.com/ptobey/local-memory-mcp",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.1,
-      "firstSeen": "2026-06-13T21:44:48.912Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 36,
-      "title": "Show HN: An exact verifier for one brick in a decades-old quantum math problem",
-      "url": "https://zenodo.org/records/20682233",
-      "domain": "zenodo.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.2,
-      "firstSeen": "2026-06-13T21:44:48.912Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 37,
-      "title": "Show HN: Galdor – a Go LLM agent framework with built-in tracing and replay",
-      "url": "https://github.com/YasserCR/galdor",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.4,
-      "firstSeen": "2026-06-13T19:53:25.876Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 38,
-      "title": "Show HN: Flashback Booth, A tactile retro photo booth in the browser",
-      "url": "https://flashbackbooth.me/",
-      "domain": "flashbackbooth.me",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.5,
-      "firstSeen": "2026-06-13T19:53:25.876Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 39,
-      "title": "FIFA's World Cup Ticketing Fiasco, explained",
-      "url": "https://www.readtrung.com/p/fifas-world-cup-ticketing-fiasco",
-      "domain": "readtrung.com",
-      "tier": 4,
-      "tierLabel": "Primary Analysis",
-      "stage": "Analysis",
-      "firstSource": "SatPost",
-      "sources": [
-        "SatPost"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 27.5,
-      "firstSeen": "2026-06-12T22:36:02.122Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 40,
-      "title": "Show HN: Domainbase – Instant domain search and management",
-      "url": "https://domainbase.app/",
-      "domain": "domainbase.app",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.8,
-      "firstSeen": "2026-06-13T19:53:25.876Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
