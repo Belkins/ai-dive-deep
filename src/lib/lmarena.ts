@@ -11,7 +11,8 @@
 export type Row = { rank: number; model: string; score: number; vendor: Vendor };
 export type Vendor =
   | 'anthropic' | 'openai' | 'google' | 'meta' | 'xai'
-  | 'zhipu' | 'moonshot' | 'alibaba' | 'baidu' | 'bytedance' | 'other';
+  | 'zhipu' | 'moonshot' | 'alibaba' | 'baidu' | 'bytedance'
+  | 'deepseek' | 'minimax' | 'nvidia' | 'other';
 
 export type Category = {
   id: string;
@@ -36,6 +37,9 @@ export const VENDOR_META: Record<Vendor, { label: string; color: string }> = {
   alibaba:   { label: 'Alibaba',   color: '#8B5CF6' },
   baidu:     { label: 'Baidu',     color: '#4F86C6' },
   bytedance: { label: 'ByteDance', color: '#5EC8C8' },
+  deepseek:  { label: 'DeepSeek',  color: '#4D6BFE' },
+  minimax:   { label: 'MiniMax',   color: '#E8554E' },
+  nvidia:    { label: 'NVIDIA',    color: '#77B900' },
   other:     { label: '',          color: '#71717A' },
 };
 

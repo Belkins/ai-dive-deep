@@ -16,10 +16,26 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.4',
+    date: '2026-06-16',
+    bannerText: 'New on the tier list: Artificial Analysis joins as the independent referee — agentic Intelligence Index v4.1 with cost-per-task economics. Sort the models by intelligence-per-dollar.',
+    bannerHref: '/tier-list',
+    tagline: 'The fourth reading — the tier list gains an independent referee. Between the crowd\'s LMArena votes and the vendors\' launch decks, Artificial Analysis runs its own agentic harness and prices every run, so you can finally sort the leaderboard by what a task actually costs, not just by who scores highest.',
+    shipped: [
+      'New "What an independent referee measures" panel on /tier-list — Artificial Analysis\'s agentic Intelligence Index v4.1 (Terminal-Bench 2.1, 𝜏³-Banking, GDPval-AA v2; IFBench retired) alongside its new per-task economics. Three sort pills — Intelligence, cost-per-task, speed — re-rank the same ten models live, so the intelligence-vs-cost inversion is something you feel: the #1 model on the Index (Claude Fable 5, 59.9) is the most expensive per task at $3.25, ~58× DeepSeek V4 Pro\'s $0.056. Hand-captured fair-use snapshot from AA\'s public board (2026-06-16), attributed with a link-out, and a staleness guard that ages the data honestly.',
+      'The tier list is now four readings of the same models, not three — the crowd (LMArena), the independent referee (Artificial Analysis), the labs (launch-deck claims), and the operator (Vlad\'s drag-and-drop). Different question, different answer, now with economics as the bridge to the operator\'s question. AA is independent, not infallible — its Index is a weighted composite, framed as a third reading that triangulates, never a new oracle.',
+      'AEO/discovery wiring — a visible v4.1 methodology breakdown (the 34% agentic weighting, extractable), FAQPage structured data for "cheapest agentic model" / "what is cost per task" / "is Artificial Analysis independent", Cmd-K keywords, and a rewritten llms.txt entry so the four-panel framing reaches the answer engines.',
+    ],
+    receipts: [
+      { label: 'Most capable model · AA Index v4.1', value: 'Claude Fable 5 · 59.9' },
+      { label: 'Its cost per task (the priciest on the board)', value: '$3.25' },
+      { label: 'Cheapest per task on the board', value: 'DeepSeek V4 Pro · $0.056' },
+      { label: 'Independent agentic models priced side by side', value: '10' },
+    ],
+  },
+  {
     edition: 'Edition 10.3',
     date: '2026-06-11',
-    bannerText: 'New: the subscription subsidy quantified — SemiAnalysis prices a $200 plan at up to $8,000 of compute. Plus a full tier-list benchmark refresh.',
-    bannerHref: '/research-notes',
     tagline: 'The economics week — the research timeline gets the grid that turns "this plan can\'t be profitable on me" into numbers, and the tier list catches up to the Fable 5 era with a fresh LMArena snapshot and a new lab-claims panel.',
     shipped: [
       'New research note (top of the timeline) — "The subscription subsidy, quantified." SemiAnalysis\'s Tokenomics model: a $20 claude-pro can draw ~$400/mo of API-equivalent compute, a $200 claude-max-20x ~$8,000, a $200 chatgpt-pro-20x ~$14,000. Break-even utilization per tier, the −900%/−1,650% full-utilization gross margins, and the three honest discounts to apply before quoting any of it. The two source tables are embedded as receipts and redrawn as native elements — an option-value table and a break-even bar strip where the green sliver is the business model. The operator read: every limit you\'ve ever hit is the mechanism that drags the average back into the green columns.',

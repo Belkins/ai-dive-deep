@@ -2,16 +2,52 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TierListBuilder from '@/widgets/TierListBuilder.tsx';
 import LMArenaLeaderboard from '@/widgets/LMArenaLeaderboard.tsx';
+import ArtificialAnalysisPanel from '@/widgets/ArtificialAnalysisPanel.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import { LAB_CLAIMS, VENDOR_META } from '@/lib/lmarena';
+import { AA_SNAPSHOT, AA_INDEX_VERSION } from '@/lib/artificial-analysis';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// FAQPage JSON-LD — AEO/answer-engine surface. Answers are deliberately structural
+// (no dollar figures) so they can't drift from the dated panel data; the one named
+// model is capture-dated. See FOUNDER-DECISION.md §stat-drift.
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is Artificial Analysis an independent AI benchmark?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Artificial Analysis runs its own evaluation harness on dedicated hardware, so it is neither a crowdsourced preference vote (like LMArena) nor a vendor launch-deck number. On this tier list it sits as the independent referee between the public LMArena crowd leaderboard and the vendors’ own lab-claims.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What does cost per task mean for an AI model?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Cost per task is the weighted-average cost in US dollars to run one standardized Artificial Analysis Intelligence Index task. It prices a model’s real economics in agentic loops — the number that shows up on the invoice — rather than the headline capability score, so the most capable model is often not the cheapest to run.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Which AI model is cheapest per agentic task in 2026?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `As of the ${AA_SNAPSHOT} capture of Artificial Analysis’s ${AA_INDEX_VERSION} board, DeepSeek V4 Pro had the lowest cost per Intelligence Index task, while the most capable model on the board (Claude Fable 5) was the most expensive per task. The panel shows the dated per-task figures; sort by "Cost / task" to compare.`,
+      },
+    },
+  ],
+};
 ---
 <BaseLayout title="The Tier List" description="Drag-and-drop your own AI tools tier list. Share via URL. Public benchmarks vs operator usefulness, side by side.">
   <section class="container-prose pt-16 pb-4">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Chapter 24</div>
     <h1>The tier list. Without mercy.</h1>
-    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Public leaderboards rank capability. Operators rank usefulness. Below: the public benchmark, then Vlad's actual stack — and a builder you can drag, share, and argue about.</p>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Public leaderboards rank capability. Operators rank usefulness. Below, four readings of the same models: the crowd's public benchmark, an independent referee that prices every run, the labs' own launch decks — then Vlad's actual stack, a builder you can drag, share, and argue about.</p>
   </section>
 
   <section class="container-prose pt-6 pb-2">
@@ -22,6 +58,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <section class="pt-4 pb-2">
     <LMArenaLeaderboard client:load />
+  </section>
+
+  <section class="container-prose pt-12 pb-2">
+    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What an independent referee measures</div>
+    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Artificial Analysis — the independent referee</h2>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is the crowd's taste; the boards below are the vendors' launch slides. This is neither — <a href="https://artificialanalysis.ai/models" target="_blank" rel="noopener" style="color: rgb(var(--accent))">Artificial Analysis</a> runs its own agentic harness (rebuilt in {AA_INDEX_VERSION} around long agentic chains — Terminal-Bench 2.1, 𝜏³-Banking, GDPval v2) and reports the one number the other two never do: what each run <em>costs</em>. Cost per task, not just capability — the column where the leaderboard starts speaking the operator's language. Read it as a referee's reading, not a verdict: independent buys disinterest, not the last word. Captured {AA_SNAPSHOT}; dated sourcing on <a href={`${base}/research-notes`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
+  </section>
+
+  <section class="pt-4 pb-2">
+    <ArtificialAnalysisPanel client:load />
   </section>
 
   <section class="container-prose pt-12 pb-2">
@@ -67,6 +113,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p class="m-0">Benchmarks reward the model that beats other models. Operators reward the tool that doesn't break the workflow. The most useful tool you own is rarely the most capable one — it's the one with the lowest activation energy on a Tuesday morning when you have nineteen other problems. That's why Claude Code is S-tier in this list and not even ranked on LMArena. Different question. Different answer.</p>
     </div>
   </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
 
   <CommandPaletteMount />
 </BaseLayout>

@@ -32,7 +32,7 @@ export const GET: APIRoute = async () => {
   lines.push(`- [Sections](${SITE}/sections/) — chapters grouped by topic`);
   lines.push(`- [Research notes](${SITE}/research-notes/) — external papers folded into operator implications (OPS-204, Anthropic 81k-interviews, etc.)`);
   lines.push(`- [Radar](${SITE}/radar/) — hourly index of what's moving in AI, ranked by the lead-time gradient (papers → repos → community → analysis); dated archive permalinks at /radar/YYYY-MM-DD`);
-  lines.push(`- [Tier list](${SITE}/tier-list/) — operator-usefulness ranking embedded next to the public LMArena leaderboard`);
+  lines.push(`- [Tier list](${SITE}/tier-list/) — four readings of the same models side by side: the LMArena crowd leaderboard, Artificial Analysis's independent agentic Intelligence Index with per-task cost economics ($/task), the labs' launch-deck claims, and an operator-usefulness ranking you can build`);
   lines.push(`- [Day zero](${SITE}/day-zero/) — first 30 minutes for a new reader`);
   lines.push(`- [Vault starter](${SITE}/vault-starter/) — Obsidian as working memory, with a cloneable starter vault`);
   lines.push(`- [Weekend builds](${SITE}/weekend-builds/) — the multi-AI 3-agent swarm pattern`);
