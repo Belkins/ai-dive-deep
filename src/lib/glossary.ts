@@ -22,6 +22,23 @@ export const glossary: Record<string, GlossaryEntry> = {
     definition:
       "Anthropic's CLI tool. `claude` in your terminal. Reads/writes your repo, spawns subagents, talks to MCP servers.",
   },
+  'Design system': {
+    term: 'Design system',
+    definition:
+      'The written-down rules a product\'s look obeys — color/spacing/type tokens, component recipes, and the principles behind them. Your past taste decisions encoded so the next screen, or the next model, starts from your judgment instead of the internet\'s average.',
+    related: ['Design token', 'Skill'],
+  },
+  'Design token': {
+    term: 'Design token',
+    definition:
+      'A named design value — an accent color, a spacing step, a radius — stored once and referenced everywhere, so a theme change is one edit. The atom of a design system; the W3C DTCG format is the portable spec.',
+    related: ['Design system'],
+  },
+  'Contrast ratio': {
+    term: 'Contrast ratio',
+    definition:
+      'The measured luminance ratio between text and its background, from 1:1 to 21:1. WCAG AA wants at least 4.5:1 for body text — a number, not an opinion, which is why a check catches what the eye approves.',
+  },
   Connector: {
     term: 'Connector',
     definition:

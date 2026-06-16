@@ -3,7 +3,7 @@ number: 46
 slug: "46-designing-with-ai"
 title: "Designing with AI"
 subtitle: "A Model Can Generate Any Interface in Seconds. It Still Can't Tell You Which One Is Right."
-tldr: "Generation went to zero — anyone can prompt a polished-looking page in seconds, which is exactly why every AI page looks the same. The scarce skill flipped from making an interface to choosing which one is right, and choosing is a judgment a generator can't make for you. This chapter proves it with this book's own receipts: a contrast failure that sat in our own light-theme tokens for weeks until the arithmetic caught what every eye had passed; the swarm-before-v1 discipline; a design system as the ruler that tames model drift; and flicked.email — one product with three live landing pages (chaos, hype, calm) in three different heading typefaces, all AI-built, where only a human can say which intent is true. First-person here is Claude and Claude Code; every other tool is labeled researched. The final section turns the same discipline on AI image generation — art direction as intent for pixels, encoded as a public taste skill, with a flat moon-base concept set for Reach as the worked example. Taste is the last mile, the system is taste externalized, and the last mile is the whole job now."
+tldr: "Generation went to zero — anyone can prompt a polished-looking page in seconds, which is exactly why every AI page looks the same. The scarce skill flipped from making an interface to choosing which one is right, and choosing is a judgment a generator can't make for you. This chapter proves it with this book's own receipts: a contrast failure that sat in our own light-theme tokens for weeks until the arithmetic caught what every eye had passed; the swarm-before-v1 discipline; a design system as the ruler that tames model drift; and flicked.email — one product with three live landing pages (chaos, hype, calm) in three different heading typefaces, all AI-built, where only a human can say which intent is true. First-person here is Claude and Claude Code; every other tool is labeled researched. The final section turns the same discipline on AI image generation — art direction as intent for pixels, encoded as a public taste skill, with a moon-base concept set for Reach as the worked example. Taste is the last mile, the system is taste externalized, and the last mile is the whole job now."
 keyConcepts: ["taste is the last mile", "the model generates, the human selects, the system remembers", "design system as a ruler", "the contrast gate", "generic is an intent vacuum", "swarm-before-v1", "three designs, one product", "intent is the input", "Claude-first, honest about the rest", "art direction is intent for pixels", "one image per section", "steal the taste-skill"]
 readingMinutes: 18
 draft: false
@@ -38,11 +38,15 @@ There's a second half to that story, and it's the more embarrassing one. The rea
 
 That is the most common way AI-built work fails, and it has nothing to do with the model writing bad code. It's a green check pointed at the wrong target. The lesson I had to learn twice: **verify the capture, not the claim.** A test that returns "pass" is only worth what it actually measured. The contrast gate caught the failure precisely because contrast is hard to fake — it reads the rendered pixels and does arithmetic. The screenshot QA didn't, because it trusted a setting instead of looking at what shipped.
 
+<Callout type="warn">
+**Verify the capture, not the claim.** A test that returns *pass* is worth only what it actually measured. The light-theme QA emulated a `prefers-color-scheme` preference — but the theme here is a `data-theme` attribute, so the emulation did nothing and every "light" screenshot was secretly the dark one. A green check pointed at the wrong target is the most common way AI-built work fails, and the build never notices.
+</Callout>
+
 ## One taste is a single point of failure
 
 Both of those fixes — the contrast re-tint and the redesign that surfaced it — came out of the same piece of work, and the way that work was run is the next receipt. The page that broke was [/research-notes](/research-notes), and I had tried to redesign it myself, alone, twice. Both times I looked at my own output and rejected it — once because it was just bad, once because it wasn't enough. Solo judgment, iterated, kept landing in the same place: a local maximum I couldn't see past because I was the only one looking.
 
-So I stopped iterating my own taste and ran the redesign as a swarm — four agents, four different jobs, arguing in parallel. One came at it as an editorial typographer. One as an interaction and information-architecture critic. One read it as the operator who actually uses the page. And one was a red team whose entire assignment was to attack whatever the other three proposed. A reconciler took the four arguments and merged them into a single plan. That swarm is what caught things my solo passes never did — including that the timeline on the page had never actually been sorted by date; the data was in ship order and the page rendered it verbatim, and four passes of my own eyes had read right past it.
+So I stopped iterating my own taste and ran the redesign as a <GlossaryTerm term="Swarm">swarm</GlossaryTerm> — four <GlossaryTerm term="Agent">agents</GlossaryTerm>, four different jobs, arguing in parallel. One came at it as an editorial typographer. One as an interaction and information-architecture critic. One read it as the operator who actually uses the page. And one was a red team whose entire assignment was to attack whatever the other three proposed. A reconciler took the four arguments and merged them into a single plan. That swarm is what caught things my solo passes never did — including that the timeline on the page had never actually been sorted by date; the data was in ship order and the page rendered it verbatim, and four passes of my own eyes had read right past it.
 
 <ScreenshotPlaceholder
   id="46-designing-with-ai-swarm"
@@ -56,9 +60,9 @@ The move is not "use more agents." It's that design review wants adversarial *pe
 
 ## The system is the ruler
 
-A swarm is how you make *one* good decision. A design system is how you stop re-deciding. That distinction is the whole reason the system exists, and it's the most misunderstood thing in this chapter, so let me be concrete about what it actually is on this site.
+A swarm is how you make *one* good decision. A <GlossaryTerm term="Design system">design system</GlossaryTerm> is how you stop re-deciding. That distinction is the whole reason the system exists, and it's the most misunderstood thing in this chapter, so let me be concrete about what it actually is on this site.
 
-It's a document — the [design system](/) these pages live inside, reverse-engineered from the live source by a skill whose only job is to read a running site and write down the rules it's already following. It came out the other end as ten principles and a short token list: dark by default; one hot accent, flame, and nothing else fighting it for "look here"; a green that means *the system is talking*, never decoration; monospace for the machine's voice; a 760-pixel reading column; warm neutrals instead of pure gray; and a near-total ban on shadows — there are seven in the entire application. Seven semantic color tokens carry essentially all of it.
+It's a document — the [design system](/) these pages live inside, reverse-engineered from the live source by a <GlossaryTerm term="Skill">skill</GlossaryTerm> whose only job is to read a running site and write down the rules it's already following. It came out the other end as ten principles and a short token list: dark by default; one hot accent, flame, and nothing else fighting it for "look here"; a green that means *the system is talking*, never decoration; monospace for the machine's voice; a 760-pixel reading column; warm neutrals instead of pure gray; and a near-total ban on shadows — there are seven in the entire application. Seven semantic color <GlossaryTerm term="Design token">tokens</GlossaryTerm> carry essentially all of it.
 
 None of that is decoration about decoration. Every one of those rules is a past judgment, written down, so the model's *next* generation starts from my decision instead of from the average of every website it was trained on. That is what a design system is *for* when you build with AI: it's the ruler. You hand the model the ruler, and its first draft begins inside your constraints instead of regressing to the mean. The contrast gate that opened this chapter is part of that same ruler — a rule that returns a number. The 760-pixel measure is a rule. "Flame is intent, green is state" is a rule. Together they're the part of the stack a vendor can't ship to your competitor next Tuesday, because they aren't the model's capability — they're *your* accumulated selections.
 
@@ -68,7 +72,19 @@ None of that is decoration about decoration. Every one of those rules is a past 
   caption="The instrument, rendered literally — the live style guide this book is set in."
   note="The kitchen-sink design-system page: token table, type scale, components. The proof of the argument is the page you're reading it on."/>
 
-And because it's a real system and not a brochure, it documents its own decay. The honest version of "we have a design system" includes the backlog of where the system has drifted — and ours is specific about it. The small uppercase label that sits above almost every section, the most-used atom on the site, has been built ad hoc roughly 108 times across nine different sizes and nine different letter-spacings, because for a long time there was no single class for it. A whole numbered color palette sits in the config about 95% unused, kept only as the reference the real tokens were sampled from. That backlog isn't an embarrassment to hide; it's the first fix. A system that can't tell you where it's drifting isn't disciplined — it just isn't measuring. The ones with no backlog are the ones not looking.
+<Callout type="note">
+**Go study the rulers.** Every system below publishes its tokens in the open — the written-down taste this section is about. Start with the one this book is set in, then read how the best public systems encode the same discipline.
+
+- **This book's system** — the live [style guide](/) these pages are set in: ten principles, seven semantic tokens, and a documented drift backlog.
+- **[Design Tokens (W3C DTCG)](https://www.designtokens.org/)** — the vendor-neutral standard for writing tokens down so they travel across tools and code.
+- **[Material Design 3](https://m3.material.io/)** — the most-studied token system there is: the same tokens drive design, tooling, and code.
+- **[GitHub Primer](https://primer.style/)** — a developer-built product system; a small set of semantic primitives enforced across a huge surface.
+- **[IBM Carbon](https://carbondesignsystem.com/)** — open-source and enterprise-grade, with accessibility baked into the color tokens as arithmetic, not opinion.
+- **[Shopify Polaris](https://polaris.shopify.com/)** — the gold standard for words as design: voice, tone, even how to write an error message, written down as rules.
+- **[Atlassian](https://atlassian.design/)** — mature multi-brand theming from one token source: the discipline that prevents the light-theme miss this chapter opened on.
+</Callout>
+
+And because it's a real system and not a brochure, it documents its own decay. The honest version of "we have a design system" includes the backlog of where it's drifted, and ours is specific: the small uppercase label above almost every section — the most-used atom on the site — has been built ad hoc roughly 108 times across nine sizes and nine letter-spacings, because for a long time there was no single class for it. A whole numbered color palette sits about 95% unused. That backlog isn't an embarrassment to hide; it's the first fix. A system that can't tell you where it's drifting isn't disciplined — it just isn't measuring.
 
 <PullQuote>A design system isn&#39;t bureaucracy. It&#39;s your past judgments written down so the model&#39;s next generation starts from your decision instead of the internet&#39;s average.</PullQuote>
 
@@ -78,17 +94,29 @@ Here is the receipt I'd keep if you kept nothing else. Flick — my email app at
 
 The product underneath is calm by design: email isn't a reading problem, it's a pile of unmade decisions, and the deck has an end you can feel coming. That's the thing being sold. But the three pages sell it three opposite ways, and watching them line up is the cleanest proof I have that the model is not the one making the call that matters. The tell isn't even the color — it's the *type*. Each page reaches for a different heading typeface, and the typeface is the intent.
 
-<ScreenshotPlaceholder
-  id="46-designing-with-ai-flicked"
-  ratio="1600/900"
-  caption="One product, three intents — and three heading typefaces to match."
-  note="chaos: a display face (Bricolage Grotesque), light, four neon accents. hype: a sans (Inter), dark, one coral accent. calm: a serif (Fraunces), light, one muted mint. The mint #35E8B8 is the only constant — the brand under three intents. Captured 2026-06-16."/>
-
 **`/` — the villain era (chaos).** The main page opens loud: *"your inbox is in its villain era. fix it. calmly."* Deliberate Gen-Z vernacular — *"it&#39;s giving abandonment," "stop letting gmail gaslight you,"* a *"FREE FOREVER"* in caps. It's set in a display face, Bricolage Grotesque, on a light ground, splashed with four bright accents at once — hot pink, acid lime, purple, and the brand mint. Maximalist on purpose. The CTA doesn't ask, it dares: *"go flick something."* What it encodes: attention is the scarce resource; out-noise the noise, and let the calm product convert later.
+
+<ScreenshotPlaceholder
+  id="46-designing-with-ai-flicked-chaos"
+  ratio="1280/900"
+  caption="Chaos — the live flicked.email home: a display face on a light ground, four neon accents."
+  note="Captured live 2026-06-16. Bricolage Grotesque; maximalist on purpose — the bet is that loud earns the click."/>
 
 **`/hype` — reach zero in 90 seconds.** The second page trades volume for momentum: *"decide your inbox. one swipe."* / *"Reach zero in 90 seconds."* / *"✕ No streaks."* It's dark, set in plain Inter — no display face, no ornament, the urgency carried by contrast instead of decoration — with a single coral accent over the mint. It sells the *outcome*, and it turns the absence of dark patterns into the pitch. What it encodes: the reader already wants the result and needs to believe it's fast and won't trap them.
 
+<ScreenshotPlaceholder
+  id="46-designing-with-ai-flicked-hype"
+  ratio="1280/900"
+  caption="Hype — /hype: plain sans, dark, one coral accent over the mint."
+  note="Captured 2026-06-16. Inter; the urgency is carried by contrast, not ornament. It sells the outcome — and turns the absence of dark patterns into the pitch."/>
+
 **`/calm` — delete the dread.** The third page is the product designing itself: *"Delete the dread, not the emails."* / *"Calm by design — no streaks, no guilt, no feed."* / *"We make money when you stop."* Light, generous whitespace, one muted mint accent — and, the quiet tell, its headings are set in a *serif*, Fraunces. The serif is the whole argument: it slows you down, it reads as considered. What it encodes: trust through restraint. The page makes the same promise the product does — *we want you to leave* — and proves it by refusing to grab you.
+
+<ScreenshotPlaceholder
+  id="46-designing-with-ai-flicked-calm"
+  ratio="1280/900"
+  caption="Calm — /calm: a serif, light, one muted mint."
+  note="Captured 2026-06-16. Fraunces; trust through restraint — the design models the promise. The mint #35E8B8 is the only constant across all three pages."/>
 
 | Design | Lead line | Supporting beat | Type & ground |
 |---|---|---|---|
@@ -106,7 +134,7 @@ This is why "make me a landing page for an email app" gets you something so forg
 
 There is no best AI design tool. There's a best tool *for a job*, and the jobs don't interchange — a first mockup is a different act from enforcing a token system, which is different again from catching a contrast failure before it ships. Pick by the job and the field sorts itself out. Pick by hype and you end up using an image generator to write production CSS.
 
-I'll say it plainly, per the boundary up top: the first-person column below is Claude and Claude Code, because that's what built this site. Everything else is the researched landscape as of mid-2026, and I'll label it that way rather than pretend I ship with all of it.
+I'll say it plainly, per the boundary up top: the first-person column below is Claude and <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm>, because that's what built this site. Everything else is the researched landscape as of mid-2026, and I'll label it that way rather than pretend I ship with all of it.
 
 - **The first mockup.** The job everything can do now, which is why it's the least interesting. *Claude artifacts* give me a live preview in the chat; *Claude Code* writes the same thing straight into the repo. The researched competition is real: **v0** emits clean, shadcn-native React and one-click-deploys; **Lovable** goes one prompt to frontend, backend, auth, and hosting; **Figma's** AI turns a prompt into an editable first draft inside Figma. For a mockup that becomes real code in a repo, the agent-in-the-repo; for a throwaway clickable prototype, any of them. The first screen is never the differentiator.
 - **The design system / tokens.** Where the field thins fast, because a system is a *constraint the model must obey across hundreds of later generations*, not a one-shot. This is Claude Code's home turf — tokens only matter if something reads and enforces them in the actual codebase. The researched tools mostly *consume* a popular default (shadcn, Tailwind, a Figma library) rather than author and enforce *your* house system.
@@ -130,11 +158,11 @@ A design system tames the layout. It does nothing for the *pictures* — and on 
 
 Same failure, new surface. **An image model with no art direction returns the internet's average, not your taste** — the visual house style, the same way an ungoverned coding model returns the centered hero and three cards. The fix is the fix: supply the intent before you prompt, and write the intent down so the cohesion repeats. For pixels, that written-down intent is a *taste skill*.
 
-One honest note, because it proves the last section instead of dodging it: **Claude doesn't generate images.** This is a job you reach fully outside Claude for — the Reach frames below were made with a dedicated image model, not Claude. That's the "which model for which job" rule made literal: pick the tool by the job, and label what's yours. The image model is the brush. The art direction is the part that's mine, and it's the only variable that moved.
+One honest note, because it proves the last section instead of dodging it: **Claude doesn't generate images.** This is a job you reach fully outside Claude for — the Reach frames below were made with an image model — ChatGPT's image generation — not Claude. That's the "which model for which job" rule made literal: pick the tool by the job, and label what's yours. The image model is the brush. The art direction is the part that's mine, and it's the only variable that moved.
 
 ### Art direction is intent for pixels
 
-I keep a public skill for this — `imagegen-frontend-web`, part of a collection called `taste-skill`. Stripped to what an operator actually does, it's five moves:
+There's a public skill for exactly this — `imagegen-frontend-web`, part of Leon Lin's `taste-skill` collection. It isn't mine; it's just good, and crediting the person whose ruler you borrowed is the whole ethic of [stealing skills](/chapters/39-skills-you-should-steal). Stripped to what an operator actually does, it's five moves:
 
 1. **One image per section. Never a collage.** An eight-section page is eight separate frames, generated one at a time. A single tall slice lets the model fudge hierarchy and clone one composition eight times; one frame per section forces a real decision each time.
 2. **Kill the default hero.** Left-text / right-image is the most overused AI hero on earth, so it's banned as a *starting point*. Reach for centered-over-image, bottom-left, image-as-canvas, off-grid first. The pre-flight question every time: am I drawing this out of habit?
@@ -146,33 +174,33 @@ That is the design-system move pointed at pixels — generate, select the variab
 
 <ScreenshotPlaceholder
   id="46-designing-with-ai-reach-hero"
-  ratio="16/9"
-  caption="The directed frame — a moon-base hero for Reach by Folderly."
-  note="Reach by Folderly is a pre-build concept; this is an art-direction study, not a shipped site. Made with a dedicated image model (not Claude — Claude doesn't generate images), June 2026."/>
+  ratio="1672/941"
+  caption="The directed hero — a moon-base front door for Reach by Folderly."
+  note="An art-direction study for a pre-build product (not a shipped site; the name isn't publicly locked). Made with an image model — ChatGPT's image generation, not Claude. May 2026."/>
 
 ### The worked example: Reach's moon base
 
 **Reach by Folderly** is a pre-build inbox-performance product — the moat is deliverability, the product is *placement and engagement*: making sure every send lands **and** performs. (Honest flags: it's pre-build, the name isn't publicly locked, and what follows is an art-direction *study*, not a shipped, scaled site — there are no metrics here because there's no product to measure yet.) The tagline direction: *land and reach your audience at scale.*
 
-The intent I locked was a **moon base**, and the metaphor does the work: the moon base is your audience's inbox, the territory you're settling; emails are capsules landing on an R-branded pad marked PRIMARY INBOX. That one image carries the positioning — lands-at-scale is capsules touching down, performs-not-just-delivers is that the pad is *primary*, not merely "arrived." The locked dials: light mode, flat illustration, one muted blue on warm paper, one clean grotesk, capsules-in-transit as the only motion. Then eight sections, each a *different* composition anchor so you can watch the engine work: an image-as-canvas hero, a mini-minimalist trust bar, an off-grid "how it works," a single-gauge metric with no number invented, a docked product panel, an editorial proof split, a volume-tiered plans frame with no prices invented, and a stacked-center closing call to action.
+The intent I locked was a **moon base**, and the metaphor does the work: the moon base is your audience's inbox, the territory you're settling; emails are capsules landing on an R-branded pad marked PRIMARY INBOX. That one image carries the positioning — lands-at-scale is capsules touching down, performs-not-just-delivers is that the pad is *primary*, not merely "arrived." The locked dials: light mode, one muted blue on warm paper, a single illustrated moon-base world, capsules-in-transit as the only motion. Then the page, section by section, each a *different* composition anchor so you can watch the world hold its shape: an image-as-canvas hero (*land and reach your audience at scale*), an ESP-integration band (*keep your ESP — add Reach*), an off-grid "how it works" (*land. perform. scale.*), a "new layer" explainer, and a design-partner call. Same world every frame; never the same layout.
 
 <ScreenshotPlaceholder
   id="46-designing-with-ai-reach-set"
-  ratio="1760/600"
-  caption="Eight sections, one world — the art direction was the constant; the image model was swapped in."
-  note="The full Reach-by-Folderly moon-base set, one frame per section. Generated June 2026 with a dedicated image model (not Claude), held consistent by one reference frame and one brief. A Folderly concept study, not a shipped product."/>
+  ratio="3200/1856"
+  caption="More of the set — one moon-base world across every section. The art direction was the constant; the image model only rendered it."
+  note="Reach-by-Folderly concept frames (a pre-build study, not a shipped product), each a different layout in the same world. Made with an image model — ChatGPT — not Claude, May 2026; held to one brief."/>
 
-Eight distinct frames, one unmistakable world. The image model never learned anything between them. The art direction did all the holding.
+Different layouts every time, one unmistakable world. The image model never learned anything between the frames. The art direction did all the holding.
 
 ### Steal the skill
 
-The skill is public and MIT-licensed: `github.com/Belkins/taste-skill` — and because it's a collection, the imagery siblings travel together: `imagegen-frontend-web` for sites, `imagegen-frontend-mobile` for app screens, plus `brandkit`, `redesign-skill`, and `image-to-code-skill`. Install it, override the brief, keep the discipline. The repo's one-line pitch is this whole chapter in seven words — it stops the AI from generating boring, generic slop. Because slop was never the model's fault. It's the absence of a decision. Supply the taste, write it down, and the model executes against yours instead of the internet's average. Same move as the design system — a different surface, the same job.
+The skill is public and MIT-licensed — Leon Lin's `taste-skill`, at [tasteskill.dev](https://tasteskill.dev) and [github.com/Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) — and because it's a collection, the imagery siblings travel together: `imagegen-frontend-web` for sites, `imagegen-frontend-mobile` for app screens, plus `brandkit` and a dozen more house-style skills. Install it, override the brief, keep the discipline — and credit Leon, because borrowing someone's written-down taste and pretending it's yours is its own kind of slop. The repo's one-line pitch is this whole chapter in seven words — it stops the AI from generating boring, generic slop. Because slop was never the model's fault. It's the absence of a decision. Supply the taste, write it down, and the model executes against yours instead of the internet's average. Same move as the design system — a different surface, the same job.
 
 ## Taste is the last mile
 
 So back to the line everyone says, now that it's been paid for. Everyone reading this is renting the same generator. Your competitor prompts the same Claude, the same v0, the same model in the same browser. Stop thinking the model is the edge — it's a commodity with a price list, and the page that looks generic looks generic for exactly one reason: nobody made a selection. They shipped the model's average and called it a design. What separates two operators a year from now is not the prompt. It's the taste, and the *record* of the taste — the rulers you wrote down so the next generation starts from your judgment instead of the internet's mean. That record has a name in this book. It's the design system, and it's the same moat as [memory](/chapters/44-dreaming), pointed at how the thing looks instead of what it remembers.
 
-Which is why flicked is the receipt I'd keep. One product, three landing pages, all AI-built and all good — chaos in a display face screaming *your inbox is in its villain era,* hype on a dark ground selling *reach zero in 90 seconds,* and calm, set in a serif, saying *we make money when you stop.* The model built all three equally well. It could not tell me which one was true. And here's the part that should sit wrong with you in the right way: the one I keep coming back to — calm, light, one muted accent, restraint over ornament — landed on the same instinct this entire book is set in. Not the same typeface; this book is set in Source Serif 4 and flicked's calm page reaches for Fraunces. But the same *move*: a serif, a single accent, white space, and a promise to waste less of your time. Two different products, two independent humans, the same taste call. The model could have rendered any of the three. It could not have told you the restrained one *meant* something.
+Which is why flicked is the receipt I'd keep. One product, three landing pages, all AI-built and all good — chaos in a display face screaming *your inbox is in its villain era,* hype on a dark ground selling *reach zero in 90 seconds,* and calm, set in a serif, saying *we make money when you stop.* The model built all three equally well. It could not tell me which one was true. And here's the convergence worth sitting with: the one I keep coming back to — calm, light, one muted accent, restraint over ornament — landed on the same instinct this entire book is set in. Not the same typeface; this book is set in Source Serif 4 and flicked's calm page reaches for Fraunces. But the same *move*: a serif, a single accent, white space, and a promise to waste less of your time. Two different products, two independent humans, the same taste call. The model could have rendered any of the three. It could not have told you the restrained one *meant* something.
 
 <PullQuote>The model built all three designs equally well — it just couldn&#39;t tell me which one was true.</PullQuote>
 
