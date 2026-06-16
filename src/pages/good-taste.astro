@@ -24,16 +24,20 @@ const catalog = [
     <h1 class="font-display font-medium leading-[1.02] text-[clamp(2.5rem,6vw,4.5rem)] tracking-tight max-w-[16ch]">
       Stop your AI from generating <span style="color: rgb(var(--accent))">boring, generic slop.</span>
     </h1>
-    <p class="mt-6 max-w-[58ch] text-lg md:text-xl" style="color: rgb(var(--fg) / 0.9)">
+    <p class="mt-5 max-w-[58ch] text-base" style="color: rgb(var(--muted))">
+      <strong>Ana</strong> — who runs Folderly with me — asked me to explain how to design with AI. So here we go: the skill, the before/after, and what I built with it, all in one place.
+    </p>
+    <p class="mt-4 max-w-[58ch] text-lg md:text-xl" style="color: rgb(var(--fg) / 0.9)">
       A model with no art direction returns the internet's average — the purple glow, the floating blobs, the fake dashboard. <strong>taste-skill</strong> is the written-down taste that makes it execute <em>your</em> decision instead.
     </p>
     <p class="mt-3 max-w-[58ch] text-base" style="color: rgb(var(--muted))">
-      Full disclosure, because it's the whole point: <strong>it isn't mine.</strong> It's <a href="https://github.com/Leonxlnx/taste-skill">Leon Lin's open-source project</a> — 45,000+ stars, MIT-licensed, works in Codex, Cursor, and Claude. This page is what <a href={`${base}/chapters/39-skills-you-should-steal`}>stealing a skill well</a> looks like: here's the skill, here's what I built with the discipline, go take it — and credit Leon.
+      Full disclosure, because it's the whole point: <strong>I didn't make this.</strong> It's <a href="https://tasteskill.dev">Leon Lin's open-source project</a> — 45,000+ stars, MIT-licensed, works in Codex, Cursor, and Claude. I share a fork of it, the way you'd hand a friend a great tool. This page is what <a href={`${base}/chapters/39-skills-you-should-steal`}>stealing a skill well</a> looks like: here's the skill, here's what I built with the discipline, take it — and credit Leon.
     </p>
 
     <div class="mt-7 rounded-lg p-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
       <div class="text-[0.7rem] uppercase tracking-[0.18em] mb-2" style="color: rgb(var(--accent-2))">Install in one line</div>
-      <pre class="m-0 overflow-x-auto"><code>npx skills add https://github.com/Leonxlnx/taste-skill</code></pre>
+      <pre class="m-0 overflow-x-auto"><code>npx skills add https://github.com/Belkins/taste-skill</code></pre>
+      <div class="mt-2 text-xs" style="color: rgb(var(--muted))">That's my shared fork. The original, always current, is <a href="https://tasteskill.dev">tasteskill.dev</a>, by Leon Lin.</div>
     </div>
     <div class="mt-5 flex flex-wrap gap-3">
       <a href="https://tasteskill.dev" class="btn-flame no-underline">Open tasteskill.dev →</a>
@@ -118,7 +122,7 @@ const catalog = [
     <h2 class="font-display text-3xl md:text-4xl">Sixty seconds.</h2>
     <div class="mt-5 rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
       <ol class="text-base leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92); padding-left: 1.25rem;">
-        <li>Install the collection: <code>npx skills add https://github.com/Leonxlnx/taste-skill</code> — or one skill: <code>--skill "imagegen-frontend-web"</code>.</li>
+        <li>Install: <code>npx skills add https://github.com/Belkins/taste-skill</code> (my fork) — or one skill: <code>--skill "imagegen-frontend-web"</code>. Prefer the source? Swap in <code>Leonxlnx/taste-skill</code>.</li>
         <li>Write the <strong>intent</strong> first: what is this <em>for</em> — loud or calm, the emotion, the positioning. One sentence, before you prompt.</li>
         <li>Ask for the design. The skill fires, kills the slop defaults, and holds one world across every frame.</li>
         <li>Cull the misses. Image models are stochastic — the skill <em>biases</em> toward your taste; you still pick.</li>
@@ -134,7 +138,7 @@ const catalog = [
     <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--muted)); color: rgb(var(--fg) / 0.92);">
       <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">What's real, what's not</div>
       <ul class="text-sm leading-relaxed m-0" style="padding-left: 1.1rem;">
-        <li><strong>The skill is Leon Lin's</strong>, not mine — <a href="https://github.com/Leonxlnx/taste-skill">github.com/Leonxlnx/taste-skill</a>, 45k+ stars, MIT, with its own research corpus on model "laziness." I'm a user and a fan, crediting the source.</li>
+        <li><strong>The skill is Leon Lin's</strong>, not mine — the original is <a href="https://tasteskill.dev">tasteskill.dev</a> / <a href="https://github.com/Leonxlnx/taste-skill">Leonxlnx/taste-skill</a> (45k+ stars, MIT, with its own research corpus on model "laziness"). I share a fork at <a href="https://github.com/Belkins/taste-skill">github.com/Belkins/taste-skill</a> so it sits with everything else I share — credited to its author, not claimed.</li>
         <li><strong>The receipts are art-direction studies.</strong> flicked.email is a live product; the Reach moon-base set is a <em>pre-build</em> concept (the name isn't locked) — both made with an image model and the discipline, not shipped-and-scaled claims.</li>
         <li><strong>No invented numbers.</strong> The slop image's "99% · 10× · INFINITE" is the parody; nothing here is a metric I don't have.</li>
       </ul>
