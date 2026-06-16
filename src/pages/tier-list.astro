@@ -50,7 +50,17 @@ const faqLd = {
     <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Public leaderboards rank capability. Operators rank usefulness. Below, four readings of the same models: the crowd's public benchmark, an independent referee that prices every run, the labs' own launch decks — then Vlad's actual stack, a builder you can drag, share, and argue about.</p>
   </section>
 
-  <section class="container-prose pt-6 pb-2">
+  <nav id="tl-sectionnav" aria-label="Tier list sections" class="sticky z-30 border-b backdrop-blur" style="top: 3.5rem; background: rgb(var(--bg) / 0.82); border-color: rgb(var(--line))">
+    <div class="container-prose flex items-center gap-1 py-2.5 overflow-x-auto text-xs">
+      <span class="uppercase tracking-wider mr-1 shrink-0" style="color: rgb(var(--muted))">Jump to</span>
+      <a href="#sec-crowd" data-spy="sec-crowd" class="tl-link">Crowd</a>
+      <a href="#sec-independent" data-spy="sec-independent" class="tl-link">Independent</a>
+      <a href="#sec-labs" data-spy="sec-labs" class="tl-link">Labs</a>
+      <a href="#sec-operator" data-spy="sec-operator" class="tl-link">Operator</a>
+    </div>
+  </nav>
+
+  <section id="sec-crowd" style="scroll-margin-top: 7rem" class="container-prose pt-6 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the public says</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">LMArena public leaderboard</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://lmarena.ai/" target="_blank" rel="noopener" style="color: rgb(var(--accent))">lmarena.ai</a>. This is the canonical "which model is better at benchmark tasks" public ranking. It's the right answer to one specific question — and the wrong answer to the question you actually care about as an operator.</p>
@@ -60,7 +70,7 @@ const faqLd = {
     <LMArenaLeaderboard client:load />
   </section>
 
-  <section class="container-prose pt-12 pb-2">
+  <section id="sec-independent" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What an independent referee measures</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Artificial Analysis — the independent referee</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is the crowd's taste; the boards below are the vendors' launch slides. This is neither — <a href="https://artificialanalysis.ai/models" target="_blank" rel="noopener" style="color: rgb(var(--accent))">Artificial Analysis</a> runs its own agentic harness (rebuilt in {AA_INDEX_VERSION} around long agentic chains — Terminal-Bench 2.1, 𝜏³-Banking, GDPval v2) and reports the one number the other two never do: what each run <em>costs</em>. Cost per task, not just capability — the column where the leaderboard starts speaking the operator's language. Read it as a referee's reading, not a verdict: independent buys disinterest, not the last word. Captured {AA_SNAPSHOT}; dated sourcing on <a href={`${base}/research-notes`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
@@ -70,7 +80,7 @@ const faqLd = {
     <ArtificialAnalysisPanel client:load />
   </section>
 
-  <section class="container-prose pt-12 pb-2">
+  <section id="sec-labs" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the labs claim</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Launch-deck numbers — discounted on arrival</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is crowd votes on chat prompts. The boards below are what vendors shipped on launch day for the question operators actually ask — agentic work — which LMArena doesn't measure. Read every row as a claim, not a receipt: Berkeley RDI reward-hacked 8 of 8 major agent benchmarks, so launch numbers carry a 10–15 point discount until your own eval confirms them. Models you can't buy don't appear — capability ceilings are not tier-list entries. Dated sourcing for every figure lives on <a href={`${base}/research-notes`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
@@ -97,7 +107,7 @@ const faqLd = {
     </div>
   </section>
 
-  <section class="container-prose pt-12 pb-2">
+  <section id="sec-operator" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent))">What an operator actually uses</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Vlad's tier list</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">
@@ -113,6 +123,51 @@ const faqLd = {
       <p class="m-0">Benchmarks reward the model that beats other models. Operators reward the tool that doesn't break the workflow. The most useful tool you own is rarely the most capable one — it's the one with the lowest activation energy on a Tuesday morning when you have nineteen other problems. That's why Claude Code is S-tier in this list and not even ranked on LMArena. Different question. Different answer.</p>
     </div>
   </section>
+
+  <style>
+    .tl-link { padding: 5px 10px; border-radius: 999px; white-space: nowrap; text-decoration: none; color: rgb(var(--muted)); transition: background .12s, color .12s; }
+    .tl-link:hover { color: rgb(var(--fg)); background: rgb(var(--line) / 0.5); }
+    .tl-link[aria-current="true"] { color: #fff; background: rgb(var(--accent)); }
+    @media (prefers-reduced-motion: reduce) { .tl-link { transition: none; } }
+  </style>
+
+  <script>
+    // Sticky section-nav scrollspy. Position-based (rAF-throttled scroll), so the
+    // active link tracks the section under the sticky bar accurately. Idempotent +
+    // wired to astro:page-load so it survives ClientRouter SPA navigations.
+    let tlCleanup: (() => void) | undefined;
+    function initTierSectionNav() {
+      const nav = document.getElementById('tl-sectionnav');
+      if (!nav) return; // not on the tier-list page
+      const links = new Map<string, Element>();
+      nav.querySelectorAll<HTMLElement>('[data-spy]').forEach((a) => {
+        if (a.dataset.spy) links.set(a.dataset.spy, a);
+      });
+      const sections = [...links.keys()]
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLElement => !!el);
+      if (!sections.length) return;
+      let ticking = false;
+      const setActive = () => {
+        ticking = false;
+        let current = sections[0].id;
+        for (const s of sections) if (s.getBoundingClientRect().top <= 130) current = s.id;
+        links.forEach((a, id) =>
+          id === current ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')
+        );
+      };
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(setActive); } };
+      tlCleanup?.(); // tear down a prior instance before re-binding
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      tlCleanup = () => {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+      };
+      setActive();
+    }
+    document.addEventListener('astro:page-load', initTierSectionNav);
+  </script>
 
   <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
 
