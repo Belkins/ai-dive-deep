@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <marker id="ah46s" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#FF6B2C"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="#0E0F11"/>
+
+  <text x="80" y="84" fill="#FF6B2C" font-size="13" letter-spacing="3" font-family="JetBrains Mono, monospace">CHAPTER 46 · SWARM-BEFORE-V1</text>
+  <text x="80" y="134" fill="#FAFAF7" font-size="40" font-weight="500" font-family="Source Serif 4, Georgia, serif">Two opinions iterated ≠ four perspectives reconciled.</text>
+  <text x="80" y="172" fill="#AAA79A" font-size="16">One taste is a single point of failure. The only fix for a blind spot is another reader who doesn&#39;t share it.</text>
+
+  <!-- ZONE 1: SOLO -->
+  <text x="80" y="262" fill="#EF4444" font-size="14" font-weight="700" letter-spacing="1" font-family="JetBrains Mono, monospace">SOLO JUDGMENT</text>
+  <g>
+    <rect x="80" y="284" width="360" height="118" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5"/>
+    <text x="108" y="332" fill="#FAFAF7" font-size="19" font-weight="600">Redesign v1</text>
+    <text x="108" y="362" fill="#AAA79A" font-size="14">my own eye, first attempt</text>
+    <text x="108" y="388" fill="#EF4444" font-size="15" font-weight="700" font-family="JetBrains Mono, monospace">✕ rejected — &#34;just bad&#34;</text>
+  </g>
+  <g>
+    <rect x="80" y="424" width="360" height="118" rx="10" fill="#1A1410" stroke="#5C2108" stroke-width="1.5"/>
+    <text x="108" y="472" fill="#FAFAF7" font-size="19" font-weight="600">Redesign v2</text>
+    <text x="108" y="502" fill="#AAA79A" font-size="14">my own eye, sharpened</text>
+    <text x="108" y="528" fill="#EF4444" font-size="15" font-weight="700" font-family="JetBrains Mono, monospace">✕ rejected — &#34;not enough&#34;</text>
+  </g>
+  <text x="80" y="588" fill="#56544B" font-size="14">Same eye, same blind spot, sharper each time.</text>
+
+  <line x1="460" y1="413" x2="556" y2="413" stroke="#FF6B2C" stroke-width="3" marker-end="url(#ah46s)"/>
+
+  <!-- ZONE 2: SWARM -->
+  <text x="580" y="262" fill="#FF6B2C" font-size="14" font-weight="700" letter-spacing="1" font-family="JetBrains Mono, monospace">FOUR LENSES, IN PARALLEL</text>
+  <g font-family="JetBrains Mono, monospace" font-size="15">
+    <rect x="580" y="284" width="360" height="58" rx="9" fill="#161B1F" stroke="#262521" stroke-width="1"/>
+    <text x="606" y="320" fill="#FAFAF7">editorial typographer</text>
+    <rect x="580" y="352" width="360" height="58" rx="9" fill="#161B1F" stroke="#262521" stroke-width="1"/>
+    <text x="606" y="388" fill="#FAFAF7">interaction / IA critic</text>
+    <rect x="580" y="420" width="360" height="58" rx="9" fill="#161B1F" stroke="#262521" stroke-width="1"/>
+    <text x="606" y="456" fill="#FAFAF7">the operator-reader</text>
+    <rect x="580" y="488" width="360" height="58" rx="9" fill="#1A1410" stroke="#5C2108" stroke-width="1.5"/>
+    <text x="606" y="524" fill="#FF8E54">red-team — paid to disagree</text>
+  </g>
+  <text x="580" y="588" fill="#56544B" font-size="14">Each carries a different bias on purpose.</text>
+
+  <line x1="960" y1="413" x2="1056" y2="413" stroke="#FF6B2C" stroke-width="3" marker-end="url(#ah46s)"/>
+
+  <!-- ZONE 3: RECONCILER + V1 -->
+  <text x="1080" y="262" fill="#22D3A0" font-size="14" font-weight="700" letter-spacing="1" font-family="JetBrains Mono, monospace">RECONCILED</text>
+  <rect x="1080" y="284" width="360" height="118" rx="10" fill="#0C1F1A" stroke="#22D3A0" stroke-width="1.5"/>
+  <text x="1108" y="332" fill="#22D3A0" font-size="19" font-weight="600" font-family="JetBrains Mono, monospace">reconciler</text>
+  <text x="1108" y="362" fill="#AAA79A" font-size="14">merges four arguments into one plan</text>
+  <text x="1108" y="388" fill="#AAA79A" font-size="14">— caught the timeline was never sorted</text>
+
+  <line x1="1260" y1="402" x2="1260" y2="442" stroke="#22D3A0" stroke-width="3" marker-end="url(#ah46s)"/>
+
+  <rect x="1080" y="448" width="360" height="118" rx="10" fill="#161B1F" stroke="#22D3A0" stroke-width="1.5"/>
+  <path d="M1112 505 l12 12 l22 -26" fill="none" stroke="#22D3A0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1162" y="500" fill="#FAFAF7" font-size="19" font-weight="600">Shipped v1</text>
+  <text x="1162" y="528" fill="#AAA79A" font-size="14">what solo never reached</text>
+  <text x="1108" y="612" fill="#56544B" font-size="14">Four readers found what one eye couldn&#39;t.</text>
+
+  <text x="80" y="800" fill="#FAFAF7" font-size="20" font-family="Source Serif 4, Georgia, serif">When you iterate alone you sharpen what you already see. A swarm finds what you <tspan fill="#FF6B2C" font-style="italic">can&#39;t</tspan>.</text>
+  <text x="1520" y="852" fill="#3F3F46" font-size="11" text-anchor="end" font-family="JetBrains Mono, monospace">dive.vladyslavpodoliako.com · Ch 46 · swarm-before-v1</text>
+</svg>

@@ -16,10 +16,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.5',
+    date: '2026-06-16',
+    bannerText: 'New chapter — "Designing with AI." A model can generate any interface in seconds; it still can\'t tell you which one is right. Taste is the last mile.',
+    bannerHref: '/chapters/46-designing-with-ai',
+    tagline: 'The design reading. Forty-five chapters taught you to build with AI; none taught you to make it look like something. Chapter 46 fills the gap with the book\'s own receipts — a contrast failure that sat in our light-theme tokens for weeks until the arithmetic caught what every eye had passed, flicked.email\'s three landing pages in three different typefaces, and a flat moon-base image set for Reach art-directed with a public taste skill. Generation went to zero; selection didn\'t.',
+    shipped: [
+      'New Chapter 46 — "Designing with AI" (Part V). The thesis: the model generates, the human selects, the system remembers the selection. It opens on the WCAG light-accent miss — flame at ~2.7:1 and terminal at ~1.7:1 doing text duty on light, a latent token omission the arithmetic caught after every eye had passed it — then runs through swarm-before-v1 and the design-system-as-a-ruler, and proves the thesis on a second product.',
+      'The flicked.email case study, pixel-verified: one product, three live landing pages — chaos, hype, calm — in three different heading typefaces (Bricolage display / Inter sans / Fraunces serif), with the brand mint #35E8B8 as the only constant. Intent is the input; the model is the executor; which intent is right is a taste call it can\'t make for you.',
+      'An honest "which model for which design job" matrix — first-person is Claude and Claude Code; every other tool (GPT, v0, Lovable, Midjourney, Figma AI) is labeled researched, not a war story I didn\'t earn.',
+      'A new section on designing the images, not just the layout — AI image generation as art direction: one image per section, kill the default hero, pick one of each variable, run the anti-slop ban-list. The worked example is a flat eight-section moon-base concept set for Reach by Folderly, generated with a dedicated image model (not Claude) and held consistent by one reference frame. The skill behind it is public: github.com/Belkins/taste-skill.',
+    ],
+    receipts: [
+      { label: 'The contrast miss the eye passed, the math caught', value: '2.7:1 / 1.7:1 → ≥4.5:1' },
+      { label: 'flicked.email — one product, three typefaces', value: 'display / sans / serif' },
+      { label: 'Reach moon-base set — one image per section', value: '8 frames, one world' },
+      { label: 'Chapters', value: '45 → 46' },
+    ],
+  },
+  {
     edition: 'Edition 10.4',
     date: '2026-06-16',
-    bannerText: 'New on the tier list: Artificial Analysis joins as the independent referee — agentic Intelligence Index v4.1 with cost-per-task economics. Sort the models by intelligence-per-dollar.',
-    bannerHref: '/tier-list',
     tagline: 'The fourth reading — the tier list gains an independent referee. Between the crowd\'s LMArena votes and the vendors\' launch decks, Artificial Analysis runs its own agentic harness and prices every run, so you can finally sort the leaderboard by what a task actually costs, not just by who scores highest.',
     shipped: [
       'New "What an independent referee measures" panel on /tier-list — Artificial Analysis\'s agentic Intelligence Index v4.1 (Terminal-Bench 2.1, 𝜏³-Banking, GDPval-AA v2; IFBench retired) alongside its new per-task economics. Three sort pills — Intelligence, cost-per-task, speed — re-rank the same ten models live, so the intelligence-vs-cost inversion is something you feel: the #1 model on the Index (Claude Fable 5, 59.9) is the most expensive per task at $3.25, ~58× DeepSeek V4 Pro\'s $0.056. Hand-captured fair-use snapshot from AA\'s public board (2026-06-16), attributed with a link-out, and a staleness guard that ages the data honestly.',
