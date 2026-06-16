@@ -16,11 +16,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.6',
+    date: '2026-06-16',
+    bannerText: 'New showcase — /good-taste: stop your AI from generating generic slop. A before/after of Leon Lin\'s public taste-skill (45k★, credited), with the receipts I built using it.',
+    bannerHref: '/good-taste',
+    tagline: 'The showcase. Chapter 46 argued that taste is the last mile; /good-taste makes it visceral — a side-by-side of generic-AI slop (purple glow, floating blobs, a fake dashboard) next to the same brief art-directed with a public skill. The skill is Leon Lin\'s open-source taste-skill (github.com/Leonxlnx/taste-skill, 45k+ stars), not mine; this page is what stealing a skill well, with credit, looks like.',
+    shipped: [
+      'New page /good-taste — a before/after gallery (slop vs. taste, same prompt), the skill catalog, a 60-second npx install, and the receipts (flicked.email\'s three designs, the Reach moon-base study, this book\'s own design system). The "before" is an honest generated example of un-directed AI slop — every tell on the skill\'s own ban-list.',
+      'Honest attribution throughout: taste-skill is Leon Lin\'s MIT-licensed project (Leonxlnx/taste-skill), and it runs across Codex, Cursor, and Claude. The page credits the author, links upstream, and frames the whole thing as the Ch 39 "steal it well, with credit" move — not a Belkins product.',
+    ],
+    receipts: [
+      { label: 'The skill (credited, not claimed)', value: 'Leonxlnx/taste-skill · 45k★' },
+      { label: 'Before / after, same prompt', value: 'slop → directed' },
+      { label: 'Install', value: 'npx skills add' },
+    ],
+  },
+  {
     edition: 'Edition 10.5',
     date: '2026-06-16',
-    bannerText: 'New chapter — "Designing with AI." A model can generate any interface in seconds; it still can\'t tell you which one is right. Taste is the last mile.',
-    bannerHref: '/chapters/46-designing-with-ai',
-    tagline: 'The design reading. Forty-five chapters taught you to build with AI; none taught you to make it look like something. Chapter 46 fills the gap with the book\'s own receipts — a contrast failure that sat in our light-theme tokens for weeks until the arithmetic caught what every eye had passed, flicked.email\'s three landing pages in three different typefaces, and a flat moon-base image set for Reach art-directed with a public taste skill. Generation went to zero; selection didn\'t.',
+    tagline: 'The design reading. Forty-five chapters taught you to build with AI; none taught you to make it look like something. Chapter 46 fills the gap with the book\'s own receipts — a contrast failure that sat in our light-theme tokens for weeks until the arithmetic caught what every eye had passed, flicked.email\'s three landing pages in three different typefaces, and a moon-base image set for Reach art-directed with a public taste skill. Generation went to zero; selection didn\'t.',
     shipped: [
       'New Chapter 46 — "Designing with AI" (Part V). The thesis: the model generates, the human selects, the system remembers the selection. It opens on the WCAG light-accent miss — flame at ~2.7:1 and terminal at ~1.7:1 doing text duty on light, a latent token omission the arithmetic caught after every eye had passed it — then runs through swarm-before-v1 and the design-system-as-a-ruler, and proves the thesis on a second product.',
       'The flicked.email case study, pixel-verified: one product, three live landing pages — chaos, hype, calm — in three different heading typefaces (Bricolage display / Inter sans / Fraunces serif), with the brand mint #35E8B8 as the only constant. Intent is the input; the model is the executor; which intent is right is a taste call it can\'t make for you.',
@@ -30,7 +44,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     receipts: [
       { label: 'The contrast miss the eye passed, the math caught', value: '2.7:1 / 1.7:1 → ≥4.5:1' },
       { label: 'flicked.email — one product, three typefaces', value: 'display / sans / serif' },
-      { label: 'Reach moon-base set — one image per section', value: '8 frames, one world' },
+      { label: 'Reach moon-base set — real mockups', value: 'one world, many layouts' },
       { label: 'Chapters', value: '45 → 46' },
     ],
   },

@@ -97,6 +97,10 @@ export const SCREENSHOTS: Record<string, string> = {
   "dynamic-workflows-flow": "dynamic-workflows-flow.svg",
   "dynamic-workflows-slider": "dynamic-workflows-slider.gif",
   "fable-5-cc-banner": "fable-5-cc-banner.png",
+  "good-taste-after": "good-taste-after.jpg",
+  "good-taste-flicked": "good-taste-flicked.jpg",
+  "good-taste-slop": "good-taste-slop.jpg",
+  "good-taste-system": "good-taste-system.jpg",
   "research-semianalysis-margin-grid": "research-semianalysis-margin-grid.png",
   "research-semianalysis-max-spend": "research-semianalysis-max-spend.png",
   "swarms-1": "swarms-1.png",
@@ -104,4 +108,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "swarms-3": "swarms-3.png"
 };
 
-export const SCREENSHOT_COUNT = 99;
+export const SCREENSHOT_COUNT = 103;

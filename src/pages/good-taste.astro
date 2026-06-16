@@ -1,0 +1,168 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const catalog = [
+  { name: 'imagegen-frontend-web', flagship: true, job: 'Art-directed website images — one image per section, the anti-slop ban-list, a consistent palette across the whole set.' },
+  { name: 'imagegen-frontend-mobile', job: 'The same discipline pointed at app screens and mobile flows.' },
+  { name: 'brandkit', job: 'Lock a brand world — palette, type, tone — so everything downstream stays on-brand.' },
+  { name: 'design-taste-frontend', job: 'The original taste skill: stop a coding model from shipping the centered-hero-and-three-cards default.' },
+  { name: 'redesign', job: 'Take an existing ugly surface and re-derive it with taste, not a from-scratch reroll.' },
+  { name: 'image-to-code', job: 'Turn a design image into structured, buildable front-end code.' },
+  { name: 'minimalist · brutalist · soft', job: 'Style skills — commit to one art direction instead of averaging all of them into mush.' },
+];
+---
+<BaseLayout
+  title="Good taste, on tap"
+  description="A public skill that stops your AI from generating boring, generic slop — by Leon Lin (Leonxlnx/taste-skill, 45k+ stars). Here's the before/after, the catalog, the 60-second install, and what I built with the discipline. Steal it well, with credit.">
+
+  <!-- 1. HERO -->
+  <section class="container-wide pt-16 md:pt-20 pb-10">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">A skill worth stealing</div>
+    <h1 class="font-display font-medium leading-[1.02] text-[clamp(2.5rem,6vw,4.5rem)] tracking-tight max-w-[16ch]">
+      Stop your AI from generating <span style="color: rgb(var(--accent))">boring, generic slop.</span>
+    </h1>
+    <p class="mt-6 max-w-[58ch] text-lg md:text-xl" style="color: rgb(var(--fg) / 0.9)">
+      A model with no art direction returns the internet's average — the purple glow, the floating blobs, the fake dashboard. <strong>taste-skill</strong> is the written-down taste that makes it execute <em>your</em> decision instead.
+    </p>
+    <p class="mt-3 max-w-[58ch] text-base" style="color: rgb(var(--muted))">
+      Full disclosure, because it's the whole point: <strong>it isn't mine.</strong> It's <a href="https://github.com/Leonxlnx/taste-skill">Leon Lin's open-source project</a> — 45,000+ stars, MIT-licensed, works in Codex, Cursor, and Claude. This page is what <a href={`${base}/chapters/39-skills-you-should-steal`}>stealing a skill well</a> looks like: here's the skill, here's what I built with the discipline, go take it — and credit Leon.
+    </p>
+
+    <div class="mt-7 rounded-lg p-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+      <div class="text-[0.7rem] uppercase tracking-[0.18em] mb-2" style="color: rgb(var(--accent-2))">Install in one line</div>
+      <pre class="m-0 overflow-x-auto"><code>npx skills add https://github.com/Leonxlnx/taste-skill</code></pre>
+    </div>
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a href="https://tasteskill.dev" class="btn-flame no-underline">Open tasteskill.dev →</a>
+      <a href="https://github.com/Leonxlnx/taste-skill" class="btn-ghost no-underline">Leon's repo (45k★) ↗</a>
+      <a href={`${base}/chapters/46-designing-with-ai`} class="btn-ghost no-underline">The full reading: Ch 46</a>
+    </div>
+  </section>
+
+  <!-- 2. BEFORE / AFTER GALLERY -->
+  <section class="container-wide pb-12">
+    <div class="flex items-baseline justify-between mb-6 flex-wrap gap-3">
+      <h2 class="font-display text-3xl md:text-4xl m-0">Slop, then taste.</h2>
+      <span class="text-sm" style="color: rgb(var(--muted))">Same prompt. The only variable is the art direction.</span>
+    </div>
+
+    <!-- diptych -->
+    <div class="grid gap-5 lg:grid-cols-2">
+      <figure class="m-0">
+        <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--line));">
+          <img src={`${base}/screens/good-taste-slop.jpg`} alt="A generic-AI slop landing page: purple glow, floating blobs, a fake dashboard with invented stats" loading="lazy" decoding="async" style="width:100%; display:block; aspect-ratio: 16/9; object-fit: cover;" />
+        </div>
+        <figcaption class="mt-3 text-sm" style="color: rgb(var(--muted))">
+          <span class="font-mono text-xs uppercase tracking-wider px-2 py-0.5 rounded" style="background: rgb(239 68 68 / 0.15); color: rgb(239 68 68);">Before · no art direction</span>
+          <span class="block mt-2">"Moon-base landing page for an email product." With no intent supplied, the model returns the average: a purple-blue glow, floating orbs, gradient headline, and a fake dashboard claiming <em>99% · 10× · INFINITE</em>. Every tell on the skill's own ban-list.</span>
+        </figcaption>
+      </figure>
+      <figure class="m-0">
+        <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--accent-2) / 0.4);">
+          <img src={`${base}/screens/good-taste-after.jpg`} alt="A directed moon-base hero for Reach: flat illustrated world, one muted blue, real headline" loading="lazy" decoding="async" style="width:100%; display:block; aspect-ratio: 16/9; object-fit: cover;" />
+        </div>
+        <figcaption class="mt-3 text-sm" style="color: rgb(var(--muted))">
+          <span class="font-mono text-xs uppercase tracking-wider px-2 py-0.5 rounded" style="background: rgb(var(--accent-2) / 0.15); color: rgb(var(--accent-2));">After · the discipline</span>
+          <span class="block mt-2">Same brief, one locked intent: a moon base where the inbox is the territory and emails are capsules landing on a "PRIMARY INBOX" pad. One world, one accent, real type. An art-direction study for <em>Reach by Folderly</em>, made with an image model (ChatGPT, not Claude).</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- range + the book -->
+    <div class="grid gap-5 lg:grid-cols-2 mt-8">
+      <figure class="m-0">
+        <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--line));">
+          <img src={`${base}/screens/good-taste-flicked.jpg`} alt="flicked.email's three landing pages — chaos, hype, calm — side by side" loading="lazy" decoding="async" style="width:100%; display:block; aspect-ratio: 21/8; object-fit: cover; background: rgb(var(--paper));" />
+        </div>
+        <figcaption class="mt-3 text-sm" style="color: rgb(var(--muted))">
+          <span class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent));">One product, three intents</span>
+          <span class="block mt-1">flicked.email's three live pages — chaos, hype, calm — in three heading typefaces, one constant brand mint. Intent is the input; the model is the executor.</span>
+        </figcaption>
+      </figure>
+      <figure class="m-0">
+        <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--line));">
+          <img src={`${base}/screens/good-taste-system.jpg`} alt="The Playbook's own design system style guide" loading="lazy" decoding="async" style="width:100%; display:block; aspect-ratio: 16/9; object-fit: cover; background: rgb(var(--paper));" />
+        </div>
+        <figcaption class="mt-3 text-sm" style="color: rgb(var(--muted))">
+          <span class="font-mono text-xs uppercase tracking-wider" style="color: rgb(var(--accent));">The proof you're standing in</span>
+          <span class="block mt-1">This book runs on the same discipline: a small set of written-down tokens the next screen has to obey. The page you're reading <em>is</em> the receipt. <a href="/">See the style guide →</a></span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 3. SKILL CATALOG -->
+  <section class="container-wide pb-12">
+    <div class="flex items-baseline justify-between mb-6 flex-wrap gap-3">
+      <h2 class="font-display text-3xl md:text-4xl m-0">It's a collection.</h2>
+      <span class="text-sm" style="color: rgb(var(--muted))">Install all of them at once, or one by name. The repo lists the exact install names.</span>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {catalog.map((s) => (
+        <div class="card" style={s.flagship ? 'border-color: rgb(var(--accent) / 0.5)' : ''}>
+          <div class="flex items-center gap-2 mb-1.5">
+            <code class="text-sm" style="color: rgb(var(--fg))">{s.name}</code>
+            {s.flagship && <span class="text-[0.6rem] uppercase tracking-wider px-1.5 py-0.5 rounded" style="background: rgb(var(--accent) / 0.15); color: rgb(var(--accent));">flagship</span>}
+          </div>
+          <p class="m-0 text-sm" style="color: rgb(var(--muted))">{s.job}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 4. HOW IT WORKS -->
+  <section class="container-prose pb-12">
+    <h2 class="font-display text-3xl md:text-4xl">Sixty seconds.</h2>
+    <div class="mt-5 rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
+      <ol class="text-base leading-relaxed m-0" style="color: rgb(var(--fg) / 0.92); padding-left: 1.25rem;">
+        <li>Install the collection: <code>npx skills add https://github.com/Leonxlnx/taste-skill</code> — or one skill: <code>--skill "imagegen-frontend-web"</code>.</li>
+        <li>Write the <strong>intent</strong> first: what is this <em>for</em> — loud or calm, the emotion, the positioning. One sentence, before you prompt.</li>
+        <li>Ask for the design. The skill fires, kills the slop defaults, and holds one world across every frame.</li>
+        <li>Cull the misses. Image models are stochastic — the skill <em>biases</em> toward your taste; you still pick.</li>
+      </ol>
+    </div>
+    <p class="mt-4 text-sm" style="color: rgb(var(--muted))">
+      Honest note: the image-generation skills hand the prompt to an external <em>image</em> model (ChatGPT, Midjourney, etc.) — Claude doesn't generate images. The skill is the art direction; the image model is the brush. That's the <a href={`${base}/chapters/46-designing-with-ai`}>which-model-for-which-job</a> rule made literal.
+    </p>
+  </section>
+
+  <!-- 5. RECEIPTS / HONESTY BAR -->
+  <section class="container-prose pb-12">
+    <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--muted)); color: rgb(var(--fg) / 0.92);">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">What's real, what's not</div>
+      <ul class="text-sm leading-relaxed m-0" style="padding-left: 1.1rem;">
+        <li><strong>The skill is Leon Lin's</strong>, not mine — <a href="https://github.com/Leonxlnx/taste-skill">github.com/Leonxlnx/taste-skill</a>, 45k+ stars, MIT, with its own research corpus on model "laziness." I'm a user and a fan, crediting the source.</li>
+        <li><strong>The receipts are art-direction studies.</strong> flicked.email is a live product; the Reach moon-base set is a <em>pre-build</em> concept (the name isn't locked) — both made with an image model and the discipline, not shipped-and-scaled claims.</li>
+        <li><strong>No invented numbers.</strong> The slop image's "99% · 10× · INFINITE" is the parody; nothing here is a metric I don't have.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6. WHERE THIS SITS -->
+  <section class="container-prose pb-24">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Where this sits in the book</div>
+    <div class="grid gap-3 sm:grid-cols-2">
+      <a href={`${base}/chapters/46-designing-with-ai`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <h3 class="m-0 font-display text-lg">Chapter 46 — Designing with AI</h3>
+        <p class="mt-1.5 text-sm" style="color: rgb(var(--muted))">The full reading: taste is the last mile, and how this skill fits the picture.</p>
+      </a>
+      <a href={`${base}/chapters/39-skills-you-should-steal`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <h3 class="m-0 font-display text-lg">Chapter 39 — Skills You Should Steal</h3>
+        <p class="mt-1.5 text-sm" style="color: rgb(var(--muted))">The philosophy: take the good public ones, credit the author, ship.</p>
+      </a>
+      <a href={`${base}/starter-skills`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <h3 class="m-0 font-display text-lg">Starter skills</h3>
+        <p class="mt-1.5 text-sm" style="color: rgb(var(--muted))">Six more drop-in SKILL.md files, in my voice.</p>
+      </a>
+      <a href={`${base}/resources`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+        <h3 class="m-0 font-display text-lg">Resources</h3>
+        <p class="mt-1.5 text-sm" style="color: rgb(var(--muted))">The copy-paste vault: CLAUDE.md skeletons, hooks, templates.</p>
+      </a>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
