@@ -16,6 +16,23 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.7',
+    date: '2026-06-18',
+    bannerText: 'New Chapter 47 — "The Measurement Layer": when the AI output IS the product, a three-line eval isn\'t enough. Anthropic\'s own course, ported to a TS eval harness + hybrid retriever (29 tests), now gating AI features before they ship.',
+    bannerHref: '/chapters/47-measurement-layer',
+    tagline: 'The builder\'s eval, one altitude above Chapter 25. Chapter 25 was a three-line smoke detector for a skill\'s artifact; Chapter 47 is for when the model\'s output is the product itself. The Anthropic API course ships, as working code, the two tools most builders never build — a way to SCORE output and a way to RETRIEVE the right context. Both ported to TypeScript over a weekend: a PromptEvaluator (synthetic dataset → cheap code-grade + LLM-judge → honest scorecard) and a hybrid BM25+vector retriever. The point isn\'t the 400 lines; it\'s that you can stop charging for AI output you can\'t score.',
+    shipped: [
+      'New Chapter 47 — "The Measurement Layer" (Part V). Bridges from Chapter 25\'s operator eval to a builder\'s graded test set: generate a synthetic dataset, grade cheap-first (deterministic checks before any judge token), judge with reasoning-before-score, and print a scorecard that shows its failing cases — never a vanity average.',
+      'The RAG half: why lexical (BM25) and semantic (vector) search fail in opposite directions — BM25 nails exact identifiers an embedding blurs; vectors catch paraphrase keywords miss — fused by rank (reciprocal rank fusion), not by mismatched raw scores.',
+      'Receipts are the real thing: ~400 lines of glue extracted from Anthropic\'s course into two tested TypeScript libraries, 29 tests green, the deterministic gate proven to score a known-good reply 10 and a deliberately-toxic one 0 with no model in the loop. No live pass-rate is claimed — the harness is built and staged; the first product wiring is next.',
+    ],
+    receipts: [
+      { label: 'Course → TS, tested', value: '29 tests green' },
+      { label: 'Eval + RAG glue', value: '~400 lines' },
+      { label: 'Deterministic gate (good / bad)', value: '10 / 0' },
+    ],
+  },
+  {
     edition: 'Edition 10.6',
     date: '2026-06-16',
     bannerText: 'New showcase — /good-taste: stop your AI from generating generic slop. A before/after of Leon Lin\'s public taste-skill (45k★, credited), with the receipts I built using it.',
