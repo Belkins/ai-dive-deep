@@ -1,0 +1,76 @@
+---
+// In-chapter "On this page" navigation. Driven by the chapter's own H2 headings
+// (from Astro's render() — no MDX changes needed; Astro auto-slugs heading ids).
+// Active-section tracking uses a rAF-throttled scroll listener reading
+// getBoundingClientRect().top — NOT IntersectionObserver, which fires too coarsely
+// near the sticky header on this site (see memory: scrollspy-scroll-listener-not-io).
+interface Heading { depth: number; slug: string; text: string }
+interface Props { headings: Heading[] }
+const { headings } = Astro.props;
+const items = (headings ?? []).filter((h) => h.depth === 2);
+---
+{items.length >= 3 && (
+  <nav class="container-prose mt-6 mb-2" aria-label="On this page">
+    <details class="chapter-toc rounded-lg border" open style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
+      <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between select-none">
+        <span class="text-xs uppercase tracking-[0.2em]" style="color: rgb(var(--muted))">On this page</span>
+        <span class="text-xs" style="color: rgb(var(--muted))">{items.length} sections</span>
+      </summary>
+      <ol class="px-2 pb-3 mt-0 mb-0 list-none space-y-0.5 text-sm">
+        {items.map((s, i) => (
+          <li>
+            <a
+              href={`#${s.slug}`}
+              data-toc-link={s.slug}
+              class="toc-link flex gap-2 px-3 py-1.5 rounded no-underline transition"
+              style="color: rgb(var(--fg) / 0.8)"
+            >
+              <span class="font-mono text-[0.7rem] shrink-0" style="color: rgb(var(--muted))">{String(i + 1).padStart(2, '0')}</span>
+              <span>{s.text.replace(/\s*#+\s*$/, '')}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </details>
+  </nav>
+)}
+
+<style>
+  .chapter-toc .toc-link:hover { color: rgb(var(--fg)); background: rgb(var(--accent-2) / 0.06); }
+  .chapter-toc .toc-link[data-active="true"] {
+    color: rgb(var(--accent-2));
+    background: rgb(var(--accent-2) / 0.1);
+    font-weight: 500;
+  }
+  :global(.chapter-body h2[id]) { scroll-margin-top: 6rem; }
+</style>
+
+<script>
+  let tocScrollHandler: (() => void) | null = null;
+  function initChapterToc() {
+    if (tocScrollHandler) { window.removeEventListener('scroll', tocScrollHandler); tocScrollHandler = null; }
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[data-toc-link]'));
+    if (!links.length) return;
+    const heads = links
+      .map((a) => document.getElementById(a.getAttribute('data-toc-link') || ''))
+      .filter((el): el is HTMLElement => !!el);
+    if (!heads.length) return;
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      let activeId = heads[0].id;
+      for (const h of heads) {
+        if (h.getBoundingClientRect().top <= 130) activeId = h.id;
+        else break;
+      }
+      links.forEach((a) =>
+        a.toggleAttribute('data-active', a.getAttribute('data-toc-link') === activeId),
+      );
+    };
+    tocScrollHandler = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
+    window.addEventListener('scroll', tocScrollHandler, { passive: true });
+    update();
+  }
+  document.addEventListener('astro:page-load', initChapterToc);
+</script>

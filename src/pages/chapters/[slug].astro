@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ChapterHero from '@/components/ChapterHero.astro';
 import TLDR from '@/components/TLDR.astro';
+import ChapterToc from '@/components/ChapterToc.astro';
 import ChapterFooter from '@/components/ChapterFooter.astro';
 import ProgressBar from '@/components/ProgressBar.astro';
 import VideoEmbed from '@/components/VideoEmbed.astro';
@@ -14,7 +15,7 @@ export async function getStaticPaths() {
 }
 
 const { chapter } = Astro.props as any;
-const { Content } = await render(chapter);
+const { Content, headings } = await render(chapter);
 const data = chapter.data;
 ---
 
@@ -31,7 +32,9 @@ const data = chapter.data;
 
   <TLDR text={data.tldr} />
 
-  <article class="chapter-body container-prose pt-10 pb-12">
+  <ChapterToc headings={headings} />
+
+  <article class="chapter-body container-prose pt-6 pb-12">
     <Content />
   </article>
 
