@@ -54,6 +54,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 45, slug: '45-app-store-no-swift', title: 'The App Store Without Swift', subtitle: 'A Native iOS App, Real Recurring Revenue, and Not One Line of Swift I Wrote' },
   { number: 46, slug: '46-designing-with-ai', title: 'Designing with AI', subtitle: 'A Model Can Generate Any Interface in Seconds. It Still Can\'t Tell You Which One Is Right.' },
   { number: 47, slug: '47-measurement-layer', title: 'The Measurement Layer', subtitle: 'When the AI Output Is the Product, a Three-Line Eval Isn\'t Enough' },
+  { number: 48, slug: '48-traffic-graph-that-lies', title: 'The Traffic Graph That Lies', subtitle: 'Agentic SEO Done Right vs. the Vanity Version' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -94,7 +95,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part V — The Building Site',
     tagline: 'From Saturday idea to deployed URL with receipts.',
     intro: "Six stages: ideation → foundation → creation → polishing → security → deploy. Plus cron, headless, vibe coding, evals, the bill. This is the part that turns reading into shipping.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done', '41-send-the-link', '45-app-store-no-swift', '46-designing-with-ai', '47-measurement-layer'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done', '41-send-the-link', '45-app-store-no-swift', '46-designing-with-ai', '47-measurement-layer', '48-traffic-graph-that-lies'],
   },
   {
     key: 'VI',
@@ -145,7 +146,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'building',
     label: 'Building Products',
     description: "From Saturday idea to deployed URL. Six stages. Cron. Headless. Vibe coding. The bill, demystified.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '41-send-the-link', '45-app-store-no-swift', '46-designing-with-ai', '47-measurement-layer'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '41-send-the-link', '45-app-store-no-swift', '46-designing-with-ai', '47-measurement-layer', '48-traffic-graph-that-lies'],
   },
   {
     key: 'resources',

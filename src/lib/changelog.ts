@@ -16,10 +16,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.8',
+    date: '2026-06-23',
+    bannerText: 'New Chapter 48 — "The Traffic Graph That Lies": agentic SEO done right vs. the vanity version. Two AI-built products, real GSC + Ahrefs numbers — one genuine win (EmailGen, #1 for "business email generator"), one cautionary tale (LinguaLive, ~94% branded clicks).',
+    bannerHref: '/chapters/48-traffic-graph-that-lies',
+    tagline: 'The SEO reading. Most "agentic SEO" wins are self-reported traffic graphs that crater in six months. This chapter pulls the real receipts from two products built by AI agents end to end: Folderly EmailGen — a brand-new subdomain that hit #1 for "business email generator," 467K impressions, third-party traffic value climbing ~$0 → ~$320/mo — and LinguaLive, the cautionary tale whose 153K-impression graph looks like a win until you see ~94% of the clicks are people already typing the brand name. The method is triangulation: GSC for footprint, Ahrefs for the independently-checkable commercial keywords, conversions for truth. Do not trust a graph you cannot cross-check.',
+    shipped: [
+      'New Chapter 48 — "The Traffic Graph That Lies" (Part V). The anti-vanity case for agentic SEO: agents are the labor, a per-page differentiated dataset is the moat, and Google\'s scaled-content-abuse policy is production-method-neutral — "an agent wrote it" earns zero safe-harbor.',
+      'Two AI-built products as a natural experiment, with verified numbers. EmailGen (generate.folderly.com): 3,330 clicks / 467K impressions over 12 months, #1 for "business email generator" (KD 36) confirmed by Ahrefs, traffic value stepped from ~$0 to ~$290–390/mo. The honest caveats kept in: 0.7% CTR, average position 13, and one query printing 14,350 impressions for 81 clicks.',
+      'LinguaLive (lingualive.ai) as the cautionary tale: a 153K-impression / 1.33K-click graph where ~94% of top-query clicks are branded, the non-branded long-tail earns ~3 clicks each, and independent traffic value is ~$12/mo. The first-party-vs-third-party divergence (GSC ~1,000 queries vs Ahrefs 21 keywords) is the whole lesson: triangulate, or you are the next 24k-clicks screenshot.',
+    ],
+    receipts: [
+      { label: 'EmailGen — GSC, 12 mo', value: '3.3K clicks / 467K impr' },
+      { label: 'EmailGen — Ahrefs commercial', value: '#1 "business email generator"' },
+      { label: 'LinguaLive — branded clicks', value: '~94% of top queries' },
+    ],
+  },
+  {
     edition: 'Edition 10.7',
     date: '2026-06-18',
-    bannerText: 'New Chapter 47 — "The Measurement Layer": when the AI output IS the product, a three-line eval isn\'t enough. Anthropic\'s own course, ported to a TS eval harness + hybrid retriever (29 tests), now gating AI features before they ship.',
-    bannerHref: '/chapters/47-measurement-layer',
     tagline: 'The builder\'s eval, one altitude above Chapter 25. Chapter 25 was a three-line smoke detector for a skill\'s artifact; Chapter 47 is for when the model\'s output is the product itself. The Anthropic API course ships, as working code, the two tools most builders never build — a way to SCORE output and a way to RETRIEVE the right context. Both ported to TypeScript over a weekend: a PromptEvaluator (synthetic dataset → cheap code-grade + LLM-judge → honest scorecard) and a hybrid BM25+vector retriever. The point isn\'t the 400 lines; it\'s that you can stop charging for AI output you can\'t score.',
     shipped: [
       'New Chapter 47 — "The Measurement Layer" (Part V). Bridges from Chapter 25\'s operator eval to a builder\'s graded test set: generate a synthetic dataset, grade cheap-first (deterministic checks before any judge token), judge with reasoning-before-score, and print a scorecard that shows its failing cases — never a vanity average.',

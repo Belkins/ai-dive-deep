@@ -91,6 +91,8 @@ export const SCREENSHOTS: Record<string, string> = {
   "46-designing-with-ai-swarm": "46-designing-with-ai-swarm.svg",
   "46-designing-with-ai-system": "46-designing-with-ai-system.png",
   "47-measurement-layer-1": "47-measurement-layer-1.png",
+  "48-traffic-graph-that-lies-1": "48-traffic-graph-that-lies-1.png",
+  "48-traffic-graph-that-lies-2": "48-traffic-graph-that-lies-2.png",
   "ad-x-90k-delete": "ad-x-90k-delete.svg",
   "claude-md-rules-1": "claude-md-rules-1.svg",
   "dynamic-workflows-1": "dynamic-workflows-1.png",
@@ -109,4 +111,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "swarms-3": "swarms-3.png"
 };
 
-export const SCREENSHOT_COUNT = 104;
+export const SCREENSHOT_COUNT = 106;

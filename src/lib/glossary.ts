@@ -5,6 +5,36 @@ export type GlossaryEntry = {
 };
 
 export const glossary: Record<string, GlossaryEntry> = {
+  'Agentic SEO': {
+    term: 'Agentic SEO',
+    definition:
+      'Using AI agents as the labor to build and maintain an SEO footprint end to end — research, pages, internal links, monitoring. The agents are cheap; the moat is a per-page differentiated dataset, not the fact that an agent wrote it. Google judges the output, not the production method.',
+    related: ['Programmatic SEO', 'AEO', 'GEO'],
+  },
+  AEO: {
+    term: 'AEO',
+    definition:
+      'Answer Engine Optimization — structuring content to be the direct answer a search or AI surface returns (featured snippets, FAQ, 40–60-word answers), not just a blue link. Sibling of GEO.',
+    related: ['GEO', 'Zero-click', 'Agentic SEO'],
+  },
+  GEO: {
+    term: 'GEO',
+    definition:
+      'Generative Engine Optimization — earning a citation inside an AI-generated answer (ChatGPT, AI Overviews, Perplexity). Driven by evidential authority — stats, named sources, quotable claims — not keyword density. The one term in this family with a peer-reviewed origin.',
+    related: ['AEO', 'Zero-click', 'Agentic SEO'],
+  },
+  'Zero-click': {
+    term: 'Zero-click',
+    definition:
+      'A search that ends without a click — the answer was already on the results page or in an AI Overview. Now the default for most searches, which is why clicks are necessary-but-not-sufficient and the real KPI is conversions per source cohort.',
+    related: ['AEO', 'GEO'],
+  },
+  'Programmatic SEO': {
+    term: 'Programmatic SEO',
+    definition:
+      'Generating many pages from a template plus a dataset (one URL per city, tool, or query). Durable when each page carries genuinely unique data; the churn-and-burn version — boilerplate that differs only by a swapped variable — is what Google\'s scaled-content-abuse policy deindexes.',
+    related: ['Agentic SEO'],
+  },
   Agent: {
     term: 'Agent',
     definition:
