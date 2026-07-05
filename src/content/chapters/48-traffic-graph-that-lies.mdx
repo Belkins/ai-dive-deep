@@ -5,7 +5,7 @@ title: "The Traffic Graph That Lies"
 subtitle: "Agentic SEO Done Right vs. the Vanity Version — Two AI-Built Products, Real Numbers"
 tldr: "Most 'agentic SEO' is a self-reported traffic graph that craters in six months — the operator who claimed 24k clicks in three months on a zero-backlink site, and the SEO veterans who called it vanity, were mostly right. So I pointed the swarm at Google across two AI-built products and pulled the real numbers. Folderly EmailGen is a genuine win: a brand-new subdomain hit #1 for 'business email generator,' 467K impressions over the year, third-party traffic value climbing from ~$0 to ~$320/mo. LinguaLive is the cautionary tale: a 153K-impression graph that looks like a win until you see roughly nineteen of every twenty clicks are people already typing the brand name. The honest part is the divergence — Google's own console shows EmailGen 3.3K clicks across ~1,000 queries while Ahrefs sees 21 keywords; so you triangulate, and you don't trust a graph you can't independently check."
 keyConcepts: ["Agentic SEO", "AEO", "GEO", "Zero-click", "Programmatic SEO"]
-readingMinutes: 11
+readingMinutes: 13
 ---
 
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
@@ -36,6 +36,8 @@ So invert the whole frame. Agents are cheap *labor.* The swarm can produce ten t
 The durable-versus-churn line is one sentence: per-page data uniqueness plus real intent, not the agent stack. A page that *contains* differentiated data — a live result, a computed score, a generated artifact — earns the right to exist. A page that paraphrases what a million other pages already say is inventory waiting to be deduplicated.
 
 Which sets up the two products as a natural experiment. EmailGen's pages each carry differentiated data: a live spam score, a generated email. LinguaLive's pages are closer to generic language content — facts anyone can restate. Same swarm, same build quality. If the thesis is right, the numbers should split along exactly that seam. They did.
+
+An SEO veteran will object, correctly: that's an *n* of one per side, and the two products differ in more than data-uniqueness — commercial intent, vertical, and keyword competition all cut the same direction. Fair. Two products are a tell, not a controlled trial. I'm not claiming a law — I'm claiming the seam pointed where the rest of the evidence already pointed, and that the cheapest way for you to test it is on your own site, not to take mine on faith.
 
 ## What I actually pointed at Google
 
@@ -112,6 +114,46 @@ But the inverse trap is worse, and it's the whole reason I don't lead with the G
 Distill it to a method, not a checklist wall. <GlossaryTerm term="Zero-click">Zero-click</GlossaryTerm> is the default — most searches end without a click, and an AI Overview pushes that higher — so clicks are necessary-not-sufficient. The real KPI is conversions and revenue per source cohort, and AI-referred traffic converts far higher than generic organic, which is why a smaller, sharper cohort beats a fat impressions number. <GlossaryTerm term="AEO">AEO</GlossaryTerm>/<GlossaryTerm term="GEO">GEO</GlossaryTerm> citation — getting named inside the AI answer — is earned by evidential authority: stats, named sources, real quotes a model can lift and attribute. Keyword stuffing is the churn-and-burn signature; evidential density is the durable one. The grade-your-own-output discipline is the same muscle as [evals or hope](/chapters/25-evals-or-hope): you check the output before you ship it, or you don't.
 
 The one-line keeper: build pages that *are* differentiated data with real intent behind the query, gate publishing hard, and the agent stack becomes an implementation detail. EmailGen's spam checker is data. LinguaLive's "hello in Spanish" is trivia. The dataset decided the outcome.
+
+## Run it on your own site
+
+Enough about my graphs. Here are the three instruments — the audit, the gate, the go/no-go. These are the things I run; none of them live in a screenshot.
+
+### 1. The branded-discovery audit (the one that stings)
+
+The fastest way to find out whether your traffic is real: separate the people who searched for *you* from the people who *found* you.
+
+- **Pull the data.** GSC → *Search results* → last 12 months → the **Queries** tab → *Export*. The UI caps at 1,000 rows and your long tail is the whole point, so for the full set use the Search Console API or the Looker Studio connector, not the export button.
+- **Classify.** Flag every query containing your brand or a variant of it — for LinguaLive that's a regex like `/lingua[\s-]?live|lingualive|lingua ai/i`. Everything else is non-branded *discovery.*
+- **Divide.** `branded clicks ÷ total clicks = branded %`.
+- **Read it honestly.** North of ~70% branded and your "SEO" is mostly your own audience typing your name — you have a brand, not discovery. Under ~40% and you're genuinely being found. (Those are my rules of thumb, not Google's law — a known brand skews high for good reasons; calibrate to your stage.) LinguaLive came in at ~94%. That one number turned a 153K-impression graph into a cautionary tale.
+- **Cross-check the money.** Run the same domain through Ahrefs — Site Explorer, set the mode to `*.domain/*` (domain plus all its subdomains), open **Organic Keywords**, and check the Overview's traffic-value history — to see what your rankings are independently worth. GSC shows footprint; Ahrefs shows whether that footprint is *commercial.* If the third party sees a handful of keywords worth single-digit dollars while GSC shows a thousand-query trickle, that's the long-tail undercount, not a contradiction — now you've triangulated your own data instead of mine.
+
+### 2. The gate (the thing I called "the work")
+
+I said the gate, not the generation, is the job — so here it is. A page earns the right to publish only if it clears *all four*:
+
+1. Does the page **contain** differentiated data a competitor can't restate — a live computation, a proprietary aggregation, a generated artifact, a verifiable result? (EmailGen ships a live spam score, not *an article about* spam scores.)
+2. Is there a **real query with intent** behind it — a thing people actually search for, not a keyword you reverse-engineered?
+3. Would the page still deserve to exist if you **deleted the CTA**? If its only job is to funnel, it's a doorway — and Google deindexes doorways.
+4. Could a human tell it apart from the ten thousand pages the same template could spit out? If the only difference is a swapped variable, that's the churn-and-burn profile the scaled-content-abuse policy was written to catch.
+
+<Callout>Any "no" is a "don't publish." The gate is boring, and it is the entire moat — the one place your taste, not the agent's speed, decides whether a page should exist. Build it before you build the generator.</Callout>
+
+And for pages already live, two kill-lines — when to prune instead of defend:
+
+- Stuck below position ~20 with a sub-0.5% CTR after three to six months, and not climbing? It's counting impressions, not earning clicks — even inside a winner, a single page can fail this line: EmailGen's "spam score checker" (14,350 impressions, 81 clicks) is exactly this shape. `noindex` it; thin pages can drag your whole site's quality signal down with them.
+- A programmatic ring whose pages are near-identical to *each other* is the token-swap profile. That's a kill signal for the ring, not a tweak.
+
+### 3. The go/no-go (before you build anything)
+
+Three questions. Any "no," and agentic SEO is the wrong bet for you right now:
+
+- **Do you have queries?** Does your category have buyer-intent searches someone actually types? No queries, no SEO — go do outbound.
+- **Can you inject unique data?** Can each page carry a live, computed, or generated result unique to that query — or are you about to mass-produce paraphrase? Paraphrase at scale is deindex bait.
+- **Can you convert it?** Is there a product to lead-gen for, a signup, a booked call at the end of the click? Discovery with no conversion event is a vanity graph waiting to happen.
+
+Three yeses and the dataset-is-the-moat play is open to you. Fewer, and you'll build a graph that lies.
 
 ## What I can't show you yet
 
