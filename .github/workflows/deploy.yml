@@ -39,11 +39,31 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # Cap the retry ladder: deploy-pages polls up to 10 min per attempt,
+    # so an uncapped hang-style outage would run ~33 min before failing.
+    timeout-minutes: 15
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.retry1.outputs.page_url || steps.retry2.outputs.page_url }}
     steps:
+      # The Pages backend intermittently rejects deployments with
+      # "Deployment failed, try again later" (~45% of pushes since 2026-07-03).
+      # deploy-pages does not retry a failed deployment (error_count only
+      # covers status-poll errors), so retry the whole step with backoff.
+      # All three attempts failing still fails the job — real outages stay loud.
       - id: deployment
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+      - if: steps.deployment.outcome == 'failure'
+        run: sleep 30
+      - id: retry1
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+      - if: steps.deployment.outcome == 'failure' && steps.retry1.outcome == 'failure'
+        run: sleep 120
+      - id: retry2
+        if: steps.deployment.outcome == 'failure' && steps.retry1.outcome == 'failure'
         uses: actions/deploy-pages@v5
 
   # Announce the deployed corpus to IndexNow (Bing/Brave/Yandex ingestion —
