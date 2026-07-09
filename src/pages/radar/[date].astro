@@ -16,7 +16,9 @@ export async function getStaticPaths() {
   const liveDate = dates[0];
   return all
     .filter((data) => data.date !== liveDate)
-    .map((data) => ({ params: { date: data.date }, props: { data, archiveDates: dates } }));
+    // the live date has NO dated page (it is /radar itself) — passing it in archiveDates
+    // put a 404 link in every frozen page's dated nav (review finding, pre-existing)
+    .map((data) => ({ params: { date: data.date }, props: { data, archiveDates: dates.filter((d) => d !== liveDate) } }));
 }
 
 const { data, archiveDates } = Astro.props;

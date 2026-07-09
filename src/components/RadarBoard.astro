@@ -14,15 +14,22 @@ interface RadarItem {
   sources: string[]; nSources: number; nFam: number; ageHours: number;
   firstSeen: string; heating: boolean; travelled: boolean; leadHours: number | null;
 }
+interface RadarFire {
+  title: string; url: string; domain: string;
+  fromSource: string; fromStage: string; toSource: string; toStage: string;
+  leadHours: number; ts: string;
+}
 interface RadarPayload {
   date: string; generated: string; count: number;
   stats: { feedsTotal: number; feedsLive: number; itemsTracked: number; travellingFires: number; sinceFirstSeen: string };
   summary: {
     byStage: Record<string, number>; byTier: Record<string, number>;
+    flow?: Record<string, number>; // payloads before 2026-07-09 predate the flow export
     newToday: number; heatingNow: number; travelledNow: number; medianLeadHours: number | null;
     freshestHours: number | null; oldestSurvivorHours: number | null;
     topDomains: { domain: string; count: number }[];
   };
+  fires?: RadarFire[]; // ditto — absent on frozen pre-flow archives
   items: RadarItem[];
 }
 interface Props { data: RadarPayload; archiveDates?: string[]; isArchive?: boolean; preview?: boolean }
@@ -40,14 +47,37 @@ const fmtDay = (iso: string) =>
 const age = (h: number) => (h < 1 ? `${Math.round(h * 60)}m` : h < 48 ? `${Math.round(h)}h` : `${Math.round(h / 24)}d`);
 
 const s = data.summary;
-const stageEntries = STAGES.map((st) => [st, s.byStage[st] ?? 0] as [string, number]);
-const topStage = stageEntries.reduce((a, b) => (b[1] > a[1] ? b : a), stageEntries[0]);
+// The spectrum reads the day's FLOW — every story that entered the watched feeds in the
+// last 24h, by gradient station — because the scored top-40's composition is structurally
+// ~all-community (fresh community items outrun an 18h half-life; measured 23 straight days
+// of Papers=0 while 170+ new papers/day moved through state unseen). Pre-flow archive
+// payloads fall back to the board composition they were frozen with.
+const flow = s.flow ?? null;
+const boardEntries = STAGES.map((st) => [st, s.byStage[st] ?? 0] as [string, number]);
+const topStage = boardEntries.reduce((a, b) => (b[1] > a[1] ? b : a), boardEntries[0]);
+const stageEntries = STAGES.map((st) => [st, (flow ?? s.byStage)[st] ?? 0] as [string, number]);
+const flowTotal = stageEntries.reduce((a, [, n]) => a + n, 0);
+// Fire ages are relative to the payload's OWN generated stamp (never the build clock) so a
+// frozen archive keeps reading true and a stale receipt can't masquerade as today's motion.
+const genMs = Date.parse(data.generated);
+const fireAge = (ts: string) => age(Math.max(0, (genMs - Date.parse(ts)) / 36e5));
+const fireList = (data.fires ?? []).slice(0, 3);
 const heatingClause = s.heatingNow === 0
   ? 'No stories are corroborated across independent sources yet'
   : `${s.heatingNow} ${s.heatingNow === 1 ? 'story is' : 'stories are'} heating across independent sources`;
-const leadClause = s.medianLeadHours != null ? `, and the sharpest lead time is ${age(s.medianLeadHours)} — caught that long before the crowd` : '';
+// Pre-flow payloads (frozen archives) computed medianLeadHours over travelled rows ON THE
+// BOARD — a different measurement. The wording must follow the payload's own semantics.
+const leadClause = s.medianLeadHours == null ? ''
+  : flow
+    ? `, and the median lead across the ledger's ${data.stats.travellingFires} observed fires is ${age(s.medianLeadHours)} — measured, not estimated`
+    : `, and the sharpest lead time on the board is ${age(s.medianLeadHours)} — caught that long before the crowd`;
 const oldClause = s.oldestSurvivorHours != null ? ` The oldest survivor has held the board for ${age(s.oldestSurvivorHours)}.` : '';
-const whatMoved = `Today's radar skews to ${topStage[0]} (${topStage[1]} of ${data.count}). ${heatingClause}${leadClause}. ${s.newToday} arrived in the last 24 hours.${oldClause}`;
+const fireClause = fireList.length
+  ? ` Freshest receipt, ${fireAge(fireList[0].ts)} ago: caught in ${fireList[0].fromSource} ${age(fireList[0].leadHours)} before ${fireList[0].toSource} carried it.`
+  : '';
+const whatMoved = flow
+  ? `${flowTotal} ${flowTotal === 1 ? 'story' : 'stories'} entered the watched feeds in the last 24 hours — ${flow.Papers ?? 0} in papers, ${flow.Repos ?? 0} in repos, ${flow.Community ?? 0} in community, ${flow.Analysis ?? 0} in analysis. The scored board skews to ${topStage[0]} (${topStage[1]} of ${data.count}). ${heatingClause}${leadClause}.${fireClause}${oldClause}`
+  : `Today's radar skews to ${topStage[0]} (${topStage[1]} of ${data.count}). ${heatingClause}${leadClause}. ${s.newToday} arrived in the last 24 hours.${oldClause}`;
 
 // --- Ridgeline geometry (the signature instrument) — distortion-free, honest at skew ---
 // The day's distribution drawn as ONE smooth filled curve: flat on the baseline at empty
@@ -81,7 +111,6 @@ const darkCount = ridgeCounts.filter((n) => n === 0).length;
 // --- MOVING NOW teaser derived stats ---
 const feedsQuiet = Math.max(0, data.stats.feedsTotal - data.stats.feedsLive);
 const feedsClause = feedsQuiet === 0 ? 'all feeds live' : `${feedsQuiet} feeds quiet`;
-const stagesQuiet = STAGES.filter((st) => (s.byStage[st] ?? 0) === 0).length;
 const top5 = data.items.slice(0, 5);
 
 const RAIL_Y = [12, 38, 64, 88];
@@ -93,10 +122,13 @@ const pageUrl = isArchive ? `${SITE}/radar/${data.date}` : `${SITE}/radar`;
 // FAQ — single source of truth for BOTH the visible <dl> and the JSON-LD (can never drift).
 const FAQ: [string, string][] = [
   ['What is the lead-time gradient?', 'The path a story travels through the AI ecosystem: it appears first in papers (arXiv, Hugging Face) or repos (GitHub), then surfaces in community discussion (Hacker News, Lobsters, LessWrong), then gets interpreted in analysis (operator newsletters, essays). Radar ranks by where a story sits on that path and how far it has travelled.'],
+  // flow-gated: until the payload actually carries flow (deploy window / pre-flow data), the
+  // page must not describe a spectrum it is not rendering.
+  ...(flow ? [['What does the lead-time spectrum show?', 'Every story that entered Radar’s watched feeds in the last 24 hours, bucketed by the gradient station where it first appeared — papers, repos, community, or analysis. It is the day’s flow through the whole watched ecosystem, not the composition of the scored top 40 below it: a paper counts in the flow the moment it is observed, even while its signal score is still too low to earn a board row.'] as [string, string]] : []),
   ['How is Radar ranked?', 'By a recency-decayed signal score: each source tier has a weight and a half-life, a story scores higher when independent source families corroborate it, and a small bonus applies when a story has visibly climbed the gradient. Stories past their tier max age expire from the board. Popularity on a single site is not corroboration.'],
   ['How often does Radar update?', 'Hourly. The page is server-rendered and a frozen snapshot is archived at a dated permalink each day, so the record is both current and citable.'],
   ['What does "heating" mean?', 'A story has surfaced in two or more independent source families — not two feeds of the same site. It is corroboration, not popularity.'],
-  ['What is the lead time reading?', 'When the same story is observed first at an earlier gradient stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv 14 hours before it reached the Hacker News front page. That gap is your lead time.'],
+  ['What is the lead time reading?', 'When the same story is observed first at an earlier gradient stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv 14 hours before it reached the Hacker News front page. That gap is your lead time. The fires ledger is rolling: a fire ages out with its story, roughly 45 days after the story’s last sighting, so the median lead always describes recent motion.'],
   ['What sources does Radar watch?', `Around ${data.stats.feedsTotal} verified feeds across five tiers: live signal (Hacker News, Lobsters, GitHub trending, arXiv, Hugging Face papers), AI labs and firehose blogs, operator newsletters, contrarian essayists, and primary analysis. The registry is curated; aggregators are used only to corroborate a story, never to be the first to report it.`],
   ['Is Radar the newsletter?', 'No. Radar shows what is moving; the newsletter tells you what to do about it. Radar is the free, public funnel; Vlad’s Newsletter is the weekly operator read.'],
 ];
@@ -146,7 +178,7 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
       <a href="#board" class="ml-auto font-mono text-xs no-underline" style="color: rgb(var(--muted))">see all {data.count} ↓</a>
     </div>
     <div class="mt-2 font-mono" style="font-size: 12px; color: rgb(var(--muted))">
-      <span style="color: rgb(var(--accent-2))">{data.count}</span> tracked · <span style="color: rgb(var(--accent-2))">{s.heatingNow}</span> heating · {feedsClause} · {stagesQuiet} of 4 stages quiet
+      <span style="color: rgb(var(--accent-2))">{data.count}</span> tracked · <span style="color: rgb(var(--accent-2))">{s.heatingNow}</span> heating · {feedsClause} · {darkCount} of 4 stations quiet
     </div>
     <ol role="list" class="list-none p-0 mt-3 mb-0 space-y-2">
       {top5.map((it) => (
@@ -167,10 +199,10 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
   <div class="max-w-3xl mx-auto rounded-lg p-5" style="border: 1px solid rgb(var(--line))">
     <div class="flex items-baseline justify-between gap-3 mb-1">
       <div class="eyebrow">Lead-time spectrum</div>
-      <div class="font-mono tabular-nums" style="font-size: 11px; color: rgb(var(--muted))">4 stations · {darkCount} dark</div>
+      <div class="font-mono tabular-nums" style="font-size: 11px; color: rgb(var(--muted))">{flow ? 'flow, last 24h' : '4 stations'} · {darkCount} dark</div>
     </div>
 
-    <svg viewBox="0 0 320 120" class="radar-ridge w-full mt-1" style="height: 120px" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Lead-time ridgeline: Papers ${ridgeCounts[0]}, Repos ${ridgeCounts[1]}, Community ${ridgeCounts[2]}, Analysis ${ridgeCounts[3]}.`}>
+    <svg viewBox="0 0 320 120" class="radar-ridge w-full mt-1" style="height: 120px" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Lead-time spectrum${flow ? ' — stories entering the watched feeds in the last 24 hours' : ''}: Papers ${ridgeCounts[0]}, Repos ${ridgeCounts[1]}, Community ${ridgeCounts[2]}, Analysis ${ridgeCounts[3]}.`}>
       <defs>
         <linearGradient id="ridgeFillGrad" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0" stop-color="rgb(var(--accent))" stop-opacity="0.55" />
@@ -208,17 +240,39 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
 
     <div class="mt-4 grid grid-cols-2 sm:grid-cols-4" style="border-top: 1px solid rgb(var(--line))">
       {[
-        { n: String(data.count), cap: 'on the board', live: false },
-        { n: String(s.heatingNow), cap: 'heating', live: true },
-        { n: String(s.newToday), cap: 'new in 24h', live: false },
-        { n: s.medianLeadHours != null ? `${age(s.medianLeadHours)}` : '—', cap: 'notable lead', live: false },
+        { n: String(data.count), cap: 'on the board', live: false, tip: undefined },
+        { n: String(s.heatingNow), cap: 'heating', live: true, tip: undefined },
+        { n: String(s.newToday), cap: flow ? 'new on board' : 'new in 24h', live: false, tip: 'board rows first seen in the last 24 hours' },
+        // pre-flow payloads froze this as the board's own travelled-row median — keep their original label
+        flow
+          ? { n: s.medianLeadHours != null ? `${age(s.medianLeadHours)}` : '—', cap: 'median lead', live: s.medianLeadHours != null, tip: `median lead across the ${data.stats.travellingFires} fires on the rolling ledger` }
+          : { n: s.medianLeadHours != null ? `${age(s.medianLeadHours)}` : '—', cap: 'notable lead', live: false, tip: undefined },
       ].map((cell, i) => (
-        <div class="pt-3" style={i % 2 === 1 ? 'padding-left: 1rem; border-left: 1px solid rgb(var(--line))' : 'padding-right: 1rem'}>
+        <div class="pt-3" style={i % 2 === 1 ? 'padding-left: 1rem; border-left: 1px solid rgb(var(--line))' : 'padding-right: 1rem'} title={cell.tip}>
           <div class="font-mono tabular-nums text-2xl" style={`color: rgb(var(--${cell.live ? 'accent-2' : 'fg'}))`}>{cell.n}</div>
           <div class="eyebrow mt-0.5">{cell.cap}</div>
         </div>
       ))}
     </div>
+
+    {fireList.length > 0 && (
+      <div class="mt-5 pt-4" style="border-top: 1px solid rgb(var(--line))">
+        <div class="eyebrow mb-3" title="A fire = the same story observed at an earlier gradient stage, then carried by an independent source family at a later one. The gap is measured lead time.">Latest fires — measured lead</div>
+        <ol role="list" class="list-none p-0 m-0 space-y-3">
+          {fireList.map((f) => (
+            <li class="min-w-0">
+              <div class="flex flex-wrap items-baseline gap-x-2 font-mono" style="font-size: 11px">
+                <span style="color: rgb(var(--accent))">{f.fromStage} → {f.toStage}</span>
+                <span style="color: rgb(var(--accent-2))">+{age(f.leadHours)} lead</span>
+                <span style="color: rgb(var(--muted))">{f.fromSource} first · then {f.toSource}</span>
+                <span style="color: rgb(var(--muted)); opacity: 0.75">{fireAge(f.ts)} ago</span>
+              </div>
+              <a href={f.url} target="_blank" rel="noopener nofollow" class="block truncate no-underline font-display text-sm md:text-base leading-snug hover:underline mt-0.5" style="color: rgb(var(--fg))">{f.title}</a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    )}
   </div>
 </section>
 
@@ -289,7 +343,7 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
 <section class="container-prose pb-10">
   <h2 class="font-display text-2xl leading-snug" style="color: rgb(var(--fg))">How Radar works</h2>
   <div class="mt-4 space-y-4 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.9)">
-    <p><strong>The gradient.</strong> Stories travel through the AI ecosystem in a rough sequence: they appear first in <em>papers</em> (arXiv, Hugging Face) or <em>repos</em> (GitHub), then surface in <em>community</em> discussion (Hacker News, Lobsters, LessWrong), then get interpreted in <em>analysis</em> (operator newsletters and essays). Radar ranks by where a story sits on that gradient. The earlier it is caught, the more lead time you have before it reaches consensus.</p>
+    <p><strong>The gradient.</strong> Stories travel through the AI ecosystem in a rough sequence: they appear first in <em>papers</em> (arXiv, Hugging Face) or <em>repos</em> (GitHub), then surface in <em>community</em> discussion (Hacker News, Lobsters, LessWrong), then get interpreted in <em>analysis</em> (operator newsletters and essays). Radar ranks by where a story sits on that gradient. The earlier it is caught, the more lead time you have before it reaches consensus.{flow ? ' The spectrum at the top of the page shows the last 24 hours of that flow — every story that entered the watched feeds, counted at the station where it first appeared.' : ''}</p>
     <p><strong>The score.</strong> Each story gets a recency-decayed signal score. Every source tier carries a weight and a half-life, so live signal moves fast and fades fast while analysis sources move slowly and stay relevant longer. A story scores higher when two or more <em>independent source families</em> carry it — corroboration, not popularity, which is why five feeds of the same site count once. A small bonus applies when a story has visibly climbed the gradient. Stories past their tier's maximum age expire from the board.</p>
     <p><strong>Heating and lead time.</strong> A story is <em>heating</em> when it has surfaced in two or more independent source families. When the same story is observed first at an earlier stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv fourteen hours before it reached the Hacker News front page. That gap is the reader's lead time, and it is a measured span, never an estimate.</p>
     <p><strong>The honesty rule.</strong> Every value on this page is an observed fact from the feed log — which source carried a story, when, and how many. Radar makes no claim about what a story <em>means</em>; that is the newsletter's job. When a reading does not exist yet — no stories heating, nothing upstream — the page says so rather than inventing one.</p>
