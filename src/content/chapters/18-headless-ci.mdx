@@ -116,7 +116,7 @@ claude --print "..." \
 
 `--allowed-tools` scopes what can run. `--dangerously-skip-permissions` skips the interactive prompt that would otherwise hang the job. The flag name is intentionally scary, and it should be — you only use it when you've already constrained what's possible via the allow-list, or when you're inside an ephemeral container that gets blown away the second the job ends.
 
-Rule of thumb: if your CI runner is a container that exits in 5 minutes, `--dangerously-skip-permissions` is fine. If it's a long-lived VM with access to production secrets, lock down `--allowed-tools` until it screams. See [Chapter 15](/chapters/15-permissions) for the full permissions story.
+Rule of thumb: if your CI runner is a container that exits in 5 minutes, `--dangerously-skip-permissions` is fine. If it's a long-lived VM with access to production secrets, lock down `--allowed-tools` until it screams. See [Chapter 15](/chapters/15-permissions/) for the full permissions story.
 
 ## The 24/7 monitor pattern
 

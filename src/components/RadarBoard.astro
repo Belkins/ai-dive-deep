@@ -117,7 +117,7 @@ const RAIL_Y = [12, 38, 64, 88];
 const navDates = archiveDates.filter((d) => d !== data.date).slice(0, 7);
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
-const pageUrl = isArchive ? `${SITE}/radar/${data.date}` : `${SITE}/radar`;
+const pageUrl = isArchive ? `${SITE}/radar/${data.date}/` : `${SITE}/radar/`;
 
 // FAQ — single source of truth for BOTH the visible <dl> and the JSON-LD (can never drift).
 const FAQ: [string, string][] = [
@@ -395,11 +395,11 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
   <section class="container-prose pb-10">
     <div class="eyebrow mb-2">The radar, dated</div>
     <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-sm">
-      {isArchive && <a href={`${base}/radar`} class="no-underline" style="color: rgb(var(--accent))">latest →</a>}
+      {isArchive && <a href={`${base}/radar/`} class="no-underline" style="color: rgb(var(--accent))">latest →</a>}
       {navDates.map((d, i) => (
         <>
           {(i > 0 || isArchive) && <span style="opacity: 0.4">·</span>}
-          <a href={`${base}/radar/${d}`} class="no-underline" style="color: rgb(var(--accent))">{fmtDay(d)}</a>
+          <a href={`${base}/radar/${d}/`} class="no-underline" style="color: rgb(var(--accent))">{fmtDay(d)}</a>
         </>
       ))}
     </div>

@@ -43,7 +43,7 @@ const navItems = [
           <h2 class="font-display text-3xl mb-4">What it is</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
             <p>A dynamic workflow is a JavaScript script Claude writes to orchestrate subagents at scale. You describe the task; Claude writes the script; a runtime executes it in the background while your session stays responsive. That last part is the whole trick — the plan moves <em>into code</em>. The script holds the loop, the branches, and the intermediate results, so your context window only ever sees the final answer instead of every agent's scratch pad.</p>
-            <p>That's the line between this and what came before. With <a href="/chapters/06-the-swarm">subagents and skills</a>, Claude is the orchestrator — it decides turn by turn what to spawn, and every result lands back in its context, eating the window. A workflow is a script the runtime executes: dozens to hundreds of agents per run, resumable mid-session, with the coordination happening outside the conversation so the plan stays on track no matter how big the task gets. Opus 4.8 shipped it as a research preview — needs Claude Code v2.1.154+, runs on every paid plan (on Pro you flip it on in <code>/config</code>).</p>
+            <p>That's the line between this and what came before. With <a href="/chapters/06-the-swarm/">subagents and skills</a>, Claude is the orchestrator — it decides turn by turn what to spawn, and every result lands back in its context, eating the window. A workflow is a script the runtime executes: dozens to hundreds of agents per run, resumable mid-session, with the coordination happening outside the conversation so the plan stays on track no matter how big the task gets. Opus 4.8 shipped it as a research preview — needs Claude Code v2.1.154+, runs on every paid plan (on Pro you flip it on in <code>/config</code>).</p>
             <PullQuote>Subagents put the plan in Claude's head. A workflow puts the plan in code — which is why it doesn't fall over when the task gets big.</PullQuote>
           </div>
         </div>
@@ -67,7 +67,7 @@ const navItems = [
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
             <p>Here's the part that took me a beat to feel: the value isn't that a pile of parallel agents burns more tokens. It's the loop. One set of agents makes the change — code, refactor, tests. Another set tries to break it — reads the diff, hunts for errors, thinks through the edge cases. Generate, then validate, then fix what validation caught. It's a little like a GAN, only pointed at an engineering workflow instead of pixels.</p>
             <p>Because the plan lives in the script, a workflow can apply a repeatable quality pattern instead of just running more agents: have independent agents adversarially review each other's findings before anything is reported, or draft a plan from several angles and weigh them against each other. One request can become several workflows in a row — one to understand the code, one to make the change, one to verify it. The model stops being a single answer and becomes an orchestration that has already argued with itself before it reaches you.</p>
-            <p>The mechanics of orchestrating parallel agents by hand — the wave pattern, the between-wave audit, the skill shelf — live in <a href="/swarms">The Swarm</a>. Dynamic workflows is that, automated: you get the chain of command without writing the dispatch prompts yourself.</p>
+            <p>The mechanics of orchestrating parallel agents by hand — the wave pattern, the between-wave audit, the skill shelf — live in <a href="/swarms/">The Swarm</a>. Dynamic workflows is that, automated: you get the chain of command without writing the dispatch prompts yourself.</p>
           </div>
         </div>
 
@@ -250,7 +250,7 @@ const navItems = [
             <p>You're not learning a command. You're learning where the seam is between "go do it" and "let me shape the plan first" — and once you've felt the validator loop catch its own mistake, you won't want to refactor a big thing by hand again.</p>
             <PullQuote>The swarm used to be something you conducted. Now it's something you brief, approve, and check. The job moved up a level.</PullQuote>
             <p class="mt-6 text-sm" style={{ color: 'rgb(var(--muted))' }}>
-              Related: <a href="/swarms">The Swarm — orchestrating parallel agents by hand</a> · <a href="/chapters/06-the-swarm">Ch 6 — the swarm</a> · <a href="/sovereign-stack">The Sovereign Stack — the model under it</a> · <a href="/chapters/40-prompting-knob">Ch 40 — the prompting knob</a>
+              Related: <a href="/swarms/">The Swarm — orchestrating parallel agents by hand</a> · <a href="/chapters/06-the-swarm/">Ch 6 — the swarm</a> · <a href="/sovereign-stack/">The Sovereign Stack — the model under it</a> · <a href="/chapters/40-prompting-knob/">Ch 40 — the prompting knob</a>
             </p>
           </div>
         </div>

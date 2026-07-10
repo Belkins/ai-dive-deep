@@ -371,7 +371,7 @@ artifact + segment-specific hook per channel.`,
       The point isn't that you should install all of these. The point is that this is what an operator's library looks like at hour two thousand. Steal anything. Skip anything. Build your own. The auto-extracted list is just names — scroll past it to the <a href="#swarm-compositions" style="color: rgb(var(--accent))">six swarm compositions</a> first to see how the pieces actually chain together.
     </p>
     <p class="mt-3 text-base" style="color: rgb(var(--muted))">
-      And it's a garden, not a museum: last pruned 2026-06-09 by <a href={`${base}/self-audit`} style="color: rgb(var(--accent))">the Self-Audit</a> — fifteen dead skills archived on telemetry evidence, every trigger description re-trimmed, one plugin benched. A library that only ever grows is a library that's rotting.
+      And it's a garden, not a museum: last pruned 2026-06-09 by <a href={`${base}/self-audit/`} style="color: rgb(var(--accent))">the Self-Audit</a> — fifteen dead skills archived on telemetry evidence, every trigger description re-trimmed, one plugin benched. A library that only ever grows is a library that's rotting.
     </p>
 
     <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-mono" style="color: rgb(var(--muted))">
@@ -383,15 +383,15 @@ artifact + segment-specific hook per channel.`,
     </div>
 
     <div class="mt-6 grid gap-3 sm:grid-cols-3">
-      <a href={`${base}/chapters/05-skills`} class="card no-underline" style="color: rgb(var(--fg))">
+      <a href={`${base}/chapters/05-skills/`} class="card no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">Why skills</div>
         <div class="font-display text-base">Ch 5 — Recipes the chef reads</div>
       </a>
-      <a href={`${base}/chapters/11-build-a-skill`} class="card no-underline" style="color: rgb(var(--fg))">
+      <a href={`${base}/chapters/11-build-a-skill/`} class="card no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">How to build one</div>
         <div class="font-display text-base">Ch 11 — Build a skill end-to-end</div>
       </a>
-      <a href={`${base}/cowork-setup`} class="card no-underline" style="color: rgb(var(--fg))">
+      <a href={`${base}/cowork-setup/`} class="card no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent-2))">Sister page</div>
         <div class="font-display text-base">Cowork setup (sanitized) →</div>
       </a>
@@ -435,7 +435,7 @@ artifact + segment-specific hook per channel.`,
           </div>
 
           <div class="mt-3">
-            <a href={`${base}/chapters/${c.chapterLink.href}`} class="text-xs no-underline inline-flex items-center gap-1" style="color: rgb(var(--accent))">
+            <a href={`${base}/chapters/${c.chapterLink.href}/`} class="text-xs no-underline inline-flex items-center gap-1" style="color: rgb(var(--accent))">
               → {c.chapterLink.label}
             </a>
           </div>
@@ -541,7 +541,7 @@ artifact + segment-specific hook per channel.`,
 
           <div class="mt-3 flex flex-wrap gap-3">
             {p.crossLinks.map((link) => (
-              <a href={link.external ? `${base}/${link.href}` : `${base}/chapters/${link.href}`} class="text-xs no-underline inline-flex items-center gap-1" style="color: rgb(var(--accent))">
+              <a href={link.external ? `${base}/${link.href}/` : `${base}/chapters/${link.href}/`} class="text-xs no-underline inline-flex items-center gap-1" style="color: rgb(var(--accent))">
                 → {link.label}
               </a>
             ))}

@@ -62,7 +62,7 @@ const faq = {
       Same company, same API, one costs exactly twice as much — and the cheaper one is wired into the expensive one as its safety net. That's the decision Anthropic handed every operator on June 9, 2026, with a plan window that closes June 22 (the API meters from request one). Here's the file.
     </p>
     <p class="mt-2 text-sm text-muted">
-      Numbers from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a> and the model's API surface. The full model file lives on <a href="/fable-5">the Fable 5 hub</a>; the benchmark caveats on <a href="/fable-5/benchmarks">the benchmarks page</a>.
+      Numbers from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a> and the model's API surface. The full model file lives on <a href="/fable-5/">the Fable 5 hub</a>; the benchmark caveats on <a href="/fable-5/benchmarks/">the benchmarks page</a>.
     </p>
   </section>
 
@@ -103,7 +103,7 @@ const faq = {
                 </tbody>
               </table>
             </div>
-            <p class="text-sm text-muted">One more operational difference that doesn't fit a row: the minimum cacheable prompt prefix drops from 4096 tokens on Opus 4.8 to 2048 on Fable 5. Details on <a href="/fable-5/api">the API page</a>; full pricing math on <a href="/fable-5/pricing">the pricing page</a>.</p>
+            <p class="text-sm text-muted">One more operational difference that doesn't fit a row: the minimum cacheable prompt prefix drops from 4096 tokens on Opus 4.8 to 2048 on Fable 5. Details on <a href="/fable-5/api/">the API page</a>; full pricing math on <a href="/fable-5/pricing/">the pricing page</a>.</p>
             <p>Read the table cold and the pattern is plain: the spec sheet is nearly identical, the price doubles, and the gap lives in two places — agentic coding and the fallback row. Everything below is about whether those two places are where <em>your</em> work lives.</p>
           </div>
         </div>
@@ -123,7 +123,7 @@ const faq = {
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p><strong>Cyber- and bio-adjacent work.</strong> Fable 5 ships with blocking classifiers in front of offensive cyber and biology/chemistry, and Anthropic's own footnote says the starred benchmark rows show Fable performing closer to Opus 4.8 there because of fallbacks — by design. Paying $10/$50 to behave like the $5/$25 model is not an upgrade, it's a markup.</p>
             <p><strong>Knowledge work.</strong> GDPval-AA reads 1932 vs 1890 — 42 points. If your workload is documents, analysis, and drafting rather than multi-hour agent runs, the launch table itself says the gap is thin. A 2× sticker needs more than thin.</p>
-            <p><strong>Cost-sensitive bulk.</strong> Classification, extraction, pipeline drafting — the routing logic from <a href="/chapters/29-cost-economics">Ch 29</a> didn't change on June 9. Opus 4.8 at $5/$25 keeps the heavy-but-routine lane, and the Sonnet/Haiku tiers below it keep the bulk lane. The <a href="/tier-list">tier list</a> stays the live source of truth.</p>
+            <p><strong>Cost-sensitive bulk.</strong> Classification, extraction, pipeline drafting — the routing logic from <a href="/chapters/29-cost-economics/">Ch 29</a> didn't change on June 9. Opus 4.8 at $5/$25 keeps the heavy-but-routine lane, and the Sonnet/Haiku tiers below it keep the bulk lane. The <a href="/tier-list/">tier list</a> stays the live source of truth.</p>
             <Callout type="note">
               Opus 4.8 is <strong>not deprecated</strong>. It remains current, supported, and priced at $5/$25 — and it's the model the Claude apps route to when a Fable classifier trips (on the API, fallback is opt-in). "Wait" is a defensible answer here, not a cop-out.
             </Callout>
@@ -144,9 +144,9 @@ const faq = {
           <div class="space-y-4 leading-relaxed text-fg/88">
             <ol class="space-y-3 list-none p-0 m-0">
               <li class="rounded-lg border p-4 border-line"><strong>1 — Use the window.</strong> Fable 5 is inside paid-plan limits June 9–22, 2026. That's a two-week free private-eval window on frontier capacity. Point it at the workloads where Opus 4.8 makes you retry, and keep the transcripts.</li>
-              <li class="rounded-lg border p-4 border-line"><strong>2 — Swap one string, not your stack.</strong> If your model id lives in config, the trial is a one-line diff: <code>claude-fable-5</code>. Same API surface as Opus 4.8 with one new 400 — explicit <code>thinking: disabled</code> is rejected, so omit the param. The rest is on <a href="/fable-5/api">the API page</a>.</li>
-              <li class="rounded-lg border p-4 border-line"><strong>3 — Measure cost per finished task.</strong> Not per token. <a href="/chapters/29-cost-economics">Ch 29</a>'s math is the whole decision: if Fable 5 collapses your turn count, 2× the rate is a discount; if it doesn't, it's just 2× the rate.</li>
-              <li class="rounded-lg border p-4 border-line"><strong>4 — Don't re-route on a launch table.</strong> The book's standing discount on public scores — the Berkeley-RDI receipt in <a href="/research-notes">research notes</a> (eight major agent benchmarks reward-hacked in April), run through <a href="/chapters/25-evals-or-hope">Ch 25</a>'s discipline — is 10–15 points. The table above is a signal. Your eval is the receipt.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>2 — Swap one string, not your stack.</strong> If your model id lives in config, the trial is a one-line diff: <code>claude-fable-5</code>. Same API surface as Opus 4.8 with one new 400 — explicit <code>thinking: disabled</code> is rejected, so omit the param. The rest is on <a href="/fable-5/api/">the API page</a>.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>3 — Measure cost per finished task.</strong> Not per token. <a href="/chapters/29-cost-economics/">Ch 29</a>'s math is the whole decision: if Fable 5 collapses your turn count, 2× the rate is a discount; if it doesn't, it's just 2× the rate.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>4 — Don't re-route on a launch table.</strong> The book's standing discount on public scores — the Berkeley-RDI receipt in <a href="/research-notes/">research notes</a> (eight major agent benchmarks reward-hacked in April), run through <a href="/chapters/25-evals-or-hope/">Ch 25</a>'s discipline — is 10–15 points. The table above is a signal. Your eval is the receipt.</li>
             </ol>
             <p>No five-lessons wrap. The launch table opens the question; only your workload closes it — and closing it costs nothing until June 22.</p>
           </div>
@@ -167,17 +167,17 @@ const faq = {
         <div id="series" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The Fable 5 files</h2>
           <div class="grid gap-3 sm:grid-cols-2">
-            <a href="/fable-5/vs-mythos-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
-            <a href="/fable-5/benchmarks" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
+            <a href="/fable-5/vs-mythos-5/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
+            <a href="/fable-5/benchmarks/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
             <div class="card text-fg opacity-60"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></div>
-            <a href="/fable-5/vs-gpt-5-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
-            <a href="/fable-5/pricing" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
-            <a href="/fable-5/use-cases" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
-            <a href="/fable-5/claude-code" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
-            <a href="/fable-5/api" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
+            <a href="/fable-5/vs-gpt-5-5/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
+            <a href="/fable-5/pricing/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
+            <a href="/fable-5/use-cases/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
+            <a href="/fable-5/claude-code/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
+            <a href="/fable-5/api/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
           </div>
           <p class="mt-6 text-sm text-muted">
-            Related: <a href="/fable-5">The Fable 5 hub</a> · <a href="/chapters/24-tier-list">Ch 24 — the tier list</a> · <a href="/chapters/29-cost-economics">Ch 29 — cost economics</a> · <a href="/chapters/02-five-tools">Ch 2 — the five-tool stack</a> · <a href="/tier-list">The live tier list</a>
+            Related: <a href="/fable-5/">The Fable 5 hub</a> · <a href="/chapters/24-tier-list/">Ch 24 — the tier list</a> · <a href="/chapters/29-cost-economics/">Ch 29 — cost economics</a> · <a href="/chapters/02-five-tools/">Ch 2 — the five-tool stack</a> · <a href="/tier-list/">The live tier list</a>
           </p>
         </div>
 

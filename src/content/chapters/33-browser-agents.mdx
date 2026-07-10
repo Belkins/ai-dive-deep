@@ -145,7 +145,7 @@ The four hard NEVER lines I keep:
 
 The soft rule: if I'd be embarrassed to explain the script to the company that owns the site, I don't run the script. That filter catches 90% of the bad ideas before I write the first line of code.
 
-[Chapter 9](/chapters/09-dont-get-owned) goes deeper on the security side. [Chapter 12](/chapters/12-connectors-mcp) covers the connectors-first reflex — always check whether an MCP exists before you reach for Playwright.
+[Chapter 9](/chapters/09-dont-get-owned/) goes deeper on the security side. [Chapter 12](/chapters/12-connectors-mcp/) covers the connectors-first reflex — always check whether an MCP exists before you reach for Playwright.
 
 ## Operator is dead, computer-use is production
 
@@ -180,6 +180,6 @@ The kill switch is the thing that lets you run browser agents at all. Without it
 
 Browser agents are the bridge between the world that has APIs and the world that doesn't. The pricing page nobody publishes a feed for. The vendor portal where invoices live behind a login. The internal tool a vendor sold you with no MCP. You don't get to wait for those companies to ship integrations. You get to script the page.
 
-The thing browser agents are not is a substitute for thinking. A connector with a contract is always better than a script that interprets a webpage. APIs change with notice; pages change overnight. So my reflex order is: MCP connector first ([Chapter 12](/chapters/12-connectors-mcp)), official API second, scraped feed third, browser agent fourth, and only when the prior three don't exist or aren't enough.
+The thing browser agents are not is a substitute for thinking. A connector with a contract is always better than a script that interprets a webpage. APIs change with notice; pages change overnight. So my reflex order is: MCP connector first ([Chapter 12](/chapters/12-connectors-mcp/)), official API second, scraped feed third, browser agent fourth, and only when the prior three don't exist or aren't enough.
 
 I'm not going to wrap this with five lessons. The lesson is the channel I posted into, the apology I wrote, the kill switch I shipped two days late. If you build browser agents, you will repeat one of those three at least once. Get the kill switch in before the apology, and you'll only repeat the first two.

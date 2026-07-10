@@ -69,11 +69,11 @@ What does NOT go in:
 
 Practical shape: one MEMORY.md index file at the root, individual `.md` files for each lesson. The index points to the lessons. The agent reads the index on wake-up, decides which lessons apply, loads only those. That's how you keep the memory layer from becoming the next CLAUDE.md bloat problem.
 
-That index is also where the next problem hides. "Updates it when something worth remembering happens" is doing a lot of quiet work in one sentence — across hundreds of sessions you'll never re-read, how does this layer stay deduplicated, verified, and under that ceiling? That's a discipline of its own, and it's [Chapter 44](/chapters/44-dreaming): the propose-only loop I run to surface candidate memories and re-check every one against the raw transcript, without ever letting an agent write to this layer on its own.
+That index is also where the next problem hides. "Updates it when something worth remembering happens" is doing a lot of quiet work in one sentence — across hundreds of sessions you'll never re-read, how does this layer stay deduplicated, verified, and under that ceiling? That's a discipline of its own, and it's [Chapter 44](/chapters/44-dreaming/): the propose-only loop I run to surface candidate memories and re-check every one against the raw transcript, without ever letting an agent write to this layer on its own.
 
 ### Layer 3 — skills/ (procedural memory, loaded on demand)
 
-<GlossaryTerm term="Skill">Skills</GlossaryTerm> are folders with a SKILL.md inside. The full body never loads at session start — only the description loads, as a trigger. When you say something that matches, the agent pulls the body into context and follows the runbook. See [Chapter 5](/chapters/05-skills) for the why and [Chapter 11](/chapters/11-build-a-skill) for the how.
+<GlossaryTerm term="Skill">Skills</GlossaryTerm> are folders with a SKILL.md inside. The full body never loads at session start — only the description loads, as a trigger. When you say something that matches, the agent pulls the body into context and follows the runbook. See [Chapter 5](/chapters/05-skills/) for the why and [Chapter 11](/chapters/11-build-a-skill/) for the how.
 
 The relevant point for context-file architecture: skills are how you avoid stuffing every workflow into CLAUDE.md. A workflow with steps and edge cases belongs in a skill. A rule that applies everywhere belongs in CLAUDE.md. The line is workflow versus convention — runbook versus law.
 
@@ -230,7 +230,7 @@ The practical setup, the one I run on the bigger Belkins repos:
 - Root CLAUDE.md: ≤ 80 lines. What the system is, where the landmines are, links down.
 - Per-service CLAUDE.md: the test command *for that service*, the lint config, the one weird thing about that subsystem. Scoped, not global.
 - `.claude/settings.json` checked into the repo with `permissions.deny` rules for generated files, build artifacts, vendored code. Version-controlled, so the whole team inherits the exclusions and nobody's agent wastes a turn reading `dist/`.
-- An LSP server wired up if it's a multi-language repo — symbol-level "go to definition" beats string-grep, and it filters before the model reads anything. ([Chapter 16](/chapters/16-hooks-subagents) covers the exploration-split that pairs with this.)
+- An LSP server wired up if it's a multi-language repo — symbol-level "go to definition" beats string-grep, and it filters before the model reads anything. ([Chapter 16](/chapters/16-hooks-subagents/) covers the exploration-split that pairs with this.)
 
 **Third: context files rot, and they rot faster as the model improves.** Review the whole stack every 3–6 months, and always after a major model release. Half the rules you wrote in 2025 were scaffolding around limitations the current model doesn't have. The classic: a rule that forces single-file refactors because an older model lost the plot across files. The current model does coordinated cross-file edits fine — that rule is now a cage, not a guardrail. Retiring stale instructions is maintenance, not optional. A CLAUDE.md you haven't pruned since the last model generation is actively making the agent dumber.
 

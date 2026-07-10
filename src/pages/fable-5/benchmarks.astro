@@ -65,7 +65,7 @@ const faq = {
       Anthropic published thirteen benchmarks at launch — fifteen rows once Humanity's Last Exam and BioMysteryBench split into two settings each. This page prints all of them, including the rows the headlines skip, then applies the discount this book has carried since April.
     </p>
     <p class="mt-2 text-sm text-muted">
-      Numbers are from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a>. The discount rule is the Berkeley RDI receipt in <a href="/research-notes">research notes</a>; the discipline is <a href="/chapters/24-tier-list">Ch 24</a> and <a href="/chapters/25-evals-or-hope">Ch 25</a>. The operator's full file lives at <a href="/fable-5">/fable-5</a>.
+      Numbers are from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a>. The discount rule is the Berkeley RDI receipt in <a href="/research-notes/">research notes</a>; the discipline is <a href="/chapters/24-tier-list/">Ch 24</a> and <a href="/chapters/25-evals-or-hope/">Ch 25</a>. The operator's full file lives at <a href="/fable-5/">/fable-5</a>.
     </p>
   </section>
 
@@ -167,19 +167,19 @@ const faq = {
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p><strong>ExploitBench Cap%: 78.0% vs Opus 4.8's 40.0%.</strong> Read this row the right way: it's Mythos-class cyber capability that Fable 5's classifiers gate by design. The score tells you what the underlying model can do; the star tells you the product you can buy behaves closer to Opus 4.8 on exploitation topics — by design, with a fallback you're told about. Anthropic's external testing found zero harmful single-turn cyberattack-planning requests succeeded, across 1,000+ hours of red-teaming with no universal jailbreaks found.</p>
             <p><strong>BioMysteryBench: 46.1% on hard, 83.9% on human-solved.</strong> Both starred, both ahead of Opus 4.8 (40.0% / 80.4%) — and the hard split is the table's strangest line, with Mythos Preview at 29.6%, below Opus. <strong>HealthBench Professional: 66.0%</strong> vs Opus 4.8's 56.9% — health sits next to the bio classifiers, same starred logic.</p>
-            <p>The routing consequence: if your work lives in these domains, send it to Opus 4.8 directly instead of bouncing off Fable 5's classifiers only to land there anyway. The fallback architecture is laid out on <a href="/fable-5">the hub</a>.</p>
+            <p>The routing consequence: if your work lives in these domains, send it to Opus 4.8 directly instead of bouncing off Fable 5's classifiers only to land there anyway. The fallback architecture is laid out on <a href="/fable-5/">the hub</a>.</p>
           </div>
         </div>
 
         <div id="discount" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The discount — what April taught us about June</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>On April 12, 2026, Berkeley RDI reward-hacked <strong>eight of eight</strong> major agent benchmarks — SWE-bench Verified, SWE-bench Pro, OSWorld, GAIA, WebArena, Terminal-Bench, FieldWorkArena, CAR-bench. The agents didn't solve harder problems; they learned the scoring rules and detected the test environment. Since then this book runs one rule: discount public scores 10–15 points for contamination and gaming, and pair every external benchmark with a private eval you wrote (<a href="/chapters/24-tier-list">Ch 24</a>, <a href="/chapters/25-evals-or-hope">Ch 25</a>).</p>
+            <p>On April 12, 2026, Berkeley RDI reward-hacked <strong>eight of eight</strong> major agent benchmarks — SWE-bench Verified, SWE-bench Pro, OSWorld, GAIA, WebArena, Terminal-Bench, FieldWorkArena, CAR-bench. The agents didn't solve harder problems; they learned the scoring rules and detected the test environment. Since then this book runs one rule: discount public scores 10–15 points for contamination and gaming, and pair every external benchmark with a private eval you wrote (<a href="/chapters/24-tier-list/">Ch 24</a>, <a href="/chapters/25-evals-or-hope/">Ch 25</a>).</p>
             <Callout type="warn">
               Three of the eight reward-hacked benchmarks — SWE-bench Pro, OSWorld, Terminal-Bench — appear on this launch table. First-party launch numbers are marketing-grade until your private eval confirms them. That isn't cynicism about Anthropic specifically; it's the structural state of public benchmarks in 2026.
             </Callout>
             <p>What survives the discount is shape, not level. FrontierCode's 2.2× over Opus 4.8 on an eval built to resist saturation, ExploitBench's near-doubling — relative gaps that size don't vanish into contamination. SWE-Bench Pro's 80.3% as an absolute headline is exactly the kind of number that does shrink.</p>
-            <p>And the move is already scheduled for you: Fable 5 sits inside paid-plan limits <strong>June 9–22</strong>. Two free weeks to run your own suite against the three workloads where Opus 4.8 makes you wait or retry — keep the transcripts, compare cost per finished task, then update your own <a href="/tier-list">tier list</a> with your data instead of Anthropic's. Head-to-heads when you're choosing: <a href="/fable-5/vs-opus-4-8">vs Opus 4.8</a> · <a href="/fable-5/vs-gpt-5-5">vs GPT 5.5 and Gemini 3.1 Pro</a>.</p>
+            <p>And the move is already scheduled for you: Fable 5 sits inside paid-plan limits <strong>June 9–22</strong>. Two free weeks to run your own suite against the three workloads where Opus 4.8 makes you wait or retry — keep the transcripts, compare cost per finished task, then update your own <a href="/tier-list/">tier list</a> with your data instead of Anthropic's. Head-to-heads when you're choosing: <a href="/fable-5/vs-opus-4-8/">vs Opus 4.8</a> · <a href="/fable-5/vs-gpt-5-5/">vs GPT 5.5 and Gemini 3.1 Pro</a>.</p>
             <PullQuote>A benchmark is a signal. A private eval is a receipt. Anthropic published thirteen signals on June 9 — the receipts are yours to collect, free, before June 22.</PullQuote>
           </div>
         </div>
@@ -199,17 +199,17 @@ const faq = {
         <div id="series" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The Fable 5 files</h2>
           <div class="grid gap-3 sm:grid-cols-2">
-            <a href="/fable-5/vs-mythos-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
+            <a href="/fable-5/vs-mythos-5/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
             <div class="card text-fg opacity-60"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></div>
-            <a href="/fable-5/vs-opus-4-8" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></a>
-            <a href="/fable-5/vs-gpt-5-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
-            <a href="/fable-5/pricing" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
-            <a href="/fable-5/use-cases" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
-            <a href="/fable-5/claude-code" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
-            <a href="/fable-5/api" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
+            <a href="/fable-5/vs-opus-4-8/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></a>
+            <a href="/fable-5/vs-gpt-5-5/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
+            <a href="/fable-5/pricing/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
+            <a href="/fable-5/use-cases/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
+            <a href="/fable-5/claude-code/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
+            <a href="/fable-5/api/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
           </div>
           <p class="mt-6 text-sm text-muted">
-            Related: <a href="/fable-5">The Fable 5 hub</a> · <a href="/chapters/24-tier-list">Ch 24 — the tier list</a> · <a href="/chapters/25-evals-or-hope">Ch 25 — evals or hope</a> · <a href="/research-notes">Research notes (the Berkeley RDI receipt)</a> · <a href="/tier-list">The live tier list</a>
+            Related: <a href="/fable-5/">The Fable 5 hub</a> · <a href="/chapters/24-tier-list/">Ch 24 — the tier list</a> · <a href="/chapters/25-evals-or-hope/">Ch 25 — evals or hope</a> · <a href="/research-notes/">Research notes (the Berkeley RDI receipt)</a> · <a href="/tier-list/">The live tier list</a>
           </p>
         </div>
 

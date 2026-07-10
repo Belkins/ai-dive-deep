@@ -47,7 +47,7 @@ const receipts = [
           <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
             <p>Here's the move, and it's the whole move: the multi-agent audit you already run against codebases — parallel domain reviewers, adversarial verification of every finding, a synthesis you can act on — works on the agent's <em>own configuration</em>. Skills are code. Hooks are code. The memory index, the permission grants, the launchd jobs — all of it is a system you built incrementally, never reviewed holistically, and trust completely.</p>
             <p>I ran it on mine. Five auditors in parallel, one per surface: the skill library, the per-session context budget, the memory system, hooks-and-permissions, and the automation layer. Then a red-team pass that re-verified every high and medium finding empirically and listed what all five auditors missed. Forty-one findings. The red-team confirmed twenty-nine, weakened four, and <strong>refuted two outright</strong> — and those two refutations are the most important part of this page, because I would have executed both.</p>
-            <p>This is <a href="/chapters/06-the-swarm">the swarm</a> and <a href="/dynamic-workflows">dynamic workflows</a> pointed inward, the same way <a href="/dreaming">Dreaming</a> points the loop at the agent's memory. The codebase was never the only system that rots.</p>
+            <p>This is <a href="/chapters/06-the-swarm/">the swarm</a> and <a href="/dynamic-workflows/">dynamic workflows</a> pointed inward, the same way <a href="/dreaming/">Dreaming</a> points the loop at the agent's memory. The codebase was never the only system that rots.</p>
           </div>
         </div>
 
@@ -129,7 +129,7 @@ const receipts = [
           <h2 class="font-display text-3xl mb-4">The layer the agent can't own</h2>
           <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
             <p>One class of finding no in-session audit can fix: things that must happen when no session is open. The audit found a health heartbeat fifty-two days stale — the on-demand model for "check the state of my systems" had simply stopped being invoked, which is itself the lesson. Anything that depends on you remembering to ask will eventually not be asked.</p>
-            <p>The fix is the OS scheduler — <a href="/chapters/07-cron">Chapter 7's</a> answer, still — running the agent headless on a calendar: a weekday health pulse that rewrites the heartbeat and alerts only on state <em>transitions</em>, and a weekly <a href="/dreaming">Dreaming</a> run. The agent does the judgment; launchd does the showing up.</p>
+            <p>The fix is the OS scheduler — <a href="/chapters/07-cron/">Chapter 7's</a> answer, still — running the agent headless on a calendar: a weekday health pulse that rewrites the heartbeat and alerts only on state <em>transitions</em>, and a weekly <a href="/dreaming/">Dreaming</a> run. The agent does the judgment; launchd does the showing up.</p>
             <Callout type="warn">macOS gotcha that cost a job weeks of silent failure: launchd cannot read scripts under <code>~/Desktop</code> (or Documents/Downloads) — privacy protection denies the read and the job dies with exit 126 while looking perfectly configured. Entry scripts live outside the protected folders; the working jobs all do.</Callout>
             <p>And close the loop: the health pulse's first duty is sweeping the scheduler itself for non-zero exit codes and configured-but-unloaded jobs — the automation watches the automation, on a clock no one has to remember.</p>
           </div>
@@ -148,7 +148,7 @@ const receipts = [
               <li><strong>Install the spine.</strong> Whatever must outlive the session goes on the OS scheduler, and the scheduled job's first task is checking its siblings.</li>
             </ol>
             <p>Then put it on a cadence. Mine is: every model-generation jump (the scaffolding audit), plus whenever the setup "feels slow" — which, I now know, is about two months after the last time.</p>
-            <p class="text-sm" style="color: rgb(var(--muted))">Related: <a href="/showcase">the setup this ran against</a> · <a href="/swarms">Swarms — the fan-out patterns</a> · <a href="/dynamic-workflows">Dynamic Workflows — the harness that runs it</a> · <a href="/chapters/39-skills-you-should-steal">Ch 39 — the 73% problem, the same rot in public libraries</a></p>
+            <p class="text-sm" style="color: rgb(var(--muted))">Related: <a href="/showcase/">the setup this ran against</a> · <a href="/swarms/">Swarms — the fan-out patterns</a> · <a href="/dynamic-workflows/">Dynamic Workflows — the harness that runs it</a> · <a href="/chapters/39-skills-you-should-steal/">Ch 39 — the 73% problem, the same rot in public libraries</a></p>
           </div>
         </div>
 

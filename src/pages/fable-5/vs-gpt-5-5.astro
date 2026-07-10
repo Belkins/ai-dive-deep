@@ -58,10 +58,10 @@ const faq = {
     <div class="eyebrow eyebrow-loud mb-3 text-accent">Model file · Fable 5 / Mythos 5 · Head-to-head</div>
     <h1>Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro.</h1>
     <p class="mt-3 text-lg text-muted">
-      On June 9 Anthropic published a launch table with rival columns in it. Thirteen rows compare <a href="/fable-5">Claude Fable 5</a> against GPT 5.5 and Gemini 3.1 Pro. This page is the operator read: what the table says, where the rivals hold up, and why none of it re-tiers anything by itself.
+      On June 9 Anthropic published a launch table with rival columns in it. Thirteen rows compare <a href="/fable-5/">Claude Fable 5</a> against GPT 5.5 and Gemini 3.1 Pro. This page is the operator read: what the table says, where the rivals hold up, and why none of it re-tiers anything by itself.
     </p>
     <p class="mt-2 text-sm text-muted">
-      Numbers sourced from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a>. Full per-row caveats on the <a href="/fable-5/benchmarks">benchmarks page</a>; the standing discount rule in <a href="/chapters/24-tier-list">Ch 24</a>.
+      Numbers sourced from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a>. Full per-row caveats on the <a href="/fable-5/benchmarks/">benchmarks page</a>; the standing discount rule in <a href="/chapters/24-tier-list/">Ch 24</a>.
     </p>
   </section>
 
@@ -115,10 +115,10 @@ const faq = {
         <div id="honest-reads" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The honest reads</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p><strong>Terminal-Bench is the closest agentic-coding race — and the one where the rivals brought their own harnesses.</strong> The rival numbers aren't bare models: GPT 5.5 ran through Codex CLI, Gemini 3.1 Pro through Gemini CLI. Codex CLI at 83.4% is five points off the lead on the one row where the rivals brought their own tooling — that holds up. It's also the lesson of <a href="/chapters/35-codex-and-cc">Ch 35</a>: Codex isn't a competing model in my stack, it's the night shift — same repo, different contract — which is why the rivals' CLI numbers here deserve respect.</p>
+            <p><strong>Terminal-Bench is the closest agentic-coding race — and the one where the rivals brought their own harnesses.</strong> The rival numbers aren't bare models: GPT 5.5 ran through Codex CLI, Gemini 3.1 Pro through Gemini CLI. Codex CLI at 83.4% is five points off the lead on the one row where the rivals brought their own tooling — that holds up. It's also the lesson of <a href="/chapters/35-codex-and-cc/">Ch 35</a>: Codex isn't a competing model in my stack, it's the night shift — same repo, different contract — which is why the rivals' CLI numbers here deserve respect.</p>
             <p><strong>Blueprint-Bench 2 is the closest race on the table.</strong> 38.6% vs 36.2% on spatial reasoning — 2.4 points. If your workload is floor plans, diagrams, physical layout, this table gives you no reason to switch anything in either direction.</p>
             <p><strong>Legal Agent Benchmark says more about the eval than the loser.</strong> 13.3% vs 2.1% vs 0.0% — when the leader can't clear 14% and one model posts a zero, the row is telling you the task class is barely solved, not that one vendor cracked it.</p>
-            <p><strong>Gemini 3.1 Pro is third on all but one row it appears in — it edges GPT 5.5 on Humanity's Last Exam without tools. Read that with both caveats on.</strong> First: this is Anthropic's table of Anthropic-chosen benchmarks. Second: Google's cycle already moved. On May 19 this site's <a href="/research-notes">research notes</a> logged Gemini 3.5 Flash clearing 3.1 Pro on Google's own agentic boards — vendor slides, same discipline applied — with a 3.5 Pro promised. Anthropic launched against the model Google is in the middle of replacing. That's how launch tables work; it's also why they expire.</p>
+            <p><strong>Gemini 3.1 Pro is third on all but one row it appears in — it edges GPT 5.5 on Humanity's Last Exam without tools. Read that with both caveats on.</strong> First: this is Anthropic's table of Anthropic-chosen benchmarks. Second: Google's cycle already moved. On May 19 this site's <a href="/research-notes/">research notes</a> logged Gemini 3.5 Flash clearing 3.1 Pro on Google's own agentic boards — vendor slides, same discipline applied — with a 3.5 Pro promised. Anthropic launched against the model Google is in the middle of replacing. That's how launch tables work; it's also why they expire.</p>
             <PullQuote>A launch table is the vendor's opening argument. The leaderboard is the cross-examination. Your eval is the verdict.</PullQuote>
           </div>
         </div>
@@ -126,10 +126,10 @@ const faq = {
         <div id="discipline" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The discipline — one vendor's table is not a leaderboard</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>This book has one rule for launch-day numbers and it didn't expire on June 9. Berkeley RDI reward-hacked eight major agent benchmarks in April 2026 — since then the standing discount on every public score is 10–15 points, and every external benchmark gets paired with a private eval (<a href="/chapters/24-tier-list">Ch 24</a>, <a href="/chapters/25-evals-or-hope">Ch 25</a>). That discount applies to all three columns above, including the one with the accent color.</p>
+            <p>This book has one rule for launch-day numbers and it didn't expire on June 9. Berkeley RDI reward-hacked eight major agent benchmarks in April 2026 — since then the standing discount on every public score is 10–15 points, and every external benchmark gets paired with a private eval (<a href="/chapters/24-tier-list/">Ch 24</a>, <a href="/chapters/25-evals-or-hope/">Ch 25</a>). That discount applies to all three columns above, including the one with the accent color.</p>
             <p>What survives the discount is shape, not precision. SWE-Bench Pro at 80.3% vs 58.6% is a 21.7-point gap — that doesn't dissolve into contamination noise. FrontierCode Diamond at 29.3% vs 5.7% is a 5× gap on the eval built to resist saturation. Terminal-Bench at 88.0% vs 83.4% is inside the discount band — treat that row as a tie until your own numbers say otherwise.</p>
             <Callout type="warn">
-              Benchmarks are a signal, never a receipt. The live <a href="/tier-list">tier list</a> auto-updates from independent leaderboards and stays this site's source of truth — a launch presentation doesn't touch it. Same treatment Google's May slides got, same treatment Anthropic's June slides get.
+              Benchmarks are a signal, never a receipt. The live <a href="/tier-list/">tier list</a> auto-updates from independent leaderboards and stays this site's source of truth — a launch presentation doesn't touch it. Same treatment Google's May slides got, same treatment Anthropic's June slides get.
             </Callout>
           </div>
         </div>
@@ -137,7 +137,7 @@ const faq = {
         <div id="move" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The move</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>If you run a second-prior workflow — Claude on the day shift, Codex on the night shift, Gemini as the idea machine (<a href="/chapters/35-codex-and-cc">Ch 35</a>) — nothing in this table changes your setup today. Two priors triangulate; that logic got stronger, not weaker, now that the gaps between them are this uneven across task classes.</p>
+            <p>If you run a second-prior workflow — Claude on the day shift, Codex on the night shift, Gemini as the idea machine (<a href="/chapters/35-codex-and-cc/">Ch 35</a>) — nothing in this table changes your setup today. Two priors triangulate; that logic got stronger, not weaker, now that the gaps between them are this uneven across task classes.</p>
             <p>The one time-boxed action: Fable 5 sits inside paid-plan limits June 9–22, 2026, which makes the Claude leg of a three-way eval free for two weeks. Point all three models at the same three workloads, keep the transcripts, read the results against your own bar. Re-tier after that — not after a slide, mine or theirs.</p>
             <p>The question every launch invites — which model won the cycle — is the wrong question. The table above is one vendor's thirteen favorite rows on launch day; the May table was another vendor's. The operators who win cycles are the ones whose private evals were already running when the slides dropped.</p>
           </div>
@@ -158,17 +158,17 @@ const faq = {
         <div id="series" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The Fable 5 files</h2>
           <div class="grid gap-3 sm:grid-cols-2">
-            <a href="/fable-5/vs-mythos-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
-            <a href="/fable-5/benchmarks" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
-            <a href="/fable-5/vs-opus-4-8" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></a>
+            <a href="/fable-5/vs-mythos-5/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
+            <a href="/fable-5/benchmarks/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
+            <a href="/fable-5/vs-opus-4-8/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></a>
             <div class="card text-fg opacity-60"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></div>
-            <a href="/fable-5/pricing" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
-            <a href="/fable-5/use-cases" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
-            <a href="/fable-5/claude-code" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
-            <a href="/fable-5/api" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
+            <a href="/fable-5/pricing/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
+            <a href="/fable-5/use-cases/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></a>
+            <a href="/fable-5/claude-code/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
+            <a href="/fable-5/api/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
           </div>
           <p class="mt-6 text-sm text-muted">
-            Related: <a href="/fable-5">The Fable 5 hub</a> · <a href="/fable-5/benchmarks">Benchmarks, read honestly</a> · <a href="/tier-list">The live tier list</a> · <a href="/research-notes">Research notes (the Gemini 3.5 Flash entry)</a> · <a href="/chapters/24-tier-list">Ch 24 — the tier list</a> · <a href="/chapters/35-codex-and-cc">Ch 35 — Codex or Claude Code</a>
+            Related: <a href="/fable-5/">The Fable 5 hub</a> · <a href="/fable-5/benchmarks/">Benchmarks, read honestly</a> · <a href="/tier-list/">The live tier list</a> · <a href="/research-notes/">Research notes (the Gemini 3.5 Flash entry)</a> · <a href="/chapters/24-tier-list/">Ch 24 — the tier list</a> · <a href="/chapters/35-codex-and-cc/">Ch 35 — Codex or Claude Code</a>
           </p>
         </div>
 

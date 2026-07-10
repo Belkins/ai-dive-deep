@@ -90,7 +90,7 @@ const timeline = [
       <h2 class="font-display text-3xl md:text-4xl m-0 mb-4" style="letter-spacing: -0.02em;">HTML-ization. Stop sending dead files.</h2>
       <p class="text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.88)">Every deliverable — report, pitch, audit, deck, model — ships as a live interactive HTML artifact on a deployed link, not a PDF attachment that started rotting the second it was exported. The link is current because the repo is. People forward links; they archive PDFs unread.</p>
       <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.88)">This page is the proof. The book about building this kind of artifact is, itself, this kind of artifact — and the source you're holding is the recipe.</p>
-      <p class="mt-6"><a href="/html-first" class="underline-offset-4 hover:underline" style="color: rgb(var(--accent)); font-weight: 600">Read the method →</a></p>
+      <p class="mt-6"><a href="/html-first/" class="underline-offset-4 hover:underline" style="color: rgb(var(--accent)); font-weight: 600">Read the method →</a></p>
     </div>
   </section>
 
@@ -118,7 +118,7 @@ const timeline = [
     <p class="mb-8 max-w-2xl" style="color: rgb(var(--muted))">Click any. Or hit ⌘K and search the whole thing.</p>
     <div class="chapter-mosaic grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
       {CHAPTERS.map((c) => (
-        <a href={`/chapters/${c.slug}`} class="ch-tile no-underline"
+        <a href={`/chapters/${c.slug}/`} class="ch-tile no-underline"
           style="display:block;padding:10px 12px;border:1px solid rgb(var(--line));border-radius:8px;background:rgb(var(--paper));color:rgb(var(--fg));">
           <div class="font-mono text-[0.65rem] mb-1" style="color: rgb(var(--accent))">{String(c.number).padStart(2, '0')}</div>
           <div class="text-sm leading-snug" style="font-weight: 500">{c.title}</div>
@@ -148,7 +148,7 @@ const timeline = [
   <section data-section-target class="container-wide py-16 reveal text-center">
     <h2 class="font-display text-3xl md:text-5xl m-0 mb-6" style="letter-spacing: -0.02em;">Now do something with it.</h2>
     <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
-      <a href="/sections" class="cta-primary">Read the book →</a>
+      <a href="/sections/" class="cta-primary">Read the book →</a>
       <a href="https://github.com/Belkins/ai-dive-deep" target="_blank" rel="noopener" class="cta-secondary">Star the repo on GitHub</a>
     </div>
     <p class="mt-6 text-sm" style="color: rgb(var(--muted))">No signup. No paywall. The source is the recipe.</p>

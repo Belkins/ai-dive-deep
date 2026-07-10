@@ -27,7 +27,7 @@ const navItems = [
       Every autonomous loop in this book points outward. The swarm reads the codebase. Cron reads the calendar. Run-until-done reads the task. Dreaming is the first one pointed at the agent's own memory — the one index a wrong write quietly poisons. So it gets less rope, not more.
     </p>
     <p class="mt-2 text-sm" style="color: rgb(var(--muted))">
-      Anthropic shipped Dreaming in Managed Agents as a thing that can auto-write memory. I built the local Claude Code twin deliberately weaker — propose-only — because the one record I can't afford to corrupt is the one I curate by hand. This page is the operator's runbook: the pipeline, the refusals, the receipts, and when not to. The story lives in <a href="/chapters/44-dreaming">Chapter 44</a>.
+      Anthropic shipped Dreaming in Managed Agents as a thing that can auto-write memory. I built the local Claude Code twin deliberately weaker — propose-only — because the one record I can't afford to corrupt is the one I curate by hand. This page is the operator's runbook: the pipeline, the refusals, the receipts, and when not to. The story lives in <a href="/chapters/44-dreaming/">Chapter 44</a>.
     </p>
   </section>
 
@@ -39,7 +39,7 @@ const navItems = [
         <div id="thesis" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The loop pointed inward</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p>The book has spent forty-three chapters handing agents more rope. The <a href="/swarms">swarm</a> fans out across a codebase. Cron runs while you sleep. Run-until-done loops until an evaluator says stop. Chapter 43 let a second model delete ninety thousand lines unsupervised. Every one of those points at something external — code, a schedule, a task — where a mistake is visible and reversible.</p>
+            <p>The book has spent forty-three chapters handing agents more rope. The <a href="/swarms/">swarm</a> fans out across a codebase. Cron runs while you sleep. Run-until-done loops until an evaluator says stop. Chapter 43 let a second model delete ninety thousand lines unsupervised. Every one of those points at something external — code, a schedule, a task — where a mistake is visible and reversible.</p>
             <p>Dreaming points at your <em>memory</em>. The curated index every future session reboots into. A wrong write there isn't a bad diff you revert; it's a confident lie your agent reads back to you for weeks. So this is the loop I gave the least rope, on purpose. It reads everything and writes nothing.</p>
             <PullQuote>Every loop in this book points at something. The swarm reads the codebase. Cron reads the calendar. Run-until-done reads the task. Dreaming is the first one pointed at the agent's own memory — which is exactly why it's the only one I forbade to write.</PullQuote>
           </div>
@@ -60,7 +60,7 @@ const navItems = [
             </div>
             <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
               <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>3 · Extract <span style="opacity:.6">— the model</span></div>
-              <p class="m-0">Read-only Explore agents fan out, one per session — OpenClaw logic, the read-broadly-summarize-cite shape from <a href="/chapters/32-archetypes-rick">Rick</a>. Each candidate lesson must cite a verbatim quote from the digest. The agents have no write tool and structurally cannot touch memory.</p>
+              <p class="m-0">Read-only Explore agents fan out, one per session — OpenClaw logic, the read-broadly-summarize-cite shape from <a href="/chapters/32-archetypes-rick/">Rick</a>. Each candidate lesson must cite a verbatim quote from the digest. The agents have no write tool and structurally cannot touch memory.</p>
             </div>
             <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--border))' }}>
               <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>4 · Verify <span style="opacity:.6">— the load-bearing gate</span></div>
@@ -175,11 +175,11 @@ const navItems = [
         <div id="exception" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The exception to Chapter 7</h2>
           <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
-            <p><a href="/chapters/07-cron">Chapter 7</a> tells you to make AI work while you sleep — put it on a cron. Dreaming is the obvious nightly cron, and refusal number two forbids exactly that. The two aren't in conflict; they're resolved by a rule the cron chapter doesn't have to state because most tasks read cloud data: <strong>schedule a task where its data lives, or don't schedule it.</strong></p>
+            <p><a href="/chapters/07-cron/">Chapter 7</a> tells you to make AI work while you sleep — put it on a cron. Dreaming is the obvious nightly cron, and refusal number two forbids exactly that. The two aren't in conflict; they're resolved by a rule the cron chapter doesn't have to state because most tasks read cloud data: <strong>schedule a task where its data lives, or don't schedule it.</strong></p>
             <Callout type="warn">
               A cloud scheduler runs in a sandbox that can't see your local <code>~/.claude/</code> disk. Point a cloud cron at a local-disk corpus and it wakes to an empty disk and reports success on nothing — a confident false green, the most dangerous kind. Dreaming runs locally, on <code>launchd</code>, or it doesn't run.
             </Callout>
-            <p class="text-sm" style={{ color: 'rgb(var(--muted))' }}>Two-way link: <a href="/chapters/07-cron">Ch 7 — Scheduled Tasks</a> · <a href="/chapters/44-dreaming">Ch 44 — Dreaming</a>.</p>
+            <p class="text-sm" style={{ color: 'rgb(var(--muted))' }}>Two-way link: <a href="/chapters/07-cron/">Ch 7 — Scheduled Tasks</a> · <a href="/chapters/44-dreaming/">Ch 44 — Dreaming</a>.</p>
           </div>
         </div>
 
@@ -200,7 +200,7 @@ const navItems = [
             <p>Don't build the pipeline yet. Steal the principle. At the end of your next heavy session, tell the agent: re-read this whole transcript and propose, in writing, what's worth remembering — and make it quote the exact line for each one. Then you read the list, throw out the noise, and save the keepers yourself. That's dreaming, by hand, before you ever automate it — and it's the version that teaches you whether the automated one is worth building for how you actually work.</p>
             <PullQuote>The most destructive thing this whole pipeline can do is write one markdown file. That's not a limitation. That's the design.</PullQuote>
             <p class="mt-6 text-sm" style={{ color: 'rgb(var(--muted))' }}>
-              Related: <a href="/chapters/44-dreaming">Ch 44 — Dreaming (the narrative)</a> · <a href="/chapters/37-context-files">Ch 37 — the memory layers it curates</a> · <a href="/chapters/03-temp-agency">Ch 3 — why it forgets you</a> · <a href="/chapters/32-archetypes-rick">Ch 32 — Rick &amp; OpenClaw</a> · <a href="/swarms">The Swarm — the fan-out it runs on</a> · <a href="/chapters/07-cron">Ch 7 — and why not to cloud-cron this one</a>
+              Related: <a href="/chapters/44-dreaming/">Ch 44 — Dreaming (the narrative)</a> · <a href="/chapters/37-context-files/">Ch 37 — the memory layers it curates</a> · <a href="/chapters/03-temp-agency/">Ch 3 — why it forgets you</a> · <a href="/chapters/32-archetypes-rick/">Ch 32 — Rick &amp; OpenClaw</a> · <a href="/swarms/">The Swarm — the fan-out it runs on</a> · <a href="/chapters/07-cron/">Ch 7 — and why not to cloud-cron this one</a>
             </p>
           </div>
         </div>

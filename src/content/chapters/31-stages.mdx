@@ -72,7 +72,7 @@ Concrete example: the daily voice brief's Polishing stage was two and a half hou
 
 What gets produced: the version that doesn't get you fired. Secrets in env vars, not in source. <GlossaryTerm term="Permissions">Permission</GlossaryTerm> scopes pulled tight. <GlossaryTerm term="Prompt injection">Prompt injection</GlossaryTerm> surface mapped. Inputs validated. Outputs inspected before they hit a public channel. Logs that don't leak the customer data the agent just read.
 
-The test that says you're ready for Deploy: you handed the spec to a security-minded teammate and they didn't immediately point at three things. Or, you ran the threat-model exercise from [Chapter 9](/chapters/09-dont-get-owned) and the answers didn't make you sweat.
+The test that says you're ready for Deploy: you handed the spec to a security-minded teammate and they didn't immediately point at three things. Or, you ran the threat-model exercise from [Chapter 9](/chapters/09-dont-get-owned/) and the answers didn't make you sweat.
 
 The failure mode if you skip it: you ship a Saturday tool to a Tuesday environment and the first prompt-injection test from a curious coworker exfiltrates your HubSpot pipeline. Or your <GlossaryTerm term="Cron">scheduled task</GlossaryTerm> writes to a public channel something it should have written to a private one. Both of these have happened to me. I will not tell you when.
 

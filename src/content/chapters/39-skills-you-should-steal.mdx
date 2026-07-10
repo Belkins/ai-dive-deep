@@ -24,7 +24,7 @@ Four out of six broken on first invocation. From repos with combined 60k+ stars.
 This chapter is what I wish someone had handed me before I opened those six tabs.
 
 <Callout type="tip">
-A worked example of stealing one *well*: [**/good-taste**](/good-taste) — Leon Lin's public taste-skill (credited; the original lives at tasteskill.dev), a slop-vs-taste before/after, and what I built with the discipline. The long version is [Designing with AI](/chapters/46-designing-with-ai).
+A worked example of stealing one *well*: [**/good-taste**](/good-taste/) — Leon Lin's public taste-skill (credited; the original lives at tasteskill.dev), a slop-vs-taste before/after, and what I built with the discipline. The long version is [Designing with AI](/chapters/46-designing-with-ai/).
 </Callout>
 
 ## Quickstart: install your first community skill in ten minutes
@@ -37,7 +37,7 @@ Three commands, two files to read, one habit that keeps your vault intact.
 git clone https://github.com/garrytan/gstack ~/.claude/skills/gstack
 ```
 
-That's the install. No package manager, no registry, no `npm install`. Claude Code scans `~/.claude/skills/**/SKILL.md` on session start — and as of May 2026 so does Codex, the same file, no rewrite. (For a skill driving the Codex side end to end — `hatch-pet` reading its own contract and hatching a desktop pet in ten minutes — see [Chapter 42](/chapters/42-codex-on-a-loop).)
+That's the install. No package manager, no registry, no `npm install`. Claude Code scans `~/.claude/skills/**/SKILL.md` on session start — and as of May 2026 so does Codex, the same file, no rewrite. (For a skill driving the Codex side end to end — `hatch-pet` reading its own contract and hatching a desktop pet in ten minutes — see [Chapter 42](/chapters/42-codex-on-a-loop/).)
 
 **Step 2 — read SKILL.md before activation (3 minutes).** Open the SKILL.md of the first skill you plan to use. Four lines decide whether it fires safely:
 
@@ -50,7 +50,7 @@ That's the install. No package manager, no registry, no `npm install`. Claude Co
 
 **Step 4 — if it misfires.** Move it out of the active path: `mv ~/.claude/skills/<library>/<broken-skill>/ ~/.claude/skills-archive/`. Don't `rm` — the SKILL.md might be a useful starting point for your own version. The audit habit: read every imported SKILL.md before the next session start. Eight seconds per skill. Saves the Saturday I had.
 
-Pair a vetted skill install with [Ch 38](/chapters/38-run-until-done) — `/goal` style runs let the skill compose into autonomous loops.
+Pair a vetted skill install with [Ch 38](/chapters/38-run-until-done/) — `/goal` style runs let the skill compose into autonomous loops.
 
 ### First 10 minutes — bootstrap script
 
@@ -108,12 +108,12 @@ The failure modes converged:
 The audit gave the ecosystem its first quality benchmark. It also gave operators a reason to stop treating star count as a signal. Star count measures how many people clicked "I want this." It does not measure whether the thing fires.
 
 <Callout type="tip">
-The same rot runs in *your* library — it just never gets a public scorer. I pointed the audit machinery at my own setup: five parallel auditors, an adversarial red-team, telemetry-backed kill decisions. 81 skills became 66, and the red-team refuted two findings I would otherwise have executed. The full method and the receipts: [The Self-Audit](/self-audit).
+The same rot runs in *your* library — it just never gets a public scorer. I pointed the audit machinery at my own setup: five parallel auditors, an adversarial red-team, telemetry-backed kill decisions. 81 skills became 66, and the red-team refuted two findings I would otherwise have executed. The full method and the receipts: [The Self-Audit](/self-audit/).
 </Callout>
 
 ## Tier list — May 2026 community libraries
 
-The cadence here matches [Chapter 24's](/chapters/24-tier-list) tier list, narrowed to one domain: where to actually steal from. All star counts are verbatim from the survey pulled May 14, 2026.
+The cadence here matches [Chapter 24's](/chapters/24-tier-list/) tier list, narrowed to one domain: where to actually steal from. All star counts are verbatim from the survey pulled May 14, 2026.
 
 ### S — install the whole thing, prune to what fires
 
@@ -248,7 +248,7 @@ Operator profile: portfolio CEO, holding-company operator, multi-product founder
 
 The setup: I run a paid mentorship cadence weekly. Each session has pre-session prep (last week's notes, action tracker, patterns file, agenda generation), during-session capture (structured notes against a four-frame template), post-session fan-out (summary, action tracker update, patterns refresh, next session scheduled). One skill, four modes selected by context.
 
-Public ecosystem coverage of this: zero. The mentoring-lifecycle pattern referenced in [Chapter 5](/chapters/05-skills) has no installable counterpart on any of the top six libraries I surveyed. Mentees, coaches, advisors, agencies — anyone running a recurring 1:1 against an evolving file set — would install this immediately.
+Public ecosystem coverage of this: zero. The mentoring-lifecycle pattern referenced in [Chapter 5](/chapters/05-skills/) has no installable counterpart on any of the top six libraries I surveyed. Mentees, coaches, advisors, agencies — anyone running a recurring 1:1 against an evolving file set — would install this immediately.
 
 Why nobody's filled it: the developer-shaped majority of skill authors don't run paid coaching practices. The shape of the workflow is invisible to them.
 
@@ -287,7 +287,7 @@ The publisher wins inbound from a focused audience. The audience gets a library 
 
 Back to the cold open. Of the six skills I installed that Saturday morning, one had `allowed-tools: ["*"]` in its frontmatter — wildcard tool access, the default-permit posture. I missed it on the install. Two prompts later, in a session where I'd asked Claude to clean up some scratch files, the skill fired against a phrase that wasn't in its description, picked up a `Bash(rm)` it had no reason to invoke, and ran it against a path inside my Obsidian vault before I caught it on the receipts. Two markdown files gone. Vault git history saved them.
 
-The lesson lives in [Chapter 9](/chapters/09-dont-get-owned) but it deserves to land here too: every imported skill gets read line-by-line before activation. The frontmatter especially. `allowed-tools: ["*"]` is the same energy as `chmod 777` — you don't ship it, you don't install it, you don't trust the maintainer who did. Star count is not a security signal. A 95k-star repo and a 95-star repo both run with your permissions once they fire.
+The lesson lives in [Chapter 9](/chapters/09-dont-get-owned/) but it deserves to land here too: every imported skill gets read line-by-line before activation. The frontmatter especially. `allowed-tools: ["*"]` is the same energy as `chmod 777` — you don't ship it, you don't install it, you don't trust the maintainer who did. Star count is not a security signal. A 95k-star repo and a 95-star repo both run with your permissions once they fire.
 
 <ScreenshotPlaceholder
   id="39-skills-you-should-steal-1"
@@ -295,6 +295,6 @@ The lesson lives in [Chapter 9](/chapters/09-dont-get-owned) but it deserves to 
   note="terminal screenshot — `cat` of a SKILL.md frontmatter block, with allowed-tools and version field highlighted. Two-column compare ideal: a 'good' frontmatter next to a wildcarded one."
 />
 
-If you want the build-side of the workflow, [Chapter 11](/chapters/11-build-a-skill) walks the morning-briefing skill end-to-end. If you want the tier-list cadence applied to tools and connectors rather than libraries, [Chapter 24](/chapters/24-tier-list) is the sibling. This chapter is just the curation receipt — the nine libraries to steal from, the three gaps to fill, the one audit habit that keeps your vault intact.
+If you want the build-side of the workflow, [Chapter 11](/chapters/11-build-a-skill/) walks the morning-briefing skill end-to-end. If you want the tier-list cadence applied to tools and connectors rather than libraries, [Chapter 24](/chapters/24-tier-list/) is the sibling. This chapter is just the curation receipt — the nine libraries to steal from, the three gaps to fill, the one audit habit that keeps your vault intact.
 
 The ecosystem will look different in six months. Half the star counts above will move. Two of these libraries will be acquired or stop maintaining. Some operator I've never heard of will publish the portfolio-CEO briefing skill and I'll install it before I finish mine. The receipts will update. The audit habit won't.

@@ -89,8 +89,8 @@ const faq = {
             <li><strong>PostToolUse</strong> — fires after. Format, test, notify.</li>
             <li><strong>Stop</strong> — fires when the agent thinks it's done. Your script gets the last word.</li>
           </ul>
-          <p>They live in two places: <code>~/.claude/settings.json</code> (global — every session on your machine) or <code>&lt;repo&gt;/.claude/settings.json</code> (committed — the whole team inherits the guardrails). The full mental model is in <a href={`${base}/chapters/16-hooks-subagents`}>Chapter 16</a>; this page is the reference card.</p>
-          <p>The line that earns the page: I typed "please run prettier on this file" 47 times in one week. Then I wrote one PostToolUse hook. I haven't typed it since (<a href={`${base}/chapters/16-hooks-subagents`}>Ch 16</a>).</p>
+          <p>They live in two places: <code>~/.claude/settings.json</code> (global — every session on your machine) or <code>&lt;repo&gt;/.claude/settings.json</code> (committed — the whole team inherits the guardrails). The full mental model is in <a href={`${base}/chapters/16-hooks-subagents/`}>Chapter 16</a>; this page is the reference card.</p>
+          <p>The line that earns the page: I typed "please run prettier on this file" 47 times in one week. Then I wrote one PostToolUse hook. I haven't typed it since (<a href={`${base}/chapters/16-hooks-subagents/`}>Ch 16</a>).</p>
         </div>
 
         <div id="config" data-section-target class="scroll-mt-24 mt-14">
@@ -109,7 +109,7 @@ const faq = {
 
         <div id="which" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Which hooks should you actually run?</h2>
-          <p>All ten configs published across the Playbook, one verdict each. The five team hooks are in <a href={`${base}/chapters/16-hooks-subagents`}>Ch 16</a>; the five operator scripts live on <a href={`${base}/resources`}>/resources</a> as copy-paste blocks.</p>
+          <p>All ten configs published across the Playbook, one verdict each. The five team hooks are in <a href={`${base}/chapters/16-hooks-subagents/`}>Ch 16</a>; the five operator scripts live on <a href={`${base}/resources/`}>/resources</a> as copy-paste blocks.</p>
           <div class="overflow-x-auto">
             <table>
               <thead><tr><th>Hook</th><th>Event</th><th>What it does</th><th>Verdict</th></tr></thead>
@@ -132,9 +132,9 @@ const faq = {
         <div id="caught" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">What did these hooks catch in production?</h2>
           <ul>
-            <li><strong>block-push-to-main:</strong> three "oh no" moments at Belkins in a year — each one a force of habit the model talked itself into, stopped by a grep (<a href={`${base}/chapters/16-hooks-subagents`}>Ch 16</a>).</li>
+            <li><strong>block-push-to-main:</strong> three "oh no" moments at Belkins in a year — each one a force of habit the model talked itself into, stopped by a grep (<a href={`${base}/chapters/16-hooks-subagents/`}>Ch 16</a>).</li>
             <li><strong>format-on-save:</strong> "please run prettier" went from 47 times a week to zero.</li>
-            <li><strong>secrets-scan:</strong> caught an Anthropic key a subagent helpfully "moved into the example" — five seconds of grep versus rotating a key across four projects (<a href={`${base}/resources`}>/resources</a>). Its documented blind spot: it only scans the tool-input payload; content passed another way is silently allowed.</li>
+            <li><strong>secrets-scan:</strong> caught an Anthropic key a subagent helpfully "moved into the example" — five seconds of grep versus rotating a key across four projects (<a href={`${base}/resources/`}>/resources</a>). Its documented blind spot: it only scans the tool-input payload; content passed another way is silently allowed.</li>
             <li><strong>claude-md-size-guard:</strong> a 340-line CLAUDE.md was doubling the token bill — the file reads on every turn. Warn-only at 300 lines.</li>
           </ul>
         </div>
@@ -142,26 +142,26 @@ const faq = {
         <div id="failed" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Which hook ideas failed?</h2>
           <p>The section the official docs will never have: my own cleverness, priced.</p>
-          <p><strong>The keystroke storm.</strong> An on-save syntax-check hook met a 1.5-second autosave. Each check spawned a 6–8-second subagent; by minute three there were 90 running concurrently. Hooks have no rate limiter unless you build one in. The fix was two lines of discipline: a 30-second per-file debounce, plus a <code>~/.claude/hooks/disabled</code> kill-switch file every hook checks first (<a href={`${base}/chapters/28-failure-receipts`}>Ch 28</a>).</p>
-          <p><strong>The typecheck that never finished.</strong> A typecheck-on-every-edit hook on a 15,000-file tree ran for months and never completed once — its output piped through a truncator that always exited clean. Maximum cost, zero benefit, zero errors. Found only by the <a href={`${base}/self-audit`}>self-audit</a>, not by any alert.</p>
-          <p><strong>The 2× evaluator.</strong> Forcing a /goal evaluator up to Opus via a custom hook config: a 47-turn session at roughly twice the expected cost, for judgment Haiku was already delivering (<a href={`${base}/chapters/38-run-until-done`}>Ch 38</a>).</p>
+          <p><strong>The keystroke storm.</strong> An on-save syntax-check hook met a 1.5-second autosave. Each check spawned a 6–8-second subagent; by minute three there were 90 running concurrently. Hooks have no rate limiter unless you build one in. The fix was two lines of discipline: a 30-second per-file debounce, plus a <code>~/.claude/hooks/disabled</code> kill-switch file every hook checks first (<a href={`${base}/chapters/28-failure-receipts/`}>Ch 28</a>).</p>
+          <p><strong>The typecheck that never finished.</strong> A typecheck-on-every-edit hook on a 15,000-file tree ran for months and never completed once — its output piped through a truncator that always exited clean. Maximum cost, zero benefit, zero errors. Found only by the <a href={`${base}/self-audit/`}>self-audit</a>, not by any alert.</p>
+          <p><strong>The 2× evaluator.</strong> Forcing a /goal evaluator up to Opus via a custom hook config: a 47-turn session at roughly twice the expected cost, for judgment Haiku was already delivering (<a href={`${base}/chapters/38-run-until-done/`}>Ch 38</a>).</p>
           <PullQuote attribution="Ch 28, Failure receipts">One autosave-triggered hook spawned 90 concurrent subagents in three minutes. Autosave fires every 1.5 seconds, and hooks have no rate limiter unless you build one in.</PullQuote>
         </div>
 
         <div id="goal" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">How do hooks relate to /goal and /loop?</h2>
-          <p>A Stop hook is the loop primitive: the agent thinks it's done, your script disagrees, the agent keeps going. <code>/goal</code> is literally a wrapper around a prompt-based Stop hook with a Haiku evaluator reading the transcript (<a href={`${base}/chapters/38-run-until-done`}>Ch 38</a>). Two consequences worth knowing: enterprises that lock hooks (<code>disableAllHooks</code>, <code>allowManagedHooksOnly</code>) lose /goal with them; and if you can measure "done" with code, skip the evaluator entirely — a real script returning the verdict is more honest than a Haiku judging a feeling. Determinism beats vibes when the vibes can cost $11.</p>
+          <p>A Stop hook is the loop primitive: the agent thinks it's done, your script disagrees, the agent keeps going. <code>/goal</code> is literally a wrapper around a prompt-based Stop hook with a Haiku evaluator reading the transcript (<a href={`${base}/chapters/38-run-until-done/`}>Ch 38</a>). Two consequences worth knowing: enterprises that lock hooks (<code>disableAllHooks</code>, <code>allowManagedHooksOnly</code>) lose /goal with them; and if you can measure "done" with code, skip the evaluator entirely — a real script returning the verdict is more honest than a Haiku judging a feeling. Determinism beats vibes when the vibes can cost $11.</p>
         </div>
 
         <div id="rot" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">How do you stop hooks from rotting?</h2>
           <ul>
-            <li><strong>Telemetry before deletion.</strong> A one-line JSONL invocation logger per hook. "Zero fires in seven weeks, across two independent telemetry sources" is kill evidence; a feeling isn't (<a href={`${base}/self-audit`}>/self-audit</a>).</li>
+            <li><strong>Telemetry before deletion.</strong> A one-line JSONL invocation logger per hook. "Zero fires in seven weeks, across two independent telemetry sources" is kill evidence; a feeling isn't (<a href={`${base}/self-audit/`}>/self-audit</a>).</li>
             <li><strong>Warn-only for heuristics.</strong> Anything that can false-positive (size guards, style lints) warns; only deterministic policy (push-to-main, live keys) blocks with exit 2.</li>
             <li><strong>Never break the parent agent because logging broke.</strong> Every script ends in a way that degrades to exit 0 when its own plumbing fails.</li>
             <li><strong>Quarterly re-verify against the official reference.</strong> The exit-code semantics under this page's own Ch 16 examples moved once already. Re-stamp the verified date or assume drift.</li>
           </ul>
-          <p>Want the next hook to write? List the three corrections you've typed more than five times this month — those are your next three hooks (<a href={`${base}/chapters/17-tips-tricks`}>Ch 17</a>).</p>
+          <p>Want the next hook to write? List the three corrections you've typed more than five times this month — those are your next three hooks (<a href={`${base}/chapters/17-tips-tricks/`}>Ch 17</a>).</p>
           <CopyBlock client:visible text={HOOK_SECRETS_SCAN} filename="secrets-scan.sh" language="bash" />
         </div>
 
@@ -177,7 +177,7 @@ const faq = {
           <p>Yes — PreToolUse on Write|Edit scanning live-key patterns. It only sees the tool-input payload; re-verify the blind spot after harness updates.</p>
           <h3>What's the difference between a Stop hook and /goal?</h3>
           <p>/goal wraps a prompt-based Stop hook with a Haiku evaluator. A raw Stop hook is deterministic — if you can measure "done" with code, use the hook.</p>
-          <p class="mt-6 text-sm" style="color: rgb(var(--muted))">Related: <a href={`${base}/claude-code-best-practices`}>best practices</a> · <a href={`${base}/resources`}>the full copy-paste vault</a> · <a href={`${base}/cheat-sheet`}>command cheat sheet</a> · <a href={`${base}/chapters/16-hooks-subagents`}>Ch 16: Hooks and Custom Subagents</a></p>
+          <p class="mt-6 text-sm" style="color: rgb(var(--muted))">Related: <a href={`${base}/claude-code-best-practices/`}>best practices</a> · <a href={`${base}/resources/`}>the full copy-paste vault</a> · <a href={`${base}/cheat-sheet/`}>command cheat sheet</a> · <a href={`${base}/chapters/16-hooks-subagents/`}>Ch 16: Hooks and Custom Subagents</a></p>
         </div>
 
       </div>

@@ -107,7 +107,7 @@ function Pick<T extends string>({ label, value, onChange, options }: { label: st
 
 function linkify(text: string): string {
   // Convert "Ch X — slug" or "[Ch X](slug)" patterns into anchor tags.
-  return text.replace(/\[Ch (\d+)\]\(([^)]+)\)/g, (_m, num, slug) => `<a href="../chapters/${slug}">Ch ${num}</a>`);
+  return text.replace(/\[Ch (\d+)\]\(([^)]+)\)/g, (_m, num, slug) => `<a href="../chapters/${slug}/">Ch ${num}</a>`);
 }
 
 function buildPlan(stack: Stack, cadence: Cadence, focus: Focus): Day[] {

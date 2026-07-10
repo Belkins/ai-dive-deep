@@ -17,11 +17,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </p>
 
     <div class="mt-6 grid sm:grid-cols-2 gap-3">
-      <a href={`${base}/chapters/19-build-products`} class="card no-underline" style="color: rgb(var(--fg))">
+      <a href={`${base}/chapters/19-build-products/`} class="card no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">The framework</div>
         <div class="font-display text-base">Ch 19 — How to build products with AI</div>
       </a>
-      <a href={`${base}/chapters/31-stages`} class="card no-underline" style="color: rgb(var(--fg))">
+      <a href={`${base}/chapters/31-stages/`} class="card no-underline" style="color: rgb(var(--fg))">
         <div class="text-xs uppercase tracking-wider mb-1" style="color: rgb(var(--accent))">The stages</div>
         <div class="font-display text-base">Ch 31 — Six stages from idea to deploy</div>
       </a>
@@ -73,7 +73,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
               <div class="text-[10px] uppercase tracking-wider mb-1.5" style="color: rgb(var(--muted))">Chapters that teach the bits</div>
               <div class="flex flex-wrap gap-1.5">
                 {b.chapters.map((c) => (
-                  <a href={`${base}/chapters/${c.slug}`} class="text-xs px-2 py-0.5 rounded no-underline" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line)); color: rgb(var(--accent));">
+                  <a href={`${base}/chapters/${c.slug}/`} class="text-xs px-2 py-0.5 rounded no-underline" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line)); color: rgb(var(--accent));">
                     {c.ref}
                   </a>
                 ))}
@@ -140,7 +140,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         If you have no recurring async pain, build nothing. If you have one Tuesday-morning ritual you hate, build the one that fixes it. The other seven will still be here next Saturday.
       </p>
       <p class="text-sm leading-relaxed mt-3 m-0" style="color: rgb(var(--fg) / 0.92)">
-        Don't know which one? Drop the <code>process-miner</code> skill from <a href={`${base}/starter-skills`}>/starter-skills</a> into <code>~/.claude/skills/</code> and run it Monday morning. It'll tell you which workflow you've been doing manually 5+ times this week — that's your Saturday.
+        Don't know which one? Drop the <code>process-miner</code> skill from <a href={`${base}/starter-skills/`}>/starter-skills</a> into <code>~/.claude/skills/</code> and run it Monday morning. It'll tell you which workflow you've been doing manually 5+ times this week — that's your Saturday.
       </p>
     </div>
   </section>

@@ -49,9 +49,9 @@ The autonomous-work surface in Claude Code now reads as a clean three-way. Each 
 
 **`/goal` — evaluator-driven.** "Run until this condition is met." The Haiku evaluator decides. Use it when the finish line is measurable in transcript output — tests pass, file count below N, all PRs labeled, lint clean.
 
-**`/loop [interval] [prompt]` — interval-driven.** "Run this prompt every N minutes." No evaluator. Claude executes the prompt, sleeps, executes again. Use it for polling — `/loop 5m check if the deploy finished` is the canonical example. Pre-2026 you'd have rigged this with [cron](/chapters/07-cron); now it's a slash command. For a real operator loop running this way — Codex on a standing "simplify, follow my design system" prompt, fenced by a diff ceiling — see [Chapter 42](/chapters/42-codex-on-a-loop), and [Chapter 43](/chapters/43-codex-saviour) for what that fence looks like when the loop deletes ninety thousand lines of a shipping product.
+**`/loop [interval] [prompt]` — interval-driven.** "Run this prompt every N minutes." No evaluator. Claude executes the prompt, sleeps, executes again. Use it for polling — `/loop 5m check if the deploy finished` is the canonical example. Pre-2026 you'd have rigged this with [cron](/chapters/07-cron/); now it's a slash command. For a real operator loop running this way — Codex on a standing "simplify, follow my design system" prompt, fenced by a diff ceiling — see [Chapter 42](/chapters/42-codex-on-a-loop/), and [Chapter 43](/chapters/43-codex-saviour/) for what that fence looks like when the loop deletes ninety thousand lines of a shipping product.
 
-**Stop hooks — custom-logic-driven.** The engineer-flavored version — covered in detail in [Ch 16](/chapters/16-hooks-subagents). Use when you want determinism — "stop when this script returns 0" — rather than a model judging the transcript. For curated community skills and the install audit pattern, see [Ch 39](/chapters/39-skills-you-should-steal).
+**Stop hooks — custom-logic-driven.** The engineer-flavored version — covered in detail in [Ch 16](/chapters/16-hooks-subagents/). Use when you want determinism — "stop when this script returns 0" — rather than a model judging the transcript. For curated community skills and the install audit pattern, see [Ch 39](/chapters/39-skills-you-should-steal/).
 
 | | `/goal` | `/loop` | Stop hook |
 |---|---|---|---|
@@ -99,7 +99,7 @@ default if you're not sure: /goal with a turn cap of 20.
 
 Read `/goal` as the third rung of an autonomy ladder — that framing isn't Anthropic's wording verbatim, but the per-prompt pairing they describe in the docs is exactly the same shape: each rung removes a class of operator approval.
 
-- **Plan mode** removes per-step uncertainty. You approve a plan, not each diff. Covered in [Ch 21](/chapters/21-three-modes).
+- **Plan mode** removes per-step uncertainty. You approve a plan, not each diff. Covered in [Ch 21](/chapters/21-three-modes/).
 - **Auto mode** removes per-tool prompts. You stop saying "yes, run that bash, yes, write that file." The turn still has to end and return to you.
 - **`/goal`** removes per-turn prompts. You stop saying "yes, take another turn, yes, keep going." The session runs until the condition lands.
 

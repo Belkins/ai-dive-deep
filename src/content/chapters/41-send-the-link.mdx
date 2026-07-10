@@ -3,7 +3,7 @@ number: 41
 slug: "41-send-the-link"
 title: "Send the Link, Not the File"
 subtitle: "Every Deliverable as a Live Artifact"
-tldr: "Every report, pitch, audit, deck, and model in my portfolio ships as a live interactive HTML link in a private repo, not as a PDF or slide attachment. The cheaper, better, more current artifact also happens to be the one that takes less of your night. This chapter is the thesis; [/html-first](/html-first) is the deep reference with the embedded case studies, the recipe, the applications gallery, and the twelve public examples in the wild."
+tldr: "Every report, pitch, audit, deck, and model in my portfolio ships as a live interactive HTML link in a private repo, not as a PDF or slide attachment. The cheaper, better, more current artifact also happens to be the one that takes less of your night. This chapter is the thesis; [/html-first](/html-first/) is the deep reference with the embedded case studies, the recipe, the applications gallery, and the twelve public examples in the wild."
 keyConcepts: ["HTML-ization", "living link", "private repo", "artifact economics", "distribution"]
 readingMinutes: 9
 ---
@@ -33,16 +33,16 @@ And the medium itself is the signal. A live link says operator. A PDF named `Dec
 
 The first deliverable you ship this way is a curiosity. The second one is the format you can't go back from. I've watched this happen across five portfolio companies in the same shape every time. Pitches go first because no compliance team has to approve an investment doc that doesn't exist yet. Audits go next because the methodology hits a wall the moment a client wants to "see what happens if we change one assumption." Internal QBRs follow because the format is the answer to "the board keeps asking the same three what-if questions." By the fourth or fifth deliverable in this shape, nobody on the team is exporting PDFs anymore. The format that won wasn't decreed; it spread because the better way was obviously better.
 
-That's the [Chapter 26](/chapters/26-team-adoption) point pointed at a document instead of a tool. When something is genuinely better, you don't roll it out. You ship one and the second one starts spinning up next to it without you telling anyone.
+That's the [Chapter 26](/chapters/26-team-adoption/) point pointed at a document instead of a tool. When something is genuinely better, you don't roll it out. You ship one and the second one starts spinning up next to it without you telling anyone.
 
 ## Why this is its own chapter
 
-It's also the same idea as the living link from [Chapter 19](/chapters/19-build-products), taken to its conclusion. Chapter 19 is "build a product on Saturday." This chapter is "every deliverable is a product." The mechanic is identical — private repo, single HTML file (or set of files), deploy to a link, share. The only thing that changes is what's in the file. A Next.js app, a one-page audit, a board memo, a brief, a deck, a model — same recipe, same pipeline, different content.
+It's also the same idea as the living link from [Chapter 19](/chapters/19-build-products/), taken to its conclusion. Chapter 19 is "build a product on Saturday." This chapter is "every deliverable is a product." The mechanic is identical — private repo, single HTML file (or set of files), deploy to a link, share. The only thing that changes is what's in the file. A Next.js app, a one-page audit, a board memo, a brief, a deck, a model — same recipe, same pipeline, different content.
 
-The Playbook itself is the maximal version. You're inside the case study right now. Edition 6 of this book added three embedded case studies (the AFC pitch, the AFC robot stable, the Folderly audit), Edition 7 made the launch its own artifact at [/launch](/launch), and Edition 8.1 made the launch week its own daily-updating artifact at [/launch-week](/launch-week). The maximal version is also the minimal version. A Tuesday morning report is one HTML file. A 43-chapter book is many HTML files. Same pattern, both ends of one ladder.
+The Playbook itself is the maximal version. You're inside the case study right now. Edition 6 of this book added three embedded case studies (the AFC pitch, the AFC robot stable, the Folderly audit), Edition 7 made the launch its own artifact at [/launch](/launch/), and Edition 8.1 made the launch week its own daily-updating artifact at [/launch-week](/launch-week/). The maximal version is also the minimal version. A Tuesday morning report is one HTML file. A 43-chapter book is many HTML files. Same pattern, both ends of one ladder.
 
 <Callout type="tip">
-The deep version of this chapter — the recipe, the prompt template, the gallery of twelve deliverable shapes that work, the four places HTML-ization doesn't work, and the twelve public examples in the wild — lives at [/html-first](/html-first). This chapter is the story; that page is the playbook.
+The deep version of this chapter — the recipe, the prompt template, the gallery of twelve deliverable shapes that work, the four places HTML-ization doesn't work, and the twelve public examples in the wild — lives at [/html-first](/html-first/). This chapter is the story; that page is the playbook.
 </Callout>
 
 ## The cost math nobody priced in
@@ -51,7 +51,7 @@ A PDF deck assembled by a human takes three to five hours per quarter to refresh
 
 The deeper saving is on the second-order work. A live artifact updates from a data source; the static deck doesn't. The hours you used to spend "refreshing the deck for the board call" because the numbers shifted between when you exported it and when the call happened — those hours are gone. The artifact is already current. You spent zero time on the refresh because there was no refresh; the link is the live read.
 
-If you want the cost-per-task math at the prompt-and-token layer, [Chapter 29](/chapters/29-cost-economics) has the four-cost picture and the cache hit rate that makes this run economically at scale.
+If you want the cost-per-task math at the prompt-and-token layer, [Chapter 29](/chapters/29-cost-economics/) has the four-cost picture and the cache hit rate that makes this run economically at scale.
 
 ## Where the format fails
 
@@ -65,7 +65,7 @@ I'd be the only person publishing a chapter on a format if I didn't say where it
 
 **Internal deliverables where the deploy overhead beats the value.** A fifty-word Slack ask doesn't need a deployed webpage. Reserve the format for what gets forwarded; if there's no distribution problem, there's no format problem to solve.
 
-The longer field guide on this — including the recipe to run a deliverable through HTML-ization on a Saturday, the twelve applications that work, and the public examples in the wild from Stripe / Pudding / Ciechanowski / AI 2027 / Anthropic / NYT / Linear — lives at [/html-first](/html-first).
+The longer field guide on this — including the recipe to run a deliverable through HTML-ization on a Saturday, the twelve applications that work, and the public examples in the wild from Stripe / Pudding / Ciechanowski / AI 2027 / Anthropic / NYT / Linear — lives at [/html-first](/html-first/).
 
 ## What it asks of you
 
@@ -73,7 +73,7 @@ The change is small and the discipline matters. Three things have to be true for
 
 **One — you write your deliverables in a format that deploys.** Not Word. Not Pages. Not PowerPoint. Markdown becomes HTML. HTML is the universal target. The drafting environment becomes a text editor and a chat with Claude — that's it. Anything else is friction between "the thought" and "the link."
 
-**Two — you have a place to deploy.** A private GitHub repo is the cheapest, most durable, most operator-respectable home that exists. The [/github-playbook](/github-playbook) page is the path in if that part of the stack is new to you — five things you can do on GH without writing a line of code, the eight `gh` commands you actually need, what you can safely ignore.
+**Two — you have a place to deploy.** A private GitHub repo is the cheapest, most durable, most operator-respectable home that exists. The [/github-playbook](/github-playbook/) page is the path in if that part of the stack is new to you — five things you can do on GH without writing a line of code, the eight `gh` commands you actually need, what you can safely ignore.
 
 **Three — you build muscle on the format.** The first artifact takes an evening. The second takes a morning. The fifth takes ten minutes. By the twentieth, you've forgotten the format you used to use. The skill compounds against the deliverable type — once you've shipped one QBR as an artifact, the next QBR is faster than the deck version was, every quarter, forever.
 
@@ -81,10 +81,10 @@ The change is small and the discipline matters. Three things have to be true for
 
 Pick the deliverable you've sent most recently — the board update, the customer QBR, the strategy memo, the contractor brief. Don't send the next one as an attachment. Spend forty-five minutes and ship it as a link.
 
-The mechanic from [Chapter 19](/chapters/19-build-products)'s Hour 2 pointed at a document instead of a product: `gh repo create --private`, drop the HTML file in, `vercel deploy` (or GitHub Pages), share the link. Updated by commit, current forever, forwardable.
+The mechanic from [Chapter 19](/chapters/19-build-products/)'s Hour 2 pointed at a document instead of a product: `gh repo create --private`, drop the HTML file in, `vercel deploy` (or GitHub Pages), share the link. Updated by commit, current forever, forwardable.
 
 The first one is the curiosity. The second one is the format you can't go back from. The thirteenth is the year your finance pages started showing the time-savings the rest of the team noticed before the spreadsheet did.
 
 <PullQuote>The cheapest product you'll ever ship isn't an MVP. It's the report you were going to email anyway — shipped as a living link instead of a dead file.</PullQuote>
 
-The deep version of everything in this chapter — the recipe, the prompt template, the twelve applications gallery, the four anti-cases, and the twelve public examples in the wild — is at [/html-first](/html-first). The story is here; the playbook is there. The two together is the whole move.
+The deep version of everything in this chapter — the recipe, the prompt template, the twelve applications gallery, the four anti-cases, and the twelve public examples in the wild — is at [/html-first](/html-first/). The story is here; the playbook is there. The two together is the whole move.

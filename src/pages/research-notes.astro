@@ -51,7 +51,7 @@ const confidence = (note: ResearchNote) => {
       External papers and benchmarks that materially shift how the book's patterns hold up. Not a literature review — only the findings that change what you should do Monday morning. Each note has the receipt, the operator implications, and the chapters it informs.
     </p>
     <p class="mt-4 text-sm font-mono" style="color: rgb(var(--muted))">
-      {sorted.length} notes · latest {latest.date} · <a href={`${base}/rss/research-notes.xml`} style="color: rgb(var(--accent))">RSS</a> · <a href={`${base}/radar`} style="color: rgb(var(--accent-2))">Radar →</a><span id="rn-new-delta" class="hidden" style="color: rgb(var(--accent-2))"></span>
+      {sorted.length} notes · latest {latest.date} · <a href={`${base}/rss/research-notes.xml`} style="color: rgb(var(--accent))">RSS</a> · <a href={`${base}/radar/`} style="color: rgb(var(--accent-2))">Radar →</a><span id="rn-new-delta" class="hidden" style="color: rgb(var(--accent-2))"></span>
     </p>
   </section>
 
@@ -136,7 +136,7 @@ const confidence = (note: ResearchNote) => {
                     <div class="eyebrow mb-2">Chapters this informs</div>
                     <div class="grid gap-2 sm:grid-cols-2">
                       {row.note.chapters.map((c) => (
-                        <a href={`${base}/chapters/${c.slug}`} class="card hover:border-flame transition-colors no-underline p-3" style="color: rgb(var(--fg));">
+                        <a href={`${base}/chapters/${c.slug}/`} class="card hover:border-flame transition-colors no-underline p-3" style="color: rgb(var(--fg));">
                           <div class="text-[11px] font-mono mb-1" style="color: rgb(var(--accent))">{c.ref}</div>
                           <div class="text-sm leading-snug" style="color: rgb(var(--fg) / 0.92)">{c.why}</div>
                         </a>

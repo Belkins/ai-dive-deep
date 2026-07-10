@@ -30,18 +30,18 @@ const fbHref = `mailto:v@vladyslavpodoliako.com?subject=${fbSubject}&body=${fbBo
 ---
 <nav class="container-prose mt-16 mb-8 grid gap-4 sm:grid-cols-2">
   {prev ? (
-    <a href={`${base}/chapters/${prev.slug}`} class="card hover:border-flame transition-colors no-underline text-fg">
+    <a href={`${base}/chapters/${prev.slug}/`} class="card hover:border-flame transition-colors no-underline text-fg">
       <div class="text-xs uppercase tracking-wider mb-1.5 text-muted">← Previous · Ch {prev.number}</div>
       <div class="font-display text-lg leading-tight">{prev.title}</div>
     </a>
   ) : (
-    <a href={`${base}/how-to-read`} class="card hover:border-flame transition-colors no-underline text-fg">
+    <a href={`${base}/how-to-read/`} class="card hover:border-flame transition-colors no-underline text-fg">
       <div class="text-xs uppercase tracking-wider mb-1.5 text-muted">← Prologue</div>
       <div class="font-display text-lg leading-tight">How to read this book</div>
     </a>
   )}
   {next ? (
-    <a href={`${base}/chapters/${next.slug}`} class="card hover:border-flame transition-colors no-underline text-right text-fg">
+    <a href={`${base}/chapters/${next.slug}/`} class="card hover:border-flame transition-colors no-underline text-right text-fg">
       <div class="text-xs uppercase tracking-wider mb-1.5 text-accent">
         {crossingPart && partInfo ? `Next: ${partInfo.label.replace('Part ', 'Part ')} →` : `Most readers go here next · Ch ${next.number} →`}
       </div>
@@ -51,7 +51,7 @@ const fbHref = `mailto:v@vladyslavpodoliako.com?subject=${fbSubject}&body=${fbBo
       )}
     </a>
   ) : (
-    <a href={`${base}/journey`} class="card hover:border-flame transition-colors no-underline text-right text-fg">
+    <a href={`${base}/journey/`} class="card hover:border-flame transition-colors no-underline text-right text-fg">
       <div class="text-xs uppercase tracking-wider mb-1.5 text-accent">You finished the book →</div>
       <div class="font-display text-lg leading-tight">See the full journey</div>
     </a>

@@ -79,7 +79,7 @@ const patterns = [
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Swarms</div>
     <h1>One agent is a chat. Twenty agents is a portfolio.</h1>
     <p class="mt-3 text-lg" style="color: rgb(var(--muted))">
-      The deep version of <a href="/chapters/06-the-swarm">Chapter 6</a> — the architecture diagrams, the ten swarm skills I've shipped, the seven patterns I actually use, the orchestration prompts I'd hand to a friend, and the three things that quietly break a swarm. This page is what <a href="/chapters/40-prompting-knob">Ch 40</a> kept gesturing at — the next step up from a clever single-instance prompt.
+      The deep version of <a href="/chapters/06-the-swarm/">Chapter 6</a> — the architecture diagrams, the ten swarm skills I've shipped, the seven patterns I actually use, the orchestration prompts I'd hand to a friend, and the three things that quietly break a swarm. This page is what <a href="/chapters/40-prompting-knob/">Ch 40</a> kept gesturing at — the next step up from a clever single-instance prompt.
     </p>
     <p class="mt-2 text-sm" style="color: rgb(var(--muted))">
       Interactive visualizer below. Patterns you can run on Monday. The skills you can install before lunch.
@@ -96,7 +96,7 @@ const patterns = [
           <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
             <p>The cleverest single-instance prompt you'll ever write tops out at a ceiling the model imposes — one context window, one chain of reasoning, one shot. A swarm lifts the ceiling by changing what you're running. Not one bigger model. Many same-sized models, each in a clean context, each pointed at one slice of the problem, returning to a conductor who never had to hold the whole symphony in its head.</p>
             <p>The shift is structural, not stylistic. A single instance has to balance four perspectives in one answer; four instances each get to be one perspective. A single instance loses the thread on a long task; four instances each finish before their threads go anywhere. A single instance running for fifteen minutes consumes fifteen minutes; four instances running in parallel consume four wall-clock minutes of yours. The model didn't get smarter — the architecture got smarter.</p>
-            <p>I wrote this Playbook with a 15-agent swarm in roughly six minutes of wall-clock time (the story is in <a href="/chapters/06-the-swarm">Chapter 6</a>). I run a 20-agent swarm whenever a portfolio company wants a complete strategic plan from scratch — the <a href="#shelf">/swarm-strategic-plan</a> skill is the productized version of that pattern. I run a 3-agent swarm every time I hit a bug I can't reason through alone (<a href="#shelf">/debug-swarm</a>). The shelf is real. The patterns are stable. The compounding is the same compounding that all leverage has — once you've used it, the sequential version of your work starts to feel like writing email by candlelight.</p>
+            <p>I wrote this Playbook with a 15-agent swarm in roughly six minutes of wall-clock time (the story is in <a href="/chapters/06-the-swarm/">Chapter 6</a>). I run a 20-agent swarm whenever a portfolio company wants a complete strategic plan from scratch — the <a href="#shelf">/swarm-strategic-plan</a> skill is the productized version of that pattern. I run a 3-agent swarm every time I hit a bug I can't reason through alone (<a href="#shelf">/debug-swarm</a>). The shelf is real. The patterns are stable. The compounding is the same compounding that all leverage has — once you've used it, the sequential version of your work starts to feel like writing email by candlelight.</p>
             <PullQuote>The swarm isn't 15 agents talking to each other. It's 15 agents reporting to one.</PullQuote>
             <p>That distinction is the whole game. Most operators who try parallel agents and bounce off have built a group chat. You want a chain of command — one conductor, N section leads, each section lead in its own clean context window, returning only finished phrases to the conductor.</p>
           </div>
@@ -105,7 +105,7 @@ const patterns = [
         <div id="architecture" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The four patterns (interactive)</h2>
           <div class="space-y-4 leading-relaxed mb-4" style="color: rgb(var(--fg) / 0.88)">
-            <p>Four shapes cover ~90% of operator swarm work. Pick one, hit Run, watch the topology animate. Then pick a different one and see how the dispatch order changes. This is the same widget that lives in <a href="/chapters/06-the-swarm">Ch 06</a>; embedded here so you can poke at it without context-switching.</p>
+            <p>Four shapes cover ~90% of operator swarm work. Pick one, hit Run, watch the topology animate. Then pick a different one and see how the dispatch order changes. This is the same widget that lives in <a href="/chapters/06-the-swarm/">Ch 06</a>; embedded here so you can poke at it without context-switching.</p>
           </div>
           <SwarmVisualizer client:visible />
           <div class="space-y-4 leading-relaxed mt-6" style="color: rgb(var(--fg) / 0.88)">
@@ -163,7 +163,7 @@ const patterns = [
             ))}
           </div>
           <Callout type="note">
-            These are the skills with "swarm" in their DNA — multi-agent orchestration is the load-bearing pattern. The full shelf is wider (the live count is on <a href="/showcase">Vlad's CC setup</a>). When you build your own, start by cloning one of these as a template — the SKILL.md frontmatter shape, the description-as-trigger discipline, and the master-BRIEF pattern transfer directly.
+            These are the skills with "swarm" in their DNA — multi-agent orchestration is the load-bearing pattern. The full shelf is wider (the live count is on <a href="/showcase/">Vlad's CC setup</a>). When you build your own, start by cloning one of these as a template — the SKILL.md frontmatter shape, the description-as-trigger discipline, and the master-BRIEF pattern transfer directly.
           </Callout>
         </div>
 
@@ -323,7 +323,7 @@ done`}</code></pre>
             <p><strong>Path C — swarm-strategic-plan.</strong> The next portfolio idea you've been sitting on, run <code>/swarm-strategic-plan</code>. Twenty agents in five waves over ~3 hours produce a complete 25-doc strategic plan in the genre of the AFC playbook. You'll have more strategy than you can read in one sitting — most operators don't have that problem, and the ones who do can afford the cost.</p>
             <PullQuote>The next agent loop you'd run sequentially over twenty minutes — run four of them in parallel for five. The wall-clock difference is the entire argument for this whole chapter.</PullQuote>
             <p class="mt-6 text-sm" style="color: rgb(var(--muted))">
-              Related: <a href="/chapters/06-the-swarm">Ch 06 — The Swarm (the original)</a> · <a href="/chapters/40-prompting-knob">Ch 40 — Prompting, the Knob</a> · <a href="/chapters/05-skills">Ch 05 — Skills</a> · <a href="/chapters/16-hooks-subagents">Ch 16 — Hooks &amp; Subagents</a> · <a href="/showcase">Vlad's full CC setup</a> · <a href="/resources">Resources library (orchestration prompts)</a>
+              Related: <a href="/chapters/06-the-swarm/">Ch 06 — The Swarm (the original)</a> · <a href="/chapters/40-prompting-knob/">Ch 40 — Prompting, the Knob</a> · <a href="/chapters/05-skills/">Ch 05 — Skills</a> · <a href="/chapters/16-hooks-subagents/">Ch 16 — Hooks &amp; Subagents</a> · <a href="/showcase/">Vlad's full CC setup</a> · <a href="/resources/">Resources library (orchestration prompts)</a>
             </p>
           </div>
         </div>

@@ -62,7 +62,7 @@ const faq = {
       Anthropic's launch page ships six customer receipts. All six are vendor-curated — the vendor picked the names, the vendor reported the numbers. That doesn't make them worthless; it makes them signals. This page reads each one honestly, then translates them into the patterns this book already runs.
     </p>
     <p class="mt-2 text-sm text-muted">
-      Receipts sourced from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a>. The model file lives on <a href="/fable-5">the Fable 5 hub</a>; the full table on <a href="/fable-5/benchmarks">the benchmarks page</a>.
+      Receipts sourced from <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" rel="noopener">Anthropic's announcement</a>. The model file lives on <a href="/fable-5/">the Fable 5 hub</a>; the full table on <a href="/fable-5/benchmarks/">the benchmarks page</a>.
     </p>
   </section>
 
@@ -81,11 +81,11 @@ const faq = {
         <div id="receipts" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The launch receipts, read honestly</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>Six receipts shipped with the announcement. Here's each one, with the read Anthropic's copy won't give you. <a href="/chapters/24-tier-list">Ch 24</a>'s rule applies to customer quotes the same as it applies to benchmark rows: a receipt is a signal, a private eval is the proof.</p>
+            <p>Six receipts shipped with the announcement. Here's each one, with the read Anthropic's copy won't give you. <a href="/chapters/24-tier-list/">Ch 24</a>'s rule applies to customer quotes the same as it applies to benchmark rows: a receipt is a signal, a private eval is the proof.</p>
             <ol class="space-y-3 list-none p-0 m-0">
               <li class="rounded-lg border p-4 border-line">
                 <strong>Stripe — 50 million lines of Ruby, migrated in one day.</strong> Scoped at two months by hand.
-                <p class="mt-1 mb-0 text-sm text-muted">The read: the strongest cost-per-task receipt any model launch has shipped — not a demo, a migration with a by-hand baseline attached. Also: one company, one codebase, vendor-reported. The <a href="/chapters/29-cost-economics">Ch 29</a> math on this lives on <a href="/fable-5/pricing">the pricing page</a>.</p>
+                <p class="mt-1 mb-0 text-sm text-muted">The read: the strongest cost-per-task receipt any model launch has shipped — not a demo, a migration with a by-hand baseline attached. Also: one company, one codebase, vendor-reported. The <a href="/chapters/29-cost-economics/">Ch 29</a> math on this lives on <a href="/fable-5/pricing/">the pricing page</a>.</p>
               </li>
               <li class="rounded-lg border p-4 border-line">
                 <strong>Cursor + Cognition — the coding-tool vendors agree.</strong> Cursor calls Fable 5 the "state of the art model on CursorBench". On Cognition's FrontierCode, it scores highest among frontier models at medium effort.
@@ -97,7 +97,7 @@ const faq = {
               </li>
               <li class="rounded-lg border p-4 border-line">
                 <strong>IMC — the trading desk.</strong> Fable 5 "aced their trading-analysis evaluations nearly across the board".
-                <p class="mt-1 mb-0 text-sm text-muted">The read: the first non-coding receipt, and the most instructive one — IMC ran <em>private evals</em>, which is the <a href="/chapters/25-evals-or-hope">Ch 25</a> discipline. "Nearly" is the honest word in the quote; keep it.</p>
+                <p class="mt-1 mb-0 text-sm text-muted">The read: the first non-coding receipt, and the most instructive one — IMC ran <em>private evals</em>, which is the <a href="/chapters/25-evals-or-hope/">Ch 25</a> discipline. "Nearly" is the honest word in the quote; keep it.</p>
               </li>
               <li class="rounded-lg border p-4 border-line">
                 <strong>Drug design — around 10x.</strong> Anthropic-internal protein experts accelerated aspects of the drug-design process by around 10x.
@@ -109,7 +109,7 @@ const faq = {
               </li>
             </ol>
             <Callout type="warn">
-              The genomics receipts belong to <strong>Mythos 5</strong> — the gated twin with safeguards lifted by area — today Project Glasswing partners (cyber), next vetted biology researchers (bio/chem). The Fable 5 you can buy blocks most bio/chem requests — in the Claude apps the response falls back to Opus 4.8 and you're told; on the API a blocked request errors, unbilled, with fallback opt-in. Don't buy Fable 5 expecting the 138-species run. Full split on <a href="/fable-5/vs-mythos-5">the Fable vs Mythos page</a>.
+              The genomics receipts belong to <strong>Mythos 5</strong> — the gated twin with safeguards lifted by area — today Project Glasswing partners (cyber), next vetted biology researchers (bio/chem). The Fable 5 you can buy blocks most bio/chem requests — in the Claude apps the response falls back to Opus 4.8 and you're told; on the API a blocked request errors, unbilled, with fallback opt-in. Don't buy Fable 5 expecting the 138-species run. Full split on <a href="/fable-5/vs-mythos-5/">the Fable vs Mythos page</a>.
             </Callout>
             <PullQuote>The vendor picked the names and the vendor reported the numbers. The only receipt with your name on it is the eval you run yourself.</PullQuote>
           </div>
@@ -133,13 +133,13 @@ const faq = {
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>Every receipt above maps onto a pattern this book already documents. That's the useful translation: not "Stripe did a cool thing" but "which of my workloads has the Stripe shape".</p>
             <ol class="space-y-3 list-none p-0 m-0">
-              <li class="rounded-lg border p-4 border-line"><strong>1 — Long-horizon refactors and migrations.</strong> The Stripe shape. This book ran the same pattern one size down: <a href="/chapters/43-codex-saviour">Ch 43</a>'s run deleted a net 91,874 lines across 718 files behind layered verification. Stripe's day is that move at 50M-line scale. If you have a migration scoped in months, this is the workload Fable 5 was priced for.</li>
-              <li class="rounded-lg border p-4 border-line"><strong>2 — Run-until-done loops.</strong> "Complex, long-running work" is Anthropic's own banner copy, and it is the <a href="/chapters/38-run-until-done">Ch 38</a> pattern verbatim: goal in, evaluator on, agent loops until the condition proves. A model that holds the thread longer is worth more per loop, not per token.</li>
-              <li class="rounded-lg border p-4 border-line"><strong>3 — Swarm orchestration — the conductor seat.</strong> Put the expensive model where the judgment is and fan cheap ones out below it (<a href="/swarms">/swarms</a>, <a href="/dynamic-workflows">/dynamic-workflows</a>). Fable 5 takes the conductor seat; Haiku and Sonnet stay in the sections. The 2× sticker buys one seat, not the whole orchestra.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>1 — Long-horizon refactors and migrations.</strong> The Stripe shape. This book ran the same pattern one size down: <a href="/chapters/43-codex-saviour/">Ch 43</a>'s run deleted a net 91,874 lines across 718 files behind layered verification. Stripe's day is that move at 50M-line scale. If you have a migration scoped in months, this is the workload Fable 5 was priced for.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>2 — Run-until-done loops.</strong> "Complex, long-running work" is Anthropic's own banner copy, and it is the <a href="/chapters/38-run-until-done/">Ch 38</a> pattern verbatim: goal in, evaluator on, agent loops until the condition proves. A model that holds the thread longer is worth more per loop, not per token.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>3 — Swarm orchestration — the conductor seat.</strong> Put the expensive model where the judgment is and fan cheap ones out below it (<a href="/swarms/">/swarms</a>, <a href="/dynamic-workflows/">/dynamic-workflows</a>). Fable 5 takes the conductor seat; Haiku and Sonnet stay in the sections. The 2× sticker buys one seat, not the whole orchestra.</li>
               <li class="rounded-lg border p-4 border-line"><strong>4 — Knowledge work — the quiet headline.</strong> GDPval-AA reads 1932 vs Opus 4.8's 1890. GDP.pdf — vision knowledge work, no tools — reads 29.8% vs 22.5%. The launch is sold on code; the table says the gain shows up in contracts, decks, and documents too. If you're a non-developer reading this, these two rows are yours.</li>
               <li class="rounded-lg border p-4 border-line"><strong>5 — Computer use — eval before believing.</strong> OSWorld-Verified: 85.0% vs Opus 4.8's 83.4%. An incremental gain, not a leap — if browser-driving agents are your workload, the delta may not survive a 2× price. Measure it.</li>
             </ol>
-            <p>Where this runs day to day for most operators: <a href="/fable-5/claude-code">Fable 5 in Claude Code</a> — the banner, <code>/model</code>, and the routing call.</p>
+            <p>Where this runs day to day for most operators: <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a> — the banner, <code>/model</code>, and the routing call.</p>
           </div>
         </div>
 
@@ -148,8 +148,8 @@ const faq = {
           <div class="space-y-4 leading-relaxed text-fg/88">
             <ul class="space-y-3 list-none p-0 m-0">
               <li class="rounded-lg border p-4 border-line"><strong>Cyber- and bio-adjacent work.</strong> The safeguard classifiers trip — in the Claude apps the response comes from Opus 4.8 instead; on the API the request errors, unbilled, unless you opted into Opus-priced fallback. Either way you bought Fable and got Opus. Route those workloads to Opus 4.8 directly.</li>
-              <li class="rounded-lg border p-4 border-line"><strong>Bulk cheap work.</strong> Classification, extraction, routine drafts — Haiku 4.5 at $1/$5 and Sonnet 4.6 at $3/$15 didn't get worse on June 9. The <a href="/tier-list">tier list</a> stays the live source of truth on routing.</li>
-              <li class="rounded-lg border p-4 border-line"><strong>Anything you haven't evaled.</strong> Fable 5 is included in paid-plan limits June 9–22, 2026 — a free private-eval window (<a href="/chapters/25-evals-or-hope">Ch 25</a>). After June 22 the meter runs on usage credits. Eval first, route second.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>Bulk cheap work.</strong> Classification, extraction, routine drafts — Haiku 4.5 at $1/$5 and Sonnet 4.6 at $3/$15 didn't get worse on June 9. The <a href="/tier-list/">tier list</a> stays the live source of truth on routing.</li>
+              <li class="rounded-lg border p-4 border-line"><strong>Anything you haven't evaled.</strong> Fable 5 is included in paid-plan limits June 9–22, 2026 — a free private-eval window (<a href="/chapters/25-evals-or-hope/">Ch 25</a>). After June 22 the meter runs on usage credits. Eval first, route second.</li>
             </ul>
             <p>The receipts say what Fable 5 did for six teams that aren't yours. The free window says what it does for you. One of those is marketing.</p>
           </div>
@@ -170,17 +170,17 @@ const faq = {
         <div id="series" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">The Fable 5 files</h2>
           <div class="grid gap-3 sm:grid-cols-2">
-            <a href="/fable-5/vs-mythos-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
-            <a href="/fable-5/benchmarks" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
-            <a href="/fable-5/vs-opus-4-8" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></a>
-            <a href="/fable-5/vs-gpt-5-5" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
-            <a href="/fable-5/pricing" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
+            <a href="/fable-5/vs-mythos-5/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Mythos 5</span><p class="mt-1 mb-0 text-sm text-muted">One model, two names — the safeguards, the fallback, the gated twin.</p></a>
+            <a href="/fable-5/benchmarks/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Benchmarks, read honestly</span><p class="mt-1 mb-0 text-sm text-muted">All thirteen benchmarks, the starred-row caveat, and the reward-hacking discount.</p></a>
+            <a href="/fable-5/vs-opus-4-8/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs Opus 4.8</span><p class="mt-1 mb-0 text-sm text-muted">Upgrade or wait — the 2× sticker against the turn-count collapse.</p></a>
+            <a href="/fable-5/vs-gpt-5-5/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 vs GPT 5.5 vs Gemini 3.1 Pro</span><p class="mt-1 mb-0 text-sm text-muted">The cross-vendor read, including where the rivals' CLIs hold up.</p></a>
+            <a href="/fable-5/pricing/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Pricing + cost per task</span><p class="mt-1 mb-0 text-sm text-muted">$10/$50, the plan window, and the Ch 29 math on 2× stickers.</p></a>
             <div class="card text-fg opacity-60"><span class="font-semibold">Use cases</span><p class="mt-1 mb-0 text-sm text-muted">Stripe's 50M-line day, Cursor, GitHub, trading desks, drug design — and the operator's own.</p></div>
-            <a href="/fable-5/claude-code" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
-            <a href="/fable-5/api" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
+            <a href="/fable-5/claude-code/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">Fable 5 in Claude Code</span><p class="mt-1 mb-0 text-sm text-muted">The banner, the June 22 clock, /model, and when to route to it.</p></a>
+            <a href="/fable-5/api/" class="card hover:border-flame no-underline text-fg"><span class="font-semibold">The API page</span><p class="mt-1 mb-0 text-sm text-muted">claude-fable-5, the one new 400, and the one-line migration from Opus 4.8.</p></a>
           </div>
           <p class="mt-6 text-sm text-muted">
-            Related: <a href="/fable-5">The Fable 5 hub</a> · <a href="/chapters/29-cost-economics">Ch 29 — cost economics</a> · <a href="/chapters/38-run-until-done">Ch 38 — run until done</a> · <a href="/chapters/43-codex-saviour">Ch 43 — the 90k-line delete</a> · <a href="/swarms">Swarms</a> · <a href="/dynamic-workflows">Dynamic workflows</a>
+            Related: <a href="/fable-5/">The Fable 5 hub</a> · <a href="/chapters/29-cost-economics/">Ch 29 — cost economics</a> · <a href="/chapters/38-run-until-done/">Ch 38 — run until done</a> · <a href="/chapters/43-codex-saviour/">Ch 43 — the 90k-line delete</a> · <a href="/swarms/">Swarms</a> · <a href="/dynamic-workflows/">Dynamic workflows</a>
           </p>
         </div>
 

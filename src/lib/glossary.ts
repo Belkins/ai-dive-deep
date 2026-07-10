@@ -101,7 +101,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   Dreaming: {
     term: 'Dreaming',
     definition:
-      'An automated memory-curation pass — an agent reads its own recent sessions, finds patterns, and improves its persistent memory. Anthropic ships it in Managed Agents (a research preview as of mid-2026), where it can auto-update memory; the local Claude Code build in <a href="/chapters/44-dreaming">Ch 44</a> is deliberately propose-only — it surfaces candidates and never writes.',
+      'An automated memory-curation pass — an agent reads its own recent sessions, finds patterns, and improves its persistent memory. Anthropic ships it in Managed Agents (a research preview as of mid-2026), where it can auto-update memory; the local Claude Code build in <a href="/chapters/44-dreaming/">Ch 44</a> is deliberately propose-only — it surfaces candidates and never writes.',
     related: ['Agent memory', 'Memory curation', 'Propose-only', 'CLAUDE.md'],
   },
   'Agent memory': {
@@ -147,7 +147,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   Hook: {
     term: 'Hook',
     definition:
-      'A command, HTTP endpoint, or short LLM prompt Claude Code runs automatically at lifecycle points (PreToolUse, PostToolUse, Stop, SessionStart, …). Lives in <code>settings.json</code>, not the chat — the model can\'t skip it. Ten real configs with verdicts and failure receipts: <a href="/claude-code-hooks">Claude Code hooks</a>.',
+      'A command, HTTP endpoint, or short LLM prompt Claude Code runs automatically at lifecycle points (PreToolUse, PostToolUse, Stop, SessionStart, …). Lives in <code>settings.json</code>, not the chat — the model can\'t skip it. Ten real configs with verdicts and failure receipts: <a href="/claude-code-hooks/">Claude Code hooks</a>.',
     related: ['PreToolUse', 'PostToolUse', 'Stop hook'],
   },
   Inference: {
@@ -376,79 +376,79 @@ export const glossary: Record<string, GlossaryEntry> = {
   'HTML-ization': {
     term: 'HTML-ization',
     definition:
-      'Shipping every deliverable — report, pitch, audit, deck, model — as a live interactive HTML artifact on a deployed link instead of a dead PDF/slide attachment. It gets opened, clicked into, forwarded; it stays current because it\'s re-rendered, not re-attached. See <a href="/html-first">HTML-ization</a>.',
+      'Shipping every deliverable — report, pitch, audit, deck, model — as a live interactive HTML artifact on a deployed link instead of a dead PDF/slide attachment. It gets opened, clicked into, forwarded; it stays current because it\'s re-rendered, not re-attached. See <a href="/html-first/">HTML-ization</a>.',
     related: ['Persona agent', 'Swarm'],
   },
   'Sovereign stack': {
     term: 'Sovereign stack',
     definition:
-      'A second LLM stack you run yourself — open-weights models (GLM-4.7, Kimi K2.5, Qwen 3.5, DeepSeek) on hardware you own, behind a runtime you control (Ollama / LM Studio / vLLM). Not a replacement for Claude / GPT / Gemini — insurance against the deprecation calendar, plus a 10–30× cheaper batch tier for evaluators, summarization, and RAG. See <a href="/sovereign-stack">The Sovereign Stack</a>.',
+      'A second LLM stack you run yourself — open-weights models (GLM-4.7, Kimi K2.5, Qwen 3.5, DeepSeek) on hardware you own, behind a runtime you control (Ollama / LM Studio / vLLM). Not a replacement for Claude / GPT / Gemini — insurance against the deprecation calendar, plus a 10–30× cheaper batch tier for evaluators, summarization, and RAG. See <a href="/sovereign-stack/">The Sovereign Stack</a>.',
     related: ['Mythos', 'Heretic model'],
   },
   'Heretic model': {
     term: 'Heretic model',
     definition:
-      'An open-weights model whose refusal direction has been surgically removed via abliteration — orthogonalizing weight matrices against the linear refusal direction in the residual stream (Arditi et al., 2024). Not jailbreaking: the weights themselves no longer encode the refusal, persistent across all sessions. Trade-off: 1–6% benchmark regression, and the model is no longer aligned by its lab — alignment becomes your problem. See <a href="/sovereign-stack#heretic">The heretic question</a>.',
+      'An open-weights model whose refusal direction has been surgically removed via abliteration — orthogonalizing weight matrices against the linear refusal direction in the residual stream (Arditi et al., 2024). Not jailbreaking: the weights themselves no longer encode the refusal, persistent across all sessions. Trade-off: 1–6% benchmark regression, and the model is no longer aligned by its lab — alignment becomes your problem. See <a href="/sovereign-stack/#heretic">The heretic question</a>.',
     related: ['Sovereign stack'],
   },
   'Mythos': {
     term: 'Mythos',
     definition:
-      'Vlad\'s private name for Claude Opus 3 — the model his team had learned to write against, retired by Anthropic on January 5, 2026. The Mythos lesson: any model you build a moat around is on someone else\'s calendar. Treat as a tail risk; eval-suite the alternative before the deprecation email arrives, not after. See <a href="/sovereign-stack#mythos">The Mythos lesson</a>. Not the same thing as <a href="/glossary#Mythos+5">Claude Mythos 5</a>, the model Anthropic shipped in June 2026 — three uses of one name, kept apart on purpose.',
+      'Vlad\'s private name for Claude Opus 3 — the model his team had learned to write against, retired by Anthropic on January 5, 2026. The Mythos lesson: any model you build a moat around is on someone else\'s calendar. Treat as a tail risk; eval-suite the alternative before the deprecation email arrives, not after. See <a href="/sovereign-stack/#mythos">The Mythos lesson</a>. Not the same thing as <a href="/glossary/#Mythos+5">Claude Mythos 5</a>, the model Anthropic shipped in June 2026 — three uses of one name, kept apart on purpose.',
     related: ['Sovereign stack', 'Mythos 5', 'Fable 5'],
   },
   'Fable 5': {
     term: 'Fable 5',
     definition:
-      'Anthropic\'s most capable generally available model (released June 9, 2026; model id <code>claude-fable-5</code>). A Mythos-class model made safe for general use: safety classifiers gate offensive-cyber, bio/chem, and distillation requests — fallback to Opus 4.8 is built into the Claude apps and Managed Agents, opt-in on the API (blocked API requests error, unbilled). $10/$50 per Mtok, 1M context, 128K output. Also available as an advisor model cheaper workers call mid-task. See <a href="/fable-5">the model file</a>.',
+      'Anthropic\'s most capable generally available model (released June 9, 2026; model id <code>claude-fable-5</code>). A Mythos-class model made safe for general use: safety classifiers gate offensive-cyber, bio/chem, and distillation requests — fallback to Opus 4.8 is built into the Claude apps and Managed Agents, opt-in on the API (blocked API requests error, unbilled). $10/$50 per Mtok, 1M context, 128K output. Also available as an advisor model cheaper workers call mid-task. See <a href="/fable-5/">the model file</a>.',
     related: ['Mythos 5', 'Mythos-class'],
   },
   'Mythos 5': {
     term: 'Mythos 5',
     definition:
-      'The raw twin of <a href="/glossary#Fable+5">Fable 5</a> — same underlying model, safeguards lifted in some areas, restricted to Project Glasswing partners and (next) vetted biology researchers. Reported scores sit within 1–3 points of Fable 5 except where the safeguards bite. Not Vlad\'s "Mythos" (that was Opus 3), and not Mythos Preview (the withheld March 2026 disclosure). See <a href="/fable-5/vs-mythos-5">Fable 5 vs Mythos 5</a>.',
+      'The raw twin of <a href="/glossary/#Fable+5">Fable 5</a> — same underlying model, safeguards lifted in some areas, restricted to Project Glasswing partners and (next) vetted biology researchers. Reported scores sit within 1–3 points of Fable 5 except where the safeguards bite. Not Vlad\'s "Mythos" (that was Opus 3), and not Mythos Preview (the withheld March 2026 disclosure). See <a href="/fable-5/vs-mythos-5/">Fable 5 vs Mythos 5</a>.',
     related: ['Fable 5', 'Mythos'],
   },
   'Mythos-class': {
     term: 'Mythos-class',
     definition:
-      'Anthropic\'s tier above Opus — currently Fable 5 (generally available) and Mythos 5 (gated). Mythos-class traffic carries a limited 30-day retention requirement (misuse detection only, not training) and the classifier-plus-fallback safety architecture. See <a href="/fable-5">Fable 5</a>.',
+      'Anthropic\'s tier above Opus — currently Fable 5 (generally available) and Mythos 5 (gated). Mythos-class traffic carries a limited 30-day retention requirement (misuse detection only, not training) and the classifier-plus-fallback safety architecture. See <a href="/fable-5/">Fable 5</a>.',
     related: ['Fable 5', 'Mythos 5'],
   },
   'Abliteration': {
     term: 'Abliteration',
     definition:
-      'A technique (coined by FailSpy in 2024, automated by the Heretic CLI in 2025) for permanently removing a model\'s refusal behavior by orthogonalizing every weight matrix that writes into the residual stream against the empirically-found refusal direction. Produces a "<a href="/glossary#Heretic+model">heretic model</a>" — same weights minus one specific behavior. See <a href="/sovereign-stack#heretic">The heretic question</a>.',
+      'A technique (coined by FailSpy in 2024, automated by the Heretic CLI in 2025) for permanently removing a model\'s refusal behavior by orthogonalizing every weight matrix that writes into the residual stream against the empirically-found refusal direction. Produces a "<a href="/glossary/#Heretic+model">heretic model</a>" — same weights minus one specific behavior. See <a href="/sovereign-stack/#heretic">The heretic question</a>.',
     related: ['Heretic model', 'Sovereign stack'],
   },
   'Dynamic workflows': {
     term: 'Dynamic workflows',
     definition:
-      'Opus 4.8\'s headline Claude Code feature: Claude writes a JavaScript script that plans a big task, fans out subagents (up to 16 at once, 1,000 per run), runs an adversarial verifier pass, and returns one answer — the orchestration runs in the background, outside your context. A research preview. See <a href="/dynamic-workflows">Dynamic Workflows</a>.',
+      'Opus 4.8\'s headline Claude Code feature: Claude writes a JavaScript script that plans a big task, fans out subagents (up to 16 at once, 1,000 per run), runs an adversarial verifier pass, and returns one answer — the orchestration runs in the background, outside your context. A research preview. See <a href="/dynamic-workflows/">Dynamic Workflows</a>.',
     related: ['ultracode', '/effort', 'Agent teams', 'Subagent'],
   },
   'Agent teams': {
     term: 'Agent teams',
     definition:
-      'The other shape of Claude Code parallelism: a roster you define up front (one lead session plus named roles like Frontend Specialist, Backend Engineer) — for work that decomposes cleanly into domains. Contrast <a href="/dynamic-workflows#teams-vs-workflows">dynamic workflows</a>, where Claude writes the decomposition itself.',
+      'The other shape of Claude Code parallelism: a roster you define up front (one lead session plus named roles like Frontend Specialist, Backend Engineer) — for work that decomposes cleanly into domains. Contrast <a href="/dynamic-workflows/#teams-vs-workflows">dynamic workflows</a>, where Claude writes the decomposition itself.',
     related: ['Dynamic workflows', 'Subagent'],
   },
   '/effort': {
     term: '/effort',
     definition:
-      'The Opus 4.8 slash command that sets how hard the model thinks before it acts: low → medium → high (the default) → xhigh → max, with a separate <a href="/glossary#ultracode">ultracode</a> notch. Most people leave it on the default and never feel the ceiling. See <a href="/dynamic-workflows#the-on-ramp">Dynamic Workflows — turning it on</a>.',
+      'The Opus 4.8 slash command that sets how hard the model thinks before it acts: low → medium → high (the default) → xhigh → max, with a separate <a href="/glossary/#ultracode">ultracode</a> notch. Most people leave it on the default and never feel the ceiling. See <a href="/dynamic-workflows/#the-on-ramp">Dynamic Workflows — turning it on</a>.',
     related: ['ultracode', 'Dynamic workflows'],
   },
   'ultracode': {
     term: 'ultracode',
     definition:
-      'The top notch of the Opus 4.8 <a href="/glossary#%2Feffort">/effort</a> dial — xhigh reasoning plus workflows (parallel agents, a deeper plan). A Claude Code setting, not a model effort level: a mode, not a volume knob. See <a href="/dynamic-workflows#the-loop">Dynamic Workflows</a>.',
+      'The top notch of the Opus 4.8 <a href="/glossary/#%2Feffort">/effort</a> dial — xhigh reasoning plus workflows (parallel agents, a deeper plan). A Claude Code setting, not a model effort level: a mode, not a volume knob. See <a href="/dynamic-workflows/#the-loop">Dynamic Workflows</a>.',
     related: ['/effort', 'Dynamic workflows'],
   },
   'Self-Audit': {
     term: 'Self-Audit',
     definition:
-      'The multi-agent code audit pointed at the agent\'s own configuration — skills, hooks, memory, permissions, schedulers — with an adversarial red-team re-verifying every finding before anything executes. Config rot is silent by construction; the audit is what makes it visible. Method and receipts: <a href="/self-audit">The Self-Audit</a>.',
+      'The multi-agent code audit pointed at the agent\'s own configuration — skills, hooks, memory, permissions, schedulers — with an adversarial red-team re-verifying every finding before anything executes. Config rot is silent by construction; the audit is what makes it visible. Method and receipts: <a href="/self-audit/">The Self-Audit</a>.',
     related: ['Dynamic workflows', 'Agent teams'],
   },
 };

@@ -54,7 +54,7 @@ export default function StarterSkillCard({ skill, baseUrl }: { skill: StarterSki
             {skill.chapters.map((c) => (
               <a
                 key={c.slug}
-                href={`${base}/chapters/${c.slug}`}
+                href={`${base}/chapters/${c.slug}/`}
                 className="text-xs px-2 py-0.5 rounded no-underline"
                 style={{ background: 'rgb(var(--bg))', border: '1px solid rgb(var(--line))', color: 'rgb(var(--accent))' }}
               >

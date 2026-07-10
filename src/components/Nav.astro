@@ -11,43 +11,43 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 // every destination is reachable on a phone. Keep in sync when pages change.
 const mobileNav = [
   { group: 'Start', links: [
-    { href: '/day-zero', label: 'Start here' },
-    { href: '/learn', label: 'Learn' },
-    { href: '/how-to-read', label: 'How to read' },
+    { href: '/day-zero/', label: 'Start here' },
+    { href: '/learn/', label: 'Learn' },
+    { href: '/how-to-read/', label: 'How to read' },
   ]},
   { group: 'Read', links: [
-    { href: '/journey', label: 'Journey' },
-    { href: '/questions', label: 'Questions' },
-    { href: '/sections', label: 'Sections' },
+    { href: '/journey/', label: 'Journey' },
+    { href: '/questions/', label: 'Questions' },
+    { href: '/sections/', label: 'Sections' },
   ]},
   { group: 'Reference', links: [
-    { href: '/radar', label: 'Radar' },
-    { href: '/fable-5', label: 'Fable 5' },
-    { href: '/showcase', label: 'Setup' },
-    { href: '/resources', label: 'Resources' },
-    { href: '/cheat-sheet', label: 'Cheat sheet' },
-    { href: '/glossary', label: 'Glossary' },
-    { href: '/tier-list', label: 'Tier list' },
+    { href: '/radar/', label: 'Radar' },
+    { href: '/fable-5/', label: 'Fable 5' },
+    { href: '/showcase/', label: 'Setup' },
+    { href: '/resources/', label: 'Resources' },
+    { href: '/cheat-sheet/', label: 'Cheat sheet' },
+    { href: '/glossary/', label: 'Glossary' },
+    { href: '/tier-list/', label: 'Tier list' },
   ]},
   { group: 'More', links: [
-    { href: '/good-taste', label: 'Good taste' },
-    { href: '/claude-code-best-practices', label: 'CC best practices' },
-    { href: '/claude-code-vs-cursor', label: 'CC vs Cursor' },
-    { href: '/claude-code-vs-codex', label: 'CC vs Codex' },
-    { href: '/claude-code-pricing', label: 'CC pricing' },
-    { href: '/claude-code-hooks', label: 'CC hooks' },
-    { href: '/claude-code-mcp', label: 'CC + MCP' },
-    { href: '/ai-agent-examples', label: 'Agent examples' },
-    { href: '/what-is-agentic-coding', label: 'Agentic coding' },
-    { href: '/build-vs-buy', label: 'Build vs Buy' },
-    { href: '/cfo-case', label: 'For your CFO' },
-    { href: '/claude-md-rules', label: 'CLAUDE.md rules' },
-    { href: '/cowork-setup', label: 'Cowork setup' },
-    { href: '/vault-starter', label: 'Vault starter' },
-    { href: '/weekend-builds', label: 'Weekend builds' },
-    { href: '/starter-skills', label: 'Starter skills' },
-    { href: '/thirty-day-plan', label: '30-day plan' },
-    { href: '/about', label: 'About' },
+    { href: '/good-taste/', label: 'Good taste' },
+    { href: '/claude-code-best-practices/', label: 'CC best practices' },
+    { href: '/claude-code-vs-cursor/', label: 'CC vs Cursor' },
+    { href: '/claude-code-vs-codex/', label: 'CC vs Codex' },
+    { href: '/claude-code-pricing/', label: 'CC pricing' },
+    { href: '/claude-code-hooks/', label: 'CC hooks' },
+    { href: '/claude-code-mcp/', label: 'CC + MCP' },
+    { href: '/ai-agent-examples/', label: 'Agent examples' },
+    { href: '/what-is-agentic-coding/', label: 'Agentic coding' },
+    { href: '/build-vs-buy/', label: 'Build vs Buy' },
+    { href: '/cfo-case/', label: 'For your CFO' },
+    { href: '/claude-md-rules/', label: 'CLAUDE.md rules' },
+    { href: '/cowork-setup/', label: 'Cowork setup' },
+    { href: '/vault-starter/', label: 'Vault starter' },
+    { href: '/weekend-builds/', label: 'Weekend builds' },
+    { href: '/starter-skills/', label: 'Starter skills' },
+    { href: '/thirty-day-plan/', label: '30-day plan' },
+    { href: '/about/', label: 'About' },
   ]},
 ];
 ---
@@ -58,14 +58,14 @@ const mobileNav = [
       <span class="hidden xl:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">{edition}</span>
     </a>
     <div class="flex items-center gap-0.5 sm:gap-1.5 min-w-0">
-      <a href={`${base}/day-zero`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent))">Start here</a>
-      <a href={`${base}/learn`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Learn</a>
-      <a href={`${base}/radar`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Radar</a>
-      <a href={`${base}/journey`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Journey</a>
-      <a href={`${base}/questions`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Questions</a>
-      <a href={`${base}/showcase`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Setup</a>
-      <a href={`${base}/resources`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Resources</a>
-      <a href={`${base}/tier-list`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Tier list</a>
+      <a href={`${base}/day-zero/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent))">Start here</a>
+      <a href={`${base}/learn/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Learn</a>
+      <a href={`${base}/radar/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Radar</a>
+      <a href={`${base}/journey/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Journey</a>
+      <a href={`${base}/questions/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Questions</a>
+      <a href={`${base}/showcase/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Setup</a>
+      <a href={`${base}/resources/`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Resources</a>
+      <a href={`${base}/tier-list/`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Tier list</a>
       <span
         id="read-counter"
         data-chapter-total={chapterCount}

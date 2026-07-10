@@ -13,7 +13,7 @@ import PullQuote from '@/components/PullQuote.astro';
 import Callout from '@/components/Callout.astro';
 import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
-[Chapter 42](/chapters/42-codex-on-a-loop) ended with the desktop pet idling in the corner with a thought bubble, "apparently thinking about a Folderly simplification, which is a joke the loop didn't know it was making." This is that joke coming true.
+[Chapter 42](/chapters/42-codex-on-a-loop/) ended with the desktop pet idling in the corner with a thought bubble, "apparently thinking about a Folderly simplification, which is a joke the loop didn't know it was making." This is that joke coming true.
 
 A job titled "Plan Folderly simplification." A full bench of named explorer agents fanned out across one repo — Pauli reading the route surface, Planck mapping the account IA, Fermat down inside the HubSpot integration boundary, a dozen more besides. And Emberling, the half-robot half-flame pet from Ch 42, idling on the desktop the whole time, oblivious, while the thing it joked about actually ran. By the time the branch closed, the run had deleted a net 91,874 lines across 718 files and the product had one promise instead of seven.
 
@@ -30,7 +30,7 @@ The lesson is not "AI can delete a lot of code." Any model with a `rm` and no fe
 <PullQuote>Simplification and security are not separate phases. Removing the noise is what makes the real risks easy to find.</PullQuote>
 
 <Callout type="note">
-This is NOT "Codex beats Claude Code." If you want the honest ranking — which model is actually ahead this month, on which axis — that's [the tier list](/tier-list), and it's the source of truth, not this chapter. This chapter is about pointing a second prior at a job a single trusted agent should never be trusted to do blind: deleting ninety thousand lines of a shipping product. The point is the workflow, not the leaderboard.
+This is NOT "Codex beats Claude Code." If you want the honest ranking — which model is actually ahead this month, on which axis — that's [the tier list](/tier-list/), and it's the source of truth, not this chapter. This chapter is about pointing a second prior at a job a single trusted agent should never be trusted to do blind: deleting ninety thousand lines of a shipping product. The point is the workflow, not the leaderboard.
 </Callout>
 
 ## The numbers, reconciled
@@ -46,11 +46,11 @@ Now the part that looks like a contradiction if you don't read carefully, so rea
 
 <ScreenshotPlaceholder id="43-codex-saviour-3" ratio="1600/900" caption="The delete, by the numbers — net 91,874 lines gone, contracts intact" note="718 files, +43,092 / −134,966, 243 commits, 106 beginning with 'Simplify'. The mid-run counter read 585 files / +30,928 / −55,984 before the branch finished. 46% of one week's usage."/>
 
-One more receipt, and it's the most important one: even a great loop needed the human steer. Mid-run, watching the diff balloon, the operator typed — roughly — *"you're making a lot of changes; test the build, what you already did, commit and push if no regressions."* That's not a footnote. That's the [Ch 38](/chapters/38-run-until-done) fence and the Ch 42 "human is the gate" rule doing their job in real time. The loop was good. It still needed a hand on the wheel telling it to checkpoint before it ran further.
+One more receipt, and it's the most important one: even a great loop needed the human steer. Mid-run, watching the diff balloon, the operator typed — roughly — *"you're making a lot of changes; test the build, what you already did, commit and push if no regressions."* That's not a footnote. That's the [Ch 38](/chapters/38-run-until-done/) fence and the Ch 42 "human is the gate" rule doing their job in real time. The loop was good. It still needed a hand on the wheel telling it to checkpoint before it ran further.
 
 ## The bench
 
-It wasn't one agent. The run spawned a bench of named explorers — Pauli, Planck, Hume, Ramanujan, Averroes, Gibbs, Fermat, Sagan, Hooke, Socrates, Feynman, Beauvoir, Franklin, Mill — each reading a slice of the surface. Fermat inspected the HubSpot integration route surface. Harvey owned the API-key security and entitlement slice. The split was explicit: one agent reads the HubSpot route and auth boundaries, another owns the API-key path, a third maps the account IA — the same fan-out [Ch 6](/chapters/06-the-swarm) is the whole reference for, just pointed at a reduction problem instead of a writing one.
+It wasn't one agent. The run spawned a bench of named explorers — Pauli, Planck, Hume, Ramanujan, Averroes, Gibbs, Fermat, Sagan, Hooke, Socrates, Feynman, Beauvoir, Franklin, Mill — each reading a slice of the surface. Fermat inspected the HubSpot integration route surface. Harvey owned the API-key security and entitlement slice. The split was explicit: one agent reads the HubSpot route and auth boundaries, another owns the API-key path, a third maps the account IA — the same fan-out [Ch 6](/chapters/06-the-swarm/) is the whole reference for, just pointed at a reduction problem instead of a writing one.
 
 That literal bench maps onto a *conceptual* swarm decision model, and the mapping is the useful part. Underneath the explorer agents sat ten role-lenses, each with veto power over the plan:
 
@@ -162,7 +162,7 @@ None of these are exotic. They're the same handful of boundary mistakes every fa
 
 ## Verify with real behavior
 
-Layered verification is the entire reason deleting ninety thousand lines is safe rather than reckless. The reduction rode on six layers of proof, each one independently capable of catching a regression the others slept through — the [Ch 38](/chapters/38-run-until-done) evaluator discipline and the [Ch 25](/chapters/25-evals-or-hope) "evals or hope" rule, applied to a refactor instead of a feature:
+Layered verification is the entire reason deleting ninety thousand lines is safe rather than reckless. The reduction rode on six layers of proof, each one independently capable of catching a regression the others slept through — the [Ch 38](/chapters/38-run-until-done/) evaluator discipline and the [Ch 25](/chapters/25-evals-or-hope/) "evals or hope" rule, applied to a refactor instead of a feature:
 
 - **Focused tests** — access policy, auth redirects, marketing chrome, route registries, API contracts, billing behavior, sitemap rules.
 - **`npm run build`** — production compilation, Build & Lint green for the head commit.
@@ -175,6 +175,6 @@ That last layer earned its place. The final production check caught two real-wor
 
 ## The through-line
 
-Codex isn't a better Claude Code — that ranking lives at [/tier-list](/tier-list) and nowhere else. It's a second prior that, pointed at a real product with a clear truth and a hard fence, can do the thing humans dread and machines without judgment do badly: delete most of the code and harden what's left, across hundreds of files, without losing the thread. Not by replacing product judgment — by applying it at a scale and a stamina no human brings to a Tuesday refactor.
+Codex isn't a better Claude Code — that ranking lives at [/tier-list](/tier-list/) and nowhere else. It's a second prior that, pointed at a real product with a clear truth and a hard fence, can do the thing humans dread and machines without judgment do badly: delete most of the code and harden what's left, across hundreds of files, without losing the thread. Not by replacing product judgment — by applying it at a scale and a stamina no human brings to a Tuesday refactor.
 
 The pet was thinking about a Folderly simplification. Now it doesn't have to. The joke shipped.

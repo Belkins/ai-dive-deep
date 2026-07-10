@@ -19,7 +19,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     edition: 'Edition 10.8',
     date: '2026-06-23',
     bannerText: 'New Chapter 48 — "The Traffic Graph That Lies": agentic SEO done right vs. the vanity version. Two AI-built products, real GSC + Ahrefs numbers — one genuine win (EmailGen, #1 for "business email generator"), one cautionary tale (LinguaLive, ~94% branded clicks).',
-    bannerHref: '/chapters/48-traffic-graph-that-lies',
+    bannerHref: '/chapters/48-traffic-graph-that-lies/',
     tagline: 'The SEO reading. Most "agentic SEO" wins are self-reported traffic graphs that crater in six months. This chapter pulls the real receipts from two products built by AI agents end to end: Folderly EmailGen — a brand-new subdomain that hit #1 for "business email generator," 467K impressions, third-party traffic value climbing ~$0 → ~$320/mo — and LinguaLive, the cautionary tale whose 153K-impression graph looks like a win until you see ~94% of the clicks are people already typing the brand name. The method is triangulation: GSC for footprint, Ahrefs for the independently-checkable commercial keywords, conversions for truth. Do not trust a graph you cannot cross-check.',
     shipped: [
       'New Chapter 48 — "The Traffic Graph That Lies" (Part V). The anti-vanity case for agentic SEO: agents are the labor, a per-page differentiated dataset is the moat, and Google\'s scaled-content-abuse policy is production-method-neutral — "an agent wrote it" earns zero safe-harbor.',
@@ -51,7 +51,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     edition: 'Edition 10.6',
     date: '2026-06-16',
     bannerText: 'New showcase — /good-taste: stop your AI from generating generic slop. A before/after of Leon Lin\'s public taste-skill (45k★, credited), with the receipts I built using it.',
-    bannerHref: '/good-taste',
+    bannerHref: '/good-taste/',
     tagline: 'The showcase. Chapter 46 argued that taste is the last mile; /good-taste makes it visceral — a side-by-side of generic-AI slop (purple glow, floating blobs, a fake dashboard) next to the same brief art-directed with a public skill. The skill is Leon Lin\'s open-source taste-skill (github.com/Leonxlnx/taste-skill, 45k+ stars), not mine; this page is what stealing a skill well, with credit, looks like.',
     shipped: [
       'New page /good-taste — a before/after gallery (slop vs. taste, same prompt), the skill catalog, a 60-second npx install, and the receipts (flicked.email\'s three designs, the Reach moon-base study, this book\'s own design system). The "before" is an honest generated example of un-directed AI slop — every tell on the skill\'s own ban-list.',

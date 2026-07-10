@@ -53,7 +53,7 @@ export default function GlossaryPopover({
             </div>
           )}
           <a
-            href={`${base}/glossary#${encodeURIComponent(term)}`}
+            href={`${base}/glossary/#${encodeURIComponent(term)}`}
             className="block mt-2.5 text-xs"
             style={{ color: 'rgb(var(--muted))', textDecoration: 'underline' }}
           >

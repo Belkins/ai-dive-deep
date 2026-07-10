@@ -15,7 +15,7 @@ import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
 Here's a language-tutor reply that would sail straight through a smoke test. A beginner types *"Je voudrais un café, s'il vous plaît"* — already correct — and the AI tutor "corrects" it anyway, dumps three C1 vocabulary words on someone who's barely at A1, and signs off by asking where they're from. Fluent. Well-formed. Encouraging. And wrong on every axis that matters for a learner who's one discouraging session away from deleting the app. Nothing crashed. The transcript arrived intact.
 
-[Chapter 25](/chapters/25-evals-or-hope)'s three-line <GlossaryTerm term="Eval">eval</GlossaryTerm> — the one that saved me from shipping a $0-pipeline canvas to my COO — would have stayed green the whole time. Because "did a well-formed reply arrive?" is the right question for an internal skill's artifact, and exactly the wrong question when the reply *is* the product.
+[Chapter 25](/chapters/25-evals-or-hope/)'s three-line <GlossaryTerm term="Eval">eval</GlossaryTerm> — the one that saved me from shipping a $0-pipeline canvas to my COO — would have stayed green the whole time. Because "did a well-formed reply arrive?" is the right question for an internal skill's artifact, and exactly the wrong question when the reply *is* the product.
 
 That's the altitude jump this chapter is about. Some of the things I ship aren't skills with a side-effect artifact you can smoke-test. They're products where **the model's output is the thing the customer pays for**. When the output *is* the product, the question isn't "did something arrive?" It's: *across a hundred realistic inputs, how often is the output actually good — and can you prove it before you charge for it?*
 
@@ -38,7 +38,7 @@ The course is Python and teaches by code — there are no lecture cells, the tea
 
 Four moving parts, in the order they fire.
 
-**Generate the dataset.** You describe the task and the inputs your prompt takes; the harness asks the model for a set of *diverse* scenarios (so the test set isn't ten variations of the same easy case) and turns each into a concrete test case. This is the step that feels like cheating — the labeled test set [Chapter 25](/chapters/25-evals-or-hope) told you to skip for an internal skill, now cheap enough to justify when the output is the product. You get a hundred-row test set without hand-writing one.
+**Generate the dataset.** You describe the task and the inputs your prompt takes; the harness asks the model for a set of *diverse* scenarios (so the test set isn't ten variations of the same easy case) and turns each into a concrete test case. This is the step that feels like cheating — the labeled test set [Chapter 25](/chapters/25-evals-or-hope/) told you to skip for an internal skill, now cheap enough to justify when the output is the product. You get a hundred-row test set without hand-writing one.
 
 **Grade cheap first.** Before you spend a single token on a judge, run the free checks. Does the output parse as JSON? Does it match a schema? Does the regex compile? These are deterministic, zero-cost, and perfectly reliable — `json.loads` doesn't have opinions. Brand rule in my shop: never pay an LLM to grade something a parser can grade for free.
 
@@ -113,13 +113,13 @@ The one place I changed the course's approach: fusing by **rank** (reciprocal ra
 
 This isn't a product. It's the internal trust dial for every AI feature across the portfolio, and the discipline matters more than the code.
 
-The first feature I'm pointing it at is a shipped one — a language tutor with paying users, the kind from [Chapter 45](/chapters/45-app-store-no-swift). The neat part: that tutor's reply doesn't even run on Claude. Doesn't matter. The harness grades the **transcript**, not the SDK — so the judge can be Claude even when the feature isn't. If you can capture the input and the output as text, you can grade it, whatever vendor produced it.
+The first feature I'm pointing it at is a shipped one — a language tutor with paying users, the kind from [Chapter 45](/chapters/45-app-store-no-swift/). The neat part: that tutor's reply doesn't even run on Claude. Doesn't matter. The harness grades the **transcript**, not the SDK — so the judge can be Claude even when the feature isn't. If you can capture the input and the output as text, you can grade it, whatever vendor produced it.
 
 Three refusals keep this from becoming the portfolio's next half-built thing:
 
 - **I'm not rebuilding what mature tools nail.** Promptfoo, Braintrust, Ragas all exist and are good. The harness's only reason to exist is portfolio-fit plus the one thing a generic runner can't give me: every production failure becomes a permanent test case, so the dataset compounds. The day that flywheel stops turning, I should delete the harness and adopt a vendor. (There's an irony worth naming: Promptfoo, the most-used open-source eval runner, was acquired by OpenAI in March 2026. For a kit built on Anthropic's own teaching code, that's reason enough to keep the glue in-house.)
 - **No RAG until something measurably needs it.** The retriever is built and tested, but a retrieval layer with no measured retrieval bottleneck is the half-built thing this whole effort exists to prevent — built because it's buildable, not because a number asked for it. It waits for the number.
-- **The cheapest version first.** The whole judge-and-dataset apparatus is worth nothing if it dies of non-adoption — and I've watched skills die of exactly that ([Chapter 26](/chapters/26-team-adoption) is the graveyard tour). So the floor isn't the fancy version. It's a deterministic-only gate — banned-content regex, format checks, an over-correction counter — wired into CI with zero judge tokens and zero API calls. On the tutor, that floor already works: the known-good reply scores 10, the deliberately-toxic one scores 0, no model in the loop. That's the version that survives contact with a builder who ships fast and sleeps.
+- **The cheapest version first.** The whole judge-and-dataset apparatus is worth nothing if it dies of non-adoption — and I've watched skills die of exactly that ([Chapter 26](/chapters/26-team-adoption/) is the graveyard tour). So the floor isn't the fancy version. It's a deterministic-only gate — banned-content regex, format checks, an over-correction counter — wired into CI with zero judge tokens and zero API calls. On the tutor, that floor already works: the known-good reply scores 10, the deliberately-toxic one scores 0, no model in the loop. That's the version that survives contact with a builder who ships fast and sleeps.
 
 ## The closer
 

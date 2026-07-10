@@ -71,7 +71,7 @@ Twenty-five tips. Five buckets. Read it once, then come back next week — half 
 
 ### tip-11
 **Never skip permissions on your main laptop.** The flag is `--dangerously-skip-permissions` for a reason. The name is the warning label. Anything destructive the agent can do on your machine, it will eventually try, in the wrong directory, on the wrong day. Skipping permissions on your daily driver is how `rm -rf` happens.
-**Action:** if you've ever typed that flag on your main machine, stop. Move that workload into a sandbox today. See [Chapter 15](/chapters/15-permissions).
+**Action:** if you've ever typed that flag on your main machine, stop. Move that workload into a sandbox today. See [Chapter 15](/chapters/15-permissions/).
 
 ### tip-12
 **Allow narrow, deny broad.** Write your permission config like a paranoid sysadmin. `allow: Bash(npm test*)`, `allow: Bash(git status)`, `deny: Bash(*)`. Specific allows trump generic denies, and the broad deny catches every foot-gun you didn't think of. The first time you see the agent get blocked from running `git push --force`, you'll thank yourself.

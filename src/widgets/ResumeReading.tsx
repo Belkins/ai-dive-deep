@@ -33,7 +33,7 @@ export default function ResumeReading() {
 
   return (
     <a
-      href={`${base}/chapters/${resumeAt.slug}`}
+      href={`${base}/chapters/${resumeAt.slug}/`}
       className="inline-flex items-center gap-3 rounded-lg px-4 py-3 mt-4 no-underline"
       style={{
         background: 'rgb(var(--paper))',

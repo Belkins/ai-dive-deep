@@ -326,7 +326,7 @@ export default function QuestionsBoard() {
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <span className="text-[10px] uppercase tracking-wider" style={{ color: 'rgb(var(--muted))' }}>Read more in:</span>
               {q.chapters.map((c) => (
-                <a key={c.slug} href={`${base}/chapters/${c.slug}`} className="text-xs px-2.5 py-1 rounded-md no-underline" style={{ background: 'rgb(var(--bg))', border: '1px solid rgb(var(--line))', color: 'rgb(var(--accent))' }}>
+                <a key={c.slug} href={`${base}/chapters/${c.slug}/`} className="text-xs px-2.5 py-1 rounded-md no-underline" style={{ background: 'rgb(var(--bg))', border: '1px solid rgb(var(--line))', color: 'rgb(var(--accent))' }}>
                   {c.label} →
                 </a>
               ))}

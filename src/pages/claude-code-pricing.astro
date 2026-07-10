@@ -93,7 +93,7 @@ const faq = {
       The pricing page is two numbers. The bill has four. Here's the reference table, then the receipts — a real invoice arc, one $4,312 mistake, and the structure that carries five companies on about $400 a month of subscriptions.
     </p>
     <p class="mt-2 text-sm text-muted">
-      Every cost claim links to its source. The bill mechanics live in <a href="/chapters/29-cost-economics">Ch 29</a>, the Fable 5 sticker on <a href="/fable-5/pricing">the Fable 5 pricing file</a>, the budget-defense memo on <a href="/cfo-case">the CFO case</a>.
+      Every cost claim links to its source. The bill mechanics live in <a href="/chapters/29-cost-economics/">Ch 29</a>, the Fable 5 sticker on <a href="/fable-5/pricing/">the Fable 5 pricing file</a>, the budget-defense memo on <a href="/cfo-case/">the CFO case</a>.
     </p>
   </section>
 
@@ -136,7 +136,7 @@ const faq = {
                 </tbody>
               </table>
             </div>
-            <p class="text-sm text-muted">† claude.com displays "From $100" on both Max tiers. The operator receipt for the 20x tier: my two Max 20x seats bill about $400 a month total — {PRICES.max20xReceipt} (<a href="/chapters/29-cost-economics">Ch 29</a>).</p>
+            <p class="text-sm text-muted">† claude.com displays "From $100" on both Max tiers. The operator receipt for the 20x tier: my two Max 20x seats bill about $400 a month total — {PRICES.max20xReceipt} (<a href="/chapters/29-cost-economics/">Ch 29</a>).</p>
             <p class="text-sm text-accent-2">Prices verified against <a href="https://claude.com/pricing" rel="noopener">claude.com/pricing</a> and <a href="https://platform.claude.com/docs/en/docs/about-claude/pricing" rel="noopener">the API pricing docs</a> on {PRICES.lastVerified}. When a roundup and the pricing page disagree, the pricing page wins — that's also the rule this table was built under.</p>
           </div>
         </div>
@@ -145,14 +145,14 @@ const faq = {
           <h2 class="font-display text-3xl mb-4">Is there a free version of Claude Code?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>No. The Free plan is chat — Claude Code is not on its feature list, and the entry ticket is Pro at {PRICES.pro}. What you're buying at every subscription tier is a capped allowance, not a meter: the plan includes Claude Code up to weekly usage limits, and the dashboard speaks percent-of-cap instead of dollars.</p>
-            <p>What the caps feel like in practice, from <a href="/chapters/29-cost-economics">Ch 29</a>: on a Max 20x plan the number that bites isn't a bill, it's the "all models" weekly bar hitting 88% on a Thursday with the heaviest day still ahead. Same cost question as an API graph — what's burning the budget — wearing a different outfit. If you're on Pro and that bar is your weekly ceiling instead of your Thursday warning, that's the upgrade signal.</p>
+            <p>What the caps feel like in practice, from <a href="/chapters/29-cost-economics/">Ch 29</a>: on a Max 20x plan the number that bites isn't a bill, it's the "all models" weekly bar hitting 88% on a Thursday with the heaviest day still ahead. Same cost question as an API graph — what's burning the budget — wearing a different outfit. If you're on Pro and that bar is your weekly ceiling instead of your Thursday warning, that's the upgrade signal.</p>
           </div>
         </div>
 
         <div id="which-plan" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Pro vs Max vs API — which should you actually buy?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>The principle, in the words of <a href="/chapters/29-cost-economics">Ch 29</a>: <em>"max out the thing with the predictable ceiling before you touch the thing with the open meter."</em> A Max seat has a wall you hit and a price you already know. The API has no wall and a meter that runs as fast as your worst-written agent loop.</p>
+            <p>The principle, in the words of <a href="/chapters/29-cost-economics/">Ch 29</a>: <em>"max out the thing with the predictable ceiling before you touch the thing with the open meter."</em> A Max seat has a wall you hit and a price you already know. The API has no wall and a meter that runs as fast as your worst-written agent loop.</p>
             <p>The structure that falls out of it, running five companies: two Max 20x subscriptions — about $400 a month, total — carry the bulk of the daily work. The direct API only comes out for what a subscription can't do: SDK integrations and the always-on autonomous agents that need a raw API key, not a chat surface. That's a real cost, separate from the $400, and it's the line that gets optimized — the next two sections are about it.</p>
             <p>So the buying order is the dependency order. Pro at {PRICES.pro} until the weekly cap is your problem. Max when Claude Code is your daily driver and the cap should be a Thursday warning instead of a ceiling. The API last, and only for unattended work — because it's the only tier where a mistake is denominated in dollars instead of percent. The cap is a feature, not a limitation.</p>
             <PullQuote>A Max seat has a wall you hit and a price you already know. The API has no wall and a meter that runs as fast as your worst-written agent loop.</PullQuote>
@@ -189,7 +189,7 @@ const faq = {
             <Callout type="warn">
               A sticker shift hiding in the docs: Opus 4.7 and later use a new tokenizer that "may use up to 35% more tokens for the same fixed text." Same per-token rate, more tokens per page — an effective price increase no comparison table shows. One more reason to measure cost per task, not per million.
             </Callout>
-            <p>What a disciplined month looks like in dollars, from my own console: April direct-API spend, every model, the whole month — <strong>$2,216</strong>. May ran at <strong>$556 through the 14th</strong>, a ~$1,200 run-rate — same class of workload, half the bill. The numbers behind that arc: a 98.1% cache read ratio, 11.7× write amortization, which prices the stable part of every prompt at roughly 0.19× the base input rate. Not "tokens went down" — the invoice went down while the work didn't. The full scorecard, screenshots included, is <a href="/chapters/29-cost-economics">Ch 29</a>.</p>
+            <p>What a disciplined month looks like in dollars, from my own console: April direct-API spend, every model, the whole month — <strong>$2,216</strong>. May ran at <strong>$556 through the 14th</strong>, a ~$1,200 run-rate — same class of workload, half the bill. The numbers behind that arc: a 98.1% cache read ratio, 11.7× write amortization, which prices the stable part of every prompt at roughly 0.19× the base input rate. Not "tokens went down" — the invoice went down while the work didn't. The full scorecard, screenshots included, is <a href="/chapters/29-cost-economics/">Ch 29</a>.</p>
           </div>
         </div>
 
@@ -199,7 +199,7 @@ const faq = {
             <p>Because something voided your prompt cache, and nothing told you. Here's the receipt, since no pricing roundup has one.</p>
             <p>8:11 AM on a Wednesday, staring at a <strong>$4,312</strong> Anthropic bill for the prior week. The week before: <strong>$1,108</strong>. Same workload — the morning briefing still ran at 6:30, the Friday wrap still fired at 5 PM. I spent forty minutes convinced my workers had gone feral and were re-running themselves in a loop. The cron logs were clean. Per-run token counts looked normal. The only thing off was the ratio of cached input to fresh input — which had cratered.</p>
             <p>The cause was a <strong>38-line edit to CLAUDE.md</strong> the prior Saturday. New portfolio context, one rearranged section — which moved a paragraph that lived inside the cached prefix. Every morning briefing was now sending a prefix the cache server had never seen, paying full input price on roughly 60,000 tokens of system prompt that used to cost a tenth of that, across 60% of the briefings. Caching isn't a feature you turn on; it's a contract about what changes between calls, and one paragraph voided the contract.</p>
-            <p><strong>The fix took 12 minutes</strong> — move the new section to the bottom, behind the cache breakpoint. The bill went back to $1,108 the following week. Knowing the fix existed took six months. The early-warning system, so you skip both: open the console's Caching tab weekly — a cache read ratio north of ~90% means the contract is holding; a cliff in that chart is a cache-voiding event with a timestamp you can trace to a commit. Mechanism, breakpoints, and what else voids the contract: <a href="/chapters/29-cost-economics">Ch 29</a>.</p>
+            <p><strong>The fix took 12 minutes</strong> — move the new section to the bottom, behind the cache breakpoint. The bill went back to $1,108 the following week. Knowing the fix existed took six months. The early-warning system, so you skip both: open the console's Caching tab weekly — a cache read ratio north of ~90% means the contract is holding; a cliff in that chart is a cache-voiding event with a timestamp you can trace to a commit. Mechanism, breakpoints, and what else voids the contract: <a href="/chapters/29-cost-economics/">Ch 29</a>.</p>
             <PullQuote>Most operators don't have a token problem. They have a cache problem they haven't named yet.</PullQuote>
           </div>
         </div>
@@ -207,7 +207,7 @@ const faq = {
         <div id="cut-the-bill" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">How do you cut the bill without cutting the work?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>Three levers, in the order they pay. Each gets two sentences here; the mechanism is <a href="/chapters/29-cost-economics">Ch 29</a>'s job.</p>
+            <p>Three levers, in the order they pay. Each gets two sentences here; the mechanism is <a href="/chapters/29-cost-economics/">Ch 29</a>'s job.</p>
             <p><strong>Caching.</strong> Treat the system prompt as an append-only log so the prefix stays byte-stable, then check two numbers weekly: read ratio (mine: 98.1%) and write amortization (mine: 11.7×, which prices the stable prefix at ~0.19× the input rate — an ~81% discount). Under ~3× amortization for a week, you're paying the write premium for a discount you're not collecting — consolidate the workload or remove the breakpoint.</p>
             <p><strong>Batch.</strong> Anything that can wait 24 hours runs at {PRICES.batchDiscount} off — my weekly newsletter drafts and the Folderly deliverability evals went from a $600/week line item to $300/week, and the only change is submitting Friday 5 PM and pulling Saturday morning. If "does this need to finish in sixty seconds" is a no, it's a batch job.</p>
             <p><strong>Routing.</strong> A three-line router — Haiku for triage, Sonnet as default, Opus-class only where a wrong answer costs more than the run — cut the bill roughly 30% the week it shipped. Not from one big save; from the long tail of triage that no longer ran on the wrong model.</p>
@@ -219,16 +219,16 @@ const faq = {
           <h2 class="font-display text-3xl mb-4">What does Fable 5 change about Claude Code pricing?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>Two things — a clock and a sticker. The clock: Claude Fable 5 is included in paid-plan limits from June 9 to <strong>June 22, 2026</strong>, then switches to usage credits on subscriptions — the Claude Code banner says it plainly. Read the window as a billing event, not a launch perk: two weeks of frontier capacity at zero marginal cost is a free A/B against your current model, if you run it as one, and the meter starts June 22 whether you measured or not.</p>
-            <p>The sticker: $10/$50 per million tokens on the API — exactly 2× Opus 4.8 — which makes caching discipline twice as expensive to break. The full pricing file — the ladder, the plan mechanics, when 2× is and isn't worth it — is <a href="/fable-5/pricing">Fable 5 pricing</a>; the in-terminal view, banner verbatim, is <a href="/fable-5/claude-code">Fable 5 in Claude Code</a>.</p>
+            <p>The sticker: $10/$50 per million tokens on the API — exactly 2× Opus 4.8 — which makes caching discipline twice as expensive to break. The full pricing file — the ladder, the plan mechanics, when 2× is and isn't worth it — is <a href="/fable-5/pricing/">Fable 5 pricing</a>; the in-terminal view, banner verbatim, is <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a>.</p>
           </div>
         </div>
 
         <div id="worth-it" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Is Claude Code worth the money?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>Wrong unit, honest answer: stop pricing tokens and price finished tasks. The rule that survives every model launch, from <a href="/chapters/29-cost-economics">Ch 29</a>: <em>the price of a model is not the price of a task</em>. A model that one-shots what the old one needed three turns and a retry to finish is cheaper per job at double the per-token rate — so the column to decide on is total-billed-per-finished-task, never $/Mtok. Run your top five real workloads through old and new, and read that column.</p>
-            <p>For the person who approves the budget, the comparison isn't tokens at all — it's the fully loaded cost of the humans the work would otherwise need. That case is already written as a forwardable memo with workflow-level receipts: <a href="/cfo-case">the CFO case</a>. Send the link, don't paraphrase it. And if the question is "why keep paying at all instead of self-hosting" — that math is <a href="/build-vs-buy">build vs buy</a>.</p>
-            <p>The closing word goes to the chapter that carries the invoices: the fact that you're being charged at all is a feature, not a bug — visible unit economics are tunable economics, and a line item is a thing you can negotiate. <a href="/chapters/29-cost-economics">Ch 29</a>'s verdict on the whole category: "The bill is a rounding error on what it deletes."</p>
+            <p>Wrong unit, honest answer: stop pricing tokens and price finished tasks. The rule that survives every model launch, from <a href="/chapters/29-cost-economics/">Ch 29</a>: <em>the price of a model is not the price of a task</em>. A model that one-shots what the old one needed three turns and a retry to finish is cheaper per job at double the per-token rate — so the column to decide on is total-billed-per-finished-task, never $/Mtok. Run your top five real workloads through old and new, and read that column.</p>
+            <p>For the person who approves the budget, the comparison isn't tokens at all — it's the fully loaded cost of the humans the work would otherwise need. That case is already written as a forwardable memo with workflow-level receipts: <a href="/cfo-case/">the CFO case</a>. Send the link, don't paraphrase it. And if the question is "why keep paying at all instead of self-hosting" — that math is <a href="/build-vs-buy/">build vs buy</a>.</p>
+            <p>The closing word goes to the chapter that carries the invoices: the fact that you're being charged at all is a feature, not a bug — visible unit economics are tunable economics, and a line item is a thing you can negotiate. <a href="/chapters/29-cost-economics/">Ch 29</a>'s verdict on the whole category: "The bill is a rounding error on what it deletes."</p>
           </div>
         </div>
 
@@ -243,7 +243,7 @@ const faq = {
             ))}
           </div>
           <p class="mt-8 text-sm text-muted">
-            Related: <a href="/chapters/29-cost-economics">Ch 29 — why is my bill so high</a> · <a href="/the-bill">The bill</a> · <a href="/cfo-case">The CFO case</a> · <a href="/fable-5/pricing">Fable 5 pricing</a> · <a href="/build-vs-buy">Build vs buy</a> · <a href="/claude-code-best-practices">Claude Code best practices</a> · <a href="/claude-code-vs-cursor">Claude Code vs Cursor</a> · <a href="/tier-list">The tier list</a>
+            Related: <a href="/chapters/29-cost-economics/">Ch 29 — why is my bill so high</a> · <a href="/the-bill/">The bill</a> · <a href="/cfo-case/">The CFO case</a> · <a href="/fable-5/pricing/">Fable 5 pricing</a> · <a href="/build-vs-buy/">Build vs buy</a> · <a href="/claude-code-best-practices/">Claude Code best practices</a> · <a href="/claude-code-vs-cursor/">Claude Code vs Cursor</a> · <a href="/tier-list/">The tier list</a>
           </p>
         </div>
 

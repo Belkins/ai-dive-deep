@@ -133,7 +133,7 @@ function recommend(job: Job, tech: Tech, budget: Budget): Rec {
       why: "You have the muscle to maintain it, the budget to absorb tokens, and the workflow doesn't fit a preset. Drop a `.md` into `~/.claude/agents/` and own the thing.",
       costBand: '$200–800/mo in tokens depending on volume',
       antiPattern: "Don't pay for Rick's UI when you'll never use it.",
-      link: '/chapters/16-hooks-subagents',
+      link: '/chapters/16-hooks-subagents/',
       linkLabel: 'See Ch 16',
     };
   }
@@ -197,7 +197,7 @@ function recommend(job: Job, tech: Tech, budget: Budget): Rec {
     why: "Your workflow doesn't fit a preset and you have the muscle to write the agent yourself. Drop a `.md` into `~/.claude/agents/`.",
     costBand: '$50–500/mo in tokens depending on volume',
     antiPattern: "Don't ship without an eval. Custom agents fail silently. See Ch 25.",
-    link: '/chapters/25-evals-or-hope',
+    link: '/chapters/25-evals-or-hope/',
     linkLabel: 'See Ch 25 (Evals)',
   };
 }

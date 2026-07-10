@@ -40,7 +40,7 @@ I found this on the internet a few months ago. It's a prompt. It works — and I
 </instructions>
 ```
 
-I tested it. I added it to my library — you can find it in [/resources](/resources#five-reusable-prompts) under the name PROMPT_RIGOR_ENFORCER. It's there because, yes, it earns its keep on certain one-off questions where I want a more careful answer.
+I tested it. I added it to my library — you can find it in [/resources](/resources/#five-reusable-prompts) under the name PROMPT_RIGOR_ENFORCER. It's there because, yes, it earns its keep on certain one-off questions where I want a more careful answer.
 
 It's also exactly what this chapter is arguing against.
 
@@ -58,17 +58,17 @@ That's the first thing I want to say plainly. **Prompting is a basic skill now �
 
 The ladder, top to bottom, hardest to softest:
 
-1. **The data layer.** What you can feed in, in what shape, with what access. MCP, APIs, databases, lakes, vault contents, the customer record. This has been the real lever in software for the last thirty years and AI did not change that. The team with the better data feed and the cleaner schema wins against the team with the cleverer prompt every single time. ([Chapter 12 — Connectors and MCP](/chapters/12-connectors-mcp) is the practical entry point.)
-2. **Memory.** What the model knows about *you* and your work between sessions, without you re-explaining it. [Obsidian](/chapters/04-the-vault) as the auto-updating working memory. The `~/.claude/projects/<slug>/memory/` lessons file. The agent's notebook. This is where "AI as an OS" actually starts to feel like an OS. The model isn't smarter session-to-session; it's loaded.
-3. **Swarms.** Multiple instances of the same model, prompted differently, working in parallel against the same goal. The fan-out and the synthesis. ([Chapter 6 — Parallel Subagents and Fan-Out](/chapters/06-the-swarm) is the canonical chapter; my [`/swarm-strategic-plan`](/showcase) skill is a productized version that fires twenty pre-prompted agents in five waves.) One instance with a clever prompt is a curiosity. Twenty instances with okay prompts is an operator move.
-4. **Skills.** The runbook the model loads on demand. ([Chapter 5 — What a Skill Is.](/chapters/05-skills)) A skill is the right answer to every "I just wrote a clever prompt I want to reuse" instinct. Don't keep the prompt; ship the skill.
-5. **CLAUDE.md and the context-file layer.** The four-layer architecture from [Chapter 37](/chapters/37-context-files) — CLAUDE.md, memory/, skills/, session-scoped. Where conventions live, where they die.
+1. **The data layer.** What you can feed in, in what shape, with what access. MCP, APIs, databases, lakes, vault contents, the customer record. This has been the real lever in software for the last thirty years and AI did not change that. The team with the better data feed and the cleaner schema wins against the team with the cleverer prompt every single time. ([Chapter 12 — Connectors and MCP](/chapters/12-connectors-mcp/) is the practical entry point.)
+2. **Memory.** What the model knows about *you* and your work between sessions, without you re-explaining it. [Obsidian](/chapters/04-the-vault/) as the auto-updating working memory. The `~/.claude/projects/<slug>/memory/` lessons file. The agent's notebook. This is where "AI as an OS" actually starts to feel like an OS. The model isn't smarter session-to-session; it's loaded.
+3. **Swarms.** Multiple instances of the same model, prompted differently, working in parallel against the same goal. The fan-out and the synthesis. ([Chapter 6 — Parallel Subagents and Fan-Out](/chapters/06-the-swarm/) is the canonical chapter; my [`/swarm-strategic-plan`](/showcase/) skill is a productized version that fires twenty pre-prompted agents in five waves.) One instance with a clever prompt is a curiosity. Twenty instances with okay prompts is an operator move.
+4. **Skills.** The runbook the model loads on demand. ([Chapter 5 — What a Skill Is.](/chapters/05-skills/)) A skill is the right answer to every "I just wrote a clever prompt I want to reuse" instinct. Don't keep the prompt; ship the skill.
+5. **CLAUDE.md and the context-file layer.** The four-layer architecture from [Chapter 37](/chapters/37-context-files/) — CLAUDE.md, memory/, skills/, session-scoped. Where conventions live, where they die.
 6. **The prompt.** The thing you type into the box. Where every operator-grade prompt-engineering thread on the internet stops, and where this chapter starts.
 
 The mistake most prompting content makes is optimizing for layer 6 in isolation, as if layers 1–5 didn't exist. Read with that frame and 90% of it falls apart. A magic phrase that scores 4% higher on a benchmark is a layer-6 tweak. An operator who built a connector to their customer record is operating at layer 1. They are not playing the same game.
 
 <Callout type="tip">
-There's a knob *under* the model too — `/effort` in Opus 4.8 (low → max, then **ultracode** = xhigh + workflows). At the top it doesn't just think harder, it writes a script that fans out parallel subagents and checks their work. How that works, and when I reach for it: [Dynamic Workflows](/dynamic-workflows).
+There's a knob *under* the model too — `/effort` in Opus 4.8 (low → max, then **ultracode** = xhigh + workflows). At the top it doesn't just think harder, it writes a script that fans out parallel subagents and checks their work. How that works, and when I reach for it: [Dynamic Workflows](/dynamic-workflows/).
 </Callout>
 
 ## Three techniques that still earn their keep
@@ -96,7 +96,7 @@ This part has a footnote, so read both halves.
 **Four — "You are a helpful assistant" prefixes.** The model knows. You can skip it. The token budget you spend on this preamble would be better spent on one good example.
 
 <Callout type="note">
-**Footnote, important.** All four of these techniques become useful in one specific context: a [swarm](/chapters/06-the-swarm) of agents where each agent is assigned a *different* role. "Skeptical CFO," "buyer's lawyer," "head of engineering," "newsletter editor" — each one a distinct instance with a locked perspective, fanning out against the same problem in parallel. *That's* role-distribution as architecture. Single-instance role-playing is performance. Same words, different leverage. If you find yourself typing "act as" into one chat, you're using the wrong knob; if you find yourself spinning up four chats with four roles, you're using the right one.
+**Footnote, important.** All four of these techniques become useful in one specific context: a [swarm](/chapters/06-the-swarm/) of agents where each agent is assigned a *different* role. "Skeptical CFO," "buyer's lawyer," "head of engineering," "newsletter editor" — each one a distinct instance with a locked perspective, fanning out against the same problem in parallel. *That's* role-distribution as architecture. Single-instance role-playing is performance. Same words, different leverage. If you find yourself typing "act as" into one chat, you're using the wrong knob; if you find yourself spinning up four chats with four roles, you're using the right one.
 </Callout>
 
 ## Exhibit A vs Exhibit B — two of my own prompts, side by side
@@ -122,9 +122,9 @@ Six lines. No instruction blocks, no rubric theater, no role assignment. What it
 
 - **An explicit data feed.** The model is told what to read — calendar, email, Slack, repo, CRM. That's a layer-1 move. Without those connectors wired up via MCP, this prompt does nothing.
 - **A locked output schema.** Five numbered slots. The model can't drift into prose; it has to fill the slots.
-- **A write target.** The output goes back into my [vault](/chapters/04-the-vault), so tomorrow morning the next instance reading the vault gets yesterday's read for free. The single prompt feeds my long-term memory layer.
+- **A write target.** The output goes back into my [vault](/chapters/04-the-vault/), so tomorrow morning the next instance reading the vault gets yesterday's read for free. The single prompt feeds my long-term memory layer.
 
-`PROMPT_EOD` is boring. It's also the one that runs every day at 6:30 PM via a [scheduled task](/chapters/07-cron), with no human prompting at all. It's the operator move. Exhibit A is the dinner-party trick.
+`PROMPT_EOD` is boring. It's also the one that runs every day at 6:30 PM via a [scheduled task](/chapters/07-cron/), with no human prompting at all. It's the operator move. Exhibit A is the dinner-party trick.
 
 The lesson: the clever prompt and the operator prompt belong to different toolboxes. Don't confuse them. Don't put the clever prompt where the operator prompt belongs.
 
@@ -132,15 +132,15 @@ The lesson: the clever prompt and the operator prompt belong to different toolbo
 
 Let me make this concrete in your stack, not in the abstract.
 
-If you have one prompt you've tweaked five or more times, that prompt belongs in a [skill](/chapters/05-skills), not a chat. The fifth tweak is the signal. The skill makes it reusable, the description makes it discoverable, the body makes it deterministic.
+If you have one prompt you've tweaked five or more times, that prompt belongs in a [skill](/chapters/05-skills/), not a chat. The fifth tweak is the signal. The skill makes it reusable, the description makes it discoverable, the body makes it deterministic.
 
-If you have a prompt that needs context that takes you ten minutes to gather every time (last week's metrics, current pipeline, vault notes), you don't need a better prompt — you need a [connector](/chapters/12-connectors-mcp). MCP, an API call, a vault-read skill. Pull the context once; let the prompt stay simple.
+If you have a prompt that needs context that takes you ten minutes to gather every time (last week's metrics, current pipeline, vault notes), you don't need a better prompt — you need a [connector](/chapters/12-connectors-mcp/). MCP, an API call, a vault-read skill. Pull the context once; let the prompt stay simple.
 
-If you have a question where one model's answer doesn't quite satisfy you and you keep trying different wordings, you don't have a wording problem — you have a [swarm](/chapters/06-the-swarm) problem. Three instances, three frames, one synthesis. Costs three times as much in tokens, returns ten times the value, and the synthesis itself becomes your next published prompt.
+If you have a question where one model's answer doesn't quite satisfy you and you keep trying different wordings, you don't have a wording problem — you have a [swarm](/chapters/06-the-swarm/) problem. Three instances, three frames, one synthesis. Costs three times as much in tokens, returns ten times the value, and the synthesis itself becomes your next published prompt.
 
 If your prompt depends on the model remembering what you told it yesterday, you don't have a model problem — you have a memory problem. Move the recurring context into CLAUDE.md, the project's `memory/` directory, or your vault. The model doesn't have to remember; it has to be loaded.
 
-If your prompt depends on facts the model doesn't have access to — your customer record, your codebase state, your competitive landscape — you don't have a prompt problem at all. You have a [data layer](/chapters/12-connectors-mcp) problem. The thing you've been describing in twelve thousand tokens of context could be three lines of structured input from an MCP server.
+If your prompt depends on facts the model doesn't have access to — your customer record, your codebase state, your competitive landscape — you don't have a prompt problem at all. You have a [data layer](/chapters/12-connectors-mcp/) problem. The thing you've been describing in twelve thousand tokens of context could be three lines of structured input from an MCP server.
 
 Every one of these is a layer-1-through-5 move. The prompt is the thinnest layer in your stack and the one most operators are still spending the most time on.
 
@@ -171,7 +171,7 @@ A short field guide. When you see any of these, you're reading content optimized
 
 ## A short note on swarms, because this chapter keeps gesturing at them
 
-I wrote the deep version separately — [the /swarms page](/swarms) has the architecture diagrams, the ten swarm skills I've shipped, the seven patterns I use, the orchestration prompts to steal, and the three things that quietly break a swarm. For this chapter, the load-bearing claim is:
+I wrote the deep version separately — [the /swarms page](/swarms/) has the architecture diagrams, the ten swarm skills I've shipped, the seven patterns I use, the orchestration prompts to steal, and the three things that quietly break a swarm. For this chapter, the load-bearing claim is:
 
 A swarm is the upgrade path from "I have a clever single-instance prompt." When the prompt is doing too much work, the answer isn't to make the prompt cleverer; the answer is to split the prompt across instances and let synthesis do the integration. `/swarm-strategic-plan` is the productized version of this — twenty pre-prompted agents in five waves, with a master BRIEF locking the constraints across the whole run. Each agent's prompt is plain. The intelligence is in the architecture.
 
@@ -184,8 +184,8 @@ Open the prompt you've tweaked the most this past week. The one you keep refinin
 Do four things to it, in this order:
 
 1. **Run the repeatability test.** Paste it into a fresh chat with cold inputs you haven't used before. If the output shape isn't what you wanted, the prompt needs work *as a prompt*. Fix it now.
-2. **Promote it to a skill.** If the prompt is something you'll run again, [it belongs in a skill](/chapters/05-skills), not in your scratchpad. Description, body, output schema. Five minutes.
-3. **Find its data feed.** What context does this prompt need to do its job? Where does that context live? Is there a [connector](/chapters/12-connectors-mcp) that could load it instead of you pasting it? Wire it.
+2. **Promote it to a skill.** If the prompt is something you'll run again, [it belongs in a skill](/chapters/05-skills/), not in your scratchpad. Description, body, output schema. Five minutes.
+3. **Find its data feed.** What context does this prompt need to do its job? Where does that context live? Is there a [connector](/chapters/12-connectors-mcp/) that could load it instead of you pasting it? Wire it.
 4. **Ask if it should be a swarm instead.** If the prompt is trying to balance three perspectives in one answer — split it. Three instances, three roles, one synthesis. The "act as expert" instinct you suppressed earlier in this chapter — let it loose, across four different chats, against four different angles.
 
 If you do this with one prompt per week for a quarter, you'll have promoted thirteen prompts off your scratchpad. Some will become skills. Some will reveal a missing connector. Some will become swarms. Some will get deleted because they were tricks that never deserved a workflow.

@@ -12,17 +12,19 @@ Scope:
       directory + index.astro      → /<dir>
       directory + [slug].astro     → /<dir>/<slug>  (load slugs from MDX frontmatter)
       *.json.ts / *.xml.ts         → /<basename>.<ext>
-  - Walk prose files (chapters/*.mdx, pages/*.astro) and pull every:
+  - Walk source files (Astro, MDX, TSX, TS) and pull every:
       [text](/path)                markdown link
       href="/path"                 plain attribute
-      href={'/path'}               literal-string interpolation
+      href/url/link: "/path"       route data literal
   - Strip #anchor and ?query.
-  - Compare against discovered route set; flag any miss.
+  - Compare against discovered route set; flag any miss or slashless page URL
+    that would redirect on GitHub Pages.
 
 Skipped:
   - External URLs (http://, https://, mailto:, tel:)
   - Anchor-only (#section)
-  - Interpolated paths (href={someVar})
+  - Interpolated paths (href={someVar}); the rendered HTML check catches many
+    of these after build.
   - Lines containing <!-- NOLINKCHECK -->
 """
 
@@ -36,13 +38,15 @@ PAGES = ROOT / 'src' / 'pages'
 CHAPTERS = ROOT / 'src' / 'content' / 'chapters'
 PUBLIC = ROOT / 'public'
 
-PROSE_GLOBS = ['src/content/chapters/*.mdx', 'src/pages/*.astro']
+PROSE_GLOBS = ['src/**/*.astro', 'src/**/*.mdx', 'src/**/*.tsx', 'src/**/*.ts']
 ESCAPE = '<!-- NOLINKCHECK -->'
 
 # Markdown: [text](/path)  — path must start with / and not be //
 MD_LINK_RE = re.compile(r'\[[^\]]*\]\((/(?!/)[^)\s]*)\)')
 # Astro/HTML: href="/path" or href='/path'  — path must start with /
 HREF_RE = re.compile(r'href=(?P<q>["\'])(/(?!/)[^"\'\s>]*)(?P=q)')
+# Route data: href/url/link: '/path' in TS/TSX/Astro frontmatter.
+PROP_ROUTE_RE = re.compile(r'\b(?:href|url|link):\s*(?P<q>["\'])(/(?!/)[^"\'\s]*)\1')
 
 
 def chapter_slugs() -> set[str]:
@@ -133,6 +137,8 @@ def extract_links(text: str) -> list[tuple[int, str]]:
             out.append((line_no, m.group(1)))
         for m in HREF_RE.finditer(line):
             out.append((line_no, m.group(2)))
+        for m in PROP_ROUTE_RE.finditer(line):
+            out.append((line_no, m.group(2)))
     return out
 
 
@@ -143,27 +149,43 @@ def main() -> int:
         return 1
 
     fails: list[tuple[str, int, str]] = []
+    canonical_fails: list[tuple[str, int, str, str]] = []
     for pattern in PROSE_GLOBS:
         for f in sorted(ROOT.glob(pattern)):
             text = f.read_text(encoding='utf-8', errors='ignore')
             for line_no, raw in extract_links(text):
                 normalized = normalize(raw)
                 if normalized in routes:
+                    raw_path = raw.split('#', 1)[0].split('?', 1)[0]
+                    last_segment = normalized.rsplit('/', 1)[-1]
+                    is_page_route = normalized != '/' and '.' not in last_segment
+                    if is_page_route and not raw_path.endswith('/'):
+                        canonical_fails.append((str(f.relative_to(ROOT)), line_no, raw, normalized + '/'))
                     continue
                 fails.append((str(f.relative_to(ROOT)), line_no, raw))
 
-    if not fails:
+    if not fails and not canonical_fails:
         print(f'✓ internal-links OK — {len(routes)} routes discovered, all references resolve')
         return 0
 
     # Group by file for readability
-    print(f'Dead internal links — {len(fails)} reference(s) point at routes that do not exist:')
-    last_file = None
-    for path, line_no, link in fails:
-        if path != last_file:
-            print(f'\n  {path}:')
-            last_file = path
-        print(f'    {line_no}:  {link}')
+    if fails:
+        print(f'Dead internal links — {len(fails)} reference(s) point at routes that do not exist:')
+        last_file = None
+        for path, line_no, link in fails:
+            if path != last_file:
+                print(f'\n  {path}:')
+                last_file = path
+            print(f'    {line_no}:  {link}')
+
+    if canonical_fails:
+        print(f'Non-canonical internal links — {len(canonical_fails)} page reference(s) should use trailing slash URLs:')
+        last_file = None
+        for path, line_no, link, expected in canonical_fails:
+            if path != last_file:
+                print(f'\n  {path}:')
+                last_file = path
+            print(f'    {line_no}:  {link}  →  {expected}')
 
     print()
     print('Fix options:')

@@ -42,7 +42,7 @@ A few field notes:
 - `--resume` shows a session picker; `--continue` jumps straight back into the last one. Different muscle memory, different use cases.
 - `--model` accepts model aliases (`sonnet`, `opus`, `haiku`) or full model IDs. Aliases are safer — they auto-track the current generation.
 - `--no-update` matters in CI containers and locked-down sandboxes where the updater wastes seconds or fails outright.
-- `--dangerously-skip-permissions` exists. It bypasses every approval prompt. We cover when (and when not) to use it in [Chapter 15](/chapters/15-permissions).
+- `--dangerously-skip-permissions` exists. It bypasses every approval prompt. We cover when (and when not) to use it in [Chapter 15](/chapters/15-permissions/).
 
 ---
 
@@ -82,7 +82,7 @@ Inside an interactive session, type `/` and you get a fuzzy-search picker. These
 
 The command surface moved roughly ten entries in 90 days. The ones below are the additions and material updates between February and May 2026 — verified against the official changelog where noted, flagged otherwise.
 
-- `/goal <condition>` — autonomous loop. Sets a finish-line condition, runs turn after turn, and a small fast model (Haiku 4.5) inspects the transcript after every turn to check whether the condition holds. Shipped 2026-05-11, Claude Code v2.1.139. Stops itself when satisfied; aliases for clear include `stop`, `off`, `reset`, `cancel`. See [Chapter 21](/chapters/21-three-modes) for the mode story.
+- `/goal <condition>` — autonomous loop. Sets a finish-line condition, runs turn after turn, and a small fast model (Haiku 4.5) inspects the transcript after every turn to check whether the condition holds. Shipped 2026-05-11, Claude Code v2.1.139. Stops itself when satisfied; aliases for clear include `stop`, `off`, `reset`, `cancel`. See [Chapter 21](/chapters/21-three-modes/) for the mode story.
 - `/loop [interval] [prompt]` — run a prompt on a recurring interval. Existed pre-`/goal`; pairs with it for time-based polling vs goal-directed loops. `/loop 5m check if the deploy finished`.
 - `/agents` — Agent View dashboard. Single CLI surface showing every background session (running, blocked, done), dispatch new sessions inline. Shipped 2026-05-11, v2.1.139. Replaces the tmux-grid hack.
 - `/powerup` — interactive tutorials inside Claude Code. Shipped 2026-04-01, v2.1.90. Onboarding without writing docs.
