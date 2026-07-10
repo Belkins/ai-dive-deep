@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { SEO_DESCRIPTION_MAX_LENGTH, seoTextLength } from '../lib/seo';
 
 const chapters = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/chapters' }),
@@ -9,6 +10,10 @@ const chapters = defineCollection({
     title: z.string(),
     subtitle: z.string(),
     tldr: z.string(),
+    seoDescription: z.string().trim().min(1).refine(
+      (value) => seoTextLength(value) <= SEO_DESCRIPTION_MAX_LENGTH,
+      { message: `SEO descriptions must be ${SEO_DESCRIPTION_MAX_LENGTH} characters or fewer` },
+    ).optional(),
     keyConcepts: z.array(z.string()).default([]),
     readingMinutes: z.number().int().min(1).default(8),
     video: z

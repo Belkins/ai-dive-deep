@@ -39,7 +39,7 @@ export const LAUNCH_TIMELINE: LaunchEntry[] = [
     date: 'May 20',
     surface: 'Newsletter',
     title: 'Forwardable.',
-    // url: 'https://www.vladsnewsletter.com/p/forwardable',  // fill in once published
+    // URL intentionally omitted until the essay is published.
     prep: '~1,815-word essay framing every artifact around the does-it-forward test. The book launch is the receipt for the thesis, not the headline.',
   },
   {

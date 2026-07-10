@@ -11,6 +11,7 @@ import { RADAR_PUBLIC } from './src/lib/radar-config.mjs';
 // Build a date → freeze-timestamp map from the radar archives so the sitemap can carry
 // truthful per-archive lastmod (review-swarm: build-time new Date() lies on immutable pages).
 const radarLastmod = {};
+let radarCurrentLastmod;
 try {
   const dir = 'src/data/radar/archive';
   if (existsSync(dir)) {
@@ -21,6 +22,8 @@ try {
       }
     }
   }
+  const current = JSON.parse(readFileSync('src/data/radar/today.json', 'utf8'));
+  if (current.generated) radarCurrentLastmod = current.generated;
 } catch { /* archives optional */ }
 
 // Choose deploy target via env: DEPLOY_TARGET=vercel | gh-pages (default)
@@ -49,22 +52,27 @@ export default defineConfig({
       // chapter pages are the primary content surfaces, so bump their priority.
       serialize(item) {
         const path = new URL(item.url).pathname.replace(/\/$/, '');
-        const lastmod = new Date().toISOString();
+        const { lastmod: _lastmod, ...withoutLastmod } = item;
         if (path === '') {
-          return { ...item, changefreq: 'daily', priority: 1.0, lastmod };
+          return { ...withoutLastmod, changefreq: 'daily', priority: 1.0 };
         }
         if (path.startsWith('/chapters/')) {
-          return { ...item, changefreq: 'weekly', priority: 0.9, lastmod };
+          return { ...withoutLastmod, changefreq: 'weekly', priority: 0.9 };
         }
         // /radar: hourly-changing live board; dated archives carry their true freeze time.
         if (path === '/radar') {
-          return { ...item, changefreq: 'hourly', priority: 0.8, lastmod };
+          return {
+            ...withoutLastmod,
+            changefreq: 'hourly',
+            priority: 0.8,
+            ...(radarCurrentLastmod ? { lastmod: radarCurrentLastmod } : {}),
+          };
         }
         const radarDate = path.startsWith('/radar/') ? path.slice('/radar/'.length) : null;
         if (radarDate && radarLastmod[radarDate]) {
-          return { ...item, changefreq: 'never', priority: 0.6, lastmod: radarLastmod[radarDate] };
+          return { ...withoutLastmod, changefreq: 'never', priority: 0.6, lastmod: radarLastmod[radarDate] };
         }
-        return { ...item, changefreq: 'monthly', priority: 0.7, lastmod };
+        return { ...withoutLastmod, changefreq: 'monthly', priority: 0.7 };
       },
     }),
     tailwind({ applyBaseStyles: false }),

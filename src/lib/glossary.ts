@@ -41,6 +41,12 @@ export const glossary: Record<string, GlossaryEntry> = {
       'An LLM in a loop with tools, working toward a goal across multiple turns. The bar isn\'t "uses tools once" — it\'s "decides for itself what to do next."',
     related: ['Subagent', 'Swarm'],
   },
+  'Anthropic SDK': {
+    term: 'Anthropic SDK',
+    definition:
+      'Anthropic\'s official client libraries for calling Claude from application code. Use the SDK when Claude is part of a product or backend service; use Claude Code or Cowork when the user is you.',
+    related: ['Claude Code', 'Function calling', 'Tool use'],
+  },
   'CLAUDE.md': {
     term: 'CLAUDE.md',
     definition:
@@ -174,6 +180,12 @@ export const glossary: Record<string, GlossaryEntry> = {
     definition:
       'A bundle of skills, MCP servers, commands, and hooks. Install once, get many capabilities.',
     related: ['Skill', 'Hook'],
+  },
+  Permissions: {
+    term: 'Permissions',
+    definition:
+      'The rules that bound what an agent, tool, token, or user can read, write, or execute. Grant the narrowest scope the workflow needs, then make broader access an explicit decision.',
+    related: ['Permission mode', 'Sandbox', 'Hook'],
   },
   'Prompt injection': {
     term: 'Prompt injection',

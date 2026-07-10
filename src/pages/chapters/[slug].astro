@@ -8,6 +8,7 @@ import ChapterFooter from '@/components/ChapterFooter.astro';
 import ProgressBar from '@/components/ProgressBar.astro';
 import VideoEmbed from '@/components/VideoEmbed.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import { createChapterSeoDescription } from '@/lib/seo';
 
 export async function getStaticPaths() {
   const chapters = await getCollection('chapters');
@@ -17,9 +18,10 @@ export async function getStaticPaths() {
 const { chapter } = Astro.props as any;
 const { Content, headings } = await render(chapter);
 const data = chapter.data;
+const seoDescription = createChapterSeoDescription(data);
 ---
 
-<BaseLayout title={data.title} description={data.tldr}>
+<BaseLayout title={data.title} description={seoDescription}>
   <ProgressBar slug={data.slug} />
   <ChapterHero
     number={data.number}

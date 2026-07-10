@@ -6,6 +6,7 @@ import Footer from '@/components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
 import { CHAPTERS, getPart } from '@/lib/chapters';
 import { AUTHOR, PUBLISHER } from '@/lib/author';
+import { createSeoDescription } from '@/lib/seo';
 
 interface Props {
   title: string;
@@ -18,10 +19,11 @@ interface Props {
 const BRAND = "Vlad's Playbook";
 const FULL = "Vlad's Playbook — The Ultimate AI Dive Deep";
 const chapterCount = CHAPTERS.length;
+const DEFAULT_DESCRIPTION = `${chapterCount} chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.`;
 
 const { title, description, ogImage, noNav, noindex } = Astro.props;
 const fullTitle = title === BRAND || title === FULL ? FULL : `${title} — ${BRAND}`;
-const desc = description ?? `${chapterCount} chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.`;
+const desc = createSeoDescription(description, DEFAULT_DESCRIPTION);
 const og = new URL(ogImage ?? '/og-default.png', Astro.site).toString();
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 

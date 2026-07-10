@@ -7,6 +7,19 @@ import { CHAPTERS } from '@/lib/chapters';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
+type Course = {
+  name: string;
+  vendor: string;
+  url: string;
+  level: string;
+  track: 'no-code' | 'builder' | 'both';
+  time: string;
+  free: boolean | 'core';
+  oneLiner: string;
+  official?: boolean;
+  note?: string;
+};
+
 const toc = [
   { id: 'is-this-you',       label: 'Is this you?' },
   { id: 'concepts',          label: 'Five words first' },
@@ -22,7 +35,7 @@ const GROUP_A = [
   { name: 'Claude 101', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/claude-101', level: 'Beginner', track: 'no-code', time: '~1 hr', free: true, oneLiner: 'Use Claude for real work — writing, data, documents, projects.', official: true },
   { name: 'Claude Code 101', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/claude-code-101', level: 'Beginner', track: 'builder', time: 'Self-paced', free: true, oneLiner: 'Install to daily workflow — the Explore, Plan, Code, Commit loop.', official: true, note: 'Hands-on exercises need a Pro/Max plan or API key.' },
   { name: 'Introduction to Claude Cowork', vendor: 'Anthropic', url: 'https://anthropic.skilljar.com/introduction-to-claude-cowork', level: 'Beginner', track: 'no-code', time: 'Self-paced', free: true, oneLiner: 'First launch to daily use — task loops, skills, real file output.', official: true, note: 'Cowork runs on a paid Claude plan.' },
-];
+] satisfies Course[];
 
 // GROUP B — Go deeper with Claude (default-closed drawer)
 const GROUP_B = [
@@ -35,7 +48,7 @@ const GROUP_B = [
   { name: 'Claude Platform Docs', vendor: 'Anthropic', url: 'https://platform.claude.com/docs/en/home', level: 'Beginner', track: 'builder', time: 'Reference', free: true, oneLiner: 'Official platform docs — API, models, prompting, agents.', official: true },
   { name: 'Claude Cookbooks', vendor: 'Anthropic', url: 'https://github.com/anthropics/claude-cookbooks', level: 'Intermediate', track: 'builder', time: 'Reference', free: true, oneLiner: 'Official code recipes — runnable notebooks for API, tools, RAG.', official: true },
   { name: 'Model Context Protocol Docs', vendor: 'MCP · Anthropic-stewarded', url: 'https://modelcontextprotocol.io/docs/getting-started/intro', level: 'Intermediate', track: 'builder', time: 'Reference', free: true, oneLiner: 'The open MCP spec — the standard behind connectors.', official: true, note: 'Open standard, not on anthropic.com.' },
-];
+] satisfies Course[];
 
 // GROUP C — Other ecosystems: OpenAI & Google (default-closed drawer)
 const GROUP_C = [
@@ -48,7 +61,7 @@ const GROUP_C = [
   { name: 'Introduction to Generative AI', vendor: 'Google', url: 'https://www.skills.google/course_templates/536', level: 'Beginner', track: 'no-code', time: '45 min', free: true, oneLiner: '45-minute primer on what generative AI actually is. Free badge.', official: true },
   { name: 'Gemini API quickstart', vendor: 'Google', url: 'https://ai.google.dev/gemini-api/docs/quickstart', level: 'Intermediate', track: 'builder', time: '30 min', free: true, oneLiner: 'Free API key, install the SDK, first call in under five minutes.', official: true },
   { name: 'Gemini API documentation', vendor: 'Google', url: 'https://ai.google.dev/gemini-api/docs', level: 'Intermediate', track: 'builder', time: 'Reference', free: true, oneLiner: 'Full developer reference — text, tools, function calling.', official: true },
-];
+] satisfies Course[];
 
 // GROUP D — Hand-picked extras (default-closed drawer; independent hosts)
 const GROUP_D = [
@@ -59,7 +72,7 @@ const GROUP_D = [
   { name: 'MCP: Build Rich-Context AI Apps with Anthropic', vendor: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/short-courses/mcp-build-rich-context-ai-apps-with-anthropic/', level: 'Intermediate', track: 'builder', time: '2 hrs', free: 'core', oneLiner: "Anthropic's Elie Schoppik shows you how to build and deploy an MCP server.", note: 'Free during beta; certificate is paid.' },
   { name: 'AI Agents Course', vendor: 'Hugging Face', url: 'https://huggingface.co/learn/agents-course', level: 'Beginner', track: 'both', time: 'Self-paced', free: true, oneLiner: 'Free course, free certificate — what agents are and how to build them.', note: 'Hands-on units need basic Python.' },
   { name: 'Generative AI for Beginners', vendor: 'Microsoft', url: 'https://github.com/microsoft/generative-ai-for-beginners', level: 'Beginner', track: 'builder', time: 'Self-paced', free: true, oneLiner: '21 free lessons covering prompts, RAG, agents, and more.', note: 'Assumes basic Python or TypeScript.' },
-];
+] satisfies Course[];
 ---
 <BaseLayout
   title="Learn"
