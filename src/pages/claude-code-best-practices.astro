@@ -36,8 +36,8 @@ const faqItems = [
     a: 'Treat your prompt prefix as an append-only log so prompt caching holds — a 38-line CLAUDE.md edit once took a weekly bill from $1,108 to $4,312, and the fix took 12 minutes. Batch anything that can wait 24 hours (50% off). Route by task: cheap models for triage, the default tier for the working middle, the top model only when a wrong answer costs more than the run. Set a workspace spend cap before you need one.',
   },
   {
-    q: 'Do these work with Fable 5?',
-    a: 'Yes — the practices are model-agnostic by design. Claude Fable 5 (released June 9, 2026) is picked in Claude Code via /model and is included in paid-plan limits until June 22, then needs usage credits. If your model id is a variable, switching is a one-line diff. The discipline transfers unchanged: cap the spend, keep the eval, route complex long-running work to it, and measure cost per finished task before the meter starts.',
+    q: 'Do these work with Opus 5 and Fable 5?',
+    a: 'Yes — the practices are model-agnostic by design, which is the whole reason to write them against the discipline instead of the model. Claude Opus 5 (released July 24, 2026) is now the default Opus in Claude Code and the default model on Claude Max; Claude Sonnet 5 (June 30, 2026) sits under it; Claude Fable 5 remains Anthropic\'s declared capability ceiling. All are picked via /model. If your model id is a variable, switching is a one-line diff. Two Opus-5-specific adjustments: re-run your effort sweep rather than inheriting xhigh from Opus 4.7 or 4.8, and delete carried-over "verify your work" instructions, which now cause over-verification.',
   },
 ];
 
@@ -176,7 +176,8 @@ const faq = {
           <h2 class="font-display text-3xl mb-4">New model, same practices — the Fable 5 note</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>Claude Fable 5 landed in Claude Code on June 9, 2026 — the banner calls it the model "for complex, long-running work," and you pick it via <code>/model</code>. Nothing on this page changes. That's the point of writing practices against the discipline instead of the model: if your model id is a variable (<a href="/chapters/24-tier-list/">Ch 24</a> — don't pin model strings), a new flagship is a one-line diff plus a regression run, not a migration project.</p>
-            <p>Two of the non-negotiables apply immediately. Rule 5 — a model upgrade is a deploy, so run your golden set before flipping the default. And rule 4 — Fable 5 is included in paid-plan limits until June 22, then needs usage credits, which makes the window a free private eval on your own workload. Route the long-horizon, complex work to it, keep the transcripts, and decide on cost per finished task. The operator file on the model is <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a>; the full picture is <a href="/fable-5/">the Fable 5 hub</a>.</p>
+            <p>Two of the non-negotiables apply immediately. Rule 5 — a model upgrade is a deploy, so run your golden set before flipping the default. And rule 4 — Fable 5's free plan-limit window ran June 9–22, 2026 and is now closed, so any eval you run against it is billed at $10/$50.</p>
+            <p><strong>Updated July 27, 2026.</strong> <a href="/opus-5/">Claude Opus 5</a> shipped on July 24 and is now the default Opus in Claude Code, doing the long-horizon job at $5/$25 — half of Fable 5, and statistically indistinguishable from it on aggregate independent indices. Nothing on this page changes, but three things about <em>your config</em> should: re-run the effort sweep instead of inheriting <code>xhigh</code> (Anthropic says so explicitly, and the score peaks at <code>medium</code> on some agentic-coding evals), delete carried-over verification instructions, and cap subagent nesting before upgrading past Claude Code v2.1.219, which raised the default depth from 1 to 3. The migration list is on <a href="/opus-5/#migration">the model file</a>.</p>
           </div>
         </div>
 

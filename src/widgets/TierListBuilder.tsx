@@ -15,24 +15,33 @@ const TIER_COLOR: Record<Tier, string> = {
   S: '#FF6B2C', A: '#FF8E54', B: '#FFB48C', C: '#22D3A0', D: '#56544B', F: '#26251F', pool: '#8C897C',
 };
 
-// Vlad's picks — updated May 2026. Public leaderboards rank capability;
+// Vlad's picks — updated 2026-07-27. Public leaderboards rank capability;
 // operators rank usefulness. These are usefulness rankings.
+//
+// Three changes in the July refresh, all forced by reality rather than taste:
+// Opus 5 (2026-07-24) is now the default model behind the S-tier tools, so it
+// earns its own row; Sonnet 5 (2026-06-30) is the everyday workhorse under it;
+// and Kimi 2.6 is replaced by Kimi K3, which took #1 on Arena's WebDev board
+// with open weights. Placements are keyed by name — a retired name simply stops
+// rendering, so old shared URLs degrade quietly instead of breaking.
 const DEFAULT_PLACEMENTS: Record<string, Tier> = {
   // S — load-bearing
   'Claude Code': 'S',
   'Cowork': 'S',
+  'Opus 5': 'S',
   'Perplexity': 'S',
   'Nano Banana': 'S',
   'ElevenLabs': 'S',
   'SeeDance': 'S',
   // A — open every day
+  'Sonnet 5': 'A',
   'Gemini Pro': 'A',
   'Codex (OpenAI)': 'A',
   'Suno': 'A',
   'OpenClaw': 'A',
   'Hermes': 'A',
   'NemoClaw': 'A',
-  'Kimi 2.6': 'A',
+  'Kimi K3': 'A',
   // B — useful for one job
   'Claude web chat': 'B',
   'Grok': 'B',

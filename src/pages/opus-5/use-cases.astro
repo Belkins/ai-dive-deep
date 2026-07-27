@@ -1,0 +1,263 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'ranked', label: 'The seven jobs' },
+  { id: 'wrong', label: 'When it is the wrong call' },
+  { id: 'reception', label: 'What practitioners say' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+// Ranked by strength of evidence, not by excitement. `effort` is the actionable
+// column: it is the only setting that moves capability and the invoice together,
+// and the right answer is different for every row below.
+const USES = [
+  {
+    n: 1,
+    title: 'Long-horizon agentic knowledge work',
+    effort: 'high — escalate to xhigh only past 30 minutes',
+    lede: 'The strongest evidence in the entire release, and the one that should change a default today.',
+    body: 'On AA-Briefcase — Artificial Analysis\'s long-horizon knowledge-work benchmark, built around multi-week projects — Opus 5 at the default <code>high</code> scores 1606 Elo for <strong>$10.41 a task</strong>, while Fable 5 at <code>max</code> scores 1574 for <strong>$22.30</strong>. A higher score at 47% of the cost, from the tier below, at the setting you get for free by not touching anything. Decomposed, the gap is lopsided: Analytical Quality Elo 2016 against Fable 5\'s ~1716, while Presentation Quality actually goes to GPT-5.6 Sol. Opus 5 thinks better than it writes.',
+    escalation: '<code>max</code> buys +114 Elo for +71% cost, +10 minutes and +27 turns per task. <code>xhigh</code> is the honest ceiling at 1693 for $14.26 — and Anthropic reserves it for work "over 30 minutes with token budgets in the millions."',
+    caveat: 'Opus 5 runs ~50% longer and takes nearly 2× the turns of Opus 4.8 on identical tasks — 36.2 minutes and 103 turns against 24.1 and 55. The quality is bought with sustained loop length, which makes cost forecasting harder, not easier.',
+    src: 'Artificial Analysis · 2026-07-24 · independent',
+  },
+  {
+    n: 2,
+    title: 'Workflow and SaaS-integration automation',
+    effort: 'medium',
+    lede: 'The best cost-per-outcome row in the launch, and almost nobody quoted it.',
+    body: 'Zapier ran Opus 5 against AutomationBench — their own harness across 47 simulated SaaS tools, scored on a held-out split. On Zapier\'s leaderboard it takes <strong>23.6% at $0.89 a task at <code>medium</code> effort</strong>, beating both Opus 4.8 (17.0) and Fable 5 (17.4) at less than half their cost. At <code>max</code> it reaches 26.2% for $1.27. This is an independent leaderboard from a company with no incentive to flatter, which puts it a full trust tier above the launch table.',
+    escalation: 'Barely worth it — <code>max</code> buys 2.6 points for 43% more spend. The medium-effort row <em>is</em> the headline here.',
+    caveat: 'Only the leaderboard\'s scoring split is held out: Zapier open-sourced a 600-task public set across the same tools and reports local runs in directional agreement with the board, so this is one of the few rows on this page you can actually re-run yourself. Anthropic\'s own summary table prints slightly different figures (24.0 and 26.0); Zapier\'s are used here, because it is Zapier\'s benchmark.',
+    src: 'Zapier AutomationBench leaderboard · 2026-07-24 · INDEPENDENT',
+  },
+  {
+    n: 3,
+    title: 'Debugging and root-cause analysis in an existing repo',
+    effort: 'medium — do not go above high',
+    lede: 'The one job where turning the dial up makes the output measurably worse.',
+    body: 'Cognition ran and scored FrontierCode 1.1: Opus 5 hits <strong>53.4 on Main, and its best score is at <code>medium</code></strong>. Anthropic documents the decline itself — "a decline in FrontierCode score above high effort… Opus 5 at these effort levels [makes] more changes than the task requires (e.g., refactoring)." Devin\'s qualitative read matches: "particular strength on difficult debugging and root-cause analysis," "prefers targeted, in-place fixes over large refactors," "adhering to existing repo conventions."',
+    escalation: 'Escalating is the mistake. Above <code>high</code> you are paying more to get scope creep.',
+    caveat: 'Cognition is a launch partner — independent harness, but not a disinterested party. That said, the vendor and the partner and the practitioners all report the same decline, which is unusual and worth weighting.',
+    src: 'Cognition · System Card §8.4 · 2026-07-24 · partner-independent',
+  },
+  {
+    n: 4,
+    title: 'Computer use and desktop automation',
+    effort: 'max',
+    lede: 'The largest single jump over Opus 4.8 anywhere in the card — and the most misreadable number in the launch.',
+    body: 'OSWorld 2.0: <strong>70.6</strong> against Opus 4.8\'s 55.7, Fable 5\'s 66.1 and GPT-5.6 Sol\'s 62.6. A +14.9-point jump over the previous Opus in one release.',
+    escalation: 'This is the one row where <code>max</code> is the documented setting and the gain justifies it.',
+    caveat: 'Two things must travel with this number or it lies. It is <strong>partial/checkpoint credit, not task completion</strong> — the OSWorld 2.0 paper scores Opus 4.8 at 20.6% binary against 54.8% partial, so "70.6% on computer tasks" reads roughly 3× what it means. And Opus 5 is <strong>absent from the official OSWorld 2.0 leaderboard</strong>, which still tops out at Opus 4.8. Vendor-only, with Opus 4.8 as the grader.',
+    src: 'Anthropic System Card Table 8.1.A · 2026-07-24 · vendor',
+  },
+  {
+    n: 5,
+    title: 'Novel-abstraction and open-ended puzzle reasoning',
+    effort: 'high (max was never tested)',
+    lede: 'The one launch-window number this site credits without a discount — because a third party ran it.',
+    body: 'ARC-AGI-3, Public Demo set: <strong>30.16%</strong>, against GPT-5.6 Sol\'s 13.33% on the same set and Anthropic\'s Fable-class models at ~20%. Opus 5 "completed five additional Public Demo environments that no model had previously beaten." ARC Prize\'s judge on the game Axis Reflect: Opus 5 scored 100, cleared all eight levels in 294 actions, derived an explicit reflection equation by level 2 and generalized to 2D by level 8 — "once the correct ontology is found, execution is extremely reliable."',
+    escalation: 'Not measurable. ARC Prize evaluated <code>high</code> only, "due to the short testing window" — no max-effort ARC-AGI-3 figure for Opus 5 exists.',
+    caveat: 'Anthropic\'s own table compares this against a GPT-5.6 <em>Semi-Private</em> score, which mixes evaluation sets and inflates the gap from ~2.3× to ~4×. The comparison above is same-set.',
+    src: 'ARC Prize Foundation · arcprize.org · 2026-07-24 · INDEPENDENT',
+  },
+  {
+    n: 6,
+    title: 'Single-window long-context work',
+    effort: 'high, with a fresh 1M budget per pass',
+    lede: 'Where the pricing structure, not the benchmark, is the actual advantage.',
+    body: 'ProgramBench — 166 golden tasks, 247,000+ behavioral tests, a fresh 1M-token context per episode: <strong>83% after episode 1, rising to 93% by episode 5</strong>. Beats Opus 4.8 (80→90) and ties Mythos 5 (84→93). Pair that with the pricing fact from <a href="/opus-5/">the model file</a>: <strong>there is no long-context surcharge</strong>, so a 900K-token request bills at the same per-token rate as a 9K one, while GPT-5.6 charges 2× input and 1.5× output above 272K.',
+    escalation: 'Unnecessary — the win here is structural, not dial-dependent.',
+    caveat: 'Anthropic\'s claim that "instruction following, tool calling, and reasoning stay consistent throughout the window" is <strong>asserted, not independently benchmarked</strong>. Nobody has published a needle-in-a-haystack-style degradation curve for Opus 5.',
+    src: 'Anthropic System Card · 2026-07-24 · vendor',
+  },
+  {
+    n: 7,
+    title: 'Agentic search and multi-hop research',
+    effort: 'high — and bring your own fetcher',
+    lede: 'Strong numbers with a hard architectural blocker attached.',
+    body: 'BrowseComp <strong>90.8</strong> (GPT-5.6 Sol 90.4, Fable 5 87.4) and Humanity\'s Last Exam with tools at 64.7. A 10-agent team reached 93.6% with a 5.9× latency speedup at N=10.',
+    escalation: 'The multi-agent figure was gathered on a <em>pre-release configuration</em> of Opus 5 — treat it as directional only.',
+    caveat: '<strong>The <code>web_fetch</code> server tool is not available on Opus 5.</strong> If your search agent depends on Anthropic\'s server-side fetcher, Opus 5 cannot run it as written — you must supply your own. Opus 5 also has no entry on Arena\'s Search board at all.',
+    src: 'Anthropic System Card · 2026-07-24 · vendor',
+  },
+];
+
+const WRONG = [
+  { t: 'Anything latency-sensitive', d: 'Time-to-first-token is <strong>21.7s at the default <code>high</code></strong> and <strong>66.4s at <code>max</code></strong>, with throughput flat at 52–56 tok/s against a ~75 t/s median. Artificial Analysis ranks it #117 of 190 on speed and calls it "notably slow and very verbose." Anthropic\'s own model matrix routes real-time applications to Haiku 4.5. Fast mode buys up to 2.5× output speed at $10/$50 — Fable 5 token pricing for an Opus-tier model, and it is a research preview.' },
+  { t: 'As the leaf node in a subagent swarm', d: 'Anthropic\'s effort table names <code>low</code> as the subagent setting and its model matrix names Haiku 4.5 for sub-agent tasks. Running Opus 5 at <code>high</code> in every leaf of a depth-3 tree is the documented anti-pattern — and depth-3 became the <em>default</em> in Claude Code v2.1.219, shipped the same day as the model. Practitioners report subagent eagerness multiplying cost by "an order of magnitude."' },
+  { t: 'High-volume, well-defined, repeated work', d: 'Sonnet 5 costs $1.53 per Index task to Opus 5\'s $2.03, at $2/$10 through August 31 (then $3/$15) against $5/$25. Anthropic routes high-volume intelligent processing to Haiku 4.5 and scaled code generation and data analysis to Sonnet 5.' },
+  { t: 'Code review where recall matters more than precision', d: 'CodeRabbit\'s production A/B is the sharpest counterexample to the launch narrative. Opus 5 at <code>xhigh</code> caught <strong>55.2%</strong> of known issues against CodeRabbit\'s production model mix at <strong>61.1%</strong> — and GPT-5.6 Sol on its own catches <strong>69.7%</strong>. It generated <strong>92 nitpicks against 23</strong> and burned ~50% more input and ~65% more output tokens per call. On the comments it marks actionable it is more precise (39.3% vs 35.2%), but across the full post-pipeline stream it is <em>less</em> precise (28.6% vs 32.8%) — so "a precision play, not a coverage play" holds only for the filtered slice. CodeRabbit\'s own caution: small numeric differences should not be read as head-to-head wins. Anthropic\'s own guidance if you use it here: do <em>not</em> tell it to be conservative, because "the model may follow that instruction literally and report less." Ask for everything and filter in a second pass.' },
+  { t: 'When you need the vendor-declared ceiling', d: 'Anthropic\'s matrix still assigns "the highest available capability / long-running agents / advanced research" to Fable 5. The official tbench.ai Terminal-Bench 2.1 #1 is Claude Code + Fable 5 at 83.8%, and Opus 5 has no submission at all.' },
+  { t: 'Knowledge-reliability-critical work', d: 'On AA-Omniscience, accuracy rises +7 points over Opus 4.8 — but <strong>hallucination rate rises +14 points, to 50%</strong>. The composite index tells the story: Fable 5 40.15 against Opus 5\'s 31.27. Pair with the HealthBench collapse from 67.1 raw to 57.8 length-adjusted. Fable 5 is materially more reliable on knowledge.' },
+  { t: 'Offensive security and exploit development', d: 'Anthropic states Opus 5 is "substantially weaker on exploits" than Mythos 5, and binary/compiled-code vulnerability discovery remains blocked. Source-code vulnerability discovery is now permitted at all access levels. One published long-horizon signal: Zvi Mowshowitz reports Opus 5 approaching Mythos 5 on ExploitBench at a 2-hour budget but falling behind at 6 — in a domain Anthropic deliberately suppressed, so it does not generalize.' },
+  { t: 'Integrations that must run with thinking disabled', d: 'A documented failure mode: Opus 5 "occasionally writes a tool call into its user-facing text instead of emitting a structured <code>tool_use</code> block. The turn completes normally and <strong>the call never runs</strong>, and in agentic loops the leaked text stays in the conversation history." Most common on tool-heavy search workloads. Anthropic\'s fix: "for most tasks, thinking enabled at <code>low</code> effort performs better than thinking disabled at similar cost."' },
+  { t: 'Structured or templated output where verbosity is a cost', d: 'Default responses, agentic narration and written files all run longer than Opus 4.8 — <strong>and effort will not fix it.</strong> Anthropic, verbatim: "changing effort does not reliably shorten responses, so prompt for length instead."' },
+  { t: 'Long cached sessions with dynamic effort escalation', d: 'Changing effort mid-conversation invalidates the prompt cache, because effort shapes the rendered prompt. Pick one level at the start and keep it.' },
+  { t: 'Workloads needing Priority Tier or server-side web_fetch', d: 'Neither is supported on Opus 5. Both work on Opus 4.8. This is the rare case where the newer model is the downgrade.' },
+];
+
+const faqItems = [
+  {
+    q: 'What is Claude Opus 5 best at?',
+    a: 'Long-horizon agentic knowledge work is the strongest evidenced use case: on Artificial Analysis\'s AA-Briefcase benchmark, Opus 5 at its default effort setting scores higher than Claude Fable 5 at maximum effort while costing roughly half as much per task. Beyond that, the evidence supports workflow automation at medium effort, in-repo debugging and root-cause analysis at medium effort, desktop automation at max effort, and novel-environment reasoning — where its ARC-AGI-3 result was administered by the ARC Prize Foundation rather than by Anthropic.',
+  },
+  {
+    q: 'What effort level should I use with Claude Opus 5?',
+    a: 'Start at high, which is the API default and equivalent to not setting the parameter. Use medium for workflow automation and for debugging inside an existing repository, where scores actually peak. Use low for subagents. Reserve xhigh for genuinely long-running work past thirty minutes, and max only for computer use. Do not inherit an xhigh default from Opus 4.7 or 4.8 — Anthropic explicitly recommends running a fresh effort sweep instead.',
+  },
+  {
+    q: 'When should I not use Claude Opus 5?',
+    a: 'Avoid it for anything latency-sensitive — time to first token is about 21.7 seconds at the default setting and 66.4 seconds at maximum. Avoid it as the leaf node of a subagent swarm, where Anthropic\'s own guidance names Haiku 4.5. Avoid it for high-volume repeated work, where Sonnet 5 is cheaper per task. And avoid it for code review where recall matters more than precision: one production A/B by CodeRabbit found it caught 55.2% of known issues against 61.1% for their production model mix, while producing four times the nitpicks.',
+  },
+  {
+    q: 'Does Claude Opus 5 hallucinate more than Claude Fable 5?',
+    a: 'On Artificial Analysis\'s AA-Omniscience benchmark, yes. Opus 5 gains about 7 points of accuracy over Opus 4.8 but its hallucination rate rises about 14 points, to roughly 50%. The composite AA-Omniscience index puts Claude Fable 5 at 40.15 against Opus 5 at 31.27. For knowledge-reliability-critical work, Fable 5 is the more reliable choice despite the near-identical aggregate intelligence scores.',
+  },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<BaseLayout
+  title="Claude Opus 5 use cases — what to run on it, at which effort level"
+  description="Seven ranked jobs for Claude Opus 5 with the effort setting for each, eleven places it is the wrong choice, and the evidence behind both. Sourced and dated."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="eyebrow eyebrow-loud mb-3 text-accent">Model file · Opus 5</div>
+    <h1>Opus 5 use cases — seven jobs, and the dial setting for each.</h1>
+    <p class="mt-3 text-lg text-muted">
+      Most launch coverage answers "is it better." That is the wrong question, because the honest answer is <em>statistically indistinguishable from the model above it, at half the price</em>. The useful question is which jobs, at which effort — because on this model the dial is worth more than the model choice, and on one job below turning it up makes the output <strong>worse</strong>.
+    </p>
+    <p class="mt-2 text-sm text-muted">
+      Ranked by strength of evidence, not by excitement. Every row names its source and its trust tier. The specs, pricing and the effort ladder live on <a href={`${base}/opus-5/`}>the model file</a>; the discipline for reading any of these numbers is <a href={`${base}/tier-list/`}>Ch 24</a>.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="rounded-xl border p-5 border-line bg-accent/5">
+            <p class="m-0 leading-relaxed"><strong>Opus 5 is a long-horizon agent model.</strong> Its best-evidenced win: on AA-Briefcase, at the <em>default</em> effort setting, it scores higher than Fable 5 at <em>max</em> for 47% of the cost. Use <code>high</code> for long-horizon work, <code>medium</code> for automation and in-repo debugging (where scores peak), <code>low</code> for subagents, <code>max</code> only for computer use. It is the wrong tool for anything latency-sensitive, for high-volume repeated work, and for review tasks where recall beats precision.</p>
+          </div>
+        </div>
+
+        <div id="ranked" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The seven jobs, ranked by evidence</h2>
+          <div class="space-y-5">
+            {USES.map((u) => (
+              <div class="rounded-xl border p-5 border-line">
+                <div class="flex items-baseline gap-3 flex-wrap">
+                  <span class="font-display text-2xl text-accent">{u.n}</span>
+                  <h3 class="font-display text-xl m-0 flex-1 min-w-[200px]">{u.title}</h3>
+                </div>
+                <div class="mt-2 inline-block text-xs px-2.5 py-1 rounded-md" style="background: rgb(var(--accent) / 0.1); border: 1px solid rgb(var(--accent) / 0.4); color: rgb(var(--accent))">
+                  Effort: {u.effort}
+                </div>
+                <p class="mt-3 mb-0 text-sm italic text-muted">{u.lede}</p>
+                <p class="mt-2 mb-0 leading-relaxed text-fg/88 text-[15px]" set:html={u.body} />
+                <div class="mt-3 pt-3 space-y-2 text-sm" style="border-top: 1px solid rgb(var(--line))">
+                  <p class="m-0 text-fg/80"><strong class="text-muted">Turning it up:</strong> <span set:html={u.escalation} /></p>
+                  <p class="m-0 text-fg/80"><strong class="text-muted">The caveat:</strong> <span set:html={u.caveat} /></p>
+                  <p class="m-0 text-xs text-muted">{u.src}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <PullQuote>The dial is worth more than the model choice. Six-point-nine times the cost separates its cheapest setting from its most expensive — and on debugging, the expensive one scores lower.</PullQuote>
+        </div>
+
+        <div id="wrong" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Eleven places Opus 5 is the wrong call</h2>
+          <div class="space-y-3">
+            <p class="leading-relaxed text-fg/88">A model file that only lists strengths is a brochure. These are the documented cases where something else wins — several of them from Anthropic's own guidance, one of them a production A/B that contradicts the launch narrative outright.</p>
+            {WRONG.map((w, i) => (
+              <div class="rounded-lg border p-4 border-line">
+                <div class="flex items-baseline gap-3">
+                  <span class="font-mono text-xs text-muted">{String(i + 1).padStart(2, '0')}</span>
+                  <strong class="text-[15px]">{w.t}</strong>
+                </div>
+                <p class="mt-2 mb-0 text-sm leading-relaxed text-fg/80" set:html={w.d} />
+              </div>
+            ))}
+          </div>
+
+          <Callout type="warn" title="The cost trap nobody scheduled">
+            Claude Code v2.1.219 shipped the same day as Opus 5 and raised default subagent nesting depth from 1 to 3 — alongside a model Anthropic itself describes as delegating "more readily than prior models," and which practitioners report over-verifying without being asked. Three multiplicative changes, one day, no migration note that puts them together. Set <code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1</code> before you upgrade, delete your carried-over "verify your work" instructions, and read <a href={`${base}/the-bill/`}>the bill chapter</a> before you run a swarm on it.
+          </Callout>
+        </div>
+
+        <div id="reception" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What practitioners say</h2>
+          <Callout type="note" title="This section is community signal, not measurement">
+            Nothing below is a benchmark. It is what named engineers reported in the first three days, kept separate from the tables above on purpose. One caveat on the sample: Reddit was not reachable during this research pass, so this is Hacker News, Substack, Simon Willison and vendor-partner blogs only.
+          </Callout>
+          <div class="grid gap-4 md:grid-cols-2 mt-6">
+            <div class="rounded-xl border p-5 border-line">
+              <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">Praise</div>
+              <ul class="space-y-3 text-sm leading-relaxed m-0 pl-4">
+                <li><strong>Simon Willison</strong> flags the example where the model "independently developed a computer vision pipeline to analyze machine parts when direct viewing wasn't available" — while explicitly noting he had <em>not</em> yet put it through its paces. The widely-quoted <em>"our least prompt injectable model yet"</em> line is <strong>Boris Cherny's</strong>, an Anthropic employee — a vendor claim, not third-party praise. Willison relayed it without endorsing it, and it does not belong in this column.</li>
+                <li><strong>Zvi Mowshowitz</strong> on the system card: prompt-injection attack success drops 5.5% → 2.0%; computer-use environment attack rate 7.14% → 0.54%. When the model found scoring exploits it declined, calling them "hacks."</li>
+                <li><strong>Cognition's CEO</strong>: strongest on difficult debugging and root-cause analysis inside Devin.</li>
+                <li><strong>Hacker News</strong> on the economics: "Half the price of Fable 5 and usable with 100% of your subscription means roughly 4× the usage." Also valued: mid-conversation tool swapping, automatic Opus 4.8 fallback, and no 30-day retention requirement.</li>
+              </ul>
+            </div>
+            <div class="rounded-xl border p-5 border-line">
+              <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent))">Complaints</div>
+              <ul class="space-y-3 text-sm leading-relaxed m-0 pl-4">
+                <li><strong>Scope creep above <code>high</code></strong> — "Above high, Opus 5 starts making changes the task didn't ask for." This is the most load-bearing community claim in the set, because it is corroborated by two non-community sources: Anthropic's own scope-expansion warning and Cognition's measured decline.</li>
+                <li><strong>Token burn with no pushback</strong> — "it will almost certainly not push back on your silly request and go ahead and burn as many tokens as it can." Recurring calls for per-prompt token caps and an explicit autonomous-vs-interactive mode.</li>
+                <li><strong>Over-delegation</strong> — subagent eagerness reported to multiply cost by "an order of magnitude."</li>
+                <li><strong>Truncation</strong> — thinking counts against <code>max_tokens</code>; migrated code cuts off mid-sentence.</li>
+                <li><strong>Regression on clarification</strong> — Opus 4.8 was "generally better at asking for clarification."</li>
+                <li><strong>Benchmark-integrity criticism</strong> — the undisclosed Opus-4.8-fallback substitution on FrontierBench, and several benchmarks built by outside orgs but <em>run</em> by Anthropic.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <div class="space-y-4">
+            {faqItems.map((f) => (
+              <details class="rounded-lg border p-4 border-line">
+                <summary class="cursor-pointer font-semibold">{f.q}</summary>
+                <p class="mt-3 mb-0 leading-relaxed text-fg/88 text-sm">{f.a}</p>
+              </details>
+            ))}
+          </div>
+
+          <div class="mt-10 rounded-xl border p-5 border-line bg-accent/5">
+            <div class="text-[10px] uppercase tracking-wider mb-2 text-accent">Keep reading</div>
+            <p class="m-0 leading-relaxed"><a href={`${base}/opus-5/`}><strong>The Opus 5 model file</strong></a> — specs, pricing, the full effort ladder, and where it sits against Fable 5. <a href={`${base}/tier-list/`}><strong>Ch 24, the tier list</strong></a> — the four boards it now appears on, and why they disagree. <a href={`${base}/chapters/25-evals-or-hope/`}><strong>Ch 25</strong></a> — how to run the effort sweep this page keeps telling you to run.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

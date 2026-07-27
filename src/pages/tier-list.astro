@@ -4,7 +4,7 @@ import TierListBuilder from '@/widgets/TierListBuilder.tsx';
 import LMArenaLeaderboard from '@/widgets/LMArenaLeaderboard.tsx';
 import ArtificialAnalysisPanel from '@/widgets/ArtificialAnalysisPanel.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
-import { LAB_CLAIMS, VENDOR_META } from '@/lib/lmarena';
+import { LAB_CLAIMS, VENDOR_META, ARENA_AGENT, ARENA_AGENT_META } from '@/lib/lmarena';
 import { AA_SNAPSHOT, AA_INDEX_VERSION } from '@/lib/artificial-analysis';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -37,7 +37,23 @@ const faqLd = {
       name: 'Which AI model is cheapest per agentic task in 2026?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: `As of the ${AA_SNAPSHOT} capture of Artificial Analysis’s ${AA_INDEX_VERSION} board, DeepSeek V4 Pro had the lowest cost per Intelligence Index task, while the most capable model on the board (Claude Fable 5) was the most expensive per task. The panel shows the dated per-task figures; sort by "Cost / task" to compare.`,
+        text: `As of the ${AA_SNAPSHOT} capture of Artificial Analysis’s ${AA_INDEX_VERSION} board, DeepSeek V4 Pro had the lowest cost per Intelligence Index task of any scored model, delivering roughly three-quarters of the board leader’s Index score. Note that the most capable model is no longer the most expensive one — that link broke in July 2026. The panel shows the dated per-task figures; sort by "Cost / task" to compare.`,
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the effort dial on Claude Opus 5?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The effort dial is a parameter on Claude Opus 5 with five settings — low, medium, high, xhigh and max — that trades capability against token spend and latency. The API default is high; max is not the default. Anthropic’s launch benchmark table is reported at max effort, so an application that never sets the parameter is running a materially different configuration from the one the launch numbers describe. More effort is also not monotonically better: on some agentic coding evaluations the score peaks at medium and declines above high, because the model begins making changes the task did not require.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is Claude Opus 5 better than Claude Fable 5?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'They are statistically indistinguishable in aggregate capability, and Opus 5 costs half as much per million tokens. Independent aggregate indices disagree on the order and every gap falls inside the evaluators’ own stated confidence intervals: one index puts Opus 5 first by under a point, another puts Fable 5 first by a third of a point, and the crowd leaderboard puts Fable 5 first with overlapping intervals. Anthropic’s own guidance keeps Fable 5 as the highest available capability while recommending Opus 5 as the starting point for agentic coding and enterprise work.',
       },
     },
   ],
@@ -47,7 +63,12 @@ const faqLd = {
   <section class="container-prose pt-16 pb-4">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Chapter 24</div>
     <h1>The tier list. Without mercy.</h1>
-    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Public leaderboards rank capability. Operators rank usefulness. Below, four readings of the same models: the crowd's public benchmark, an independent referee that prices every run, the labs' own launch decks — then Vlad's actual stack, a builder you can drag, share, and argue about.</p>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Public leaderboards rank capability. Operators rank usefulness. Below, five readings of the same models: the crowd's public benchmark, an independent referee that prices every run, the labs' own launch decks, the one crowd board that scores agents doing work — then Vlad's actual stack, a builder you can drag, share, and argue about.</p>
+    <div class="mt-6 rounded-lg p-5 text-sm leading-relaxed" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent)); color: rgb(var(--fg) / 0.9)">
+      <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Refreshed 2026-07-27</div>
+      <p class="m-0">Two Anthropic models shipped since the last capture — <strong>Sonnet 5</strong> on June 30 and <strong>Opus 5</strong> on July 24 — and one of them broke the rule this page was built on. For as long as these boards have existed, the most capable model was also the most expensive one. It isn't any more: Opus 5 took the top of the independent index at <em>lower</em> cost per task than the model below it, and it ships with a five-position effort dial that moves capability and the invoice together. The <a href={`${base}/opus-5/`} style="color: rgb(var(--accent))">Opus 5 model file</a> has the full read, and <a href={`${base}/opus-5/use-cases/`} style="color: rgb(var(--accent))">the use-case page</a> has the part that changes what you type tomorrow.</p>
+      <p class="mt-2 mb-0" style="color: rgb(var(--muted))">Also new: LMArena is now <strong>Arena</strong>, its boards no longer share an update date (the spread in this capture is 34 days, so each carries its own), and its HuggingFace feed was retired — so the leaderboard below is a hand-verified mirror, cross-checked against a community mirror on ten of eleven boards.</p>
+    </div>
   </section>
 
   <nav id="tl-sectionnav" aria-label="Tier list sections" class="sticky z-30 border-b backdrop-blur" style="top: 3.5rem; background: rgb(var(--bg) / 0.82); border-color: rgb(var(--line))">
@@ -56,14 +77,16 @@ const faqLd = {
       <a href="#sec-crowd" data-spy="sec-crowd" class="tl-link">Crowd</a>
       <a href="#sec-independent" data-spy="sec-independent" class="tl-link">Independent</a>
       <a href="#sec-labs" data-spy="sec-labs" class="tl-link">Labs</a>
+      <a href="#sec-agent" data-spy="sec-agent" class="tl-link">Agent</a>
       <a href="#sec-operator" data-spy="sec-operator" class="tl-link">Operator</a>
     </div>
   </nav>
 
   <section id="sec-crowd" style="scroll-margin-top: 7rem" class="container-prose pt-6 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the public says</div>
-    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">LMArena public leaderboard</h2>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://lmarena.ai/" target="_blank" rel="noopener" style="color: rgb(var(--accent))">lmarena.ai</a>. This is the canonical "which model is better at benchmark tasks" public ranking. It's the right answer to one specific question — and the wrong answer to the question you actually care about as an operator.</p>
+    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Arena public leaderboard</h2>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://arena.ai/" target="_blank" rel="noopener" style="color: rgb(var(--accent))">arena.ai</a>, the platform formerly called LMArena. This is the canonical "which model is better at benchmark tasks" public ranking. It's the right answer to one specific question — and the wrong answer to the question you actually care about as an operator.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Two things to hold while reading it. First, <strong>the sample sizes are not comparable across rows</strong>: Opus 5 debuts at #1 on Document on 1,663 votes against the 37,271 behind the model it displaced, with fully overlapping confidence intervals. That is a leaderboard fact, not yet a statistical one, and the per-board notes say so where it applies. Second, Opus 5 appears here as <code>claude-opus-5-high</code> — the crowd is voting on the API <em>default</em> effort, while every vendor table further down runs at <code>max</code>. Same model, different configuration, different number.</p>
   </section>
 
   <section class="pt-4 pb-2">
@@ -74,6 +97,7 @@ const faqLd = {
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What an independent referee measures</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Artificial Analysis — the independent referee</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is the crowd's taste; the boards below are the vendors' launch slides. This is neither — <a href="https://artificialanalysis.ai/models" target="_blank" rel="noopener" style="color: rgb(var(--accent))">Artificial Analysis</a> runs its own agentic harness (rebuilt in {AA_INDEX_VERSION} around long agentic chains — Terminal-Bench 2.1, 𝜏³-Banking, GDPval v2) and reports the one number the other two never do: what each run <em>costs</em>. Cost per task, not just capability — the column where the leaderboard starts speaking the operator's language. Read it as a referee's reading, not a verdict: independent buys disinterest, not the last word. Captured {AA_SNAPSHOT}; dated sourcing on <a href={`${base}/research-notes/`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Two disclosures this board earns. AA states it <em>"supported Anthropic to evaluate Claude Opus 5 ahead of release"</em> — its own harness and hardware, so not a vendor claim, but pre-release coordination on the row that came first. And the top of this board is a tie, not a ranking: AA's own stated confidence interval is ±1%, and the gap between the top two <em>distinct</em> models is 0.83 points. (AA ranks effort variants separately, so its literal second place is the same model again at a lower setting, 0.62 behind.) A page that discounts launch decks has to apply the same arithmetic to the referee.</p>
   </section>
 
   <section class="pt-4 pb-2">
@@ -83,19 +107,39 @@ const faqLd = {
   <section id="sec-labs" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the labs claim</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Launch-deck numbers — discounted on arrival</h2>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is crowd votes on chat prompts. The boards below are what vendors shipped on launch day for the question operators actually ask — agentic work — which LMArena doesn't measure. Read every row as a claim, not a receipt: Berkeley RDI reward-hacked 8 of 8 major agent benchmarks, so launch numbers carry a 10–15 point discount until your own eval confirms them. Models you can't buy don't appear — capability ceilings are not tier-list entries. Dated sourcing for every figure lives on <a href={`${base}/research-notes/`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is crowd votes on chat prompts. The boards below are what vendors shipped on launch day for the question operators actually ask — agentic work — which the arena doesn't measure. Read every row as a claim, not a receipt: Berkeley RDI reward-hacked 8 of 8 major agent benchmarks, so launch numbers carry a 10–15 point discount until your own eval confirms them. Models you can't buy don't appear — capability ceilings are not tier-list entries. Dated sourcing for every figure lives on <a href={`${base}/research-notes/`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Three of these four cards are vendor claims. One was run by a third party. Watch what happens to the numbers when the referee changes — that difference is the entire argument of this chapter, and it is now visible in a column rather than asserted in a sentence.</p>
     <div class="mt-6 grid gap-4 sm:grid-cols-2">
       {LAB_CLAIMS.map((c) => (
         <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
           <div class="flex items-baseline justify-between gap-2 flex-wrap">
             <div class="font-display text-lg leading-tight">{c.bench}</div>
+            <span
+              class="text-[9px] uppercase tracking-[0.14em] px-2 py-0.5 rounded-full whitespace-nowrap"
+              style={c.tier === 'independent'
+                ? 'color: rgb(var(--accent-2)); border: 1px solid rgb(var(--accent-2) / 0.55); background: rgb(var(--accent-2) / 0.1)'
+                : 'color: rgb(var(--muted)); border: 1px solid rgb(var(--line))'}
+            >{c.tier === 'independent' ? 'Independent' : 'Vendor claim'}</span>
           </div>
           <div class="text-xs mt-1" style="color: rgb(var(--muted))">{c.what}</div>
-          <div class="mt-3 flex flex-col gap-1.5">
+          {c.columns && (
+            <div class="mt-3 flex items-baseline gap-3 text-[9px] uppercase tracking-[0.12em]" style="color: rgb(var(--muted))">
+              <span class="flex-1"></span>
+              <span class="w-[86px] text-right">{c.columns[0]}</span>
+              <span class="w-[72px] text-right">{c.columns[1]}</span>
+            </div>
+          )}
+          <div class="mt-2 flex flex-col gap-1.5">
             {c.entries.map((e) => (
-              <div class="flex items-baseline justify-between gap-3">
-                <span class="font-mono text-sm" style={`color: ${VENDOR_META[e.vendor].color}`}>{e.model}</span>
-                <span class="font-mono text-sm font-semibold">{e.score}</span>
+              <div class="flex items-baseline gap-3">
+                <span class="font-mono text-sm flex-1 truncate" style={`color: ${VENDOR_META[e.vendor].color}`}>{e.model}</span>
+                <span class={c.columns ? 'font-mono text-sm font-semibold w-[86px] text-right' : 'font-mono text-sm font-semibold text-right'}>{e.score}</span>
+                {c.columns && (
+                  <span
+                    class="font-mono text-sm w-[72px] text-right"
+                    style={e.score2 && !/^[\d.]/.test(e.score2) ? 'color: rgb(var(--accent)); font-size: 11px' : 'color: rgb(var(--muted))'}
+                  >{e.score2 ?? '—'}</span>
+                )}
               </div>
             ))}
           </div>
@@ -104,6 +148,30 @@ const faqLd = {
           </div>
         </div>
       ))}
+    </div>
+  </section>
+
+  <section id="sec-agent" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
+    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">The board that measures the actual job</div>
+    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Arena's Agent board — and why it isn't a tab above</h2>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">
+      Arena runs an agent board too, over {ARENA_AGENT_META.sessions}. It is deliberately not one of the tabs above, because it does not use Elo — its metric is a <em>{ARENA_AGENT_META.metric}</em>, a percentage. Rendering 12.72 in a column that reads 1508 two tabs over would be the exact category error this chapter exists to argue against, so it gets its own shape. It is also the closest any crowd board comes to measuring what operators actually buy — and note who is missing from it.
+    </p>
+    <div class="mt-5 rounded-lg overflow-hidden" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+      <div class="px-5 py-3 text-xs uppercase tracking-wider flex items-center justify-between gap-3 flex-wrap" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--muted))">
+        <span>Net improvement score</span>
+        <span>board published {ARENA_AGENT_META.published}</span>
+      </div>
+      {ARENA_AGENT.map((r) => (
+        <div class="px-5 py-2 flex items-baseline gap-3 text-sm" style="border-bottom: 1px solid rgb(var(--line) / 0.5)">
+          <span class="font-display w-6" style="color: rgb(var(--muted))">{r.rank}</span>
+          <span class="flex-1 truncate" style={`color: ${VENDOR_META[r.vendor].color}`}>{r.model}</span>
+          <span class="font-mono text-xs" style="color: rgb(var(--fg))">{r.net}</span>
+        </div>
+      ))}
+      <div class="px-5 py-3 text-[11px] leading-relaxed" style="color: rgb(var(--muted))">
+        Opus 5 is not on this board at all — three days old at capture. Every interval here overlaps its neighbour's, so read it as three or four bands, not ten ranks. The band that matters: an open-weights model (Kimi K3) sits inside the top four, and the #3 slot belongs to a model one generation old.
+      </div>
     </div>
   </section>
 

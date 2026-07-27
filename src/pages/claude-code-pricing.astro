@@ -23,10 +23,12 @@ const PRICES = {
     { plan: 'Enterprise', price: '$20/seat + usage at API rates', cc: 'Yes', note: 'contact sales — usage scales with model and task' },
   ],
   api: [
-    { model: 'Haiku 4.5', input: '$1', output: '$5', read: 'the triage tier' },
-    { model: 'Sonnet 4.6', input: '$3', output: '$15', read: 'the workhorse' },
-    { model: 'Opus 4.8', input: '$5', output: '$25', read: 'prior top tier, still current' },
-    { model: 'Fable 5 / Mythos 5', input: '$10', output: '$50', read: '2× Opus 4.8 — see the Fable 5 section' },
+    { model: 'Haiku 4.5', input: '$1', output: '$5', read: 'the triage tier — still the only current Haiku' },
+    { model: 'Sonnet 5', input: '$2', output: '$10', read: 'the workhorse · intro price, steps to $3/$15 on Sept 1, 2026' },
+    { model: 'Opus 5', input: '$5', output: '$25', read: 'the current top Opus — same sticker as 4.8, half of Fable 5' },
+    { model: 'Fable 5 / Mythos 5', input: '$10', output: '$50', read: '2× Opus 5 — Anthropic’s declared capability ceiling' },
+    { model: 'Sonnet 4.6 (legacy)', input: '$3', output: '$15', read: 'superseded by Sonnet 5' },
+    { model: 'Opus 4.8 (legacy)', input: '$5', output: '$25', read: 'superseded by Opus 5; still active, still the safety-fallback target' },
   ],
   cache: { write5m: '1.25×', write1h: '2×', read: '0.1×' },
   batchDiscount: '50%',
@@ -105,7 +107,7 @@ const faq = {
         <div id="answer" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
           <div class="rounded-xl border p-5 border-line bg-accent/5">
-            <p class="m-0 leading-relaxed">Claude Code is included with every paid Claude plan — <strong>Pro $20/month, Max from $100, Team from $25/seat</strong> — there is no free tier. On the API it bills per token: Sonnet 4.6 at $3/$15 per million, Opus 4.8 at $5/$25. Running five companies, Vlad Podoliako pays ~$400/month in Max subscriptions plus an API line cut from $2,216 to a ~$1,200 run-rate.</p>
+            <p class="m-0 leading-relaxed">Claude Code is included with every paid Claude plan — <strong>Pro $20/month, Max from $100, Team from $25/seat</strong> — there is no free tier. On the API it bills per token: Sonnet 5 at $2/$10 per million (rising to $3/$15 on September 1, 2026), Opus 5 at $5/$25. Running five companies, Vlad Podoliako pays ~$400/month in Max subscriptions plus an API line cut from $2,216 to a ~$1,200 run-rate.</p>
           </div>
           <p class="mt-2 text-sm text-accent-2">Prices verified against claude.com/pricing on {PRICES.lastVerified}.</p>
         </div>
@@ -218,8 +220,9 @@ const faq = {
         <div id="fable-5" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">What does Fable 5 change about Claude Code pricing?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>Two things — a clock and a sticker. The clock: Claude Fable 5 is included in paid-plan limits from June 9 to <strong>June 22, 2026</strong>, then switches to usage credits on subscriptions — the Claude Code banner says it plainly. Read the window as a billing event, not a launch perk: two weeks of frontier capacity at zero marginal cost is a free A/B against your current model, if you run it as one, and the meter starts June 22 whether you measured or not.</p>
-            <p>The sticker: $10/$50 per million tokens on the API — exactly 2× Opus 4.8 — which makes caching discipline twice as expensive to break. The full pricing file — the ladder, the plan mechanics, when 2× is and isn't worth it — is <a href="/fable-5/pricing/">Fable 5 pricing</a>; the in-terminal view, banner verbatim, is <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a>.</p>
+            <p>Two things — a clock and a sticker. The clock ran out: Claude Fable 5 <em>was</em> included in paid-plan limits from June 9 to <strong>June 22, 2026</strong>, then switched to usage credits. That free-eval window is closed; if you did not run the A/B then, you are buying it at list now.</p>
+            <p>The sticker: $10/$50 per million tokens on the API — exactly 2× Opus 5 — which makes caching discipline twice as expensive to break. The full pricing file — the ladder, the plan mechanics, when 2× is and isn't worth it — is <a href="/fable-5/pricing/">Fable 5 pricing</a>; the in-terminal view is <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a>.</p>
+            <p><strong>What changed since:</strong> <a href="/opus-5/">Opus 5</a> shipped July 24, 2026 at $5/$25 — half of Fable 5, same sticker as Opus 4.8 — and is now the default on Claude Max and the strongest model on Pro. On aggregate independent indices the two are statistically indistinguishable, so the "is 2× worth it" question is now a genuinely open one rather than a capability gap you are paying to close. Anthropic still routes highest-available-capability to Fable 5; the honest read of both sits on <a href="/opus-5/#hierarchy">the Opus 5 model file</a>.</p>
           </div>
         </div>
 

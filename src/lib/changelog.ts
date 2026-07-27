@@ -16,10 +16,30 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 10.9',
+    date: '2026-07-27',
+    bannerText: 'New model file — Opus 5: the frontier stopped being the most expensive thing on the menu. The effort dial, seven use cases with the setting for each, and every benchmark board refreshed to 2026-07-27.',
+    bannerHref: '/opus-5/',
+    tagline: 'The refresh edition. Two Anthropic models shipped since the last capture — Sonnet 5 on June 30, Opus 5 on July 24 — and one of them broke the rule this site\'s tier list was built on: for as long as these leaderboards have existed, the most capable model was also the priciest. Not any more. Opus 5 took the top of the independent index at LOWER cost per task than the model below it. Every board on Ch 24 is re-captured, the vendor cards now show the public leaderboard beside the launch claim, and there is a new two-page model file on the model itself — with the part most coverage skipped: the launch table runs at max effort, the API default is high, and on debugging the expensive setting scores lower.',
+    shipped: [
+      'New model file — /opus-5/. Claude Opus 5 shipped 2026-07-24 at $5/$25 per Mtok (unchanged from Opus 4.8, half of Fable 5), 1M context, May 2026 cutoff, default on Claude Max. Specs, exact pricing including the no-long-context-surcharge fact, the full five-position effort ladder priced by Artificial Analysis, and the hierarchy question answered honestly: three independent aggregates disagree about whether Opus 5 or Fable 5 is ahead, and every gap sits inside the evaluators\' own confidence intervals.',
+      'New use-cases page — /opus-5/use-cases/. Seven jobs ranked by strength of evidence with the effort setting for each, and eleven documented cases where Opus 5 is the wrong call. The headline finding: on AA-Briefcase, Opus 5 at the DEFAULT effort scores higher than Fable 5 at max for 47% of the cost. The counter-intuitive one: more effort is not monotonically better — on agentic coding the score peaks at medium and declines above high, corroborated by Cognition\'s measurements, Anthropic\'s own docs, and practitioner reports.',
+      'Ch 24 fully re-captured. All eleven Arena boards refreshed — and they no longer share a date, so each now carries its own publish stamp (the spread is 34 days). LMArena is now Arena; its HuggingFace feed was retired, so the widget\'s dead live-fetch path was removed rather than left to fail quietly into a fallback. Artificial Analysis re-captured at 17 models — still Intelligence Index v4.1, so the methodology block stands verbatim and only the capture date moves.',
+      'The lab-claims cards now show two columns where it matters: the vendor\'s own number beside the public independent board\'s. On FrontierBench that reads 43.3 from Anthropic against 43.5 on the public board — agreement on Opus 5, and a sharp disagreement about its rival, since Anthropic re-ran GPT-5.6 Sol itself at 37.5 while the public board scores it 34.4. Three cards are vendor claims, one (ARC-AGI-3, run by ARC Prize) is independent and labelled as such — the chapter\'s thesis rendered as a column instead of asserted as a sentence.',
+      'Arena\'s Agent board added as its own panel rather than a tab, because it does not use Elo — its metric is a Net Improvement Score percentage, and coercing it into the Elo column would be the exact category error Ch 24 exists to argue against. Opus 5 is not on it.',
+      'A stat-drift bug fixed in the independent panel: its callout hardcoded the assumption that the smartest model is also the priciest. True in June, false the moment Opus 5 took #1 at $2.03 against Fable 5\'s $2.75. The relationship is now derived from the data rather than asserted over it.',
+    ],
+    receipts: [
+      { label: 'Opus 5 — price vs Fable 5', value: '$5/$25 vs $10/$50 per Mtok' },
+      { label: 'Effort ladder span (AA)', value: '6.9× cost, low → max, for ~10 index points' },
+      { label: 'The hierarchy', value: '3 independent aggregates, 2 different winners, all gaps inside the error bars' },
+      { label: 'Boards re-captured', value: '11 Arena + Agent + AA (17 models)' },
+      { label: 'Numbers researched / refuted', value: '40 flagged do-not-publish, incl. 3 that failed verification outright' },
+    ],
+  },
+  {
     edition: 'Edition 10.8',
     date: '2026-06-23',
-    bannerText: 'New Chapter 48 — "The Traffic Graph That Lies": agentic SEO done right vs. the vanity version. Two AI-built products, real GSC + Ahrefs numbers — one genuine win (EmailGen, #1 for "business email generator"), one cautionary tale (LinguaLive, ~94% branded clicks).',
-    bannerHref: '/chapters/48-traffic-graph-that-lies/',
     tagline: 'The SEO reading. Most "agentic SEO" wins are self-reported traffic graphs that crater in six months. This chapter pulls the real receipts from two products built by AI agents end to end: Folderly EmailGen — a brand-new subdomain that hit #1 for "business email generator," 467K impressions, third-party traffic value climbing ~$0 → ~$320/mo — and LinguaLive, the cautionary tale whose 153K-impression graph looks like a win until you see ~94% of the clicks are people already typing the brand name. The method is triangulation: GSC for footprint, Ahrefs for the independently-checkable commercial keywords, conversions for truth. Do not trust a graph you cannot cross-check.',
     shipped: [
       'New Chapter 48 — "The Traffic Graph That Lies" (Part V). The anti-vanity case for agentic SEO: agents are the labor, a per-page differentiated dataset is the moat, and Google\'s scaled-content-abuse policy is production-method-neutral — "an agent wrote it" earns zero safe-harbor.',

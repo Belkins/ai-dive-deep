@@ -1,94 +1,29 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  LMARENA, VENDOR_META, LMARENA_SNAPSHOT, LMARENA_LIVE, LMARENA_HF,
-  type Row, type Vendor, type Category,
+  LMARENA, VENDOR_META, LMARENA_SNAPSHOT, LMARENA_LIVE, LMARENA_MIRROR,
+  type Vendor, type Category,
 } from '@/lib/lmarena';
 
-// Category id -> HF datasets-server config. null = no live config (snapshot only).
-const CONFIG: Record<string, string | null> = {
-  text: 'text',
-  webdev: 'webdev',
-  'image-to-webdev': null,
-  document: 'document',
-  vision: 'vision',
-  search: 'search',
-  'text-to-image': 'text_to_image',
-  'image-edit': 'image_edit',
-  'text-to-video': 'text_to_video',
-  'image-to-video': 'image_to_video',
-  'video-edit': 'video_edit',
-};
-
-// HF datasets-server caps `length` at 100. The primary board sits at the
-// top of the `latest` split, so 100 rows always covers the top 12 we show.
-const ENDPOINT = (cfg: string) =>
-  `https://datasets-server.huggingface.co/rows?dataset=lmarena-ai/leaderboard-dataset&config=${cfg}&split=latest&offset=0&length=100`;
-
-function vendorOf(org: string): Vendor {
-  const o = (org || '').toLowerCase();
-  if (o.includes('anthropic')) return 'anthropic';
-  if (o.includes('openai')) return 'openai';
-  if (o.includes('google') || o.includes('deepmind')) return 'google';
-  if (o.includes('meta')) return 'meta';
-  if (o.includes('xai') || o.includes('x.ai')) return 'xai';
-  if (o.includes('zhipu') || o.includes('z.ai')) return 'zhipu';
-  if (o.includes('moonshot')) return 'moonshot';
-  if (o.includes('alibaba') || o.includes('qwen')) return 'alibaba';
-  if (o.includes('baidu')) return 'baidu';
-  if (o.includes('bytedance') || o.includes('dreamina')) return 'bytedance';
-  return 'other';
-}
-
-type Loaded = { rows: Row[]; date: string | null; source: 'live' | 'snapshot' };
+// Snapshot-only, deliberately.
+//
+// This widget used to fetch the lmarena-ai/leaderboard-dataset HF feed live and
+// fall back to the static mirror on failure. That feed was retired when LMArena
+// rebranded to Arena and now returns 404 on every request, so the "live" path
+// was a guaranteed round-trip to a dead endpoint on every tab click, ending in
+// the fallback it always ends in. Arena publishes no replacement public API.
+// Removed rather than left to fail quietly — a fetch that can only fail is not
+// a freshness guarantee, it is a freshness costume.
+//
+// Freshness is instead carried honestly: each board renders its OWN publish date
+// from `freshness`, because Arena recomputes each on its own cadence and the
+// spread across this capture is 34 days.
 
 export default function LMArenaLeaderboard() {
   const cats = LMARENA;
   const [active, setActive] = useState(cats[0].id);
-  const [byCat, setByCat] = useState<Record<string, Loaded>>({});
-  const [loading, setLoading] = useState(false);
-  const fetched = useRef<Set<string>>(new Set());
-
   const cat = cats.find((c) => c.id === active) as Category;
-  const snapshot = (c: Category): Loaded => ({ rows: c.rows, date: null, source: 'snapshot' });
+  const rows = cat.rows;
 
-  useEffect(() => {
-    const cfg = CONFIG[active];
-    if (!cfg || fetched.current.has(active)) return;
-    fetched.current.add(active);
-    let cancelled = false;
-    setLoading(true);
-    fetch(ENDPOINT(cfg))
-      .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
-      .then((d: any) => {
-        if (cancelled) return;
-        const raw: any[] = (d?.rows ?? []).map((x: any) => x.row).filter(Boolean);
-        if (!raw.length) throw new Error('empty');
-        const primary = active === 'text' ? 'overall' : raw[0].category;
-        const seen = new Set<string>();
-        const rows: Row[] = raw
-          .filter((r) => r.category === primary && typeof r.rating === 'number')
-          .sort((a, b) => (a.rank ?? 1e9) - (b.rank ?? 1e9))
-          .filter((r) => (seen.has(r.model_name) ? false : seen.add(r.model_name)))
-          .slice(0, 12)
-          .map((r, i) => ({
-            rank: Math.round(r.rank ?? i + 1),
-            model: String(r.model_name),
-            score: Math.round(r.rating),
-            vendor: vendorOf(r.organization),
-          }));
-        if (!rows.length) throw new Error('no rows after filter');
-        const date = raw[0].leaderboard_publish_date ?? null;
-        setByCat((p) => ({ ...p, [active]: { rows, date, source: 'live' } }));
-      })
-      .catch(() => {
-        if (!cancelled) setByCat((p) => ({ ...p, [active]: snapshot(cat) }));
-      })
-      .finally(() => { if (!cancelled) setLoading(false); });
-    return () => { cancelled = true; };
-  }, [active]);
-
-  const data: Loaded = byCat[active] ?? snapshot(cat);
-  const rows = data.rows;
   const min = useMemo(() => Math.min(...rows.map((r) => r.score)), [rows]);
   const max = useMemo(() => Math.max(...rows.map((r) => r.score)), [rows]);
   const span = Math.max(1, max - min);
@@ -115,9 +50,11 @@ export default function LMArenaLeaderboard() {
     .lmb-track{height:6px;border-radius:3px;background:rgb(var(--line))}
     .lmb-fill{height:6px;border-radius:3px}
     .lmb-sc{font:600 17px/1 var(--font-mono,monospace);color:rgb(var(--fg));text-align:right}
-    .lmb-foot{padding:14px 24px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;font-size:12px;color:rgb(var(--muted))}
+    .lmb-foot{padding:14px 24px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;font-size:12px;color:rgb(var(--muted));border-top:1px solid rgb(var(--line))}
     .lmb-callout{margin:16px 24px 4px;padding:12px 16px;border:1px solid rgb(var(--accent-2) / .5);border-radius:10px;background:rgb(var(--accent-2) / .08);font-size:13px;color:rgb(var(--fg))}
-    @media (max-width:680px){.lmb-row{grid-template-columns:32px 1fr 64px;gap:8px;padding:9px 16px}.lmb-vd,.lmb-track,.lmb-fill{display:none}.lmb-head,.lmb-tabs,.lmb-foot,.lmb-callout{padding-left:16px;padding-right:16px}.lmb-callout{margin-left:16px;margin-right:16px}}
+    .lmb-note{margin:12px 24px 4px;padding:12px 16px;border-left:3px solid rgb(var(--accent));border-radius:0 8px 8px 0;background:rgb(var(--accent) / .06);font-size:12.5px;line-height:1.55;color:rgb(var(--fg) / .9)}
+    .lmb-note b{font-weight:600;color:rgb(var(--accent))}
+    @media (max-width:680px){.lmb-row{grid-template-columns:32px 1fr 64px;gap:8px;padding:9px 16px}.lmb-vd,.lmb-track,.lmb-fill{display:none}.lmb-head,.lmb-tabs,.lmb-foot,.lmb-callout,.lmb-note{padding-left:16px;padding-right:16px}.lmb-callout,.lmb-note{margin-left:16px;margin-right:16px}}
   `;
 
   return (
@@ -127,20 +64,14 @@ export default function LMArenaLeaderboard() {
         <div className="lmb-head">
           <div>
             <div className="text-xs uppercase tracking-wider" style={{ color: 'rgb(var(--accent-2))' }}>
-              LMArena · {cat.name}
+              Arena · {cat.name}
             </div>
             <div className="font-display" style={{ fontSize: '1.4rem', lineHeight: 1.2, marginTop: 4 }}>
               {cat.blurb}
             </div>
           </div>
           <div style={{ textAlign: 'right', fontSize: 12, color: 'rgb(var(--muted))' }}>
-            {loading && !byCat[active] ? (
-              'loading live…'
-            ) : data.source === 'live' ? (
-              <>live · as of {data.date}</>
-            ) : (
-              <>snapshot · {LMARENA_SNAPSHOT}{CONFIG[active] ? ' (live unavailable)' : ''}</>
-            )}
+            captured {LMARENA_SNAPSHOT}
             <div style={{ marginTop: 2 }}>{cat.freshness}</div>
           </div>
         </div>
@@ -163,7 +94,7 @@ export default function LMArenaLeaderboard() {
             const vm = VENDOR_META[r.vendor];
             const w = 8 + ((r.score - min) / span) * 92;
             return (
-              <div className="lmb-row" key={`${r.rank}-${r.model}`}>
+              <div className="lmb-row" key={`${r.rank}-${r.model}-${r.score}`}>
                 <div className="lmb-rk">{r.rank}</div>
                 <div className="lmb-vd" style={{ color: vm.color }}>
                   {vm.label || '—'}
@@ -188,16 +119,23 @@ export default function LMArenaLeaderboard() {
           </div>
         )}
 
+        {cat.note && (
+          <div className="lmb-note">
+            <b>Read the board, not the rank.</b> {cat.note}
+          </div>
+        )}
+
         <div className="lmb-foot">
           <span>
-            Crowdsourced head-to-head votes. Live data via the{' '}
-            <a href={LMARENA_HF} target="_blank" rel="noopener" style={{ color: 'rgb(var(--accent))' }}>
-              lmarena-ai HF dataset
-            </a>
-            ; falls back to a hand-verified snapshot if offline.
+            Crowdsourced head-to-head votes, hand-mirrored on {LMARENA_SNAPSHOT}. Arena ships no public API;
+            ten of eleven boards were cross-checked against a{' '}
+            <a href={LMARENA_MIRROR} target="_blank" rel="noopener" style={{ color: 'rgb(var(--accent))' }}>
+              community mirror
+            </a>{' '}
+            — a corroborating source, never the citation.
           </span>
           <a href={LMARENA_LIVE} target="_blank" rel="noopener" style={{ color: 'rgb(var(--accent))', fontWeight: 600 }}>
-            Open lmarena.ai →
+            Open arena.ai →
           </a>
         </div>
       </div>

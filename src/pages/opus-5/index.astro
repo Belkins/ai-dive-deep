@@ -1,0 +1,293 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import { OPUS5_EFFORT_LADDER, AA_SNAPSHOT } from '@/lib/artificial-analysis';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'what-shipped', label: 'What shipped' },
+  { id: 'effort', label: 'The effort dial' },
+  { id: 'hierarchy', label: 'Where it actually sits' },
+  { id: 'losses', label: 'The rows it loses' },
+  { id: 'migration', label: 'Before you migrate' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+// Every figure below traces to a dated primary source; the ladder is imported
+// from the Artificial Analysis capture so the page and the tier-list panel can
+// never disagree with each other.
+const ladderCostRatio = (
+  OPUS5_EFFORT_LADDER[OPUS5_EFFORT_LADDER.length - 1].costToRunIndexUsd / OPUS5_EFFORT_LADDER[0].costToRunIndexUsd
+).toFixed(1);
+const ladderIndexGain = (
+  OPUS5_EFFORT_LADDER[OPUS5_EFFORT_LADDER.length - 1].intelligence - OPUS5_EFFORT_LADDER[0].intelligence
+).toFixed(1);
+const high = OPUS5_EFFORT_LADDER.find((r) => r.effort === 'high')!;
+const maxRow = OPUS5_EFFORT_LADDER.find((r) => r.effort === 'max')!;
+const highToMaxCost = (maxRow.costToRunIndexUsd / high.costToRunIndexUsd).toFixed(2);
+
+const faqItems = [
+  {
+    q: 'What is Claude Opus 5?',
+    a: "Claude Opus 5 is Anthropic's Opus-tier model, released July 24, 2026. Model id claude-opus-5, 1M-token context window, 128K max output, May 2026 training cutoff — the freshest of any Anthropic model. It prices at $5 per million input tokens and $25 per million output, unchanged from Opus 4.8, and Anthropic positions it as coming close to the frontier intelligence of Claude Fable 5 at half the price. It is the default model on Claude Max and the strongest model available on Claude Pro.",
+  },
+  {
+    q: 'How much does Claude Opus 5 cost?',
+    a: 'API pricing is $5 per million input tokens and $25 per million output tokens — identical to Claude Opus 4.8 and exactly half of Claude Fable 5. Cache writes are $6.25 (5-minute) or $10.00 (1-hour), cache hits $0.50, and the Batch API halves input and output to $2.50 and $12.50. One rate carries a premium: Fast mode, a research preview available on the first-party Claude API only, is $10 per million input and $50 per million output — double the base rate. There is no long-context surcharge: a 900,000-token request bills at the same per-token rate as a 9,000-token one.',
+  },
+  {
+    q: 'What is the effort parameter on Claude Opus 5?',
+    a: 'Effort has five settings — low, medium, high, xhigh and max — set via output_config. The API default is high, and Anthropic documents high as equivalent to not setting the parameter at all. Effort shapes all tokens, including tool calls and thinking, and it is a behavioral signal rather than a strict token budget. It does not reliably shorten visible responses on Opus 5, so length must be prompted for separately.',
+  },
+  {
+    q: 'Is Claude Opus 5 better than Claude Fable 5?',
+    a: 'They are statistically indistinguishable in aggregate capability, and Opus 5 costs half as much. Independent aggregate indices disagree about the order, and every gap sits inside the evaluators’ own stated confidence intervals. Anthropic’s own routing guidance keeps Fable 5 as the highest available capability while recommending Opus 5 as the starting point for complex agentic coding and enterprise work.',
+  },
+  {
+    q: 'Does Claude Opus 5 deprecate Claude Opus 4.8?',
+    a: 'No. Opus 5 deprecates nothing. Opus 4.8, 4.7, 4.6 and 4.5 all remain active, and Opus 4.8 is the automatic fallback target when an Opus 5 safety classifier flags a request in the Claude apps, Claude Code and Cowork. Two capabilities do go backwards versus Opus 4.8: Priority Tier is not supported on Opus 5, and the server-side web_fetch tool is not available on it.',
+  },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<BaseLayout
+  title="Claude Opus 5 — release, pricing, the effort dial, and where it sits"
+  description="Claude Opus 5 read by an operator: shipped 2026-07-24 at $5/$25, a five-position effort dial, and the hierarchy question the launch post does not answer."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="eyebrow eyebrow-loud mb-3 text-accent">Model file · Opus 5</div>
+    <h1>Claude Opus 5 — the frontier stopped being the expensive one.</h1>
+    <p class="mt-3 text-lg text-muted">
+      For as long as these leaderboards have existed, the most capable model was also the priciest. On July 24, 2026 that stopped being true. Opus 5 took the top of the independent index at <em>lower</em> cost per task than the model below it — and shipped with a dial that lets you spend a sixth as much for most of the capability.
+    </p>
+    <p class="mt-2 text-sm text-muted">
+      Sourced from <a href="https://www.anthropic.com/news/claude-opus-5" rel="noopener">Anthropic's announcement</a>, the 194-page <a href="https://www.anthropic.com/claude-opus-5-system-card" rel="noopener">Opus 5 System Card</a>, Anthropic's live pricing and model docs, <a href="https://artificialanalysis.ai/models/claude-opus-5" rel="noopener">Artificial Analysis</a> and <a href="https://arcprize.org/results/anthropic-claude-opus-5" rel="noopener">ARC Prize</a>. The tier discipline is <a href={`${base}/tier-list/`}>Ch 24</a>. What to actually run on it lives on <a href={`${base}/opus-5/use-cases/`}>the use-cases page</a>.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="rounded-xl border p-5 border-line bg-accent/5">
+            <p class="m-0 leading-relaxed"><strong>Claude Opus 5</strong> shipped July 24, 2026. <code>claude-opus-5</code>, 1M context, 128K output, May 2026 cutoff. <strong>$5/$25 per Mtok</strong> — unchanged from Opus 4.8, half of Fable 5. Default on Claude Max, top model on Pro. It deprecates nothing. The headline feature is a five-position <strong>effort dial</strong>, and the single most important thing to know about it is that <strong>the API default is <code>high</code> while every launch benchmark number is reported at <code>max</code></strong>. Two things go backwards: no Priority Tier, no server-side <code>web_fetch</code>.</p>
+          </div>
+        </div>
+
+        <div id="what-shipped" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What shipped — the specs that change decisions</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm border-collapse">
+                <tbody>
+                  <tr class="border-b border-line"><td class="py-2 pr-4 text-muted">Model id</td><td class="py-2"><code>claude-opus-5</code> — dateless, but still a pinned snapshot, not an evergreen alias</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-4 text-muted">Price</td><td class="py-2"><strong>$5 in / $25 out</strong> per Mtok · batch $2.50 / $12.50 · cache hits $0.50 · Fast mode $10 / $50 (research preview, 2× base)</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-4 text-muted">Context</td><td class="py-2">1,000,000 tokens — default <em>and</em> maximum, no smaller variant, <strong>no long-context surcharge</strong></td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-4 text-muted">Max output</td><td class="py-2">128,000 tokens (300,000 on the Batch API beta)</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-4 text-muted">Training cutoff</td><td class="py-2"><strong>May 2026</strong> — four months fresher than Fable 5 and Sonnet 5, both January 2026</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-4 text-muted">Thinking</td><td class="py-2">Adaptive only, <strong>on by default</strong>. <code>thinking.type: "enabled"</code> is gone; disabling it 400s at <code>xhigh</code> and <code>max</code></td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-4 text-muted">Plans</td><td class="py-2">Default on Claude Max, strongest model on Claude Pro. <em>Anthropic's launch post names only Max and Pro and is silent on Team and Enterprise — so this page doesn't claim them either.</em></td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-4 text-muted">Not supported</td><td class="py-2">Priority Tier · the server-side <code>web_fetch</code> tool</td></tr>
+                  <tr><td class="py-2 pr-4 text-muted">Earliest retirement</td><td class="py-2">not sooner than 2027-07-24</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>The pricing line worth pausing on is the one that isn't in the announcement. <strong>There is no long-context surcharge.</strong> A 900,000-token request bills at exactly the per-token rate of a 9,000-token one. GPT-5.6, by contrast, charges 2× input and 1.5× output above 272K. If your workload is "put the whole repository in the window and let it think," that is a structural pricing advantage, not a benchmark one — and benchmarks will never show it to you.</p>
+            <p>The line that quietly works against you: <strong>the tokenizer tax.</strong> Claude 4.7 and later produce roughly 30% more tokens for the same text than Sonnet 4.6 and earlier. Per-token price is flat; token count is not. Any cost-per-task comparison you carry over from a pre-4.7 model is inflated by about 30% before you start measuring anything.</p>
+          </div>
+        </div>
+
+        <div id="effort" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The effort dial — the only lever that moves capability and the invoice together</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Five settings, no beta header, set via <code>output_config: {'{'}"effort": "…"{'}'}</code>. Anthropic's own descriptions and intended uses:</p>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr class="border-b border-line text-left text-xs uppercase tracking-wider text-muted">
+                    <th class="py-2 pr-3 font-semibold">Effort</th>
+                    <th class="py-2 pr-3 font-semibold">What Anthropic says it's for</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-line"><td class="py-2 pr-3"><code>max</code></td><td class="py-2 pr-3">"Absolute maximum capability with no constraints on token spending."</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-3"><code>xhigh</code></td><td class="py-2 pr-3">Long-running agentic and coding tasks over 30 minutes, token budgets in the millions</td></tr>
+                  <tr class="border-b border-line bg-accent/5"><td class="py-2 pr-3"><code>high</code> <span class="text-[10px] uppercase tracking-wider text-accent">default</span></td><td class="py-2 pr-3">"High capability. <strong>Equivalent to not setting the parameter.</strong>"</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-3"><code>medium</code></td><td class="py-2 pr-3">Agentic tasks balancing speed, cost and performance</td></tr>
+                  <tr><td class="py-2 pr-3"><code>low</code></td><td class="py-2 pr-3">"Most efficient… simpler tasks, <strong>such as subagents</strong>"</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <Callout type="warn" title="The caveat that sits under every number on this page">
+              <strong>The API default is <code>high</code>. Anthropic's headline benchmark table is <code>max</code>.</strong> Anyone calling the API without setting <code>effort</code> is running a materially weaker configuration than the launch table describes — and the crowd leaderboard, which lists the model as <code>claude-opus-5-high</code>, is voting on the default rather than the table. This is not a small print detail; it is the difference between rank 1 and rank 5 on the same independent index.
+            </Callout>
+
+            <p>Artificial Analysis measured the whole ladder on launch day. This is the most decision-useful table in the release, because it is the only one that prices the dial:</p>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr class="border-b border-line text-left text-xs uppercase tracking-wider text-muted">
+                    <th class="py-2 pr-3 font-semibold">Effort</th>
+                    <th class="py-2 pr-3 font-semibold text-right">Index</th>
+                    <th class="py-2 pr-3 font-semibold text-right">Rank /190</th>
+                    <th class="py-2 pr-3 font-semibold text-right">Cost to run the Index</th>
+                    <th class="py-2 pr-3 font-semibold text-right">Output tokens</th>
+                    <th class="py-2 font-semibold text-right">Time to first token</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {OPUS5_EFFORT_LADDER.map((r) => (
+                    <tr class={r.effort === 'high' ? 'border-b border-line bg-accent/5' : 'border-b border-line'}>
+                      <td class="py-2 pr-3"><code>{r.effort}</code>{r.effort === 'high' && <span class="ml-2 text-[10px] uppercase tracking-wider text-accent">default</span>}</td>
+                      <td class="py-2 pr-3 text-right font-mono">{r.intelligence.toFixed(1)}</td>
+                      <td class="py-2 pr-3 text-right font-mono text-muted">#{r.rankOf190}</td>
+                      <td class="py-2 pr-3 text-right font-mono">${r.costToRunIndexUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td class="py-2 pr-3 text-right font-mono text-muted">{r.outputTokensM}M</td>
+                      <td class="py-2 text-right font-mono text-muted">{r.ttftSeconds.toFixed(2)}s</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p class="text-xs text-muted">Artificial Analysis, 2026-07-24 · captured {AA_SNAPSHOT}. "Cost to run the Index" is what AA paid to run the entire benchmark suite at that setting — <em>not</em> a per-task figure. Different denominator, kept separate on purpose.</p>
+
+            <p>The arithmetic that should change your defaults: <strong>{ladderCostRatio}× the cost from <code>low</code> to <code>max</code>, for {ladderIndexGain} index points.</strong> From the default <code>high</code> to <code>max</code> it is {highToMaxCost}× the spend for 1.8 points. Time-to-first-token scales 18× across the ladder while throughput stays flat at 52–56 tokens per second — you are not buying speed at any setting, only depth.</p>
+
+            <PullQuote>More effort is not monotonically better. On agentic coding evals the score peaks at medium and declines above high — because the model starts making changes the task didn't ask for.</PullQuote>
+
+            <p>That is the genuinely counter-intuitive finding, and it is corroborated three ways. Cognition ran FrontierCode 1.1 and got Opus 5's best Main score <strong>at <code>medium</code></strong>. Anthropic documents the decline itself: <em>"a decline in FrontierCode score above high effort… Opus 5 at these effort levels [makes] more changes than the task requires (e.g., refactoring)."</em> And on Anthropic's own FrontierBench, <code>xhigh</code> (44.4) beats <code>max</code> (43.3). On GDPval-AA v2, <code>xhigh</code> scores 1827 using <strong>25% fewer output tokens</strong> than <code>max</code> and still beats every other model on the board.</p>
+
+            <Callout type="tip" title="Anthropic reversed its own advice">
+              The Opus 4.7 and 4.8 docs said <em>"Start with <code>xhigh</code> for coding and agentic use cases."</em> The Opus 5 docs say: <em>"Start with <code>high</code>, the default… use <code>low</code> and <code>medium</code> liberally as your primary control for token cost and response time… <strong>If you carried effort settings over from an earlier model, run a fresh effort sweep on your evals rather than reusing them.</strong>"</em> If you inherited an <code>xhigh</code> habit from Opus 4.8, you are now paying more for a worse result on some task classes.
+            </Callout>
+
+            <p>Two mechanics that bite in production. <strong>Effort does not shorten output</strong> — Anthropic, verbatim: <em>"on Claude Opus 5, changing effort does not reliably shorten responses, so prompt for length instead."</em> And <strong>changing effort mid-conversation invalidates the prompt cache</strong>, because effort shapes the rendered prompt. Pick one level at the start of a long cached session and stay there.</p>
+          </div>
+        </div>
+
+        <div id="hierarchy" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Where it actually sits — five sources, three different winners</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>This is the most confused question of the release, and the confusion is legitimate: the evidence genuinely splits. Every gap below falls inside the evaluators' own stated confidence intervals.</p>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr class="border-b border-line text-left text-xs uppercase tracking-wider text-muted">
+                    <th class="py-2 pr-3 font-semibold">Source</th>
+                    <th class="py-2 pr-3 font-semibold">Tier</th>
+                    <th class="py-2 pr-3 font-semibold">Winner</th>
+                    <th class="py-2 font-semibold">The gap</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-line"><td class="py-2 pr-3">Anthropic docs</td><td class="py-2 pr-3 text-muted">vendor</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">"the highest available capability" — but <em>start</em> with Opus 5</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-3">Artificial Analysis</td><td class="py-2 pr-3 text-muted">independent</td><td class="py-2 pr-3 text-accent">Opus 5</td><td class="py-2">60.69 vs 59.86 — <strong>0.83 points, against a stated ±1%</strong></td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-3">Vals AI Index</td><td class="py-2 pr-3 text-muted">independent</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">75.14% vs 74.82% (±1.35) — 0.32 points, inside the interval</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-3">Arena Text</td><td class="py-2 pr-3 text-muted">crowd</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">1508±6 vs 1495±8 — intervals overlap</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-3">tbench.ai Terminal-Bench 2.1</td><td class="py-2 pr-3 text-muted">independent</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">Claude Code + Fable 5 at 83.8% — <strong>Opus 5 has no submission</strong></td></tr>
+                  <tr><td class="py-2 pr-3">Anthropic's own Table 8.1.A</td><td class="py-2 pr-3 text-muted">vendor</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">SWE-bench Pro 80.0 vs 79.2</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <PullQuote>Opus 5 and Fable 5 are statistically indistinguishable in aggregate capability. Opus 5 costs exactly half. That is the whole finding, and it is a pricing event more than a capability one.</PullQuote>
+
+            <p>Fable 5 remains the vendor-declared ceiling and holds both the crowd crown and the official Terminal-Bench crown. Opus 5's one uncontested win is <strong>ARC-AGI-3</strong> — 30.16% against GPT-5.6 Sol's 13.33% on the same Public Demo set — and that is the one to trust, because <a href="https://arcprize.org/results/anthropic-claude-opus-5" rel="noopener">ARC Prize administered it</a>, not Anthropic. Read the config even there: ARC Prize evaluated <code>high</code> effort only, "due to the short testing window." No max-effort ARC-AGI-3 number for Opus 5 exists.</p>
+
+            <Callout type="note" title="Don't forget the model you can't buy">
+              <strong>Mythos 5</strong> is Fable-5-priced, invitation-only, and still beats Opus 5 on HealthBench Professional (66.0 vs 59.8 length-adjusted), Chartography without tools, GDP.pdf with tools, and exploit development. It does not appear in this page's tables for the reason <a href={`${base}/tier-list/`}>Ch 24</a> gives: capability ceilings you cannot purchase are not tier-list entries. One labelling trap worth knowing — Anthropic's own summary-table column marked "Fable 5" in the HealthBench Professional row is footnoted as Mythos 5.
+            </Callout>
+
+            <p>Against <strong>Sonnet 5</strong> ($2/$10 through August 31, then $3/$15) the split is cleaner. Per-Index-task, Sonnet 5 costs $1.53 to Opus 5's $2.03 — but scores 53.4 to 60.7, and loses badly exactly where this audience lives: FrontierBench 14.6 vs 43.5 on the public board, and Toolathlon Pass@1 74.7 vs 80.6. Sonnet 5 is the volume tier. Opus 5 is the long-horizon tier.</p>
+          </div>
+        </div>
+
+        <div id="losses" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The rows it loses — six of seventeen, in Anthropic's own table</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <p>Secondary coverage buried these. They are in Anthropic's own summary table, and they are the fastest way to calibrate what the launch is and isn't.</p>
+            <ul class="space-y-2 list-none p-0 m-0 text-sm">
+              <li class="rounded-lg border p-3 border-line"><strong>SWE-bench Pro</strong> — Fable 5 wins, 80.0 to 79.2</li>
+              <li class="rounded-lg border p-3 border-line"><strong>DeepSWE v1.1</strong> — GPT-5.6 Sol wins, 72.7 to 68.8</li>
+              <li class="rounded-lg border p-3 border-line"><strong>FrontierCode Main</strong> — Fable 5 wins by 0.1 (53.5 to 53.4)</li>
+              <li class="rounded-lg border p-3 border-line"><strong>Humanity's Last Exam, no tools</strong> — Fable 5 wins by 0.2 (56.5 to 56.3)</li>
+              <li class="rounded-lg border p-3 border-line"><strong>HealthBench Professional, length-adjusted</strong> — Mythos 5 wins, 66.0 to 59.8</li>
+              <li class="rounded-lg border p-3 border-line"><strong>ARC-AGI-2</strong> — GPT-5.6 Sol wins, 92.5 to 90.42</li>
+            </ul>
+
+            <h3 class="font-display text-2xl mt-8 mb-3">And one row that needs its own warning</h3>
+            <Callout type="warn" title="FrontierBench: both Anthropic scores are blends of two models">
+              On Anthropic's internal FrontierBench run, <strong>Opus 4.8 silently substituted whenever a safety classifier refused</strong> — 5% of API calls in 4% of Opus 5's trials, and 42% of calls on 26% of Fable 5's. GPT-5.6 Sol never triggered a classifier. So "Opus 5 beats Fable 5 by 10 points on agentic coding" is comparing one two-model blend against a heavier two-model blend, with a clean single-model score in third place. The public FrontierBench board independently corroborates the ranking — Opus 5 leads it at 43.5 ±1.65 — but disagrees about the rival: Anthropic re-ran GPT-5.6 Sol itself at 37.5, while the public board scores Sol at 34.4 on OpenAI's own agent.
+            </Callout>
+
+            <p class="text-sm text-muted">Benchmarks Anthropic published <em>no</em> Opus 5 number for, in either the launch post or the 194-page system card: GPQA Diamond, AIME, MMMU, MMLU-Pro, τ-bench and its variants, LiveCodeBench, and Terminal-Bench at any version. If you see an Opus 5 figure for one of these attributed to Anthropic, it is not real. Terminal-Bench appears to have been superseded internally by FrontierBench v0.1 — described as "a successor to Terminal-Bench 2.1 developed by the same team." Likewise, METR has published no time horizon for Opus 5; its page was last updated 2026-05-08, and circulating figures trace to a prediction market, not a measurement.</p>
+          </div>
+        </div>
+
+        <div id="migration" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Four things to do before you migrate anything</h2>
+          <div class="space-y-4 leading-relaxed text-fg/88">
+            <ol class="space-y-3 list-none p-0 m-0">
+              <li class="rounded-lg border p-4 border-line">
+                <strong>1. Raise <code>max_tokens</code>.</strong> Adaptive thinking is now <em>on by default</em>, and <code>max_tokens</code> has always been a hard limit on thinking plus response text — so workloads that ran without thinking on Opus 4.8 now hit the ceiling. Anthropic recommends starting at <strong>64K</strong> for <code>xhigh</code> and <code>max</code>.
+                <p class="mt-1 mb-0 text-sm text-muted">This is the number-one migration footgun. Code that moved over without raising the ceiling truncates mid-sentence, and the failure looks like a model regression rather than a config error.</p>
+              </li>
+              <li class="rounded-lg border p-4 border-line">
+                <strong>2. Delete every verification instruction you carried over.</strong> Anthropic, verbatim: <em>"If your prompt contains explicit verification instructions ('include a final verification step for any non-trivial task,' 'use a subagent to verify'), <strong>remove them</strong>: instructions like these cause over-verification on Claude Opus 5, and removing them reduces wasted tokens with no loss in quality."</em>
+                <p class="mt-1 mb-0 text-sm text-muted">Same for "double-check your answer," and the same for legacy harness scaffolding. The behaviour you were compensating for is gone; the compensation is now pure cost.</p>
+              </li>
+              <li class="rounded-lg border p-4 border-line">
+                <strong>3. Cap subagent spawning before you upgrade Claude Code past v2.1.219.</strong> Nesting depth silently went from 1 to 3 on the same day as a model Anthropic describes as delegating to subagents "more readily than prior models."
+                <p class="mt-1 mb-0 text-sm text-muted">Set <code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1</code> to disable nesting; <code>CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION</code> defaults to 200. A depth-3 tree of Opus 5 leaves at <code>high</code> is the documented anti-pattern — Anthropic's own effort table names <code>low</code> as the subagent setting, and its model matrix names Haiku 4.5. See <a href={`${base}/swarms/`}>the swarm chapter</a> for the shape of the bill.</p>
+              </li>
+              <li class="rounded-lg border p-4 border-line">
+                <strong>4. Run a fresh effort sweep.</strong> Anthropic explicitly says not to inherit <code>xhigh</code> from Opus 4.7 or 4.8, and Cognition's data says Opus 5 peaks at <code>medium</code> on FrontierCode.
+                <p class="mt-1 mb-0 text-sm text-muted">This is a <a href={`${base}/chapters/25-evals-or-hope/`}>Ch 25</a> job, and it is the cheapest hour you will spend this quarter — the ladder above says the wrong default costs {highToMaxCost}× for 1.8 points.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <div class="space-y-4">
+            {faqItems.map((f) => (
+              <details class="rounded-lg border p-4 border-line">
+                <summary class="cursor-pointer font-semibold">{f.q}</summary>
+                <p class="mt-3 mb-0 leading-relaxed text-fg/88 text-sm">{f.a}</p>
+              </details>
+            ))}
+          </div>
+
+          <div class="mt-10 rounded-xl border p-5 border-line bg-accent/5">
+            <div class="text-[10px] uppercase tracking-wider mb-2 text-accent">Next</div>
+            <p class="m-0 leading-relaxed"><a href={`${base}/opus-5/use-cases/`}><strong>Opus 5 use cases — what to actually run on it</strong></a>: seven ranked jobs with the effort level for each, eleven places it's the wrong choice, and the practitioner reception separated from the measurement. Then <a href={`${base}/tier-list/`}>the tier list</a> for how it places against everything else.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>

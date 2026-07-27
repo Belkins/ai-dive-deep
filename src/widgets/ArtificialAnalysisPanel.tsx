@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { VENDOR_META, type Vendor } from '@/lib/lmarena';
 import {
   AA_MODELS, AA_SNAPSHOT, AA_INDEX_VERSION, AA_SOURCE_URL,
-  AA_METHODOLOGY_URL, AA_METHODOLOGY, type AAMetric, type AAModel,
+  AA_METHODOLOGY_URL, AA_METHODOLOGY, AA_DISCLOSURE, AA_PRECISION,
+  type AAMetric, type AAModel,
 } from '@/lib/artificial-analysis';
 
 type SortDef = {
@@ -18,7 +19,7 @@ type SortDef = {
 const SORTS: SortDef[] = [
   { key: 'intelligence', label: 'Intelligence', unit: 'Index v4.1', higherBetter: true,
     value: (m) => m.intelligence, fmt: (v) => v.toFixed(1) },
-  { key: 'cost', label: 'Cost / task', unit: 'USD, lower wins', higherBetter: false,
+  { key: 'cost', label: 'Cost / task', unit: 'USD per Index task', higherBetter: false,
     value: (m) => m.costPerTaskUsd, fmt: (v) => `$${v < 1 ? v.toFixed(3) : v.toFixed(2)}` },
   { key: 'speed', label: 'Speed', unit: 'tok/s', higherBetter: true,
     value: (m) => m.outputTokensPerSec, fmt: (v) => Math.round(v).toString() },
@@ -62,10 +63,20 @@ export default function ArtificialAnalysisPanel() {
     return 8 + good * 92;
   };
 
-  // dynamic intelligence-vs-cost callout — computed, never hardcoded, so it can't drift
+  // Dynamic intelligence-vs-cost callout — computed, never hardcoded, so it can't
+  // drift. It previously ASSERTED that the smartest model is also the priciest,
+  // which was true on the 2026-06-16 board and became false on 2026-07-27 the
+  // moment Opus 5 took #1 at $2.03 while Fable 5 sat at $2.75. A sentence that
+  // only holds for one snapshot is a stat-drift bug with a delayed fuse, so the
+  // relationship is now derived rather than assumed.
   const smartest = [...AA_MODELS].sort((a, b) => b.intelligence - a.intelligence)[0];
   const cheapest = [...AA_MODELS].sort((a, b) => a.costPerTaskUsd - b.costPerTaskUsd)[0];
-  const multiple = (smartest.costPerTaskUsd / cheapest.costPerTaskUsd);
+  const priciest = [...AA_MODELS].sort((a, b) => b.costPerTaskUsd - a.costPerTaskUsd)[0];
+  const multiple = smartest.costPerTaskUsd / cheapest.costPerTaskUsd;
+  const smartestIsPriciest = smartest.model === priciest.model;
+  // How much of the leader's capability the cheapest row actually delivers.
+  const cheapShare = Math.round((cheapest.intelligence / smartest.intelligence) * 100);
+  const cheapCostShare = (cheapest.costPerTaskUsd / smartest.costPerTaskUsd) * 100;
 
   // compute staleness only after mount, so SSR and first client render agree
   // (build-time date vs view-time date would otherwise be a hydration mismatch)
@@ -176,9 +187,20 @@ export default function ArtificialAnalysisPanel() {
         </div>
 
         <div className="aap-callout">
-          <strong>{smartest.model}</strong> tops the Index ({smartest.intelligence.toFixed(1)}) — and is the
-          most expensive per task on this board at ${smartest.costPerTaskUsd.toFixed(2)},
-          about {Math.round(multiple)}× <strong>{cheapest.model}</strong> (${cheapest.costPerTaskUsd.toFixed(3)}).
+          <strong>{smartest.model}</strong> tops the Index ({smartest.intelligence.toFixed(1)}) at $
+          {smartest.costPerTaskUsd.toFixed(2)} per Index task
+          {smartestIsPriciest ? (
+            <> — and is also the most expensive row on this board.</>
+          ) : (
+            <>
+              {' '}— and is <em>not</em> the most expensive row on this board:{' '}
+              <strong>{priciest.model}</strong> pays ${priciest.costPerTaskUsd.toFixed(2)} for{' '}
+              {(smartest.intelligence - priciest.intelligence).toFixed(1)} fewer points. The frontier stopped
+              being the priciest thing on the menu.
+            </>
+          )}{' '}
+          Meanwhile <strong>{cheapest.model}</strong> delivers {cheapShare}% of the leader&rsquo;s Index at{' '}
+          {cheapCostShare.toFixed(1)}% of its cost per task — a {Math.round(multiple)}× price ratio.
           Capability is the vanity metric; cost-per-task is the one that shows up on the invoice. Sort by it.
         </div>
 
@@ -190,6 +212,9 @@ export default function ArtificialAnalysisPanel() {
             ))}
           </ul>
           <div style={{ marginTop: 6 }}>v4.1 retired {AA_METHODOLOGY.retired.join(', ')} to chase agentic signal. It's a weighted composite — change the weights and you change the king. Independent buys disinterest, not infallibility: read it as a third reading that disagrees usefully with the crowd and the labs, not a tiebreaker that overrules them.</div>
+          <div style={{ marginTop: 8 }}><strong>Precision.</strong> {AA_PRECISION} Treat the top of this board as a tie, not a ranking.</div>
+          <div style={{ marginTop: 8 }}><strong>Disclosure.</strong> {AA_DISCLOSURE}</div>
+          <div style={{ marginTop: 8 }}><strong>One column, one denominator.</strong> AA publishes two different numbers it calls "cost per task": the Intelligence Index one shown here, and a much larger AA-Briefcase one (Opus 5 at max: $17.79 a task, against Fable 5's $22.30). Secondary coverage quotes them interchangeably. This column is always the Index.</div>
         </details>
 
         <div className="aap-foot">

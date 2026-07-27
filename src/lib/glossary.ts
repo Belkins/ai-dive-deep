@@ -403,6 +403,24 @@ export const glossary: Record<string, GlossaryEntry> = {
       'Anthropic\'s most capable generally available model (released June 9, 2026; model id <code>claude-fable-5</code>). A Mythos-class model made safe for general use: safety classifiers gate offensive-cyber, bio/chem, and distillation requests — fallback to Opus 4.8 is built into the Claude apps and Managed Agents, opt-in on the API (blocked API requests error, unbilled). $10/$50 per Mtok, 1M context, 128K output. Also available as an advisor model cheaper workers call mid-task. See <a href="/fable-5/">the model file</a>.',
     related: ['Mythos 5', 'Mythos-class'],
   },
+  'Opus 5': {
+    term: 'Opus 5',
+    definition:
+      'Anthropic\'s Opus-tier model, released July 24, 2026 (model id <code>claude-opus-5</code>). $5/$25 per Mtok — unchanged from Opus 4.8, half of <a href="/glossary/#Fable+5">Fable 5</a> — with a 1M context window, 128K output, and a May 2026 training cutoff, the freshest of any Anthropic model. Default on Claude Max, strongest model on Claude Pro. It deprecates nothing, and two things go backwards versus Opus 4.8: no Priority Tier and no server-side <code>web_fetch</code>. Its headline feature is the <a href="/glossary/#Effort+dial">effort dial</a>. In aggregate capability it is statistically indistinguishable from Fable 5 at half the price — which makes it a pricing event more than a capability one. See <a href="/opus-5/">the model file</a> and <a href="/opus-5/use-cases/">the use cases</a>.',
+    related: ['Effort dial', 'Fable 5', 'Sonnet 5'],
+  },
+  'Effort dial': {
+    term: 'Effort dial',
+    definition:
+      'The five-position <code>effort</code> parameter on <a href="/glossary/#Opus+5">Opus 5</a> — <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code>, <code>max</code> — that trades capability against token spend and latency. <strong>The API default is <code>high</code>; every vendor launch benchmark is reported at <code>max</code></strong>, so an app that never sets the parameter is running a different configuration from the one the launch table describes. Measured span: 6.9× cost from <code>low</code> to <code>max</code> for about ten index points. It is not monotonic — on agentic coding evals the score peaks at <code>medium</code> and declines above <code>high</code>, because the model starts making changes the task did not require. It also does not shorten output (prompt for length instead), and changing it mid-conversation invalidates the prompt cache. Not the same thing as <a href="/glossary/#%2Feffort">/effort</a>, the Claude Code slash command — that sets the dial from the CLI; this is the API parameter it maps onto. See <a href="/opus-5/#effort">the effort ladder</a>.',
+    related: ['Opus 5', '/effort'],
+  },
+  'Sonnet 5': {
+    term: 'Sonnet 5',
+    definition:
+      'Anthropic\'s volume tier, released June 30, 2026 (model id <code>claude-sonnet-5</code>). $2/$10 per Mtok as an introductory price, stepping to $3/$15 on September 1, 2026. 1M context, 128K output, January 2026 cutoff, adaptive thinking on by default. It is the right call for high-volume well-defined work and the wrong one for long-horizon agent loops, where <a href="/glossary/#Opus+5">Opus 5</a> beats it by a wide margin on the agentic boards. Uses the tokenizer introduced with Opus 4.7, which produces roughly 30% more tokens for the same text than Sonnet 4.6 and earlier — per-token price is flat, token count is not.',
+    related: ['Opus 5', 'Fable 5'],
+  },
   'Mythos 5': {
     term: 'Mythos 5',
     definition:
@@ -436,8 +454,8 @@ export const glossary: Record<string, GlossaryEntry> = {
   '/effort': {
     term: '/effort',
     definition:
-      'The Opus 4.8 slash command that sets how hard the model thinks before it acts: low → medium → high (the default) → xhigh → max, with a separate <a href="/glossary/#ultracode">ultracode</a> notch. Most people leave it on the default and never feel the ceiling. See <a href="/dynamic-workflows/#the-on-ramp">Dynamic Workflows — turning it on</a>.',
-    related: ['ultracode', 'Dynamic workflows'],
+      'The Claude Code slash command that sets how hard the model thinks before it acts: low → medium → high (the default) → xhigh → max, with a separate <a href="/glossary/#ultracode">ultracode</a> notch. Introduced on Opus 4.7/4.8; on <a href="/glossary/#Opus+5">Opus 5</a> it maps onto the API <a href="/glossary/#Effort+dial">effort dial</a>, where the guidance inverted — Anthropic now says start at <code>high</code> rather than <code>xhigh</code>, and says explicitly not to carry old effort settings over. Most people leave it on the default and never feel the ceiling. See <a href="/dynamic-workflows/#the-on-ramp">Dynamic Workflows — turning it on</a>.',
+    related: ['Effort dial', 'ultracode', 'Dynamic workflows'],
   },
   'ultracode': {
     term: 'ultracode',

@@ -17,6 +17,53 @@ export type ResearchNote = {
 
 export const RESEARCH_NOTES: ResearchNote[] = [
   {
+    slug: 'opus-5-effort-dial',
+    title: 'Opus 5 ships — and the frontier stops being the most expensive thing on the menu',
+    source: 'Anthropic announcement + 194-page System Card · Artificial Analysis · ARC Prize Foundation · Cognition · Zapier · CodeRabbit',
+    date: '2026-07-24',
+    kind: 'models',
+    tagline: 'Fable-5-class intelligence at half the sticker. But the launch table runs at max effort, the API default is high, and on debugging the expensive setting scores lower.',
+    takeaway: [
+      "Claude Opus 5 shipped on July 24 at $5/$25 per Mtok — unchanged from Opus 4.8, exactly half of Fable 5 — with a 1M context window, a May 2026 training cutoff (the freshest of any Anthropic model), and default placement on Claude Max. It deprecates nothing. Anthropic's own framing: \"a thoughtful and proactive model that comes close to the frontier intelligence of Claude Fable 5 at half the price.\"",
+      "The structural finding is a pricing event, not a capability one. For as long as these boards have existed, the most capable model was also the priciest. That link broke: Artificial Analysis put Opus 5 at the top of its Intelligence Index at $2.03 per Index task while Fable 5 sat below it at $2.75. Three independent aggregates now disagree about the order — AA has Opus 5 first by 0.83 points against its own stated ±1% interval, Vals AI has Fable 5 first by 0.32 against ±1.35, and Arena's crowd has Fable 5 first with overlapping intervals. All three gaps are inside their own error bars. The defensible sentence is \"statistically indistinguishable at half the price,\" never \"better.\"",
+      "The headline feature is a five-position effort dial, and it carries the caveat that sits under every number in the release: the API default is `high`, while Anthropic's entire launch benchmark table is reported at `max`. Anyone calling the API without setting the parameter is running a materially different configuration from the one the table describes — and Arena, which lists the model as `claude-opus-5-high`, is voting on the default. Measured span across the ladder: 6.9× cost and 8.3× output tokens from `low` to `max`, for about ten index points. From the default to `max`: 1.94× spend for 1.8 points.",
+      "The genuinely counter-intuitive part is that more effort is not monotonically better, and it is corroborated three ways rather than one. Cognition ran FrontierCode 1.1 and found Opus 5's best score at MEDIUM effort. Anthropic documents the decline in its own words — \"a decline in FrontierCode score above high effort… Opus 5 at these effort levels [makes] more changes than the task requires (e.g., refactoring).\" And practitioners report the same shape independently: above `high`, it starts making changes the task didn't ask for. Anthropic also reversed its own prior guidance, which told operators to start at `xhigh` on Opus 4.7/4.8, and now says explicitly to run a fresh effort sweep rather than inherit the old setting.",
+      "Two things belong on the discount side of the ledger. On Anthropic's internal FrontierBench run, Opus 4.8 silently substituted whenever a safety classifier refused — 4% of Opus 5's trials and 26% of Fable 5's — so both Anthropic scores are blends of two models while the GPT-5.6 comparison score is clean. And Opus 5 is missing from most independent leaderboards for its own headline benchmarks: no submission on tbench.ai's Terminal-Bench, not on Scale's SWE-bench Pro board, not on the official OSWorld 2.0 board. The exception is the one that matters most, and it cuts the other way — the public FrontierBench board does list Opus 5, at 43.5 ±1.65, ranked first, independently corroborating Anthropic's own 43.3. What the two boards disagree about is the rival: Anthropic re-ran GPT-5.6 Sol itself at 37.5, the public board scores it 34.4 on OpenAI's own agent. The other launch number that earns full credit is ARC-AGI-3 at 30.16% — because ARC Prize administered it, not Anthropic.",
+    ],
+    implications: [
+      'Run an effort sweep before you run anything else. Anthropic says not to inherit `xhigh` from Opus 4.7/4.8, and the measured ladder says the wrong default costs 1.94× for 1.8 index points. Start at `high`, drop to `medium` for automation and in-repo debugging (where the score actually peaks), use `low` for subagents. This is a Ch 25 job and the cheapest hour of the quarter.',
+      'Cap subagent depth before upgrading Claude Code past v2.1.219. Three multiplicative changes landed on one day: a model that "delegates to subagents more readily than prior models", default nesting depth raised from 1 to 3, and documented over-verification behaviour. Set CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1 and delete carried-over "verify your work" instructions — Anthropic says removing them cuts wasted tokens with no loss in quality.',
+      'Raise max_tokens to 64k before migrating. Thinking now counts against it, and code that moved over without raising the ceiling truncates mid-sentence — a config error that reads like a model regression.',
+      'Stop quoting "the most capable model is the most expensive" (Ch 24, Ch 29). It was true through June 2026 and is now false. The replacement heuristic is that capability and price have decoupled at the top, so the ranking question and the invoice question have to be asked separately — which is what the cost-per-task column on the tier list was built for.',
+      'Do not put Opus 5 in a Terminal-Bench column, and do not publish an Opus 5 METR time horizon. Anthropic published neither; the only Terminal-Bench figure that exists is rounded article prose from AA, and circulating METR numbers trace to a prediction market, not a measurement.',
+    ],
+    receipts: [
+      { label: 'Release + id', value: '2026-07-24 · claude-opus-5 · 1M ctx / 128K out · May 2026 cutoff' },
+      { label: 'Price', value: '$5 / $25 per Mtok — same as Opus 4.8, half of Fable 5. No long-context surcharge.' },
+      { label: 'Effort ladder (AA, 2026-07-24)', value: 'low 51.0 → medium 56.3 → high 58.9 (default) → xhigh 60.1 → max 60.7 · 6.9× cost span' },
+      { label: 'The hierarchy', value: 'AA: Opus 5 by 0.83 (±1%) · Vals AI: Fable 5 by 0.32 (±1.35) · Arena: Fable 5, intervals overlap' },
+      { label: 'Independent, uncontested', value: 'ARC-AGI-3 30.16% vs GPT-5.6 Sol 13.33% — run by ARC Prize, high effort only' },
+      { label: 'The counter-example', value: 'CodeRabbit production A/B: caught 55.2% of known issues vs a GPT-5.6 baseline\'s 61.1%, with 92 nitpicks vs 23' },
+      { label: 'Absent from', value: 'tbench.ai Terminal-Bench · Scale SWE-bench Pro · official OSWorld 2.0 · Arena Agent board' },
+      { label: 'Independently corroborated on', value: 'public FrontierBench board — Opus 5 43.5 ±1.65, rank 1 (read 2026-07-27)' },
+      { label: 'Source confidence', value: 'high on specs/pricing/effort (primary docs) · medium on vendor benchmarks (max-effort, fallback-blended) · community signal labelled as such' },
+    ],
+    chapters: [
+      { slug: '24-tier-list', ref: 'Ch 24', why: 'the chapter\'s discount rule gets its cleanest demonstration yet — three vendor cards where the model is absent from the matching public board, next to one card a third party actually ran' },
+      { slug: '29-cost-economics', ref: 'Ch 29', why: 'price the task not the token, with a new wrinkle: the effort dial means the same model has five different cost-per-task figures, and the default is not the one on the launch slide' },
+      { slug: '25-evals-or-hope', ref: 'Ch 25', why: 'Anthropic now explicitly instructs operators to re-run their own effort sweep rather than inherit settings — the vendor telling you to run a private eval is as strong as this argument gets' },
+      { slug: '06-the-swarm', ref: 'Ch 6', why: 'default subagent nesting depth went 1 → 3 the same day as a model that delegates more readily — the swarm chapter\'s cost math needs the cap set before the upgrade, not after' },
+    ],
+    links: [
+      { label: 'Anthropic — Introducing Claude Opus 5', href: 'https://www.anthropic.com/news/claude-opus-5' },
+      { label: 'Claude Opus 5 System Card', href: 'https://www.anthropic.com/claude-opus-5-system-card' },
+      { label: 'Artificial Analysis — Opus 5', href: 'https://artificialanalysis.ai/models/claude-opus-5' },
+      { label: 'ARC Prize — Opus 5 results', href: 'https://arcprize.org/results/anthropic-claude-opus-5' },
+      { label: 'The model file on this site', href: '/opus-5/' },
+      { label: 'Use cases + effort settings', href: '/opus-5/use-cases/' },
+    ],
+  },
+  {
     slug: 'semianalysis-subsidy',
     title: 'The subscription subsidy, quantified — SemiAnalysis prices a $200 plan at up to $8,000 of compute',
     source: 'SemiAnalysis (X thread, Tokenomics model) · third-party analyst model with stated assumptions',
