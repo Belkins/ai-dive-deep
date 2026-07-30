@@ -117,6 +117,16 @@ const SELFAUDIT_SECTIONS: { id: string; label: string }[] = [
   { id: 'the-spine', label: "The layer the agent can't own" },
   { id: 'run-it', label: 'Run it Monday' },
 ];
+const MUSICMATH_SECTIONS: { id: string; label: string }[] = [
+  { id: 'claim', label: 'The claim' },
+  { id: 'mechanism', label: 'Sound is already numbers' },
+  { id: 'suno', label: "What Suno will and won't tell you" },
+  { id: 'alphabets', label: 'What else turned out to be a language' },
+  { id: 'dialects', label: 'Two ways to generate' },
+  { id: 'bottleneck', label: 'The boring thing that decides it' },
+  { id: 'leaks', label: 'Where the thesis leaks' },
+  { id: 'monday', label: 'Do this Monday' },
+];
 const LEARN_SECTIONS: { id: string; label: string }[] = [
   { id: 'is-this-you', label: 'Is this you? (no-code vs builder)' },
   { id: 'concepts', label: 'Five words you need first' },
@@ -230,6 +240,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'HTML-ization',          href: `${base}/html-first/`,      subtitle: 'Stop sending dead files — 2 live, clickable case studies',                                            keywords: 'html-ization htmlization html-first html first interactive artifact deliverable single-file static page case study clickable afc folderly audit' },
       { type: 'page', title: 'The Sovereign Stack',   href: `${base}/sovereign-stack/`, subtitle: 'Open-weights LLMs that survive the deprecation calendar — Ollama, hardware, the heretic question, nano-gpt', keywords: 'sovereign stack open source weights local llm on-device edge ollama lm studio kimi qwen glm deepseek llama mistral grok gpt-oss heretic abliteration nano-gpt nanogpt karpathy mythos hardware mac studio rtx 3090 4090 mythos meta google deepmind anthropic openai xai zhipu alibaba' },
       { type: 'page', title: 'Dynamic Workflows',     href: `${base}/dynamic-workflows/`, subtitle: 'Opus 4.8 dynamic workflows — Claude plans, fans out parallel subagents, and verifies its own work',     keywords: 'dynamic workflows workflow opus 4.8 parallel subagents agents ultracode effort generator validator orchestration deep-research agent teams anthropic claude code swarm automated' },
+      { type: 'page', title: 'Music is Math',          href: `${base}/music-is-math/`,   subtitle: 'How AI writes a song — and why the same recipe writes proteins, motion and weather',                          keywords: 'music is math suno udio ai music how does ai make music audio tokens tokenization tokenizer neural codec encodec soundstream dac musicgen musiclm bark stable audio riffusion elevenlabs lyria transformer autocomplete next token prediction diffusion flow matching latent proteins esm3 esmgfp gfp alphafold dna evo genome amino acids robots rt-2 pi0 physical intelligence gemini robotics action tokens weather gencast weathernext ecmwf world models genie sora veo vit patches vqgan alphago universality everything is a language' },
       { type: 'page', title: 'Dreaming',              href: `${base}/dreaming/`,        subtitle: "A local, propose-only twin of Anthropic's Dreaming — digest, surface, verify against the raw transcript, never write", keywords: 'dreaming dream memory curation agent memory propose-only surfacer anthropic managed agents self-improve session transcripts verify quote raw jsonl hallucination yield-floor /learn /dream digest extract review apply-new claude code loop pointed inward' },
       { type: 'page', title: 'The Self-Audit',          href: `${base}/self-audit/`,      subtitle: "The swarm pointed at the agent's own setup — 41 findings, 2 refutations, the kill-rules", keywords: 'self-audit self audit config rot skills hooks memory permissions allowlist red-team adversarial verification telemetry prune archive launchd spine health pulse maintenance hygiene setup audit' },
       { type: 'page', title: 'Opus 5 — the model file',   href: `${base}/opus-5/`,       subtitle: 'Shipped 2026-07-24 — $5/$25, the effort dial, and where it really sits',                                keywords: 'opus 5 opus-5 claude opus 5 claude-opus-5 new model july 2026 release launch effort dial effort parameter low medium high xhigh max pricing $5 $25 1m context may 2026 cutoff default claude max claude pro fallback opus 4.8 priority tier web_fetch hierarchy fable 5 comparison arc-agi-3 frontierbench swe-bench pro osworld' },
@@ -331,6 +342,13 @@ export default function CommandPalette() {
         subtitle: 'The Self-Audit',
         href: `${base}/self-audit/#${s.id}`,
         keywords: `self-audit config rot skills hooks memory permissions red-team telemetry prune ${s.label} ${s.id}`.toLowerCase(),
+      })),
+      ...MUSICMATH_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'Music is Math',
+        href: `${base}/music-is-math/#${s.id}`,
+        keywords: `music is math tokenization audio tokens suno transformer autocomplete proteins robots weather diffusion ${s.label} ${s.id}`.toLowerCase(),
       })),
       ...LEARN_SECTIONS.map((s) => ({
         type: 'section' as const,

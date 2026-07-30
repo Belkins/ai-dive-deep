@@ -171,6 +171,30 @@ export const glossary: Record<string, GlossaryEntry> = {
       'Model Context Protocol. The open standard that lets any AI client talk to any tool. USB-C for AI.',
     related: ['Connector'],
   },
+  Tokenization: {
+    term: 'Tokenization',
+    definition:
+      'Turning a thing into a short sequence of discrete symbols a model can predict. The unglamorous step that decides whether a whole domain is reachable: sound becomes a few hundred codec symbols a second instead of 44,100 raw numbers, a protein is already 20 letters, a robot action becomes binned integers. Find the alphabet and the sentence-finishing machine works unmodified.',
+    related: ['Token', 'Neural codec', 'Diffusion'],
+  },
+  'Neural codec': {
+    term: 'Neural codec',
+    definition:
+      'The encoder/decoder pair that gives audio its alphabet — squash a chunk of sound into one of a fixed set of learned entries, and turn it back afterwards. MusicGen runs one at 50 frames a second with four codebooks of 2,048 entries. Note it emits a stack of codes per instant, not a single stream of words.',
+    related: ['Tokenization', 'Token'],
+  },
+  Diffusion: {
+    term: 'Diffusion',
+    definition:
+      'The other way to generate: start from noise and repeatedly denoise until the finished thing emerges, rather than predicting one piece after another. How images, video and weather forecasts are made. Its faster sibling, flow matching, is what moves a robot arm in the frontier policies.',
+    related: ['Tokenization', 'Autoregressive'],
+  },
+  Autoregressive: {
+    term: 'Autoregressive',
+    definition:
+      'Predict the next piece given all the pieces so far — plain autocomplete, and the objective behind text, MusicGen, and RT-2 robot actions. Not the only reading order: masked models like ESM3 generate by unmasking in any order instead.',
+    related: ['Diffusion', 'Tokenization', 'Token'],
+  },
   Multimodal: {
     term: 'Multimodal',
     definition: 'Models that handle more than text — images, audio, video, code.',

@@ -16,10 +16,30 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 11.0',
+    date: '2026-07-30',
+    bannerText: 'New lesson — Music is Math: how AI actually writes a song, and why the same recipe now writes proteins, drives robot arms, and beats the best weather forecast on Earth.',
+    bannerHref: '/music-is-math/',
+    tagline: 'The foundations edition. Every other page here tells you how to operate the tools; this one explains what is happening inside them, using the domain people find most magical. Sound is already numbers — 44,100 of them a second — and the whole breakthrough was compressing that into a few hundred learned symbols a second, short enough for a machine built to finish sentences to finish a song instead. Then the interesting part: the same three-step recipe went and conquered proteins, robot motion and the weather, which is the actual event of the last few years. Shipped with an interactive lab that runs the same pipeline across six alphabets, and with the parts most retellings get wrong kept in — including five claims from my own first draft that failed verification.',
+    shipped: [
+      'New lesson page — /music-is-math/. The mechanism first: why nobody predicts raw waveform samples (three minutes is ~7.9M numbers), what a neural codec does, and the four numbers that make it concrete — MusicGen at 50 frames/sec with 4 codebooks of 2,048 entries (200 tokens a second, 1,500 prediction steps for 30 seconds of music), MusicLM\'s quoted "one second of audio is represented by 600 tokens", and Descript\'s ~90× compression at 8 kbps. Every figure read off the primary paper.',
+      'New interactive widget — TokenizerLab. One four-stage pipeline, six switchable alphabets (music, images, proteins, DNA, robot motion, weather), each with the dialect it actually uses and a card naming where the analogy leaks. Respects prefers-reduced-motion.',
+      'The Suno section states a verified absence. Suno has published no paper, model card, or architecture post through v5.5 — so the page cites what IS on the record (the Bark lineage, the CEO\'s 2024 description of next-token prediction over audio tokens, his "tokens per second" constraint) and explicitly refuses to print the 48 kHz specs that circulate without first-party support. Plus the part that actually matters commercially: Suno\'s August 2024 court admission that it trained on "essentially all music files of reasonable quality that are accessible on the open Internet," and the fact that the Warner settlement licenses future models, not the one serving you today.',
+      'The universality argument, with the corrections kept in. esmGFP is 58% identical to tagRFP — a RED protein — not "58% similar to anything known"; the 500-million-year figure is a line fit through six anthozoan GFPs, not a measurement; and it took ~184 wells, not one shot. ESM3 is a masked any-order model, not a GPT. π0 abandoned discrete action tokens for flow matching. GenCast\'s verified 97.2% of 1,320 targets in 8 minutes on one TPU v5 — superseded in Google production by WeatherNext 2, which is not a diffusion model at all.',
+      'A "where the thesis leaks" section that argues against the page. "One architecture, one objective" no longer holds: 2026 flagship open-weight models interleave linear attention with real attention at about 3:1, and DeepSeek R1-Zero gained 55 points on AIME through RL alone. Images are the weakest link, not the strongest (patches are how models READ, most generators denoise). AlphaGo won by search, not autocomplete. And the taxi-route transformer that found the shortest path 97% of the time while implying a map with physically impossible streets — fluency is not a working model of the thing.',
+      'The operator move: three questions (what is the alphabet, how much of it do we have written down, is the next piece predictable) applied to your own repetitive output — plus the Deezer receipt showing where the constraint goes next. Over half of daily uploads there are now fully AI-generated, ~90,000 tracks a day, while AI music is 1–3% of streams. Generation went to zero; selection did not.',
+    ],
+    receipts: [
+      { label: 'Compression, stated as arithmetic', value: '44,100 samples/sec → a few hundred tokens/sec' },
+      { label: 'Verified against primary sources', value: '6 research lanes, adversarial re-check on every numeric claim' },
+      { label: 'Claims from my own draft that failed', value: '5 — corrected on the page, not quietly dropped' },
+      { label: 'Robot data vs text data', value: '10,000 hours (π0) vs 15.6T tokens (Llama 3)' },
+      { label: 'Supply vs demand', value: '>50% of Deezer daily uploads AI-generated · 1–3% of streams' },
+    ],
+  },
+  {
     edition: 'Edition 10.9',
     date: '2026-07-27',
-    bannerText: 'New model file — Opus 5: the frontier stopped being the most expensive thing on the menu. The effort dial, seven use cases with the setting for each, and every benchmark board refreshed to 2026-07-27.',
-    bannerHref: '/opus-5/',
     tagline: 'The refresh edition. Two Anthropic models shipped since the last capture — Sonnet 5 on June 30, Opus 5 on July 24 — and one of them broke the rule this site\'s tier list was built on: for as long as these leaderboards have existed, the most capable model was also the priciest. Not any more. Opus 5 took the top of the independent index at LOWER cost per task than the model below it. Every board on Ch 24 is re-captured, the vendor cards now show the public leaderboard beside the launch claim, and there is a new two-page model file on the model itself — with the part most coverage skipped: the launch table runs at max effort, the API default is high, and on debugging the expensive setting scores lower.',
     shipped: [
       'New model file — /opus-5/. Claude Opus 5 shipped 2026-07-24 at $5/$25 per Mtok (unchanged from Opus 4.8, half of Fable 5), 1M context, May 2026 cutoff, default on Claude Max. Specs, exact pricing including the no-long-context-surcharge fact, the full five-position effort ladder priced by Artificial Analysis, and the hierarchy question answered honestly: three independent aggregates disagree about whether Opus 5 or Fable 5 is ahead, and every gap sits inside the evaluators\' own confidence intervals.',

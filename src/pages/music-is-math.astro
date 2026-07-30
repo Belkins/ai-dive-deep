@@ -1,0 +1,194 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import TokenizerLab from '@/widgets/TokenizerLab.tsx';
+
+const navItems = [
+  { id: 'claim', label: 'The claim' },
+  { id: 'mechanism', label: 'Sound is already numbers' },
+  { id: 'suno', label: "What Suno won't tell you" },
+  { id: 'alphabets', label: 'What else is a language' },
+  { id: 'dialects', label: 'Two ways to generate' },
+  { id: 'bottleneck', label: 'The boring thing that decides it' },
+  { id: 'leaks', label: 'Where the thesis leaks' },
+  { id: 'monday', label: 'Do this Monday' },
+];
+---
+<BaseLayout
+  title="Music is Math"
+  description="AI music generation is not a music trick. Sound gets chopped into a learned alphabet, a transformer autocompletes the next symbol, a decoder turns it back into a waveform — and the same recipe is now writing proteins, driving robot arms, and forecasting the weather. The mechanism, the real numbers, what Suno will and won't tell you, and the three places the everything-is-a-language thesis actually breaks."
+>
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Foundations · How it actually works</div>
+    <h1>Music is math.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">
+      Not as a slogan. As a description of the machine. Sound gets chopped into a learned alphabet, a transformer predicts the next symbol the way your phone predicts the next word, and a decoder turns the symbols back into something you can hear. That is the whole trick.
+    </p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">
+      The reason it belongs in an operator's field manual is what happened next. The same recipe — find the alphabet, predict the next piece, decode — went and conquered proteins, robot arms, and the weather. Once you have seen the shape once, you stop being surprised by the headlines and start being able to predict which domain falls next. This page is the mechanism, the receipts, and the three places the story is oversold.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="claim" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The claim</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Ask most people how an AI writes a song and you get a shrug and the word "magic." Ask an engineer and you get an answer so boring it sounds like a dodge: it is autocomplete. Both are wrong in the same direction — they treat music generation as a <em>music</em> achievement.</p>
+            <p>It isn't. It is a tokenization achievement. The hard part was never composition; it was finding a way to write sound down as a short sequence of discrete symbols, so that a machine built to finish sentences could finish a song instead. Once sound had an alphabet, the sentence-finishing machine worked unmodified.</p>
+            <p>That is the sentence worth carrying out of this page, because it generalizes. The surprising discovery of the last few years is not that AI can do one impressive thing. It is that a single family of architectures, pointed at a single objective — predict the next piece — keeps falling into domain after domain that look nothing alike, as soon as somebody works out the alphabet. Music, proteins, motion, weather. The world turned out to be far more writable-down than anyone expected.</p>
+            <PullQuote>The breakthrough was never that a machine could write music. It was that somebody figured out how to write sound down as a language — and the machine that finishes sentences didn't need to change.</PullQuote>
+          </div>
+        </div>
+
+        <div id="mechanism" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Sound is already numbers</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Start with the thing nobody finds surprising and everybody skips past: audio on a computer is already a list of numbers. A CD stores 44,100 amplitude measurements per second, per channel, at 16 bits each — so a stereo second is 88,200 numbers, about 1.4 megabits (<a href="https://en.wikipedia.org/wiki/Compact_Disc_Digital_Audio" target="_blank" rel="noopener">Red Book</a>). Sound is not <em>like</em> math. It is stored as math.</p>
+            <p>So why not just predict the next number? Because 44,100 steps per second is a hopeless sequence length. Three minutes of one channel is about 7.9 million numbers, and a model that had to emit them one at a time would spend its entire capacity on the shape of a waveform rather than the shape of a song. The raw representation is technically complete and practically useless — the same reason nobody builds a language model over individual pixels of a scanned page.</p>
+            <p>The fix is a neural codec: a small network trained to squash a chunk of sound into one of a fixed set of learned entries, and a matching network trained to turn that entry back into sound. Now sound has a vocabulary. Four numbers you can hold onto, all read off the papers:</p>
+            <ul class="space-y-2 my-4">
+              <li><strong>50 a second.</strong> Meta's <a href="https://arxiv.org/abs/2306.05284" target="_blank" rel="noopener">MusicGen</a> runs a codec at a 50 Hz frame rate, with four codebooks of 2,048 entries — 200 tokens per second of audio.</li>
+              <li><strong>1,500 steps for 30 seconds.</strong> The same paper: an interleaving trick lets it emit four tokens per step, so half a minute of music costs 1,500 prediction steps rather than 6,000.</li>
+              <li><strong>600 a second.</strong> Google's <a href="https://arxiv.org/abs/2301.11325" target="_blank" rel="noopener">MusicLM</a> states it plainly: "one second of audio is represented by 600 tokens" — plus a sparse 25-per-second layer that carries melody and structure while the dense layer carries timbre.</li>
+              <li><strong>~90×.</strong> Descript's <a href="https://arxiv.org/abs/2306.06546" target="_blank" rel="noopener">audio codec</a> compresses 44.1 kHz audio into tokens at 8 kbps — about 86 frames a second, nine codebooks deep.</li>
+            </ul>
+            <p>That is the entire magic trick, stated as arithmetic: 44,100 numbers a second becomes a few hundred symbols a second. Now the sequence is short enough that a transformer can hold a musical idea across it, and the model does what it has always done — given everything so far, predict what comes next. Your prompt is just more context, steering which continuation is likely.</p>
+            <p>Pick a domain and run it:</p>
+          </div>
+
+          <TokenizerLab client:visible />
+
+          <Callout type="note" title="The caveat that keeps the metaphor honest">
+            "Audio tokens are like words" is a good intuition and a slightly wrong picture. The codec emits a <em>matrix</em>, not a sentence: at each time-step there is a stack of four to twelve codes refining the same instant, arriving at a fixed clock rate whether the music is silence or a drum fill. And unlike words, these symbols have no meaning of their own — each is just an index into a learned codebook. That stacked structure is not pedantry; it is exactly why MusicGen needs its interleaving trick to keep sequences tractable.
+          </Callout>
+        </div>
+
+        <div id="suno" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What Suno will and won't tell you</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Every number above comes from an open paper. Suno — the tool most people actually mean when they say "AI music" — has published none. No paper, no model card, no architecture post, across every version through v5.5 (shipped 26 March 2026). Anyone who tells you exactly how Suno works is reading tea leaves. So here is precisely what is on the record, and where the record stops.</p>
+            <p><strong>The founders' own code.</strong> Before Suno was a music company it open-sourced <a href="https://github.com/suno-ai/bark" target="_blank" rel="noopener">Bark</a>, a text-to-audio model built in the GPT mould: predict semantic tokens, then coarse codec tokens, then fine ones, then decode to a waveform. Token prediction, end to end.</p>
+            <p><strong>The CEO, on the record.</strong> In a March 2024 interview, Mikey Shulman described the approach as next-token prediction over audio tokens — "very similar to text… you train a model to predict the probability over all of the next token" — and said their tokenization is "at least similar to how it's done in the open source stuff." He also named the constraint that governs the product: "We care a lot about how many tokens per second we can generate, because we need to stream you music as fast as you can listen to it."</p>
+            <p><strong>Where it stops.</strong> That was two model generations ago. The popular description of Suno as a transformer paired with a diffusion refiner is third-party inference that Suno has never confirmed. There is no public figure for its sample rate, codec frame rate, or token rate — the 48 kHz specs floating around come from third-party guides, not from Suno. If you want to reason about the tokens behind an 8-minute Suno track, you are borrowing MusicGen's arithmetic and should say so.</p>
+
+            <Callout type="warn" title="The part that matters commercially, not technically">
+              In its August 2024 answer to the record labels' lawsuit, Suno admitted its training data "includes essentially all music files of reasonable quality that are accessible on the open Internet," and argued fair use. Warner settled in November 2025, with Suno promising <em>new licensed models in 2026 to replace the current ones</em> — so the deal licenses the future, not the model serving you today. Universal and Sony remain in litigation, and the Munich Regional Court is scheduled to rule in GEMA v. Suno on 31 July 2026 — the first major European test of whether training on protected songs needs a licence at all, and the day after this page shipped. Check it before you rely on any of this. If you are putting generated music into anything client-facing, that is the paragraph your legal team cares about, not the token rate.
+            </Callout>
+
+            <p>The honest summary: Suno's stated paradigm is the one this page describes, its ancestor provably worked that way, and whether today's model still does is not public. That is a normal state of affairs in 2026 — and it is why the mechanism is worth understanding from the open systems, where the numbers are checkable.</p>
+          </div>
+        </div>
+
+        <div id="alphabets" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What else turned out to be a language</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Here is where it stops being a music story. The same three-step shape — find the alphabet, predict the next piece, decode — has been pointed at domains that share nothing except sequential structure.</p>
+
+            <h3 class="font-semibold mt-6" style={{ color: 'rgb(var(--fg) / 0.95)' }}>Proteins — the one that should stop you</h3>
+            <p>A protein is a sentence in a 20-letter alphabet. Evolution spent four billion years writing the training corpus and left it lying around in public databases. So <a href="https://www.science.org/doi/10.1126/science.ads0018" target="_blank" rel="noopener">ESM3</a>, a 98-billion-parameter model trained on 771 billion tokens of protein, learned to speak it — and was used to design <strong>esmGFP</strong>, a green fluorescent protein that is <strong>58% identical to the nearest known fluorescent protein</strong>: 96 mutations across 229 residues. It was not a simulation. They expressed it, and it glowed — peak emission 512 nm, brightness in the natural GFP range after about two days (Science, 16 January 2025).</p>
+            <p>Now the three details that popular retellings drop, each of which I had to correct in my own draft:</p>
+            <ul class="space-y-2 my-4">
+              <li><strong>The 58% neighbour is a red protein.</strong> It is tagRFP. Against the nearest wild-type protein of any kind it is 53% identical; against the original jellyfish GFP, 36%. "58% similar to anything known" is wrong as usually written.</li>
+              <li><strong>The 500 million years is an analogy, not a measurement.</strong> The authors fit a line through six anthozoan GFPs whose species have dated common ancestors, correlating sequence identity with elapsed time. It estimates how far apart two species would have to be for their GFPs to differ this much — not how long evolution would have needed to find this protein.</li>
+              <li><strong>It was not one shot.</strong> Tens of thousands of candidates were generated, 88 went onto a first 96-well plate and produced exactly one dim hit — 50× less bright, maturing over a week. esmGFP turned up on the second plate. Roughly one good protein per 184 wells.</li>
+            </ul>
+            <p>That last one is the real lesson, and it is not a debunk. A model that turns "search an astronomically large space" into "screen two plates" is genuinely transformative. It just isn't authorship — it is candidate enrichment, and the wet lab is still the judge.</p>
+            <p>One more correction, because it matters two sections down: ESM3 is not GPT run left to right. It is a masked model — it generates by starting from a fully masked sequence and unmasking tokens in any order, filling in blanks rather than continuing a sentence. Same bet (discrete tokens, transformer trunk, predict what belongs), different reading order. The frontier 98B model is also closed; only a 1.4B version has public weights.</p>
+
+            <h3 class="font-semibold mt-6" style={{ color: 'rgb(var(--fg) / 0.95)' }}>Robots — the recipe is fine, the data isn't</h3>
+            <p>This is the one that sounds like science fiction and is mechanically the most literal. Google's <a href="https://arxiv.org/abs/2307.15818" target="_blank" rel="noopener">RT-2</a> writes a robot action directly into the text stream: eight integers per step — three position deltas, three rotation deltas, gripper, a stop flag — with each continuous axis chopped into 256 bins. The model predicts them exactly the way it predicts words. A robot arm and a chatbot, running the same play.</p>
+            <p>But the frontier complicated it, and the complication is the interesting part. Physical Intelligence's <a href="https://arxiv.org/abs/2410.24164" target="_blank" rel="noopener">π0</a> keeps a token-predicting vision-language model as its backbone and then <em>abandons tokens for the actions themselves</em>, generating continuous 50 Hz motion through flow matching — a diffusion relative — because naive binning breaks down on fast, dexterous control. Their <a href="https://arxiv.org/abs/2501.09747" target="_blank" rel="noopener">own follow-up paper</a> says so outright, then partially rescues the token story with a smarter tokenizer whose purely autoregressive model matches the flow-matching one while training with up to 5× less compute. π0.5 settled into the split worth quoting: discrete decoding for the high-level plan, continuous flow matching for the low-level motor commands. Google announced Gemini Robotics 2 on 30 July 2026 — the day this page was researched — as a closed system with blog-level disclosure, so treat it as announced, not proven.</p>
+
+            <h3 class="font-semibold mt-6" style={{ color: 'rgb(var(--fg) / 0.95)' }}>Weather — prediction with no tokens in it at all</h3>
+            <p>The atmosphere is a grid of numbers evolving in time, so forecasting is the purest "predict what comes next" problem on the list. DeepMind's <a href="https://deepmind.google/discover/blog/gencast-predicts-weather-and-the-risks-of-extreme-conditions-with-sota-accuracy/" target="_blank" rel="noopener">GenCast</a> — a diffusion model, explicitly the same family behind image and music generation — beat ECMWF's ENS, the best operational ensemble in the world, on <strong>97.2% of 1,320 evaluation targets</strong>, rising to 99.8% beyond 36 hours out, and produces a 15-day forecast in <strong>8 minutes on a single Cloud TPU v5</strong> where the physics ensemble takes hours on a supercomputer (Nature, 4 December 2024).</p>
+            <p>Two things the headline version leaves out. Google's own production successor, WeatherNext 2 (November 2025), is <em>not</em> a diffusion model — it injects noise into the weights instead, runs 8× faster, and now drives weather in Search, Gemini and Maps. And every one of these models is trained on ERA5 reanalysis, a dataset manufactured by physics-based data assimilation, then initialized from physics-based analyses. The AI replaced the expensive simulation step. It did not replace the physics underneath.</p>
+
+            <Callout type="tip" title="The pattern, stated once">
+              Sound, amino acids, DNA bases, motor commands, atmospheric states. Different alphabets, one bet: that what comes next is predictable from what came before, and that a big enough model fed enough examples will find the structure. When you hear about the next domain to fall, the question to ask is not "is the model smart enough?" It is "does this thing have an alphabet, and is there a pile of it lying around?"
+            </Callout>
+          </div>
+        </div>
+
+        <div id="dialects" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Two ways to generate — and why the binary is already leaking</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Two dialects keep showing up. <strong>Autoregressive</strong>: chop the thing into discrete symbols and predict the next one, the autocomplete you have now seen in music, proteins and robot actions. <strong>Diffusion</strong>: start from pure noise and repeatedly denoise until the finished thing emerges all at once — how images, video and weather tend to work.</p>
+            <p>Useful as a first map. But by 2026 the real axis is not autoregressive-versus-diffusion; it is <strong>discrete symbols versus continuous values</strong>, and each side has more than one way to decode:</p>
+            <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--line))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Discrete tokens</div>
+              <p class="m-0">Decode them left to right (MusicGen, RT-2), or decode them <em>in any order</em> by unmasking — which is how ESM3 designs a protein, and how masked audio models generate music several times faster than the autoregressive ones. Same tokens, different reading order.</p>
+            </div>
+            <div class="rounded-xl border p-5 my-3" style={{ borderColor: 'rgb(var(--line))' }}>
+              <div class="text-[0.7rem] uppercase tracking-[0.25em] mb-2" style={{ color: 'rgb(var(--accent))' }}>Continuous values</div>
+              <p class="m-0">Denoise them (Stable Audio generates 3-minute stereo tracks over a latent running at 21.5 steps a second — no tokens anywhere; GenCast does the same to the atmosphere), or flow-match them, diffusion's faster sibling, which is what moves π0's robot arm.</p>
+            </div>
+            <p>So "AI music" is not one architecture. MusicGen autocompletes tokens; Stable Audio denoises a continuous latent; both make music. The bet they share is not the mechanism — it is the premise that the data has learnable structure. That is the actual through-line, and it survives every architectural fashion cycle.</p>
+          </div>
+        </div>
+
+        <div id="bottleneck" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The boring thing that decides whether it feels magic</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>Here is the operator-grade takeaway, and it is deliberately unglamorous. How impressive AI is in a domain tracks two things — <strong>how good the alphabet is, and how much data exists</strong> — and almost never tracks how creative or intelligent the task sounds to a human.</p>
+            <p>Proteins fell fast because the alphabet is 20 letters and evolution handed over a colossal free dataset. Robots lag, and not because moving is harder than talking. Compare the two piles: Physical Intelligence pre-trained π0 on <strong>10,000 hours</strong> of dexterous manipulation data, across 7 robot configurations and 68 tasks. Meta pre-trained its flagship Llama 3 model on <strong>15.6 trillion text tokens</strong>. The units do not even match — which is the point. One of those you can scrape; the other you have to physically perform, one robot-hour at a time. The largest open robotics dataset aggregates about a million real trajectories from 34 labs, which is heroic for robotics and a rounding error next to the internet.</p>
+            <PullQuote>Robots aren't behind because moving is harder than talking. They're behind because you can't scrape the physical world.</PullQuote>
+            <p>The same lesson wearing its first costume: music's constraint was never musicality, it was tokens per second — Suno's CEO named it as the thing they care most about, because the model has to produce music faster than you can listen to it. Alphabet quality and data volume. Everything else is commentary.</p>
+            <p>This is also why the "which domain falls next?" question has a cheap answer. Not the one that sounds most creative — the one where somebody just found a good alphabet and there is a mountain of examples nobody had bothered to point a model at.</p>
+
+            <Callout type="warn" title="And then the constraint moves — which is the part to plan for">
+Deezer reported on 21 July 2026 that fully AI-generated tracks peaked in June at <strong>more than half of all daily new-music uploads — about 90,000 tracks a day</strong> — while fully AI-generated music accounts for only <strong>1–3% of total streams</strong>, and up to 85% of the streams those tracks did get were fraudulent in 2025. Read that twice. Generation capacity became effectively infinite and demand did not move. Two caveats belong with it: Deezer excludes detected AI tracks from its algorithmic and editorial playlists, so part of that 1–3% is policy rather than taste, and Deezer sells AI-detection tooling, so it is an interested party. The pattern shows up elsewhere: in 2025 robotics researchers built a distributed real-world evaluation arena — 600-plus double-blind head-to-head episodes across seven generalist policies — after finding that centralized benchmarks ranked those policies less accurately than crowd-sourced comparison did. Once a domain gets tokenized, the bottleneck stops being <em>can we make it</em> and becomes <em>can we tell which ones are any good</em>. That is where the money and the moat move next.
+            </Callout>
+          </div>
+        </div>
+
+        <div id="leaks" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Where the thesis leaks</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>"Everything is a language" is a genuinely good lens and it is oversold constantly — usually by people repeating a version of this page without the corrections. Three places it breaks, all of which I had to fix in my own draft.</p>
+            <ol class="space-y-3 list-none p-0 m-0">
+              <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--line))' }}>
+                <strong>1 — Images are the weakest link, not the strongest.</strong> The tidy claim is that an image becomes a grid of "visual words" the way sound becomes audio tokens. That conflates two different things. Patches — the famous 16×16 words — are how a transformer <em>reads</em> an image. Discrete visual tokens are real but power a minority of generators; most of today's leading image models create pictures by iterative denoising in a continuous latent space, with no visual vocabulary involved at all. Token-by-token image generation did return at the frontier with GPT-4o's native image mode, but as the exception. Keep the metaphor for perception; drop it for generation.
+              </li>
+              <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--line))' }}>
+                <strong>2 — "Predict the next frame" is wrong for the video models people mean.</strong> Sora-class systems denoise an entire clip jointly rather than emitting frames in order. The systems that genuinely do predict the next frame are interactive world models — Genie 3 generates navigable 720p worlds at 24 fps, frame by frame, conditioned on what you just did, with no explicit 3D model underneath. That distinction is not pedantry: it is precisely what makes a world model interactive and a video model not. (It is also a live space: OpenAI announced in March 2026 that it is winding down the Sora app.)
+              </li>
+              <li class="rounded-lg border p-4" style={{ borderColor: 'rgb(var(--line))' }}>
+                <strong>3 — AlphaGo is not evidence for this thesis.</strong> "Go is a language of moves" is a nice line, and AlphaGo's move-prediction network really was trained to predict an expert's next move. But AlphaGo won by <em>searching the future</em> — Monte Carlo tree search over learned position evaluations — not by finishing sentences. Citing it as proof that everything is next-token prediction gets the mechanism backwards.
+              </li>
+            </ol>
+            <p>And one honest correction to the framing as a whole: <strong>"one architecture, one objective" was true in 2023 and is not true now.</strong> On architecture, 2026's flagship open-weight models are hybrids — Qwen and Moonshot independently landed on interleaving linear-attention blocks with real attention at a ratio of about 3:1, meaning roughly three quarters of the sequence-mixing layers in a current flagship are not attention at all. The defensible sentence is "attention is still the load-bearing primitive, in about a quarter of layers." On objective, the splintering is worse: generation now happens at least four ways (left to right, masked unmasking, diffusion, flow matching), and a large share of headline capability arrives after pretraining — DeepSeek's R1-Zero went from 15.6% to 71.0% on AIME 2024 through reinforcement learning alone, with no supervised fine-tuning. That is a 55-point jump from an objective that is not next-token prediction.</p>
+            <p>The version that survives the attack is narrower and still remarkable: <strong>a single family of sequence models, pointed at the objective of predicting missing pieces, keeps transferring to domains that share nothing but structure.</strong> Note what that sentence gives up. The transformer generalized. Next-token prediction did not — wherever the output is continuous and geometric (weather, protein structure, robot motion, video), diffusion and flow matching won.</p>
+            <p>The last leak is the one that costs money rather than credibility: <strong>fluency is not a working model of the thing.</strong> The cleanest demonstration is a transformer trained to give turn-by-turn directions across Manhattan — 2.9 million shortest-path sequences over a street graph built from New York taxi pickup and dropoff coordinates. It produced the true shortest path 97% of the time and almost never proposed an invalid next turn. Then researchers reconstructed the map its predictions implied, and got streets whose orientations are physically impossible — labelled north-west while facing east, requiring flyovers over other streets. Force random detours into the route and its rate of valid traversals falls from 0.99 with no detours to 0.69 at a 1% detour rate, 0.08 at 10%, and 0.00 at 50%. A follow-up trained models on orbital trajectories: they predict planetary motion beautifully, and the force law you can extract from them is nonsense. Kepler without Newton. The same signature shows up in genomics, where a 2026 preprint reports a classifier telling AI-generated genomes from real ones at up to 0.97 AUROC, with accuracy climbing the further you get from the seed sequence — locally fluent, globally incoherent — and in AlphaFold 3, which invents confident structure in disordered regions the way a text model invents confident citations.</p>
+            <p>None of that makes the thesis wrong. It makes it a claim about <em>prediction</em>, not about <em>understanding</em>, and those come apart exactly where you would want to rely on them. A model that speaks a domain fluently has not thereby become trustworthy in it. That gap is where evaluation lives, and it is the whole reason <a href="/chapters/25-evals-or-hope/">Chapter 25</a> exists. It is also a live bet with real money on it: Yann LeCun left Meta in November 2025 saying "LLMs basically are a dead end when it comes to superintelligence," founded Advanced Machine Intelligence Labs, and in March 2026 raised $1.03 billion at a $3.5 billion pre-money valuation on that proposition. He may be wrong. He is not obviously wrong, and the market has priced that in.</p>
+          </div>
+        </div>
+
+        <div id="monday" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
+          <div class="space-y-4 leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.88)' }}>
+            <p>This page is a lens, not a tool, so the Monday move is a habit rather than an install.</p>
+            <p><strong>Take one repetitive thing your business produces and ask the three questions.</strong> What is the alphabet — the smallest discrete unit this thing is built from? How much of it do we already have written down? And is what comes next genuinely predictable from what came before? Support macros, outreach sequences, invoice lines, QA steps, shift rosters. If all three answers are good, the domain is already tokenizable and someone will point a model at it — better you than a competitor. If the alphabet is fuzzy or the pile is thin, you have just found the actual bottleneck, and it is a data-collection project, not an AI project. That reframe alone kills more doomed AI initiatives than any vendor evaluation.</p>
+            <p><strong>Then apply the discount rule to the next headline.</strong> When a lab announces that AI has conquered a new field, ask four things: which dialect it actually used, whether the number came from the vendor or an independent evaluator, whether it was validated outside a simulation, and what the denominator was. Five claims in my own draft of this page failed that test — the image-tokens claim, the AlphaGo claim, calling ESM3 a GPT, the esmGFP "58% similar to anything known" line, and the implication that the protein came out in one shot. Every one of them was directionally right and specifically wrong, which is the most expensive kind of wrong. The pattern is real. The retelling is where it gets sloppy.</p>
+            <PullQuote>The question isn't "is the model smart enough for this domain?" It's "does this domain have an alphabet, and is there a pile of it lying around?"</PullQuote>
+            <p class="mt-6 text-sm" style="color: rgb(var(--muted))">
+              Related: <a href="/chapters/10-wild-stuff/">Ch 10 — the generative pipeline this runs inside</a> · <a href="/chapters/25-evals-or-hope/">Ch 25 — fluency is not competence</a> · <a href="/chapters/46-designing-with-ai/">Ch 46 — the same argument for pixels</a> · <a href="/sovereign-stack/">The Sovereign Stack — the open models you can read the papers for</a> · <a href="/glossary/">Glossary</a>
+            </p>
+            <p class="text-xs" style="color: rgb(var(--muted))">
+              Every figure on this page was verified against a primary source on 2026-07-30, by a six-lane research pass with an adversarial re-check on each numeric claim. Where a system is closed (Suno, Gemini Robotics 2, Sora 2), that is stated rather than papered over. Corrections: v@vladyslavpodoliako.com
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CommandPaletteMount />
+</BaseLayout>
