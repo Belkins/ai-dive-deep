@@ -3,10 +3,20 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import ManifestoQuote from '@/components/ManifestoQuote.astro';
 import { CHANGELOG } from '@/lib/changelog';
+import { AUTHOR } from '@/lib/author';
 const ed = CHANGELOG[0];
 const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+// E-E-A-T: give the Person entity a standalone home; chapter/Book author nodes
+// reference it via AUTHOR['@id'].
+const profileLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: 'https://dive.vladyslavpodoliako.com/about/',
+  mainEntity: AUTHOR,
+};
 ---
 <BaseLayout title="About" description="Who wrote this. Why. And how to keep reading.">
+  <script type="application/ld+json" set:html={JSON.stringify(profileLd)} />
   <section class="container-prose pt-16 pb-16">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">About</div>
     <h1>One operator. A portfolio of companies. A field manual.</h1>

@@ -2,10 +2,10 @@
   "name": "ai-dive-deep",
   "type": "module",
   "version": "1.0.0",
-  "description": "ULTIMATE AI DIVE DEEP — interactive field manual by Vlad Podoliako",
+  "description": "ULTIMATE AI DIVE DEEP \u2014 interactive field manual by Vlad Podoliako",
   "scripts": {
-    "prebuild": "python3 scripts/scan-screenshots.py && bash scripts/check-template-literals.sh && python3 scripts/check-stack-integrity.py && python3 scripts/check-stale-numbers.py && python3 scripts/check-internal-links.py && python3 scripts/check-glossary-terms.py",
-    "predev": "python3 scripts/scan-screenshots.py && bash scripts/check-template-literals.sh && python3 scripts/check-stack-integrity.py && python3 scripts/check-stale-numbers.py && python3 scripts/check-internal-links.py && python3 scripts/check-glossary-terms.py",
+    "prebuild": "python3 scripts/scan-screenshots.py && bash scripts/check-template-literals.sh && python3 scripts/check-stack-integrity.py && python3 scripts/check-stale-numbers.py && python3 scripts/check-internal-links.py && python3 scripts/check-glossary-terms.py && python3 scripts/gen-chapter-dates.py",
+    "predev": "python3 scripts/scan-screenshots.py && bash scripts/check-template-literals.sh && python3 scripts/check-stack-integrity.py && python3 scripts/check-stale-numbers.py && python3 scripts/check-internal-links.py && python3 scripts/check-glossary-terms.py && python3 scripts/gen-chapter-dates.py",
     "lint:tpl": "bash scripts/check-template-literals.sh",
     "lint:stack": "python3 scripts/check-stack-integrity.py",
     "lint:stale": "python3 scripts/check-stale-numbers.py",

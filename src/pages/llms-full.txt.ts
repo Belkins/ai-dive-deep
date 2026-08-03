@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+import { glossary } from '@/lib/glossary';
+import { QUESTIONS } from '@/widgets/QuestionsBoard.tsx';
 import { getCollection } from 'astro:content';
 import { RESEARCH_NOTES } from '@/lib/research-notes';
 
@@ -114,8 +116,35 @@ export const GET: APIRoute = async () => {
     lines.push('');
   }
 
+  // Q&A and glossary — the highest-intent standalone surfaces. Without these
+  // the full-ingestion file carried only chapters + research notes.
+  lines.push(`# Questions operators ask (${QUESTIONS.length} answered)`);
+  lines.push('');
+  lines.push(`> Live page with answers mapped to chapters: ${SITE}/questions/`);
+  lines.push('');
+  for (const item of QUESTIONS) {
+    lines.push(`## ${item.q}`);
+    lines.push('');
+    lines.push(item.answer);
+    if (item.chapters.length > 0) {
+      lines.push('');
+      lines.push(`Goes deeper: ${item.chapters.map((c) => `${SITE}/chapters/${c.slug}/`).join(' · ')}`);
+    }
+    lines.push('');
+  }
+  lines.push('---');
+  lines.push('');
+  const terms = Object.values(glossary);
+  lines.push(`# Glossary (${terms.length} terms)`);
+  lines.push('');
+  lines.push(`> Live page: ${SITE}/glossary/`);
+  lines.push('');
+  for (const t of terms) lines.push(`- ${t.term}: ${t.definition}`);
+  lines.push('');
+  lines.push('---');
+  lines.push('');
   lines.push('Feedback / corrections: v@vladyslavpodoliako.com');
-  lines.push('Source repo: github.com/Belkins/ai-dive-deep (private)');
+  lines.push('Source repo: github.com/Belkins/ai-dive-deep (public)');
   lines.push('');
 
   return new Response(lines.join('\n'), {

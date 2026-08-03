@@ -12,7 +12,7 @@ const ed = CHANGELOG[0];
 const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
 
-<BaseLayout title="Vlad's Playbook" description="A field manual for operators who want to stop juggling tabs and start running AI like an OS. By Vlad Podoliako.">
+<BaseLayout title="Vlad's Playbook" description={`${CHAPTERS.length} chapters on Claude Code, AI agents, and agentic workflows for operators — free, no email gate. A field manual for running AI like an OS, by Vlad Podoliako.`}>
   <section class="container-wide pt-16 md:pt-24 pb-10">
     <div class="text-xs uppercase tracking-[0.25em] mb-4" style="color: rgb(var(--accent))">A field manual</div>
     <h1 class="font-display font-medium leading-[0.95] text-[clamp(3rem,8vw,7rem)] tracking-tight">

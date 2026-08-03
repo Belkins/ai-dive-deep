@@ -227,12 +227,12 @@ const slug = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 const navItems = sections.map((s) => ({ id: slug(s.h), label: s.h }));
 ---
-<BaseLayout title="Claude Code Commands — The Cheat Sheet" description="Slash commands, settings, env vars, file paths, keyboard shortcuts. Tape it next to your monitor.">
+<BaseLayout title="Claude Code Commands — The Cheat Sheet" description="The Claude Code cheat sheet: slash commands, settings, env vars, file paths, keyboard shortcuts. Tape it next to your monitor.">
   <section class="container-wide pt-12 pb-6 print:pt-2 print:pb-2">
     <div class="flex items-baseline justify-between gap-4 flex-wrap">
       <div>
         <div class="text-xs uppercase tracking-[0.25em] mb-2" style="color: rgb(var(--accent))">Chapter 14</div>
-        <h1 class="font-display text-4xl md:text-5xl m-0">Cheat sheet</h1>
+        <h1 class="font-display text-4xl md:text-5xl m-0">The Claude Code cheat sheet</h1>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Print it. Tape it next to your monitor. Stop re-googling.</p>
       </div>
       <button onclick="window.print()" class="btn-ghost no-print" type="button">Print</button>

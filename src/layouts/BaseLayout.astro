@@ -7,6 +7,7 @@ import { ClientRouter } from 'astro:transitions';
 import { CHAPTERS, getPart } from '@/lib/chapters';
 import { AUTHOR, PUBLISHER } from '@/lib/author';
 import { createSeoDescription } from '@/lib/seo';
+import chapterDatesJson from '@/data/chapter-dates.json';
 
 interface Props {
   title: string;
@@ -17,7 +18,7 @@ interface Props {
 }
 
 const BRAND = "Vlad's Playbook";
-const FULL = "Vlad's Playbook — The Ultimate AI Dive Deep";
+const FULL = "Vlad's Playbook — The Agentic AI & Claude Code Field Manual";
 const chapterCount = CHAPTERS.length;
 const DEFAULT_DESCRIPTION = `${chapterCount} chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.`;
 
@@ -37,6 +38,10 @@ const chapterSlug = isChapter
   ? Astro.url.pathname.replace(/^\/chapters\//, '').replace(/\/$/, '')
   : '';
 const chapterPart = isChapter ? getPart(chapterSlug) : null;
+// Git-derived publish/modified dates (scripts/gen-chapter-dates.py). Absent
+// entry (e.g. a chapter not yet committed) just omits the date fields.
+const chapterDates = chapterDatesJson as Record<string, { published: string; modified: string }>;
+const chapterDate = isChapter ? chapterDates[chapterSlug] : undefined;
 
 // PostHog: gated on PUBLIC_POSTHOG_KEY env var. Absent = no init, no events, no
 // network calls. Set the var on Vercel to turn analytics on without code changes.
@@ -56,6 +61,7 @@ const jsonLd: Record<string, unknown> = isChapter
       url: canonical,
       mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
       ...(chapterPart ? { articleSection: chapterPart.label } : {}),
+      ...(chapterDate ? { datePublished: chapterDate.published, dateModified: chapterDate.modified } : {}),
       isPartOf: { '@type': 'Book', name: BRAND, url: 'https://dive.vladyslavpodoliako.com' },
       inLanguage: 'en',
     }
@@ -70,6 +76,12 @@ const jsonLd: Record<string, unknown> = isChapter
         image: og,
         bookFormat: 'EBook',
         numberOfPages: chapterCount,
+        hasPart: CHAPTERS.map((c) => ({
+          '@type': 'Chapter',
+          name: c.title,
+          position: c.number,
+          url: `https://dive.vladyslavpodoliako.com/chapters/${c.slug}/`,
+        })),
         inLanguage: 'en',
         license: 'https://dive.vladyslavpodoliako.com/llms.txt',
       }
@@ -97,6 +109,8 @@ const jsonLd: Record<string, unknown> = isChapter
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     <meta property="og:type" content={isChapter ? 'article' : 'website'} />
+    {chapterDate && <meta property="article:published_time" content={chapterDate.published} />}
+    {chapterDate && <meta property="article:modified_time" content={chapterDate.modified} />}
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
     <meta property="og:image" content={og} />
@@ -111,6 +125,20 @@ const jsonLd: Record<string, unknown> = isChapter
     <link rel="alternate" type="application/rss+xml" title="Research notes RSS" href="https://dive.vladyslavpodoliako.com/rss/research-notes.xml" />
     <link rel="alternate" type="application/rss+xml" title="Changelog RSS" href="https://dive.vladyslavpodoliako.com/rss/changelog.xml" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {isChapter && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://dive.vladyslavpodoliako.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Journey', item: 'https://dive.vladyslavpodoliako.com/journey/' },
+            { '@type': 'ListItem', position: 3, name: title, item: canonical },
+          ],
+        })}
+      />
+    )}
     <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
     <script is:inline define:vars={{ googleAnalyticsId }}>
       window.dataLayer = window.dataLayer || [];

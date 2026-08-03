@@ -5,6 +5,7 @@
 
 export const AUTHOR = {
   '@type': 'Person',
+  '@id': 'https://dive.vladyslavpodoliako.com/about/#vlad',
   name: 'Vlad Podoliako',
   url: 'https://dive.vladyslavpodoliako.com',
   jobTitle: 'CEO, Belkins',
@@ -28,8 +29,15 @@ export const AUTHOR = {
     'AI for operators and founders',
     'AI tooling',
   ],
-  // TODO(Vlad): add your LinkedIn + X profile URLs to sameAs to complete the entity graph
-  sameAs: ['https://www.vladsnewsletter.com'],
+  // Profile URLs as published on vladyslavpodoliako.com (verified 2026-08-03).
+  sameAs: [
+    'https://www.linkedin.com/in/chiefdata/',
+    'https://x.com/StBelkins',
+    'https://www.youtube.com/@stbelkins',
+    'https://t.me/belkinsmain',
+    'https://vladyslavpodoliako.com',
+    'https://www.vladsnewsletter.com',
+  ],
 } as const;
 
 export const PUBLISHER = {
