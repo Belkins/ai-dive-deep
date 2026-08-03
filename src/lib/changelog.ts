@@ -16,10 +16,28 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 12.0',
+    date: '2026-08-03',
+    bannerText: 'New — CAD-as-code: Claude designed a 3D-printable museum frame for the bird station. Eight parts, STL + STEP, from a vendor PNG — and zero screws into the display.',
+    bannerHref: '/cad-as-code/',
+    tagline: 'The physical edition. Every prior edition ran the loop on information; this one runs it on matter. Claude Code designed a wall frame for the bird station\'s 13.3" e-ink panel and its Raspberry Pi 5 — not by driving a CAD program, but by writing one: a 267-line build123d script whose dimensions were read off Pimoroni\'s official drawing, and which emits every part as STL and STEP, an assembly model with the panel and Pi mocked in place, and section cuts at five heights; the isometric line renders shown on the page are projected from the same geometry. The frame clamps the display through foam instead of screwing into it, hides the panel\'s own bezel behind a 0.8 mm reveal, splits itself into bed-sized quadrants on request, and keeps the microphone outside where it can hear. Shipped with the honesty intact: the design is committed, and zero grams of plastic exist until the calipers agree.',
+    shipped: [
+      'New page — /cad-as-code/. The full process: an interior-design brief ("make the electronics disappear") plus a vendor\'s dimensional drawing in, eight printable parts out. Why the deliverable is a program rather than a mesh — parameters at the top like a config block, geometry as boolean subtraction, STL and STEP as build artifacts regenerated in seconds when a number changes.',
+      'The six mechanical decisions that make it a frame rather than a box: six ø8 foam-tipped clamp posts so nothing fastens into the $299.99 panel (±1.5 mm of tolerance absorbed by the material), the 0.8 mm reveal that hides the panel\'s own black border behind the lip, a parametric half-lap quadrant split so a 312 mm frame prints on a 220 mm bed, face-down printing so the textured plate becomes the museum finish with zero supports, a lay-in cable tunnel + zip-tie saddles + chimney vents + keyholes in both orientations, and the refusal that matters: the microphone capsule stays outside the frame, because a closed box would muffle the station\'s hearing.',
+      'The self-verification harness, which is the operator lesson: the final 60 lines of the script are QA, not design. Volume / bounding-box / validity report per part, section SVGs at five heights (a wall too thin shows up as a wrong outline in seconds), isometric line renders for eyeball QA, and an assembly STEP with mock panel and Pi so a human can check fit in one file. The renders on the page are that evidence, unretouched.',
+      'The honesty section, kept load-bearing: nothing is printed yet — the commit itself says the panel-thickness and interior-depth parameters await calipers. Dimensions were read off a drawing by a vision model, which is a trust chain, not a caliper — mitigated structurally, because a mis-read number is a sixty-second regeneration. And mouse CAD is not the villain: the repo\'s earlier bird-mic enclosure was hand-drawn in Fusion 360 and works fine; the difference is what the artifact invites.',
+    ],
+    receipts: [
+      { label: 'Vendor drawing → printable parts', value: '1 session · 8 parts + assembly' },
+      { label: 'The generator', value: '267 lines of build123d' },
+      { label: 'The commit', value: '25 files · 77,177 insertions — STEP is text' },
+      { label: 'Screws into the display', value: '0 — six foam-tipped clamp posts' },
+      { label: 'Printed so far', value: '0 g — calipers before plastic' },
+    ],
+  },
+  {
     edition: 'Edition 11.0',
     date: '2026-07-30',
-    bannerText: 'New lesson — Music is Math: how AI actually writes a song, and why the same recipe now writes proteins, drives robot arms, and beats the best weather forecast on Earth.',
-    bannerHref: '/music-is-math/',
     tagline: 'The foundations edition. Every other page here tells you how to operate the tools; this one explains what is happening inside them, using the domain people find most magical. Sound is already numbers — 44,100 of them a second — and the whole breakthrough was compressing that into a few hundred learned symbols a second, short enough for a machine built to finish sentences to finish a song instead. Then the interesting part: the same three-step recipe went and conquered proteins, robot motion and the weather, which is the actual event of the last few years. Shipped with an interactive lab that runs the same pipeline across six alphabets, and with the parts most retellings get wrong kept in — including five claims from my own first draft that failed verification.',
     shipped: [
       'New lesson page — /music-is-math/. The mechanism first: why nobody predicts raw waveform samples (three minutes is ~7.9M numbers), what a neural codec does, and the four numbers that make it concrete — MusicGen at 50 frames/sec with 4 codebooks of 2,048 entries (200 tokens a second, 1,500 prediction steps for 30 seconds of music), MusicLM\'s quoted "one second of audio is represented by 600 tokens", and Descript\'s ~90× compression at 8 kbps. Every figure read off the primary paper.',
@@ -90,8 +108,6 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     edition: 'Edition 10.6',
     date: '2026-06-16',
-    bannerText: 'New showcase — /good-taste: stop your AI from generating generic slop. A before/after of Leon Lin\'s public taste-skill (45k★, credited), with the receipts I built using it.',
-    bannerHref: '/good-taste/',
     tagline: 'The showcase. Chapter 46 argued that taste is the last mile; /good-taste makes it visceral — a side-by-side of generic-AI slop (purple glow, floating blobs, a fake dashboard) next to the same brief art-directed with a public skill. The skill is Leon Lin\'s open-source taste-skill (github.com/Leonxlnx/taste-skill, 45k+ stars), not mine; this page is what stealing a skill well, with credit, looks like.',
     shipped: [
       'New page /good-taste — a before/after gallery (slop vs. taste, same prompt), the skill catalog, a 60-second npx install, and the receipts (flicked.email\'s three designs, the Reach moon-base study, this book\'s own design system). The "before" is an honest generated example of un-directed AI slop — every tell on the skill\'s own ban-list.',

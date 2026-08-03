@@ -493,6 +493,12 @@ export const glossary: Record<string, GlossaryEntry> = {
       'The multi-agent code audit pointed at the agent\'s own configuration — skills, hooks, memory, permissions, schedulers — with an adversarial red-team re-verifying every finding before anything executes. Config rot is silent by construction; the audit is what makes it visible. Method and receipts: <a href="/self-audit/">The Self-Audit</a>.',
     related: ['Dynamic workflows', 'Agent teams'],
   },
+  'CAD-as-code': {
+    term: 'CAD-as-code',
+    definition:
+      'Designing a physical part as a program — parametric Python (build123d, CadQuery) or OpenSCAD — instead of sculpting it with a mouse. The source of truth is a parameter block plus boolean geometry; the STL your slicer eats and the STEP a machinist edits are build artifacts, regenerated in seconds when a number changes. What makes hardware legible to an agent loop: read the vendor drawing, emit the parts, render the evidence, commit. The worked example: <a href="/cad-as-code/">CAD-as-code</a>.',
+    related: ['Agent', 'Claude Code'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);

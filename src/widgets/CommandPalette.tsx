@@ -127,6 +127,16 @@ const MUSICMATH_SECTIONS: { id: string; label: string }[] = [
   { id: 'leaks', label: 'Where the thesis leaks' },
   { id: 'monday', label: 'Do this Monday' },
 ];
+const CADASCODE_SECTIONS: { id: string; label: string }[] = [
+  { id: 'claim', label: 'The claim' },
+  { id: 'wall', label: 'The wall it hangs on' },
+  { id: 'drawing', label: 'The spec was a PNG' },
+  { id: 'code', label: 'The CAD is a program' },
+  { id: 'decisions', label: 'Six decisions in plastic' },
+  { id: 'selfcheck', label: 'The script QAs its own geometry' },
+  { id: 'leaks', label: 'Where this honestly stops' },
+  { id: 'monday', label: 'Do this Monday' },
+];
 const LEARN_SECTIONS: { id: string; label: string }[] = [
   { id: 'is-this-you', label: 'Is this you? (no-code vs builder)' },
   { id: 'concepts', label: 'Five words you need first' },
@@ -241,6 +251,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'The Sovereign Stack',   href: `${base}/sovereign-stack/`, subtitle: 'Open-weights LLMs that survive the deprecation calendar — Ollama, hardware, the heretic question, nano-gpt', keywords: 'sovereign stack open source weights local llm on-device edge ollama lm studio kimi qwen glm deepseek llama mistral grok gpt-oss heretic abliteration nano-gpt nanogpt karpathy mythos hardware mac studio rtx 3090 4090 mythos meta google deepmind anthropic openai xai zhipu alibaba' },
       { type: 'page', title: 'Dynamic Workflows',     href: `${base}/dynamic-workflows/`, subtitle: 'Opus 4.8 dynamic workflows — Claude plans, fans out parallel subagents, and verifies its own work',     keywords: 'dynamic workflows workflow opus 4.8 parallel subagents agents ultracode effort generator validator orchestration deep-research agent teams anthropic claude code swarm automated' },
       { type: 'page', title: 'Music is Math',          href: `${base}/music-is-math/`,   subtitle: 'How AI writes a song — and why the same recipe writes proteins, motion and weather',                          keywords: 'music is math suno udio ai music how does ai make music audio tokens tokenization tokenizer neural codec encodec soundstream dac musicgen musiclm bark stable audio riffusion elevenlabs lyria transformer autocomplete next token prediction diffusion flow matching latent proteins esm3 esmgfp gfp alphafold dna evo genome amino acids robots rt-2 pi0 physical intelligence gemini robotics action tokens weather gencast weathernext ecmwf world models genie sora veo vit patches vqgan alphago universality everything is a language' },
+      { type: 'page', title: 'CAD-as-code',            href: `${base}/cad-as-code/`,     subtitle: 'Claude designs a printable museum frame for the bird station — STL, STEP, and the renders to prove it', keywords: 'cad as code cad-as-code frame inkframe 3d print printing printer stl step build123d cadquery openscad fusion 360 freecad parametric hardware physical object e-ink eink inky impression spectra pimoroni raspberry pi pi 5 birdnet bird station enclosure bracket mount jig half-lap dovetail keyhole clamp museum frame mockup renders dimensional drawing calipers petg filament' },
       { type: 'page', title: 'Dreaming',              href: `${base}/dreaming/`,        subtitle: "A local, propose-only twin of Anthropic's Dreaming — digest, surface, verify against the raw transcript, never write", keywords: 'dreaming dream memory curation agent memory propose-only surfacer anthropic managed agents self-improve session transcripts verify quote raw jsonl hallucination yield-floor /learn /dream digest extract review apply-new claude code loop pointed inward' },
       { type: 'page', title: 'The Self-Audit',          href: `${base}/self-audit/`,      subtitle: "The swarm pointed at the agent's own setup — 41 findings, 2 refutations, the kill-rules", keywords: 'self-audit self audit config rot skills hooks memory permissions allowlist red-team adversarial verification telemetry prune archive launchd spine health pulse maintenance hygiene setup audit' },
       { type: 'page', title: 'Opus 5 — the model file',   href: `${base}/opus-5/`,       subtitle: 'Shipped 2026-07-24 — $5/$25, the effort dial, and where it really sits',                                keywords: 'opus 5 opus-5 claude opus 5 claude-opus-5 new model july 2026 release launch effort dial effort parameter low medium high xhigh max pricing $5 $25 1m context may 2026 cutoff default claude max claude pro fallback opus 4.8 priority tier web_fetch hierarchy fable 5 comparison arc-agi-3 frontierbench swe-bench pro osworld' },
@@ -349,6 +360,13 @@ export default function CommandPalette() {
         subtitle: 'Music is Math',
         href: `${base}/music-is-math/#${s.id}`,
         keywords: `music is math tokenization audio tokens suno transformer autocomplete proteins robots weather diffusion ${s.label} ${s.id}`.toLowerCase(),
+      })),
+      ...CADASCODE_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'CAD-as-code',
+        href: `${base}/cad-as-code/#${s.id}`,
+        keywords: `cad as code frame inkframe 3d print stl step build123d parametric hardware e-ink pimoroni raspberry pi birdnet ${s.label} ${s.id}`.toLowerCase(),
       })),
       ...LEARN_SECTIONS.map((s) => ({
         type: 'section' as const,
