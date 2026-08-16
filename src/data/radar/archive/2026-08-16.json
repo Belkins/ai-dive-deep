@@ -1,11 +1,11 @@
 {
   "date": "2026-08-16",
-  "generated": "2026-08-16T05:46:53.391Z",
+  "generated": "2026-08-16T07:02:26.439Z",
   "count": 40,
   "stats": {
     "feedsTotal": 78,
     "feedsLive": 67,
-    "itemsTracked": 18937,
+    "itemsTracked": 18950,
     "travellingFires": 22,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
@@ -13,37 +13,37 @@
     "byStage": {
       "Papers": 0,
       "Repos": 8,
-      "Community": 32,
-      "Analysis": 0
+      "Community": 31,
+      "Analysis": 1
     },
     "byTier": {
-      "Live Signal": 32,
-      "AI Firehose": 8
+      "Live Signal": 31,
+      "AI Firehose": 9
     },
     "flow": {
-      "Papers": 11,
+      "Papers": 9,
       "Repos": 8,
-      "Community": 192,
-      "Analysis": 12
+      "Community": 178,
+      "Analysis": 13
     },
     "newToday": 40,
-    "heatingNow": 0,
+    "heatingNow": 1,
     "travelledNow": 0,
     "medianLeadHours": 4.4,
     "freshestHours": 1.4,
-    "oldestSurvivorHours": 8.1,
+    "oldestSurvivorHours": 9.2,
     "topDomains": [
       {
         "domain": "github.com",
-        "count": 15
+        "count": 14
       },
       {
         "domain": "lesswrong.com",
         "count": 3
       },
       {
-        "domain": "spectrum.ieee.org",
-        "count": 2
+        "domain": "news.ycombinator.com",
+        "count": 1
       }
     ]
   },
@@ -107,6 +107,47 @@
   "items": [
     {
       "rank": 1,
+      "title": "Show HN: I have tried using Honestify instead of sending direct CV/Resume",
+      "url": "https://news.ycombinator.com/item?id=49317091",
+      "domain": "news.ycombinator.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.9,
+      "firstSeen": "2026-08-16T07:02:03.447Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 2,
+      "title": "Software Engineering fundamentals matter more",
+      "url": "https://rhonabwy.com/2026/08/15/software-engineering-fundamentals-matter-more-than-ever",
+      "domain": "rhonabwy.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front",
+        "Lobsters"
+      ],
+      "nSources": 2,
+      "nFam": 2,
+      "ageHours": 8.5,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 3,
       "title": "The quirky personal homepages of programming language creators",
       "url": "https://breck.lol/plMakers.html",
       "domain": "breck.lol",
@@ -119,14 +160,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.4,
+      "ageHours": 2.6,
       "firstSeen": "2026-08-16T04:52:26.164Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 2,
+      "rank": 4,
       "title": "Does DiffusionGemma do latent reasoning?",
       "url": "https://www.lesswrong.com/posts/QBuJ3suRZxrrxSTtv/does-diffusiongemma-do-latent-reasoning",
       "domain": "lesswrong.com",
@@ -135,18 +176,39 @@
       "stage": "Community",
       "firstSource": "LessWrong",
       "sources": [
-        "LessWrong"
+        "LessWrong",
+        "Alignment Forum"
       ],
-      "nSources": 1,
+      "nSources": 2,
       "nFam": 1,
-      "ageHours": 1.4,
+      "ageHours": 2.7,
       "firstSeen": "2026-08-16T04:52:26.164Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 3,
+      "rank": 5,
+      "title": "Falstad Math and Physics Simulations",
+      "url": "https://www.falstad.com/mathphysics.html",
+      "domain": "falstad.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.7,
+      "firstSeen": "2026-08-16T07:02:03.447Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 6,
       "title": "Show HN: DSH Plugin Directory – Every DeepSeek Harness Plugin",
       "url": "https://dshplugin.online/",
       "domain": "dshplugin.online",
@@ -159,14 +221,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.6,
+      "ageHours": 2.8,
       "firstSeen": "2026-08-16T04:52:26.164Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 4,
+      "rank": 7,
       "title": "What's missing to have reproducible builds on PyPI",
       "url": "https://snarky.ca/whats-missing-to-have-reproducible-builds-on-pypi",
       "domain": "snarky.ca",
@@ -179,14 +241,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
+      "ageHours": 3.4,
       "firstSeen": "2026-08-16T04:52:26.164Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 5,
+      "rank": 8,
       "title": "Show HN: Upscaled screenshots of specific DOM elements",
       "url": "https://addons.mozilla.org/en-US/firefox/addon/beermusic",
       "domain": "addons.mozilla.org",
@@ -199,14 +261,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.2,
+      "ageHours": 3.5,
       "firstSeen": "2026-08-16T04:52:26.164Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 6,
+      "rank": 9,
       "title": "Show HN: Grow your SaaS visibility with AI-powered discovery",
       "url": "https://saaslyra.com/",
       "domain": "saaslyra.com",
@@ -219,67 +281,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.3,
-      "firstSeen": "2026-08-16T04:52:26.164Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 7,
-      "title": "Government sponsored study on alcohol doesn't stand up to scrutiny: Nassim Taleb",
-      "url": "https://nntaleb.substack.com/p/have-another-drink",
-      "domain": "nntaleb.substack.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.4,
-      "firstSeen": "2026-08-16T04:52:26.164Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 8,
-      "title": "Aiki reaches recursive self-interpretation",
-      "url": "https://decuser.github.io/posts/aiki-alpha-mileston26-update",
-      "domain": "decuser.github.io",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.6,
-      "firstSeen": "2026-08-16T04:52:26.164Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 9,
-      "title": "Zapping Rocks Unlocks Stimulated Geologic Hydrogen",
-      "url": "https://spectrum.ieee.org/stimulated-geologic-hydrogen",
-      "domain": "spectrum.ieee.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.2,
+      "ageHours": 3.5,
       "firstSeen": "2026-08-16T04:52:26.164Z",
       "heating": false,
       "travelled": false,
@@ -287,29 +289,9 @@
     },
     {
       "rank": 10,
-      "title": "Show HN: Widen, a native Postgres GUI using Apple's on-device LLM",
-      "url": "https://github.com/betocmn/widen",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.2,
-      "firstSeen": "2026-08-16T04:52:26.164Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 11,
-      "title": "Patterns and problems in emerging multi-agent systems",
-      "url": "https://www.anthropic.com/research/multiagent-systems",
-      "domain": "anthropic.com",
+      "title": "Government sponsored study on alcohol doesn't stand up to scrutiny: Nassim Taleb",
+      "url": "https://nntaleb.substack.com/p/have-another-drink",
+      "domain": "nntaleb.substack.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -326,7 +308,107 @@
       "leadHours": null
     },
     {
+      "rank": 11,
+      "title": "Aiki reaches recursive self-interpretation",
+      "url": "https://decuser.github.io/posts/aiki-alpha-mileston26-update",
+      "domain": "decuser.github.io",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T04:52:26.164Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
       "rank": 12,
+      "title": "Zapping Rocks Unlocks Stimulated Geologic Hydrogen",
+      "url": "https://spectrum.ieee.org/stimulated-geologic-hydrogen",
+      "domain": "spectrum.ieee.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.4,
+      "firstSeen": "2026-08-16T04:52:26.164Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 13,
+      "title": "Show HN: Widen, a native Postgres GUI using Apple's on-device LLM",
+      "url": "https://github.com/betocmn/widen",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.4,
+      "firstSeen": "2026-08-16T04:52:26.164Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 14,
+      "title": "Patterns and problems in emerging multi-agent systems",
+      "url": "https://www.anthropic.com/research/multiagent-systems",
+      "domain": "anthropic.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.8,
+      "firstSeen": "2026-08-16T04:52:26.164Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 15,
+      "title": "🔮 The curious economics of a $6 AI agent #597",
+      "url": "https://www.exponentialview.co/p/ev-597",
+      "domain": "exponentialview.co",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Analysis",
+      "firstSource": "Exponential View",
+      "sources": [
+        "Exponential View"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.4,
+      "firstSeen": "2026-08-16T07:02:03.447Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 16,
       "title": "Guiding Ships with Moire Patterns",
       "url": "https://tinkerings.org/2018/03/28/guiding-ships-with-moire-patterns",
       "domain": "tinkerings.org",
@@ -339,14 +421,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.3,
+      "ageHours": 5.6,
       "firstSeen": "2026-08-16T03:14:45.728Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 13,
+      "rank": 17,
       "title": "Winners of the Fundamental Uncertainty Essay Contest",
       "url": "https://www.lesswrong.com/posts/SPeqbS7zTczgFtnP6/winners-of-the-fundamental-uncertainty-essay-contest",
       "domain": "lesswrong.com",
@@ -359,14 +441,174 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.4,
+      "ageHours": 5.7,
       "firstSeen": "2026-08-16T01:59:11.801Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 14,
+      "rank": 18,
+      "title": "cathrynlavery/diagram-design",
+      "url": "https://github.com/cathrynlavery/diagram-design",
+      "domain": "github.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Repos",
+      "firstSource": "GitHub Trending weekly",
+      "sources": [
+        "GitHub Trending weekly"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 19,
+      "title": "HKUDS/CLI-Anything",
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "domain": "github.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Repos",
+      "firstSource": "GitHub Trending Python",
+      "sources": [
+        "GitHub Trending Python"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 20,
+      "title": "macro-inc/macro",
+      "url": "https://github.com/macro-inc/macro",
+      "domain": "github.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Repos",
+      "firstSource": "GitHub Trending weekly",
+      "sources": [
+        "GitHub Trending weekly"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 21,
+      "title": "paperclipai/paperclip",
+      "url": "https://github.com/paperclipai/paperclip",
+      "domain": "github.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Repos",
+      "firstSource": "GitHub Trending weekly",
+      "sources": [
+        "GitHub Trending weekly"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 22,
+      "title": "sgl-project/sglang-omni",
+      "url": "https://github.com/sgl-project/sglang-omni",
+      "domain": "github.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Repos",
+      "firstSource": "GitHub Trending Python",
+      "sources": [
+        "GitHub Trending Python"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 23,
+      "title": "titanwings/colleague-skill",
+      "url": "https://github.com/titanwings/colleague-skill",
+      "domain": "github.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Repos",
+      "firstSource": "GitHub Trending Python",
+      "sources": [
+        "GitHub Trending Python"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 24,
+      "title": "ToolJet/ToolJet",
+      "url": "https://github.com/ToolJet/ToolJet",
+      "domain": "github.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Repos",
+      "firstSource": "GitHub Trending weekly",
+      "sources": [
+        "GitHub Trending weekly"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 25,
+      "title": "whiteguo233/OpenBiliClaw",
+      "url": "https://github.com/whiteguo233/OpenBiliClaw",
+      "domain": "github.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Repos",
+      "firstSource": "GitHub Trending Python",
+      "sources": [
+        "GitHub Trending Python"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-08-16T03:14:45.728Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 26,
       "title": "Show HN: Mic Drop, a real-time multiplayer karaoke game",
       "url": "https://www.micdrop.gg/",
       "domain": "micdrop.gg",
@@ -380,14 +622,14 @@
       ],
       "nSources": 2,
       "nFam": 1,
-      "ageHours": 5,
+      "ageHours": 6.3,
       "firstSeen": "2026-08-16T01:59:11.801Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 15,
+      "rank": 27,
       "title": "Show HN: I built a native app for coding agents with Rust and GPUI",
       "url": "https://waku.sh/",
       "domain": "waku.sh",
@@ -401,14 +643,14 @@
       ],
       "nSources": 2,
       "nFam": 1,
-      "ageHours": 5.1,
+      "ageHours": 6.4,
       "firstSeen": "2026-08-16T01:59:11.801Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 16,
+      "rank": 28,
       "title": "The complete AI SEO playbook: from zero to 4.6M impressions in 3 months",
       "url": "https://github.com/TraceCohenTech/ai-seo-playbook",
       "domain": "github.com",
@@ -421,174 +663,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5.4,
+      "ageHours": 6.7,
       "firstSeen": "2026-08-16T01:59:11.801Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 17,
-      "title": "cathrynlavery/diagram-design",
-      "url": "https://github.com/cathrynlavery/diagram-design",
-      "domain": "github.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Repos",
-      "firstSource": "GitHub Trending weekly",
-      "sources": [
-        "GitHub Trending weekly"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 18,
-      "title": "HKUDS/CLI-Anything",
-      "url": "https://github.com/HKUDS/CLI-Anything",
-      "domain": "github.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Repos",
-      "firstSource": "GitHub Trending Python",
-      "sources": [
-        "GitHub Trending Python"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 19,
-      "title": "macro-inc/macro",
-      "url": "https://github.com/macro-inc/macro",
-      "domain": "github.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Repos",
-      "firstSource": "GitHub Trending weekly",
-      "sources": [
-        "GitHub Trending weekly"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 20,
-      "title": "paperclipai/paperclip",
-      "url": "https://github.com/paperclipai/paperclip",
-      "domain": "github.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Repos",
-      "firstSource": "GitHub Trending weekly",
-      "sources": [
-        "GitHub Trending weekly"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 21,
-      "title": "sgl-project/sglang-omni",
-      "url": "https://github.com/sgl-project/sglang-omni",
-      "domain": "github.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Repos",
-      "firstSource": "GitHub Trending Python",
-      "sources": [
-        "GitHub Trending Python"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 22,
-      "title": "titanwings/colleague-skill",
-      "url": "https://github.com/titanwings/colleague-skill",
-      "domain": "github.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Repos",
-      "firstSource": "GitHub Trending Python",
-      "sources": [
-        "GitHub Trending Python"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 23,
-      "title": "ToolJet/ToolJet",
-      "url": "https://github.com/ToolJet/ToolJet",
-      "domain": "github.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Repos",
-      "firstSource": "GitHub Trending weekly",
-      "sources": [
-        "GitHub Trending weekly"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 24,
-      "title": "whiteguo233/OpenBiliClaw",
-      "url": "https://github.com/whiteguo233/OpenBiliClaw",
-      "domain": "github.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Repos",
-      "firstSource": "GitHub Trending Python",
-      "sources": [
-        "GitHub Trending Python"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 25,
+      "rank": 29,
       "title": "Tea5767-Radio-Tuner",
       "url": "https://github.com/turtushig22-blip/tea5767-radio-tuner",
       "domain": "github.com",
@@ -601,14 +683,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5.9,
+      "ageHours": 7.1,
       "firstSeen": "2026-08-16T01:59:11.801Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 26,
+      "rank": 30,
       "title": "Show HN: Snafu: Agentic flow to help you with \"naming things\" in source code",
       "url": "https://github.com/sebastiancarlos/snafu",
       "domain": "github.com",
@@ -621,14 +703,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 6.3,
+      "ageHours": 7.5,
       "firstSeen": "2026-08-16T01:59:11.801Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 27,
+      "rank": 31,
       "title": "What do you think of LazyPromise as a lightweight alternative to Effect?",
       "url": "https://github.com/lazy-promise/lazy-promise",
       "domain": "github.com",
@@ -641,14 +723,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 6.4,
+      "ageHours": 7.7,
       "firstSeen": "2026-08-15T23:37:29.708Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 28,
+      "rank": 32,
       "title": "A Programming Paradigm for Spatiotemporal Composability",
       "url": "https://github.com/cordiverse/paper/blob/main/paper.pdf",
       "domain": "github.com",
@@ -661,14 +743,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 6.6,
+      "ageHours": 7.8,
       "firstSeen": "2026-08-15T23:37:29.708Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 29,
+      "rank": 33,
       "title": "AI-Assisted GPU Porting of a 250k Line Legacy Weather Simulation Code",
       "url": "https://arxiv.org/abs/2608.13122",
       "domain": "arxiv.org",
@@ -681,14 +763,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 7.1,
+      "ageHours": 8.3,
       "firstSeen": "2026-08-16T03:14:45.728Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 30,
+      "rank": 34,
       "title": "The Government Is Monitoring Anti-Flock TikTok and Instagram Accounts",
       "url": "https://www.404media.co/the-government-is-monitoring-anti-flock-tiktok-and-instagram-accounts",
       "domain": "404media.co",
@@ -701,14 +783,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 7.1,
+      "ageHours": 8.4,
       "firstSeen": "2026-08-15T23:37:29.708Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 31,
+      "rank": 35,
       "title": "Show HN: Stratum – Rate books, films, and music to find users with similar taste",
       "url": "https://www.joinstratum.app/",
       "domain": "joinstratum.app",
@@ -721,14 +803,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 7.2,
+      "ageHours": 8.4,
       "firstSeen": "2026-08-15T23:37:29.708Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 32,
+      "rank": 36,
       "title": "Kimi likes causal decision theory more after RL in twin prisoner’s dilemmas",
       "url": "https://www.lesswrong.com/posts/hfNBEKaStASAYMLiu/kimi-likes-causal-decision-theory-more-after-rl-in-twin-1",
       "domain": "lesswrong.com",
@@ -741,34 +823,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 7.3,
+      "ageHours": 8.5,
       "firstSeen": "2026-08-15T22:41:26.726Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 33,
-      "title": "Software Engineering fundamentals matter more",
-      "url": "https://rhonabwy.com/2026/08/15/software-engineering-fundamentals-matter-more-than-ever",
-      "domain": "rhonabwy.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 7.3,
-      "firstSeen": "2026-08-16T03:14:45.728Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 34,
+      "rank": 37,
       "title": "SugarTrack – an offline Android logbook for blood sugar (no account, no cloud)",
       "url": "https://sugartrack-beta.vercel.app/",
       "domain": "sugartrack-beta.vercel.app",
@@ -781,14 +843,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 7.3,
+      "ageHours": 8.6,
       "firstSeen": "2026-08-15T23:37:29.708Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 35,
+      "rank": 38,
       "title": "Show HN: Bribes.fyi – Compare bribes statistics department wise",
       "url": "https://bribes.fyi/compare",
       "domain": "bribes.fyi",
@@ -801,14 +863,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 7.6,
+      "ageHours": 8.9,
       "firstSeen": "2026-08-16T01:59:11.801Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 36,
+      "rank": 39,
       "title": "Engineers will do anything to avoid learning from history",
       "url": "https://horn.gg/blog/engineers-will-do-anything-to-avoid-learning-from-history",
       "domain": "horn.gg",
@@ -821,14 +883,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 7.6,
+      "ageHours": 8.9,
       "firstSeen": "2026-08-15T22:41:26.726Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 37,
+      "rank": 40,
       "title": "Modeling and Verification of Keeta's Consensus [pdf]",
       "url": "https://xescu.re/keeta-consensus.pdf",
       "domain": "xescu.re",
@@ -841,68 +903,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 8,
-      "firstSeen": "2026-08-15T22:41:26.726Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 38,
-      "title": "Bede Liu, a digital signal processing pioneer, has died",
-      "url": "https://spectrum.ieee.org/digital-signal-processing",
-      "domain": "spectrum.ieee.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 8,
-      "firstSeen": "2026-08-15T22:41:26.726Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 39,
-      "title": "The Wow signal was a strong narrowband radio signal detected on August 15, 1977",
-      "url": "https://en.wikipedia.org/wiki/Wow!_signal",
-      "domain": "en.wikipedia.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 8.1,
-      "firstSeen": "2026-08-15T22:41:26.726Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 40,
-      "title": "Show HN: Live Claude Usage HUD for a $38 Thermalright Trofeo Vision LCD",
-      "url": "https://github.com/christensen143/claude-trofeo-hud",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front",
-        "Show HN"
-      ],
-      "nSources": 2,
-      "nFam": 1,
-      "ageHours": 8.1,
+      "ageHours": 9.2,
       "firstSeen": "2026-08-15T22:41:26.726Z",
       "heating": false,
       "travelled": false,
