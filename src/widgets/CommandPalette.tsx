@@ -40,6 +40,16 @@ const CHEAT_SHEET_SECTIONS = [
   '.mcp.json shape', 'Hook JSON shape', 'Headless / CI one-liners',
   'Plan → Auto → /goal ladder', 'Model routing + cost',
 ];
+const TERMINAL_SECTIONS: { id: string; label: string }[] = [
+  { id: 'the-problem', label: 'The glance test' },
+  { id: 'layers', label: 'The four layers' },
+  { id: 'terminals', label: 'Terminal options, honestly' },
+  { id: 'claude-code', label: 'What Claude Code gives you' },
+  { id: 'fleet-paint', label: 'Fleet paint — the full system' },
+  { id: 'gotchas', label: 'The gotchas that cost a day' },
+  { id: 'build-it', label: 'Build it with Claude Code' },
+  { id: 'do-this', label: 'Do this Monday' },
+];
 const HTMLFIRST_SECTIONS: { id: string; label: string }[] = [
   { id: 'the-case', label: 'The case for HTML-first' },
   { id: 'case-afc', label: 'AFC — idea became a company' },
@@ -273,6 +283,7 @@ export default function CommandPalette() {
       { type: 'page', title: 'Claude Code vs Codex',   href: `${base}/claude-code-vs-codex/`, subtitle: 'Ran both in anger — verdict per job, with receipts',                                             keywords: 'claude code vs codex openai codex comparison which better agent cli night shift worktree' },
       { type: 'page', title: 'Claude Code MCP',        href: `${base}/claude-code-mcp/`, subtitle: 'Setup, .mcp.json examples, and the servers worth wiring',                                             keywords: 'claude code mcp model context protocol setup mcp.json servers connectors wiring config security' },
       { type: 'page', title: 'Claude Code hooks',      href: `${base}/claude-code-hooks/`, subtitle: '10 real configs, what they caught, what failed',                                                    keywords: 'claude code hooks pretooluse posttooluse stop sessionstart settings.json secrets-scan block push main exit 2 examples' },
+      { type: 'page', title: 'Fleet paint — terminal setup', href: `${base}/terminal-setup/`, subtitle: 'Paint every window by project — statusline, OSC codes, the watcher',                          keywords: 'terminal setup customization customize statusline status line osc escape codes colors colours paint window title fleet iterm2 wezterm ghostty terminal.app kitty alacritty warp theme bell notification dock badge launchd watcher palette oklch per-project fleet paint' },
       { type: 'page', title: 'AI agent examples',      href: `${base}/ai-agent-examples/`, subtitle: '12 real agents — costs, architecture, failures',                                                    keywords: 'ai agent examples real agents use cases gallery receipts swarm browser voice persona overnight costs failures' },
       { type: 'page', title: 'GitHub Playbook',       href: `${base}/github-playbook/`, subtitle: 'GitHub for non-developers — 5 non-code uses, 8 gh commands, what to ignore, 6 worked examples',                              keywords: 'github gh git non-developer non-coder operator pages readme issues releases discussions linkedin karpathy simonw willison nanogpt nanochat profile readme private repo public repo deploy artifacts' },
       { type: 'page', title: 'Swarms — deep dive',     href: `${base}/swarms/`,          subtitle: '10 swarm skills, 7 patterns, the prompts to steal, the 3 things that break',                                                          keywords: 'swarm swarms parallel subagents fan-out pipeline map-reduce adversarial wave orchestration agent-wave-verify swarm-strategic-plan debug-swarm audit bughunter ultrareview cross-trio-audit folderly orchestrator conductor brief canon-lock red-team' },
@@ -304,6 +315,13 @@ export default function CommandPalette() {
         subtitle: 'Resources',
         href: `${base}/resources/#${s.id}`,
         keywords: `resources ${s.label} ${s.id}`.toLowerCase(),
+      })),
+      ...TERMINAL_SECTIONS.map((s) => ({
+        type: 'section' as const,
+        title: s.label,
+        subtitle: 'Fleet paint',
+        href: `${base}/terminal-setup/#${s.id}`,
+        keywords: `terminal setup customization statusline osc paint fleet window ${s.label} ${s.id}`.toLowerCase(),
       })),
       ...HTMLFIRST_SECTIONS.map((s) => ({
         type: 'section' as const,

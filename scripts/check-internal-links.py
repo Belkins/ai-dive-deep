@@ -46,7 +46,7 @@ MD_LINK_RE = re.compile(r'\[[^\]]*\]\((/(?!/)[^)\s]*)\)')
 # Astro/HTML: href="/path" or href='/path'  — path must start with /
 HREF_RE = re.compile(r'href=(?P<q>["\'])(/(?!/)[^"\'\s>]*)(?P=q)')
 # Route data: href/url/link: '/path' in TS/TSX/Astro frontmatter.
-PROP_ROUTE_RE = re.compile(r'\b(?:href|url|link):\s*(?P<q>["\'])(/(?!/)[^"\'\s]*)\1')
+PROP_ROUTE_RE = re.compile(r'\w*(?:[Hh]ref|[Uu]rl|[Ll]ink):\s*(?P<q>["\'])(/(?!/)[^"\'\s]*)\1')  # suffix match: bannerHref:, sourceUrl:, … (PR #3 review)
 
 
 def chapter_slugs() -> set[str]:

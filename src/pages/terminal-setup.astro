@@ -1,0 +1,318 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const navItems = [
+  { id: 'the-problem', label: 'The glance test' },
+  { id: 'layers', label: 'The four layers' },
+  { id: 'terminals', label: 'Terminal options, honestly' },
+  { id: 'claude-code', label: 'What Claude Code gives you' },
+  { id: 'fleet-paint', label: 'Fleet paint — the full system' },
+  { id: 'gotchas', label: 'The gotchas that cost a day' },
+  { id: 'build-it', label: 'Build it with Claude Code' },
+  { id: 'do-this', label: 'Do this Monday' },
+];
+---
+<BaseLayout
+  title="Fleet paint"
+  description="Customize your terminal for a fleet of parallel agents: statusline, themes, OSC escape codes, and a watcher that paints every window by project. The full technical setup, built by Claude Code."
+>
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Setup</div>
+    <h1>Which window is which.</h1>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Run six agents in six terminal windows and every one of them is the same black rectangle. This page is the fix — from a five-minute statusline to a launchd watcher that paints every window by project. All of it built by Claude Code, including the part where it disassembled the terminal to check what actually works.</p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Screenshots are reconstructions — same system, project names swapped for decoys. The real ones are client work.</p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="the-problem" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The glance test</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p><a href="/chapters/20-terminal-windows/">Chapter 20</a> gets you to six parallel Claude Code sessions. What it doesn't tell you is what your screen looks like when you're there: six identical dark rectangles. Same background, same font, same prompt. The only difference is a title bar you have to squint at — and half the time the title is whatever the agent last renamed itself to, not the project.</p>
+            <p>Here's the failure mode, and it's not hypothetical: you alt-tab into what you think is the staging repo and type a destructive command into production's shell. Or the cheaper, daily version — an agent finished four minutes ago and is sitting there waiting for your approval, and you didn't notice, because a waiting window looks exactly like a working window. You're paying for parallel agents and losing the parallelism to <em>which one was this again?</em></p>
+            <p>The test your setup has to pass is a glance from across the room: which window is which project, and which one needs me right now. Not read — <em>glance</em>. Color does that. Text doesn't.</p>
+          </div>
+
+          <figure class="my-8">
+            <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--line))">
+              <svg viewBox="0 0 880 400" width="100%" role="img" aria-label="Six identical dark terminal windows — indistinguishable at a glance" style="display:block; background:#0c0d10">
+                <!-- before: six identical windows -->
+                {[0,1,2].map((col) => [0,1].map((row) => (
+                  <g transform={`translate(${20 + col * 288}, ${20 + row * 185})`}>
+                    <rect width="264" height="165" rx="8" fill="#1e1e1e" stroke="#2c2c2c"/>
+                    <rect width="264" height="24" rx="8" fill="#282828"/>
+                    <rect y="16" width="264" height="8" fill="#282828"/>
+                    <circle cx="14" cy="12" r="4" fill="#5a5a5a"/><circle cx="28" cy="12" r="4" fill="#5a5a5a"/><circle cx="42" cy="12" r="4" fill="#5a5a5a"/>
+                    <text x="132" y="16" text-anchor="middle" font-family="SF Mono, Menlo, monospace" font-size="9" fill="#8a8a8a">zsh — 80×24</text>
+                    <rect x="14" y="38" width="150" height="7" rx="2" fill="#3a3a3a"/>
+                    <rect x="14" y="52" width="200" height="7" rx="2" fill="#333333"/>
+                    <rect x="14" y="66" width="120" height="7" rx="2" fill="#3a3a3a"/>
+                    <rect x="14" y="80" width="180" height="7" rx="2" fill="#333333"/>
+                    <rect x="14" y="94" width="90" height="7" rx="2" fill="#3a3a3a"/>
+                    <rect x="14" y="140" width="8" height="12" fill="#7a7a7a"/>
+                  </g>
+                )))}
+              </svg>
+            </div>
+            <figcaption class="mt-2 text-sm" style="color: rgb(var(--muted))">Before: six sessions, six projects, zero information. One of these is production. Good luck.</figcaption>
+          </figure>
+
+          <figure class="my-8">
+            <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--line))">
+              <svg viewBox="0 0 880 400" width="100%" role="img" aria-label="The same six windows painted by project — each a distinct background tint with an emoji and project label in the title" style="display:block; background:#0c0d10">
+                <!-- after: painted fleet, decoy project names -->
+                {[
+                  { bg: '#001a1d', bar: '#04252a', cur: '#00d0dd', label: '🚢 harbor', state: '◐ Tracing a flaky webhook retry' },
+                  { bg: '#1b1025', bar: '#251733', cur: '#d19cff', label: '🧵 loom', state: '✳ Waiting: approve the migration?' },
+                  { bg: '#260d0d', bar: '#331515', cur: '#ff9592', label: '🔥 ember', state: '◑ Refactoring the image pipeline' },
+                  { bg: '#0b1629', bar: '#12203a', cur: '#90b7ff', label: '🛰️ atlas', state: '◐ Writing the release notes' },
+                  { bg: '#071b0b', bar: '#0e2712', cur: '#6dd17f', label: '🌿 fern', state: '✳ Idle — 133 tests green' },
+                  { bg: '#15191e', bar: '#1e242b', cur: '#92c1fd', label: '💎 quartz', state: '◑ Auditing the auth flow' },
+                ].map((w, i) => (
+                  <g transform={`translate(${20 + (i % 3) * 288}, ${20 + Math.floor(i / 3) * 185})`}>
+                    <rect width="264" height="165" rx="8" fill={w.bg} stroke="#2c2c2c"/>
+                    <rect width="264" height="24" rx="8" fill={w.bar}/>
+                    <rect y="16" width="264" height="8" fill={w.bar}/>
+                    <circle cx="14" cy="12" r="4" fill="#5a5a5a"/><circle cx="28" cy="12" r="4" fill="#5a5a5a"/><circle cx="42" cy="12" r="4" fill="#5a5a5a"/>
+                    <text x="132" y="16" text-anchor="middle" font-family="SF Mono, Menlo, monospace" font-size="9" fill="#c8c8c8">{w.label} — {w.state}</text>
+                    <rect x="14" y="38" width="150" height="7" rx="2" fill="#ffffff" opacity="0.14"/>
+                    <rect x="14" y="52" width="200" height="7" rx="2" fill="#ffffff" opacity="0.09"/>
+                    <rect x="14" y="66" width="120" height="7" rx="2" fill="#ffffff" opacity="0.14"/>
+                    <rect x="14" y="80" width="180" height="7" rx="2" fill="#ffffff" opacity="0.09"/>
+                    <rect x="14" y="94" width="90" height="7" rx="2" fill="#ffffff" opacity="0.14"/>
+                    <rect x="14" y="140" width="8" height="12" fill={w.cur}/>
+                  </g>
+                ))}
+              </svg>
+            </div>
+            <figcaption class="mt-2 text-sm" style="color: rgb(var(--muted))">After: same six windows, painted. Background tint = project. Emoji + label in the title. The cursor color matches the family. <code>✳</code> in the title means it's waiting for you. You can read this from the couch.</figcaption>
+          </figure>
+        </div>
+
+        <div id="layers" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The four layers</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Terminal customization sounds like one thing. It's four independent layers, and knowing which layer owns what saves you from fighting the wrong one:</p>
+          </div>
+          <div class="overflow-x-auto my-6">
+            <table class="w-full text-sm" style="border-collapse: collapse">
+              <thead>
+                <tr style="border-bottom: 1px solid rgb(var(--line))">
+                  <th class="text-left py-2 pr-4">Layer</th>
+                  <th class="text-left py-2 pr-4">Owns</th>
+                  <th class="text-left py-2">Where it lives</th>
+                </tr>
+              </thead>
+              <tbody style="color: rgb(var(--fg) / 0.85)">
+                <tr style="border-bottom: 1px solid rgb(var(--line) / 0.5)"><td class="py-2 pr-4 font-semibold">The terminal app</td><td class="py-2 pr-4">Profiles, fonts, tabs, splits, GPU rendering, which escape codes it honors</td><td class="py-2">iTerm2 / WezTerm / Ghostty / Terminal.app settings</td></tr>
+                <tr style="border-bottom: 1px solid rgb(var(--line) / 0.5)"><td class="py-2 pr-4 font-semibold">The shell prompt</td><td class="py-2 pr-4">The line you type on — git branch, exit codes, timing</td><td class="py-2">Starship, Powerlevel10k, or hand-rolled <code>PS1</code></td></tr>
+                <tr style="border-bottom: 1px solid rgb(var(--line) / 0.5)"><td class="py-2 pr-4 font-semibold">Escape codes (OSC)</td><td class="py-2 pr-4">Live recolor of background, foreground, cursor, title — from <em>any</em> process, any time</td><td class="py-2"><code>printf</code> sequences; the layer scripts talk to</td></tr>
+                <tr><td class="py-2 pr-4 font-semibold">Claude Code itself</td><td class="py-2 pr-4">Statusline, its own UI theme, window title while working, notification channel</td><td class="py-2"><code>~/.claude/settings.json</code> + <code>/statusline</code>, <code>/config</code>, <code>/rename</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The layer most people never touch is the third one, and it's the one that makes per-project painting possible. OSC (Operating System Command) sequences are how a program tells the terminal "change your background to this hex, right now." No profile switching, no restart:</p>
+          </div>
+          <pre class="text-sm overflow-x-auto rounded-lg p-4 my-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))"><code>{`# paint this window: background, foreground, cursor
+printf '\\e]11;#1b1025\\a'   # OSC 11 — background
+printf '\\e]10;#f3edf9\\a'   # OSC 10 — default text
+printf '\\e]12;#d19cff\\a'   # OSC 12 — cursor
+printf '\\e]0;🧵 loom\\a'    # OSC 0  — window title
+
+# undo everything
+printf '\\e]111\\a\\e]110\\a\\e]112\\a'`}</code></pre>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Run that first block and your window is purple before you finish reading this sentence. That's the entire trick. Everything else on this page is deciding <em>which</em> window gets <em>which</em> color, automatically, and keeping it that way.</p>
+          </div>
+        </div>
+
+        <div id="terminals" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Terminal options, honestly</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Chapter 20 said skip Terminal.app, and then I built this whole system on Terminal.app. Both are right, and the difference matters: Chapter 20 is about <em>one window with many panes</em> — tmux, splits, scrollback search — and Terminal.app is genuinely bad at that. This page is about <em>many windows, one session each</em>, which is the other legitimate fleet shape: every agent gets its own alt-tabbable, ping-able, paintable window. For that shape, Terminal.app turns out to be fine — it honors every escape code this system needs, it's already on the machine, and its blandness stops mattering the moment your watcher is doing the painting.</p>
+            <p>The honest matrix, from actually testing what each one honors:</p>
+          </div>
+          <div class="overflow-x-auto my-6">
+            <table class="w-full text-sm" style="border-collapse: collapse">
+              <thead>
+                <tr style="border-bottom: 1px solid rgb(var(--line))">
+                  <th class="text-left py-2 pr-4">Terminal</th>
+                  <th class="text-left py-2 pr-4">Per-window color story</th>
+                  <th class="text-left py-2">Take</th>
+                </tr>
+              </thead>
+              <tbody style="color: rgb(var(--fg) / 0.85)">
+                <tr style="border-bottom: 1px solid rgb(var(--line) / 0.5)"><td class="py-2 pr-4 font-semibold">Terminal.app</td><td class="py-2 pr-4">OSC 0/10/11/12 honored live; 256-color only</td><td class="py-2">Underrated for one-window-per-agent. This system runs on it.</td></tr>
+                <tr style="border-bottom: 1px solid rgb(var(--line) / 0.5)"><td class="py-2 pr-4 font-semibold">iTerm2</td><td class="py-2 pr-4">All of the above + tab colors, badges, triggers, per-profile everything</td><td class="py-2">The most machinery out of the box. If you live in tabs, start here.</td></tr>
+                <tr style="border-bottom: 1px solid rgb(var(--line) / 0.5)"><td class="py-2 pr-4 font-semibold">WezTerm</td><td class="py-2 pr-4">Everything scriptable in Lua — tab bar, colors, per-pane logic</td><td class="py-2">The programmable choice. Your fleet-paint logic can live <em>inside</em> the terminal config.</td></tr>
+                <tr style="border-bottom: 1px solid rgb(var(--line) / 0.5)"><td class="py-2 pr-4 font-semibold">Ghostty</td><td class="py-2 pr-4">Fast, truecolor, good OSC coverage, per-surface configs</td><td class="py-2">Best raw feel of the new generation. Younger ecosystem.</td></tr>
+                <tr style="border-bottom: 1px solid rgb(var(--line) / 0.5)"><td class="py-2 pr-4 font-semibold">kitty / Alacritty</td><td class="py-2 pr-4">kitty: remote-control API for recoloring; Alacritty: minimal, config-file themes</td><td class="py-2">kitty's <code>kitten @ set-colors</code> is fleet paint as a first-class feature.</td></tr>
+                <tr><td class="py-2 pr-4 font-semibold">Warp</td><td class="py-2 pr-4">Blocks, AI features, themes — but opinionated about owning the rendering</td><td class="py-2">Its own world. If you're in it, use its native theming, not OSC.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The real advice: the terminal app matters less than you think, because the painting layer is terminal-agnostic. OSC 10/11/12 works everywhere that matters. Pick the app for the ergonomics you actually use — then let the escape codes do the identity work.</p>
+          </div>
+        </div>
+
+        <div id="claude-code" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What Claude Code gives you out of the box</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Before building anything custom, take the four free wins. Claude Code ships its own customization surface, and most people run it at defaults:</p>
+            <p><strong>1. The statusline.</strong> A shell script that runs on every prompt render and prints one line under the input box. Claude Code pipes it JSON on stdin — current directory, model, context usage, session cost — and renders whatever your script prints. Type <code>/statusline</code> and it will build one for you; or wire it manually:</p>
+          </div>
+          <pre class="text-sm overflow-x-auto rounded-lg p-4 my-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))"><code>{`// ~/.claude/settings.json
+{
+  "statusLine": { "type": "command", "command": "~/.claude/scripts/statusline.sh" }
+}`}</code></pre>
+          <pre class="text-sm overflow-x-auto rounded-lg p-4 my-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))"><code>{`#!/usr/bin/env bash
+# ~/.claude/scripts/statusline.sh — minimal version
+input=$(cat)
+dir=$(echo "$input"  | jq -r '.workspace.project_dir // .cwd' )
+model=$(echo "$input" | jq -r '.model.display_name')
+pct=$(echo "$input"  | jq -r '(.context // empty) | tostring' 2>/dev/null)
+proj=$(basename "$dir" | tr '[:lower:]' '[:upper:]')
+printf '\\033[1;38;5;16;48;5;250m %s \\033[0m · %s' "$proj" "$model"`}</code></pre>
+
+          <figure class="my-8">
+            <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--line))">
+              <svg viewBox="0 0 880 150" width="100%" role="img" aria-label="Two statusline examples — a project badge with branch, model, context and cost; and a home badge with no branch" style="display:block; background:#101114">
+                <g transform="translate(24, 22)">
+                  <rect width="832" height="44" rx="6" fill="#17181c" stroke="#26272c"/>
+                  <rect x="14" y="10" width="104" height="24" rx="4" fill="#c9ced6"/>
+                  <text x="66" y="27" text-anchor="middle" font-family="SF Mono, Menlo, monospace" font-size="12" font-weight="700" fill="#111111">🚢 HARBOR</text>
+                  <text x="132" y="27" font-family="SF Mono, Menlo, monospace" font-size="12" fill="#57c7d4">⎇ feat/checkout-retries</text>
+                  <text x="330" y="27" font-family="SF Mono, Menlo, monospace" font-size="12" fill="#9a9a9a">· Fable 5 · ctx <tspan fill="#7fd48a">29%</tspan> · $12.40</text>
+                </g>
+                <g transform="translate(24, 84)">
+                  <rect width="832" height="44" rx="6" fill="#17181c" stroke="#26272c"/>
+                  <rect x="14" y="10" width="88" height="24" rx="4" fill="#b9bec6"/>
+                  <text x="58" y="27" text-anchor="middle" font-family="SF Mono, Menlo, monospace" font-size="12" font-weight="700" fill="#111111">🏠 HOME</text>
+                  <text x="116" y="27" font-family="SF Mono, Menlo, monospace" font-size="12" fill="#9a9a9a">· Fable 5 · ctx <tspan fill="#7fd48a">4%</tspan> · $0.62</text>
+                </g>
+              </svg>
+            </div>
+            <figcaption class="mt-2 text-sm" style="color: rgb(var(--muted))">The statusline: project badge, branch, model, context burn, session cost. Second row — the home directory gets its own identity and, deliberately, no branch. One glance answers "where am I and what is this costing."</figcaption>
+          </figure>
+
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p><strong>2. The theme.</strong> <code>/config</code> lets you pick Claude Code's own UI theme, and it accepts custom theme files — JSON in <code>~/.claude/themes/</code> that override specific UI colors. This matters more than it sounds; see the gotchas section for why a dark-window setup can make Claude Code's secondary text unreadable without one.</p>
+            <p><strong>3. The window title.</strong> Claude Code continuously writes the terminal title while it works — a spinner glyph plus a summary of what it's doing, then <code>✳</code> when idle. <code>/rename my-task</code> pins your own name into it. Your terminal's title bar is already a status display; most people never look up.</p>
+            <p><strong>4. The bell.</strong> Set <code>"preferredNotifChannel": "terminal_bell"</code> in settings and Claude Code rings the terminal bell when it needs you. Configure the terminal to badge-not-beep and you get a silent Dock badge on the exact window that's waiting. With eight sessions, this is the difference between polling your own fleet and being paged by it.</p>
+          </div>
+        </div>
+
+        <div id="fleet-paint" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Fleet paint — the full system</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The free wins identify the session <em>inside</em> the window. They don't pass the glance test — for that, the whole window has to carry the project. Here's the move: a small watcher that discovers every live Claude Code session, resolves its project, and paints the window it lives in. Four pieces:</p>
+            <p><strong>The registry.</strong> Each session, on start, writes a small JSON file — pid, tty, cwd, state — into <code>~/.claude/sessions/</code> (a session-start hook does this; a hook on state changes keeps <code>waiting</code> fresh). The registry is the source of truth for <em>what's running where</em>. Everything else just reads it.</p>
+            <p><strong>The palette.</strong> One JSON file mapping project-folder names to a look — background, foreground, cursor, a 256-color badge index for the statusline, a label, an emoji:</p>
+          </div>
+          <pre class="text-sm overflow-x-auto rounded-lg p-4 my-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))"><code>{`// ~/.claude/project-colors.json
+{
+  "harbor": { "label": "Harbor", "bg": "#001a1d", "fg": "#e5f4f5",
+              "cursor": "#00d0dd", "ansi": 23, "emoji": "🚢" },
+  "loom":   { "label": "Loom",   "bg": "#1b1025", "fg": "#f3edf9",
+              "cursor": "#d19cff", "ansi": 91, "emoji": "🧵" },
+  "ember":  { "label": "Ember",  "bg": "#260d0d", "fg": "#fbeceb",
+              "cursor": "#ff9592", "ansi": 124, "emoji": "🔥" },
+  "_fallback": [ /* muted grey family for unknown projects, picked by hash */ ]
+}`}</code></pre>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The colors aren't picked by vibes. They're generated — six hue families in OKLCH at two lightness tiers, so backgrounds sit at equal perceived darkness, text holds ~15:1 contrast on every one of them, and each pair stays distinguishable under the two most common forms of color-blindness. The generator prints a validation table — contrast ratios, pairwise color distance, simulated deuteranopia — and refuses vibes. Related projects share a hue family across tiers: two shades of cyan are two products of the same company. Unknown projects fall back to a hashed pick from a muted grey family that's deliberately disjoint from the configured colors — an unpainted project never impersonates a painted one.</p>
+            <p><strong>The watcher.</strong> A launchd-managed loop (a few hundred lines of Python, ~1% CPU) that every couple of seconds: reads the registry, cross-checks against <code>ps</code> that each pid is a live, interactive Claude Code on a real tty, resolves the project from the cwd basename, and writes the OSC paint — background, text, cursor — straight to that session's tty. Title gets the emoji + label, and a marker when the session is waiting for input. Windows repaint when a session moves, reset when it dies, and the palette hot-reloads on file change — edit a hex, watch the fleet recolor.</p>
+            <p><strong>The statusline, upgraded.</strong> The same script from the section above, except it imports the same palette. That's the detail that makes the system feel engineered instead of decorated: the badge color inside the window and the paint of the window come from one file. There is no way for them to disagree.</p>
+          </div>
+          <PullQuote>One palette file, two consumers. The window and the badge can't drift apart, because they're reading the same truth.</PullQuote>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The launchd wiring, so it survives reboots and crashes:</p>
+          </div>
+          <pre class="text-sm overflow-x-auto rounded-lg p-4 my-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))"><code>{`<!-- ~/Library/LaunchAgents/com.you.fleet-paint.plist -->
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.you.fleet-paint</string>
+  <key>ProgramArguments</key>
+  <array><string>/usr/bin/python3</string>
+         <string>/Users/you/.claude/scripts/fleet-paint.py</string>
+         <string>loop</string></array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+</dict></plist>`}</code></pre>
+        </div>
+
+        <div id="gotchas" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The gotchas that cost a day</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Everything above sounds like an afternoon. The afternoon version works on the happy path and then flakes in ways that make you distrust it. These are the failures that were actually hit, in the order they were hit:</p>
+            <ul class="list-disc pl-6 space-y-3">
+              <li><strong>The pty write buffer is 1 KiB.</strong> Writing escape codes to someone else's tty can short-write or hit <code>EAGAIN</code>. If you give up mid-sequence, the unterminated OSC swallows the <em>agent's own output</em> until something closes it — the bug looks like Claude Code eating text. Bounded retry, and never emit a sequence you can't finish.</li>
+              <li><strong>Dim text has a contrast ceiling.</strong> Terminal.app renders "dim" as 40% text over 60% background — on a dark background the best contrast dim text can reach is about 3.8:1. Your palette's foregrounds must be near-white so that <em>dimmed</em> derivatives stay readable. This is why the generator targets ~15:1 for normal text: it's buying headroom for the dim case.</li>
+              <li><strong>Claude Code's own greys don't follow OSC.</strong> In a 256-color terminal, CC picks explicit palette indices for its secondary text. Repaint the background and those indices don't move — you can end up with dark-grey-on-dark, functionally invisible. The fix is a custom CC theme that pins secondary text to lighter indices. Corollary: don't force <code>COLORTERM=truecolor</code> in a terminal that doesn't really do truecolor; you'll trade wrong-greys for banded-everything.</li>
+              <li><strong>Pids get reused.</strong> A registry entry can outlive its session, and the pid can come back as some other process. Cross-check process start time against the registry's — and only distrust it in one direction, because a resumed session legitimately starts <em>before</em> its registry file.</li>
+              <li><strong>Never trust a color you read back.</strong> AppleScript will happily report a dynamic background as pure white. "Restore" from that read-back and you've painted a window permanently white. Reset with <code>OSC 111/110/112</code>, never with a remembered value.</li>
+              <li><strong>Emoji in titles: one codepoint, no variation selector.</strong> Multi-codepoint emoji and <code>FE0F</code> variants trigger width bugs in title bars. Pick emoji that are emoji-presentation by default and move on.</li>
+              <li><strong>A half-written registry file isn't a dead session.</strong> Require two consecutive misses before declaring a session gone and resetting its window — or every registry write races your watcher into a flicker.</li>
+            </ul>
+            <p>None of these are exotic. All of them are invisible until you run the system for real, across sleep/wake cycles, session resumes, and eight concurrent windows. Which is the setup for the next section.</p>
+          </div>
+        </div>
+
+        <div id="build-it" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Build it with Claude Code</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Here's the part that makes this page belong in this book: I didn't write this system. I described it. The whole stack — registry hooks, palette generator with the color-science validation, watcher with every guard in the gotchas list, statusline, launchd wiring — was built by Claude Code across two evening sessions. The first evening produced the naive version. The second evening was "make it flawless, no silent failures" — and that instruction is what produced the gotchas list above, because the agent went and found the failure modes I hadn't hit yet.</p>
+            <p>Two moments from that build are the actual lesson. First: when it wasn't sure which escape codes the terminal honored, it didn't guess from training data — it disassembled the terminal binary and checked. The OSC support matrix in this page comes from that, not from a blog post. Second: when I asked for the palette, it didn't pick colors — it wrote a generator that <em>proves</em> the colors: contrast table, pairwise distance, color-blindness simulation, printed as a report. Verification as a deliverable, same as every other chapter.</p>
+            <p>The prompt shape, if you want the same build:</p>
+          </div>
+          <pre class="text-sm overflow-x-auto rounded-lg p-4 my-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))"><code>{`I run 5–8 Claude Code sessions in parallel, one terminal window each.
+I want every window painted by project so I can tell them apart at a glance.
+
+Build me:
+1. A session registry (~/.claude/sessions/) maintained by CC hooks.
+2. A palette file mapping project folders → bg/fg/cursor/badge/emoji.
+   Generate the colors in OKLCH: 6 hue families × 2 tiers, validate
+   contrast and color-blind separability, print the proof.
+3. A launchd watcher that paints each session's tty via OSC 10/11/12
+   and sets the title to emoji + project + a waiting marker.
+4. A statusline that reads THE SAME palette file for its badge.
+
+Then: harden it. Assume ptys short-write, pids get reused, registry
+files get half-written, and the terminal lies when asked its colors.
+No silent failures — every skipped session gets a printed reason.`}</code></pre>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>Note what the prompt does and doesn't do. It specifies the architecture (registry → palette → watcher → statusline) because that's an opinion worth having. It does <em>not</em> specify the escape codes, the color math, or the failure handling — that's the part the agent is better at exhausting than you are. And the last paragraph is the one that matters: "harden it, assume everything lies, no silent failures" is the difference between a demo and a system you stop thinking about.</p>
+          </div>
+          <Callout type="tip" title="The meta-move">
+            Your terminal setup is a repo like any other. The palette generator, the watcher, the statusline — they live in version control, they get the same review-and-verify treatment as product code, and when something flickers you debug it with the same agent that wrote it. Infrastructure for the fleet, built by the fleet.
+          </Callout>
+        </div>
+
+        <div id="do-this" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
+          <div class="space-y-4 leading-relaxed" style="color: rgb(var(--fg) / 0.88)">
+            <p>The ladder, cheapest rung first. Each rung is independently worth having:</p>
+            <ol class="list-decimal pl-6 space-y-3">
+              <li><strong>Five minutes:</strong> type <code>/statusline</code> in Claude Code and let it build you a statusline with project name, branch, context %, and cost. You now know where you are and what it's costing, in every session.</li>
+              <li><strong>Ten minutes:</strong> set <code>"preferredNotifChannel": "terminal_bell"</code>, and set your terminal to badge instead of beep. Your fleet now pages you instead of you polling it.</li>
+              <li><strong>Twenty minutes:</strong> the OSC one-liners from the layers section, wrapped in two shell functions — <code>paint &lt;color&gt;</code> and <code>unpaint</code> — that you call manually in important windows. Production gets red. That alone has prevented real mistakes.</li>
+              <li><strong>One evening:</strong> paste the prompt from the previous section and build the full watcher. Then spend the second evening on "harden it." The second evening is the one that makes it permanent.</li>
+            </ol>
+            <p>The through-line of the whole page: with a fleet of agents, your attention is the scarce resource, and the terminal is its dashboard. Every second you spend figuring out which window you're in is overhead on every single task you'll ever run. Paint once, glance forever.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>

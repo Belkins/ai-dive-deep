@@ -88,6 +88,10 @@ Use the repo name. Use the company name. Use the project. `belkins`, `folderly-d
 
 This is a discipline thing, not a tooling thing. Five seconds of typing on session create saves twenty minutes of "wait, which one was the staging one?" later.
 
+<Callout type="tip" title="Names are half the fix — color is the other half">
+Naming tells sessions apart when you read them. Painting tells them apart when you *glance*. The companion page [Fleet paint](/terminal-setup/) is the visual layer for this exact setup: a statusline with project + branch + cost, OSC escape codes that recolor each window by project, and a watcher that keeps eight windows painted automatically — built by Claude Code, gotchas included.
+</Callout>
+
 ## Forking workflows with git worktrees
 
 When two CC sessions work on the same repo, they fight over your filesystem. One is on main, the other wants to be on feature-x, and every checkout breaks the other agent's working tree.
