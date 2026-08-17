@@ -5,6 +5,7 @@ import HeroIntro from '@/widgets/HeroIntro.tsx';
 import ResumeReading from '@/widgets/ResumeReading.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import ManifestoQuote from '@/components/ManifestoQuote.astro';
+import TileEyebrow from '@/components/TileEyebrow.astro';
 import { CHANGELOG } from '@/lib/changelog';
 import { SETUP_STATS } from '@/lib/setup';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -115,7 +116,7 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
   <section class="container-wide pt-6 pb-24">
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       <a href={`${base}/radar/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New · Live · Updated hourly</div>
+        <TileEyebrow added="2026-06-13" category="Live · Updated hourly" />
         <h3 class="m-0 font-display text-2xl">Radar — what's moving in AI, ranked by lead time</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A self-updating index of what's travelling through the AI ecosystem, ranked by where it sits on the gradient — papers to repos to community to analysis. The receipts are on every row. See it before the crowd does.</p>
       </a>
@@ -125,138 +126,138 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">New to AI, Claude, Claude Code, or Cowork? The official free courses in the right order, a five-word primer, and the learning ladder — then the book.</p>
       </a>
       <a href={`${base}/agent-workflow/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">New · Method</div>
+        <TileEyebrow added="2026-08-17" category="Method" />
         <h3 class="m-0 font-display text-2xl">Agent workflow</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The agent doesn't pick what to work on — the board does. Sixteen repos, one queue, three slash commands, six review agents that wake by file path. The whole setup: boards, issue discipline, the review fleet, every option judged, and the four things that blew up installing it.</p>
       </a>
       <a href={`${base}/terminal-setup/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">New · Setup</div>
+        <TileEyebrow added="2026-08-17" category="Setup" />
         <h3 class="m-0 font-display text-2xl">Fleet paint</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Six agents, six identical black windows — until you paint them. Statusline, OSC escape codes, and a watcher that colors every terminal by project. The full setup, built by Claude Code, with the gotchas that cost a day.</p>
       </a>
       <a href={`${base}/cad-as-code/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">New · Hardware</div>
+        <TileEyebrow added="2026-08-03" category="Hardware" />
         <h3 class="m-0 font-display text-2xl">CAD-as-code</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Claude designed a 3D-printable museum frame for the bird station's 13.3" e-ink panel — eight parts as STL + STEP, emitted by 267 lines of Python whose dimensions were read off the vendor's drawing. The six mechanical decisions, the self-QA harness, and the honest part: zero grams printed until the calipers agree.</p>
       </a>
       <a href={`${base}/opus-5/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">New · Model file · Jul 24</div>
+        <TileEyebrow added="2026-07-27" category="Model file" />
         <h3 class="m-0 font-display text-2xl">Opus 5 — the frontier stopped being the expensive one</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">On the independent Intelligence Index, the top model is no longer the priciest per task — Opus 5 took first place below the cost of the model beneath it. (Anthropic still points to Fable 5 for highest available capability.) The effort dial, the hierarchy question, and <span style="color: rgb(var(--accent))">seven jobs with the setting for each</span> — including one where turning the dial up makes it worse.</p>
       </a>
       <a href={`${base}/fable-5/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">Model file</div>
+        <TileEyebrow added="2026-06-09" category="Model file" />
         <h3 class="m-0 font-display text-2xl">Fable 5 — the withheld model, buyable</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Anthropic shipped the model it said it wouldn't — split in two. Pricing, the full benchmark table read honestly, the fallback architecture, and the June 22 clock.</p>
       </a>
       <a href={`${base}/music-is-math/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">New · Foundations</div>
+        <TileEyebrow added="2026-07-30" category="Foundations" />
         <h3 class="m-0 font-display text-2xl">Music is math</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">How AI actually writes a song — 44,100 numbers a second become a few hundred symbols, and a transformer finishes the sentence. Then the same recipe goes and writes proteins, drives robot arms, and beats the world's best weather forecast. Includes the three places the story is oversold, and the five claims my own draft got wrong.</p>
       </a>
       <a href={`${base}/dynamic-workflows/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Dynamic Workflows</div>
+        <TileEyebrow added="2026-05-30" category="Dynamic Workflows" />
         <h3 class="m-0 font-display text-2xl">Opus 4.8 — the swarm that runs itself</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Claude writes a script that plans, fans out hundreds of parallel subagents, and verifies its own work. What it is, the validator loop, how to turn it on, and when not to.</p>
       </a>
       <a href={`${base}/good-taste/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">New · Showcase</div>
+        <TileEyebrow added="2026-06-16" category="Showcase" />
         <h3 class="m-0 font-display text-2xl">Good taste, on tap</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Stop your AI from generating generic slop. A before/after of Leon Lin's public taste-skill (45k★, credited) — and the moon-base and three-design receipts I built with the discipline.</p>
       </a>
       {/* [VLAD: h3 + hook below are candidates from the design swarm — confirm/revoice. Links to the new /dreaming page (Ch 44's sibling).] */}
       <a href={`${base}/dreaming/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Memory</div>
+        <TileEyebrow added="2026-06-04" category="Memory" />
         <h3 class="m-0 font-display text-2xl">Dreaming — the loop pointed inward</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A local, propose-only twin of Anthropic's Dreaming: it digests your sessions, surfaces candidate memories that each cite a verbatim quote, and re-verifies every one against the raw transcript — and never writes to memory itself.</p>
       </a>
       <a href={`${base}/self-audit/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">New · Method</div>
+        <TileEyebrow added="2026-06-09" category="Method" />
         <h3 class="m-0 font-display text-2xl">The Self-Audit</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The swarm pointed at the agent's own setup. Five auditors, an adversarial red-team, 41 findings — including two refutations that would have broken the system if executed. Your config rots faster than your code.</p>
       </a>
       <a href={`${base}/claude-code-pricing/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New · Reference</div>
+        <TileEyebrow added="2026-06-10" category="Reference" />
         <h3 class="m-0 font-display text-2xl">What Claude Code actually costs</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Every plan and API rate, verified — then the receipts: the real monthly bill, the $1,108→$4,312 cache mistake, and the three levers that cut it.</p>
       </a>
       <a href={`${base}/claude-code-vs-codex/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New · Comparison</div>
+        <TileEyebrow added="2026-06-10" category="Comparison" />
         <h3 class="m-0 font-display text-2xl">Claude Code vs Codex</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Ran both in anger. Verdict per job — including the night shift Codex actually wins.</p>
       </a>
       <a href={`${base}/claude-code-hooks/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New · Reference</div>
+        <TileEyebrow added="2026-06-10" category="Reference" />
         <h3 class="m-0 font-display text-2xl">Hooks that can't be talked out of</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Ten real configs with verdicts — what each caught in production, and the three hook ideas that failed expensively.</p>
       </a>
       <a href={`${base}/claude-code-mcp/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New · Setup</div>
+        <TileEyebrow added="2026-06-10" category="Setup" />
         <h3 class="m-0 font-display text-2xl">Claude Code + MCP</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The setup guide grounded in a real roster: the servers worth wiring, what each one costs and earns, and the ones that got cut.</p>
       </a>
       <a href={`${base}/ai-agent-examples/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New · Examples</div>
+        <TileEyebrow added="2026-06-10" category="Examples" />
         <h3 class="m-0 font-display text-2xl">12 agents that actually ran</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A receipts gallery: the book swarm, the 4 AM watcher, the $0.40/min voice agent — every example with a cost and a failure on record.</p>
       </a>
       <a href={`${base}/sovereign-stack/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Sovereign Stack</div>
+        <TileEyebrow added="2026-05-20" category="Sovereign Stack" />
         <h3 class="m-0 font-display text-2xl">Don't get deprecated</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Open-weights LLMs that survive the deprecation calendar — Ollama, the hardware ladder, the heretic question, and the nano-gpt Saturday.</p>
       </a>
       <a href={`${base}/html-first/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Method</div>
+        <TileEyebrow added="2026-05-19" category="Method" />
         <h3 class="m-0 font-display text-2xl">HTML-ization</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Stop sending dead files. Every report, pitch, and audit ships as a live interactive artifact — two real ones embedded and clickable.</p>
       </a>
       <a href={`${base}/launch/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">The launch</div>
+        <TileEyebrow added="2026-05-20" category="The launch" />
         <h3 class="m-0 font-display text-2xl">{ed.edition} is public</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Typewriter hero, animated stat odometer, three live embedded artifacts, all 47 chapters as a click-anywhere mosaic, a post-credit scene.</p>
       </a>
       <a href={`${base}/launch-week/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Live diary</div>
+        <TileEyebrow added="2026-05-20" category="Live diary" />
         <h3 class="m-0 font-display text-2xl">Launch week</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The launch as its own experiment in the thesis. Four surfaces, seven days, receipts accruing — honest, even the embarrassing ones.</p>
       </a>
       <a href={`${base}/resources/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Resources</div>
+        <TileEyebrow added="2026-05-07" category="Resources" />
         <h3 class="m-0 font-display text-2xl">Vault library</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">CLAUDE.md skeletons, .mcp.json examples, hook scripts, SKILL templates, the five reusable prompts. Copy, paste, ship.</p>
       </a>
       <a href={`${base}/cheat-sheet/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Reference</div>
+        <TileEyebrow added="2026-05-07" category="Reference" />
         <h3 class="m-0 font-display text-2xl">Cheat sheet</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Slash commands, settings, env vars, file paths, keyboard shortcuts. Print it. Tape it next to your monitor.</p>
       </a>
       <a href={`${base}/glossary/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Vocabulary</div>
+        <TileEyebrow added="2026-05-07" category="Vocabulary" />
         <h3 class="m-0 font-display text-2xl">Glossary</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Fifty-plus terms you'll need, grouped A–Z. Linked inline throughout the book. Hover any underlined term to read it.</p>
       </a>
       <a href={`${base}/tier-list/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Tier list</div>
+        <TileEyebrow added="2026-05-07" category="Tier list" />
         <h3 class="m-0 font-display text-2xl">Rank without mercy</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Drag-and-drop your own tier list across AI tools, connectors, and infra. The Arena leaderboard (formerly LMArena), hand-mirrored 2026-07-27, for reference — eleven boards, each with its own publish date.</p>
       </a>
       <a href={`${base}/swarms/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Orchestration</div>
+        <TileEyebrow added="2026-05-20" category="Orchestration" />
         <h3 class="m-0 font-display text-2xl">Swarms</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Multi-agent orchestration — the four-pattern visualizer, ten swarm skills shipped, seven patterns I use, the orchestration prompts to steal. Three real multi-session screenshots.</p>
       </a>
       <a href={`${base}/github-playbook/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">GitHub</div>
+        <TileEyebrow added="2026-05-20" category="GitHub" />
         <h3 class="m-0 font-display text-2xl">GitHub for non-developers</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Five non-code uses, eight gh commands you actually need, what you can safely ignore. Six worked examples — Vlad's Playbook, AFC, Karpathy, Simon Willison ×2, profile READMEs.</p>
       </a>
       <a href={`${base}/showcase/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">The stack</div>
+        <TileEyebrow added="2026-05-08" category="The stack" />
         <h3 class="m-0 font-display text-2xl">{SETUP_STATS.skills} skills · {SETUP_STATS.agents} agents · {SETUP_STATS.plugins} plugins</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Vlad's full Claude Code setup. Every skill folder, every custom subagent, every plugin — sanitized and shareable. Freshly pruned by <span style="color: rgb(var(--accent))">the Self-Audit</span>.</p>
       </a>
       <a href={`${base}/research-notes/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Research</div>
+        <TileEyebrow added="2026-05-12" category="Research" />
         <h3 class="m-0 font-display text-2xl">What shifted this week</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">External findings that move what an operator does Monday — model releases, deprecations, benchmark shifts. Dated, sourced, signal-not-receipt discipline.</p>
       </a>
