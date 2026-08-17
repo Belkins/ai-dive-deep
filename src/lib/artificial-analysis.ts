@@ -34,7 +34,6 @@ export const AA_INDEX_VERSION = 'Intelligence Index v4.1.1';
 export const AA_SOURCE_URL = 'https://artificialanalysis.ai/models';
 export const AA_AGENTIC_URL = 'https://artificialanalysis.ai/models/capabilities/agentic';
 export const AA_METHODOLOGY_URL = 'https://artificialanalysis.ai/methodology/intelligence-benchmarking';
-export const AA_ATTRIBUTION = 'Artificial Analysis (2025). LLM benchmarks dataset. artificialanalysis.ai';
 
 // AA ran the Opus 5 evals pre-release at Anthropic's request. Rendered on the
 // panel so the #1 row carries its own provenance. The quote is from AA's Opus 5
@@ -77,7 +76,7 @@ export const AA_AGENTIC_NOTE =
 // the top two models — Opus 5 at max effort (63.1) and Fable 5 (62.1) — is 0.98
 // points, inside AA's own interval. (Unlike the July board, the public board now
 // lists ONE effort setting per model, so there is no same-model-twice #2 row to
-// footnote away; the July variant capture is preserved in AA_INDEX_ONLY below.)
+// footnote away; the July variant capture lives in git history at 707fefd.)
 export const AA_PRECISION = 'AA estimates a 95% confidence interval of less than ±1% on the Index. The gap between the top two models — Opus 5 at max effort and Fable 5 — is 0.98 points, inside it.';
 
 export type AAMetric = 'intelligence' | 'agentic' | 'cost' | 'speed';
@@ -131,25 +130,9 @@ export const AA_MODELS: AAModel[] = [
   { model: 'Muse Glimmer (high)',            vendor: 'meta',      intelligence: 35.1,                costPerTaskUsd: 0.073, outputTokensPerSec: 110.9 },
 ];
 
-// DATED ARTIFACT — the 2026-07-27 capture, when AA still ranked effort variants
-// as separate board rows. The 2026-08-17 board lists one setting per model, so
-// this block is no longer refreshable; it stays as the July record the Opus 5
-// model file narrates (the same-model-twice #2, the 10-point low→max spread).
-export const AA_INDEX_ONLY: { model: string; intelligence: number; note?: string }[] = [
-  { model: 'Claude Opus 5 (xhigh)',   intelligence: 60.07 },
-  { model: 'Claude Opus 5 (high)',    intelligence: 58.86, note: 'the API default' },
-  { model: 'GPT-5.6 Sol (xhigh)',     intelligence: 57.65 },
-  { model: 'Claude Opus 5 (medium)',  intelligence: 56.28 },
-  { model: 'GPT-5.6 Sol (high)',      intelligence: 55.87 },
-  { model: 'GPT-5.5 (xhigh)',         intelligence: 54.84 },
-  { model: 'Claude Opus 4.7 (max)',   intelligence: 53.53 },
-  { model: 'GPT-5.5 (high)',          intelligence: 53.13 },
-  { model: 'DeepSeek V4 Pro (high)',  intelligence: 43.11 },
-];
-
 // The effort ladder, measured by AA on 2026-07-24 and captured 2026-07-27 — a
-// DATED ARTIFACT like AA_INDEX_ONLY (pages citing it must use
-// OPUS5_EFFORT_CAPTURED, never the moving AA_SNAPSHOT). Still the single most
+// DATED ARTIFACT (pages citing it must use OPUS5_EFFORT_CAPTURED, never the
+// moving AA_SNAPSHOT). Still the single most
 // decision-useful table in the Opus 5 release, because the dial is the only
 // lever that moves both capability and the invoice at once. `costToRunIndexUsd`
 // is what AA paid to run the whole Index at that setting, NOT a per-task figure
