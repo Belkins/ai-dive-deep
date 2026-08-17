@@ -1,0 +1,53 @@
+name: Documentation
+description: Write down a rule, a decision or a piece of reference.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One topic per file. If you need two output paths, this is two issues.
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What a reader can do after this document exists that they could not before.
+    validations:
+      required: true
+
+  - type: input
+    id: output_path
+    attributes:
+      label: Output path
+      description: The one file this issue creates or rewrites.
+      placeholder: docs/backend/migrations.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: >-
+        Where the content comes from: the code that already implements the rule,
+        the conversation that decided it, the existing document being replaced.
+        A document written from imagination documents nothing.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - [ ] Every rule stated is one the code actually follows, or is marked as a decision not yet built
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: open_questions
+    attributes:
+      label: Open questions
+      placeholder: none
+    validations:
+      required: true

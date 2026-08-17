@@ -1,0 +1,70 @@
+name: Bug
+description: Something we built behaves incorrectly.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A defect in code we wrote. Behaviour inherited from a system this one
+        replaces is context for a Task, not a bug.
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happens
+      description: The observed behaviour, with the exact input that produces it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen
+      description: One sentence, and what makes that the right answer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: >-
+        The shortest path from a clean checkout to the wrong outcome. A failing
+        test is the best possible answer here.
+      value: |
+        1.
+        2.
+    validations:
+      required: true
+
+  - type: textarea
+    id: entry_points
+    attributes:
+      label: Suspected entry points
+      description: >-
+        Where you think it lives, with paths. A guess is useful and costs
+        nothing — mark it as a guess. This is not a boundary: the cause of a
+        bug is often not where the reporter thought.
+      placeholder: "Guess: src/modules/leads/lead.repository.ts"
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: >-
+        At minimum: a test that fails before the fix and passes after it.
+      value: |
+        - [ ] A test reproduces the defect and fails on `main`
+        - [ ]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk
+      options:
+        - low
+        - medium
+        - high
+    validations:
+      required: true

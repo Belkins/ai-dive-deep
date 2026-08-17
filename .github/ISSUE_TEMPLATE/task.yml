@@ -1,0 +1,162 @@
+name: Task
+description: A unit of work that becomes exactly one pull request.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One issue is one pull request is one concern.
+
+        The test this form exists to pass: **an agent with no memory of any
+        conversation should be able to read this issue and open a mergeable
+        pull request without asking a question.** Anything left implicit here
+        will be invented plausibly and wrongly.
+
+        If the work does not fit a single reviewable diff, file the parent here
+        and split the children off as sub-issues.
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One sentence. The observable outcome, not the implementation.
+      placeholder: A user can filter the leads list by owner and status.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: >-
+        Everything the implementer must read first. Link the documents that
+        state the rules that apply, and cite existing code by path and symbol
+        where it is the source of truth for the behaviour. Uncertain claims are
+        marked `UNVERIFIED`.
+      value: |
+        - Docs:
+        - Existing code:
+        - Related issues:
+    validations:
+      required: true
+
+  - type: textarea
+    id: entry_points
+    attributes:
+      label: Entry points
+      description: >-
+        The paths this task lives in, and the paths it must not touch. This is
+        the highest-value field in the form: it stops the implementer guessing
+        at where code goes, and it is what keeps concurrent branches from
+        colliding.
+      value: |
+        Touches:
+        -
+
+        Must not touch:
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: >-
+        `Out` is not optional and is not a formality. An unstated boundary is
+        the single most common way a change grows past its review.
+      value: |
+        In:
+        -
+
+        Out:
+        -
+    validations:
+      required: true
+
+  - type: dropdown
+    id: contract
+    attributes:
+      label: Contract change
+      description: >-
+        Whether the shared contracts package changes — the boundary every side
+        of the system meets on. An unannounced change here is how two branches
+        end up incompatible. A breaking change needs its migration named in
+        Context.
+      options:
+        - none
+        - additive (new field, new endpoint, new optional input)
+        - breaking (changed or removed shape)
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: >-
+        Checkboxes, each one independently checkable by someone who did not
+        write the code. "Works correctly" is not a criterion; "an unknown owner
+        id returns 422 and the list is unchanged" is.
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: >-
+        The commands the implementer runs and pastes the output of into the
+        pull request. Trim what does not apply, add what is missing.
+      value: |
+        - [ ] `npm run check`
+        - [ ] `npm run build`
+        - [ ] `node --test tests/`
+    validations:
+      required: true
+
+  - type: textarea
+    id: open_questions
+    attributes:
+      label: Open questions
+      description: >-
+        Anything undecided, guessed, or `UNVERIFIED`. **A non-empty list here
+        means the task is not ready to be picked up** — it goes back to
+        refining, not into the queue. Write `none` when there are none; never
+        leave this blank.
+      placeholder: none
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Applied as an `area/*` label after the issue is filed.
+      multiple: true
+      options:
+        - chapters
+        - components
+        - data
+        - design
+        - platform
+        - docs
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk
+      description: >-
+        `high` means auth, tenant isolation, money, or a data migration. A
+        high-risk task gets a human design review before code is written and a
+        security review before merge.
+      options:
+        - low
+        - medium
+        - high
+    validations:
+      required: true

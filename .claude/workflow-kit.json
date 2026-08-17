@@ -1,0 +1,158 @@
+{
+  "repo": "Belkins/ai-dive-deep",
+  "mainBranch": "main",
+  "board": {
+    "enabled": false,
+    "owner": "Belkins",
+    "ownerType": "user",
+    "number": 0,
+    "issueFields": [],
+    "statusField": "Status",
+    "statuses": {
+      "inbox": "Inbox",
+      "refining": "Refining",
+      "ready": "Ready",
+      "inProgress": "In progress",
+      "inReview": "In review",
+      "blocked": "Blocked",
+      "done": "Done"
+    },
+    "priority": {
+      "field": "Priority",
+      "values": [
+        "Urgent",
+        "High",
+        "Medium",
+        "Low"
+      ]
+    },
+    "iterationField": "Iteration"
+  },
+  "labels": {
+    "areas": [
+      {
+        "name": "area/chapters",
+        "description": "src/pages, src/content — playbook chapters and pages"
+      },
+      {
+        "name": "area/components",
+        "description": "src/components, src/layouts — Astro/React UI"
+      },
+      {
+        "name": "area/data",
+        "description": "scripts/*.py, public/data — generated stack/radar/glossary data"
+      },
+      {
+        "name": "area/design",
+        "description": "design-system.html, tailwind, assets/"
+      },
+      {
+        "name": "area/platform",
+        "description": "deploy.yml (Pages), astro.config.mjs"
+      },
+      {
+        "name": "area/docs",
+        "description": "docs/, notes/, _TODO"
+      }
+    ],
+    "risk": [
+      {
+        "name": "risk/low",
+        "description": "Contained; a mistake is visible and cheap to undo"
+      },
+      {
+        "name": "risk/medium",
+        "description": "Touches shared code or data others depend on"
+      },
+      {
+        "name": "risk/high",
+        "description": "Auth, tenant isolation, money, or a data migration"
+      }
+    ]
+  },
+  "review": {
+    "base": "origin/main",
+    "riskHighLabel": "risk/high",
+    "smallFix": {
+      "maxChangedLines": 50,
+      "allowNewFiles": false,
+      "protectedPaths": []
+    },
+    "deterministicChecks": [
+      {
+        "command": "npm run check",
+        "decides": "astro check (types + templates)"
+      },
+      {
+        "command": "npm run build",
+        "decides": "the prebuild guards — template literals, stack integrity, stale numbers, internal links, glossary terms, chapter dates — then astro build"
+      },
+      {
+        "command": "node --test tests/",
+        "decides": "the SEO test suites (run locally; deploy.yml does not run them)"
+      }
+    ],
+    "agents": {
+      "scope-reviewer": {
+        "enabled": true,
+        "always": true
+      },
+      "simplicity-reviewer": {
+        "enabled": true,
+        "paths": [
+          "*.ts",
+          "*.tsx",
+          "*.astro",
+          "*.mjs",
+          "*.py"
+        ]
+      },
+      "test-quality-reviewer": {
+        "enabled": true,
+        "paths": [
+          "*.ts",
+          "*.tsx",
+          "*.astro",
+          "*.mjs",
+          "*.py"
+        ]
+      },
+      "security-reviewer": {
+        "enabled": true,
+        "wakesOnRiskHigh": true,
+        "paths": [
+          ".github/workflows/*",
+          "*.env.example"
+        ]
+      },
+      "db-reviewer": {
+        "enabled": false,
+        "paths": []
+      },
+      "contract-reviewer": {
+        "enabled": false,
+        "paths": []
+      }
+    }
+  },
+  "contracts": {
+    "enabled": false,
+    "path": ""
+  },
+  "verification": [
+    "npm run check",
+    "npm run build",
+    "node --test tests/"
+  ],
+  "docs": {
+    "root": "docs",
+    "workflow": "docs/workflow",
+    "decisionDocs": [
+      "CLAUDE.md"
+    ]
+  },
+  "readOnlyPaths": [
+    "dist/",
+    "vault-starter/"
+  ]
+}
