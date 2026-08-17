@@ -16,10 +16,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 12.1',
+    date: '2026-08-17',
+    bannerText: 'New — Fleet paint: six agents, six identical black windows, until you paint them. Terminal customization for a fleet, built by Claude Code.',
+    bannerHref: '/terminal-setup/',
+    tagline: 'The cockpit edition. Every chapter so far has been about what the agents do; this page is about the two square meters in front of the human. Run 6–8 Claude Code sessions in parallel and the bottleneck stops being the model — it\'s you, alt-tabbing through identical black rectangles, typing into the wrong one. Fleet paint is the fix: a statusline that names every session, OSC escape codes that recolor each window by project, and a launchd watcher that keeps the whole fleet painted automatically — one palette file that both the window and the badge read, so they can never disagree. Built by Claude Code across two evenings, including the one where it disassembled the terminal to check which escape codes actually work, and the second one — "harden it, no silent failures" — that turned a demo into infrastructure.',
+    shipped: [
+      'New page — /terminal-setup/. The four layers of terminal customization (app, prompt, escape codes, Claude Code itself) and which layer owns what; the honest terminal matrix — Terminal.app, iTerm2, WezTerm, Ghostty, kitty, Warp — including why Chapter 20\'s "skip Terminal.app" and this page\'s "it runs on Terminal.app" are both right.',
+      'The out-of-the-box wins most people never turn on: /statusline (project, branch, context %, session cost under every prompt), custom Claude Code themes, /rename and the title bar as a status display, and terminal_bell → a silent Dock badge on the exact window that\'s waiting.',
+      'Fleet paint, the full system: session registry maintained by hooks, an OKLCH-generated palette (6 hue families × 2 tiers, contrast and color-blindness validated by a generator that prints its proof), a ~1%-CPU launchd watcher painting each tty via OSC 10/11/12, and a statusline that reads the same palette — plus the seven gotchas that cost a day, from the 1 KiB pty write buffer to the terminal that reports its background as white.',
+      'The build-it-with-Claude-Code section: the exact prompt shape, why it specifies the architecture but not the escape codes, and why "harden it — assume everything lies" is the instruction that separates a demo from a system. Reconstructured screenshots with decoy project names; the real fleet is client work.',
+    ],
+    receipts: [
+      { label: 'Windows in the daily fleet', value: '5–8' },
+      { label: 'Contrast the palette holds', value: '~15:1' },
+      { label: 'Watcher CPU', value: '~1%' },
+      { label: 'Evenings to build', value: '2' },
+    ],
+  },
+  {
     edition: 'Edition 12.0',
     date: '2026-08-03',
-    bannerText: 'New — CAD-as-code: Claude designed a 3D-printable museum frame for the bird station. Eight parts, STL + STEP, from a vendor PNG — and zero screws into the display.',
-    bannerHref: '/cad-as-code/',
     tagline: 'The physical edition. Every prior edition ran the loop on information; this one runs it on matter. Claude Code designed a wall frame for the bird station\'s 13.3" e-ink panel and its Raspberry Pi 5 — not by driving a CAD program, but by writing one: a 267-line build123d script whose dimensions were read off Pimoroni\'s official drawing, and which emits every part as STL and STEP, an assembly model with the panel and Pi mocked in place, and section cuts at five heights; the isometric line renders shown on the page are projected from the same geometry. The frame clamps the display through foam instead of screwing into it, hides the panel\'s own bezel behind a 0.8 mm reveal, splits itself into bed-sized quadrants on request, and keeps the microphone outside where it can hear. Shipped with the honesty intact: the design is committed, and zero grams of plastic exist until the calipers agree.',
     shipped: [
       'New page — /cad-as-code/. The full process: an interior-design brief ("make the electronics disappear") plus a vendor\'s dimensional drawing in, eight printable parts out. Why the deliverable is a program rather than a mesh — parameters at the top like a config block, geometry as boolean subtraction, STL and STEP as build artifacts regenerated in seconds when a number changes.',

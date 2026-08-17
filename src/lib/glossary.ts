@@ -499,6 +499,12 @@ export const glossary: Record<string, GlossaryEntry> = {
       'Designing a physical part as a program — parametric Python (build123d, CadQuery) or OpenSCAD — instead of sculpting it with a mouse. The source of truth is a parameter block plus boolean geometry; the STL your slicer eats and the STEP a machinist edits are build artifacts, regenerated in seconds when a number changes. What makes hardware legible to an agent loop: read the vendor drawing, emit the parts, render the evidence, commit. The worked example: <a href="/cad-as-code/">CAD-as-code</a>.',
     related: ['Agent', 'Claude Code'],
   },
+  'Fleet paint': {
+    term: 'Fleet paint',
+    definition:
+      'Automatically coloring each terminal window by the project its agent is working in — background, cursor, title emoji, and a matching statusline badge, all driven from one palette file by a watcher process. Passes the glance test: with 6–8 parallel sessions, you can tell which window is which project, and which one is waiting for you, from across the room. The setup: <a href="/terminal-setup/">Fleet paint</a>.',
+    related: ['Claude Code', 'Design system'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);
