@@ -1,5 +1,26 @@
 # Contributing
 
+## How work is filed and reviewed
+
+This repo runs the workflow the book's [/agent-workflow](https://dive.vladyslavpodoliako.com/agent-workflow)
+page describes — most code here is written by AI and reviewed by humans, and
+the process is built for that:
+
+- **One issue is one pull request is one concern.** File from
+  [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/) — the bar is that an
+  agent with no memory of the conversation can read the issue and open a
+  mergeable PR. Rules live in [docs/workflow/](docs/workflow/); the config
+  every command reads is [.claude/workflow-kit.json](.claude/workflow-kit.json).
+- **Never commit to `main`.** Branch as `<type>/<issue>-<short-description>`
+  (e.g. `feat/31-leads-import`). The PR title is the squash-commit subject —
+  Conventional Commits, with `Closes #n`.
+- **The review fleet runs before the PR opens** (`.github/scripts/review.sh plan`
+  names the reviewers). No agent blocks a merge — CI is the only gate — but
+  every finding is fixed or dismissed *in writing* in the PR's Reviewer notes.
+- **State what you verified.** `npm run check` · `npm run build` (prebuild
+  guards + postbuild checks) · `node --test tests/*.test.mjs` — paste the
+  results; never claim a check passed without running it.
+
 ## Quick fixes (typos, broken links)
 
 Open a PR. Keep it tight — one typo per commit is fine. Reference the chapter
