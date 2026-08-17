@@ -11,9 +11,18 @@ const NOW = Date.parse('2026-08-17T00:00:00Z');
 test('a page inside the window badges New and carries its ship date', () => {
   // 29 days old — one day short of the window. If this fails, fresh pages
   // lose their badge early and the label is lying in the other direction.
-  const { text, isNew } = eyebrowLabel('2026-07-19', 'Method', NOW);
+  const { text, isNew, tail } = eyebrowLabel('2026-07-19', 'Method', NOW);
   assert.equal(isNew, true);
+  // `tail` is what the badge renders beside the chip, and `text` is composed
+  // from it in the lib — both literals pinned here so a format change to
+  // either is a conscious, red-test decision.
+  assert.equal(tail, 'Jul 19 · Method');
   assert.equal(text, 'New · Jul 19 · Method');
+});
+
+test('an expired page returns no `tail` — the chip must not render', () => {
+  const { tail } = eyebrowLabel('2026-06-10', 'Reference', NOW);
+  assert.equal(tail, undefined);
 });
 
 test('a page at the window boundary has expired', () => {
