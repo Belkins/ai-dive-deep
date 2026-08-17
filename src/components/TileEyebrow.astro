@@ -1,0 +1,29 @@
+---
+/**
+ * TileEyebrow — the eyebrow label on a homepage tile, with a New badge
+ * that derives from the page's ship date instead of being hand-typed.
+ *
+ * While `added` is within NEW_WINDOW_DAYS of the build date the eyebrow
+ * renders "New · Aug 17 · Method" in the accent tone; after that it
+ * renders the category alone in the secondary tone. The comparison runs
+ * at build time — the hourly radar auto-update push rebuilds the site,
+ * so the badge expires without anyone editing a label. The derivation
+ * itself lives in src/lib/eyebrow.ts, where tests can inject a clock.
+ *
+ * Props:
+ *   added     — the page's ship date, ISO yyyy-mm-dd (read from git:
+ *               `git log --diff-filter=A --follow --format=%as -- <page>`).
+ *   category  — the permanent label (e.g. "Method", "Reference").
+ */
+import { eyebrowLabel } from '@/lib/eyebrow';
+
+interface Props {
+  added: string;
+  category: string;
+}
+const { added, category } = Astro.props;
+const { text, isNew } = eyebrowLabel(added, category);
+---
+<div class="text-xs uppercase tracking-wider mb-2" style={`color: rgb(var(${isNew ? '--accent' : '--accent-2'}))`}>
+  {text}
+</div>
