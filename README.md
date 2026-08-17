@@ -50,7 +50,7 @@ The repo is how it's built. The site is what it IS.
 | **Music is math** | How AI actually writes a song, and where the same recipe conquered proteins, robots and the weather — with the five claims the first draft got wrong kept on the page | [`/music-is-math`](https://dive.vladyslavpodoliako.com/music-is-math) |
 | **Learn** | New to any of this? The official free courses in the right order, then the book | [`/learn`](https://dive.vladyslavpodoliako.com/learn) |
 | **Cheat sheet** | Slash commands, settings keys, hook JSON shape, permission syntax, model routing — printable | [`/cheat-sheet`](https://dive.vladyslavpodoliako.com/cheat-sheet) |
-| **Glossary** | 90 terms, A–Z, linked inline throughout the chapters | [`/glossary`](https://dive.vladyslavpodoliako.com/glossary) |
+| **Glossary** | 89 terms, A–Z, linked inline throughout the chapters | [`/glossary`](https://dive.vladyslavpodoliako.com/glossary) |
 | **Resources** | Copy-paste templates: CLAUDE.md skeletons, .mcp.json, hooks, SKILL.md, subagent .md, reusable prompts | [`/resources`](https://dive.vladyslavpodoliako.com/resources) |
 | **Research notes** | 13 dated external signals that shift what an operator does Monday — sourced, signal-vs-receipt discipline | [`/research-notes`](https://dive.vladyslavpodoliako.com/research-notes) |
 
@@ -92,7 +92,7 @@ operating discipline the chapters describe:
 - **48 chapters** in `src/content/chapters/*.mdx`
 - **31 React/Astro widgets** in `src/widgets/` (Arena leaderboard, AA economics panel, sortable tier list, command palette, token-burn calculator, swarm visualizer, tokenizer lab, …)
 - **50+ standalone pages** in `src/pages/` — the surfaces above plus the journey, day zero, questions, showcase, vault starter, weekend builds, swarms, and more
-- **90 glossary terms** in `src/lib/glossary.ts` · **13 dated research notes** in `src/lib/research-notes.ts`
+- **89 glossary terms** in `src/lib/glossary.ts` · **13 dated research notes** in `src/lib/research-notes.ts`
 - **4 embedded interactive artifacts** in `public/artifacts/` — single-file, self-contained, sandboxed-iframe-embedded
 - **35 shipped editions** in `src/lib/changelog.ts`, each with receipts
 
