@@ -22,8 +22,36 @@ interface Props {
   category: string;
 }
 const { added, category } = Astro.props;
-const { text, isNew } = eyebrowLabel(added, category);
+const { text, isNew, when } = eyebrowLabel(added, category);
 ---
-<div class="text-xs uppercase tracking-wider mb-2" style={`color: rgb(var(${isNew ? '--accent' : '--accent-2'}))`}>
-  {text}
-</div>
+{isNew ? (
+  <div class="tile-eyebrow--new text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))" aria-label={text}>
+    <span class="tile-new" aria-hidden="true">New</span>
+    <span aria-hidden="true">{when} · {category}</span>
+  </div>
+) : (
+  <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">
+    {text}
+  </div>
+)}
+
+<style>
+  .tile-eyebrow--new {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  /* Filled accent chip — same white-on-accent idiom as .btn-flame and the
+     active panel pills; token-only colors so it tracks both themes. */
+  .tile-new {
+    background: rgb(var(--accent));
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    flex: none;
+  }
+</style>
