@@ -7,24 +7,23 @@
  * renders "New · Aug 17 · Method" in the accent tone; after that it
  * renders the category alone in the secondary tone. The comparison runs
  * at build time — the hourly radar auto-update push rebuilds the site,
- * so the badge expires without anyone editing a label.
+ * so the badge expires without anyone editing a label. The derivation
+ * itself lives in src/lib/eyebrow.ts, where tests can inject a clock.
  *
  * Props:
  *   added     — the page's ship date, ISO yyyy-mm-dd (read from git:
  *               `git log --diff-filter=A --follow --format=%as -- <page>`).
  *   category  — the permanent label (e.g. "Method", "Reference").
  */
+import { eyebrowLabel } from '@/lib/eyebrow';
+
 interface Props {
   added: string;
   category: string;
 }
 const { added, category } = Astro.props;
-
-const NEW_WINDOW_DAYS = 30;
-const shipped = Date.parse(added + 'T00:00:00Z');
-const isNew = Date.now() - shipped < NEW_WINDOW_DAYS * 86_400_000;
-const when = new Date(shipped).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+const { text, isNew } = eyebrowLabel(added, category);
 ---
 <div class="text-xs uppercase tracking-wider mb-2" style={`color: rgb(var(${isNew ? '--accent' : '--accent-2'}))`}>
-  {isNew ? `New · ${when} · ${category}` : category}
+  {text}
 </div>
