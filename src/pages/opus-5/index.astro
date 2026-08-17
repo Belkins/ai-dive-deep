@@ -4,7 +4,7 @@ import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SectionNav from '@/components/SectionNav.astro';
 import Callout from '@/components/Callout.astro';
 import PullQuote from '@/components/PullQuote.astro';
-import { OPUS5_EFFORT_LADDER, AA_SNAPSHOT } from '@/lib/artificial-analysis';
+import { OPUS5_EFFORT_LADDER, OPUS5_EFFORT_CAPTURED } from '@/lib/artificial-analysis';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -46,7 +46,7 @@ const faqItems = [
   },
   {
     q: 'Is Claude Opus 5 better than Claude Fable 5?',
-    a: 'They are statistically indistinguishable in aggregate capability, and Opus 5 costs half as much. Independent aggregate indices disagree about the order, and every gap sits inside the evaluators’ own stated confidence intervals. Anthropic’s own routing guidance keeps Fable 5 as the highest available capability while recommending Opus 5 as the starting point for complex agentic coding and enterprise work.',
+    a: 'The independent evaluators keep them within or near their own stated confidence intervals, and Opus 5 costs half as much. As of the 2026-08-17 captures, Artificial Analysis puts Opus 5 at max effort first by under a point on its Intelligence Index and by about 2.6 on its Agentic Index, while Arena’s crowd Text board puts Fable 5 first — the one gap that now clears both confidence intervals. Anthropic’s own routing guidance keeps Fable 5 as the highest available capability while recommending Opus 5 as the starting point for complex agentic coding and enterprise work.',
   },
   {
     q: 'Does Claude Opus 5 deprecate Claude Opus 4.8?',
@@ -74,7 +74,7 @@ const faq = {
     <div class="eyebrow eyebrow-loud mb-3 text-accent">Model file · Opus 5</div>
     <h1>Claude Opus 5 — the frontier stopped being the expensive one.</h1>
     <p class="mt-3 text-lg text-muted">
-      For as long as these leaderboards have existed, the most capable model was also the priciest. On July 24, 2026 that stopped being true. Opus 5 took the top of the independent index at <em>lower</em> cost per task than the model below it — and shipped with a dial that lets you spend a sixth as much for most of the capability.
+      For as long as these leaderboards have existed, the most capable model was also the priciest. On July 24, 2026 that stopped being true. Opus 5 took the top of the independent index at <em>lower</em> cost per task than the model below it — and shipped with a dial that lets you spend about a seventh as much for most of the capability.
     </p>
     <p class="mt-2 text-sm text-muted">
       Sourced from <a href="https://www.anthropic.com/news/claude-opus-5" rel="noopener">Anthropic's announcement</a>, the 194-page <a href="https://www.anthropic.com/claude-opus-5-system-card" rel="noopener">Opus 5 System Card</a>, Anthropic's live pricing and model docs, <a href="https://artificialanalysis.ai/models/claude-opus-5" rel="noopener">Artificial Analysis</a> and <a href="https://arcprize.org/results/anthropic-claude-opus-5" rel="noopener">ARC Prize</a>. The tier discipline is <a href={`${base}/tier-list/`}>Ch 24</a>. What to actually run on it lives on <a href={`${base}/opus-5/use-cases/`}>the use-cases page</a>.
@@ -139,7 +139,7 @@ const faq = {
             </div>
 
             <Callout type="warn" title="The caveat that sits under every number on this page">
-              <strong>The API default is <code>high</code>. Anthropic's headline benchmark table is <code>max</code>.</strong> Anyone calling the API without setting <code>effort</code> is running a materially weaker configuration than the launch table describes — and the crowd leaderboard, which lists the model as <code>claude-opus-5-high</code>, is voting on the default rather than the table. This is not a small print detail; it is the difference between rank 1 and rank 5 on the same independent index.
+              <strong>The API default is <code>high</code>. Anthropic's headline benchmark table is <code>max</code>.</strong> Anyone calling the API without setting <code>effort</code> is running a materially weaker configuration than the launch table describes — and the crowd leaderboard votes on <code>claude-opus-5-high</code> (the default) and <code>claude-opus-5-max</code> as separate rows — on the Code board they land 29 Elo apart, max at #1 and high at #4. This is not a small print detail; on launch week it was the difference between rank 1 and rank 5 on the same independent index.
             </Callout>
 
             <p>Artificial Analysis measured the whole ladder on launch day. This is the most decision-useful table in the release, because it is the only one that prices the dial:</p>
@@ -169,7 +169,7 @@ const faq = {
                 </tbody>
               </table>
             </div>
-            <p class="text-xs text-muted">Artificial Analysis, 2026-07-24 · captured {AA_SNAPSHOT}. "Cost to run the Index" is what AA paid to run the entire benchmark suite at that setting — <em>not</em> a per-task figure. Different denominator, kept separate on purpose.</p>
+            <p class="text-xs text-muted">Artificial Analysis, 2026-07-24 · captured {OPUS5_EFFORT_CAPTURED}. A dated launch-week measurement: AA's public board has since stopped listing effort variants as separate rows, so this ladder is not re-capturable — it stays as the launch record. "Cost to run the Index" is what AA paid to run the entire benchmark suite at that setting — <em>not</em> a per-task figure. Different denominator, kept separate on purpose.</p>
 
             <p>The arithmetic that should change your defaults: <strong>{ladderCostRatio}× the cost from <code>low</code> to <code>max</code>, for {ladderIndexGain} index points.</strong> From the default <code>high</code> to <code>max</code> it is {highToMaxCost}× the spend for 1.8 points. Time-to-first-token scales 18× across the ladder while throughput stays flat at 52–56 tokens per second — you are not buying speed at any setting, only depth.</p>
 
@@ -188,7 +188,7 @@ const faq = {
         <div id="hierarchy" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Where it actually sits — five sources, three different winners</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>This is the most confused question of the release, and the confusion is legitimate: the evidence genuinely splits. Every gap below falls inside the evaluators' own stated confidence intervals.</p>
+            <p>This is the most confused question of the release, and the confusion is legitimate: the evidence genuinely splits. At launch every gap below fell inside the evaluators' own stated confidence intervals; as of the 2026-08-17 re-capture, one no longer does — the crowd's.</p>
             <div class="overflow-x-auto">
               <table class="w-full text-sm border-collapse">
                 <thead>
@@ -201,16 +201,16 @@ const faq = {
                 </thead>
                 <tbody>
                   <tr class="border-b border-line"><td class="py-2 pr-3">Anthropic docs</td><td class="py-2 pr-3 text-muted">vendor</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">"the highest available capability" — but <em>start</em> with Opus 5</td></tr>
-                  <tr class="border-b border-line"><td class="py-2 pr-3">Artificial Analysis</td><td class="py-2 pr-3 text-muted">independent</td><td class="py-2 pr-3 text-accent">Opus 5</td><td class="py-2">60.69 vs 59.86 — <strong>0.83 points, against a stated ±1%</strong></td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-3">Artificial Analysis</td><td class="py-2 pr-3 text-muted">independent</td><td class="py-2 pr-3 text-accent">Opus 5</td><td class="py-2">63.05 vs 62.07 on the 2026-08-17 board — <strong>0.98 points, against a stated ±1%</strong> (launch week: 60.69 vs 59.86)</td></tr>
                   <tr class="border-b border-line"><td class="py-2 pr-3">Vals AI Index</td><td class="py-2 pr-3 text-muted">independent</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">75.14% vs 74.82% (±1.35) — 0.32 points, inside the interval</td></tr>
-                  <tr class="border-b border-line"><td class="py-2 pr-3">Arena Text</td><td class="py-2 pr-3 text-muted">crowd</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">1508±6 vs 1495±8 — intervals overlap</td></tr>
+                  <tr class="border-b border-line"><td class="py-2 pr-3">Arena Text</td><td class="py-2 pr-3 text-muted">crowd</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">1506 (1501–1512) vs 1493 (1488–1498) at the 2026-08-17 capture — <strong>the intervals no longer overlap</strong>; at launch they did</td></tr>
                   <tr class="border-b border-line"><td class="py-2 pr-3">tbench.ai Terminal-Bench 2.1</td><td class="py-2 pr-3 text-muted">independent</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">Claude Code + Fable 5 at 83.8% — <strong>Opus 5 has no submission</strong></td></tr>
                   <tr><td class="py-2 pr-3">Anthropic's own Table 8.1.A</td><td class="py-2 pr-3 text-muted">vendor</td><td class="py-2 pr-3">Fable 5</td><td class="py-2">SWE-bench Pro 80.0 vs 79.2</td></tr>
                 </tbody>
               </table>
             </div>
 
-            <PullQuote>Opus 5 and Fable 5 are statistically indistinguishable in aggregate capability. Opus 5 costs exactly half. That is the whole finding, and it is a pricing event more than a capability one.</PullQuote>
+            <PullQuote>On the independent indices, Opus 5 and Fable 5 sit inside each other's error bars. Opus 5 costs exactly half. That is the whole finding, and it is a pricing event more than a capability one.</PullQuote>
 
             <p>Fable 5 remains the vendor-declared ceiling and holds both the crowd crown and the official Terminal-Bench crown. Opus 5's one uncontested win is <strong>ARC-AGI-3</strong> — 30.16% against GPT-5.6 Sol's 13.33% on the same Public Demo set — and that is the one to trust, because <a href="https://arcprize.org/results/anthropic-claude-opus-5" rel="noopener">ARC Prize administered it</a>, not Anthropic. Read the config even there: ARC Prize evaluated <code>high</code> effort only, "due to the short testing window." No max-effort ARC-AGI-3 number for Opus 5 exists.</p>
 
@@ -218,7 +218,7 @@ const faq = {
               <strong>Mythos 5</strong> is Fable-5-priced, invitation-only, and still beats Opus 5 on HealthBench Professional (66.0 vs 59.8 length-adjusted), Chartography without tools, GDP.pdf with tools, and exploit development. It does not appear in this page's tables for the reason <a href={`${base}/tier-list/`}>Ch 24</a> gives: capability ceilings you cannot purchase are not tier-list entries. One labelling trap worth knowing — Anthropic's own summary-table column marked "Fable 5" in the HealthBench Professional row is footnoted as Mythos 5.
             </Callout>
 
-            <p>Against <strong>Sonnet 5</strong> ($2/$10 through August 31, then $3/$15) the split is cleaner. Per-Index-task, Sonnet 5 costs $1.53 to Opus 5's $2.03 — but scores 53.4 to 60.7, and loses badly exactly where this audience lives: FrontierBench 14.6 vs 43.5 on the public board, and Toolathlon Pass@1 74.7 vs 80.6. Sonnet 5 is the volume tier. Opus 5 is the long-horizon tier.</p>
+            <p>Against <strong>Sonnet 5</strong> ($2/$10 through August 31, then $3/$15) the split is cleaner. Per-Index-task at the launch-week capture, Sonnet 5 cost $1.53 to Opus 5's $2.03 while scoring 53.4 to 60.7 (AA's 2026-08-17 board no longer lists Sonnet 5 with a per-task cost, so those are the last comparable figures) — and it loses badly exactly where this audience lives: FrontierBench 14.6 vs 43.5 on the public board, and Toolathlon Pass@1 74.7 vs 80.6. Sonnet 5 is the volume tier. Opus 5 is the long-horizon tier.</p>
           </div>
         </div>
 
