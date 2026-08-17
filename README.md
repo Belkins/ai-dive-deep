@@ -149,7 +149,7 @@ of others.
 
 - 📬 [Vlad's Newsletter](https://www.vladsnewsletter.com) (10K+ subscribers)
 - 🌐 [vladyslavpodoliako.com](https://vladyslavpodoliako.com)
-- 🎧 [Spotify (AI-native music side project)](https://open.spotify.com/artist/48kwMgLHicP6nqaI8Xc3rN)
+- 🎧 [Spotify (My music side project)](https://open.spotify.com/artist/48kwMgLHicP6nqaI8Xc3rN)
 
 The book teaches the technique. The artifact IS the technique. The repo is
 how it's built — but **the site is what it IS.**
