@@ -505,6 +505,18 @@ export const glossary: Record<string, GlossaryEntry> = {
       'Automatically coloring each terminal window by the project its agent is working in — background, cursor, title emoji, and a matching statusline badge, all driven from one palette file by a watcher process. Passes the glance test: with 6–8 parallel sessions, you can tell which window is which project, and which one is waiting for you, from across the room. The setup: <a href="/terminal-setup/">Fleet paint</a>.',
     related: ['Claude Code', 'Design system'],
   },
+  'Review fleet': {
+    term: 'Review fleet',
+    definition:
+      'A set of read-only review agents — scope, simplicity, test quality, security, database, contracts — that run in parallel on a branch before a human sees it. Which ones wake is decided by path globs in a committed config, not by the model\'s mood. None of them gates the merge; CI does. What binds: every finding is fixed or dismissed with a written reason in the PR. The full setup: <a href="/agent-workflow/">Agent workflow</a>.',
+    related: ['Definition of Ready', 'Claude Code'],
+  },
+  'Definition of Ready': {
+    term: 'Definition of Ready',
+    definition:
+      'The bar an issue passes before an agent may pick it up: entry points name real paths plus an explicit must-not-touch list, every acceptance criterion is checkable by someone who did not write the code, and Open questions literally says "none". Fail any of it and the pickup command refuses — a vague issue produces a plausible PR that solves the wrong problem, which costs more than the refusal. See <a href="/agent-workflow/">Agent workflow</a>.',
+    related: ['Review fleet', 'Claude Code'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);

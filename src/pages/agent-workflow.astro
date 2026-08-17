@@ -1,0 +1,254 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Screenshots are reconstructions with decoy repo names (acme/*) — the real
+// boards run client and portfolio work. Numbers in the text are real.
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'problem', label: 'The problem' },
+  { id: 'spine', label: 'The five rules' },
+  { id: 'issue', label: 'The issue is the spec' },
+  { id: 'board', label: 'The board' },
+  { id: 'commands', label: 'The three commands' },
+  { id: 'fleet', label: 'The review fleet' },
+  { id: 'setup', label: 'Technical setup' },
+  { id: 'options', label: 'The options, judged' },
+  { id: 'delta', label: 'The nightly pulse' },
+  { id: 'failures', label: 'What blew up' },
+  { id: 'do-this', label: 'Do this Monday' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Can Claude Code work with GitHub Projects boards?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Yes, through the gh CLI. GitHub Projects v2 is GraphQL-only, so the practical setup is a small vendored bash script (board.sh) that wraps the queries — add, show, set fields, record blocked-by dependencies, and print a ready queue. Claude Code calls the script instead of re-deriving GraphQL every session, and a human or CI can run the identical commands.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I make Claude Code follow a development workflow instead of freestyling?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Package the workflow as a plugin: slash commands for the lifecycle steps (file an issue, pick it up, review the branch), subagents for review, and one committed JSON config per repository that holds everything repo-specific. The commands read the config and refuse to run without it, so the workflow is enforced by structure, not by prompting.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Should AI code review agents block merges?',
+      acceptedAnswer: { '@type': 'Answer', text: 'No. Deterministic checks (lint, types, tests) gate the merge; review agents inform. What binds is that every agent finding gets a written answer in the pull request — fixed, or dismissed with a stated reason. An agent that can block a merge trains you to game it; an agent whose findings must be answered in writing trains you to think.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'How many review agents does a branch need?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Six roles cover it: scope (did the diff stay inside the issue boundary), simplicity, test quality, security, database/migrations, and API contracts. Which of them wake on a given branch is decided by path globs in a config file — a docs-only branch wakes almost nothing, a migration wakes the database reviewer. Routing is arithmetic, not model judgment, so it is auditable.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does one board work across multiple repositories?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Yes — a GitHub Projects board can hold issues from any number of repositories. Point every repo config at the same project number; the queue command then filters to the current repo by default and shows the whole portfolio with an --all flag, prefixing each item owner/repo#n.' },
+    },
+  ],
+};
+---
+<BaseLayout
+  title="Claude Code + GitHub Projects: The Issue-to-PR Workflow for an Agent Fleet"
+  description="A working setup: GitHub Projects boards, issues written for agents with no memory, three slash commands, and six path-routed review agents. Full technical setup, every option judged, real failure receipts."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Method</div>
+    <h1>The agent doesn't pick what to work on. The board does.</h1>
+    <p class="mt-3 max-w-2xl text-lg" style="color: rgb(var(--muted))">Sixteen repos, one queue, three slash commands, six review agents that wake by path. This page is the whole setup — the discipline, the plumbing, every option I considered, and the four things that blew up while installing it.</p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Screenshots are reconstructions with decoy repo names — the real boards carry client work. The numbers are real.</p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="card">
+            <p class="m-0">Work flows one way: an idea becomes a <strong>GitHub issue written for an agent with no memory of the conversation</strong>; the issue sits on a <strong>GitHub Projects board</strong> whose queue answers "what can I start"; a session picks one up, branches, implements inside the issue's stated boundary, runs the checks, and gets reviewed by <strong>six read-only agents routed by file path</strong>; every finding is fixed or dismissed in writing inside the PR; <strong>CI is the only gate</strong>. All of it is a Claude Code plugin — three slash commands, six subagents, and one committed JSON config per repo. Setup for a new repo is about ten minutes.</p>
+          </div>
+        </div>
+
+        <div id="problem" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The problem: a fleet with no queue</h2>
+          <p>Run one Claude Code session and you are the queue — you know what it's doing because you asked for it. Run five sessions across a dozen repos and three failure modes arrive on schedule:</p>
+          <ul>
+            <li><strong>Invented work.</strong> An agent finishes early and "improves" adjacent code nobody asked about. The diff grows 4× past the ask, and review time grows with it.</li>
+            <li><strong>Colliding branches.</strong> Two sessions touch the same file from different intentions. You find out at merge time, which is the most expensive time.</li>
+            <li><strong>Unreviewable output.</strong> Plausible 800-line PRs with no statement of what was verified. Most AI code looks right on its face — that's the problem, not the reassurance.</li>
+          </ul>
+          <p>The fix isn't a smarter agent. It's the same thing that fixes human teams: <strong>a queue with a definition of ready, a boundary per task, and a review step that can't be skipped silently.</strong> Agents follow process better than people do — they just need the process to be structure, not vibes.</p>
+          <PullQuote>The model is not the bottleneck. The absence of a queue is.</PullQuote>
+        </div>
+
+        <div id="spine" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The five rules everything hangs off</h2>
+          <ol>
+            <li><strong>One issue = one PR = one concern.</strong> Bigger work is a parent issue with sub-issues. The size test: a diff a reviewer can hold in their head (~400 lines).</li>
+            <li><strong>An issue is written for an agent with no memory of the conversation that produced it.</strong> Concrete file paths, an explicit "must not touch" list, acceptance criteria a third party can check without reading the diff.</li>
+            <li><strong>The board answers "what can I start" — not the issue tracker.</strong> Ready means the spec passed the bar <em>and</em> nothing open blocks it.</li>
+            <li><strong>Review happens before a human sees the branch</strong>, and the result is written into the PR: what ran, what it found, what was fixed, what was dismissed and why.</li>
+            <li><strong>Nothing an agent says is a gate.</strong> Lint, types, tests — deterministic checks gate. Agents inform. A finding binds in one way only: it must be answered, in writing.</li>
+          </ol>
+          <Callout type="tip">Rule 5 is the one people resist and the one that makes the rest work. The moment an agent can block a merge, you start prompt-engineering the reviewer instead of fixing the code. When its findings merely demand a written answer, dismissals become auditable — and lazy dismissals are visible in the PR forever.</Callout>
+        </div>
+
+        <div id="issue" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The issue is the spec</h2>
+          <p>The issue form is where the leverage is. Mine has eight required fields; three do most of the work:</p>
+          <ul>
+            <li><strong>Entry points.</strong> The paths this task lives in — and the paths it <em>must not touch</em>. This is what stops an implementer guessing where code goes, and what keeps two concurrent branches off each other's files. If you can't name the paths, you haven't finished thinking.</li>
+            <li><strong>Acceptance criteria.</strong> Checkboxes someone else can verify without reading the diff. "Filtering works" is not one. "An unknown owner id returns 422 and the list is unchanged" is.</li>
+            <li><strong>Open questions.</strong> Anything guessed or undecided. Non-empty means the issue is <em>not ready</em> — it goes to Refining, not the queue. Writing <code>none</code> is a claim you get held to.</li>
+          </ul>
+          <p>The pickup command <em>refuses</em> an issue that fails this bar. That refusal felt like friction for a day. It's the feature: a vague issue produces a plausible PR that solves the wrong problem, and that costs more review than the refusal ever will.</p>
+        </div>
+
+        <div id="board" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The board: one queue over many repos</h2>
+          <p>GitHub Projects v2, one board per product ecosystem. Seven statuses — Inbox, Refining, Ready, In&nbsp;progress, In&nbsp;review, Blocked, Done — plus a Priority single-select. Issues from any number of repos sit on the same board; each repo's config names the same project number.</p>
+          <img src={`${base}/screens/agent-workflow-ready.svg`} alt="Terminal showing board.sh ready — a priority-sorted queue for the current repo, then board.sh ready --all showing six repositories' ready items on one shared board, each prefixed owner/repo#number" loading="lazy" decoding="async" class="rounded-lg border" style="border-color: rgb(var(--border)); width: 100%;" />
+          <p class="mt-4">The part GitHub doesn't give you out of the box: <code>gh issue view</code> shows the body and labels and <em>nothing else</em> — status, priority, and the blocking graph live on the board and in the dependencies API, behind GraphQL. So the board gets a vendored script, <code>board.sh</code>: <code>add</code>, <code>show</code>, <code>set</code>, <code>block --by</code>, <code>ready</code>, <code>queue</code>. The queue is the important one — it is not "status equals Ready", it is Ready <strong>and every blocking issue is closed</strong>. Planning ahead only works if the queue hides work that can't start yet.</p>
+          <Callout type="warn">GraphQL rate budget is per <em>account</em>, not per token — every agent session spends from the same 5,000 points/hour. Cache field definitions on disk, read one issue when asked about one issue, and print the remaining budget when it runs low. An exhausted budget fails an hour later in the middle of something unrelated.</Callout>
+        </div>
+
+        <div id="commands" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The three commands</h2>
+          <p>The lifecycle is three slash commands in a Claude Code plugin. Each one reads the repo's committed config and refuses to run without it.</p>
+          <div class="card mt-4">
+            <p class="m-0"><code>/task &lt;idea&gt;</code> — turns a sentence into a filed, board-tracked issue. It reads the codebase first (real paths, not imagined ones), checks for duplicates, writes the eight-field body, files it with area/risk labels, sets board status — Ready only if every readiness check passed, Refining if anything was guessed. It asks at most three questions, and only where two readings produce materially different work.</p>
+          </div>
+          <div class="card mt-4">
+            <p class="m-0"><code>/pick &lt;n&gt;</code> — takes issue #n to an open draft PR. Verifies readiness (and refuses), branches <code>feat/41-slug</code> — the number is load-bearing, it's how every later tool finds the issue — implements inside Entry points, runs the issue's verification commands, runs the review fleet, opens the draft with the fleet's results in the body. Called with no number, it prints the ready queue and asks which.</p>
+          </div>
+          <div class="card mt-4">
+            <p class="m-0"><code>/review</code> — runs the fleet on the current branch. Asks <code>review.sh plan</code> which agents this branch wakes, spawns exactly those in parallel, merges and dedupes findings, then fixes or dismisses every one with the reason written down. It never adds an agent the routing didn't name — that's what makes the routing worth having.</p>
+          </div>
+        </div>
+
+        <div id="fleet" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The review fleet: six agents, path-routed</h2>
+          <p>Six read-only subagents, each owning one question. Which of them wake on a branch is decided by glob matching over the changed paths — a shell script, not a model's mood:</p>
+          <img src={`${base}/screens/agent-workflow-plan.svg`} alt="Terminal showing review.sh plan — five review agents woken with the exact changed path that woke each one, and one agent listed as not woken with the reason" loading="lazy" decoding="async" class="rounded-lg border" style="border-color: rgb(var(--border)); width: 100%;" />
+          <ul class="mt-4">
+            <li><strong>scope</strong> — compares changed files against the issue's Entry points and must-not-touch list. Reads paths, never code. Cheapest agent, wakes on every branch.</li>
+            <li><strong>simplicity</strong> — abstraction with one caller, local reimplementations of things the repo provides, defensive code for states the types exclude.</li>
+            <li><strong>test-quality</strong> — the only question that matters: <em>if this behaviour broke tomorrow, would anything here go red?</em> A test that passes against a broken implementation is worse than no test.</li>
+            <li><strong>security</strong> — auth, tenant isolation, injection, secrets, what a log line exposes. Its bar: no finding without a concrete failure scenario — a request, a role, and a state that together produce the wrong outcome. Also wakes on any issue labeled <code>risk/high</code>, whatever the diff touches.</li>
+            <li><strong>db</strong> — migrations, expand/contract ordering, whether an index matches the query the code actually issues, N+1s, transaction boundaries.</li>
+            <li><strong>contract</strong> — additive vs breaking on your public API surface. Off in most repos; on where an SDK or versioned API exists.</li>
+          </ul>
+          <p>And the output side — the PR carries the whole conversation:</p>
+          <img src={`${base}/screens/agent-workflow-pr.svg`} alt="A draft pull request's Reviewer notes section: two findings marked fixed with the failure scenario each one named, and two dismissed — one with a stated reason, one deferred to a follow-up issue that was filed and recorded as a blocker" loading="lazy" decoding="async" class="rounded-lg border mt-2" style="border-color: rgb(var(--border)); width: 100%;" />
+          <Callout type="tip">Two details that keep the fleet honest. Agents are told what the deterministic checks already decide (lint, formatting, types, tests) and forbidden to report on it — a reviewer that argues with the linter gets switched off by annoyed humans within a week. And every finding needs a failure scenario; a finding without one is a nit, whatever severity the agent gave it.</Callout>
+        </div>
+
+        <div id="setup" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Technical setup, start to finish</h2>
+          <p>The whole thing is a plugin plus per-repo files. Nothing repo-specific lives in the plugin; nothing generic lives in the repo.</p>
+          <p><strong>1. The plugin</strong> (installed once, user scope):</p>
+          <pre class="text-sm"><code>my-workflow-plugin/
+├── .claude-plugin/plugin.json      # name, version
+├── commands/                       # task.md, pick.md, review.md — the slash commands
+├── agents/                         # six reviewer .md files (tools: Read/Grep/Glob/Bash,
+│                                   #   permissionMode: plan — read-only by construction)
+├── scripts/                        # board.sh, review.sh, sync-labels.sh, board-bootstrap.sh
+└── templates/                      # issue forms, PR template, workflow docs, config skeleton</code></pre>
+          <p><strong>2. Per repo</strong> — a setup command vendors these in and commits them:</p>
+          <pre class="text-sm"><code>.claude/workflow-kit.json           # THE config: repo, board number, review routing,
+                                    #   deterministic checks, labels, protected paths
+.github/scripts/                    # the four scripts, copied — a human and CI can run them
+.github/ISSUE_TEMPLATE/             # task / bug / docs forms (projects: line auto-boards them)
+.github/pull_request_template.md    # with the Reviewer notes section the fleet fills
+docs/workflow/                      # board rules, branching, review rules
+CLAUDE.md                           # the working agreement, appended</code></pre>
+          <p><strong>3. The config is the whole game.</strong> Two keys decide whether the kit is useful in a repo:</p>
+          <pre class="text-sm"><code>"review": &#123;
+  "deterministicChecks": [          // what agents must NOT report on
+    &#123; "command": "pnpm lint",  "decides": "lint rules" &#125;,
+    &#123; "command": "pnpm test",  "decides": "whether the unit tests pass" &#125;
+  ],
+  "agents": &#123;                       // the routing table
+    "scope-reviewer":    &#123; "enabled": true, "always": true &#125;,
+    "security-reviewer": &#123; "enabled": true, "wakesOnRiskHigh": true,
+                           "paths": ["src/server/*", ".github/workflows/*"] &#125;,
+    "db-reviewer":       &#123; "enabled": true, "paths": ["prisma/*"] &#125;
+  &#125;
+&#125;</code></pre>
+          <p>Write the globs against paths the repo actually has — an agent routed to a directory that doesn't exist never wakes and never says why. I validate every glob against <code>git ls-files</code> at install time; it caught three dead routes across sixteen repos.</p>
+          <p><strong>4. The board</strong>, one-time: <code>gh auth refresh -s project</code> (the default token can't touch Projects), then a bootstrap script that creates the project, replaces the stock three Status options with the seven via one GraphQL mutation (<code>gh project field-create</code> can't edit the built-in Status field), creates Priority, and — the part most setups skip — <strong>reads the field list back</strong> to prove the write took before writing the project number into any config.</p>
+          <Callout type="warn">Two gotchas that cost real time. <strong>Issue types (Task/Bug/Feature) are an organization feature</strong> — on a personal-account repo the API answers 422; carry the kind in the Conventional-Commit title prefix instead. And <strong>your PR merge method matters</strong>: the whole scheme assumes squash-merge, where the PR title becomes the commit and branch commits are a working log nobody curates.</Callout>
+        </div>
+
+        <div id="options" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The options, judged</h2>
+          <p>Every fork I hit, and what I'd pick again:</p>
+          <ul>
+            <li><strong>One board per repo vs shared.</strong> Per-repo works unmodified and gives you no portfolio view — you end up with fifteen tabs. <em>Shared board per ecosystem</em> is the keeper: repos that ship together share a queue; the queue command filters to the current repo by default and shows everything with <code>--all</code>. One global board across unrelated product families is noise wearing a uniform.</li>
+            <li><strong>Agents block vs inform.</strong> Covered above — inform, always. The written-answer contract is stronger than a gate and can't be gamed by rewording the prompt.</li>
+            <li><strong>Scripts in the plugin vs vendored into the repo.</strong> Vendor them. A person can run <code>board.sh ready</code> from a terminal, CI can run them, an agent that isn't Claude Code can read them. The plugin is the distribution channel, not the runtime.</li>
+            <li><strong>Model per reviewer.</strong> Five of six run on the session's model — "is this abstraction earning its keep" is not pattern matching. The scope reviewer is set arithmetic over path lists and runs on the cheapest model available. Cost discipline goes in the routing, not the model tier.</li>
+            <li><strong>Where the config lives.</strong> Committed, in the repo, one file. Context should travel with the artifact it describes — a session opening the repo finds the whole workflow self-described, no side channel.</li>
+            <li><strong>Solo vs team.</strong> This entire setup is tuned for one operator running many agents. A human team gets most of the value from just rules 1–2 (issue discipline) and the PR template; add the fleet when review becomes the bottleneck.</li>
+          </ul>
+        </div>
+
+        <div id="delta" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The nightly pulse that keeps it honest</h2>
+          <p>Boards rot when nobody looks. The last piece is a nightly job — plain bash on a scheduler, no LLM, zero tokens — that walks every repo and writes one note into my vault:</p>
+          <img src={`${base}/screens/agent-workflow-delta.svg`} alt="The nightly system note: board counts with ready items, CI status across sixteen repos with one red flagged, an action-needed line containing a ready-to-run /task command for a check that has been red two runs in a row, open PRs, and memory files written today" loading="lazy" decoding="async" class="rounded-lg border" style="border-color: rgb(var(--border)); width: 100%;" />
+          <p class="mt-4">Boards per group, CI on main for all sixteen repos (newest run <em>per workflow</em>, so a skipped no-op can't mask the real one), open PRs, and — the part with teeth — <strong>a two-strike rule</strong>: a check red on two consecutive nights emits the exact <code>/task</code> command that files the fix as a board issue. Signal becomes queued work or it evaporates; there is no third state where it lingers in someone's head.</p>
+          <p>Every section ends in <code>ok</code> or <code>UNREADABLE</code> — a source that fails prints its failure instead of disappearing. The first run caught two CI workflows that had been silently red on main; nothing else was aggregating them.</p>
+        </div>
+
+        <div id="failures" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What blew up during install</h2>
+          <p>Sixteen repos in one pass. Fourteen went clean. The receipts from the rest:</p>
+          <ul>
+            <li><strong>Stray git hooks had been blocking every commit in one repo for a week</strong> — a husky install from some npx run had landed in the wrong git root, and every hook exited 1. Nothing surfaces this; commits just fail. Now the install script lists non-sample hooks before touching any repo.</li>
+            <li><strong>A local pre-push gate failed in a clean worktree</strong> because it shells into a toolchain the worktree doesn't have. Environmental failure, not a verdict on the change — that repo gets a branch + PR and CI decides, which is what the rules said all along.</li>
+            <li><strong>An LLM-judge CI check went red on a config-only PR.</strong> Diff couldn't reach the judged surface; the same check had passed on main twice that day. Policy now: prove the diff can't touch it, one rerun, then a human. Rerunning a judge until it's green is laundering a signal.</li>
+            <li><strong>A green local validation shipped a red CI</strong> — <code>node --test</code> with a glob pattern finds zero tests on Node 20 (glob support landed in 21) and my machine runs 26. Validate with CI's runtime version, or you're validating a different program.</li>
+          </ul>
+          <PullQuote>Fourteen out of sixteen clean is not the interesting number. The interesting number is four failure modes, each now a rule the next install checks automatically.</PullQuote>
+        </div>
+
+        <div id="do-this" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
+          <ol>
+            <li>Pick one repo. Write the issue form with Entry points, must-not-touch, checkable acceptance criteria, and a required Open-questions field where <code>none</code> is a claim.</li>
+            <li>Create the board: <code>gh auth refresh -s project</code>, seven statuses, Priority. Wire the form's <code>projects:</code> line so filed issues land on it automatically.</li>
+            <li>Write <code>.claude/workflow-kit.json</code> — or your equivalent — with the deterministic checks and two reviewer routes (scope always; security on your server paths). Commit it.</li>
+            <li>File one real issue with <code>/task</code>. Let <code>/pick</code> take it to a draft PR. Read the Reviewer notes it produces.</li>
+            <li>Only then decide how much more you want. The issue discipline alone is half the value; the fleet is the other half; the nightly pulse is what keeps both alive in month three.</li>
+          </ol>
+          <Callout type="tip">Related pages: <a href={`${base}/chapters/06-the-swarm/`}>Ch 6 — the swarm</a> for running the sessions this queue feeds, <a href={`${base}/terminal-setup/`}>Terminal setup</a> for telling those sessions apart, and <a href={`${base}/claude-code-hooks/`}>Hooks</a> for the enforcement layer underneath all of it.</Callout>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          <div class="card"><p class="m-0"><strong>Can Claude Code work with GitHub Projects?</strong> Yes, via <code>gh</code> — Projects v2 is GraphQL-only, so wrap the queries in a small committed script and have the agent call that. One command for "what can I start" beats re-deriving GraphQL per session, and humans and CI get the same interface.</p></div>
+          <div class="card mt-3"><p class="m-0"><strong>How is this different from just writing a good CLAUDE.md?</strong> CLAUDE.md is preference; this is structure. The commands refuse to run without the config, the issue form refuses vagueness, the routing table decides who reviews. An agent can talk itself past prose. It can't talk itself past a script that won't produce a queue entry.</p></div>
+          <div class="card mt-3"><p class="m-0"><strong>Do the review agents write code?</strong> No — read-only by tool allowlist (<code>Read/Grep/Glob/Bash</code>, plan mode). They return findings; the implementing session applies fixes. One writer per branch keeps the diff attributable.</p></div>
+          <div class="card mt-3"><p class="m-0"><strong>What does this cost per PR?</strong> The fleet is the marginal cost: typically three to five agents on the session model plus one on the cheapest tier, a few minutes wall-clock since they run in parallel. The refusal steps cost nothing and save the most — the expensive PR is the plausible one that solved the wrong problem.</p></div>
+          <div class="card mt-3"><p class="m-0"><strong>Does this work without Claude Code?</strong> The board scripts, issue forms, PR template, and CI checks are plain GitHub — any agent (or human) can follow them. The slash commands and subagent fleet are the Claude Code layer; the discipline underneath is portable.</p></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>

@@ -16,10 +16,28 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 13',
+    date: '2026-08-17',
+    bannerText: 'New — Agent workflow: the agent doesn\'t pick what to work on, the board does. Boards, issue discipline, six path-routed reviewers.',
+    bannerHref: '/agent-workflow/',
+    tagline: 'The queue edition. The swarm chapters taught running many sessions; this page is what those sessions should be fed. One GitHub Projects board per product family, issues written for an agent with no memory of the conversation that produced them, a pickup command that refuses vague specs, and a six-agent review fleet routed by file path — none of which gates a merge, all of which must be answered in writing. Installed across sixteen repos in one pass; fourteen went clean, and the four failure modes from the other two are on the page as rules the next install checks automatically. Screenshots are reconstructions with decoy repo names — the boards carry client work.',
+    shipped: [
+      'New page — /agent-workflow/. The five rules (one issue = one PR; the issue is the spec; the board answers "what can I start"; review before a human looks; nothing an agent says is a gate), the three slash commands (/task, /pick, /review), and the six-agent review fleet with path-glob routing a shell script can print and a human can audit.',
+      'The full technical setup: plugin layout, the one committed JSON config per repo (deterministic checks + routing table), the board bootstrap that shapes GitHub Projects\' built-in Status field over GraphQL and reads it back, and the vendored board.sh — ready/queue/show/block over a shared multi-repo board.',
+      'Every fork judged: board per repo vs shared per ecosystem, agents block vs inform, scripts vendored vs in-plugin, model tier per reviewer, solo vs team scope.',
+      'The nightly pulse: a no-LLM scheduled job that writes boards, CI-on-main (newest run per workflow), open PRs, and a two-strike rule that turns a persistent red into a ready-to-run /task command. Signal becomes queued work or it evaporates.',
+      'Failure receipts from the rollout: stray git hooks silently blocking commits for a week, a pre-push gate failing in a clean worktree, an LLM-judge CI check flaking on a config-only PR, and the Node 20-vs-26 glob mismatch that made a green local validation ship a red CI.',
+    ],
+    receipts: [
+      { label: 'Repos on the workflow', value: '16' },
+      { label: 'Review agents per branch', value: 'up to 6, path-routed' },
+      { label: 'Clean installs first pass', value: '14/16' },
+      { label: 'Setup time per new repo', value: '~10 min' },
+    ],
+  },
+  {
     edition: 'Edition 12.1',
     date: '2026-08-17',
-    bannerText: 'New — Fleet paint: six agents, six identical black windows, until you paint them. Terminal customization for a fleet, built by Claude Code.',
-    bannerHref: '/terminal-setup/',
     tagline: 'The cockpit edition. Every chapter so far has been about what the agents do; this page is about the two square meters in front of the human. Run 6–8 Claude Code sessions in parallel and the bottleneck stops being the model — it\'s you, alt-tabbing through identical black rectangles, typing into the wrong one. Fleet paint is the fix: a statusline that names every session, OSC escape codes that recolor each window by project, and a launchd watcher that keeps the whole fleet painted automatically — one palette file that both the window and the badge read, so they can never disagree. Built by Claude Code across two evenings, including the one where it disassembled the terminal to check which escape codes actually work, and the second one — "harden it, no silent failures" — that turned a demo into infrastructure.',
     shipped: [
       'New page — /terminal-setup/. The four layers of terminal customization (app, prompt, escape codes, Claude Code itself) and which layer owns what; the honest terminal matrix — Terminal.app, iTerm2, WezTerm, Ghostty, kitty, Warp — including why Chapter 20\'s "skip Terminal.app" and this page\'s "it runs on Terminal.app" are both right.',

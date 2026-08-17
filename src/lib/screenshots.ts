@@ -94,6 +94,10 @@ export const SCREENSHOTS: Record<string, string> = {
   "48-traffic-graph-that-lies-1": "48-traffic-graph-that-lies-1.webp",
   "48-traffic-graph-that-lies-2": "48-traffic-graph-that-lies-2.webp",
   "ad-x-90k-delete": "ad-x-90k-delete.svg",
+  "agent-workflow-delta": "agent-workflow-delta.svg",
+  "agent-workflow-plan": "agent-workflow-plan.svg",
+  "agent-workflow-pr": "agent-workflow-pr.svg",
+  "agent-workflow-ready": "agent-workflow-ready.svg",
   "claude-md-rules-1": "claude-md-rules-1.svg",
   "dynamic-workflows-1": "dynamic-workflows-1.png",
   "dynamic-workflows-2": "dynamic-workflows-2.png",
@@ -115,4 +119,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "swarms-3": "swarms-3.webp"
 };
 
-export const SCREENSHOT_COUNT = 110;
+export const SCREENSHOT_COUNT = 114;

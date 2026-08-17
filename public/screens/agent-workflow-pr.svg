@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 860" width="1600" height="860" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="860" fill="#0E0F11"/>
+  <rect x="60" y="40" width="1480" height="780" fill="#12161A" stroke="#26251F" stroke-width="1" rx="10"/>
+  <text x="100" y="110" fill="#FAFAF7" font-size="26" font-weight="600">fix: retry webhook delivery on 5xx with backoff <tspan fill="#71717A" font-weight="400">#52</tspan></text>
+  <rect x="100" y="130" width="86" height="28" rx="14" fill="#28C840" fill-opacity="0.15" stroke="#28C840"/>
+  <text x="143" y="149" fill="#28C840" font-size="13" text-anchor="middle">Draft</text>
+  <text x="200" y="149" fill="#71717A" font-size="14">feat/41-webhook-retry → main · Closes #41</text>
+  <text x="100" y="215" fill="#FAFAF7" font-size="19" font-weight="600">Reviewer notes</text>
+  <text x="100" y="252" fill="#AAA79A" font-size="15">Fleet: scope, security, db, simplicity, test-quality ran (contract off). 4 findings.</text>
+  <g transform="translate(100, 285)">
+    <rect x="0" y="0" width="1400" height="100" rx="8" fill="#28C840" fill-opacity="0.06" stroke="#26251F"/>
+    <text x="20" y="30" fill="#28C840" font-size="14" font-weight="600">FIXED</text>
+    <text x="90" y="30" fill="#FAFAF7" font-size="15">security · deliver.ts — retry loop re-sent the original signature header after payload mutation</text>
+    <text x="90" y="56" fill="#AAA79A" font-size="14">Failure scenario: attempt 2 signs stale body → receiver accepts a payload we no longer sent.</text>
+    <text x="90" y="80" fill="#AAA79A" font-size="14">Fix in this branch: re-sign per attempt (deliver.ts, sign.ts).</text>
+  </g>
+  <g transform="translate(100, 400)">
+    <rect x="0" y="0" width="1400" height="100" rx="8" fill="#28C840" fill-opacity="0.06" stroke="#26251F"/>
+    <text x="20" y="30" fill="#28C840" font-size="14" font-weight="600">FIXED</text>
+    <text x="90" y="30" fill="#FAFAF7" font-size="15">test-quality · retry.test.ts — the backoff test asserted the mock's schedule, not the behaviour</text>
+    <text x="90" y="56" fill="#AAA79A" font-size="14">A broken backoff would still pass. Rewritten against fake timers; goes red if the curve changes.</text>
+  </g>
+  <g transform="translate(100, 515)">
+    <rect x="0" y="0" width="1400" height="100" rx="8" fill="#FEBC2E" fill-opacity="0.06" stroke="#26251F"/>
+    <text x="20" y="30" fill="#FEBC2E" font-size="14" font-weight="600">DISMISSED</text>
+    <text x="150" y="30" fill="#FAFAF7" font-size="15">simplicity · backoff.ts — "config object with one possible value"</text>
+    <text x="150" y="56" fill="#AAA79A" font-size="14">Reason: the second value ships in #38 next week; the shape is load-bearing, not speculative.</text>
+  </g>
+  <g transform="translate(100, 630)">
+    <rect x="0" y="0" width="1400" height="100" rx="8" fill="#FEBC2E" fill-opacity="0.06" stroke="#26251F"/>
+    <text x="20" y="30" fill="#FEBC2E" font-size="14" font-weight="600">DISMISSED</text>
+    <text x="150" y="30" fill="#FAFAF7" font-size="15">db · migration — "add an index on (delivery_id, attempted_at)"</text>
+    <text x="150" y="56" fill="#AAA79A" font-size="14">Too large for this branch (new index on a hot table). Filed as #44, blocked-by recorded on the board.</text>
+  </g>
+  <text x="100" y="780" fill="#71717A" font-size="14">Every finding answered in writing. No agent gates the merge — CI does. The reviewer reads decisions, not diffs.</text>
+</svg>

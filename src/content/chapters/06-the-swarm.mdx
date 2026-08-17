@@ -101,6 +101,10 @@ If you remember nothing else: fan-out for breadth, pipeline for depth, map-reduc
 
 <SwarmVisualizer client:visible />
 
+<Callout type="tip">
+The swarm's missing organ is a queue. Once you run more than two sessions, "what should each one work on" stops being a prompt and becomes infrastructure: a board with a definition of ready, issues written for an agent with no memory, and a review fleet that wakes by file path. The full working setup — GitHub Projects, three slash commands, six reviewers, every option judged — is on [the agent-workflow page](/agent-workflow/).
+</Callout>
+
 ## Anti-patterns — the ones that bite
 
 Spawning agents for trivial work. If a task takes 30 seconds in your own terminal, a subagent costs more in overhead and tokens than it saves. The swarm is for jobs that don't fit one window or one thread.

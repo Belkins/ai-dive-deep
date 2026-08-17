@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" width="1600" height="760" font-family="JetBrains Mono, SFMono-Regular, monospace">
+  <rect width="1600" height="760" fill="#0E0F11"/>
+  <rect x="60" y="40" width="1480" height="680" fill="#101418" stroke="#26251F" stroke-width="1" rx="10"/>
+  <rect x="60" y="40" width="1480" height="44" fill="#1A1B1F" rx="10"/>
+  <rect x="60" y="70" width="1480" height="14" fill="#1A1B1F"/>
+  <circle cx="84" cy="62" r="6" fill="#FF5F57"/><circle cx="104" cy="62" r="6" fill="#FEBC2E"/><circle cx="124" cy="62" r="6" fill="#28C840"/>
+  <text x="800" y="66" fill="#71717A" font-size="13" text-anchor="middle">acme/forge · feat/41-webhook-retry — zsh</text>
+  <text x="100" y="130" fill="#8B8B8B" font-size="16">$ <tspan fill="#E8E6DF">.github/scripts/review.sh plan</tspan></text>
+  <text x="100" y="170" fill="#8B8B8B" font-size="15">==&gt; feat/41-webhook-retry — issue #41, 9 file(s) changed against origin/main</text>
+  <text x="100" y="216" fill="#28C840" font-size="16">scope-reviewer         <tspan fill="#8B8B8B">always, and this branch is on issue #41</tspan></text>
+  <text x="100" y="248" fill="#28C840" font-size="16">security-reviewer      <tspan fill="#8B8B8B">src/server/webhooks/deliver.ts</tspan></text>
+  <text x="100" y="280" fill="#28C840" font-size="16">db-reviewer            <tspan fill="#8B8B8B">prisma/migrations/20260815_delivery_attempts/migration.sql</tspan></text>
+  <text x="100" y="312" fill="#28C840" font-size="16">simplicity-reviewer    <tspan fill="#8B8B8B">src/server/webhooks/backoff.ts</tspan></text>
+  <text x="100" y="344" fill="#28C840" font-size="16">test-quality-reviewer  <tspan fill="#8B8B8B">tests/webhooks/retry.test.ts</tspan></text>
+  <text x="100" y="390" fill="#71717A" font-size="15">    not woken: contract-reviewer (off) — nothing on this branch matches what wakes it</text>
+  <text x="100" y="452" fill="#8B8B8B" font-size="15">— the routing is a table in .claude/workflow-kit.json, not a model's mood.</text>
+  <text x="100" y="482" fill="#8B8B8B" font-size="15">  "why did the database reviewer run" is answerable: the migration path matched its glob.</text>
+  <text x="100" y="540" fill="#8B8B8B" font-size="16">$ <tspan fill="#E8E6DF">/review</tspan>  <tspan fill="#71717A"># spawns exactly those five, in parallel, each fed the diff + the issue body</tspan></text>
+  <rect x="100" y="580" width="14" height="26" fill="#FF6B2C"/>
+</svg>
