@@ -53,7 +53,6 @@ const { text, isNew, tail } = eyebrowLabel(added, category);
     padding: 0.1rem 0.5rem;
     border-radius: 999px;
     position: relative;
-    isolation: isolate;
   }
   /* Ambient glow pulse. The shadow is pre-rendered on a pseudo-element and
      only its opacity animates (composited — no per-frame paint). Motion-floor
@@ -67,7 +66,6 @@ const { text, isNew, tail } = eyebrowLabel(added, category);
       border-radius: inherit;
       box-shadow: 0 0 10px 1px rgb(var(--accent) / 0.7);
       opacity: 0;
-      z-index: -1;
       animation: tile-new-glow 2.6s ease-in-out infinite;
     }
     @keyframes tile-new-glow {
