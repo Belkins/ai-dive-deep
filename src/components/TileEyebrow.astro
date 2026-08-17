@@ -22,12 +22,12 @@ interface Props {
   category: string;
 }
 const { added, category } = Astro.props;
-const { text, isNew, when } = eyebrowLabel(added, category);
+const { text, isNew, tail } = eyebrowLabel(added, category);
 ---
 {isNew ? (
-  <div class="tile-eyebrow--new text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))" aria-label={text}>
-    <span class="tile-new" aria-hidden="true">New</span>
-    <span aria-hidden="true">{when} · {category}</span>
+  <div class="tile-eyebrow--new text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">
+    <span class="tile-new">New</span>
+    <span>{tail}</span>
   </div>
 ) : (
   <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">
@@ -52,6 +52,5 @@ const { text, isNew, when } = eyebrowLabel(added, category);
     line-height: 1.4;
     padding: 0.1rem 0.5rem;
     border-radius: 999px;
-    flex: none;
   }
 </style>
