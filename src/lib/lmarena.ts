@@ -96,7 +96,7 @@ export const LMARENA: Category[] = [
       { rank: 11, model: 'muse-spark-1.1',          score: 1489, vendor: 'meta' },
       { rank: 12, model: 'kimi-k3-max',             score: 1489, vendor: 'moonshot' },
     ],
-    note: 'July\'s clean sweep is over: Muse Spark 1.2 breaks into the all-Anthropic top six at #4 (3,280 votes, ±10). Fable 5\'s #1 is now statistically real on this board — its interval (1501–1512) no longer overlaps claude-opus-5-high\'s (1488–1498), on 21,533 votes against July\'s 5,417. Both Opus 5 efforts carry rows now: high at #7, max at #10. Still no OpenAI model in the top 12. Ranks 8–12 span two Elo points.',
+    note: 'July\'s clean sweep is over: Muse Spark 1.2 breaks into the all-Anthropic top six at #4 (3,280 votes, ±10). Fable 5\'s lead over Opus 5 is now statistically real — its interval (1501–1512) no longer overlaps claude-opus-5-high\'s (1488–1498), with Opus 5\'s sample grown from July\'s 5,417 votes to 20,030 — though #2 claude-opus-4-6-high (1501–1508) still overlaps Fable 5 fully, so the #1 spot itself remains a statistical tie. Both Opus 5 efforts carry rows now: high at #7, max at #10. Still no OpenAI model in the top 12. Ranks 8–12 span two Elo points.',
   },
   {
     id: 'code',
@@ -111,9 +111,9 @@ export const LMARENA: Category[] = [
       { rank: 5,  model: 'grok-4.6-high',                      score: 1631, vendor: 'xai' },
       { rank: 6,  model: 'claude-fable-5',                     score: 1627, vendor: 'anthropic' },
       { rank: 7,  model: 'gpt-5.6-sol-xhigh (codex-harness)',  score: 1622, vendor: 'openai' },
-      { rank: 8,  model: 'gemini-3.7-flash-high',              score: 1588, vendor: 'google' },
+      { rank: 8,  model: 'gemini-3.7-flash-high',              score: 1587, vendor: 'google' },
       { rank: 9,  model: 'glm-5.2-max',                        score: 1585, vendor: 'zhipu' },
-      { rank: 10, model: 'deepseek-v4-pro-high-20260813',      score: 1585, vendor: 'deepseek' },
+      { rank: 10, model: 'deepseek-v4-pro-high-20260813',      score: 1584, vendor: 'deepseek' },
       { rank: 11, model: 'deepseek-v4-flash-high',             score: 1581, vendor: 'deepseek' },
       { rank: 12, model: 'claude-opus-4-8-high',               score: 1564, vendor: 'anthropic' },
     ],
@@ -136,13 +136,13 @@ export const LMARENA: Category[] = [
       { rank: 9,  model: 'muse-spark-1.1',                     score: 1544, vendor: 'meta' },
       { rank: 10, model: 'claude-opus-4-6-high',               score: 1540, vendor: 'anthropic' },
     ],
-    note: 'Renamed from Image-to-WebDev. July\'s two defects are both gone: the duplicated fable-5 display rows at #1/#2, and Opus 5\'s absence. Opus 5 (max) now debuts at #1 — on 922 votes (1649–1692, ±21), an interval that swallows Qwen3.8 Max and Fable 5 below it. Thinnest samples of any Elo board here, and the one board the community mirror does not cover: single-sourced from Arena\'s payload.',
+    note: 'Renamed from Image-to-WebDev. July\'s two defects are both gone: the duplicated fable-5 display rows at #1/#2, and Opus 5\'s absence. Opus 5 (max) now debuts at #1 — on 922 votes (1649–1692, ±21), an interval that still touches Qwen3.8 Max\'s below it (Qwen\'s reaches 1651) but sits fully clear of Fable 5\'s (1613–1639). Thinnest samples of any Elo board here, and the one board the community mirror does not cover: single-sourced from Arena\'s payload.',
   },
   {
     id: 'document',
     name: 'Document',
     blurb: 'Long-document reasoning and synthesis.',
-    freshness: 'votes through 2026-07-26 · 0.32M votes · unchanged since the July capture',
+    freshness: 'votes through 2026-07-26 · 0.32M votes · cutoff unchanged since July',
     rows: [
       { rank: 1,  model: 'claude-opus-5-high',    score: 1520, vendor: 'anthropic' },
       { rank: 2,  model: 'claude-opus-4-6',       score: 1510, vendor: 'anthropic' },
@@ -155,7 +155,7 @@ export const LMARENA: Category[] = [
       { rank: 9,  model: 'gpt-5.5',               score: 1480, vendor: 'openai' },
       { rank: 10, model: 'gpt-5.6-terra-xhigh',   score: 1479, vendor: 'openai' },
     ],
-    note: 'Arena has not recomputed this board since the previous capture — the vote cutoff is still 2026-07-26. The July caveat therefore stands: Opus 5\'s #1 rests on 1,663 votes against rank 2\'s 37,271, a 22× sample gap, with fully overlapping intervals (1506–1535 vs 1504–1516). "The #1 document model" is a leaderboard fact, not yet a statistical one.',
+    note: 'Arena has collected no new votes for this board since the previous capture — the cutoff is still 2026-07-26 — though it re-published the rows (gpt-5.6 entries added, -thinking display names renamed to -high). The July caveat therefore stands: Opus 5\'s #1 rests on 1,663 votes against rank 2\'s 37,271, a 22× sample gap, with fully overlapping intervals (1506–1535 vs 1504–1516). "The #1 document model" is a leaderboard fact, not yet a statistical one.',
   },
   {
     id: 'vision',
@@ -191,7 +191,7 @@ export const LMARENA: Category[] = [
       { rank: 7,  model: 'gemini-3.1-pro-grounding',        score: 1212, vendor: 'google' },
       { rank: 8,  model: 'gemini-3-pro-grounding',          score: 1207, vendor: 'google' },
       { rank: 9,  model: 'gpt-5.2-search',                  score: 1206, vendor: 'openai' },
-      { rank: 10, model: 'grok-4.20-multi-agent-beta-0309', score: 1206, vendor: 'xai' },
+      { rank: 10, model: 'grok-4.20-multi-agent-beta-0309', score: 1205, vendor: 'xai' },
     ],
     note: 'Also not recomputed since July — the vote cutoff is still 2026-07-21, so Opus 5 still has no Search entry here while `claude-sonnet-5-search` sits at rank 16 (1188 ±6). Worth pairing with the API fact: the server-side `web_fetch` tool is not available on Opus 5, so a search agent on Opus 5 must bring its own fetcher.',
   },
@@ -250,7 +250,7 @@ export const LMARENA: Category[] = [
       { rank: 9,  model: 'veo-3.1-audio-1080p',        score: 1363, vendor: 'google' },
       { rank: 10, model: 'veo-3.1-fast-audio',         score: 1362, vendor: 'google' },
     ],
-    note: 'Black Forest Labs\' flux-3-video debuts at #2 on 1,288 votes (±18), an interval wide enough to touch ranks 1 and 3 both. MiniMax-H3 arrives at #5 — and leads both boards below.',
+    note: 'Black Forest Labs\' flux-3-video debuts at #2 on 1,288 votes (±17), an interval wide enough to touch ranks 1 and 3 both. MiniMax-H3 arrives at #5 — and leads both boards below.',
   },
   {
     id: 'image-to-video',
@@ -286,7 +286,7 @@ export const LMARENA: Category[] = [
       { rank: 7, model: 'kling-o1-pro',                score: 1200, vendor: 'other' },
       { rank: 8, model: 'runway-gen4-aleph',           score: 1183, vendor: 'other' },
     ],
-    note: 'Renamed from Video Edit. This is the complete board, not a truncated top ten — eight models, up from July\'s seven: MiniMax-H3 joined and joined at #1, on 499 votes (±26). The smallest board Arena runs, at roughly 0.4% of Image Edit\'s volume.',
+    note: 'Renamed from Video Edit. This is the complete board, not a truncated top ten — eight models, up from July\'s seven: MiniMax-H3 joined and joined at #1, on 499 votes (±26). The smallest board Arena runs, at less than 0.1% of Image Edit\'s volume.',
   },
 ];
 

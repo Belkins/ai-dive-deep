@@ -3,15 +3,15 @@
 // Hand-captured from the PUBLIC boards at https://artificialanalysis.ai/models
 // and https://artificialanalysis.ai/models/capabilities/agentic (each page
 // embeds its figures as JSON-LD `Dataset` blocks, isAccessibleForFree; the
-// /models page ships 19 of them, one per chart, each listing that chart's own
-// model subset — the table below merges Intelligence, Cost per Task and Output
-// Speed by model label). This is NOT the keyed API: AA's free API tier is
+// /models page ships 18 of them, one per chart — a 19th JSON-LD block is a
+// FAQPage — each listing that chart's own model subset; the table below merges
+// Intelligence, Cost per Task and Output Speed by model label). This is NOT the keyed API: AA's free API tier is
 // "internal use only, no redistribution," so we mirror the LAB_CLAIMS trust
 // model instead — a dated, attributed, fair-use snapshot of published facts,
 // refreshed by hand when AA revises the index.
 //
 // Source: Artificial Analysis (2025). LLM benchmarks dataset. https://artificialanalysis.ai
-// Captured 2026-08-17 · Intelligence Index v4.1 (AA's default board cut).
+// Captured 2026-08-17 · Intelligence Index v4.1.1 (AA's default board cut).
 //
 // AA publishes no `dateModified` and no visible "last updated" stamp on /models,
 // so the only defensible date anchor is OUR capture date. It is labelled
@@ -30,24 +30,30 @@
 import type { Vendor } from './lmarena';
 
 export const AA_SNAPSHOT = '2026-08-17';
-export const AA_INDEX_VERSION = 'Intelligence Index v4.1';
+export const AA_INDEX_VERSION = 'Intelligence Index v4.1.1';
 export const AA_SOURCE_URL = 'https://artificialanalysis.ai/models';
 export const AA_AGENTIC_URL = 'https://artificialanalysis.ai/models/capabilities/agentic';
 export const AA_METHODOLOGY_URL = 'https://artificialanalysis.ai/methodology/intelligence-benchmarking';
 export const AA_ATTRIBUTION = 'Artificial Analysis (2025). LLM benchmarks dataset. artificialanalysis.ai';
 
 // AA ran the Opus 5 evals pre-release at Anthropic's request. Rendered on the
-// panel so the #1 row carries its own provenance.
+// panel so the #1 row carries its own provenance. The quote is from AA's Opus 5
+// launch communications (July 2026, verified at the 2026-07-27 capture) — it
+// does not appear on the /models page itself, so it is date-stamped rather than
+// cited as current page copy.
 export const AA_DISCLOSURE =
-  'AA discloses it “supported Anthropic to evaluate Claude Opus 5 ahead of release.” Own harness, own hardware — but pre-release vendor coordination on the #1 row. Weigh it as such.';
+  'At the Opus 5 launch (July 2026) AA disclosed it “supported Anthropic to evaluate Claude Opus 5 ahead of release.” Own harness, own hardware — but pre-release vendor coordination on the #1 row. Weigh it as such.';
 
-// The v4.1 methodology — re-verified against AA's methodology page on the
-// 2026-08-17 capture: the version history still ends at 4.1, and the same nine
-// benches appear. Same methodology generation as the very different 2026-06-16
-// and 2026-07-27 boards — the boards move under a fixed rulebook as models ship.
+// Re-verified against AA's methodology page on the 2026-08-17 capture: the
+// version history now ends at v4.1.1 (August 2026 — current), a maintenance
+// cut of the v4.1 redesign — 𝜏³-Banking moved to the upstream tau2-bench
+// v1.0.1 dataset/grader, and the grader model for HLE, AA-LCR and
+// AA-Omniscience upgraded to GPT-5.6 Luna (medium). The same nine benches and
+// category weights carry over unchanged, so the structure below is v4.1's
+// design under the v4.1.1 label.
 export const AA_METHODOLOGY: { version: string; since: string; categories: { name: string; weight: number; benches: string[] }[]; retired: string[] } = {
-  version: 'v4.1',
-  since: 'June 2026 — current',
+  version: 'v4.1.1',
+  since: 'August 2026 — current; the v4.1 redesign shipped June 2026',
   categories: [
     { name: 'Agents', weight: 34, benches: ['GDPval-AA v2 · 20%', '𝜏³-Banking · 14%'] },
     { name: 'Coding', weight: 24, benches: ['Terminal-Bench v2.1 · 16%', 'SciCode · 8%'] },
@@ -55,7 +61,9 @@ export const AA_METHODOLOGY: { version: string; since: string; categories: { nam
     { name: 'General', weight: 18, benches: ['AA-Omniscience · 12% (accuracy 8% + non-hallucination 4%)', 'AA-LCR · 6%'] },
   ],
   // What v4.1 retired to chase agentic signal — the "why now" in three names.
-  retired: ['IFBench (saturated)', 'Terminal-Bench Hard', '𝜏²-Bench Telecom'],
+  // (AA states only that IFBench was removed from the Index — it gives no
+  // saturation rationale, so none is printed.)
+  retired: ['IFBench', 'Terminal-Bench Hard', '𝜏²-Bench Telecom'],
 };
 
 // The Agentic Index — AA's second headline board, published as its own page.

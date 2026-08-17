@@ -17,7 +17,7 @@ type SortDef = {
 };
 
 const SORTS: SortDef[] = [
-  { key: 'intelligence', label: 'Intelligence', unit: 'Index v4.1', higherBetter: true,
+  { key: 'intelligence', label: 'Intelligence', unit: 'Index v4.1.1', higherBetter: true,
     value: (m) => m.intelligence, fmt: (v) => v.toFixed(1) },
   { key: 'agentic', label: 'Agentic', unit: 'Agentic Index', higherBetter: true,
     value: (m) => m.agentic, fmt: (v) => v.toFixed(1) },
@@ -220,7 +220,7 @@ export default function ArtificialAnalysisPanel() {
               <li key={c.name}><strong>{c.name} · {c.weight}%</strong> — {c.benches.join(' · ')}</li>
             ))}
           </ul>
-          <div style={{ marginTop: 6 }}>v4.1 retired {AA_METHODOLOGY.retired.join(', ')} to chase agentic signal. It's a weighted composite — change the weights and you change the king. Independent buys disinterest, not infallibility: read it as a third reading that disagrees usefully with the crowd and the labs, not a tiebreaker that overrules them.</div>
+          <div style={{ marginTop: 6 }}>The v4.1 redesign retired {AA_METHODOLOGY.retired.join(', ')} to chase agentic signal; v4.1.1 (August 2026) is a maintenance cut — 𝜏³-Banking moved to upstream tau2-bench v1.0.1, grader models upgraded. It's a weighted composite — change the weights and you change the king. Independent buys disinterest, not infallibility: read it as a third reading that disagrees usefully with the crowd and the labs, not a tiebreaker that overrules them.</div>
           <div style={{ marginTop: 8 }}><strong>Precision.</strong> {AA_PRECISION} Treat the top of this board as a tie, not a ranking.</div>
           <div style={{ marginTop: 8 }}><strong>Disclosure.</strong> {AA_DISCLOSURE}</div>
           <div style={{ marginTop: 8 }}><strong>The Agentic column.</strong> {AA_AGENTIC_NOTE} Source: <a href={AA_AGENTIC_URL} target="_blank" rel="noopener" style={{ color: 'rgb(var(--accent))' }}>the Agentic Index board</a>.</div>
