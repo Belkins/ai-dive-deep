@@ -69,14 +69,14 @@ const navItems = [
               <svg viewBox="0 0 880 400" width="100%" role="img" aria-label="The same six windows painted by project — each a distinct background tint with an emoji and project label in the title" style="display:block; background:#0c0d10">
                 <!-- after: painted fleet, decoy project names -->
                 {[
-                  { x: 20,  y: 20,  bg: '#001a1d', bar: '#04252a', cur: '#00d0dd', label: '🚢 harbor', state: '◐ Tracing a flaky webhook retry' },
-                  { x: 308, y: 20,  bg: '#1b1025', bar: '#251733', cur: '#d19cff', label: '🧵 loom', state: '✳ Waiting: approve the migration?' },
-                  { x: 596, y: 20,  bg: '#260d0d', bar: '#331515', cur: '#ff9592', label: '🔥 ember', state: '◑ Refactoring the image pipeline' },
-                  { x: 20,  y: 205, bg: '#0b1629', bar: '#12203a', cur: '#90b7ff', label: '🛰️ atlas', state: '◐ Writing the release notes' },
-                  { x: 308, y: 205, bg: '#071b0b', bar: '#0e2712', cur: '#6dd17f', label: '🌿 fern', state: '✳ Idle — 133 tests green' },
-                  { x: 596, y: 205, bg: '#15191e', bar: '#1e242b', cur: '#92c1fd', label: '💎 quartz', state: '◑ Auditing the auth flow' },
-                ].map((w) => (
-                  <g transform={`translate(${w.x}, ${w.y})`}>
+                  { bg: '#001a1d', bar: '#04252a', cur: '#00d0dd', label: '🚢 harbor', state: '◐ Tracing a flaky webhook retry' },
+                  { bg: '#1b1025', bar: '#251733', cur: '#d19cff', label: '🧵 loom', state: '✳ Waiting: approve the migration?' },
+                  { bg: '#260d0d', bar: '#331515', cur: '#ff9592', label: '🔥 ember', state: '◑ Refactoring the image pipeline' },
+                  { bg: '#0b1629', bar: '#12203a', cur: '#90b7ff', label: '🛰️ atlas', state: '◐ Writing the release notes' },
+                  { bg: '#071b0b', bar: '#0e2712', cur: '#6dd17f', label: '🌿 fern', state: '✳ Idle — 133 tests green' },
+                  { bg: '#15191e', bar: '#1e242b', cur: '#92c1fd', label: '💎 quartz', state: '◑ Auditing the auth flow' },
+                ].map((w, i) => (
+                  <g transform={`translate(${20 + (i % 3) * 288}, ${20 + Math.floor(i / 3) * 185})`}>
                     <rect width="264" height="165" rx="8" fill={w.bg} stroke="#2c2c2c"/>
                     <rect width="264" height="24" rx="8" fill={w.bar}/>
                     <rect y="16" width="264" height="8" fill={w.bar}/>

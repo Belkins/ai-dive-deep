@@ -577,6 +577,25 @@ export const CHANGELOG: ChangelogEntry[] = [
     ],
   },
   {
+    edition: 'Storytelling layer',
+    date: '2026-05-08',
+    tagline: '36 islands became one six-act journey.',
+    shipped: [
+      '/how-to-read — ~1,100-word prologue. Who this is for, the reframe, the journey, three ways to use the book.',
+      '/journey — 6-part narrative arc (Reframe → Memory → Workshop → Discipline → Building → Frontier)',
+      '/questions — 18 questions Vlad answers most weeks, each with short answer + chapter pointers',
+      'Part pill on every chapter hero — readers know where they are in the arc',
+      'Chapter footer transitions detect part boundaries: "Next: Part III — The Workshop →"',
+      '/showcase — auto-extracted from ~/.claude/: 62 skills + 32 custom agents + 12 plugins, categorized + searchable',
+      '/cowork-setup — sanitized: 12 connector categories + 8 scheduled-task patterns + day-shape timeline. Zero local-data scan.',
+    ],
+    receipts: [
+      { label: 'Reader-facing pages added', value: '+5' },
+      { label: 'Skills surfaced', value: '62' },
+      { label: 'Sensitive paths read', value: '0 (Cowork showcase derived from published chapters)' },
+    ],
+  },
+  {
     edition: 'Edition 3',
     date: '2026-05-07',
     tagline: 'Closed the original brief. Six new chapters, two new pages.',
@@ -596,25 +615,6 @@ export const CHANGELOG: ChangelogEntry[] = [
       { label: 'Chapters added', value: '+6 (30 → 36)' },
       { label: 'Widgets added', value: '+2 (12 → 14)' },
       { label: 'New pages', value: '+2 (/day-zero, /sections)' },
-    ],
-  },
-  {
-    edition: 'Storytelling layer',
-    date: '2026-05-08',
-    tagline: '36 islands became one six-act journey.',
-    shipped: [
-      '/how-to-read — ~1,100-word prologue. Who this is for, the reframe, the journey, three ways to use the book.',
-      '/journey — 6-part narrative arc (Reframe → Memory → Workshop → Discipline → Building → Frontier)',
-      '/questions — 18 questions Vlad answers most weeks, each with short answer + chapter pointers',
-      'Part pill on every chapter hero — readers know where they are in the arc',
-      'Chapter footer transitions detect part boundaries: "Next: Part III — The Workshop →"',
-      '/showcase — auto-extracted from ~/.claude/: 62 skills + 32 custom agents + 12 plugins, categorized + searchable',
-      '/cowork-setup — sanitized: 12 connector categories + 8 scheduled-task patterns + day-shape timeline. Zero local-data scan.',
-    ],
-    receipts: [
-      { label: 'Reader-facing pages added', value: '+5' },
-      { label: 'Skills surfaced', value: '62' },
-      { label: 'Sensitive paths read', value: '0 (Cowork showcase derived from published chapters)' },
     ],
   },
   {
