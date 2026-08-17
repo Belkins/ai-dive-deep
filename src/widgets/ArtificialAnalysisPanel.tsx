@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { VENDOR_META, type Vendor } from '@/lib/lmarena';
 import {
-  AA_MODELS, AA_SNAPSHOT, AA_INDEX_VERSION, AA_SOURCE_URL,
-  AA_METHODOLOGY_URL, AA_METHODOLOGY, AA_DISCLOSURE, AA_PRECISION,
+  AA_MODELS, AA_SNAPSHOT, AA_INDEX_VERSION, AA_SOURCE_URL, AA_AGENTIC_URL,
+  AA_METHODOLOGY_URL, AA_METHODOLOGY, AA_DISCLOSURE, AA_PRECISION, AA_AGENTIC_NOTE,
   type AAMetric, type AAModel,
 } from '@/lib/artificial-analysis';
 
@@ -19,6 +19,8 @@ type SortDef = {
 const SORTS: SortDef[] = [
   { key: 'intelligence', label: 'Intelligence', unit: 'Index v4.1', higherBetter: true,
     value: (m) => m.intelligence, fmt: (v) => v.toFixed(1) },
+  { key: 'agentic', label: 'Agentic', unit: 'Agentic Index', higherBetter: true,
+    value: (m) => m.agentic, fmt: (v) => v.toFixed(1) },
   { key: 'cost', label: 'Cost / task', unit: 'USD per Index task', higherBetter: false,
     value: (m) => m.costPerTaskUsd, fmt: (v) => `$${v < 1 ? v.toFixed(3) : v.toFixed(2)}` },
   { key: 'speed', label: 'Speed', unit: 'tok/s', higherBetter: true,
@@ -72,6 +74,7 @@ export default function ArtificialAnalysisPanel() {
   const smartest = [...AA_MODELS].sort((a, b) => b.intelligence - a.intelligence)[0];
   const cheapest = [...AA_MODELS].sort((a, b) => a.costPerTaskUsd - b.costPerTaskUsd)[0];
   const priciest = [...AA_MODELS].sort((a, b) => b.costPerTaskUsd - a.costPerTaskUsd)[0];
+  const agenticLead = [...AA_MODELS].filter((m) => m.agentic !== undefined).sort((a, b) => b.agentic! - a.agentic!)[0];
   const multiple = smartest.costPerTaskUsd / cheapest.costPerTaskUsd;
   const smartestIsPriciest = smartest.model === priciest.model;
   // How much of the leader's capability the cheapest row actually delivers.
@@ -98,7 +101,7 @@ export default function ArtificialAnalysisPanel() {
     .aap-pill:hover{color:rgb(var(--fg));border-color:rgb(var(--muted) / .5)}
     .aap-pill[data-on="1"]{background:rgb(var(--accent));border-color:rgb(var(--accent));color:#fff}
     .aap-pill small{font-weight:400;opacity:.7;margin-left:5px}
-    .aap-row{display:grid;grid-template-columns:34px minmax(120px,1.3fr) 1fr 58px 70px 56px;align-items:center;gap:12px;padding:9px 24px;border-bottom:1px solid rgb(var(--line) / .5)}
+    .aap-row{display:grid;grid-template-columns:34px minmax(120px,1.3fr) 1fr 58px 58px 70px 56px;align-items:center;gap:12px;padding:9px 24px;border-bottom:1px solid rgb(var(--line) / .5)}
     .aap-row:last-child{border-bottom:0}
     .aap-rk{font:500 16px/1 var(--font-display,Georgia,serif);color:rgb(var(--muted))}
     .aap-md{display:flex;align-items:center;gap:8px;min-width:0}
@@ -108,7 +111,7 @@ export default function ArtificialAnalysisPanel() {
     .aap-fill{height:6px;border-radius:3px;transition:width .35s cubic-bezier(.4,0,.2,1)}
     .aap-cell{font:500 13px/1 var(--font-mono,monospace);color:rgb(var(--muted));text-align:right}
     .aap-cell[data-on="1"]{font-weight:700;color:rgb(var(--fg))}
-    .aap-colh{display:grid;grid-template-columns:34px minmax(120px,1.3fr) 1fr 58px 70px 56px;gap:12px;padding:8px 24px;border-bottom:1px solid rgb(var(--line))}
+    .aap-colh{display:grid;grid-template-columns:34px minmax(120px,1.3fr) 1fr 58px 58px 70px 56px;gap:12px;padding:8px 24px;border-bottom:1px solid rgb(var(--line))}
     .aap-colh span{font:600 9px/1.2 var(--font-sans,inherit);letter-spacing:.08em;text-transform:uppercase;color:rgb(var(--muted))}
     .aap-colh .r{text-align:right}
     .aap-callout{margin:16px 24px 4px;padding:12px 16px;border:1px solid rgb(var(--accent-2) / .5);border-radius:10px;background:rgb(var(--accent-2) / .08);font-size:13px;line-height:1.5;color:rgb(var(--fg))}
@@ -161,6 +164,7 @@ export default function ArtificialAnalysisPanel() {
           <span>Model</span>
           <span className="h">{sort.label}</span>
           <span className="r" data-on={active === 'intelligence' ? '1' : '0'}>Intel</span>
+          <span className="r" data-on={active === 'agentic' ? '1' : '0'}>Agentic</span>
           <span className="r" data-on={active === 'cost' ? '1' : '0'}>$/task</span>
           <span className="r" data-on={active === 'speed' ? '1' : '0'}>tok/s</span>
         </div>
@@ -179,6 +183,7 @@ export default function ArtificialAnalysisPanel() {
                   <div className="aap-fill" style={{ width: `${width(v)}%`, background: vm.color }} />
                 </div>
                 <div className="aap-cell" data-on={active === 'intelligence' ? '1' : '0'}>{m.intelligence.toFixed(1)}</div>
+                <div className="aap-cell" data-on={active === 'agentic' ? '1' : '0'}>{m.agentic !== undefined ? m.agentic.toFixed(1) : '—'}</div>
                 <div className="aap-cell" data-on={active === 'cost' ? '1' : '0'}>{m.costPerTaskUsd < 1 ? `$${m.costPerTaskUsd.toFixed(3)}` : `$${m.costPerTaskUsd.toFixed(2)}`}</div>
                 <div className="aap-cell" data-on={active === 'speed' ? '1' : '0'}>{m.outputTokensPerSec ? Math.round(m.outputTokensPerSec) : '—'}</div>
               </div>
@@ -201,6 +206,10 @@ export default function ArtificialAnalysisPanel() {
           )}{' '}
           Meanwhile <strong>{cheapest.model}</strong> delivers {cheapShare}% of the leader&rsquo;s Index at{' '}
           {cheapCostShare.toFixed(1)}% of its cost per task — a {Math.round(multiple)}× price ratio.
+          On the Agentic Index — AA&rsquo;s agentic benches as their own board —{' '}
+          {agenticLead.model === smartest.model
+            ? <>the same model leads ({agenticLead.agentic!.toFixed(1)})</>
+            : <><strong>{agenticLead.model}</strong> leads instead ({agenticLead.agentic!.toFixed(1)})</>}.
           Capability is the vanity metric; cost-per-task is the one that shows up on the invoice. Sort by it.
         </div>
 
@@ -214,7 +223,8 @@ export default function ArtificialAnalysisPanel() {
           <div style={{ marginTop: 6 }}>v4.1 retired {AA_METHODOLOGY.retired.join(', ')} to chase agentic signal. It's a weighted composite — change the weights and you change the king. Independent buys disinterest, not infallibility: read it as a third reading that disagrees usefully with the crowd and the labs, not a tiebreaker that overrules them.</div>
           <div style={{ marginTop: 8 }}><strong>Precision.</strong> {AA_PRECISION} Treat the top of this board as a tie, not a ranking.</div>
           <div style={{ marginTop: 8 }}><strong>Disclosure.</strong> {AA_DISCLOSURE}</div>
-          <div style={{ marginTop: 8 }}><strong>One column, one denominator.</strong> AA publishes two different numbers it calls "cost per task": the Intelligence Index one shown here, and a much larger AA-Briefcase one (Opus 5 at max: $17.79 a task, against Fable 5's $22.30). Secondary coverage quotes them interchangeably. This column is always the Index.</div>
+          <div style={{ marginTop: 8 }}><strong>The Agentic column.</strong> {AA_AGENTIC_NOTE} Source: <a href={AA_AGENTIC_URL} target="_blank" rel="noopener" style={{ color: 'rgb(var(--accent))' }}>the Agentic Index board</a>.</div>
+          <div style={{ marginTop: 8 }}><strong>One column, one denominator.</strong> AA publishes several numbers it calls "cost per task": the Intelligence Index one shown here, a separate larger Agentic Index one (GPT-5.6 Sol: $2.55 there vs $1.23 here), and an AA-Briefcase one before that. Secondary coverage quotes them interchangeably. This column is always the Intelligence Index.</div>
         </details>
 
         <div className="aap-foot">
