@@ -1,11 +1,11 @@
 {
   "date": "2026-08-21",
-  "generated": "2026-08-21T20:43:33.394Z",
+  "generated": "2026-08-21T21:42:22.039Z",
   "count": 40,
   "stats": {
     "feedsTotal": 78,
-    "feedsLive": 66,
-    "itemsTracked": 19335,
+    "feedsLive": 67,
+    "itemsTracked": 19329,
     "travellingFires": 20,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
@@ -17,32 +17,32 @@
       "Analysis": 1
     },
     "byTier": {
-      "Live Signal": 39,
-      "Contrarian": 1
+      "Contrarian": 1,
+      "Live Signal": 39
     },
     "flow": {
       "Papers": 223,
       "Repos": 12,
-      "Community": 251,
+      "Community": 255,
       "Analysis": 52
     },
     "newToday": 39,
     "heatingNow": 4,
     "travelledNow": 0,
     "medianLeadHours": 5.3,
-    "freshestHours": 0.3,
-    "oldestSurvivorHours": 77.7,
+    "freshestHours": 0.9,
+    "oldestSurvivorHours": 78.7,
     "topDomains": [
       {
         "domain": "github.com",
-        "count": 10
+        "count": 9
       },
       {
         "domain": "lesswrong.com",
-        "count": 5
+        "count": 6
       },
       {
-        "domain": "felonybench.com",
+        "domain": "experimental-history.com",
         "count": 1
       }
     ]
@@ -107,6 +107,27 @@
   "items": [
     {
       "rank": 1,
+      "title": "I like 'em thick",
+      "url": "https://www.experimental-history.com/p/i-like-em-thick",
+      "domain": "experimental-history.com",
+      "tier": 3,
+      "tierLabel": "Contrarian",
+      "stage": "Analysis",
+      "firstSource": "Experimental History",
+      "sources": [
+        "Experimental History",
+        "Hacker News front"
+      ],
+      "nSources": 2,
+      "nFam": 2,
+      "ageHours": 78.7,
+      "firstSeen": "2026-08-18T23:40:10.532Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 2,
       "title": "Felony Bench",
       "url": "https://www.felonybench.com/",
       "domain": "felonybench.com",
@@ -122,35 +143,54 @@
       ],
       "nSources": 4,
       "nFam": 2,
-      "ageHours": 5.4,
+      "ageHours": 6.4,
       "firstSeen": "2026-08-21T16:54:28.131Z",
       "heating": true,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 2,
-      "title": "I like 'em thick",
-      "url": "https://www.experimental-history.com/p/i-like-em-thick",
-      "domain": "experimental-history.com",
-      "tier": 3,
-      "tierLabel": "Contrarian",
-      "stage": "Analysis",
-      "firstSource": "Experimental History",
+      "rank": 3,
+      "title": "Alignment fine-tuning induces conditional misalignment in Qwen2.5-7B-Instruct",
+      "url": "https://www.lesswrong.com/posts/fiyPBZf2YA4csGgv4/alignment-fine-tuning-induces-conditional-misalignment-in",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
       "sources": [
-        "Experimental History",
-        "Hacker News front"
+        "LessWrong"
       ],
-      "nSources": 2,
-      "nFam": 2,
-      "ageHours": 77.7,
-      "firstSeen": "2026-08-18T23:40:10.532Z",
-      "heating": true,
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.9,
+      "firstSeen": "2026-08-21T21:42:14.072Z",
+      "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 3,
+      "rank": 4,
+      "title": "Show HN: Groovebox – self-hosted music library integrated with Discogs and Tidal",
+      "url": "https://github.com/danielfalbo/groovebox",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.1,
+      "firstSeen": "2026-08-21T21:42:14.072Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 5,
       "title": "Homebrew 68K Machine Has A PCI Bus",
       "url": "https://hackaday.com/2026/08/20/homebrew-68k-machine-has-a-pci-bus",
       "domain": "hackaday.com",
@@ -163,14 +203,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.3,
+      "ageHours": 1.3,
       "firstSeen": "2026-08-21T20:43:00.364Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 4,
+      "rank": 6,
       "title": "Show HN: Zroar – Serialized Roaring Bitmaps in Zig",
       "url": "https://github.com/manishrjain/zroar",
       "domain": "github.com",
@@ -183,47 +223,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.4,
-      "firstSeen": "2026-08-21T20:43:00.364Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 5,
-      "title": "When is Unlimited Optimization Catastrophic?",
-      "url": "https://www.lesswrong.com/posts/4JCne6evQjtjxXKED/when-is-unlimited-optimization-catastrophic",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 0.6,
-      "firstSeen": "2026-08-21T20:43:00.364Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 6,
-      "title": "Show HN: Fast_trimul – Fused Triangle Multiplicative Updates in Python",
-      "url": "https://github.com/tiagomonteiro0715/fast_trimul",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 0.7,
+      "ageHours": 1.4,
       "firstSeen": "2026-08-21T20:43:00.364Z",
       "heating": false,
       "travelled": false,
@@ -231,128 +231,8 @@
     },
     {
       "rank": 7,
-      "title": "v2.1.239",
-      "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.239",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Repos",
-      "firstSource": "Claude Code releases",
-      "sources": [
-        "Claude Code releases"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 0.8,
-      "firstSeen": "2026-08-21T20:43:00.364Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 8,
-      "title": "Quick impressions: A week of using Codex more than Claude",
-      "url": "https://allaboutcoding.ghinda.com/a-week-of-using-codex-more-than-claude",
-      "domain": "allaboutcoding.ghinda.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 0.9,
-      "firstSeen": "2026-08-21T20:43:00.364Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 9,
-      "title": "Show HN: secret_share - simple CLI to share secrets with PKE",
-      "url": "https://github.com/scosman/secret_share",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 0.9,
-      "firstSeen": "2026-08-21T20:43:00.364Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 10,
-      "title": "Show HN: Ambient Drone Synth URL Preset Encoding",
-      "url": "https://akindoflikeness.net/instruments/phyllotaxis",
-      "domain": "akindoflikeness.net",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1,
-      "firstSeen": "2026-08-21T20:43:00.364Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 11,
-      "title": "Church of the TigerBeetle: A Look at Tech Evangelism",
-      "url": "https://www.wespiser.com/posts/2026-08-03-church-of-the-tigerbeetle.html",
-      "domain": "wespiser.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.1,
-      "firstSeen": "2026-08-21T20:43:00.364Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 12,
-      "title": "AI Text Watermarking Is Free And Good",
-      "url": "https://www.lesswrong.com/posts/3mKuPHmaK7NW3QypR/ai-text-watermarking-is-free-and-good",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.2,
-      "firstSeen": "2026-08-21T20:43:00.364Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 13,
-      "title": "Evaluating Explanations of LLM Behavior In The Wild with Counterfactual Experiments",
-      "url": "https://www.lesswrong.com/posts/ExB6KYDcznaFS72eT/evaluating-explanations-of-llm-behavior-in-the-wild-with",
+      "title": "When is Unlimited Optimization Catastrophic?",
+      "url": "https://www.lesswrong.com/posts/4JCne6evQjtjxXKED/when-is-unlimited-optimization-catastrophic",
       "domain": "lesswrong.com",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -370,7 +250,167 @@
       "leadHours": null
     },
     {
+      "rank": 8,
+      "title": "Show HN: Fast_trimul – Fused Triangle Multiplicative Updates in Python",
+      "url": "https://github.com/tiagomonteiro0715/fast_trimul",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.6,
+      "firstSeen": "2026-08-21T20:43:00.364Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 9,
+      "title": "v2.1.239",
+      "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.239",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Repos",
+      "firstSource": "Claude Code releases",
+      "sources": [
+        "Claude Code releases"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.8,
+      "firstSeen": "2026-08-21T20:43:00.364Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 10,
+      "title": "Quick impressions: A week of using Codex more than Claude",
+      "url": "https://allaboutcoding.ghinda.com/a-week-of-using-codex-more-than-claude",
+      "domain": "allaboutcoding.ghinda.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.8,
+      "firstSeen": "2026-08-21T20:43:00.364Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 11,
+      "title": "Show HN: secret_share - simple CLI to share secrets with PKE",
+      "url": "https://github.com/scosman/secret_share",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.9,
+      "firstSeen": "2026-08-21T20:43:00.364Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 12,
+      "title": "Show HN: Ambient Drone Synth URL Preset Encoding",
+      "url": "https://akindoflikeness.net/instruments/phyllotaxis",
+      "domain": "akindoflikeness.net",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2,
+      "firstSeen": "2026-08-21T20:43:00.364Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 13,
+      "title": "Church of the TigerBeetle: A Look at Tech Evangelism",
+      "url": "https://www.wespiser.com/posts/2026-08-03-church-of-the-tigerbeetle.html",
+      "domain": "wespiser.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.1,
+      "firstSeen": "2026-08-21T20:43:00.364Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
       "rank": 14,
+      "title": "AI Text Watermarking Is Free And Good",
+      "url": "https://www.lesswrong.com/posts/3mKuPHmaK7NW3QypR/ai-text-watermarking-is-free-and-good",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.2,
+      "firstSeen": "2026-08-21T20:43:00.364Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 15,
+      "title": "Evaluating Explanations of LLM Behavior In The Wild with Counterfactual Experiments",
+      "url": "https://www.lesswrong.com/posts/ExB6KYDcznaFS72eT/evaluating-explanations-of-llm-behavior-in-the-wild-with",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.6,
+      "firstSeen": "2026-08-21T20:43:00.364Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 16,
       "title": "Tumble Forth – from assembly to OS with C compiler",
       "url": "https://tumbleforth.hardcoded.net/",
       "domain": "tumbleforth.hardcoded.net",
@@ -383,14 +423,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.7,
+      "ageHours": 2.7,
       "firstSeen": "2026-08-21T20:43:00.364Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 15,
+      "rank": 17,
       "title": "Show HN: CSVtoTable – turn a CSV/XLSX into one self-contained HTML file",
       "url": "https://github.com/vividvilla/csvtotable",
       "domain": "github.com",
@@ -403,14 +443,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.8,
+      "ageHours": 2.8,
       "firstSeen": "2026-08-21T20:43:00.364Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 16,
+      "rank": 18,
       "title": "Bringing the cybersecurity capabilities of Claude Mythos 5 to more defenders",
       "url": "https://claude.com/blog/bringing-claude-mythos-5-to-more-defenders",
       "domain": "claude.com",
@@ -423,14 +463,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.9,
+      "ageHours": 2.9,
       "firstSeen": "2026-08-21T20:43:00.364Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 17,
+      "rank": 19,
       "title": "In Defense of ASI Socialism",
       "url": "https://www.lesswrong.com/posts/WviREh8j9xjoyGsS7/in-defense-of-asi-socialism",
       "domain": "lesswrong.com",
@@ -443,14 +483,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
+      "ageHours": 3,
       "firstSeen": "2026-08-21T18:59:33.648Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 18,
+      "rank": 20,
       "title": "Scientists release biggest 2D map of the universe",
       "url": "https://newscenter.lbl.gov/2026/08/10/scientists-release-biggest-2d-map-of-the-universe",
       "domain": "newscenter.lbl.gov",
@@ -463,169 +503,6 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 19,
-      "title": "Show HN: Outbid.lol but for X and LN Profiles",
-      "url": "https://founderboard.lol/",
-      "domain": "founderboard.lol",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.3,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 20,
-      "title": "Show HN: Lore – build and monetize personal context",
-      "url": "https://github.com/dipakkrishnan/lore-mcp",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.3,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 21,
-      "title": "Show HN: Traccia - Observability, Runtime Control & Audit for agents",
-      "url": "https://traccia.ai/",
-      "domain": "traccia.ai",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.4,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 22,
-      "title": "Show HN: Poorleton – AI Generated Cycling Workouts",
-      "url": "https://poorleton.fit/",
-      "domain": "poorleton.fit",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.4,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 23,
-      "title": "Show HN: Interactive map of the Odyssey with tap-to-gloss Homeric Greek",
-      "url": "https://georgemasto.com/odyssey",
-      "domain": "georgemasto.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 24,
-      "title": "The road to ACID transactions in Cassandra 6",
-      "url": "https://theconsensus.dev/p/2026/08/16/transactions-in-cassandra.html",
-      "domain": "theconsensus.dev",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters",
-        "Hacker News front"
-      ],
-      "nSources": 2,
-      "nFam": 2,
-      "ageHours": 8.6,
-      "firstSeen": "2026-08-21T13:14:17.997Z",
-      "heating": true,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 25,
-      "title": "I accidentally logged hundreds of thousands of phone calls to military bases",
-      "url": "https://lina.sh/blog/hijacking-e164-arpa",
-      "domain": "lina.sh",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters",
-        "Hacker News front",
-        "Hacker News best"
-      ],
-      "nSources": 3,
-      "nFam": 2,
-      "ageHours": 8.6,
-      "firstSeen": "2026-08-21T13:14:17.997Z",
-      "heating": true,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 26,
-      "title": "Show HN: Oasis - Giving Agents Situational Awareness",
-      "url": "https://joinoasis.com/",
-      "domain": "joinoasis.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
       "ageHours": 3.1,
       "firstSeen": "2026-08-21T18:59:33.648Z",
       "heating": false,
@@ -633,70 +510,10 @@
       "leadHours": null
     },
     {
-      "rank": 27,
-      "title": "Rebuilding our Electron meeting-recording engine in Swift",
-      "url": "https://circleback.ai/blog/how-we-rebuilt-our-electron-recording-engine-in-swift",
-      "domain": "circleback.ai",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.2,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 28,
-      "title": "Show HN: All your saved articles in one place",
-      "url": "https://www.topicsapp.net/",
-      "domain": "topicsapp.net",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.2,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 29,
-      "title": "Galactic Compass 2: now with new augmented reality mode",
-      "url": "https://interconnected.org/home/2026/08/21/galactic",
-      "domain": "interconnected.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.2,
-      "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 30,
-      "title": "Show HN: WorldLoop – Procedural CAD for Roblox Studio",
-      "url": "https://worldloop.io/app",
-      "domain": "worldloop.io",
+      "rank": 21,
+      "title": "Show HN: Outbid.lol but for X and LN Profiles",
+      "url": "https://founderboard.lol/",
+      "domain": "founderboard.lol",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -713,10 +530,30 @@
       "leadHours": null
     },
     {
-      "rank": 31,
-      "title": "Show HN: Daileon",
-      "url": "https://github.com/ricardoborges/Daileon",
+      "rank": 22,
+      "title": "Show HN: Lore – build and monetize personal context",
+      "url": "https://github.com/dipakkrishnan/lore-mcp",
       "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.3,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 23,
+      "title": "Show HN: Traccia - Observability, Runtime Control & Audit for agents",
+      "url": "https://traccia.ai/",
+      "domain": "traccia.ai",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -733,10 +570,10 @@
       "leadHours": null
     },
     {
-      "rank": 32,
-      "title": "Show HN: Rotation via Double Reflection",
-      "url": "https://static.laszlokorte.de/rotor-reflect",
-      "domain": "static.laszlokorte.de",
+      "rank": 24,
+      "title": "Show HN: Poorleton – AI Generated Cycling Workouts",
+      "url": "https://poorleton.fit/",
+      "domain": "poorleton.fit",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -753,10 +590,10 @@
       "leadHours": null
     },
     {
-      "rank": 33,
-      "title": "Show HN: Circuit Breaker – Score Pull Requests",
-      "url": "https://github.com/glassrun/circuit-breaker",
-      "domain": "github.com",
+      "rank": 25,
+      "title": "Show HN: Interactive map of the Odyssey with tap-to-gloss Homeric Greek",
+      "url": "https://georgemasto.com/odyssey",
+      "domain": "georgemasto.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -773,7 +610,210 @@
       "leadHours": null
     },
     {
+      "rank": 26,
+      "title": "The road to ACID transactions in Cassandra 6",
+      "url": "https://theconsensus.dev/p/2026/08/16/transactions-in-cassandra.html",
+      "domain": "theconsensus.dev",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters",
+        "Hacker News front"
+      ],
+      "nSources": 2,
+      "nFam": 2,
+      "ageHours": 9.6,
+      "firstSeen": "2026-08-21T13:14:17.997Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 27,
+      "title": "I accidentally logged hundreds of thousands of phone calls to military bases",
+      "url": "https://lina.sh/blog/hijacking-e164-arpa",
+      "domain": "lina.sh",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters",
+        "Hacker News front",
+        "Hacker News best"
+      ],
+      "nSources": 3,
+      "nFam": 2,
+      "ageHours": 9.6,
+      "firstSeen": "2026-08-21T13:14:17.997Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 28,
+      "title": "Show HN: Oasis - Giving Agents Situational Awareness",
+      "url": "https://joinoasis.com/",
+      "domain": "joinoasis.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.1,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 29,
+      "title": "Rebuilding our Electron meeting-recording engine in Swift",
+      "url": "https://circleback.ai/blog/how-we-rebuilt-our-electron-recording-engine-in-swift",
+      "domain": "circleback.ai",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.1,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 30,
+      "title": "Show HN: All your saved articles in one place",
+      "url": "https://www.topicsapp.net/",
+      "domain": "topicsapp.net",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.2,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 31,
+      "title": "Galactic Compass 2: now with new augmented reality mode",
+      "url": "https://interconnected.org/home/2026/08/21/galactic",
+      "domain": "interconnected.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.2,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 32,
+      "title": "Show HN: WorldLoop – Procedural CAD for Roblox Studio",
+      "url": "https://worldloop.io/app",
+      "domain": "worldloop.io",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.3,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 33,
+      "title": "Show HN: Daileon",
+      "url": "https://github.com/ricardoborges/Daileon",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.4,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
       "rank": 34,
+      "title": "Show HN: Rotation via Double Reflection",
+      "url": "https://static.laszlokorte.de/rotor-reflect",
+      "domain": "static.laszlokorte.de",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.4,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 35,
+      "title": "Show HN: Circuit Breaker – Score Pull Requests",
+      "url": "https://github.com/glassrun/circuit-breaker",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.4,
+      "firstSeen": "2026-08-21T18:59:33.648Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 36,
       "title": "Show HN: Visual way to understand things in parallel",
       "url": "https://wondering.app/canvas",
       "domain": "wondering.app",
@@ -786,14 +826,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.6,
+      "ageHours": 4.6,
       "firstSeen": "2026-08-21T18:59:33.648Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 35,
+      "rank": 37,
       "title": "Show HN: A puzzle I couldn't solve for a year – cubers cracked it in an hour",
       "url": "https://skimmiq.com/pt",
       "domain": "skimmiq.com",
@@ -806,14 +846,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.6,
+      "ageHours": 4.6,
       "firstSeen": "2026-08-21T18:59:33.648Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 36,
+      "rank": 38,
       "title": "LiteLLM (YC W23) Is Hiring – Rust / Performance Engineers",
       "url": "https://jobs.ashbyhq.com/litellm/3f326076-7415-46a1-921e-8a1b1d6ee2b6",
       "domain": "jobs.ashbyhq.com",
@@ -826,14 +866,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.7,
+      "ageHours": 4.7,
       "firstSeen": "2026-08-21T18:59:33.648Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 37,
+      "rank": 39,
       "title": "Misaligned AI in the Bronze Age",
       "url": "https://www.lesswrong.com/posts/mPrbyBsGmNfWWgJmi/misaligned-ai-in-the-bronze-age",
       "domain": "lesswrong.com",
@@ -846,14 +886,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.9,
+      "ageHours": 4.8,
       "firstSeen": "2026-08-21T18:59:33.648Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 38,
+      "rank": 40,
       "title": "Another better lower bound for n=17 square packing",
       "url": "http://gus-massa.blogspot.com/2026/08/another-better-lower-bound-for-n17.html",
       "domain": "gus-massa.blogspot.com",
@@ -866,48 +906,8 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.9,
+      "ageHours": 4.9,
       "firstSeen": "2026-08-21T18:59:33.648Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 39,
-      "title": "Show HN: Proliferate- open-source, self-hostable Codex for any coding agent",
-      "url": "https://github.com/proliferate-ai/proliferate",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.9,
-      "firstSeen": "2026-08-21T16:54:28.131Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 40,
-      "title": "Show HN: Steganeur – Hide secret messages in LLM-generated text (Rust)",
-      "url": "https://github.com/marcsnid/steganeur",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.2,
-      "firstSeen": "2026-08-21T16:54:28.131Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
