@@ -7,7 +7,8 @@ import PullQuote from '@/components/PullQuote.astro';
 
 // ── Single source of truth for every vendor price on this page. ──────────────
 // No price literal in the prose below — interpolate from this block.
-// Re-verify both URLs monthly (first Monday) and bump lastVerified even if unchanged.
+// Re-verify both URLs monthly (first Monday) and bump BOTH lastVerified (plans)
+// and apiLastVerified (API rates) even if unchanged — they date independent checks.
 // Hard calendar trigger: June 22, 2026 (Fable 5 plan-window expiry).
 // Plans: https://claude.com/pricing
 // API:   https://platform.claude.com/docs/en/docs/about-claude/pricing
@@ -84,8 +85,8 @@ const faq = {
 };
 ---
 <BaseLayout
-  title="Claude Code Pricing (June 2026): Plans, API Rates & a Real Monthly Bill"
-  description="Claude Code pricing, verified June 2026: Pro $20, Max $100–$200, Team, API token rates — real invoices from running a company on it, one $4,312 mistake."
+  title="Claude Code Pricing (August 2026): Plans, API Rates & a Real Monthly Bill"
+  description="Claude Code pricing, August 2026: Pro $20, Max $100–$200, Team, API token rates — real invoices from running a company on it, one $4,312 mistake."
 >
   <script type="application/ld+json" set:html={JSON.stringify(faq)} />
 
