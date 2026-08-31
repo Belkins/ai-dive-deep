@@ -442,7 +442,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   'Sonnet 5': {
     term: 'Sonnet 5',
     definition:
-      'Anthropic\'s volume tier, released June 30, 2026 (model id <code>claude-sonnet-5</code>). $2/$10 per Mtok as an introductory price, stepping to $3/$15 on September 1, 2026. 1M context, 128K output, January 2026 cutoff, adaptive thinking on by default. It is the right call for high-volume well-defined work and the wrong one for long-horizon agent loops, where <a href="/glossary/#Opus+5">Opus 5</a> beats it by a wide margin on the agentic boards. Uses the tokenizer introduced with Opus 4.7, which produces roughly 30% more tokens for the same text than Sonnet 4.6 and earlier — per-token price is flat, token count is not.',
+      'Anthropic\'s volume tier, released June 30, 2026 (model id <code>claude-sonnet-5</code>). $2/$10 per Mtok — launched as an introductory price with a step to $3/$15 scheduled for September 1, 2026, but Anthropic cancelled the increase and made $2/$10 the standard price. 1M context, 128K output, January 2026 cutoff, adaptive thinking on by default. It is the right call for high-volume well-defined work and the wrong one for long-horizon agent loops, where <a href="/glossary/#Opus+5">Opus 5</a> beats it by a wide margin on the agentic boards. Uses the tokenizer introduced with Opus 4.7, which produces roughly 30% more tokens for the same text than Sonnet 4.6 and earlier — per-token price is flat, token count is not.',
     related: ['Opus 5', 'Fable 5'],
   },
   'Mythos 5': {

@@ -7,12 +7,14 @@ import PullQuote from '@/components/PullQuote.astro';
 
 // ── Single source of truth for every vendor price on this page. ──────────────
 // No price literal in the prose below — interpolate from this block.
-// Re-verify both URLs monthly (first Monday) and bump lastVerified even if unchanged.
+// Re-verify both URLs monthly (first Monday) and bump BOTH lastVerified (plans)
+// and apiLastVerified (API rates) even if unchanged — they date independent checks.
 // Hard calendar trigger: June 22, 2026 (Fable 5 plan-window expiry).
 // Plans: https://claude.com/pricing
 // API:   https://platform.claude.com/docs/en/docs/about-claude/pricing
 const PRICES = {
-  lastVerified: '2026-06-10',
+  lastVerified: '2026-06-10', // plans, against claude.com/pricing
+  apiLastVerified: '2026-08-31', // API rates, against the platform.claude.com pricing docs
   plans: [
     { plan: 'Free', price: '$0', cc: 'No', note: 'chat only — Claude Code is not on the feature list' },
     { plan: 'Pro', price: '$20/mo · $17/mo annual', cc: 'Yes', note: 'the entry ticket, with weekly usage caps' },
@@ -24,7 +26,7 @@ const PRICES = {
   ],
   api: [
     { model: 'Haiku 4.5', input: '$1', output: '$5', read: 'the triage tier — still the only current Haiku' },
-    { model: 'Sonnet 5', input: '$2', output: '$10', read: 'the workhorse · intro price, steps to $3/$15 on Sept 1, 2026' },
+    { model: 'Sonnet 5', input: '$2', output: '$10', read: 'the workhorse · the Sept 1 step to $3/$15 was cancelled — $2/$10 is now the standard price' },
     { model: 'Opus 5', input: '$5', output: '$25', read: 'the current top Opus — same sticker as 4.8, half of Fable 5' },
     { model: 'Fable 5 / Mythos 5', input: '$10', output: '$50', read: '2× Opus 5 — Anthropic’s declared capability ceiling' },
     { model: 'Sonnet 4.6 (legacy)', input: '$3', output: '$15', read: 'superseded by Sonnet 5' },
@@ -83,8 +85,8 @@ const faq = {
 };
 ---
 <BaseLayout
-  title="Claude Code Pricing (June 2026): Plans, API Rates & a Real Monthly Bill"
-  description="Claude Code pricing, verified June 2026: Pro $20, Max $100–$200, Team, API token rates — real invoices from running a company on it, one $4,312 mistake."
+  title="Claude Code Pricing (August 2026): Plans, API Rates & a Real Monthly Bill"
+  description="Claude Code pricing, August 2026: Pro $20, Max $100–$200, Team, API token rates — real invoices from running a company on it, one $4,312 mistake."
 >
   <script type="application/ld+json" set:html={JSON.stringify(faq)} />
 
@@ -107,9 +109,9 @@ const faq = {
         <div id="answer" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
           <div class="rounded-xl border p-5 border-line bg-accent/5">
-            <p class="m-0 leading-relaxed">Claude Code is included with every paid Claude plan — <strong>Pro $20/month, Max from $100, Team from $25/seat</strong> — there is no free tier. On the API it bills per token: Sonnet 5 at $2/$10 per million (rising to $3/$15 on September 1, 2026), Opus 5 at $5/$25. Running five companies, Vlad Podoliako pays ~$400/month in Max subscriptions plus an API line cut from $2,216 to a ~$1,200 run-rate.</p>
+            <p class="m-0 leading-relaxed">Claude Code is included with every paid Claude plan — <strong>Pro $20/month, Max from $100, Team from $25/seat</strong> — there is no free tier. On the API it bills per token: Sonnet 5 at $2/$10 per million (now the standard price — the September 1 rise to $3/$15 was cancelled), Opus 5 at $5/$25. Running five companies, Vlad Podoliako pays ~$400/month in Max subscriptions plus an API line cut from $2,216 to a ~$1,200 run-rate.</p>
           </div>
-          <p class="mt-2 text-sm text-accent-2">Prices verified against claude.com/pricing on {PRICES.lastVerified}.</p>
+          <p class="mt-2 text-sm text-accent-2">Plan prices verified against claude.com/pricing on {PRICES.lastVerified}; API rates against the API pricing docs on {PRICES.apiLastVerified}.</p>
         </div>
 
         <div id="plans" data-section-target class="scroll-mt-24 mt-14">
@@ -139,7 +141,7 @@ const faq = {
               </table>
             </div>
             <p class="text-sm text-muted">† claude.com displays "From $100" on both Max tiers. The operator receipt for the 20x tier: my two Max 20x seats bill about $400 a month total — {PRICES.max20xReceipt} (<a href="/chapters/29-cost-economics/">Ch 29</a>).</p>
-            <p class="text-sm text-accent-2">Prices verified against <a href="https://claude.com/pricing" rel="noopener">claude.com/pricing</a> and <a href="https://platform.claude.com/docs/en/docs/about-claude/pricing" rel="noopener">the API pricing docs</a> on {PRICES.lastVerified}. When a roundup and the pricing page disagree, the pricing page wins — that's also the rule this table was built under.</p>
+            <p class="text-sm text-accent-2">Plan prices verified against <a href="https://claude.com/pricing" rel="noopener">claude.com/pricing</a> on {PRICES.lastVerified}; API rates against <a href="https://platform.claude.com/docs/en/docs/about-claude/pricing" rel="noopener">the API pricing docs</a> on {PRICES.apiLastVerified}. When a roundup and the pricing page disagree, the pricing page wins — that's also the rule this table was built under.</p>
           </div>
         </div>
 
@@ -187,7 +189,7 @@ const faq = {
                 </tbody>
               </table>
             </div>
-            <p class="text-sm text-muted">Batch API: the same models at {PRICES.batchDiscount} off, returned within 24 hours. Verified against the <a href="https://platform.claude.com/docs/en/docs/about-claude/pricing" rel="noopener">API pricing docs</a> on {PRICES.lastVerified}.</p>
+            <p class="text-sm text-muted">Batch API: the same models at {PRICES.batchDiscount} off, returned within 24 hours. Verified against the <a href="https://platform.claude.com/docs/en/docs/about-claude/pricing" rel="noopener">API pricing docs</a> on {PRICES.apiLastVerified}.</p>
             <Callout type="warn">
               A sticker shift hiding in the docs: Opus 4.7 and later use a new tokenizer that "may use up to 35% more tokens for the same fixed text." Same per-token rate, more tokens per page — an effective price increase no comparison table shows. One more reason to measure cost per task, not per million.
             </Callout>
