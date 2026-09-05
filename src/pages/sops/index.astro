@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import { SOP_LIBRARY, SOP_INDEX_SECTIONS, SOP_STATUS, SOP_BOUNDARY, SOP_DATE, sopHref } from '@/lib/sops';
+import '@/styles/sops.css';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title="AI SOP Library: Six Department Templates" description="Six untested AI SOP templates for sales, marketing, operations, customer success, recruiting, and agents. Review procedures, download Markdown, and adapt a plan.">
+  <article class="sop-page container-wide">
+    <header class="sop-header">
+      <nav aria-label="Breadcrumb"><a href={`${base}/library/`}>Library</a> / SOPs</nav>
+      <h1>AI SOP Library</h1>
+      <p class="sop-intro">Six departmental procedures. Defined inputs, named approval roles, and evidence required before use.</p>
+      <p class="sop-meta">General-purpose templates / <time datetime={SOP_DATE}>September 5, 2026</time></p>
+      <p class="sop-status">{SOP_STATUS}</p>
+    </header>
+    <div class="sop-layout">
+      <SectionNav items={SOP_INDEX_SECTIONS} title="SOP library" />
+      <div class="sop-body">
+        <section id="departments" data-section-target aria-labelledby="departments-title">
+          <h2 id="departments-title">Department templates</h2>
+          <ul class="sop-directory">
+            {SOP_LIBRARY.map(sop => <li>
+              <p class="sop-meta">{sop.department} / Not run</p>
+              <h3><a href={`${base}${sopHref(sop)}`}>{sop.title}</a></h3>
+              <p>{sop.summary}</p>
+              <p class="sop-reviewer">Approval role: {sop.reviewer}</p>
+            </li>)}
+          </ul>
+        </section>
+        <section id="review-boundaries" data-section-target aria-labelledby="review-boundaries-title">
+          <h2 id="review-boundaries-title">Review boundaries</h2>
+          <p>{SOP_BOUNDARY}</p>
+          <p>Role labels are placeholders, not assigned approvers. Before operational use, identify specific people, clear the input data, resolve conflicting requirements, and design a controlled synthetic trial. Expected results are not observed results.</p>
+          <p>Recruiting is limited to role-based questions and an unfilled evidence sheet. Applicant analysis, scoring, ranking, profiling, and hiring decisions are outside its scope.</p>
+          <p>The <a href={`${base}/workflow-planner/`}>workflow planner</a> assembles an editable specification. It does not validate the procedure or run its checks. The sales, marketing, and operations SOPs reuse the existing aligned presets; outbound campaign QA remains a separate planning template.</p>
+          <p><a href={`${base}/chapters/11-build-a-skill/`}>Chapter 11: Build a Skill</a> connects a reviewed procedure to reusable instructions. <a href={`${base}/chapters/25-evals-or-hope/`}>Chapter 25: Evals</a> covers the evidence needed to judge an implementation.</p>
+        </section>
+      </div>
+    </div>
+  </article>
+  <CommandPaletteMount />
+</BaseLayout>

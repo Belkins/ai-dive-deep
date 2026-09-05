@@ -16,11 +16,26 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 14.3',
+    date: '2026-09-05',
+    tagline: 'The SOP library: six general-purpose department templates with explicit approval boundaries and unrun checks.',
+    bannerText: 'AI SOP library: six department templates, Markdown downloads, and planner presets.',
+    bannerHref: '/sops/',
+    shipped: [
+      'Six indexable SOP pages for sales, marketing, operations, customer success, recruiting, and AI agent trial planning, plus a department index.',
+      'One typed content source for the procedures and matching Markdown downloads. Steps, quality checks, and acceptance tests remain explicitly not run; these are not actual Belkins SOPs or hands-on test reports.',
+      'Three aligned planner presets reused and three missing presets added; outbound QA remains separate. Only an allowlisted preset ID can seed the planner URL, never entered draft values.',
+      'Library listings and filters, Command Palette page and section links, a homepage tile, and a Chapter 11 callout. Recruiting stays limited to role-based questions and unfilled evidence capture, without applicant evaluation or hiring decisions.',
+    ],
+    receipts: [
+      { label: 'Department templates', value: '6 general-purpose drafts' },
+      { label: 'Workflow trials', value: 'Not run; no external actions, sends, model calls, or schedules' },
+    ],
+  },
+  {
     edition: 'Edition 14.2',
     date: '2026-09-05',
     tagline: 'Astra and Fable 5.1: source-backed operator guides, with the evaluation work still ahead.',
-    bannerText: 'New chapters: Astra and Fable 5.1, from launch claims to reviewable workflows.',
-    bannerHref: '/chapters/49-gpt-6-astra/',
     shipped: [
       'Chapter 49: GPT-6 Astra performance evidence, harness caveats, scoped workflow recipes and cost per accepted output.',
       'Chapter 50: Claude Fable 5.1 use-case candidates, refusal and fallback accounting, document reconciliation and migration boundaries.',
