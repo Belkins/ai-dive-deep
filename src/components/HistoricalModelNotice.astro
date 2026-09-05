@@ -1,0 +1,13 @@
+---
+interface Props { period: string }
+const { period } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<aside class="container-wide pt-6 text-sm" aria-label="Model evidence date">
+  <p class="border-l-2 border-accent pl-4 text-muted">
+    <strong class="text-fg">Historical model file: {period}.</strong>
+    Pricing, access, and rankings below describe that period unless individually dated.
+    For Astra, Fable 5.1, and the current comparison, see the
+    <a class="text-accent underline underline-offset-4" href={`${base}/tier-list/#sec-models`}>updated model list</a>.
+  </p>
+</aside>

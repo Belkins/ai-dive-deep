@@ -1,133 +1,75 @@
-// Artificial Analysis — independent agentic evals + per-task economics.
-//
-// Hand-captured from the PUBLIC boards at https://artificialanalysis.ai/models
-// and https://artificialanalysis.ai/models/capabilities/agentic (each page
-// embeds its figures as JSON-LD `Dataset` blocks, isAccessibleForFree; the
-// /models page ships 18 of them, one per chart — a 19th JSON-LD block is a
-// FAQPage — each listing that chart's own model subset; the table below merges
-// Intelligence, Cost per Task and Output Speed by model label). This is NOT the keyed API: AA's free API tier is
-// "internal use only, no redistribution," so we mirror the LAB_CLAIMS trust
-// model instead — a dated, attributed, fair-use snapshot of published facts,
-// refreshed by hand when AA revises the index.
-//
-// Source: Artificial Analysis (2025). LLM benchmarks dataset. https://artificialanalysis.ai
-// Captured 2026-08-17 · Intelligence Index v4.1.1 (AA's default board cut).
-//
-// AA publishes no `dateModified` and no visible "last updated" stamp on /models,
-// so the only defensible date anchor is OUR capture date. It is labelled
-// "captured", never "as of" — those are different claims.
-//
-// Honesty discipline (Ch 24): the Index is a weighted composite that can be gamed.
-// Read it as an independent referee's reading — disinterested, not infallible —
-// not as a new oracle. Value is triangulation against the crowd and the labs.
-//
-// One disclosure that belongs on the page, not in a footnote: AA states it
-// "supported @AnthropicAI to evaluate Claude Opus 5 ahead of release." AA ran the
-// evals on its own harness, so this is not a vendor claim — but the board's #1
-// entry involved pre-release vendor coordination, and a page built on trust tiers
-// should say so rather than present the debut as a cold third-party measurement.
+// Artificial Analysis: a limited editorial selection of public benchmark facts.
+// Captured 2026-09-05 from /models JSON-LD using parse5 + JSON.parse, joining
+// exact effort/fallback labels. No keyed API, source-page archive or live feed.
+// Public accessibility is not an open redistribution license; retain attribution
+// and terms, and do not expand this into a mirror of AA's datasets.
+// The JSON-LD has no dateModified: this is OUR capture date, not AA's update date.
+// Capture details and source discrepancies: outputs/model-release-2026-09-05/aa-evidence.md.
 
 import type { Vendor } from './lmarena';
 
-export const AA_SNAPSHOT = '2026-08-17';
-export const AA_INDEX_VERSION = 'Intelligence Index v4.1.1';
+export const AA_SNAPSHOT = '2026-09-05';
+export const AA_INDEX_VERSION = 'Intelligence Index v4.2';
 export const AA_SOURCE_URL = 'https://artificialanalysis.ai/models';
-export const AA_AGENTIC_URL = 'https://artificialanalysis.ai/models/capabilities/agentic';
 export const AA_METHODOLOGY_URL = 'https://artificialanalysis.ai/methodology/intelligence-benchmarking';
+export const AA_TERMS_URL = 'https://artificialanalysis.ai/docs/legal/Terms-of-Use.pdf';
+export const AA_ATTRIBUTION = 'Artificial Analysis (2025). LLM benchmarks dataset.';
 
-// AA ran the Opus 5 evals pre-release at Anthropic's request. Rendered on the
-// panel so the #1 row carries its own provenance. The quote is from AA's Opus 5
-// launch communications (July 2026, verified at the 2026-07-27 capture) — it
-// does not appear on the /models page itself, so it is date-stamped rather than
-// cited as current page copy.
 export const AA_DISCLOSURE =
-  'At the Opus 5 launch (July 2026) AA disclosed it “supported Anthropic to evaluate Claude Opus 5 ahead of release.” Own harness, own hardware — but pre-release vendor coordination on the #1 row. Weigh it as such.';
+  'These are AA evaluations, not vendor claims or our own tests. Fable 5.1 is measured with fallback, as served. The public snapshot does not establish whether any launch involved pre-release coordination; the July Opus 5 disclosure is not evidence about the current leader.';
 
-// Re-verified against AA's methodology page on the 2026-08-17 capture: the
-// version history now ends at v4.1.1 (August 2026 — current), a maintenance
-// cut of the v4.1 redesign — 𝜏³-Banking moved to the upstream tau2-bench
-// v1.0.1 dataset/grader, and the grader model for HLE, AA-LCR and
-// AA-Omniscience upgraded to GPT-5.6 Luna (medium). The same nine benches and
-// category weights carry over unchanged, so the structure below is v4.1's
-// design under the v4.1.1 label.
-export const AA_METHODOLOGY: { version: string; since: string; categories: { name: string; weight: number; benches: string[] }[]; retired: string[] } = {
-  version: 'v4.1.1',
-  since: 'August 2026 — current; the v4.1 redesign shipped June 2026',
+export const AA_METHODOLOGY: { version: string; since: string; categories: { name: string; weight: number; benches: string[] }[]; retired: string[]; changes: string } = {
+  version: 'v4.2',
+  since: 'September 2026; announced September 4',
   categories: [
-    { name: 'Agents', weight: 34, benches: ['GDPval-AA v2 · 20%', '𝜏³-Banking · 14%'] },
-    { name: 'Coding', weight: 24, benches: ['Terminal-Bench v2.1 · 16%', 'SciCode · 8%'] },
-    { name: 'Scientific reasoning', weight: 24, benches: ['HLE · 12%', 'GPQA Diamond · 6%', 'CritPt · 6%'] },
-    { name: 'General', weight: 18, benches: ['AA-Omniscience · 12% (accuracy 8% + non-hallucination 4%)', 'AA-LCR · 6%'] },
+    { name: 'Agents', weight: 30, benches: ['AA-Briefcase · 15%', 'GDPval-AA v2 · 10%', '𝜏³-Banking · 5%'] },
+    { name: 'Coding', weight: 20, benches: ['Terminal-Bench v2.1 · 10%', 'SciCode · 10%'] },
+    { name: 'Scientific reasoning', weight: 20, benches: ['HLE · 10%', 'CritPt · 10%'] },
+    { name: 'General', weight: 30, benches: ['AA-Omniscience · 15% (accuracy 10% + non-hallucination 5%)', 'GDP.pdf · 10%', 'AA-LCR v1.1 · 5%'] },
   ],
-  // What v4.1 retired to chase agentic signal — the "why now" in three names.
-  // (AA states only that IFBench was removed from the Index — it gives no
-  // saturation rationale, so none is printed.)
-  retired: ['IFBench', 'Terminal-Bench Hard', '𝜏²-Bench Telecom'],
+  retired: ['GPQA Diamond'],
+  changes: 'Ten evaluations: v4.2 adds AA-Briefcase and GDP.pdf, removes GPQA Diamond from the Index, upgrades AA-LCR to v1.1 and regrades SciCode v1.0.1. Weights and grading changed, so scores and per-task costs are not a like-for-like trend against July or August captures.',
 };
 
-// The Agentic Index — AA's second headline board, published as its own page.
-// Per AA's own description it is the agentic slice: GDPval-AA v2 + 𝜏³-Banking,
-// "tool use, planning, autonomy, and complex problem solving." Same harness,
-// same capture discipline; a per-model score in the table below.
 export const AA_AGENTIC_NOTE =
-  'The Agentic Index isolates AA\'s agentic benches (GDPval-AA v2 + 𝜏³-Banking) as its own board. AA also scores four models on it without publishing an Index-task cost — Qwen3.8 27B (50.9), Motif 3 (37.6), Solar Open2 250B (27.8), A.X-K2 (25.7) — so they sit outside this economics table by the standing rule.';
+  'The former Agentic Index URL returned HTTP 404 at this capture. No comparable current standalone Agentic scores were verified in the public JSON-LD; the old column is omitted, not carried into v4.2 or reconstructed from individual benchmarks.';
 
-// AA's own stated precision, applied to the 2026-08-17 board. The gap between
-// the top two models — Opus 5 at max effort (63.1) and Fable 5 (62.1) — is 0.98
-// points, inside AA's own interval. (Unlike the July board, the public board now
-// lists ONE effort setting per model, so there is no same-model-twice #2 row to
-// footnote away; the July variant capture lives in git history at 707fefd.)
-export const AA_PRECISION = 'AA estimates a 95% confidence interval of less than ±1% on the Index. The gap between the top two models — Opus 5 at max effort and Fable 5 — is 0.98 points, inside it.';
+export const AA_SCOPE_NOTE =
+  'Seven selected model settings with a verified Index score and task cost, not the full leaderboard. Effort and fallback labels are preserved. AA mentions Astra xhigh in its page summary but supplies no numeric xhigh row in the captured JSON-LD; max is not a substitute. Missing values are unverified, not zero.';
+
+export const AA_SPEED_NOTE =
+  'Speed is the /models chart output rate, not end-to-end task time. Astra max differs between that chart and its detail-page summary at capture; this panel keeps the chart value. Gemini 3.8 Flash has no speed in the captured chart, so it remains unscored here.';
+
+export const AA_PRECISION = 'AA estimates a 95% confidence interval below ±1% for the Index; individual benchmarks may be wider. That aggregate estimate is not a published pairwise significance test. Small score differences do not establish a universal winner.';
 
 export type AAMetric = 'intelligence' | 'agentic' | 'cost' | 'speed';
 
 export type AAModel = {
   model: string;
   vendor: Vendor;
-  // AA Intelligence Index v4.1 — the headline composite. Higher is better.
+  // Same-capture AA Intelligence Index v4.2. Higher is better.
   intelligence: number;
-  // AA Agentic Index — the agentic slice, from the /models/capabilities/agentic
-  // board. undefined = AA does not score this model there (rendered "—").
+  // Reserved for independently verified, comparable standalone scores.
+  // None verified at this capture; never copy the old v4.1.1 values here.
   agentic?: number;
-  // Weighted-average cost in USD to run ONE INTELLIGENCE INDEX task. Lower is
-  // better. Naming this precisely matters: AA also publishes a separate, larger
-  // "cost per task" for the AGENTIC Index (Sol $2.55, Grok 4.6 $1.95 there vs
-  // $1.23 / $0.84 here), and before that an AA-Briefcase figure — secondary
-  // coverage quotes them interchangeably. This column is the Intelligence Index
-  // one, always.
+  // Weighted USD cost per Intelligence Index task, NOT a standalone benchmark,
+  // entire-Index run, subscription price or dollars per million tokens.
   costPerTaskUsd: number;
-  // Median output speed, tokens/sec. Higher is better. undefined = AA's board
-  // does not publish a speed for this model (rendered "—", never invented).
+  // Public /models chart output rate, tokens/sec. Missing stays undefined.
   outputTokensPerSec?: number;
 };
 
-// Captured by hand 2026-08-17 from AA's public boards. Every figure traces to
-// the JSON-LD on that date. Only models AA lists with BOTH an Index score and
-// a per-task cost are included — an economics panel needs the economics.
-//
-// "Claude Fable 5 (with fallback)" is AA's own row label, verbatim — AA scores
-// the model as served, fallback architecture included.
-//
-// Unlike the 2026-07-27 board, the public board now carries one effort setting
-// per model — no separately-ranked xhigh/high/medium variants.
+// Limited comparison: new leaders, Opus/Sol predecessors and lower-cost choices.
+// Index/speed rounded to 1 decimal; task costs to 3. Sol's cost is the sum of
+// the five published token-cost components in Cost per Intelligence Index Task.
 export const AA_MODELS: AAModel[] = [
-  { model: 'Claude Opus 5 (max)',            vendor: 'anthropic', intelligence: 63.1, agentic: 59.2, costPerTaskUsd: 2.337, outputTokensPerSec: 52.7 },
-  { model: 'Claude Fable 5 (with fallback)', vendor: 'anthropic', intelligence: 62.1, agentic: 56.6, costPerTaskUsd: 3.140, outputTokensPerSec: 67.1 },
-  { model: 'GPT-5.6 Sol (max)',              vendor: 'openai',    intelligence: 60.9, agentic: 57.8, costPerTaskUsd: 1.231, outputTokensPerSec: 69.7 },
-  { model: 'Grok 4.6 (high)',                vendor: 'xai',       intelligence: 60.9, agentic: 58.7, costPerTaskUsd: 0.837, outputTokensPerSec: 58.3 },
-  { model: 'Kimi K3 (max)',                  vendor: 'moonshot',  intelligence: 59.7, agentic: 54.3, costPerTaskUsd: 0.837, outputTokensPerSec: 38.4 },
-  { model: 'Qwen3.8 Max',                    vendor: 'alibaba',   intelligence: 58.1, agentic: 58.4, costPerTaskUsd: 1.132 },
-  { model: 'Muse Spark 1.2 (xhigh)',         vendor: 'meta',      intelligence: 56.8, agentic: 49.3, costPerTaskUsd: 0.399 },
-  { model: 'GPT-5.6 Terra (max)',            vendor: 'openai',    intelligence: 56.6, agentic: 50.2, costPerTaskUsd: 0.508, outputTokensPerSec: 123.8 },
-  { model: 'Gemini 3.7 Flash (high)',        vendor: 'google',    intelligence: 56.0, agentic: 45.1, costPerTaskUsd: 0.402, outputTokensPerSec: 413.3 },
-  { model: 'DeepSeek V4 Pro 0813 (max)',     vendor: 'deepseek',  intelligence: 53.2, agentic: 49.6, costPerTaskUsd: 0.252, outputTokensPerSec: 80.2 },
-  { model: 'GLM-5.2 (max)',                  vendor: 'zhipu',     intelligence: 52.6, agentic: 45.7, costPerTaskUsd: 0.321, outputTokensPerSec: 155.0 },
-  { model: 'GPT-5.6 Luna (max)',             vendor: 'openai',    intelligence: 52.3, agentic: 46.9, costPerTaskUsd: 0.047, outputTokensPerSec: 171.2 },
-  { model: 'MiniMax-M3',                     vendor: 'minimax',   intelligence: 45.4, agentic: 36.1, costPerTaskUsd: 0.139, outputTokensPerSec: 95.9 },
-  { model: 'Inkling',                        vendor: 'other',     intelligence: 42.3, agentic: 34.1, costPerTaskUsd: 0.339, outputTokensPerSec: 83.6 },
-  { model: 'Nemotron 3 Ultra',               vendor: 'nvidia',    intelligence: 38.3, agentic: 27.5, costPerTaskUsd: 0.383, outputTokensPerSec: 139.8 },
-  { model: 'Gemini 3.5 Flash-Lite',          vendor: 'google',    intelligence: 37.4, agentic: 27.2, costPerTaskUsd: 0.097, outputTokensPerSec: 356.1 },
-  { model: 'Muse Glimmer (high)',            vendor: 'meta',      intelligence: 35.1,                costPerTaskUsd: 0.073, outputTokensPerSec: 110.9 },
+  { model: 'Claude Fable 5.1 (max with fallback)', vendor: 'anthropic', intelligence: 56.8, costPerTaskUsd: 6.117, outputTokensPerSec: 67.1 },
+  { model: 'GPT-6 Astra (max)',                   vendor: 'openai',    intelligence: 54.7, costPerTaskUsd: 2.567, outputTokensPerSec: 62.5 },
+  { model: 'Claude Opus 5 (max)',                 vendor: 'anthropic', intelligence: 54.1, costPerTaskUsd: 4.205, outputTokensPerSec: 57.5 },
+  { model: 'Muse Spark 1.3 (max)',                vendor: 'meta',      intelligence: 53.0, costPerTaskUsd: 0.959, outputTokensPerSec: 190.1 },
+  { model: 'GPT-5.6 Sol (max)',                   vendor: 'openai',    intelligence: 51.3, costPerTaskUsd: 1.249, outputTokensPerSec: 85.4 },
+  { model: 'Gemini 3.8 Flash (high)',             vendor: 'google',    intelligence: 47.1, costPerTaskUsd: 0.738 },
+  { model: 'GPT-5.6 Luna (max)',                  vendor: 'openai',    intelligence: 43.4, costPerTaskUsd: 0.097, outputTokensPerSec: 133.0 },
 ];
 
 // The effort ladder, measured by AA on 2026-07-24 and captured 2026-07-27 — a

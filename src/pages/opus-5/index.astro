@@ -4,6 +4,7 @@ import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SectionNav from '@/components/SectionNav.astro';
 import Callout from '@/components/Callout.astro';
 import PullQuote from '@/components/PullQuote.astro';
+import HistoricalModelNotice from '@/components/HistoricalModelNotice.astro';
 import { OPUS5_EFFORT_LADDER, OPUS5_EFFORT_CAPTURED } from '@/lib/artificial-analysis';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -34,7 +35,7 @@ const highToMaxCost = (maxRow.costToRunIndexUsd / high.costToRunIndexUsd).toFixe
 const faqItems = [
   {
     q: 'What is Claude Opus 5?',
-    a: "Claude Opus 5 is Anthropic's Opus-tier model, released July 24, 2026. Model id claude-opus-5, 1M-token context window, 128K max output, May 2026 training cutoff — the freshest of any Anthropic model. It prices at $5 per million input tokens and $25 per million output, unchanged from Opus 4.8, and Anthropic positions it as coming close to the frontier intelligence of Claude Fable 5 at half the price. It is the default model on Claude Max and the strongest model available on Claude Pro.",
+    a: "Claude Opus 5 was released July 24, 2026. This historical model file covers its July release and dated August comparisons: claude-opus-5, 1M-token context, 128K maximum output, and May 2026 knowledge cutoff. Launch API pricing was $5 per million input tokens and $25 per million output. Current availability and newer model comparisons are on the tier-list reference.",
   },
   {
     q: 'How much does Claude Opus 5 cost?',
@@ -69,6 +70,7 @@ const faq = {
   description="Claude Opus 5 read by an operator: shipped 2026-07-24 at $5/$25, a five-position effort dial, and the hierarchy question the launch post does not answer."
 >
   <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+  <HistoricalModelNotice period="July 2026 launch, with dated August comparisons" />
 
   <section class="container-wide pt-16 pb-8">
     <div class="eyebrow eyebrow-loud mb-3 text-accent">Model file · Opus 5</div>
@@ -169,7 +171,7 @@ const faq = {
                 </tbody>
               </table>
             </div>
-            <p class="text-xs text-muted">Artificial Analysis, 2026-07-24 · captured {OPUS5_EFFORT_CAPTURED}. A dated launch-week measurement: AA's public board has since stopped listing effort variants as separate rows, so this ladder is not re-capturable — it stays as the launch record. "Cost to run the Index" is what AA paid to run the entire benchmark suite at that setting — <em>not</em> a per-task figure. Different denominator, kept separate on purpose.</p>
+            <p class="text-xs text-muted">Artificial Analysis, 2026-07-24 · captured {OPUS5_EFFORT_CAPTURED}. This effort ladder preserves the launch-week measurement, not the current board or its newer methodology. "Cost to run the Index" is what AA paid to run the entire benchmark suite at that setting — <em>not</em> a per-task figure. Different denominator, kept separate on purpose.</p>
 
             <p>The arithmetic that should change your defaults: <strong>{ladderCostRatio}× the cost from <code>low</code> to <code>max</code>, for {ladderIndexGain} index points.</strong> From the default <code>high</code> to <code>max</code> it is {highToMaxCost}× the spend for 1.8 points. Time-to-first-token scales 18× across the ladder while throughput stays flat at 52–56 tokens per second — you are not buying speed at any setting, only depth.</p>
 

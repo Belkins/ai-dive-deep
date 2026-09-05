@@ -3,20 +3,27 @@
 // machine-readable public API, so this file is the one source of truth; edit it
 // and the widget re-renders.
 //
-// Capture: 2026-08-17, extracted from the embedded JSON payload of arena.ai
-// (each board carries `voteCutoffISOString`, `totalVotes`, `totalModels` and
-// full rating/CI/vote rows). Ten of eleven Elo boards plus the Agent board's
-// top ten were cross-checked against an independent community mirror
-// (github.com/oolong-tea-2026/arena-ai-leaderboards, data/2026-08-17/) — every
-// rank, score and vote count matched. The exception is Image-to-Code, which the
-// mirror does not cover: single-sourced. The community mirror is a
-// corroborating source, never the primary citation.
+// Capture: 2026-09-05. All eleven Elo boards and the overall Agent board were
+// retrieved from their public arena.ai URLs and their embedded JSON parsed.
+// Elo rows retain Arena's rank and display name; scores are Math.round(rating).
+// Each `source` retains the exact published cutoff, counts and snapshot id,
+// separately from our capture date. Text and Vision use Arena's default
+// style-controlled overall boards; the other nine use raw overall boards.
+// Ten Elo boards plus Agent's top ten were corroborated against the community
+// mirror's data/2026-09-05/: ranks, names, scores and vote/session counts match.
+// Image-to-Code is still single-sourced. Arena is always the primary citation.
 //
 // THE BOARDS DO NOT SHARE A DATE. Arena recomputes each board on its own
-// cadence; the vote-cutoff spread in this capture is 25 days (2026-07-21 →
-// 2026-08-15), and two boards (Document, Search) have not been recomputed since
-// the previous 2026-07-27 capture. Every category carries its own `freshness`
-// stamp and the widget renders it per board.
+// cadence. Ten Elo cutoffs advanced since August; Document's published cutoff
+// is still 2026-07-26 and its displayed rows are unchanged. No board failed
+// retrieval. The current cutoff spread is 40 days (2026-07-26 to 2026-09-04).
+// Each category's visible `freshness` is the source cutoff, not today's date.
+//
+// New-model availability was checked across ALL published entries, not just
+// the displayed top rows: claude-fable-5.1-max ranks only on Text (#3, 1504)
+// and Code (#1, 1763). No GPT-6 Astra variant has a published ranking on these
+// eleven overall Elo boards or overall Agent. Both families appear in Arena's
+// shared model catalog; catalog presence is not a scored leaderboard entry.
 //
 // Structural changes since the 2026-07-27 capture:
 //   1. Arena renamed three boards: WebDev → Code, Image-to-WebDev →
@@ -38,20 +45,30 @@ export type Vendor =
   | 'zhipu' | 'moonshot' | 'alibaba' | 'baidu' | 'bytedance'
   | 'deepseek' | 'minimax' | 'nvidia' | 'other';
 
+export type ArenaSource = {
+  url: string;
+  snapshotId: string;
+  captured: string;
+  voteCutoffISOString: string;
+  totalVotes: number;
+  totalModels: number;
+};
+
 export type Category = {
   id: string;
   name: string;
   blurb: string;
   freshness: string;
+  source: ArenaSource;
   rows: Row[];
   // Rendered under the board when the rows carry a caveat a reader would
   // otherwise miss — thin vote samples, display defects, absent models.
   note?: string;
 };
 
-export const LMARENA_SNAPSHOT = '2026-08-17';
+export const LMARENA_SNAPSHOT = '2026-09-05';
 export const LMARENA_LIVE = 'https://arena.ai/leaderboard';
-export const LMARENA_MIRROR = 'https://github.com/oolong-tea-2026/arena-ai-leaderboards';
+export const LMARENA_MIRROR = 'https://github.com/oolong-tea-2026/arena-ai-leaderboards/tree/main/data/2026-09-05';
 
 export const VENDOR_META: Record<Vendor, { label: string; color: string }> = {
   anthropic: { label: 'Anthropic', color: '#FF6B2C' },
@@ -70,79 +87,110 @@ export const VENDOR_META: Record<Vendor, { label: string; color: string }> = {
   other:     { label: '',          color: '#71717A' },
 };
 
-// Effort suffixes are load-bearing: `claude-opus-5-high` is the API DEFAULT and
-// `claude-opus-5-max` is the launch-deck configuration — since this capture the
-// crowd votes on BOTH as separate rows (Text has them at #7 and #10; Code at #4
-// and #1). Model strings below are verbatim from Arena, including harness
-// parentheticals like `(codex-harness)` — a different harness is a different
-// competitor.
+// Effort suffixes and harness parentheticals are load-bearing. Fable 5.1's
+// `max` result is not a result for `high` or the default API configuration.
+// Opus 5 high/max and Sol's `(codex-harness)` remain distinct competitors.
+// Board intervals in notes are rounded endpoints from Arena's rating bounds;
+// overlapping intervals do not establish a statistically resolved winner.
 export const LMARENA: Category[] = [
   {
     id: 'text',
     name: 'Text',
     blurb: 'The headline board — head-to-head chat votes.',
-    freshness: 'votes through 2026-08-12 · 7.78M votes · 391 models',
+    freshness: 'votes through 2026-09-02 · 8.00M votes · 400 models',
+    source: {
+      url: 'https://arena.ai/leaderboard/text',
+      snapshotId: 'leaderboard-sets/public/leaderboards/text-overall-style_control/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-09-02T21:00:00.000Z',
+      totalVotes: 7999020,
+      totalModels: 400,
+    },
     rows: [
-      { rank: 1,  model: 'claude-fable-5',          score: 1506, vendor: 'anthropic' },
+      { rank: 1,  model: 'claude-fable-5',          score: 1507, vendor: 'anthropic' },
       { rank: 2,  model: 'claude-opus-4-6-high',    score: 1505, vendor: 'anthropic' },
-      { rank: 3,  model: 'claude-opus-4-7-high',    score: 1502, vendor: 'anthropic' },
-      { rank: 4,  model: 'muse-spark-1.2 (xHigh)',  score: 1498, vendor: 'meta' },
-      { rank: 5,  model: 'claude-opus-4-6',         score: 1497, vendor: 'anthropic' },
-      { rank: 6,  model: 'claude-opus-4-7',         score: 1494, vendor: 'anthropic' },
-      { rank: 7,  model: 'claude-opus-5-high',      score: 1493, vendor: 'anthropic' },
-      { rank: 8,  model: 'qwen3.8-max',             score: 1491, vendor: 'alibaba' },
-      { rank: 9,  model: 'gemini-3.7-flash-high',   score: 1490, vendor: 'google' },
-      { rank: 10, model: 'claude-opus-5-max',       score: 1489, vendor: 'anthropic' },
-      { rank: 11, model: 'muse-spark-1.1',          score: 1489, vendor: 'meta' },
+      { rank: 3,  model: 'claude-fable-5.1-max',    score: 1504, vendor: 'anthropic' },
+      { rank: 4,  model: 'claude-opus-4-7-high',    score: 1502, vendor: 'anthropic' },
+      { rank: 5,  model: 'muse-spark-1.2 (xHigh)',  score: 1499, vendor: 'meta' },
+      { rank: 6,  model: 'claude-opus-4-6',         score: 1498, vendor: 'anthropic' },
+      { rank: 7,  model: 'claude-opus-4-7',         score: 1494, vendor: 'anthropic' },
+      { rank: 8,  model: 'gemini-3.8-flash-high',   score: 1494, vendor: 'google' },
+      { rank: 9,  model: 'claude-opus-5-high',      score: 1493, vendor: 'anthropic' },
+      { rank: 10, model: 'muse-spark-1.1',          score: 1492, vendor: 'meta' },
+      { rank: 11, model: 'gemini-3.7-flash-high',   score: 1491, vendor: 'google' },
       { rank: 12, model: 'kimi-k3-max',             score: 1489, vendor: 'moonshot' },
     ],
-    note: 'July\'s clean sweep is over: Muse Spark 1.2 breaks into the all-Anthropic top six at #4 (3,280 votes, ±10). Fable 5\'s lead over Opus 5 is now statistically real — its interval (1501–1512) no longer overlaps claude-opus-5-high\'s (1488–1498), with Opus 5\'s sample grown from July\'s 5,417 votes to 20,030 — though #2 claude-opus-4-6-high (1501–1508) still overlaps Fable 5 fully, so the #1 spot itself remains a statistical tie. Both Opus 5 efforts carry rows now: high at #7, max at #10. Still no OpenAI model in the top 12. Ranks 8–12 span two Elo points.',
+    note: 'Style-controlled overall board. Fable 5.1 enters at #3 as claude-fable-5.1-max: 1504 on 2,906 votes, with a 1493–1515 interval that overlaps Fable 5 at #1 (1502–1512). This is a max-effort result, not a generic Fable 5.1 score. Gemini 3.8 Flash and 3.7 Flash carry Arena\'s Preliminary flag. No OpenAI model is in the top 12; GPT-6 Astra is catalog-listed but has no published row on this board.',
   },
   {
     id: 'code',
     name: 'Code',
     blurb: 'Build a working web app from a prompt.',
-    freshness: 'votes through 2026-08-15 · 0.58M votes · 115 models',
+    freshness: 'votes through 2026-09-04 · 0.65M votes · 125 models',
+    source: {
+      url: 'https://arena.ai/leaderboard/code',
+      snapshotId: 'leaderboard-sets/public/leaderboards/webdev-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-09-04T17:00:00.000Z',
+      totalVotes: 648157,
+      totalModels: 125,
+    },
     rows: [
-      { rank: 1,  model: 'claude-opus-5-max',                  score: 1692, vendor: 'anthropic' },
-      { rank: 2,  model: 'kimi-k3-max',                        score: 1674, vendor: 'moonshot' },
-      { rank: 3,  model: 'qwen3.8-max',                        score: 1667, vendor: 'alibaba' },
-      { rank: 4,  model: 'claude-opus-5-high',                 score: 1663, vendor: 'anthropic' },
-      { rank: 5,  model: 'grok-4.6-high',                      score: 1631, vendor: 'xai' },
-      { rank: 6,  model: 'claude-fable-5',                     score: 1627, vendor: 'anthropic' },
-      { rank: 7,  model: 'gpt-5.6-sol-xhigh (codex-harness)',  score: 1622, vendor: 'openai' },
-      { rank: 8,  model: 'gemini-3.7-flash-high',              score: 1587, vendor: 'google' },
-      { rank: 9,  model: 'glm-5.2-max',                        score: 1585, vendor: 'zhipu' },
-      { rank: 10, model: 'deepseek-v4-pro-high-20260813',      score: 1584, vendor: 'deepseek' },
-      { rank: 11, model: 'deepseek-v4-flash-high',             score: 1581, vendor: 'deepseek' },
-      { rank: 12, model: 'claude-opus-4-8-high',               score: 1564, vendor: 'anthropic' },
+      { rank: 1,  model: 'claude-fable-5.1-max',               score: 1763, vendor: 'anthropic' },
+      { rank: 2,  model: 'qwen3.8-max-0902',                   score: 1689, vendor: 'alibaba' },
+      { rank: 3,  model: 'claude-opus-5-max',                  score: 1687, vendor: 'anthropic' },
+      { rank: 4,  model: 'kimi-k3-max',                        score: 1674, vendor: 'moonshot' },
+      { rank: 5,  model: 'qwen3.8-max',                        score: 1670, vendor: 'alibaba' },
+      { rank: 6,  model: 'claude-opus-5-high',                 score: 1662, vendor: 'anthropic' },
+      { rank: 7,  model: 'claude-fable-5',                     score: 1629, vendor: 'anthropic' },
+      { rank: 8,  model: 'grok-4.6-high',                      score: 1625, vendor: 'xai' },
+      { rank: 9,  model: 'qwen3.8-flash-next',                 score: 1625, vendor: 'alibaba' },
+      { rank: 10, model: 'hy4-preview',                        score: 1623, vendor: 'other' },
+      { rank: 11, model: 'muse-spark-1.3 (xHigh)',             score: 1618, vendor: 'meta' },
+      { rank: 12, model: 'gpt-5.6-sol-xhigh (codex-harness)',  score: 1618, vendor: 'openai' },
     ],
-    note: 'Arena renamed this board from WebDev to Code (the payload id still says webdev). July\'s finding — the one board a frontier lab did not lead — is inverted: Opus 5 at max took #1 from Kimi K3, 1692 (1682–1701) over 1674 (1663–1685), an 18-point lead whose intervals still overlap by three points. Ranks 2–4 sit within 11 points of each other. Grok 4.6 debuts at #5 on 1,513 votes (±17) — provisional.',
+    note: 'The payload still calls this board webdev. Fable 5.1 at max leads at 1763 on 2,227 votes (1746–1779), above #2 Qwen3.8 Max 0902 at 1689 (1672–1706). The intervals do not overlap, but this is web-app preference evidence, not repository-resolution or general-agent evidence. Arena marks the Qwen rows at #2, #5 and #9 and hy4-preview at #10 as Preliminary. Sol retains its xhigh effort and codex-harness qualifier. Astra has no published row.',
   },
   {
     id: 'image-to-code',
     name: 'Image-to-Code',
     blurb: 'Turn a screenshot into a working front-end.',
-    freshness: 'votes through 2026-08-04 · 87K votes · single-sourced',
+    freshness: 'votes through 2026-08-25 · 110K votes · 44 models · single-sourced',
+    source: {
+      url: 'https://arena.ai/leaderboard/image-to-code',
+      snapshotId: 'leaderboard-sets/public/leaderboards/image_to_webdev-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-08-25T00:00:00.000Z',
+      totalVotes: 110117,
+      totalModels: 44,
+    },
     rows: [
-      { rank: 1,  model: 'claude-opus-5-max',                  score: 1670, vendor: 'anthropic' },
-      { rank: 2,  model: 'qwen3.8-max',                        score: 1631, vendor: 'alibaba' },
-      { rank: 3,  model: 'claude-fable-5',                     score: 1626, vendor: 'anthropic' },
-      { rank: 4,  model: 'gpt-5.6-sol-xhigh (codex-harness)',  score: 1581, vendor: 'openai' },
-      { rank: 5,  model: 'grok-4.5',                           score: 1580, vendor: 'xai' },
-      { rank: 6,  model: 'claude-opus-4-7-high',               score: 1579, vendor: 'anthropic' },
-      { rank: 7,  model: 'kimi-k3-max',                        score: 1570, vendor: 'moonshot' },
-      { rank: 8,  model: 'claude-opus-4-7',                    score: 1565, vendor: 'anthropic' },
-      { rank: 9,  model: 'muse-spark-1.1',                     score: 1544, vendor: 'meta' },
-      { rank: 10, model: 'claude-opus-4-6-high',               score: 1540, vendor: 'anthropic' },
+      { rank: 1,  model: 'claude-opus-5-max',                  score: 1664, vendor: 'anthropic' },
+      { rank: 2,  model: 'claude-fable-5',                     score: 1623, vendor: 'anthropic' },
+      { rank: 3,  model: 'qwen3.8-max',                        score: 1618, vendor: 'alibaba' },
+      { rank: 4,  model: 'gpt-5.6-sol-xhigh (codex-harness)',  score: 1606, vendor: 'openai' },
+      { rank: 5,  model: 'claude-opus-4-7-high',               score: 1576, vendor: 'anthropic' },
+      { rank: 6,  model: 'grok-4.5',                           score: 1574, vendor: 'xai' },
+      { rank: 7,  model: 'qwen3.8-27b',                        score: 1574, vendor: 'alibaba' },
+      { rank: 8,  model: 'kimi-k3-max',                        score: 1573, vendor: 'moonshot' },
+      { rank: 9,  model: 'claude-opus-4-7',                    score: 1564, vendor: 'anthropic' },
+      { rank: 10, model: 'gemini-3.6-flash-high',              score: 1544, vendor: 'google' },
     ],
-    note: 'Renamed from Image-to-WebDev. July\'s two defects are both gone: the duplicated fable-5 display rows at #1/#2, and Opus 5\'s absence. Opus 5 (max) now debuts at #1 — on 922 votes (1649–1692, ±21), an interval that still touches Qwen3.8 Max\'s below it (Qwen\'s reaches 1651) but sits fully clear of Fable 5\'s (1613–1639). Thinnest samples of any Elo board here, and the one board the community mirror does not cover: single-sourced from Arena\'s payload.',
+    note: 'Single-sourced from Arena\'s image_to_webdev payload. Opus 5 at max leads on 1,765 votes (1649–1680), clear of Fable 5\'s 1611–1635 interval. Qwen3.8 Max at #3 carries Arena\'s Preliminary flag. This board still has relatively thin samples and an August 25 cutoff. Neither Fable 5.1 nor Astra has a published row; do not transfer their Text or Code results here.',
   },
   {
     id: 'document',
     name: 'Document',
     blurb: 'Long-document reasoning and synthesis.',
-    freshness: 'votes through 2026-07-26 · 0.32M votes · cutoff unchanged since July',
+    freshness: 'votes through 2026-07-26 · 0.32M votes · 39 models · cutoff unchanged since July',
+    source: {
+      url: 'https://arena.ai/leaderboard/document',
+      snapshotId: 'leaderboard-sets/public/leaderboards/document-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-07-26T18:00:00.000Z',
+      totalVotes: 322650,
+      totalModels: 39,
+    },
     rows: [
       { rank: 1,  model: 'claude-opus-5-high',    score: 1520, vendor: 'anthropic' },
       { rank: 2,  model: 'claude-opus-4-6',       score: 1510, vendor: 'anthropic' },
@@ -155,138 +203,196 @@ export const LMARENA: Category[] = [
       { rank: 9,  model: 'gpt-5.5',               score: 1480, vendor: 'openai' },
       { rank: 10, model: 'gpt-5.6-terra-xhigh',   score: 1479, vendor: 'openai' },
     ],
-    note: 'Arena has collected no new votes for this board since the previous capture — the cutoff is still 2026-07-26 — though it re-published the rows (gpt-5.6 entries added, -thinking display names renamed to -high). The July caveat therefore stands: Opus 5\'s #1 rests on 1,663 votes against rank 2\'s 37,271, a 22× sample gap, with fully overlapping intervals (1506–1535 vs 1504–1516). "The #1 document model" is a leaderboard fact, not yet a statistical one.',
+    note: 'Rechecked September 5: Arena still publishes the July 26 cutoff and the same displayed rows. This does not establish that no new votes have been collected. Opus 5 high leads on 1,663 votes versus #2\'s 37,271, with overlapping intervals (1505–1535 vs 1504–1516). Neither Fable 5.1 nor Astra has a published row. This remains a July result, not a September document evaluation.',
   },
   {
     id: 'vision',
     name: 'Vision',
     blurb: 'Understanding images, charts, and screenshots.',
-    freshness: 'votes through 2026-08-06 · 1.19M votes · 145 models',
+    freshness: 'votes through 2026-08-27 · 1.26M votes · 148 models',
+    source: {
+      url: 'https://arena.ai/leaderboard/vision',
+      snapshotId: 'leaderboard-sets/public/leaderboards/vision-overall-style_control/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-08-27T13:00:00.000Z',
+      totalVotes: 1258468,
+      totalModels: 148,
+    },
     rows: [
-      { rank: 1,  model: 'claude-fable-5',          score: 1315, vendor: 'anthropic' },
-      { rank: 2,  model: 'qwen3.8-max',             score: 1301, vendor: 'alibaba' },
-      { rank: 3,  model: 'claude-opus-4-7-high',    score: 1301, vendor: 'anthropic' },
-      { rank: 4,  model: 'claude-opus-4-6-high',    score: 1300, vendor: 'anthropic' },
-      { rank: 5,  model: 'claude-opus-4-7',         score: 1299, vendor: 'anthropic' },
-      { rank: 6,  model: 'claude-opus-5-high',      score: 1297, vendor: 'anthropic' },
-      { rank: 7,  model: 'gemini-3.6-flash-high',   score: 1295, vendor: 'google' },
-      { rank: 8,  model: 'muse-spark',              score: 1294, vendor: 'meta' },
-      { rank: 9,  model: 'claude-opus-4-6',         score: 1293, vendor: 'anthropic' },
-      { rank: 10, model: 'muse-spark-1.2 (xHigh)',  score: 1290, vendor: 'meta' },
+      { rank: 1,  model: 'claude-fable-5',          score: 1313, vendor: 'anthropic' },
+      { rank: 2,  model: 'claude-opus-4-7-high',    score: 1301, vendor: 'anthropic' },
+      { rank: 3,  model: 'qwen3.8-max',             score: 1300, vendor: 'alibaba' },
+      { rank: 4,  model: 'claude-opus-4-7',         score: 1299, vendor: 'anthropic' },
+      { rank: 5,  model: 'claude-opus-4-6-high',    score: 1299, vendor: 'anthropic' },
+      { rank: 6,  model: 'muse-spark',              score: 1294, vendor: 'meta' },
+      { rank: 7,  model: 'claude-opus-4-6',         score: 1293, vendor: 'anthropic' },
+      { rank: 8,  model: 'muse-spark-1.2 (xHigh)',  score: 1292, vendor: 'meta' },
+      { rank: 9,  model: 'claude-opus-5-high',      score: 1290, vendor: 'anthropic' },
+      { rank: 10, model: 'gemini-3-pro',            score: 1289, vendor: 'google' },
     ],
-    note: 'Fable 5 holds #1 by 14 points, though its interval (1306–1324) still brushes Qwen3.8 Max\'s (1292–1310) — a debut #2 on 5,344 votes. Ranks 2–9 span eight Elo points: a pile-up, not a ladder. July\'s provisional #3, gemini-3.6-flash on 238 votes, has settled to #7 on 1,205.',
+    note: 'Style-controlled overall board. Fable 5 holds #1 at 1313 on 10,002 votes, but its 1305–1322 interval overlaps #2 Opus 4.7 high\'s 1295–1308. Ranks 2–10 span 12 Elo points. The published cutoff is August 27; neither Fable 5.1 nor Astra has a scored row, even though both families appear in Arena\'s shared catalog.',
   },
   {
     id: 'search',
     name: 'Search',
     blurb: 'Grounded answers with live web retrieval.',
-    freshness: 'votes through 2026-07-21 · 0.94M votes · unchanged since the July capture',
+    freshness: 'votes through 2026-08-24 · 1.11M votes · 34 models',
+    source: {
+      url: 'https://arena.ai/leaderboard/search',
+      snapshotId: 'leaderboard-sets/public/leaderboards/search-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-08-24T20:00:00.000Z',
+      totalVotes: 1110523,
+      totalModels: 34,
+    },
     rows: [
-      { rank: 1,  model: 'claude-opus-4-6-search',          score: 1253, vendor: 'anthropic' },
-      { rank: 2,  model: 'gpt-5.5-search',                  score: 1240, vendor: 'openai' },
-      { rank: 3,  model: 'claude-fable-5',                  score: 1237, vendor: 'anthropic' },
-      { rank: 4,  model: 'claude-opus-4-7',                 score: 1233, vendor: 'anthropic' },
-      { rank: 5,  model: 'ernie-5.1',                       score: 1226, vendor: 'baidu' },
-      { rank: 6,  model: 'claude-sonnet-4-6-search',        score: 1221, vendor: 'anthropic' },
-      { rank: 7,  model: 'gemini-3.1-pro-grounding',        score: 1212, vendor: 'google' },
-      { rank: 8,  model: 'gemini-3-pro-grounding',          score: 1207, vendor: 'google' },
-      { rank: 9,  model: 'gpt-5.2-search',                  score: 1206, vendor: 'openai' },
-      { rank: 10, model: 'grok-4.20-multi-agent-beta-0309', score: 1205, vendor: 'xai' },
+      { rank: 1,  model: 'gpt-5.6-sol-xhigh',         score: 1257, vendor: 'openai' },
+      { rank: 2,  model: 'claude-opus-4-6-search',    score: 1253, vendor: 'anthropic' },
+      { rank: 3,  model: 'gpt-5.5-search',            score: 1242, vendor: 'openai' },
+      { rank: 4,  model: 'claude-opus-4-7',           score: 1233, vendor: 'anthropic' },
+      { rank: 5,  model: 'claude-fable-5',            score: 1230, vendor: 'anthropic' },
+      { rank: 6,  model: 'ernie-5.1',                 score: 1227, vendor: 'baidu' },
+      { rank: 7,  model: 'claude-sonnet-4-6-search',  score: 1221, vendor: 'anthropic' },
+      { rank: 8,  model: 'grok-4.5',                  score: 1213, vendor: 'xai' },
+      { rank: 9,  model: 'gemini-3.1-pro-grounding',  score: 1210, vendor: 'google' },
+      { rank: 10, model: 'gemini-3-pro-grounding',    score: 1207, vendor: 'google' },
     ],
-    note: 'Also not recomputed since July — the vote cutoff is still 2026-07-21, so Opus 5 still has no Search entry here while `claude-sonnet-5-search` sits at rank 16 (1188 ±6). Worth pairing with the API fact: the server-side `web_fetch` tool is not available on Opus 5, so a search agent on Opus 5 must bring its own fetcher.',
+    note: 'This board has finally advanced beyond July. GPT-5.6 Sol xhigh leads at 1257 on 29,663 votes (1250–1265), but overlaps #2 Opus 4.6 Search at 1253 (1248–1258). Arena\'s display name omits -search from Sol; the published model key is gpt-5.6-sol-search-xhigh. Neither Astra nor Fable 5.1 has a published row. Search scores should not be substituted for ordinary chat scores.',
   },
   {
     id: 'text-to-image',
     name: 'Text-to-Image',
     blurb: 'Generate an image from a prompt.',
-    freshness: 'votes through 2026-08-10 · 5.92M votes · 77 models',
+    freshness: 'votes through 2026-09-04 · 6.12M votes · 76 models',
+    source: {
+      url: 'https://arena.ai/leaderboard/text-to-image',
+      snapshotId: 'leaderboard-sets/public/leaderboards/text_to_image-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-09-04T12:00:00.000Z',
+      totalVotes: 6120042,
+      totalModels: 76,
+    },
     rows: [
-      { rank: 1,  model: 'gpt-image-2 (medium)',                                score: 1381, vendor: 'openai' },
-      { rank: 2,  model: 'mai-image-2.6-preview',                               score: 1336, vendor: 'other' },
-      { rank: 3,  model: 'grok-imagine-image-2.0 (low)',                        score: 1316, vendor: 'xai' },
-      { rank: 4,  model: 'reve-2.1',                                            score: 1302, vendor: 'other' },
-      { rank: 5,  model: 'muse-image',                                          score: 1282, vendor: 'meta' },
-      { rank: 6,  model: 'reve-2.0',                                            score: 1270, vendor: 'other' },
-      { rank: 7,  model: 'gemini-3.1-flash-image (nano-banana-2) [web-search]', score: 1264, vendor: 'google' },
-      { rank: 8,  model: 'seedream-5.0-pro',                                    score: 1258, vendor: 'bytedance' },
-      { rank: 9,  model: 'qwen-image-3.0-pro',                                  score: 1257, vendor: 'alibaba' },
-      { rank: 10, model: 'mai-image-2.5',                                       score: 1256, vendor: 'other' },
+      { rank: 1,  model: 'gpt-image-2 (medium)',                                 score: 1382, vendor: 'openai' },
+      { rank: 2,  model: 'mai-image-2.6',                                        score: 1332, vendor: 'other' },
+      { rank: 3,  model: 'grok-imagine-image-2.0 (low)',                         score: 1315, vendor: 'xai' },
+      { rank: 4,  model: 'reve-2.1',                                             score: 1301, vendor: 'other' },
+      { rank: 5,  model: 'muse-image',                                           score: 1279, vendor: 'meta' },
+      { rank: 6,  model: 'reve-2.0',                                             score: 1270, vendor: 'other' },
+      { rank: 7,  model: 'gemini-3.1-flash-image (nano-banana-2) [web-search]',  score: 1261, vendor: 'google' },
+      { rank: 8,  model: 'seedream-5.0-pro',                                     score: 1258, vendor: 'bytedance' },
+      { rank: 9,  model: 'qwen-image-3.0-pro',                                   score: 1254, vendor: 'alibaba' },
+      { rank: 10, model: 'mai-image-2.5',                                        score: 1254, vendor: 'other' },
     ],
-    note: 'gpt-image-2 still leads every board it is on, but July\'s 83-point gap to #2 has narrowed to 45: Microsoft\'s mai-image-2.6-preview debuts second on 3,488 votes (±11), with grok-imagine-image-2.0 arriving at #3. Still the widest #1 lead of any board in this capture.',
+    note: 'gpt-image-2 (medium) leads at 1382, 50 points above Microsoft\'s mai-image-2.6 at 1332. The latter is no longer labelled -preview and has 10,086 votes (1325–1339), well below the leader\'s 1377–1386 interval. Grok Imagine Image 2.0 (low) remains Preliminary on 2,682 votes. Preserve the medium/low and web-search configuration labels when comparing.',
   },
   {
     id: 'image-edit',
     name: 'Image Edit',
     blurb: 'Edit an existing image to instruction.',
-    freshness: 'votes through 2026-08-07 · 28.8M votes · 53 models',
+    freshness: 'votes through 2026-09-03 · 29.43M votes · 53 models',
+    source: {
+      url: 'https://arena.ai/leaderboard/image-edit',
+      snapshotId: 'leaderboard-sets/public/leaderboards/image_edit-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-09-03T22:00:00.000Z',
+      totalVotes: 29426679,
+      totalModels: 53,
+    },
     rows: [
-      { rank: 1,  model: 'gpt-image-2 (medium)',                                score: 1463, vendor: 'openai' },
-      { rank: 2,  model: 'grok-imagine-image-2.0 (low)',                        score: 1439, vendor: 'xai' },
-      { rank: 3,  model: 'muse-image',                                          score: 1405, vendor: 'meta' },
-      { rank: 4,  model: 'mai-image-2.5',                                       score: 1402, vendor: 'other' },
-      { rank: 5,  model: 'seedream-5.0-pro',                                    score: 1393, vendor: 'bytedance' },
-      { rank: 6,  model: 'chatgpt-image-latest-high-fidelity (20251216)',       score: 1390, vendor: 'openai' },
-      { rank: 7,  model: 'grok-imagine-image-quality (20260519)',               score: 1390, vendor: 'xai' },
-      { rank: 8,  model: 'gemini-3-pro-image-2k (nano-banana-pro)',             score: 1389, vendor: 'google' },
-      { rank: 9,  model: 'gemini-3-pro-image-preview (nano-banana-pro)',        score: 1385, vendor: 'google' },
-      { rank: 10, model: 'gemini-3.1-flash-image (nano-banana-2) [web-search]', score: 1385, vendor: 'google' },
+      { rank: 1,  model: 'gpt-image-2 (medium)',                                 score: 1461, vendor: 'openai' },
+      { rank: 2,  model: 'mai-image-2.6',                                        score: 1439, vendor: 'other' },
+      { rank: 3,  model: 'grok-imagine-image-2.0 (low)',                         score: 1439, vendor: 'xai' },
+      { rank: 4,  model: 'muse-image',                                           score: 1403, vendor: 'meta' },
+      { rank: 5,  model: 'mai-image-2.5',                                        score: 1400, vendor: 'other' },
+      { rank: 6,  model: 'seedream-5.0-pro',                                     score: 1394, vendor: 'bytedance' },
+      { rank: 7,  model: 'chatgpt-image-latest-high-fidelity (20251216)',        score: 1390, vendor: 'openai' },
+      { rank: 8,  model: 'grok-imagine-image-quality (20260519)',                score: 1390, vendor: 'xai' },
+      { rank: 9,  model: 'gemini-3-pro-image-2k (nano-banana-pro)',              score: 1390, vendor: 'google' },
+      { rank: 10, model: 'gemini-3.1-flash-image (nano-banana-2) [web-search]',  score: 1388, vendor: 'google' },
     ],
-    note: 'The highest-volume board Arena runs — 28.8M votes. grok-imagine-image-2.0 debuts at #2 on 5,931 votes; ranks 5–10 sit within eight points of each other on five- and six-figure vote counts, which is a genuinely settled pile-up rather than a thin-sample one.',
+    note: '29.43M total votes. Microsoft\'s mai-image-2.6 moves to #2 on 5,086 votes, narrowly ahead of Grok Imagine Image 2.0 (low), which Arena still marks Preliminary. Both round to 1439 with overlapping intervals (1429–1448 and 1430–1447); their distinct published ranks must not be reconstructed from rounded scores. gpt-image-2 (medium) remains #1 at 1461.',
   },
   {
     id: 'text-to-video',
     name: 'Text-to-Video',
     blurb: 'Generate video from a prompt.',
-    freshness: 'votes through 2026-08-10 · 0.61M votes · 44 models',
+    freshness: 'votes through 2026-09-04 · 0.67M votes · 47 models',
+    source: {
+      url: 'https://arena.ai/leaderboard/text-to-video',
+      snapshotId: 'leaderboard-sets/public/leaderboards/text_to_video-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-09-04T16:00:00.000Z',
+      totalVotes: 668045,
+      totalModels: 47,
+    },
     rows: [
-      { rank: 1,  model: 'gemini-omni-flash',          score: 1512, vendor: 'google' },
-      { rank: 2,  model: 'flux-3-video',               score: 1496, vendor: 'other' },
-      { rank: 3,  model: 'dreamina-seedance-2.0-720p', score: 1478, vendor: 'bytedance' },
-      { rank: 4,  model: 'muse-video',                 score: 1457, vendor: 'meta' },
-      { rank: 5,  model: 'minimax-h3',                 score: 1453, vendor: 'minimax' },
-      { rank: 6,  model: 'happyhorse-1.0',             score: 1428, vendor: 'alibaba' },
-      { rank: 7,  model: 'sora-2-pro',                 score: 1366, vendor: 'openai' },
-      { rank: 8,  model: 'veo-3.1-audio',              score: 1364, vendor: 'google' },
-      { rank: 9,  model: 'veo-3.1-audio-1080p',        score: 1363, vendor: 'google' },
-      { rank: 10, model: 'veo-3.1-fast-audio',         score: 1362, vendor: 'google' },
+      { rank: 1,  model: 'gemini-omni-1.1-flash',       score: 1515, vendor: 'google' },
+      { rank: 2,  model: 'gemini-omni-flash',           score: 1511, vendor: 'google' },
+      { rank: 3,  model: 'wan3.0',                      score: 1494, vendor: 'alibaba' },
+      { rank: 4,  model: 'flux-3-video',                score: 1494, vendor: 'other' },
+      { rank: 5,  model: 'dreamina-seedance-2.5-720p',  score: 1482, vendor: 'bytedance' },
+      { rank: 6,  model: 'dreamina-seedance-2.0-720p',  score: 1479, vendor: 'bytedance' },
+      { rank: 7,  model: 'minimax-h3',                  score: 1462, vendor: 'minimax' },
+      { rank: 8,  model: 'muse-video',                  score: 1456, vendor: 'meta' },
+      { rank: 9,  model: 'happyhorse-1.0',              score: 1427, vendor: 'alibaba' },
+      { rank: 10, model: 'sora-2-pro',                  score: 1367, vendor: 'openai' },
     ],
-    note: 'Black Forest Labs\' flux-3-video debuts at #2 on 1,288 votes (±17), an interval wide enough to touch ranks 1 and 3 both. MiniMax-H3 arrives at #5 — and leads both boards below.',
+    note: 'Gemini Omni 1.1 Flash enters at #1 on 1,777 votes (1499–1530), overlapping Gemini Omni Flash at #2 (1502–1521). Wan3.0 and Seedance 2.5 join at #3 and #5. Flux 3 Video at #4 remains Preliminary on 1,290 votes. The new #1 is a published preference lead, not a statistically isolated winner.',
   },
   {
     id: 'image-to-video',
     name: 'Image-to-Video',
     blurb: 'Animate a still image into video.',
-    freshness: 'votes through 2026-08-13 · 1.72M votes · 44 models',
+    freshness: 'votes through 2026-09-02 · 1.91M votes · 47 models',
+    source: {
+      url: 'https://arena.ai/leaderboard/image-to-video',
+      snapshotId: 'leaderboard-sets/public/leaderboards/image_to_video-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-09-02T20:00:00.000Z',
+      totalVotes: 1906002,
+      totalModels: 47,
+    },
     rows: [
-      { rank: 1,  model: 'minimax-h3',                  score: 1489, vendor: 'minimax' },
-      { rank: 2,  model: 'dreamina-seedance-2.0-720p',  score: 1479, vendor: 'bytedance' },
-      { rank: 3,  model: 'gemini-omni-flash',           score: 1462, vendor: 'google' },
-      { rank: 4,  model: 'grok-imagine-video-1.5-720p', score: 1460, vendor: 'xai' },
-      { rank: 5,  model: 'flux-3-video-20260811',       score: 1453, vendor: 'other' },
-      { rank: 6,  model: 'happyhorse-1.0',              score: 1441, vendor: 'alibaba' },
-      { rank: 7,  model: 'wan2.7-i2v',                  score: 1426, vendor: 'alibaba' },
-      { rank: 8,  model: 'grok-imagine-video-720p',     score: 1416, vendor: 'xai' },
-      { rank: 9,  model: 'veo-3.1-audio',               score: 1397, vendor: 'google' },
-      { rank: 10, model: 'veo-3.1-audio-1080p',         score: 1390, vendor: 'google' },
+      { rank: 1,  model: 'minimax-h3',                   score: 1497, vendor: 'minimax' },
+      { rank: 2,  model: 'gemini-omni-1.1-flash',        score: 1488, vendor: 'google' },
+      { rank: 3,  model: 'wan3.0',                       score: 1481, vendor: 'alibaba' },
+      { rank: 4,  model: 'dreamina-seedance-2.5-720p',   score: 1478, vendor: 'bytedance' },
+      { rank: 5,  model: 'dreamina-seedance-2.0-720p',   score: 1477, vendor: 'bytedance' },
+      { rank: 6,  model: 'gemini-omni-flash',            score: 1462, vendor: 'google' },
+      { rank: 7,  model: 'grok-imagine-video-1.5-720p',  score: 1456, vendor: 'xai' },
+      { rank: 8,  model: 'flux-3-video-20260811',        score: 1449, vendor: 'other' },
+      { rank: 9,  model: 'happyhorse-1.0',               score: 1442, vendor: 'alibaba' },
+      { rank: 10, model: 'wan2.7-i2v',                   score: 1428, vendor: 'alibaba' },
     ],
-    note: 'July\'s stalest board (34 days) got recomputed and changed hands: MiniMax-H3 debuts at #1 (1481–1496) over Seedance (1471–1487) — overlapping intervals, so a lead rather than a verdict. Seedance\'s 104,445 votes against H3\'s 10,626 is the sample gap to hold while reading it.',
+    note: 'MiniMax-H3 stays #1 at 1497 on 36,137 votes (1491–1503). New #2 Gemini Omni 1.1 Flash has 3,732 votes (1477–1499), with an overlapping interval; Wan3.0 at #3 has only 1,401 votes. Seedance 2.5 and 2.0 are separate rows at #4 and #5, not aliases.',
   },
   {
     id: 'video-to-video',
     name: 'Video-to-Video',
     blurb: 'Edit an existing clip to instruction.',
-    freshness: 'votes through 2026-08-13 · 26K votes · complete board',
+    freshness: 'votes through 2026-08-26 · 28K votes · 10 models · complete board',
+    source: {
+      url: 'https://arena.ai/leaderboard/video-to-video',
+      snapshotId: 'leaderboard-sets/public/leaderboards/video_to_video-overall-raw/leaderboard-snapshots/latest',
+      captured: '2026-09-05',
+      voteCutoffISOString: '2026-08-26T18:00:00.000Z',
+      totalVotes: 27930,
+      totalModels: 10,
+    },
     rows: [
-      { rank: 1, model: 'minimax-h3',                  score: 1390, vendor: 'minimax' },
-      { rank: 2, model: 'dreamina-seedance-2.0-720p',  score: 1358, vendor: 'bytedance' },
-      { rank: 3, model: 'gemini-omni-flash',           score: 1358, vendor: 'google' },
-      { rank: 4, model: 'happyhorse-1.0',              score: 1307, vendor: 'alibaba' },
-      { rank: 5, model: 'grok-imagine-video',          score: 1263, vendor: 'xai' },
-      { rank: 6, model: 'kling-o3-pro',                score: 1255, vendor: 'other' },
-      { rank: 7, model: 'kling-o1-pro',                score: 1200, vendor: 'other' },
-      { rank: 8, model: 'runway-gen4-aleph',           score: 1183, vendor: 'other' },
+      { rank: 1,  model: 'wan3.0',                      score: 1414, vendor: 'alibaba' },
+      { rank: 2,  model: 'dreamina-seedance-2.5-720p',  score: 1410, vendor: 'bytedance' },
+      { rank: 3,  model: 'minimax-h3',                  score: 1392, vendor: 'minimax' },
+      { rank: 4,  model: 'gemini-omni-flash',           score: 1367, vendor: 'google' },
+      { rank: 5,  model: 'dreamina-seedance-2.0-720p',  score: 1365, vendor: 'bytedance' },
+      { rank: 6,  model: 'happyhorse-1.0',              score: 1307, vendor: 'alibaba' },
+      { rank: 7,  model: 'grok-imagine-video',          score: 1258, vendor: 'xai' },
+      { rank: 8,  model: 'kling-o3-pro',                score: 1255, vendor: 'other' },
+      { rank: 9,  model: 'kling-o1-pro',                score: 1197, vendor: 'other' },
+      { rank: 10, model: 'runway-gen4-aleph',           score: 1182, vendor: 'other' },
     ],
-    note: 'Renamed from Video Edit. This is the complete board, not a truncated top ten — eight models, up from July\'s seven: MiniMax-H3 joined and joined at #1, on 499 votes (±26). The smallest board Arena runs, at less than 0.1% of Image Edit\'s volume.',
+    note: 'The complete board now has ten models. Wan3.0 debuts #1 on 463 votes (1388–1440), Seedance 2.5 #2 on 429 (1383–1436), and MiniMax-H3 is #3 on 962 (1374–1411). All three intervals overlap. At 27,930 total votes this remains a small, thin-sample board, despite the apparent precision of its ranks.',
   },
 ];
 
@@ -295,34 +401,41 @@ export const LMARENA: Category[] = [
 //
 // It does not use Elo. Its metric is a "Net Improvement Score" expressed as a
 // percentage, and it renders prettified display names rather than model slugs.
-// Coercing it into the `score: number` Elo shape above would render 12.19 in a
-// column that reads 1506 two tabs over — the exact category error this chapter
+// Coercing it into the `score: number` Elo shape above would render 13.74 in a
+// column that reads 1507 two tabs over — the exact category error this chapter
 // exists to argue against. It gets its own shape and its own panel.
 
 export type AgentRow = { rank: number; model: string; net: string; vendor: Vendor };
 
 export const ARENA_AGENT_META = {
-  published: '2026-08-13',
-  sessions: '1,793,983 sessions · 49 models',
+  published: '2026-09-01',
+  captured: '2026-09-05',
+  lastUpdatedISOString: '2026-09-01T21:00:00.000Z',
+  source: 'https://arena.ai/leaderboard/agent',
+  totalSessions: 2188416,
+  totalModels: 58,
+  sessions: '2,188,416 sessions · 58 models',
   metric: 'Net Improvement Score',
+  note: 'Overall Agent board, not its Code subcategory. Percentages are 100 × avgScore.value with 100 × avgScore.ci, not Elo or a task-success rate. Opus 5 high leads at 13.74% ± 1.80%, with an interval overlapping both Opus 5 max and Fable 5 high. Neither Fable 5.1 nor GPT-6 Astra appears among the 58 published rows; shared model-catalog entries are not ranked evidence.',
 };
 
 export const ARENA_AGENT: AgentRow[] = [
-  { rank: 1,  model: 'Claude Opus 5 (High)',      net: '12.19% ± 1.45%', vendor: 'anthropic' },
-  { rank: 2,  model: 'Claude Fable 5 (High)',     net: '12.01% ± 2.57%', vendor: 'anthropic' },
-  { rank: 3,  model: 'Claude Opus 5 (Max)',       net: '11.95% ± 1.71%', vendor: 'anthropic' },
-  { rank: 4,  model: 'GPT 5.6 Sol (xHigh)',       net: '10.86% ± 1.80%', vendor: 'openai' },
-  { rank: 5,  model: 'Kimi K3 (Max)',             net: '10.60% ± 1.04%', vendor: 'moonshot' },
-  { rank: 6,  model: 'Claude Opus 4.8 (High)',    net: '9.78% ± 1.78%',  vendor: 'anthropic' },
-  { rank: 7,  model: 'GPT 5.5 (xHigh)',           net: '8.90% ± 1.03%',  vendor: 'openai' },
-  { rank: 8,  model: 'Claude Opus 4.7 (High)',    net: '8.17% ± 1.43%',  vendor: 'anthropic' },
-  { rank: 9,  model: 'GPT 5.5 (High)',            net: '7.73% ± 0.97%',  vendor: 'openai' },
-  { rank: 10, model: 'Claude Opus 4.7',           net: '7.66% ± 1.45%',  vendor: 'anthropic' },
+  { rank: 1,  model: 'Claude Opus 5 (High)',      net: '13.74% ± 1.80%', vendor: 'anthropic' },
+  { rank: 2,  model: 'Claude Opus 5 (Max)',       net: '11.69% ± 2.01%', vendor: 'anthropic' },
+  { rank: 3,  model: 'Claude Fable 5 (High)',     net: '10.61% ± 1.53%', vendor: 'anthropic' },
+  { rank: 4,  model: 'GPT 5.6 Sol (xHigh)',       net: '9.49% ± 1.51%',  vendor: 'openai' },
+  { rank: 5,  model: 'Claude Opus 4.8 (High)',    net: '9.22% ± 1.53%',  vendor: 'anthropic' },
+  { rank: 6,  model: 'Kimi K3 (Max)',             net: '8.71% ± 0.66%',  vendor: 'moonshot' },
+  { rank: 7,  model: 'GPT 5.5 (xHigh)',           net: '7.53% ± 1.08%',  vendor: 'openai' },
+  { rank: 8,  model: 'Claude Sonnet 5 (High)',    net: '7.51% ± 2.11%',  vendor: 'anthropic' },
+  { rank: 9,  model: 'Claude Opus 4.7 (High)',    net: '6.49% ± 1.42%',  vendor: 'anthropic' },
+  { rank: 10, model: 'GLM 5.2 (Max)',            net: '6.23% ± 0.77%',  vendor: 'zhipu' },
 ];
 
 // ---------------------------------------------------------------------------
 // Lab-claimed agentic benchmarks — launch-deck numbers, NOT arena votes.
 // Every figure traces to a dated entry in src/lib/research-notes.ts.
+// Historical July evidence, deliberately not refreshed with the Arena capture.
 //
 // Framing discipline (Ch 24): launch numbers get the Berkeley-RDI discount
 // before they get respect; models you can't buy (Mythos 5) don't appear.
