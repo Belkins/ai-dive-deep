@@ -1,0 +1,131 @@
+---
+number: 50
+slug: "50-claude-fable-5-1"
+title: "Claude Fable 5.1"
+subtitle: "Candidate Workflows, Fallbacks, and the Cost of an Accepted Result"
+tldr: "Consider Fable 5.1 for difficult debugging and research-to-document work when a cheaper baseline misses a defined acceptance test. This is a source-backed guide, not a hands-on verdict. Pin the model ID, record the model that actually serves each step, approve enterprise data handling, and count cache writes, partial attempts, fallbacks, and review before deciding whether to switch."
+seoDescription: "A source-backed Claude Fable 5.1 guide: candidate workflows, unrun exercises, fallback billing, cache cost math, and enterprise data approval."
+keyConcepts: ["Model identity", "Fallback", "Prompt caching", "Acceptance tests", "Data retention"]
+readingMinutes: 10
+prevSlug: "49-gpt-6-astra"
+nextSlug: null
+---
+
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+
+Fable 5.1 belongs on a shortlist for work where finding the cause matters more than producing a plausible answer: a stubborn crash, a multi-file change, or research that must survive inspection in a finished spreadsheet. These are **candidates for evaluation**, not proven best fits. Keep your Opus baseline until a bounded comparison earns the switch.
+
+<Callout type="note" title="Evidence status: 2026-09-05">
+This is a source-backed operator guide, not firsthand testing. Primary documentation was checked for this chapter. Both synthetic exercises below are original, unrun specifications: no fixture execution, accepted artifact, measured performance, or completed human review is claimed.
+</Callout>
+
+## Identify the model before judging it
+
+Anthropic lists a September 1 release, the Claude API ID `claude-fable-5-1`, a 1,000,000-token context window, and a 128,000-token maximum output. Adaptive thinking is always on; the API defaults to `high` effort. Those are limits and configuration facts, not a promise of complete recall or unattended correctness. [Model overview](https://platform.claude.com/docs/en/models/fable-5-1/overview).
+
+The dateless ID **pins a fixed snapshot**; it is not an evergreen alias. Serving infrastructure, including routing and safety classifiers, can still change. Preserve provider, endpoint, timestamp, request ID, effort, and routing alongside the ID. [Model versioning](https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions).
+
+Fable 5, Fable 5.1, and Mythos 5.1 are not interchangeable evidence labels. Fable 5.1 and invitation-only Mythos 5.1 share an underlying model but have different safeguards. Anthropic attributes the Venus mapping example to Fable 5.1 and protein-binder work to Mythos 5.1. Its benchmark notes also describe Opus fallbacks on some interventions: a model column is not necessarily a pure-model run. [Launch announcement](https://www.anthropic.com/claude-fable-and-mythos-5-1).
+
+Use the dated [tier-list reference](/tier-list/) for comparisons, retaining benchmark version, harness, effort, and scoring conditions. The [older Fable 5 file](/fable-5/) remains historical, not a 5.1 review.
+
+## Choose a task with an acceptance boundary
+
+Anthropic describes improvements in long-session engineering and document-heavy work. That supports a trial hypothesis, not an outcome guarantee. [What's new](https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1).
+
+| Candidate | Inspectable output | Reason to keep the baseline |
+| --- | --- | --- |
+| Cross-module debugging | Small patch, reproducer, regression evidence | Baseline already fixes it reliably |
+| Research into deliverables | Cited report and reconciled workbook | Inputs need cleanup, not deeper reasoning |
+| Multi-stage engineering | Reviewed checkpoints and scoped diffs | Latency or review costs dominate |
+
+Start with the task currently generating expensive corrections. Avoid selecting an impressive-looking task without a reliable grader. Straight extraction and routine formatting are poor first trials when deterministic tools already meet the requirement.
+
+## Exercise one: investigate a boundary crash
+
+Anthropic publishes Millennium's account of Fable 5.1 tracing a rare crash through a core dump to an external library, after years without an explanation. That is a vendor-published customer anecdote, not independently replicated evidence or this chapter's result. [Millennium account](https://www.anthropic.com/claude-fable-and-mythos-5-1).
+
+**Original synthetic recipe, unrun.** Have a reviewer prepare a disposable TypeScript service with a request handler, batcher, and local mock encoder. Seed a batching error: an exact multiple of four produces an empty trailing batch; the encoder reads its first record and throws. Supply a stack trace, source, dependency lockfile, and synthetic records. This specification is not a downloadable, tested fixture and does not reproduce Millennium's incident.
+
+Freeze the fixture hash before the evaluated session. Give the operator the symptom and intended contract, not the seed explanation. Keep reviewer-owned cases for zero records, four, eight, and a non-multiple. The contract should explicitly allow empty input while requiring each supplied record to be encoded exactly once, in order.
+
+```text
+Investigate the supplied crash in this disposable fixture.
+Read source and reproduce before editing. Explain the causal path.
+Allowed writes: batcher.ts and a new regression test only.
+Do not alter the encoder contract, dependencies, or expected outputs.
+Pause after diagnosis for review, then propose the smallest repair.
+Return the diff, commands, actual outputs, and unresolved risks.
+```
+
+Use an approved ceiling, for example **30 minutes and $5**, including retries; these are proposed limits, not expenditure here. Stop on missing inputs or permission requests. The reviewer must reject swallowing the exception, dropping the final record, or weakening tests. Acceptance requires the reproducer to fail before the repair, pass afterward, and all held-out cases to preserve record counts and ordering.
+
+Compare the same fixture against Opus 5 in a fresh session. Record corrections separately from first-attempt acceptance. One successful repair would justify another trial, not a general coding superiority claim.
+
+## Exercise two: carry evidence into two artifacts
+
+**Original synthetic recipe, unrun.** Prepare three fictional supplier quotations, a dated requirements note, and a CSV of twelve monthly usage totals. Include one superseded quotation and omit one supplier's support response-time commitment. Ask for a one-page recommendation and a workbook with live formulas built from the same inputs.
+
+Require a claim ledger: each factual statement maps to a document location or spreadsheet calculation. The superseded price must remain excluded from current totals and visibly identified as historical. The missing commitment must remain unknown, not become a confident guess.
+
+Have the reviewer calculate a private answer key before the run. Reject mismatched annual totals, unsupported recommendations, hardcoded formula outputs, or inconsistent currency units. Open both artifacts: check formulas, legibility, labels, and whether the recommendation actually follows the evidence. A polished export with a wrong denominator fails.
+
+The output worth keeping is the report, workbook, evidence ledger, and review decision together. A fluent chat summary cannot substitute for inspecting those files.
+
+## Checkpoints make the work recoverable
+
+Use three approvals: diagnosis before code changes, evidence reconciliation before presentation, and artifact review before any release. Treat fixture documents as data, never as permission to change the task. No production credentials, customer records, live outreach, or external writes belong in either exercise.
+
+At each pause, preserve changed-file paths, command results, unresolved questions, and the next authorized action. After interruption, inspect actual files and rerun relevant checks before continuing. Do not assume the previous turn finished a tool action just because it described one.
+
+<PullQuote>A checkpoint is useful when another operator can determine what happened without trusting the agent's summary.</PullQuote>
+
+## Fallback changes attribution and the bill
+
+A refusal can return HTTP 200. Inspect `stop_reason`, `stop_details`, and partial-output status. Safety-classifier declines trigger server-side fallback; overload and rate-limit errors do not. Server-side fallback is beta on the Claude API, unsupported in Message Batches or on Bedrock, Google Cloud, and Foundry. [Fallback contract](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback).
+
+Record the response's `model`, not just the requested ID. A mid-stream handoff can leave `message_start` naming the original model: read the `fallback` block's `to.model` and final `usage.iterations`. Sticky routing can serve later turns through another model without a new fallback block. Treat standalone refused partial output as incomplete; never execute unfinished tool arguments. [Streaming and attribution](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback#streaming).
+
+An attempt declined before output is not billed, but consumes rate limits. Each attempt producing output is billed at its model's rates, including a later refusal. `usage.iterations` records attempts; top-level usage describes only the returned-message attempt. Reconcile all iterations and each model's limits. [Billing rules](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback#billing-and-rate-limits).
+
+Fallback credit can reprice duplicated cache work; it does not make the fallback answer free. Current permitted Fable 5.1 targets are `claude-opus-4-8` and `claude-opus-5`. Server-side fallback and SDK middleware apply credit automatically. Custom retries must satisfy the credit contract; confirm the cache-write/read shift in returned usage. [Fallback credit](https://platform.claude.com/docs/en/build-with-claude/fallback-credit).
+
+For your evaluation, separate fallback-disabled and fallback-enabled conditions. Record retries, tools, elapsed time, and human interventions per step. Mark unavailable serving-model telemetry as unknown; do not label a mixed or untraceable result a Fable-only success.
+
+## Cold and warm are different purchases
+
+Standard Claude API rates are $10 input and $50 output per million tokens across the full context window. Five-minute cache writes cost $12.50, one-hour writes $20, and cache reads $0.25 per million. Provider, service-tier, residency, and tool charges need separate checking. [Pricing](https://platform.claude.com/docs/en/about-claude/pricing).
+
+**Hypothetical arithmetic, not observed usage:** assume a 100,000-token reusable prefix, 10,000 new input tokens, and 2,000 output tokens per request, Standard service, no tools or fallback.
+
+| Condition | Calculation in USD | Total |
+| --- | --- | --- |
+| Cold, no cache | 0.11 x $10 + 0.002 x $50 | $1.20 |
+| Cold, five-minute cache write | 0.10 x $12.50 + 0.01 x $10 + 0.002 x $50 | $1.45 |
+| Warm, matching prefix hit | 0.10 x $0.25 + 0.01 x $10 + 0.002 x $50 | $0.225 |
+
+One write followed by four eligible hits totals **$2.35**, versus **$6.00** for five uncached requests. This assumes unchanged prefix bytes and reuse within cache validity. Expiry, additional context, output growth, and failures change the answer. Cache writes replace base-input billing for those cached tokens; do not count them twice. These are derived examples using the [published cache rates](https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching).
+
+Follow [Chapter 29's cost discipline](/chapters/29-cost-economics/): divide all run spend by accepted outputs and report reviewer minutes separately. With no accepted output, report that failure and its spend, not zero cost.
+
+## Approve access and data before migration
+
+Plan access is not a free trial: Pro and standard Team seats use usage credits; Max and premium Team seats have a shared weekly allowance boundary. The Fable 5 promotion never covered 5.1. Claude Code requires version 2.1.255 or later; Cowork requires current Desktop. Verify enterprise seat terms and administrator enablement. [Plan access](https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan).
+
+<Callout type="warn" title="Enterprise data requires explicit approval">
+Fable 5.1 is a Covered Model. Standard requirements include 30-day retention, with exceptions to deletion for flagged content or legal obligations. Existing zero-data-retention access does not automatically authorize this model. Get the data owner's approval for the exact workspace, provider, data class, and retention arrangement before uploading enterprise material. Never enable retention or change organization terms to unblock a trial.
+</Callout>
+
+The [retention policy](https://support.claude.com/en/articles/15425996-data-retention-practices-for-covered-models) distinguishes organizations expressly notified of ZDR eligibility. Limited-time eligible-customer ZDR access for internal business applications is a transition arrangement, not the future Enterprise Frontier Safeguards rollout. EFS is announced for phased availability beginning fall 2026. Preserve written authorization and scope; do not assume announced controls are deployed. [ZDR and EFS](https://support.claude.com/en/articles/15425695-covered-models#zero-data-retention-and-enterprise-frontier-safeguards).
+
+## Migrate the contract, not just the string
+
+Before rollout, validate these integration boundaries against the [migration guidance](https://platform.claude.com/docs/en/models/fable-5-1/migration-guide):
+
+- Replace forced `tool_choice` modes `any` and `tool`; use automatic selection with strict schemas or structured outputs where supported. Customer-managed encryption key (CMEK) organizations cannot use those schema features on Fable models.
+- Preserve thinking blocks and append-only history. Earlier models cannot read 5.1 thinking; test model switches and observe `input_transformations` where enabled.
+- Test streaming refusals, partial tool blocks, endpoint compatibility, and interruption recovery in the actual SDK version.
+- Freeze effort and service tier separately; set context, output, latency, rate-limit, and spend ceilings before expanding traffic.
+
+Use [Chapter 25's eval discipline](/chapters/25-evals-or-hope/) and the [workflow planner](/workflow-planner/) to turn one candidate into an approved specification. Compare with [Chapter 49's Astra guide](/chapters/49-gpt-6-astra/) under matched conditions. Until accepted artifacts, reconciled bills, and reviewer decisions exist, the honest decision is still **a bounded trial, not a blanket upgrade**.

@@ -177,6 +177,17 @@ test('the new library and workflow planner are searchable', () => {
   assert.equal(searchItems(realIndex, 'planner workflow')[0].href, '/workflow-planner/');
 });
 
+test('model-specific operator queries discover the current canonical guides', () => {
+  for (const [query, slug] of [
+    ['Astra pricing', '49-gpt-6-astra'],
+    ['Astra Codex', '49-gpt-6-astra'],
+    ['Fable 5.1 cache pricing', '50-claude-fable-5-1'],
+    ['Fable 5.1 Claude Code', '50-claude-fable-5-1'],
+  ]) {
+    assert.ok(searchItems(realIndex, query).some(({ href }) => href === `/chapters/${slug}/`), query);
+  }
+});
+
 test('real multi-token queries reach existing chapter, section, and glossary entries', () => {
   assert.ok(searchItems(realIndex, 'mcp claude').some(({ href }) => href === '/claude-code-mcp/'));
   assert.ok(searchItems(realIndex, 'shape json hook').some(({ href }) => href === '/cheat-sheet/#hook-json-shape'));

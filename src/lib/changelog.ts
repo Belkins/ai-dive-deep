@@ -16,11 +16,22 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 14.2',
+    date: '2026-09-05',
+    tagline: 'Astra and Fable 5.1: source-backed operator guides, with the evaluation work still ahead.',
+    bannerText: 'New chapters: Astra and Fable 5.1, from launch claims to reviewable workflows.',
+    bannerHref: '/chapters/49-gpt-6-astra/',
+    shipped: [
+      'Chapter 49: GPT-6 Astra performance evidence, harness caveats, scoped workflow recipes and cost per accepted output.',
+      'Chapter 50: Claude Fable 5.1 use-case candidates, refusal and fallback accounting, document reconciliation and migration boundaries.',
+      'Both guides distinguish sourced findings from proposed, unrun exercises. No personal model tier, completed benchmark or hands-on verdict is claimed.',
+      'The user-supplied Fireship launch video informs a primary-source-checked sidebar; its commentary is not treated as a model trial.',
+    ],
+  },
+  {
     edition: 'Edition 14.1',
     date: '2026-09-05',
     tagline: 'The model reference refresh: Astra, Fable 5.1, and benchmark comparisons with their conditions intact.',
-    bannerText: 'Updated model reference: GPT-6 Astra, Claude Fable 5.1, and dated benchmarks.',
-    bannerHref: '/tier-list/#sec-models',
     shipped: [
       'Source-linked Astra and Fable 5.1 release notes: model IDs, access boundaries, API pricing qualifiers, and candidate workflows explicitly pending local evaluation.',
       'Current independent benchmark evidence with effort and fallback labels. Intelligence Index version changes are not presented as model performance changes.',
