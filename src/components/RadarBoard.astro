@@ -1,4 +1,6 @@
 ---
+import { getRadarArchiveNavigation } from '@/lib/radar-config.mjs';
+
 // RadarBoard — shared render for /radar (live) and /radar/[date] (archive).
 // Direction A "Continuous Spectrum + Live Sweep" (instrument-redesign swarm): the masthead
 // is a single flame→muted lead-time band (the RULER), with one tick per item plotted at its
@@ -114,7 +116,7 @@ const feedsClause = feedsQuiet === 0 ? 'all feeds live' : `${feedsQuiet} feeds q
 const top5 = data.items.slice(0, 5);
 
 const RAIL_Y = [12, 38, 64, 88];
-const navDates = archiveDates.filter((d) => d !== data.date).slice(0, 7);
+const { recent: navDates, older, newer } = getRadarArchiveNavigation(archiveDates, data.date);
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
 const pageUrl = isArchive ? `${SITE}/radar/${data.date}/` : `${SITE}/radar/`;
@@ -403,6 +405,13 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
         </>
       ))}
     </div>
+    {isArchive && (older || newer) && (
+      <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-sm">
+        {older && <a href={`${base}/radar/${older}/`} rel="prev" class="no-underline" style="color: rgb(var(--accent))">&larr; Older edition &middot; {fmtDay(older)}</a>}
+        {older && newer && <span style="opacity: 0.4">&middot;</span>}
+        {newer && <a href={`${base}/radar/${newer}/`} rel="next" class="no-underline" style="color: rgb(var(--accent))">Newer edition &middot; {fmtDay(newer)} &rarr;</a>}
+      </div>
+    )}
   </section>
 )}
 

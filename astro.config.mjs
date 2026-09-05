@@ -6,11 +6,13 @@ import tailwind from '@astrojs/tailwind';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
-import { RADAR_PUBLIC } from './src/lib/radar-config.mjs';
+import { getRadarArchiveDates, isRadarEditionIndexable } from './src/lib/radar-config.mjs';
 
 // Build a date → freeze-timestamp map from the radar archives so the sitemap can carry
 // truthful per-archive lastmod (review-swarm: build-time new Date() lies on immutable pages).
 const radarLastmod = {};
+const radarArchives = [];
+let radarCurrent;
 let radarCurrentLastmod;
 try {
   const dir = 'src/data/radar/archive';
@@ -18,13 +20,15 @@ try {
     for (const f of readdirSync(dir)) {
       if (f.endsWith('.json')) {
         const j = JSON.parse(readFileSync(`${dir}/${f}`, 'utf8'));
+        radarArchives.push(j);
         if (j.date && j.generated) radarLastmod[j.date] = j.generated;
       }
     }
   }
-  const current = JSON.parse(readFileSync('src/data/radar/today.json', 'utf8'));
-  if (current.generated) radarCurrentLastmod = current.generated;
+  radarCurrent = JSON.parse(readFileSync('src/data/radar/today.json', 'utf8'));
+  if (radarCurrent.generated) radarCurrentLastmod = radarCurrent.generated;
 } catch { /* archives optional */ }
+const radarArchiveDates = new Set(getRadarArchiveDates(radarArchives, radarCurrent?.date ?? ''));
 
 // Choose deploy target via env: DEPLOY_TARGET=vercel | gh-pages (default)
 // gh-pages now serves from custom domain dive.vladyslavpodoliako.com (root path).
@@ -45,9 +49,13 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap({
-      // /the-bill stays out always. /radar is excluded only while dark (RADAR_PUBLIC=false);
-      // once public it enters the sitemap so the existing IndexNow job announces it.
-      filter: (page) => !page.includes('/the-bill') && (RADAR_PUBLIC || !page.includes('/radar')),
+      // Radar uses the same eligibility as page robots and archive navigation.
+      filter: (page) => {
+        const path = new URL(page).pathname.replace(/\/$/, '');
+        if (path === '/radar') return isRadarEditionIndexable(radarCurrent);
+        if (path.startsWith('/radar/')) return radarArchiveDates.has(path.slice('/radar/'.length));
+        return !page.includes('/the-bill');
+      },
       // Reader-invisible crawl signals only. Default daily/0.7; the homepage and
       // chapter pages are the primary content surfaces, so bump their priority.
       serialize(item) {
