@@ -50,7 +50,10 @@ export default function WorkflowPlanner() {
   const loadedSearch = useRef<string | null>(null);
   const result = buildWorkflowPlan(draft);
   useEffect(() => {
+    const plannerPath = window.location.pathname;
     const restorePreset = () => {
+      // Back updates location before Astro unmounts this island.
+      if (window.location.pathname !== plannerPath) return;
       const selected = parseWorkflowPreset(window.location.search);
       // Preserve Astro's history metadata, but never copy query fields into the draft.
       if (window.location.search !== selected.search) {
