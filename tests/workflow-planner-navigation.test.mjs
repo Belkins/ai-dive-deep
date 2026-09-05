@@ -26,7 +26,7 @@ function harness(path = '/book/workflow-planner/?preset=content-review') {
   const historyState = { index: 3, astroMetadata: 'preserve' };
   const navigate = href => { window.location = new URL(href, 'https://example.test'); };
   navigate(path);
-  window.history = { state: historyState, replaceState: (value, title, href) => { writes.push({ value, href }); navigate(href); } };
+  window.history = { state: historyState, replaceState: (value, _title, href) => { writes.push({ value, href }); navigate(href); } };
   const context = {
     window, document, ...workflow, baseline: { current: null }, revision: { current: 0 }, loadedSearch: { current: null },
     setTemplateId: value => { state.preset = value; }, setDraft: value => { state.draft = value; },
