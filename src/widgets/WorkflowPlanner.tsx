@@ -3,8 +3,9 @@ import { Copy, Download, Eraser, FilePlus2, Printer, ShieldCheck } from 'lucide-
 import type { LucideIcon } from 'lucide-react';
 import {
   WORKFLOW_FIELDS, WORKFLOW_TEMPLATES, buildWorkflowPlan, emptyWorkflowDraft, getWorkflowTemplate,
+  isWorkflowPresetId, parseWorkflowPreset,
 } from '@/lib/workflow-plan';
-import type { WorkflowDraft, WorkflowField, WorkflowIssue } from '@/lib/workflow-plan';
+import type { WorkflowDraft, WorkflowField, WorkflowIssue, WorkflowPresetId } from '@/lib/workflow-plan';
 
 function ToolButton({ label, icon: Icon, disabled, onClick }: {
   label: string; icon: LucideIcon; disabled: boolean; onClick: () => void;
@@ -39,15 +40,41 @@ function DraftFields({ draft, issues, disabled, onChange }: {
 }
 
 export default function WorkflowPlanner() {
-  const [templateId, setTemplateId] = useState(WORKFLOW_TEMPLATES[0].id);
+  const [templateId, setTemplateId] = useState<WorkflowPresetId>(WORKFLOW_TEMPLATES[0].id);
   const [draft, setDraft] = useState(() => getWorkflowTemplate(WORKFLOW_TEMPLATES[0].id));
   const [hydrated, setHydrated] = useState(false);
   const [notice, setNotice] = useState('');
   const [copying, setCopying] = useState(false);
   const baseline = useRef(draft);
   const revision = useRef(0);
+  const loadedSearch = useRef<string | null>(null);
   const result = buildWorkflowPlan(draft);
-  useEffect(() => { setHydrated(true); return () => { revision.current += 1; }; }, []);
+  useEffect(() => {
+    const restorePreset = () => {
+      const selected = parseWorkflowPreset(window.location.search);
+      // Preserve Astro's history metadata, but never copy query fields into the draft.
+      if (window.location.search !== selected.search) {
+        window.history.replaceState(window.history.state, '', `${window.location.pathname}${selected.search}${window.location.hash}`);
+      }
+      if (loadedSearch.current === selected.search) return;
+      loadedSearch.current = selected.search;
+      const next = getWorkflowTemplate(selected.presetId);
+      revision.current += 1;
+      setTemplateId(selected.presetId);
+      setDraft(next);
+      baseline.current = next;
+      setNotice(selected.rejected ? 'Unsupported URL options were ignored. Only a known preset ID can load a template. Tests have not been run.' : 'Template loaded. All proposed steps and tests remain not run.');
+    };
+    restorePreset();
+    setHydrated(true);
+    window.addEventListener('popstate', restorePreset);
+    document.addEventListener('astro:page-load', restorePreset);
+    return () => {
+      revision.current += 1;
+      window.removeEventListener('popstate', restorePreset);
+      document.removeEventListener('astro:page-load', restorePreset);
+    };
+  }, []);
 
   function updateDraft(next: WorkflowDraft) {
     revision.current += 1;
@@ -61,6 +88,9 @@ export default function WorkflowPlanner() {
     if (hasContent && (dirty || clear) && !window.confirm('Replace all current entries? Copy or download your draft first if you need to keep it.')) return;
     updateDraft(next);
     baseline.current = next;
+    const search = clear ? '' : `?preset=${templateId}`;
+    loadedSearch.current = search;
+    window.history.replaceState(window.history.state, '', `${window.location.pathname}${search}${window.location.hash}`);
     setNotice(clear ? 'All fields cleared. Add requirements to create a new draft.' : 'Template loaded. Review its requirements before sharing.');
   }
 
@@ -105,7 +135,7 @@ export default function WorkflowPlanner() {
     <div className="wp-template-bar wp-no-print">
       <div className="wp-template-choice">
         <label htmlFor="workflow-template">Starting template</label>
-        <select id="workflow-template" value={templateId} disabled={!hydrated} onChange={(event) => setTemplateId(event.target.value)}>
+        <select id="workflow-template" value={templateId} disabled={!hydrated} onChange={(event) => { if (isWorkflowPresetId(event.target.value)) setTemplateId(event.target.value); }}>
           {WORKFLOW_TEMPLATES.map((template) => <option key={template.id} value={template.id}>{template.name}</option>)}
         </select>
       </div>

@@ -1,8 +1,10 @@
+import { SOP_LIBRARY, sopHref } from './sops';
+
 export type LibraryItem = {
   href: string;
   title: string;
   description: string;
-  kind: 'Chapter' | 'Guide' | 'Tool';
+  kind: 'Chapter' | 'Guide' | 'Tool' | 'SOP';
   topics: string[];
   minutes?: number;
   number?: number;
@@ -32,6 +34,8 @@ export const LEARNING_PATHS = [
 ] as const;
 
 export const LIBRARY_RESOURCES: LibraryItem[] = [
+  { href: '/sops/', title: 'AI SOP library', description: 'Six untested departmental procedures with Markdown downloads, approval roles, and unrun checks.', kind: 'Guide', topics: ['Reference', 'AI Agents'] },
+  ...SOP_LIBRARY.map(sop => ({ href: sopHref(sop), title: sop.title, description: sop.summary, kind: 'SOP' as const, topics: [sop.department, 'Reference'] })),
   { href: '/workflow-planner/', title: 'AI workflow planner', description: 'Define inputs, approvals, and acceptance tests. Export an operating specification.', kind: 'Tool', topics: ['Building Products', 'AI Agents'] },
   { href: '/learn/', title: 'Learn the basics', description: 'Free foundational courses and a learning ladder before the playbook.', kind: 'Guide', topics: ['Getting started'] },
   { href: '/day-zero/', title: 'Day zero', description: 'A first-session path for operators new to working with AI.', kind: 'Guide', topics: ['Getting started'] },
