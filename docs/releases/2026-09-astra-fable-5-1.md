@@ -1,8 +1,18 @@
 # Astra and Fable 5.1 Release Plan
 
-Status: proposed editorial release, not published chapters.
+Status: source-backed chapters implemented for the September 5 production release;
+the measured comparison and hands-on verdict remain unrun and unpublished.
 Evidence checked: 2026-09-05. Owner and final editorial reviewer: Vlad.
-Implementation tracking: https://github.com/Belkins/ai-dive-deep/issues/21
+Reference tracking: https://github.com/Belkins/ai-dive-deep/issues/21
+Chapter release tracking: https://github.com/Belkins/ai-dive-deep/issues/23
+
+## September 5 Release Scope
+
+The production request advances the two source-only guides ahead of the original
+targets below. They publish as Chapters 49 and 50, with original proposed trial
+recipes and explicit evidence limitations. No paid trial, customer benchmark,
+personal ranking, or matched-model performance report is included. The dated
+sequence below records the earlier editorial plan, not a running schedule.
 
 ## Release Decision
 
@@ -50,6 +60,10 @@ you keep the cheaper baseline?
 2. **What performance numbers do and do not say.** Put independent measurements
    beside vendor claims, retaining benchmark version, effort, harness, capture
    date, and scoring method. No blended "overall win rate" across unrelated tests.
+   Use the [video-source addendum](./sources/2026-09-04-fireship-astra.md) for an
+   ARC harness sidebar and launch-era versus current index comparison. A rounded
+   display tie is not an exact tie; do not replace the current v4.2 reference
+   with the older v4.1.1 launch figures.
 3. **Fix a real class of repository bug.** A disposable multi-file fixture,
    hidden tests, one scope boundary, and a human-readable diff. Show a failure
    or unnecessary edit as well as the accepted patch.
@@ -82,6 +96,9 @@ Claude Code", "Fable 5.1 cache pricing".
    document-heavy work are candidates, not promises of unattended correctness.
 3. **Root-cause investigation.** Reproduce a seeded application crash, trace it
    across modules, repair it, and prove that unrelated behavior still works.
+   Introduce it with the vendor-published Millennium example reviewed in the
+   [source addendum](./sources/2026-09-04-fireship-astra.md). Clearly distinguish
+   that attributed anecdote from our original synthetic fixture and any results.
 4. **Research carried into deliverables.** Build a report and spreadsheet from
    the same fixed inputs; reconcile totals and audit every factual statement.
 5. **Scope and checkpoint discipline.** Define allowed writes, interruption
@@ -205,6 +222,12 @@ backlinks. These are review milestones, not newly scheduled automations. Refine
 the existing pieces from observed queries before adding more near-duplicate pages.
 
 ## Source Register and Open Evidence
+
+User-supplied secondary context: [Fireship's September 4 launch commentary](https://www.youtube.com/watch?v=FluKUJyeYD8).
+The [timestamped review and primary-source checks](./sources/2026-09-04-fireship-astra.md)
+were added September 5. It informs editorial questions, not personal rankings,
+proof of AGI, or claims of our own hands-on testing. No chapter was published
+as part of that source addition.
 
 Primary sources checked September 5, 2026:
 

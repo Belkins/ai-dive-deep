@@ -158,6 +158,8 @@ const LEARN_SECTIONS: { id: string; label: string }[] = [
 // and adjacent topics that readers type into Cmd-K but don't appear in chapter
 // titles/subtitles.
 const CHAPTER_SYNONYMS: Record<string, string> = {
+  '49-gpt-6-astra':     'astra gpt-6 openai codex chatgpt work pricing cache caching cost benchmark performance use cases trial protocol arc osworld',
+  '50-claude-fable-5-1':'fable 5.1 anthropic claude code pricing cache caching cost fallback retention model id benchmark performance use cases trial protocol',
   '01-killed-my-tabs':  'operating system os tabs workflow productivity daily driver',
   '02-five-tools':      'chatgpt cursor windsurf codex aider continue cline zed jetbrains copilot github copilot v0 bolt lovable replit claude code cowork picker which tool model picker',
   '03-temp-agency':     'context window memory state amnesia session forgets',

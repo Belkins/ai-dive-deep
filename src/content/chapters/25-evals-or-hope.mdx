@@ -95,6 +95,8 @@ Primary sources checked on 2026-09-05. My operator inference is to test your own
 
 ## The 30-minute starter eval
 
+<Callout>Evaluating the September models? The [Astra guide](/chapters/49-gpt-6-astra/) and [Fable 5.1 guide](/chapters/50-claude-fable-5-1/) turn this discipline into scoped bug-repair and document-review trial recipes. They are proposed exercises, not reported test results.</Callout>
+
 This is an executable, standard-library artifact checker, not a complete scheduler or connector. Put it in `eval_yourskill.py`. Your trusted connector adapter must supply `source.status` and `source.rows` after fetching every page; do not ask the model to invent its own source-health evidence. The model supplies only the `canvas` text.
 
 ```python

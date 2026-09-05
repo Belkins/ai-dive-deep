@@ -44,6 +44,15 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
   </section>
 
   <section class="container-wide pt-4 pb-8">
+    <h2 class="font-display text-2xl m-0 mb-3">New model field guides</h2>
+    <p class="text-sm mb-4" style="color: rgb(var(--muted))">Published evidence, practical trial recipes, and the checks that come before a model switch.</p>
+    <ul class="grid gap-3 sm:grid-cols-2 list-none p-0 m-0">
+      <li><a href={`${base}/chapters/49-gpt-6-astra/`} class="block card no-underline h-full hover:border-flame" style="color: rgb(var(--fg))"><h3 class="font-display text-xl m-0">GPT-6 Astra</h3><p class="text-sm mt-2 mb-0" style="color: rgb(var(--muted))">Performance, use cases, and the cost of a finished job.</p></a></li>
+      <li><a href={`${base}/chapters/50-claude-fable-5-1/`} class="block card no-underline h-full hover:border-flame" style="color: rgb(var(--fg))"><h3 class="font-display text-xl m-0">Claude Fable 5.1</h3><p class="text-sm mt-2 mb-0" style="color: rgb(var(--muted))">Difficult workflows, fallback-aware trials, and real costs.</p></a></li>
+    </ul>
+  </section>
+
+  <section class="container-wide pt-4 pb-8">
     <h2 class="font-display text-3xl m-0 mb-6" style="letter-spacing:0">What do you want to get done?</h2>
     <LearningPaths compact />
     <p class="text-sm mt-3" style="color:rgb(var(--muted))">New to AI? <a href={`${base}/learn/`}>Start with the basics.</a> Prefer reading cover to cover? <a href={`${base}/how-to-read/`}>Read the prologue.</a></p>

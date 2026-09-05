@@ -178,6 +178,8 @@ Three lines. It cut my bill by roughly 30% the week I shipped it. Not from any o
 
 ## The price of a model is not the price of a task
 
+<Callout>For September 2026 model-specific billing boundaries, read the [Astra cost guide](/chapters/49-gpt-6-astra/) and [Fable 5.1 cost and fallback guide](/chapters/50-claude-fable-5-1/). Headline token prices alone do not account for long-context thresholds, cache events, failed attempts, or a different model serving the fallback.</Callout>
+
 Every time a new model lands, the first number everyone quotes is the sticker — dollars per million tokens. It is the wrong number to decide on, and the launch decks are built to make you decide on it.
 
 Concrete, current case: on 2026-05-19 Google announced Gemini 3.5 Flash. The token price tripled — $0.5/$3 → $1.5/$9 per million (3.1 Pro, for reference, is $2/$12 under 200k context). Sticker-shock reaction: "the cheap tier got expensive, skip it." But it's a *Flash* that, on the boards Google showed, clears last-gen Gemini 3.1 Pro on agentic and coding work. A model that one-shots what the previous one needed three turns and a retry to get right is **cheaper per task at 3× the per-token price** — fewer turns, fewer tool round-trips, no failure-and-retry tax, less of your time reading a wrong answer. The sticker went up; the cost of the task may have gone down. The two numbers are not the same number and nothing on the pricing page tells you which way it broke for *your* workload.
