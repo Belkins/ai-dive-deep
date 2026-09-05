@@ -57,6 +57,7 @@ import {
   HOOK_SESSION_START_CONTEXT,
 } from '@/lib/snippets';
 
+
 const toc = [
   { id: 'working-memory', label: 'Working memory' },
   { id: 'connectors-mcp', label: 'Connectors / MCP' },
@@ -210,8 +211,9 @@ const toc = [
         <p class="text-sm" style="color: rgb(var(--muted))">Lost a \$42k deal because the AE updated stage on a Tuesday and the buyer ghosted — nobody noticed until day 19, past the discount window. This skill watches the wire, not the dashboard.</p>
         <CopyBlock client:visible text={SKILL_DEAL_WATCHER} filename="deal-watcher/SKILL.md" language="markdown" />
 
-        <h3>email-deliverability-eval</h3>
+        <h3 id="email-deliverability-eval">email-deliverability-eval</h3>
         <p class="text-sm" style="color: rgb(var(--muted))">Belkins sent 12,000 messages on a domain whose DMARC had silently broken three weeks earlier — reply rate fell to 0.4% from 3.1% before anyone noticed. SPF/DKIM/DMARC + Postmaster reputation check before the campaign ships, not after.</p>
+        <p class="text-sm" style="color: rgb(var(--muted))">Read-only review template, not a preconfigured collector. Supply the account-specific exports, metric definitions, thresholds, and owner before use. A fourteen-day aggregate cannot determine a seven-day bounce rate. Missing evidence blocks a campaign recommendation; the agent does not send or change settings.</p>
         <CopyBlock client:visible text={SKILL_EMAIL_DELIVERABILITY} filename="email-deliverability-eval/SKILL.md" language="markdown" />
 
         <h3>sub-agent-watchdog</h3>

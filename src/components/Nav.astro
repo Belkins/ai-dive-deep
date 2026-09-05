@@ -6,9 +6,7 @@ const edition = CHANGELOG[0].edition;
 const chapterCount = CHAPTERS.length;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-// Full navigation for the mobile/tablet drawer (< lg). Inline desktop tabs
-// below only show a subset (lg = 5, xl = 7); the drawer is the catch-all so
-// every destination is reachable on a phone. Keep in sync when pages change.
+// The menu exposes the full navigation at every width; desktop links are a shortlist.
 const mobileNav = [
   { group: 'Start', links: [
     { href: '/day-zero/', label: 'Start here' },
@@ -16,11 +14,13 @@ const mobileNav = [
     { href: '/how-to-read/', label: 'How to read' },
   ]},
   { group: 'Read', links: [
+    { href: '/library/', label: 'Library + learning paths' },
     { href: '/journey/', label: 'Journey' },
     { href: '/questions/', label: 'Questions' },
     { href: '/sections/', label: 'Sections' },
   ]},
   { group: 'Reference', links: [
+    { href: '/workflow-planner/', label: 'Workflow planner' },
     { href: '/radar/', label: 'Radar' },
     { href: '/opus-5/', label: 'Opus 5' },
     { href: '/fable-5/', label: 'Fable 5' },
@@ -62,13 +62,9 @@ const mobileNav = [
     </a>
     <div class="flex items-center gap-0.5 sm:gap-1.5 min-w-0">
       <a href={`${base}/day-zero/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent))">Start here</a>
-      <a href={`${base}/learn/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Learn</a>
+      <a href={`${base}/library/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Library</a>
       <a href={`${base}/radar/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--accent-2))">Radar</a>
-      <a href={`${base}/journey/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Journey</a>
-      <a href={`${base}/questions/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Questions</a>
-      <a href={`${base}/showcase/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Setup</a>
-      <a href={`${base}/resources/`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Resources</a>
-      <a href={`${base}/tier-list/`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Tier list</a>
+      <a href={`${base}/workflow-planner/`} class="hidden xl:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Workflow planner</a>
       <span
         id="read-counter"
         data-chapter-total={chapterCount}
@@ -83,7 +79,7 @@ const mobileNav = [
       <button
         type="button"
         id="open-palette-btn"
-        class="inline-flex items-center gap-2 text-xs rounded sm:min-w-[140px] sm:max-w-[200px] lg:min-w-[170px] px-2 sm:px-2.5 py-1.5"
+        class="inline-flex items-center justify-center gap-2 text-xs rounded min-w-[44px] min-h-[44px] sm:min-w-[130px] px-2 sm:px-2.5 py-1.5"
         style="border: 1px solid rgb(var(--line)); color: rgb(var(--muted)); background: rgb(var(--bg) / 0.4)"
         aria-label="Search (Cmd-K)"
         title="Search (⌘K / Ctrl-K)"
@@ -98,7 +94,7 @@ const mobileNav = [
       <button
         type="button"
         id="mobile-menu-btn"
-        class="inline-flex lg:hidden items-center justify-center rounded p-2"
+        class="inline-flex items-center justify-center rounded p-2 min-w-[44px] min-h-[44px]"
         style="border: 1px solid rgb(var(--line)); color: rgb(var(--fg))"
         aria-label="Open menu"
         aria-expanded="false"
@@ -109,8 +105,8 @@ const mobileNav = [
     </div>
   </nav>
 
-  <!-- Mobile / tablet drawer (< lg). The full nav — every destination reachable on a phone. -->
-  <div id="mobile-menu" class="hidden lg:hidden border-t" style="border-color: rgb(var(--line)); background: rgb(var(--bg))">
+  <!-- The full navigation remains available alongside the desktop shortlist. -->
+  <div id="mobile-menu" class="hidden border-t" style="border-color: rgb(var(--line)); background: rgb(var(--bg))">
     <div class="container-wide py-4 max-h-[calc(100dvh-3.5rem)] overflow-y-auto">
       {mobileNav.map((g) => (
         <div class="mb-4 last:mb-1">
@@ -127,43 +123,40 @@ const mobileNav = [
 </header>
 
 <script>
-  const btn = document.getElementById('open-palette-btn');
-  btn?.addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-palette')));
+  import { CHAPTERS } from '@/lib/chapters';
+  import { readReadingProgress, READ_THRESHOLD, PROGRESS_CHANGED_EVENT } from '@/lib/reading-progress';
+  const chapterSlugs = new Set(CHAPTERS.map(chapter => chapter.slug));
+  const closeMenu = (restoreFocus = false) => {
+    document.getElementById('mobile-menu')?.classList.add('hidden');
+    const button = document.getElementById('mobile-menu-btn');
+    button?.setAttribute('aria-expanded', 'false');
+    button?.setAttribute('aria-label', 'Open menu');
+    if (restoreFocus) button?.focus();
+  };
+  // Delegation survives Astro's replacement of the header on navigation.
+  document.addEventListener('click', event => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('#open-palette-btn')) {
+      closeMenu();
+      window.dispatchEvent(new CustomEvent('open-palette'));
+    }
+    if (target?.closest('#mobile-menu-btn')) {
+      const menu = document.getElementById('mobile-menu');
+      const button = document.getElementById('mobile-menu-btn');
+      const isOpen = menu?.classList.toggle('hidden') === false;
+      button?.setAttribute('aria-expanded', String(isOpen));
+      button?.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    } else if (target?.closest('#mobile-menu a') || !target?.closest('header')) closeMenu();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && document.getElementById('mobile-menu-btn')?.getAttribute('aria-expanded') === 'true') closeMenu(true);
+  });
 
-  // Platform-aware ⌘K vs Ctrl-K hint
-  const kbdHint = document.getElementById('palette-kbd-hint');
-  if (kbdHint && !/Mac|iPhone|iPad/.test(navigator.platform)) kbdHint.textContent = 'Ctrl K';
-
-  // Mobile / tablet drawer toggle (< lg). Mirrors the palette-button binding style.
-  const mobBtn = document.getElementById('mobile-menu-btn');
-  const mobMenu = document.getElementById('mobile-menu');
-  if (mobBtn && mobMenu) {
-    mobBtn.addEventListener('click', () => {
-      const nowHidden = mobMenu.classList.toggle('hidden');
-      mobBtn.setAttribute('aria-expanded', String(!nowHidden));
-    });
-    mobMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
-      mobMenu.classList.add('hidden');
-      mobBtn.setAttribute('aria-expanded', 'false');
-    }));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !mobMenu.classList.contains('hidden')) {
-        mobMenu.classList.add('hidden');
-        mobBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
-
-  // Read-state surfacing: walks the page, decorates [data-chapter-slug] cards
-  // based on cc-progress localStorage (already written to by ProgressBar.astro
-  // on every chapter scroll). Threshold for "read" = 85% scroll-max.
-  const READ_THRESHOLD = 85;
   const decorateReadState = () => {
     try {
-      const raw = localStorage.getItem('cc-progress');
-      const data = raw ? JSON.parse(raw) as Record<string, number> : {};
+      const data = readReadingProgress();
       const readSlugs = new Set(
-        Object.entries(data).filter(([, pct]) => pct >= READ_THRESHOLD).map(([slug]) => slug)
+        Object.entries(data).filter(([slug, pct]) => chapterSlugs.has(slug) && pct >= READ_THRESHOLD).map(([slug]) => slug)
       );
 
       document.querySelectorAll<HTMLElement>('[data-chapter-slug]').forEach((el) => {
@@ -175,24 +168,30 @@ const mobileNav = [
       const counter = document.getElementById('read-counter');
       const counterText = document.getElementById('read-counter-text');
       if (counter && counterText) {
-        const total = counter.dataset.chapterTotal || '43';
+        const total = CHAPTERS.length;
         if (readSlugs.size > 0) {
-          counter.classList.remove('hidden');
-          counter.classList.add('inline-flex');
+          counter.classList.add('sm:inline-flex');
           counterText.textContent = `${readSlugs.size} / ${total}`;
         } else {
           counter.classList.add('hidden');
-          counter.classList.remove('inline-flex');
+          counter.classList.remove('sm:inline-flex');
         }
       }
     } catch {}
   };
   decorateReadState();
+  document.addEventListener('astro:page-load', () => {
+    closeMenu();
+    decorateReadState();
+    const hint = document.getElementById('palette-kbd-hint');
+    if (hint && !/Mac|iPhone|iPad/.test(navigator.platform)) hint.textContent = 'Ctrl K';
+  });
   // Re-decorate after returning from a chapter (focus/visibility transition)
   window.addEventListener('focus', decorateReadState);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') decorateReadState();
   });
   // Allow other pages (e.g., Footer reset link) to broadcast a refresh
-  window.addEventListener('cc-progress-changed', decorateReadState);
+  window.addEventListener(PROGRESS_CHANGED_EVENT, decorateReadState);
+  window.addEventListener('storage', decorateReadState);
 </script>

@@ -1,0 +1,111 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import WorkflowPlanner from '@/widgets/WorkflowPlanner';
+import '@/styles/workflow-planner.css';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout
+  title="AI Workflow Planner"
+  description="Plan an AI-assisted workflow with editable templates, human approval boundaries, and acceptance tests. Export a Markdown specification without running AI."
+>
+  <article class="workflow-planner-page">
+    <header class="container-wide wp-page-header wp-no-print">
+      <p class="wp-kicker">Dive / Planning tools</p>
+      <h1>AI Workflow Planner</h1>
+      <p class="wp-intro">Define the job, the evidence, and the point where a human must say yes.</p>
+      <p class="wp-limits">A deterministic specification builder, not generative AI or an execution engine. No model is called, no workflow runs, and no acceptance test is performed.</p>
+    </header>
+
+    <section id="planner" class="container-wide wp-workspace" aria-label="Workflow planner">
+      <WorkflowPlanner client:load />
+      <noscript>
+        <p class="wp-noscript">JavaScript is disabled. The prefilled specification is available below the requirements as selectable text. The editor and export buttons require JavaScript; you can still select the draft or print this page.</p>
+      </noscript>
+    </section>
+
+    <div class="container-wide wp-privacy wp-no-print">
+      <p>Planner entries stay in this page's memory. The planner does not send them to a server, put them in a URL, or save them in browser storage. Reloading or leaving the page discards edits. Copy, download, and print only export on your request. The surrounding site uses its existing page analytics; planner content is excluded from capture.</p>
+    </div>
+
+    <div class="container-prose wp-guide wp-no-print">
+      <section id="workflow-steps" aria-labelledby="workflow-steps-title">
+        <h2 id="workflow-steps-title">Six steps worth specifying</h2>
+        <p>A reusable AI workflow needs more than a prompt. These are proposed review gates for a future implementation, not actions this page takes.</p>
+        <ol class="wp-steps">
+          <li><strong>Confirm scope.</strong> Name the owner, intended audience, trigger, and one bounded deliverable. Say when to skip the work.</li>
+          <li><strong>Check the inputs.</strong> List approved sources, access scope, and freshness requirements. Missing data should create a blocker, not an invented answer.</li>
+          <li><strong>Prepare a draft.</strong> Name the allowed artifacts and their formats. Keep source evidence attached and unknowns visible.</li>
+          <li><strong>Validate.</strong> Write observable pass/fail checks before the first trial. Test missing data, conflicting evidence, and repeated triggers as well as the normal case.</li>
+          <li><strong>Request approval.</strong> Name the human who reviews the output and any separate approver for sending, publishing, or changing records.</li>
+          <li><strong>Hand off deliberately.</strong> Record the reviewed version and decision. Configure permissions, duplicate prevention, and recovery separately before enabling external actions.</li>
+        </ol>
+      </section>
+
+      <section id="before-after" aria-labelledby="before-after-title">
+        <h2 id="before-after-title">Before and after: call follow-up</h2>
+        <p class="wp-muted">Illustrative planning example, not a measured customer result.</p>
+        <div class="wp-example">
+          <h3>Before: an open-ended request</h3>
+          <blockquote>Summarize the call, update the CRM, and follow up.</blockquote>
+          <p>The account match, evidence standard, and authority to send are all unspecified.</p>
+          <h3>After: a reviewable contract</h3>
+          <dl>
+            <div><dt>Input</dt><dd>Approved transcript with call ID and timestamps, plus a read-only CRM snapshot.</dd></div>
+            <div><dt>Output</dt><dd>Proposed note, action items with missing dates marked unknown, and an unsent email draft.</dd></div>
+            <div><dt>Boundary</dt><dd>Account owner approves every write or send. An ambiguous account match blocks handoff.</dd></div>
+            <div><dt>Test</dt><dd>Each commitment traces to a transcript timestamp. Replaying the same call ID does not produce a second follow-up.</dd></div>
+          </dl>
+        </div>
+        <p>The benefit here is a clearer agreement about the work. Whether an implementation saves time or improves quality must be measured on real trials.</p>
+      </section>
+
+      <section id="next-steps" aria-labelledby="next-steps-title">
+        <h2 id="next-steps-title">From specification to a controlled trial</h2>
+        <p>Review the exported draft with the accountable owner. Then choose the runtime and connections, grant the smallest necessary access, and trial with non-sensitive sample data before considering a schedule.</p>
+        <ul class="wp-reading">
+          <li><a href={`${base}/chapters/11-build-a-skill/`}>Chapter 11: Build a Skill in 30 Minutes</a><span>Turn a reviewed procedure into a reusable skill.</span></li>
+          <li><a href={`${base}/chapters/15-permissions/`}>Chapter 15: Permissions, Sandboxes, and Sharp Edges</a><span>Keep access and external actions within an explicit boundary.</span></li>
+          <li><a href={`${base}/chapters/25-evals-or-hope/`}>Chapter 25: Evals, Smoke, Regression, Golden</a><span>Make completion observable with evidence and repeatable checks.</span></li>
+          <li><a href={`${base}/chapters/07-cron/`}>Chapter 7: Scheduled Tasks</a><span>Consider recurring triggers only after the manual trial is understood.</span></li>
+          <li><a href={`${base}/resources/`}>Resources and copy-paste templates</a><span>Use the implementation references after deciding what the workflow is allowed to do.</span></li>
+          <li><a href={`${base}/agent-workflow/`}>The agent workflow</a><span>Connect the specification to a bounded task, review, and handoff.</span></li>
+        </ul>
+      </section>
+
+      <section id="faq" class="wp-faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Practical FAQ</h2>
+        <details open>
+          <summary>Does this planner use AI or run my workflow?</summary>
+          <p>No. It combines your entries with fixed planning rules to produce Markdown. The same entries produce the same document. It does not reason about your objective, connect to tools, fetch sources, schedule work, or perform tests.</p>
+        </details>
+        <details>
+          <summary>What makes an acceptance test useful?</summary>
+          <p>Name an observable result and the evidence required to judge it. Instead of "the brief is accurate," require each factual claim to map to an approved source and date. Include a missing-input case and a duplicate-trigger case. A checkbox in this document is a proposed check, not proof that it passed.</p>
+        </details>
+        <details>
+          <summary>Who should own approval?</summary>
+          <p>Use a specific person who can judge the deliverable and stop the process. A template's role label is only a starting point. Name separate approvers where publishing, spending, contacting people, or changing systems needs a different decision-maker. No response is not approval.</p>
+        </details>
+        <details>
+          <summary>Should I paste customer data or credentials?</summary>
+          <p>No credentials are needed. Describe sources and fields instead of pasting raw records. Use redacted examples where possible. Entries are not saved by the planner, but anything you explicitly export can remain in your clipboard, downloads, print queue, or the system where you paste it.</p>
+        </details>
+        <details>
+          <summary>Can I recover a draft after closing or reloading the page?</summary>
+          <p>No. There is no saved history or local persistence. Export a draft you need to retain before leaving. Loading another template or clearing edited fields asks before replacing the current entries.</p>
+        </details>
+        <details>
+          <summary>Why can I not copy, download, or print a specification?</summary>
+          <p>Every required field must contain text before the export controls become available. This is only a completeness check, not a safety review. If the browser denies clipboard access, select the Markdown text or download it. With JavaScript disabled, the initial draft remains selectable and the browser can still print the page.</p>
+        </details>
+        <details>
+          <summary>Does a completed draft mean the workflow is safe to automate?</summary>
+          <p>No. Review contradictory requirements, data access, failure handling, duplicate prevention, and spending limits separately. Run a controlled trial with human review and record actual results. The planner provides no compliance certification, performance benchmark, or estimate of time saved.</p>
+        </details>
+      </section>
+    </div>
+  </article>
+  <CommandPaletteMount />
+</BaseLayout>

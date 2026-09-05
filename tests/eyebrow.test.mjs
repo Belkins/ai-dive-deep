@@ -3,7 +3,14 @@
 // with an injected clock, which no build-day grep of dist/ can do.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { eyebrowLabel, NEW_WINDOW_DAYS } from '../src/lib/eyebrow.ts';
+import { readFileSync } from 'node:fs';
+import ts from 'typescript';
+
+const source = readFileSync(new URL('../src/lib/eyebrow.ts', import.meta.url), 'utf8');
+const { outputText } = ts.transpileModule(source, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const { eyebrowLabel, NEW_WINDOW_DAYS } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 
 // Fixed clock: midnight UTC so day arithmetic below is exact.
 const NOW = Date.parse('2026-08-17T00:00:00Z');

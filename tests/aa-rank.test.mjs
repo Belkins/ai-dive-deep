@@ -5,7 +5,14 @@
 // identical page — until the first capture where the boards diverge.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { rankBy, agenticLeader } from '../src/lib/aa-rank.ts';
+import { readFileSync } from 'node:fs';
+import ts from 'typescript';
+
+const source = readFileSync(new URL('../src/lib/aa-rank.ts', import.meta.url), 'utf8');
+const { outputText } = ts.transpileModule(source, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const { rankBy, agenticLeader } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 
 // Fixture deliberately shaped so broken selectors give different answers:
 // alpha leads intelligence but is UNSCORED on agentic and sits at the array

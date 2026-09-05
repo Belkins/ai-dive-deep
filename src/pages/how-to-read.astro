@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import { CHAPTERS } from '@/lib/chapters';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <BaseLayout title="How to read this book" description="The prologue. What this book is, who it's for, and how to actually use it.">
@@ -39,7 +40,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <h2>The journey, in six parts</h2>
 
     <p>
-      Forty-six chapters, grouped into six parts. You can read straight through. You can also jump anywhere — every chapter stands alone. But there's an arc underneath, and once you see it, the chapters click into place.
+      {CHAPTERS.length} chapters, grouped into six parts. You can read straight through. You can also jump anywhere — every chapter stands alone. But there's an arc underneath, and once you see it, the chapters click into place.
     </p>
 
     <ul>

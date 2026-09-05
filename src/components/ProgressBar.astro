@@ -2,28 +2,114 @@
 interface Props { slug: string; }
 const { slug } = Astro.props;
 ---
-<div id="cc-progress" class="fixed top-14 left-0 right-0 h-0.5 z-30 pointer-events-none">
-  <div id="cc-progress-bar" class="h-full transition-[width] duration-100 ease-out" style="width: 0%; background: rgb(var(--accent));"></div>
+<div id="cc-progress" data-progress-slug={slug} aria-hidden="true" class="fixed top-14 left-0 right-0 h-0.5 z-30 pointer-events-none">
+  <div id="cc-progress-bar" class="h-full transition-[width] duration-100 ease-out motion-reduce:transition-none" style="width: 0%; background: rgb(var(--accent));"></div>
 </div>
 
-<script define:vars={{ slug }}>
-  const bar = document.getElementById('cc-progress-bar');
-  const article = document.querySelector('article.chapter-body');
-  if (bar && article) {
-    const update = () => {
-      const rect = article.getBoundingClientRect();
-      const total = rect.height - window.innerHeight;
-      const scrolled = Math.min(Math.max(-rect.top, 0), total);
-      const pct = total > 0 ? (scrolled / total) * 100 : 0;
-      bar.style.width = pct + '%';
-      try {
-        const data = JSON.parse(localStorage.getItem('cc-progress') || '{}');
-        data[slug] = Math.max(data[slug] || 0, Math.round(pct));
-        localStorage.setItem('cc-progress', JSON.stringify(data));
-      } catch (e) {}
-    };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+<style>
+  :global(.chapter-body h2[id]), :global(.chapter-body h3[id]) { scroll-margin-top: 6rem; }
+</style>
+
+<script>
+  import { CHAPTERS } from '@/lib/chapters';
+  import {
+    calculateReadingProgress, findReadingAnchor, writeReadingProgress,
+    PROGRESS_WRITE_INTERVAL, PROGRESS_STORAGE_KEY, LAST_READ_STORAGE_KEY, PROGRESS_RESET_EVENT,
+    type LastRead,
+  } from '@/lib/reading-progress';
+
+  let activeRoot: HTMLElement | null = null;
+  let dispose: (() => void) | null = null;
+
+  function stopTracking() {
+    dispose?.();
+    dispose = null;
+    activeRoot = null;
   }
+
+  function initProgress() {
+    const root = document.getElementById('cc-progress');
+    if (root && root === activeRoot) return;
+    stopTracking();
+    const slug = root?.dataset.progressSlug;
+    const bar = root?.querySelector<HTMLElement>('#cc-progress-bar');
+    const article = document.querySelector<HTMLElement>('article.chapter-body');
+    if (!root || !slug || !bar || !article || !CHAPTERS.some((chapter) => chapter.slug === slug)) return;
+    activeRoot = root;
+
+    const controller = new AbortController();
+    const { signal } = controller;
+    const headings = Array.from(article.querySelectorAll<HTMLElement>('h2[id], h3[id]'));
+    let frame = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let pending: LastRead | null = null;
+    let current: LastRead | null = null;
+    let furthestPct = 0;
+    let paused = false;
+
+    const cancelWrite = () => {
+      clearTimeout(timer);
+      timer = undefined;
+    };
+    const flush = () => {
+      cancelWrite();
+      if (!paused && pending) writeReadingProgress(pending, furthestPct);
+      pending = null;
+    };
+    const measure = (visit = false) => {
+      const rect = article.getBoundingClientRect();
+      const pct = Math.round(calculateReadingProgress(rect.top, rect.height, window.innerHeight));
+      bar.style.width = `${pct}%`;
+      if (paused || document.visibilityState !== 'visible') return;
+      const anchor = findReadingAnchor(headings.map((heading) => ({ id: heading.id, top: heading.getBoundingClientRect().top })));
+      furthestPct = Math.max(furthestPct, pct);
+      if (visit || !current || current.pct !== pct || current.anchor !== anchor) {
+        current = { slug, pct, anchor, visitedAt: Date.now() };
+        pending = current;
+        if (timer === undefined) timer = setTimeout(flush, PROGRESS_WRITE_INTERVAL);
+      }
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(() => { frame = 0; measure(); });
+    };
+    const resume = () => {
+      if (document.visibilityState === 'visible') { measure(true); flush(); }
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') flush();
+      else resume();
+    };
+    const onReset = () => {
+      // Keep this visit cleared even if footer scrolling or page exit follows reset.
+      paused = true;
+      pending = null;
+      furthestPct = 0;
+      cancelWrite();
+    };
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === null || ((event.key === PROGRESS_STORAGE_KEY || event.key === LAST_READ_STORAGE_KEY) && event.newValue === null)) onReset();
+    };
+
+    window.addEventListener('scroll', schedule, { passive: true, signal });
+    window.addEventListener('resize', schedule, { signal });
+    window.addEventListener('focus', resume, { signal });
+    window.addEventListener('storage', onStorage, { signal });
+    window.addEventListener(PROGRESS_RESET_EVENT, onReset, { signal });
+    document.addEventListener('visibilitychange', onVisibility, { signal });
+    dispose = () => {
+      cancelAnimationFrame(frame);
+      measure();
+      flush();
+      controller.abort();
+    };
+    measure(true);
+    flush();
+  }
+
+  // The bundled module runs once; each ClientRouter page gets its own disposable listeners.
+  document.addEventListener('astro:before-swap', stopTracking);
+  document.addEventListener('astro:page-load', initProgress);
+  window.addEventListener('pagehide', stopTracking);
+  window.addEventListener('pageshow', initProgress);
+  initProgress();
 </script>

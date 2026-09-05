@@ -3,7 +3,7 @@ number: 13
 slug: "13-quickstart"
 title: "Claude Code in 10 Minutes"
 subtitle: "The 10-Minute Quickstart"
-tldr: "Five steps, ten minutes, then you ship. By minute 11 you'll have a code change in flight; by the end of the week you'll be spawning swarms. This is the shortest path from clean machine to working operator."
+tldr: "Install Claude Code, verify the installation, and run one read-only task in a test repo. Allow about ten minutes with an account and terminal ready; authentication or troubleshooting can take longer. Connectors are an optional next step."
 keyConcepts: ["Claude Code", "CLAUDE.md", "MCP", "slash commands", "OAuth"]
 readingMinutes: 6
 video:
@@ -16,7 +16,7 @@ import PullQuote from '@/components/PullQuote.astro';
 import Callout from '@/components/Callout.astro';
 import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
-If you've got 10 minutes and a terminal, you can be running <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm> today. By minute 11 you'll have shipped a code change. By minute 30 you'll have a <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm> and your first slash command. By the end of the week you'll be spawning swarms. This is the shortest path.
+With an account and terminal ready, allow about ten minutes to install <GlossaryTerm term="Claude Code">Claude Code</GlossaryTerm>, create a <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm>, and complete a read-only task. Downloads, authentication, or troubleshooting can take longer. A connector or a code change is not required for the first useful result.
 
 I'm not going to philosophize. The previous chapters told you why this matters. This one gets you on the keyboard.
 
@@ -24,33 +24,48 @@ I'm not going to philosophize. The previous chapters told you why this matters. 
 
 Before you type a single command, confirm four things:
 
-- Node.js 18 or newer. Open your terminal and run `node --version`. If you see v18.x.x or higher, you're fine. If you see "command not found," install Node from nodejs.org first — pick the LTS build, accept the defaults, come back.
+- A supported operating system and internet access. The recommended native installer does not require Node.js. If you choose npm instead, you need Node.js 22 or later; use a supported LTS release for your project tools.
 - A code repo to play in. Any git repo will do. A side project, a fork, an old README-only repo — Claude Code is happiest when it has a directory with files. Don't run it inside `~` or `/`.
 - A Claude plan or an API key. A Pro or Max subscription is the simplest path — Claude Code authenticates against your Anthropic account, no billing setup needed. If you're scripting in CI or automation, you can use an `ANTHROPIC_API_KEY` instead. Console accounts and supported cloud providers also work.
 - A terminal you don't fear. macOS Terminal, iTerm, Warp, Windows Terminal, anything. You don't need to be a CLI wizard. You need to be willing to read what comes back.
 
-Got all four? Good. Onward.
+Before granting access, read [Chapter 9's security guidance](/chapters/09-dont-get-owned/). Start in a test repo without production credentials or customer data, keep permission prompts enabled, and set a budget for any metered API use.
 
 ## Install (60 seconds)
 
-The canonical install is one command:
+Installation guidance verified on 2026-09-05 against [Anthropic's setup documentation](https://code.claude.com/docs/en/setup). Native installation is the recommended path.
+
+On macOS, Linux, or WSL:
 
 ```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+On native Windows, use PowerShell:
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+These commands execute the vendor's installer. Review your organization's software-install policy first. If it requires a package manager, Anthropic also documents Homebrew (`brew install --cask claude-code`), WinGet, and signed Linux package repositories.
+
+The npm alternative requires Node.js 22+ as of Claude Code v2.1.198:
+
+```bash
+node --version
 npm install -g @anthropic-ai/claude-code
-claude --version
 ```
 
-That's it. The npm package pulls down a per-platform native binary — it's not actually a Node program at runtime, npm is just the delivery mechanism. The `claude --version` line is your sanity check; if you see a version number, you're done.
+Older Node versions can produce an `EBADENGINE` warning even when the binary runs. Do not treat that as meeting the documented requirement, and do not use `sudo npm install -g`. npm installs a native binary; Node is not required by that binary at runtime.
 
-If you don't have npm globally, alternatives work fine:
+After any installation method:
 
 ```bash
-pnpm add -g @anthropic-ai/claude-code
-# or
-bun add -g @anthropic-ai/claude-code
+claude --version
+claude doctor
 ```
 
-On macOS you can also use Homebrew (`brew install claude-code`), and Linux has apt/dnf/apk packages from the official repo. Pick whichever your machine already trusts. The binary is the same across all of them.
+The first command should print an installed version; the second reports read-only installation and settings diagnostics. Resolve warnings before continuing. For `command not found`, installation permissions, or login failures, use [Anthropic's troubleshooting guide](https://code.claude.com/docs/en/troubleshooting). Native installations auto-update; package-manager installs need their documented update workflow.
 
 ## First run (90 seconds)
 
@@ -81,7 +96,7 @@ Claude Code reads your repo — directory tree, package files, README, top-level
 
 Never ship the auto-generated version unedited. It's a starting point, not a finish line. Open it, read every line, and add what the auto pass missed:
 
-- Stack. Languages, frameworks, the actual versions (not "Node" — "Node 20, TypeScript 5.4, Next.js 14").
+- Stack. Languages, frameworks, and the actual versions from the repo's manifests and lockfiles, not whatever version you remember installing last year.
 - Conventions. Naming, folder layout, where tests live, how commits are formatted.
 - Do-not-touch zones. Generated files, vendored dependencies, migrations that have already shipped.
 - Lint and test commands. The exact commands. `pnpm lint`, `pnpm test`, `pnpm typecheck` — written out so Claude can run them itself.
@@ -115,7 +130,7 @@ Every Edit, Write, and Bash call asks for permission by default. You see what Cl
 Two principles:
 
 - Read everything before you approve it. Especially shell commands. A shell command can do anything; a file edit can only do what's in the diff.
-- Never run `--dangerously-skip-permissions` until you understand exactly what's about to happen. That flag turns off the gate. It's useful for sandboxed swarm work where the agent is sealed inside a container or a tmpfs. It is the wrong default for your laptop. More on this in [Chapter 15](/chapters/15-permissions/).
+- Keep `--dangerously-skip-permissions` off for this quickstart. It removes the approval gate; a temporary folder or tmpfs is not a security boundary. Any later use needs a disposable environment with explicitly restricted filesystem, credentials, and network access. More on this in [Chapter 15](/chapters/15-permissions/).
 
 ## The five slash commands you'll use today
 
@@ -129,11 +144,11 @@ Memorize these five before anything else:
 
 Everything else — `/model`, `/agents`, `/mcp`, `/resume`, `/review` — you'll learn over the next week. These five are enough to operate.
 
-## Adding your first MCP server (2 minutes)
+## Adding your first MCP server (optional)
 
 <GlossaryTerm term="MCP">MCP</GlossaryTerm> — Model Context Protocol — is how Claude Code talks to outside systems. Filesystem, GitHub, Slack, your database, your Notion. Each one is a server you wire up once and then call by name.
 
-The fastest hello-world is the filesystem server. Create a file called `.mcp.json` at the root of your repo:
+Claude Code can already read your repo without MCP. Only add a server when it supplies access you actually need. For a local protocol exercise, the filesystem server below requires Node/npm separately; review its package and restrict it to a disposable test folder. Create a file called `.mcp.json` at the root of your repo:
 
 ```json
 {
@@ -150,7 +165,7 @@ Replace `/path/to/folder` with a directory you want Claude to be able to inspect
 
 Inside Claude Code, type `/mcp`. You should see filesystem listed and connected. Now ask Claude: "List the files in the folder we just gave you access to." If you get back a real listing, you're done. If you don't, check the path is absolute and the folder exists.
 
-This same pattern — one entry in `.mcp.json`, restart, `/mcp` to verify — works for every MCP server you'll ever install. Belkins runs HubSpot and Slack through MCP. The Newsletter pulls Substack stats and Ahrefs through MCP. Folderly's email infra is wired up the same way. The protocol is the same; only the server changes.
+This is a local stdio example, not a universal server configuration. Remote servers can require HTTP transport, OAuth, and separate scopes. Follow the server's installation instructions and [Chapter 12](/chapters/12-connectors-mcp/); never assume a connection grants only read access.
 
 <ScreenshotPlaceholder
   id="13-quickstart-2"
@@ -165,7 +180,7 @@ If you followed along, you should now have:
 - Claude Code installed and `claude --version` returning a number.
 - Authenticated against your Anthropic plan or API key.
 - A `CLAUDE.md` at the root of your repo, edited and committed.
-- One MCP server configured in `.mcp.json` and visible under `/mcp`.
+- `claude doctor` checked and installation warnings resolved. MCP can wait until a task needs it.
 - One real task — a summary, a comment, a small refactor — completed end to end with the approval gate working.
 
 If any of those five is shaky, fix it now before you turn the page. The rest of the book assumes the foundation is solid.

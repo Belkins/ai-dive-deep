@@ -3,7 +3,7 @@ number: 25
 slug: "25-evals-or-hope"
 title: "Evals — Smoke, Regression, Golden"
 subtitle: "Evals or Hope, Pick One"
-tldr: "A skill that ran flawlessly for six weeks shipped a $0-pipeline canvas to my COO and stayed broken for nine days because no eval was watching. An eval isn't a framework, it's three lines of code that run thirty minutes before the thing you actually care about. Build one this afternoon or pick hope."
+tldr: "A skill shipped a $0-pipeline canvas to my COO and stayed broken for nine days because no eval was watching. Start with a small artifact check, then gate every delivery on validated inputs and output. An earlier dry run is useful warning, not permission to publish a later unchecked result."
 keyConcepts: ["Eval", "Skill", "Cron", "silent failure"]
 readingMinutes: 9
 ---
@@ -41,9 +41,9 @@ def eval_friday_wrapup(canvas_text: str) -> tuple[bool, str]:
     return True, "ok"
 ```
 
-That's the eval that would have caught my nine-day failure on day zero. Three lines. No framework. No vendor. The function takes the artifact the skill produces and asks one structural question: does this look like a working week?
+That heuristic would flag the described $0 canvas, but it is not a correctness test. A genuinely empty pipeline can be valid; a broken connector can also produce convincing nonzero prose. Check source status and structured counts before trusting the text. The runnable example below makes that distinction.
 
-The mistake operators make is treating evals like model evaluation — accuracy on a labeled test set, BLEU scores, factuality benchmarks. That's research-team work. You're not evaluating the model. You're evaluating the workflow. The model can be perfectly fine and the workflow can still be broken because something upstream changed shape. Stage rename. API rate limit. Empty array where there should have been twelve rows. Connector returned an auth error and the skill quietly summarized "no recent activity" instead of escalating.
+You are evaluating the workflow, not only the model. Start with source health and artifact checks; add labeled scenarios and factuality checks when the job needs them. Internal reports need correct numbers too. The model can be perfectly fine and the workflow can still be broken because something upstream changed shape: a stage rename, an API rate limit, or an auth error quietly summarized as "no recent activity."
 
 An eval is a smoke detector for the artifact. Not for the model.
 
@@ -59,17 +59,17 @@ Four shapes cover roughly 90% of what shipped skills actually need. Building one
 
 **Adversarial evals** assume the upstream world is hostile. Stage names change. APIs return 503. Connectors decide to require new scopes. Empty arrays appear. The adversarial eval feeds your skill the worst plausible inputs — empty result sets, malformed dates, surprise null fields — and confirms it fails loudly instead of producing graceful nonsense. Most silent failures live in the gap between "API returned nothing" and "model wrote graceful prose around the nothing."
 
-You don't need all four on day one. Build the smoke eval first. It catches half of all failures and takes thirty minutes.
+You don't need all four on day one. Build the smoke eval first, then add fixtures for the failures your workflow actually faces. There is no measured coverage percentage promised by this starter.
 
 ## Running evals on cron
 
 Here's the second <GlossaryTerm term="Cron">cron</GlossaryTerm> job nobody talks about — the one that runs the eval, not the workflow.
 
-The friday-wrapup skill fires at 5:00 PM ET on Fridays. The eval that watches it now fires at 4:30 PM ET on Fridays. Same skill, same connectors, same prompt — but the artifact gets piped through the eval function instead of into the leadership Slack canvas. If the eval returns `True`, nothing happens; the real run will fire thirty minutes later and ship for real. If the eval returns `False`, I get a Telegram ping with the failure reason and a link to the dry-run output. I look at it for sixty seconds, decide whether to suppress the 5 PM run or fix the upstream issue, and move on with my Friday.
+The earlier setup ran a dry run at 4:30 PM ET before a 5:00 PM Friday delivery. That is useful early warning: a failed check gives the owner time to fix an upstream issue. But a passing dry run does not validate another model response or a changed source thirty minutes later.
 
-This pattern works for every scheduled skill — see [Chapter 7](/chapters/07-cron/) for the cron syntax itself. The dry run + 30-minute lead is the eval's actual job. The eval's not there to be smarter than the skill. It's there to give you a window to intervene before the real artifact lands in front of someone who matters.
+The required delivery sequence is **fetch complete inputs, generate once, validate that exact artifact, then publish those same bytes**. Failed reads, malformed output, or failed checks block publication and notify the owner. If you regenerate, validate again. Keep the evaluator and approved baseline outside the producing agent's write permissions. [Chapter 7](/chapters/07-cron/) covers cursor recovery and duplicate delivery; an eval does not replace those controls.
 
-The cost is negligible. Tokens for a dry run cost a few cents. The cost of a $0-pipeline canvas in front of your COO is harder to put on a spreadsheet but I assure you it's more than a few cents.
+A second model run has a cost; measure it on your workload. The local checks below require no model calls. The dry run is optional advance notice, while the delivery gate is mandatory.
 
 ## The eval failure budget
 
@@ -81,72 +81,102 @@ The eval is also a skill. It's not divine. It can drift. It can be wrong. The th
 
 <PullQuote>A skill without an eval is a Slack canvas waiting to gaslight your COO.</PullQuote>
 
-## Three receipts, one thesis
+## Three evidence types, not one dataset
 
-The chapter's been "evals or hope, pick one" since I wrote it. By May 2026 the thesis has three independent confirmations and they don't agree on the failure mode — that's what makes it structural, not specific.
+These sources answer different questions. They support taking evaluation seriously, but they are not three equivalent measurements of silent production failures.
 
-The first is mine. OPS-204, the friday-wrapup canvas, nine days of $0 pipeline in front of leadership because a HubSpot stage rename slipped past every check that wasn't there. Workflow drift, content-level. The second was Anthropic's: an analysis of roughly 81,000 user-reported issues across the platform surfaced a long tail of agents that returned "looks fine" outputs while quietly misbehaving — the same shape as my friday-wrapup, just at population scale. The third is the one that should worry anyone leaning on public benchmarks. On April 12, 2026, Berkeley's RDI lab published a paper showing they could reward-hack **eight major agent benchmarks** — SWE-bench Verified, SWE-bench Pro, OSWorld, GAIA, WebArena, Terminal-Bench, FieldWorkArena, and CAR-bench — by training agents to detect the test environment and optimize for the score, not the task. The agents got better at the benchmark while getting no better at the underlying work.
+**Operator account:** the friday-wrapup incident described above is my account of workflow drift, not an independently measured failure rate.
 
-Three different angles. One conclusion. If you're not running an eval that matches your actual job — your stage filter, your customer's actual canvas, your held-out scenario — you don't have an evaluation problem; you have hope. See the [Berkeley RDI receipt in /research-notes](/research-notes/) for the full breakdown.
+**Qualitative research:** [Anthropic's study](https://www.anthropic.com/features/81k-interviews) interviewed **80,508 people across 159 countries and 70 languages** about their experiences, hopes, and concerns around AI. It was not an incident database or a study of 81,000 reported agent failures. Reports of unreliability matter, but they do not establish the frequency or mechanism of my pipeline bug.
+
+**Benchmark security research:** [Berkeley RDI's April 2026 report](https://rdi.berkeley.edu/blog/trustworthy-benchmarks-cont/) describes an automated scanning agent finding exploitable evaluation infrastructure in eight benchmarks. That demonstrates weaknesses in the tested evaluators, not that every published score is fraudulent or that models were trained into greater underlying capability.
+
+Primary sources checked on 2026-09-05. My operator inference is to test your own stage filters, source failures, and held-out scenarios, and to protect the evaluator from the agent it evaluates. The studies do not supply a production failure percentage for your workflow.
 
 ## The 30-minute starter eval
 
-Open a file. Call it `eval_yourskill.py`. Paste this. Edit the conditions for your skill. Wire it to a cron 30 minutes before the real one fires. Done.
+This is an executable, standard-library artifact checker, not a complete scheduler or connector. Put it in `eval_yourskill.py`. Your trusted connector adapter must supply `source.status` and `source.rows` after fetching every page; do not ask the model to invent its own source-health evidence. The model supplies only the `canvas` text.
 
 ```python
+import argparse
 import json
 from pathlib import Path
-from datetime import datetime
-import requests
-
-def run_skill_dry() -> dict:
-    """Re-run your skill with the same prompt and inputs, capture the output."""
-    # however your skill gets invoked — claude --print, an API call, a Cowork job
-    output = your_skill_runner()
-    return output
+import sys
 
 def smoke(output: dict) -> tuple[bool, str]:
+    source = output.get("source")
+    if not isinstance(source, dict) or source.get("status") != "ok":
+        return False, "source read failed or completeness is unverified"
+    rows = source.get("rows")
+    if type(rows) is not int or rows < 0:
+        return False, "source row count must be a non-negative integer"
     text = output.get("canvas", "")
+    if not isinstance(text, str):
+        return False, "canvas must be text"
     if len(text) < 200:
         return False, f"canvas too short: {len(text)} chars"
     required = ["Pipeline", "Deal Motion", "Executive Summary"]
     missing = [s for s in required if s not in text]
     if missing:
         return False, f"missing sections: {missing}"
-    if "$0" in text and "pipeline" in text.lower():
-        return False, "pipeline section reports $0 — likely upstream filter drift"
     return True, "ok"
 
-def regression(output: dict, baseline_path: str) -> tuple[bool, str]:
-    text = output.get("canvas", "")
-    baseline = Path(baseline_path).read_text() if Path(baseline_path).exists() else ""
-    if not baseline:
-        Path(baseline_path).write_text(text)
-        return True, "no baseline yet, stored"
-    if len(text) < 0.4 * len(baseline):
-        return False, f"canvas length dropped {1 - len(text)/len(baseline):.0%} vs baseline"
+def regression(output: dict, baseline: dict) -> tuple[bool, str]:
+    if len(output["canvas"]) < 0.4 * len(baseline["canvas"]):
+        return False, "canvas length dropped more than 60%; review required"
+    if output["source"]["rows"] < 0.1 * baseline["source"]["rows"]:
+        return False, "source row count dropped more than 90%; review required"
     return True, "ok"
 
-def page_telegram(reason: str):
-    requests.post(
-        "https://api.telegram.org/bot$TOKEN/sendMessage",
-        json={"chat_id": "YOUR_CHAT_ID", "text": f"[eval failed] {reason}"},
-    )
+def read_output(path: str) -> dict:
+    output = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(output, dict):
+        raise ValueError("artifact must be a JSON object")
+    ok, reason = smoke(output)
+    if not ok:
+        raise ValueError(reason)
+    return output
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("artifact")
+    parser.add_argument("baseline", help="human-reviewed JSON artifact")
+    args = parser.parse_args()
+    try:
+        output = read_output(args.artifact)
+        baseline = read_output(args.baseline)
+        ok, reason = regression(output, baseline)
+        if not ok:
+            raise ValueError(reason)
+    except (OSError, ValueError) as error:
+        print(f"BLOCKED: {error}", file=sys.stderr)
+        return 1
+    print("PASS: artifact checks passed; no delivery attempted")
+    return 0
 
 if __name__ == "__main__":
-    output = run_skill_dry()
-    for name, check in [("smoke", smoke), ("regression", lambda o: regression(o, "/tmp/wrapup.txt"))]:
-        ok, reason = check(output)
-        if not ok:
-            page_telegram(f"{name}: {reason}")
-            exit(1)
-    print(f"[{datetime.now().isoformat()}] all evals passed")
+    sys.exit(main())
 ```
 
-That's the whole pattern. No framework. No vendor. Forty lines including imports. Run it on cron 30 minutes before the production skill fires. If it pages you, look. If it doesn't, the artifact will land and you can keep eating dinner.
+Start with this **synthetic fixture**, not a production receipt, in `candidate.json`. Review it and create a separate `approved-baseline.json` with the same structure for the first local test:
+
+```json
+{
+  "source": { "status": "ok", "rows": 0 },
+  "canvas": "Pipeline: $0 in this synthetic empty-week fixture. Deal Motion: no changes were returned after a complete source read. Executive Summary: a quiet test window, not a connector failure. The operator reviewed this example before accepting it as a baseline."
+}
+```
+
+```bash
+python3 eval_yourskill.py candidate.json approved-baseline.json
+```
+
+A passing fixture prints `PASS` and exits 0. A missing baseline, failed source, malformed artifact, or regression exits nonzero and must block delivery. A valid zero-row result can pass against a reviewed quiet baseline; a sudden drop from a busy baseline requires review. The checker never creates or replaces its baseline, contacts a service, or publishes anything.
+
+These thresholds are illustrative, not measured guarantees. Section presence does not prove that the prose matches the source totals: add numeric reconciliation and held-out domain cases before production. Your scheduler must route nonzero exits to its failure channel and publish only the exact checked artifact after success, with the cursor and delivery rules from Chapter 7. Do not regenerate between checking and sending.
 
 If your skill writes to a <GlossaryTerm term="CLAUDE.md">CLAUDE.md</GlossaryTerm>-driven workflow or uses an <GlossaryTerm term="MCP">MCP</GlossaryTerm> connector that talks to HubSpot, Stripe, or Slack — anything covered in [Chapter 12](/chapters/12-connectors-mcp/) — the same eval shape applies. Smoke test the artifact, regression test against yesterday, page yourself when the world drifts.
 
 ## The closer
 
-The skill is back. The eval is named friday-wrapup-eval and runs at 4:30 PM, thirty minutes before the real one fires. It checks for $0 pipeline, missing sections, and stage-name drift. It has fired twice. Both times, on a Friday afternoon, in time. The COO doesn't read the eval. She reads the canvas. That's how you know it's working.
+The operator reads the canvas, not the eval. Keep the early warning if it buys useful repair time, but put the blocking check on the artifact that actually ships. A quiet result, a failed source, and a missing baseline must not all look like success.

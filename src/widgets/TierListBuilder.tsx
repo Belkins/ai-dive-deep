@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { groupPlacements, restorePlacements, TIER_ORDER } from '@/lib/tier-list';
+import type { Tier } from '@/lib/tier-list';
 
-type Tier = 'S' | 'A' | 'B' | 'C' | 'D' | 'F' | 'pool';
-const TIER_ORDER: Tier[] = ['S', 'A', 'B', 'C', 'D', 'F', 'pool'];
 const TIER_DESC: Record<Tier, string> = {
   S: 'Run my life — remove this and three things break by Wednesday',
   A: 'Open every day',
@@ -65,6 +65,7 @@ const STORAGE_KEY = 'cc-tier-list';
 
 export default function TierListBuilder() {
   const [placements, setPlacements] = useState<Record<string, Tier>>(DEFAULT_PLACEMENTS);
+  const [hydrated, setHydrated] = useState(false);
   const [draggingTool, setDraggingTool] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied'>('idle');
@@ -74,22 +75,18 @@ export default function TierListBuilder() {
   // Hydrate from URL hash or localStorage
   useEffect(() => {
     setCanNativeShare(typeof navigator !== 'undefined' && typeof navigator.share === 'function');
-    try {
-      if (window.location.hash.startsWith('#tl=')) {
-        const decoded = JSON.parse(atob(decodeURIComponent(window.location.hash.slice(4))));
-        setPlacements({ ...DEFAULT_PLACEMENTS, ...decoded });
-        return;
-      }
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setPlacements({ ...DEFAULT_PLACEMENTS, ...JSON.parse(raw) });
-    } catch {}
+    let stored: string | null = null;
+    try { stored = localStorage.getItem(STORAGE_KEY); } catch {}
+    setPlacements(restorePlacements(window.location.hash, stored, DEFAULT_PLACEMENTS));
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(placements));
     } catch {}
-  }, [placements]);
+  }, [placements, hydrated]);
 
   // Close share popover on outside click
   useEffect(() => {
@@ -108,11 +105,7 @@ export default function TierListBuilder() {
     };
   }, [shareOpen]);
 
-  const byTier = useMemo(() => {
-    const out: Record<Tier, string[]> = { S: [], A: [], B: [], C: [], D: [], F: [], pool: [] };
-    for (const tool of ALL_TOOLS) out[placements[tool] ?? 'pool'].push(tool);
-    return out;
-  }, [placements]);
+  const byTier = useMemo(() => groupPlacements(placements, ALL_TOOLS), [placements]);
 
   // Share URLs route through the OG sidecar (Vercel project ai-dive-deep-og).
   // The sidecar serves an HTML page with a dynamic og:image rendered from the

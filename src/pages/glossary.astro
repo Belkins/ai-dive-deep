@@ -20,7 +20,7 @@ for (const e of entries) {
 const navItems = groups.map((g) => ({ id: `letter-${g.letter === '#' ? 'num' : g.letter}`, label: g.letter }));
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
-const GLOSSARY_URL = `${SITE}/glossary`;
+const GLOSSARY_URL = `${SITE}/glossary/`;
 const definedTermSetJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'DefinedTermSet',
@@ -66,7 +66,7 @@ const definedTermSetJsonLd = {
                       <div class="mt-3 text-sm flex items-center gap-2 flex-wrap">
                         <span class="text-xs uppercase tracking-wider" style="color: rgb(var(--muted))">Related</span>
                         {e.related.map((r) => (
-                          <a href={`#${r}`} class="pill no-underline">{r}</a>
+                          <a href={`#${encodeURIComponent(r)}`} class="pill no-underline">{r}</a>
                         ))}
                       </div>
                     )}
