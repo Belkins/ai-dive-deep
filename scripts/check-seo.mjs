@@ -106,6 +106,28 @@ function validateHtml(file) {
   const html = readFileSync(file, 'utf8');
   const head = html.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i)?.[1] ?? '';
 
+  if (routeFor(file) === '/the-bill/') {
+    const robots = metaContent(head, 'name', 'robots');
+    if (robots.length !== 1 || !robots[0].toLowerCase().split(/[\s,]+/).includes('noindex')) {
+      fail(displayFile, 'unfinished invoice draft must emit one robots meta tag containing noindex');
+    }
+  }
+  for (const match of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
+    const href = attributes(match[1]).href;
+    if (!href) continue;
+    let target;
+    try {
+      target = new URL(href, `${EXPECTED_ORIGIN}${routeFor(file)}`);
+    } catch {
+      continue; // Malformed links are handled by the rendered-link checker.
+    }
+    if (routeFor(file) !== '/the-bill/' && target.origin === EXPECTED_ORIGIN
+      && target.pathname.replace(/\/$/, '') === '/the-bill'
+      && !/\bdraft\b/i.test(textContent(match[2]))) {
+      fail(displayFile, 'links to the unfinished invoice must label it as a draft');
+    }
+  }
+
   const titles = [...head.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title>/gi)].map((match) => textContent(match[1]));
   if (titles.length !== 1) fail(displayFile, `expected one title, found ${titles.length}`);
   else validateText(displayFile, 'title', titles[0], { allowLong: true });
@@ -259,6 +281,7 @@ function validateSitemaps() {
       }
 
       const isRadar = path === '/radar' || /^\/radar\/\d{4}-\d{2}-\d{2}$/.test(path);
+      if (path === '/the-bill') fail(relative('.', file), 'unfinished invoice draft must stay out of the sitemap');
       if (!isRadar && lastmod) fail(relative('.', file), `${path} has a non-authoritative lastmod`);
       if (isRadar && !lastmod) fail(relative('.', file), `${path} is missing its authoritative lastmod`);
       if (!lastmod) continue;

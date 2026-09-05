@@ -63,7 +63,7 @@ const faq = {
       Claude Code vs Codex is the comparison every leaderboard thread frames as a choice. It isn't one. I run both against the same repos — Codex opened PR #4471 from a Sentry trace at 3:04 AM; Claude Code is where I reviewed and merged it before my coffee went cold. This page settles the question per job, with the bills and the failure stories attached.
     </p>
     <p class="mt-2 text-sm text-muted">
-      The shift contract is <a href="/chapters/35-codex-and-cc/">Ch 35</a>, the loop and fence discipline is <a href="/chapters/42-codex-on-a-loop/">Ch 42</a>, the 91,874-line deletion receipt is <a href="/chapters/43-codex-saviour/">Ch 43</a>, the cost methodology is <a href="/chapters/29-cost-economics/">Ch 29</a> and <a href="/the-bill/">/the-bill</a>.
+      The shift contract is <a href="/chapters/35-codex-and-cc/">Ch 35</a>, the loop and fence discipline is <a href="/chapters/42-codex-on-a-loop/">Ch 42</a>, the 91,874-line deletion receipt is <a href="/chapters/43-codex-saviour/">Ch 43</a>, the cost methodology is <a href="/chapters/29-cost-economics/">Ch 29</a>.
     </p>
   </section>
 
@@ -141,7 +141,7 @@ const faq = {
           <h2 class="font-display text-3xl mb-4">What do they actually cost to run?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>The seat math first, because it's the boring part: both land in the same shape. A hosted Codex seat ran $200-300 per developer per month as of early 2026, and the Claude Code seat sits in the same range — verify both on the vendors' pricing pages before you commit a line item, those numbers move quarterly and anti-bot walls make them annoying to pin from a script.</p>
-            <p>The usage is where the real bills live, and the corpus has three receipts. My night-shift Codex on one repo spent roughly $180 in API tokens in a month, against a workload of about 30 PRs and 60 Sentry triages (<a href="/chapters/35-codex-and-cc/">Ch 35</a>). One agentic loop fix is about 30 round-trips of context — 1 to 2 million tokens per landed fix (<a href="/the-bill/">/the-bill</a>). And Claude Code across the whole portfolio burns between 3 and 10 billion tokens a month (<a href="/chapters/01-killed-my-tabs/">Ch 1</a>) — that's the workforce line, not a chat habit.</p>
+            <p>The corpus includes two first-person usage accounts. My night-shift Codex on one repo spent roughly $180 in API tokens in a month, against a workload of about 30 PRs and 60 Sentry triages (<a href="/chapters/35-codex-and-cc/">Ch 35</a>). And Claude Code across the whole portfolio burns between 3 and 10 billion tokens a month (<a href="/chapters/01-killed-my-tabs/">Ch 1</a>) — that's the workforce line, not a chat habit.</p>
             <p>The number to respect: the 91,874-line Codex run was not free. It burned <strong>46% of one week's usage</strong> — the cost is part of the receipt, and <a href="/chapters/43-codex-saviour/">Ch 43</a> prints it next to the deletion count instead of hiding it. Big autonomy has a meter on it.</p>
             <Callout type="warn">
               Don't let the seat math drive the architecture. The reason to run both isn't cost — it's that the night shift and the day shift are different jobs. If your Sentry never fires at 3 AM, you don't need Codex. And if you do run both, the second seat is the cheap one: same repo, same MCPs, the marginal cost is the model bill, not the tooling — <a href="/chapters/35-codex-and-cc/">Ch 35</a>.
@@ -199,7 +199,7 @@ const faq = {
             ))}
           </div>
           <p class="mt-8 text-sm text-muted">
-            Related: <a href="/claude-code-vs-cursor/">Claude Code vs Cursor</a> · <a href="/claude-code-best-practices/">Claude Code best practices</a> · <a href="/tier-list/">The tier list</a> · <a href="/fable-5/vs-gpt-5-5/">Fable 5 vs GPT 5.5</a> · <a href="/the-bill/">The bill</a> · <a href="/questions/">Questions people ask me</a> · <a href="/chapters/35-codex-and-cc/">Ch 35 — Codex or Claude Code, or both</a> · <a href="/chapters/42-codex-on-a-loop/">Ch 42 — Codex on a loop</a> · <a href="/chapters/43-codex-saviour/">Ch 43 — Codex as saviour</a>
+            Related: <a href="/claude-code-vs-cursor/">Claude Code vs Cursor</a> · <a href="/claude-code-best-practices/">Claude Code best practices</a> · <a href="/tier-list/">The tier list</a> · <a href="/fable-5/vs-gpt-5-5/">Fable 5 vs GPT 5.5</a> · <a href="/the-bill/">The bill (unfinished draft)</a> · <a href="/questions/">Questions people ask me</a> · <a href="/chapters/35-codex-and-cc/">Ch 35 — Codex or Claude Code, or both</a> · <a href="/chapters/42-codex-on-a-loop/">Ch 42 — Codex on a loop</a> · <a href="/chapters/43-codex-saviour/">Ch 43 — Codex as saviour</a>
           </p>
         </div>
 

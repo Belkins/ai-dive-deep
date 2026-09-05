@@ -4,10 +4,9 @@
 datePublished = author date of the commit that added the chapter MDX
 dateModified  = author date of the last commit touching it
 
-Runs in the prebuild chain. In CI the checkout is shallow (fetch-depth 1),
-so git history would produce lies — the script detects that and keeps the
-committed JSON untouched. Locally (full clone) it refreshes on every build,
-so dateModified can never go stale.
+Runs in the prebuild chain with full history in local, CI and deployment
+checkouts. Incomplete or unavailable history fails the build rather than
+silently publishing stale committed dates. Build time is never a date source.
 """
 import json
 import subprocess
@@ -28,11 +27,15 @@ def git(*args: str) -> str:
 def main() -> int:
     try:
         if git("rev-parse", "--is-shallow-repository") == "true":
-            print("chapter-dates: shallow clone — keeping committed JSON")
-            return 0
+            print(
+                "chapter-dates: full git history required; shallow checkout detected. "
+                "Use actions/checkout fetch-depth: 0 or git fetch --unshallow.",
+                file=sys.stderr,
+            )
+            return 1
     except subprocess.CalledProcessError:
-        print("chapter-dates: not a git repo — keeping committed JSON")
-        return 0
+        print("chapter-dates: git history unavailable; build from a full checkout.", file=sys.stderr)
+        return 1
 
     dates: dict[str, dict[str, str]] = {}
     for mdx in sorted(CHAPTERS_DIR.glob("*.mdx")):
