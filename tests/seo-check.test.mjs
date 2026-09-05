@@ -18,6 +18,8 @@ function html({
   title = 'Null safety and undefined behavior',
   description = 'Use __init__ and <repo>/.mcp.json safely while preserving ~/.claude/skills/ paths.',
   canonical,
+  robots,
+  body = '',
 } = {}) {
   const canonicalUrl = canonical ?? `https://dive.vladyslavpodoliako.com${route}`;
   const encodedDescription = escapeAttribute(description);
@@ -27,6 +29,7 @@ function html({
     <meta name="description" content="${encodedDescription}">
     <meta property="og:description" content="${encodedDescription}">
     <meta name="twitter:description" content="${encodedDescription}">
+    ${robots === undefined ? '' : `<meta name="robots" content="${escapeAttribute(robots)}">`}
     <link rel="canonical" href="${encodedCanonical}">
     <script type="application/ld+json">${JSON.stringify({
       '@context': 'https://schema.org',
@@ -35,13 +38,13 @@ function html({
       description,
       url: canonicalUrl,
     })}</script>
-  </head><body><h1>${title}</h1></body></html>`;
+  </head><body><h1>${title}</h1>${body}</body></html>`;
 }
 
-function fixture({ sitemapIndex, sitemapSet, pageHtml = html() }) {
+function fixture({ sitemapIndex, sitemapSet, pageHtml = html(), page = 'null-safety' }) {
   const root = mkdtempSync(join(tmpdir(), 'dive-seo-check-'));
   const dist = join(root, 'dist');
-  const pageDir = join(dist, 'null-safety');
+  const pageDir = join(dist, page);
   mkdirSync(pageDir, { recursive: true });
   writeFileSync(join(pageDir, 'index.html'), pageHtml);
   if (sitemapIndex !== undefined) writeFileSync(join(dist, 'sitemap-index.xml'), sitemapIndex);
@@ -219,5 +222,57 @@ test('SEO checker counts Unicode code points consistently', () => {
     assert.equal(result.status, 0, result.stderr);
   } finally {
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('the public-review invoice draft requires noindex in rendered HTML', () => {
+  for (const robots of [undefined, 'index, follow', 'noindex, nofollow']) {
+    const root = fixture({
+      sitemapIndex: validIndex, sitemapSet: validSet, page: 'the-bill',
+      pageHtml: html({
+        route: '/the-bill/', title: 'The Bill (Draft)', robots,
+        body: '<a href="#receipt">The receipt</a>',
+      }),
+    });
+    try {
+      const result = run(root);
+      assert.equal(result.status, robots === 'noindex, nofollow' ? 0 : 1, result.stderr);
+      if (result.status !== 0) assert.match(result.stderr, /invoice draft must emit.*noindex/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});
+
+test('the invoice draft cannot re-enter the sitemap even when it has noindex', () => {
+  const root = fixture({
+    sitemapIndex: validIndex,
+    sitemapSet: validSet.replace('/null-safety/', '/the-bill/'),
+    page: 'the-bill', pageHtml: html({ route: '/the-bill/', robots: 'noindex, nofollow' }),
+  });
+  try {
+    const result = run(root);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /invoice draft must stay out of the sitemap/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('rendered incoming invoice links must identify the draft, including absolute URLs and fragments', () => {
+  for (const href of ['/the-bill/', '/the-bill#receipt', '../the-bill/', 'https://dive.vladyslavpodoliako.com/the-bill/']) {
+    for (const label of ['The bill - live invoice math', 'The bill (unfinished draft)']) {
+      const root = fixture({
+        sitemapIndex: validIndex, sitemapSet: validSet,
+        pageHtml: html({ body: `<a href="${href}">${label}</a>` }),
+      });
+      try {
+        const result = run(root);
+        assert.equal(result.status, label.includes('draft') ? 0 : 1, result.stderr);
+        if (result.status !== 0) assert.match(result.stderr, /invoice must label it as a draft/);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    }
   }
 });

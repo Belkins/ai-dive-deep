@@ -144,7 +144,7 @@ const faq = {
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>The pricing page shows two numbers; the invoice has four — input, output, cache write, cache read. The 10x gap between a cache read and fresh input is the entire game, and it's governed by a contract: the cached prefix must not change between calls. Treat your system prompt as an append-only log. I broke that contract with a 38-line CLAUDE.md edit and the weekly bill went from $1,108 to $4,312 with zero workload change. The fix took 12 minutes. Knowing the fix existed took six months — that's <a href="/chapters/29-cost-economics/">Ch 29</a>, so you skip the six months.</p>
             <p>Three levers after caching. Watch the scorecard — cache read ratio north of 90% means the contract is holding (mine runs 98.1%), and write amortization under ~3× means you're paying the cache premium for a discount you're not collecting. Batch what can wait — the Batch API runs the same model at 50% off within 24 hours, which turned a $600/week line item into $300. Route by task — cheap models for triage, the default tier for the working middle, the top model only when a wrong answer costs more than the run. The three-line router cut my bill roughly 30% the week it shipped.</p>
-            <p>And the rule that survives every model launch: <strong>the price of a model is not the price of a task</strong>. A model that one-shots what the old one needed three turns and a retry to finish can be cheaper per job at double the per-token rate. Decide on the total-billed-per-finished-task column, never on $/Mtok. Full math and the live numbers: <a href="/the-bill/">/the-bill</a>.</p>
+            <p>And the rule that survives every model launch: <strong>the price of a model is not the price of a task</strong>. A model that one-shots what the old one needed three turns and a retry to finish can be cheaper per job at double the per-token rate. Decide on the total-billed-per-finished-task column, never on $/Mtok. The cost-per-task methodology is in <a href="/chapters/29-cost-economics/#the-price-of-a-model-is-not-the-price-of-a-task">Ch 29</a>.</p>
           </div>
         </div>
 
@@ -192,7 +192,7 @@ const faq = {
             ))}
           </div>
           <p class="mt-8 text-sm text-muted">
-            Related: <a href="/learn/">Start here if you're new</a> · <a href="/claude-md-rules/">CLAUDE.md rules</a> · <a href="/swarms/">Swarms</a> · <a href="/the-bill/">The bill</a> · <a href="/tier-list/">The tier list</a> · <a href="/cheat-sheet/">The cheat sheet</a> · <a href="/fable-5/">Claude Fable 5</a> · <a href="/chapters/13-quickstart/">Ch 13 — Claude Code in 10 minutes</a>
+            Related: <a href="/learn/">Start here if you're new</a> · <a href="/claude-md-rules/">CLAUDE.md rules</a> · <a href="/swarms/">Swarms</a> · <a href="/the-bill/">The bill (unfinished draft)</a> · <a href="/tier-list/">The tier list</a> · <a href="/cheat-sheet/">The cheat sheet</a> · <a href="/fable-5/">Claude Fable 5</a> · <a href="/chapters/13-quickstart/">Ch 13 — Claude Code in 10 minutes</a>
           </p>
         </div>
 
