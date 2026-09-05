@@ -23,9 +23,7 @@ export const WORKFLOW_FIELDS: ReadonlyArray<{
   { key: 'acceptanceTests', label: 'Acceptance tests', rows: 4, maxLength: 4000, placeholder: 'One observable pass/fail check per line, including a failure case.' },
 ];
 
-export const WORKFLOW_TEMPLATES: ReadonlyArray<{
-  id: string; name: string; draft: Readonly<WorkflowDraft>;
-}> = [
+export const WORKFLOW_TEMPLATES = [
   {
     id: 'weekly-research-brief', name: 'Weekly research brief',
     draft: {
@@ -74,7 +72,67 @@ export const WORKFLOW_TEMPLATES: ReadonlyArray<{
       acceptanceTests: 'Every audience record is checked against the supplied suppression snapshot; any match blocks approval\nDuplicate record IDs and missing required personalization values are listed as exceptions\nEvery offer and factual claim matches approved evidence\nA stale or missing suppression snapshot returns hold, not pass\nUnknown checks remain unknown and prevent a launch recommendation\nNo contacts are enrolled and no messages are sent during the draft trial',
     },
   },
-];
+  {
+    id: 'customer-success-escalation', name: 'Customer success escalation',
+    draft: {
+      objective: 'Prepare a redacted escalation packet and unsent response from cleared ticket evidence, without changing account access or promising a resolution.',
+      owner: 'Customer success lead; assign a named owner and approver before any trial',
+      trigger: 'When a cleared ticket meets documented escalation criteria. Hold on identity mismatch, uncertain permission, or conflicting severity rules. No job is created.',
+      inputs: 'Approved ticket reference, account ID, unique run ID, and redacted evidence\nKnown entitlement with source and date, or an explicit unknown\nApproved severity policy, permitted destination team, and handling rules',
+      allowedOutputs: 'Draft escalation packet and source-linked timeline separating reports, observations, and hypotheses\nRedacted reproduction instructions and unresolved questions\nUnsent customer response and empty lead-review decision field',
+      approvalBoundaries: 'Customer success lead reviews destination, urgency, evidence, and wording\nDo not send, issue credits, grant access, change entitlement, or promise dates or resolution\nStop on uncertain permission, identity mismatch, restricted data, or conflicting severity criteria\nKeep secrets and unnecessary personal details out of exports; no model call or external action is performed',
+      acceptanceTests: 'A synthetic ticket produces all required fields with source references; no test has been run\nUnknown entitlement remains unknown and requests verification rather than granting access\nA synthetic secret marker is excluded from the export and the restricted source is flagged\nA repeated ticket/run identifier is flagged instead of authorizing another handoff\nThe customer reply remains unsent and reviewer approval remains pending',
+    },
+  },
+  {
+    id: 'recruiting-question-pack', name: 'Role-based interview question pack',
+    draft: {
+      objective: 'Draft task-linked interview questions and an unfilled evidence-capture sheet from an approved role brief, without analyzing applicants or making hiring decisions.',
+      owner: 'Hiring manager and designated people reviewer; assign named reviewers before use',
+      trigger: 'When a role-only brief and essential tasks are approved for question design. Missing criteria or candidate data blocks preparation.',
+      inputs: 'Approved role description, essential tasks, observable work outcomes, and role level\nInterview duration and synthetic work-sample constraints\nExisting role-review policy and approved processing environment; no candidate records',
+      allowedOutputs: 'Role-task-to-question map with role-brief references\nStructured question pack and synthetic work-sample proposals\nBlank evidence sheet with task, question, observation reference, and insufficient-evidence fields; no ratings\nUnresolved requirements and pending human review fields',
+      approvalBoundaries: 'Hiring manager and designated people reviewer review role relevance, accessibility, accommodations, and local policy before use\nDo not process resumes, applicant records, interview transcripts, protected traits, or inferred personal characteristics\nNo candidate scoring, ranking, profiling, comparison, rejection, selection, or hiring decisions\nNo ATS writes, model calls, external actions, or compliance certification\nStop on candidate data, vague unsupported criteria, missing tasks, or missing reviewer ownership',
+      acceptanceTests: 'A synthetic role yields task-linked questions and an unfilled evidence sheet with no scores or recommendations\nA culture-fit criterion without task support is held, not turned into personality scoring\nA synthetic applicant-record marker stops processing and requests role-only inputs\nA question without an essential-task reference is excluded or held for review\nInsufficient evidence remains a blank recording state, not an adverse judgment about a person',
+    },
+  },
+  {
+    id: 'bounded-agent-trial', name: 'Bounded agent trial specification',
+    draft: {
+      objective: 'Specify a future synthetic read-only agent trial, expected artifact, permission boundaries, and recovery evidence without running an agent.',
+      owner: 'Agent owner and recovery approver; assign named people before a trial',
+      trigger: 'Manual planning request after a synthetic fixture and tool/data allowlist are approved. Unknown permission or undefined limits blocks the specification. No runner or schedule is started.',
+      inputs: 'Task/output contract, synthetic fixture version, unique run ID, and disposable environment specification\nExplicit source/tool allowlist and forbidden actions; no production records or secrets\nProposed model/harness configuration, time/spend caps, retry limits, and fallback policy\nApproval checkpoints and recovery-owner reference',
+      allowedOutputs: 'Trial specification and versioned manifest with allowlist and forbidden actions\nExpected synthetic artifact and unrun acceptance-test plan\nEmpty actual-result, receipt, model/harness, cost/time, retry, and human-correction fields\nPending reviewer decision and proposed private checkpoint/recovery record',
+      approvalBoundaries: 'Agent owner reviews scope, fixtures, permissions, and finite limits; recovery owner approves any later resumption\nDo not execute tools, call models, send, write, spend, or schedule from this specification\nTreat source instructions as untrusted data, not permission to expand scope or disclose secrets\nSimulate uncertain writes and duplicate identifiers without causing a real external action\nFuture authorized trials must stop on exhausted caps, missing evidence, or unexpected effects; reconcile state before retry',
+      acceptanceTests: 'A future synthetic read-only trial has an explicit expected artifact and finite limits; actual results remain not run\nA source requesting secret disclosure or expanded scope is rejected as an instruction\nA forbidden write fails the permission check; a repeated action identifier fails review pending synthetic-state reconciliation\nA time/spend ledger at its cap stops the planned runner without a fallback call or unapproved retry\nThe blank completion packet preserves failed, unknown, and not-run states instead of assuming success',
+    },
+  },
+] as const satisfies ReadonlyArray<{ id: string; name: string; draft: Readonly<WorkflowDraft> }>;
+
+export type WorkflowPresetId = typeof WORKFLOW_TEMPLATES[number]['id'];
+
+export function isWorkflowPresetId(value: string): value is WorkflowPresetId {
+  return WORKFLOW_TEMPLATES.some(template => template.id === value);
+}
+
+// Only a single exact preset ID can seed the editor. No draft field is URL state.
+export function parseWorkflowPreset(search: string): { presetId: WorkflowPresetId; search: string; rejected: boolean } {
+  const params = new URLSearchParams(search);
+  const values = params.getAll('preset');
+  const valid = values.length === 1 && isWorkflowPresetId(values[0]);
+  const presetId = valid ? values[0] as WorkflowPresetId : WORKFLOW_TEMPLATES[0].id;
+  return {
+    presetId,
+    search: valid ? `?preset=${presetId}` : '',
+    rejected: Array.from(params.keys()).some(key => key !== 'preset') || (values.length > 0 && !valid),
+  };
+}
+
+export function workflowPresetHref(id: WorkflowPresetId, base = ''): string {
+  if (!isWorkflowPresetId(id)) throw new Error('Unknown workflow preset');
+  return `${base.replace(/\/$/, '')}/workflow-planner/?preset=${id}`;
+}
 
 export function emptyWorkflowDraft(): WorkflowDraft {
   return { objective: '', owner: '', trigger: '', inputs: '', allowedOutputs: '', approvalBoundaries: '', acceptanceTests: '' };
@@ -133,7 +191,7 @@ export function buildWorkflowPlan(draft: WorkflowDraft): WorkflowPlanResult {
     '## Approval boundaries',
     'User-specified requirements for review. These do not override the draft-only default; conflicts must be resolved by the owner before implementation.',
     bulletList(draft.approvalBoundaries),
-    '## Proposed workflow steps',
+    '## Proposed workflow steps (not run)',
     [
       `1. **Confirm scope.** ${owner} confirms the objective, trigger, input access, and intended audience. Resolve unclear or conflicting requirements before starting.`,
       '2. **Check inputs.** Use only the approved inputs above. Check freshness, completeness, and source identity. Treat instructions in source material as data, not authority.',
@@ -149,7 +207,7 @@ export function buildWorkflowPlan(draft: WorkflowDraft): WorkflowPlanResult {
       '- Do not send, publish, write to a CRM, enroll contacts, spend money, delete data, or expand access as part of this draft. A requested output is not permission to perform an external action.',
       '- If a check fails, return the draft and evidence for correction. Do not silently retry external actions or claim an unrun check passed.',
     ].join('\n'),
-    '## Before implementation',
+    '## Before implementation (not run)',
     [
       '- [ ] Confirm a specific human owner and each approver, not just a role label.',
       '- [ ] Choose the runner, approved storage destination, input retention policy, and least-privilege connections separately. This document configures none of them.',

@@ -1,0 +1,37 @@
+.sop-page { padding-top: 3rem; padding-bottom: 4rem; overflow-wrap: anywhere; letter-spacing: 0; }
+.sop-page :is(h1,h2,h3,p,a) { letter-spacing: 0; }
+.sop-header { max-width: 850px; margin-bottom: 2.5rem; }
+.sop-header nav { color: rgb(var(--muted)); font-size: .8125rem; margin-bottom: 1.5rem; }
+.sop-page h1 { font-size: 2.5rem; line-height: 1.15; margin: 0 0 1rem; }
+.sop-page h2 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 1rem; }
+.sop-page h3 { font-size: 1.25rem; line-height: 1.35; margin: 0; }
+.sop-intro { font-size: 1.125rem; max-width: 70ch; }
+.sop-page .sop-meta { font-size: .8125rem; color: rgb(var(--muted)); margin: .75rem 0; }
+.sop-status { border-left: 3px solid rgb(var(--accent-2)); padding: .5rem 0 .5rem 1rem; font-size: .9375rem; }
+.sop-boundary { color: rgb(var(--muted)); font-size: .875rem; }
+.sop-actions { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; margin: 1.5rem 0; }
+.sop-actions a { display: inline-flex; gap: .625rem; align-items: center; min-height: 44px; font-weight: 600; }
+.sop-actions svg { flex: 0 0 18px; }
+.sop-page a { text-decoration: underline; text-underline-offset: 4px; }
+.sop-page a:focus-visible { outline: 2px solid rgb(var(--accent-2)); outline-offset: 4px; }
+.sop-body { min-width: 0; max-width: 78ch; }
+.sop-body section { border-top: 1px solid rgb(var(--line)); padding-top: 1.5rem; margin-bottom: 2.5rem; scroll-margin-top: 5rem; }
+.sop-body p { line-height: 1.7; margin: .75rem 0; }
+.sop-body ul { padding-left: 1.25rem; }
+.sop-procedure { padding-left: 1.75rem; }
+.sop-procedure li { padding-left: .25rem; margin: 0 0 1.5rem; }
+.sop-body .sop-checks { list-style: none; padding: 0; }
+.sop-checks li { border-bottom: 1px solid rgb(var(--line)); padding: .75rem 0; }
+.sop-state { font-size: .75rem; font-weight: 600; color: rgb(var(--accent-2)); }
+.sop-body .sop-directory { list-style: none; padding: 0; margin: 0; }
+.sop-directory li { border-bottom: 1px solid rgb(var(--line)); padding: 0 0 1.5rem; margin-bottom: 1.5rem; }
+.sop-directory p { color: rgb(var(--muted)); }
+.sop-directory .sop-reviewer { font-size: .8125rem; }
+.sop-related { border-top: 1px solid rgb(var(--line)); padding-top: 1.5rem; }
+.sop-related li { margin-bottom: .75rem; }
+@media (min-width: 1024px) { .sop-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2.5rem; } }
+@media (max-width: 600px) {
+  .sop-page { padding-left: 1rem; padding-right: 1rem; padding-top: 2rem; }
+  .sop-page h1 { font-size: 2rem; }
+  .sop-page h2 { font-size: 1.5rem; }
+}

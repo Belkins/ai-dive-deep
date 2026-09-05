@@ -16,11 +16,26 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 20.2',
+    date: '2026-11-09',
+    tagline: 'The SOP library: six general-purpose department templates with explicit approval boundaries and unrun checks.',
+    bannerText: 'AI SOP library: six department templates, Markdown downloads, and planner presets.',
+    bannerHref: '/sops/',
+    shipped: [
+      'Six indexable SOP pages for sales, marketing, operations, customer success, recruiting, and AI agent trial planning, plus a department index.',
+      'One typed content source for the procedures and matching Markdown downloads. Steps, quality checks, and acceptance tests remain explicitly not run; these are not actual Belkins SOPs or hands-on test reports.',
+      'Three aligned planner presets reused and three missing presets added; outbound QA remains separate. Only an allowlisted preset ID can seed the planner URL, never entered draft values.',
+      'Library listings and filters, Command Palette page and section links, a homepage tile, and a Chapter 11 callout. Recruiting stays limited to role-based questions and unfilled evidence capture, without applicant evaluation or hiring decisions.',
+    ],
+    receipts: [
+      { label: 'Department templates', value: '6 general-purpose drafts' },
+      { label: 'Workflow trials', value: 'Not run; no external actions, sends, model calls, or schedules' },
+    ],
+  },
+  {
     edition: 'Edition 20.1',
     date: '2026-10-12',
     tagline: 'The Swarm Build Playbook: ten copyable templates from two product builds in one week.',
-    bannerText: 'New: The Swarm Build Playbook, the templates behind two product builds in one week.',
-    bannerHref: '/swarm-build-playbook/',
     shipped: [
       '/swarm-build-playbook: the conductor prompt, a role roster with model, effort and turn caps, the unit contract as JSON, a planning swarm, and the verifier and refuter rubric.',
       'Two scripts tested on macOS bash 3.2: a merge-lock integrator that gates the staged merge and keeps its lock alive, and a deploy watcher that smoke-tests every sitemap URL and rolls back.',
