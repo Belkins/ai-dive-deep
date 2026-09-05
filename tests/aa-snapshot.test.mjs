@@ -122,7 +122,9 @@ for (const metric of ['cost', 'intelligence', 'speed']) {
     const doc = parseFragment(html);
     const buttons = elements(doc, (node) => node.tagName === 'button');
     assert.equal(buttons.length, 3);
-    assert.equal(buttons.filter((node) => node.attrs.some(({ name, value }) => name === 'aria-pressed' && value === 'true')).length, 1);
+    const pressed = buttons.filter((node) => node.attrs.some(({ name, value }) => name === 'aria-pressed' && value === 'true'));
+    assert.equal(pressed.length, 1);
+    assert.match(textContent(pressed[0]), { cost: /^Cost \/ task/, intelligence: /^Intelligence/, speed: /^Speed/ }[metric]);
     assert.equal(buttons.some((node) => textContent(node).includes('Agentic')), false);
     const rows = elements(doc, (node) => hasClass(node, 'aap-row'));
     assert.equal(rows.length, 7);
