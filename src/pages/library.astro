@@ -1,0 +1,147 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import LearningPaths from '@/components/LearningPaths.astro';
+import { CHAPTERS, SECTIONS } from '@/lib/chapters';
+import { LIBRARY_RESOURCES, type LibraryItem } from '@/lib/library';
+import { toPlainText } from '@/lib/seo';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const chapters = await getCollection('chapters', entry => !entry.data.draft);
+const items: LibraryItem[] = [
+  ...CHAPTERS.flatMap(chapter => {
+    const entry = chapters.find(entry => entry.data.slug === chapter.slug);
+    return entry ? [{ href: `/chapters/${chapter.slug}/`, title: chapter.title, description: toPlainText(entry.data.tldr),
+      kind: 'Chapter' as const, number: chapter.number, minutes: entry.data.readingMinutes,
+      topics: SECTIONS.filter(section => section.slugs.includes(chapter.slug)).map(section => section.label),
+    }] : [];
+  }), ...LIBRARY_RESOURCES,
+];
+const topics = [...new Set(items.flatMap(item => item.topics))].sort();
+---
+<BaseLayout title="AI Playbook Library: Chapters, Guides and Tools" description="Find AI workflows, Claude Code chapters, practical templates, and learning paths. Browse the free operator playbook by goal, topic, or reading time.">
+  <div class="container-wide library">
+    <header class="library-heading">
+      <p class="eyebrow">Vlad's Playbook / Library</p>
+      <h1>Find your next useful read.</h1>
+      <p class="intro">{chapters.length} chapters, practical guides, and tools for turning AI into repeatable work. Start with an outcome or go straight to the reference you need.</p>
+      <a href={`${base}/workflow-planner/`} class="planner-link">Turn a task into a workflow specification <span aria-hidden="true">&rarr;</span></a>
+    </header>
+    <details id="library-paths">
+      <summary>Choose an outcome: four learning paths</summary>
+      <LearningPaths />
+    </details>
+    <section id="browse" aria-labelledby="browse-title" class="browse">
+      <h2 id="browse-title">Browse the library</h2>
+      <form id="library-filters" class="filters" role="search" aria-label="Filter library" hidden>
+        <label class="query">Search<input name="q" type="search" placeholder="A task, concept, or chapter..." autocomplete="off" maxlength="200" /></label>
+        <label>Format<select name="kind"><option value="">All formats</option><option>Chapter</option><option>Guide</option><option>Tool</option></select></label>
+        <label>Topic<select name="topic"><option value="">All topics</option>{topics.map(topic => <option>{topic}</option>)}</select></label>
+        <button type="reset">Clear</button>
+      </form>
+      <p id="library-count" role="status" aria-live="polite">{items.length} resources</p>
+      <ul id="library-results" class="results">
+        {items.map(item => (
+          <li data-library-item data-entry={JSON.stringify(item)}>
+            <div class="result-meta">{item.kind}{item.number && ` ${String(item.number).padStart(2, '0')}`}{item.minutes && <span>{item.minutes} min read</span>}</div>
+            <div class="result-body">
+              <h3><a href={`${base}${item.href}`} data-chapter-slug={item.kind === 'Chapter' ? item.href.split('/')[2] : undefined}>{item.title}</a></h3>
+              <p>{item.description}</p>
+              <div class="topic-label">{item.topics.join(' / ')}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div id="library-empty" hidden><h3>No matching resources</h3><p>Try a broader term or <button type="button" id="library-clear">clear the filters</button>.</p></div>
+    </section>
+  </div>
+  <CommandPaletteMount />
+</BaseLayout>
+<script>
+  import { matchesLibraryItem, type LibraryItem } from '@/lib/library';
+  let dispose: (() => void) | undefined;
+  const initialize = () => {
+    dispose?.();
+    const form = document.querySelector<HTMLFormElement>('#library-filters');
+    if (!form) return;
+    const controller = new AbortController();
+    const { signal } = controller;
+    const query = form.elements.namedItem('q') as HTMLInputElement;
+    const kind = form.elements.namedItem('kind') as HTMLSelectElement;
+    const topic = form.elements.namedItem('topic') as HTMLSelectElement;
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-library-item]')).map(element => ({ element, item: JSON.parse(element.dataset.entry!) as LibraryItem }));
+    const count = document.getElementById('library-count')!;
+    const empty = document.getElementById('library-empty')!;
+    const apply = (updateURL = true) => {
+      let total = 0;
+      rows.forEach(({ element, item }) => { element.hidden = !matchesLibraryItem(item, query.value, kind.value, topic.value); if (!element.hidden) total++; });
+      count.textContent = `${total} of ${rows.length} resources`;
+      empty.hidden = total > 0;
+      if (updateURL) {
+        const url = new URL(window.location.href);
+        for (const [key, value] of [['q', query.value.trim()], ['kind', kind.value], ['topic', topic.value]]) {
+          if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+        }
+        window.history.replaceState(window.history.state, '', url);
+      }
+    };
+    const restore = () => {
+      const params = new URLSearchParams(window.location.search);
+      query.value = (params.get('q') || '').slice(0, 200);
+      kind.value = params.get('kind') || ''; if (kind.selectedIndex < 0) kind.value = '';
+      topic.value = params.get('topic') || ''; if (topic.selectedIndex < 0) topic.value = '';
+      apply(false);
+    };
+    const revealPath = () => {
+      const id = window.location.hash.slice(1);
+      const target = id && document.getElementById(id);
+      if (target && target.closest('#library-paths')) {
+        (document.getElementById('library-paths') as HTMLDetailsElement).open = true;
+        target.scrollIntoView();
+      }
+    };
+    const clear = () => { query.value = ''; kind.value = ''; topic.value = ''; apply(); query.focus(); };
+    form.hidden = false;
+    restore();
+    revealPath();
+    form.addEventListener('input', () => apply(), { signal });
+    form.addEventListener('submit', event => { event.preventDefault(); apply(); }, { signal });
+    form.addEventListener('reset', event => { event.preventDefault(); clear(); }, { signal });
+    document.getElementById('library-clear')?.addEventListener('click', clear, { signal });
+    window.addEventListener('popstate', restore, { signal });
+    window.addEventListener('hashchange', revealPath, { signal });
+    dispose = () => controller.abort();
+  };
+  initialize();
+  document.addEventListener('astro:page-load', initialize);
+  document.addEventListener('astro:before-swap', () => dispose?.());
+</script>
+<style>
+  .library { padding-top:3rem; padding-bottom:3rem; }
+  .library-heading { max-width:760px; margin-bottom:2rem; }
+  .eyebrow { font-size:.75rem; color:rgb(var(--accent)); margin:0 0 1rem; }
+  h1 { font-size:3rem; line-height:1.05; letter-spacing:0; margin:0; }
+  .intro { font-size:1.125rem; color:rgb(var(--muted)); margin:1.25rem 0; }
+  .planner-link { font-weight:600; text-underline-offset:4px; }
+  h2 { font-size:2rem; letter-spacing:0; margin:0 0 1.5rem; }
+  .browse { margin-top:2rem; scroll-margin-top:5rem; }
+  details { border-top:1px solid rgb(var(--line)); border-bottom:1px solid rgb(var(--line)); }
+  summary { padding:1rem 0; font-size:1rem; cursor:pointer; color:rgb(var(--accent-2)); }
+  .filters { display:grid; grid-template-columns:minmax(0,2fr) minmax(120px,1fr) minmax(140px,1fr) auto; gap:.75rem; align-items:end; }
+  [hidden] { display:none !important; }
+  label { font-size:.8125rem; color:rgb(var(--muted)); display:grid; gap:.5rem; min-width:0; }
+  input,select,.filters button { width:100%; min-width:0; min-height:44px; padding:.625rem .75rem; border:1px solid rgb(var(--line)); border-radius:6px; background:rgb(var(--paper)); color:rgb(var(--fg)); font:inherit; }
+  input:focus-visible,select:focus-visible,button:focus-visible { outline:2px solid rgb(var(--accent-2)); outline-offset:3px; }
+  #library-count { color:rgb(var(--muted)); font-size:.8125rem; margin:1.25rem 0; }
+  .results { list-style:none; padding:0; margin:0; }
+  .results li { display:grid; grid-template-columns:120px minmax(0,1fr); gap:1.5rem; padding:1.5rem 0; margin:0; border-top:1px solid rgb(var(--line)); }
+  .result-meta { color:rgb(var(--accent-2)); font-size:.8125rem; }
+  .result-meta span { display:block; color:rgb(var(--muted)); margin-top:.375rem; }
+  h3 { font-size:1.375rem; line-height:1.25; letter-spacing:0; margin:0; }
+  .result-body p { font-size:.9375rem; color:rgb(var(--muted)); max-width:85ch; margin:.625rem 0; }
+  .topic-label { font-size:.75rem; color:rgb(var(--muted)); }
+  #library-empty { padding:2rem 0; border-top:1px solid rgb(var(--line)); }
+  #library-clear { text-decoration:underline; text-underline-offset:4px; }
+  @media(max-width:767px) { h1 { font-size:2.5rem; } .filters { grid-template-columns:1fr 1fr; } .query { grid-column:1/-1; } .results li { grid-template-columns:1fr; gap:.625rem; } .result-meta span { display:inline; margin-left:1rem; } }
+  @media(max-width:380px) { .filters { grid-template-columns:1fr; } }
+</style>

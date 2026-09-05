@@ -24,6 +24,8 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
+      - run: npm run check
+      - run: node --test tests/*.test.mjs
       - run: npm run build
         env:
           # PostHog analytics — baked into the client bundle at build time.

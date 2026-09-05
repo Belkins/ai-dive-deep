@@ -4,7 +4,7 @@ type Stack = 'beginner' | 'operator' | 'builder';
 type Cadence = 'gentle' | 'aggressive';
 type Focus = 'ops' | 'eng' | 'creative';
 
-type Day = { day: number; theme: string; tasks: string[]; chapter?: string };
+type Day = { day: number; theme: string; tasks: string[]; chapter?: string; minutes: number };
 
 export default function ThirtyDayPlan() {
   const [stack, setStack] = useState<Stack>('operator');
@@ -16,7 +16,7 @@ export default function ThirtyDayPlan() {
   const exportMarkdown = () => {
     const md = ["# 30-day plan — Vlad's Playbook", '',
       `Stack: ${stack} · Cadence: ${cadence} · Focus: ${focus}`, ''].concat(
-      days.flatMap((d) => [`## Day ${d.day} — ${d.theme}`, '', ...d.tasks.map((t) => `- ${t}`), '']),
+      days.flatMap((d) => [`## Day ${d.day} — ${d.theme}`, '', d.minutes ? `${d.minutes} minutes` : 'Rest day', '', ...d.tasks.map((t) => `- ${absoluteChapterLinks(t)}`), '']),
     ).join('\n');
     download(md, '30-day-plan.md');
   };
@@ -47,7 +47,7 @@ export default function ThirtyDayPlan() {
         </div>
 
         <div className="px-5 py-3 border-b flex items-center justify-between flex-wrap gap-2" style={{ borderColor: 'rgb(var(--line))' }}>
-          <div className="text-xs uppercase tracking-wider" style={{ color: 'rgb(var(--muted))' }}>30 days · {days.length} sessions</div>
+          <div className="text-xs uppercase tracking-wider" style={{ color: 'rgb(var(--muted))' }}>30 days · {days.filter((d) => d.minutes > 0).length} sessions</div>
           <div className="flex gap-2">
             <button type="button" onClick={exportMarkdown} className="text-xs px-2 py-1 rounded-md" style={{ border: '1px solid rgb(var(--line))', color: 'rgb(var(--fg))' }}>Export markdown</button>
             <button type="button" onClick={exportICS} className="text-xs px-2 py-1 rounded-md" style={{ background: 'rgb(var(--fg))', color: 'rgb(var(--bg))' }}>Export .ics (calendar)</button>
@@ -63,6 +63,7 @@ export default function ThirtyDayPlan() {
               </div>
               <div>
                 <div className="font-medium">{d.theme}</div>
+                <div className="text-xs mt-1" style={{ color: 'rgb(var(--muted))' }}>{d.minutes ? `${d.minutes} min` : 'Rest day'}</div>
                 <ul className="mt-2 space-y-1 text-sm">
                   {d.tasks.map((t, i) => (
                     <li key={i} className="flex gap-2">
@@ -90,6 +91,7 @@ function Pick<T extends string>({ label, value, onChange, options }: { label: st
             key={o.v}
             type="button"
             onClick={() => onChange(o.v)}
+            aria-pressed={value === o.v}
             className="text-left rounded-md px-3 py-2 transition"
             style={{
               background: value === o.v ? 'rgb(var(--accent) / 0.12)' : 'rgb(var(--bg))',
@@ -111,46 +113,90 @@ function linkify(text: string): string {
 }
 
 function buildPlan(stack: Stack, cadence: Cadence, focus: Focus): Day[] {
-  // Base sequence varies by stack; tasks vary by focus; cadence multiplies workload.
-  const weeks = STACKS[stack].slice();
-  const customised: Day[] = [];
-  let dayNum = 1;
-  for (const week of weeks) {
-    for (const dayTemplate of week) {
-      const tasks = dayTemplate.tasks(focus, cadence);
-      customised.push({ day: dayNum++, theme: dayTemplate.theme, tasks, chapter: dayTemplate.chapter });
-    }
-  }
-  return customised.slice(0, 30);
+  // Safety gates precede any tool setup, connector or unattended task on every path.
+  const sequence = [COMMON.security, COMMON.perms, ...STACKS[stack].flat()
+    .filter((template) => template !== COMMON.security && template !== COMMON.perms)];
+  return sequence.slice(0, 30).map((template, i) => {
+    const rest = template === COMMON.rest;
+    const tasks = template.tasks(focus);
+    if (!rest && cadence === 'aggressive') tasks.push(STRETCH_TASKS[template.chapter || 'audit'](focus));
+    return { day: i + 1, theme: template.theme, tasks, chapter: template.chapter, minutes: rest ? 0 : cadence === 'gentle' ? 30 : 75 };
+  });
 }
 
 type DayTemplate = {
   theme: string;
   chapter?: string;
-  tasks: (focus: Focus, cadence: Cadence) => string[];
+  tasks: (focus: Focus) => string[];
+};
+
+const FOCUS_EXERCISES: Record<Focus, { source: string; deliverable: string; task: string; check: string }> = {
+  ops: {
+    source: 'a sanitized local status note',
+    deliverable: 'a weekly operations brief',
+    task: 'Extract decisions, owners and due dates into a weekly operations brief.',
+    check: 'Trace every owner and date back to the source; flag missing information instead of filling it in.',
+  },
+  eng: {
+    source: 'a local sample issue and test log with no credentials',
+    deliverable: 'a reproducible bug-triage report',
+    task: 'Turn a sample issue and test log into reproduction steps and a failing-test proposal.',
+    check: 'Check that the reproduction uses the supplied fixture and does not invent a test result.',
+  },
+  creative: {
+    source: 'a local writing sample you own',
+    deliverable: 'a newsletter outline and opening paragraph',
+    task: 'Draft a newsletter outline and opening paragraph using your writing sample.',
+    check: 'Compare the draft with the sample for voice, and remove unsupported factual claims.',
+  },
+};
+
+const STRETCH_TASKS: Record<string, (focus: Focus) => string> = {
+  '01': () => 'Map one repeated handoff between your tools; record its inputs, owner and current time cost.',
+  '02': () => 'Run the same sanitized task in two tools and compare correction time before choosing one.',
+  '03': (focus) => `Start a fresh session with ${FOCUS_EXERCISES[focus].source}; compare results with and without a short context file.`,
+  '04': () => 'Retrieve three notes from a new session and fix the folder names or index wherever retrieval fails.',
+  '05': (focus) => `Run the skill on three different samples. ${FOCUS_EXERCISES[focus].check}`,
+  '06': () => 'Compare the parallel result with one sequential run; record elapsed time and conflicting recommendations.',
+  '07': () => 'Test a missing-input run and a duplicate run; confirm neither sends an unintended notification.',
+  '08': (focus) => `Compare two available surfaces on ${FOCUS_EXERCISES[focus].deliverable}; record where a human correction was needed.`,
+  '09': () => 'Inventory existing integrations and revoke one unnecessary scope; record how to disable the remaining integrations.',
+  '13': () => 'Run the workflow in a disposable repository and inspect every proposed file change before accepting it.',
+  '14': () => 'Try three reference commands in a disposable project and annotate the conditions under which each is useful.',
+  '15': () => 'Use harmless test fixtures to verify one allowed operation and one denied operation, without accessing real secrets.',
+  '16': () => 'Test each hook on matching and non-matching fixture files; verify failure stops the intended action.',
+  '17': () => 'Compare an instrumented run before and after one tip; keep it only if it improves the outcome.',
+  '18': () => 'Run the CI job twice on the same fixture and verify it produces one artifact without duplicate side effects.',
+  '19': (focus) => `Build a local prototype of ${FOCUS_EXERCISES[focus].deliverable} and try it with a second sample.`,
+  '20': () => 'Run two disposable worktrees simultaneously and verify each terminal has the expected working directory and branch.',
+  '21': () => 'Compare Plan and Interactive modes on the same disposable change; record the review work each requires.',
+  '22': () => 'Resume and fork the same fixture session; compare which context survives in each case.',
+  '23': (focus) => `Test a second input and publish only after review. ${FOCUS_EXERCISES[focus].check}`,
+  '24': () => 'Run one representative task in two tools whose rankings are close; update the tiers from that comparison.',
+  audit: (focus) => `Re-run a saved example of ${FOCUS_EXERCISES[focus].deliverable}; record any regression and its fix, or document the passing result.`,
 };
 
 const COMMON: Record<string, DayTemplate> = {
   killTabs:  { theme: 'Kill the tabs',          chapter: '01', tasks: () => ['Read [Ch 1](01-killed-my-tabs)', 'Write down the 5 systems you tab-hop between most.'] },
   fiveTools: { theme: 'Pick five tools',        chapter: '02', tasks: () => ['Read [Ch 2](02-five-tools)', 'Audit your AI subscriptions. Cancel one.'] },
   temp:      { theme: 'Temp agency reframe',    chapter: '03', tasks: () => ['Read [Ch 3](03-temp-agency)', 'Stop saying "my AI". Start saying "an instance".'] },
-  vault:     { theme: 'Build the vault',        chapter: '04', tasks: () => ['Install Obsidian.', 'Create the 5 base folders.', 'Write CLAUDE.md (≤100 lines).'] },
-  skills:    { theme: 'First skill',            chapter: '05', tasks: () => ['Read [Ch 5](05-skills)', 'Pick a workflow you\'ve done 3+ times.'] },
-  swarm:     { theme: 'Run a swarm',            chapter: '06', tasks: () => ['Read [Ch 6](06-the-swarm)', 'Spawn 3 Explore subagents in parallel.'] },
-  cron:      { theme: 'First scheduled task',   chapter: '07', tasks: () => ['Schedule a morning briefing for 7:30 AM weekdays.', 'Confirm it lands in the right Slack channel.'] },
+  vault:     { theme: 'Build the vault',        chapter: '04', tasks: (focus) => ['Create a local vault and a short CLAUDE.md index.', `Add ${FOCUS_EXERCISES[focus].source} and record where it came from.`] },
+  skills:    { theme: 'First skill',            chapter: '05', tasks: (focus) => ['Read [Ch 5](05-skills)', `Write a skill for this task: ${FOCUS_EXERCISES[focus].task}`] },
+  swarm:     { theme: 'Run a swarm',            chapter: '06', tasks: (focus) => ['Read [Ch 6](06-the-swarm)', `Have three read-only subagents review ${FOCUS_EXERCISES[focus].source} for missing inputs, proposed output and failure cases.`] },
+  cron:      { theme: 'First scheduled task',   chapter: '07', tasks: (focus) => [`Run one manual draft of ${FOCUS_EXERCISES[focus].deliverable} from local sample data.`, 'Then schedule a draft-only run with a stop condition; review its output before connecting a delivery channel.'] },
   doors:     { theme: 'Three doors',            chapter: '08', tasks: () => ['Read [Ch 8](08-three-doors)', 'Run the StackSelector. Settle on your 50/40/10 split.'] },
-  security:  { theme: "Don't get owned",        chapter: '09', tasks: () => ['Read [Ch 9](09-dont-get-owned)', 'Rotate one API key. Move it to a secret manager.'] },
+  security:  { theme: "Don't get owned",        chapter: '09', tasks: () => ['Read [Ch 9](09-dont-get-owned)', 'Set spending caps before adding keys or integrations. Store existing keys in a secret manager and choose sanitized local practice data.'] },
   cli:       { theme: 'Claude Code first run',  chapter: '13', tasks: () => ['Install Claude Code.', 'Run /init in a side-project repo.', 'Edit CLAUDE.md by hand.'] },
   cheat:     { theme: 'Print the cheat sheet',  chapter: '14', tasks: () => ['Read [Ch 14](14-cheat-sheet)', 'Print and tape next to monitor.'] },
   perms:     { theme: 'Permissions discipline', chapter: '15', tasks: () => ['Audit your permissions block.', 'Add deny rules for rm -rf, .env, push to main.'] },
-  hooks:     { theme: 'First two hooks',        chapter: '16', tasks: () => ['Add format-on-save PostToolUse hook.', 'Add block-push-to-main PreToolUse hook.'] },
+  hooks:     { theme: 'First two hooks',        chapter: '16', tasks: (focus) => ['Add a block-push-to-main hook in a disposable project.', `Write a validation check for the output: ${FOCUS_EXERCISES[focus].check}`] },
   tips:      { theme: 'Three tips',             chapter: '17', tasks: () => ['Read [Ch 17](17-tips-tricks)', 'Pick 3 tips. Wire them in this week.'] },
-  headless:  { theme: 'Headless / CI',          chapter: '18', tasks: () => ['Ship the daily PR digest GitHub Action.', 'Verify Slack post lands.'] },
-  product:   { theme: 'Saturday build',         chapter: '19', tasks: () => ['Pick a one-paragraph problem.', 'Spec a 1-pager PRD with a Don\'ts list.'] },
+  headless:  { theme: 'Headless / CI',          chapter: '18', tasks: (focus) => [`Run a headless job producing ${FOCUS_EXERCISES[focus].deliverable} from a local fixture.`, 'Save the output as a reviewable artifact; keep external posting disabled.'] },
+  product:   { theme: 'Scope a small build',    chapter: '19', tasks: (focus) => [`Write a one-page spec for ${FOCUS_EXERCISES[focus].deliverable}.`, 'Name one input, one output, an acceptance check and an explicit out-of-scope list.'] },
   terminal:  { theme: 'Multi-session setup',    chapter: '20', tasks: () => ['Install tmux.', 'Write the work() shell function.'] },
   modes:     { theme: 'Modes by job',           chapter: '21', tasks: () => ['Run ModePicker on next 3 tasks.', 'Try Plan mode for a 5-file refactor.'] },
   sessions:  { theme: 'Resume / fork',          chapter: '22', tasks: () => ['Practice claude --continue and --resume.', 'Fork a session deliberately.'] },
-  vibe:      { theme: 'Vibe-code something',    chapter: '23', tasks: () => ['Pick a Saturday-shape project.', 'Hour 1: spec. Hour 2: deploy URL. Hour 7: ship.'] },
+  vibe:      { theme: 'Build one working slice', chapter: '23', tasks: (focus) => [`Build the smallest local version of ${FOCUS_EXERCISES[focus].deliverable} using one sample input.`, 'Stop at the timebox, inspect the result and record the next missing acceptance check.'] },
   tier:      { theme: 'Build your tier list',   chapter: '24', tasks: () => ['Open the TierListBuilder.', 'Defend it to your future self.'] },
   audit:     { theme: 'Toolbox audit',          tasks: () => ['Skim your week\'s commits.', 'Kill any skill that fired but didn\'t earn its slot.'] },
   rest:      { theme: 'Rest day',               tasks: () => ['Don\'t schedule anything.', 'Read one good essay; don\'t do homework.'] },
@@ -182,27 +228,56 @@ const STACKS: Record<Stack, DayTemplate[][]> = {
 
 function pad(n: number) { return String(n).padStart(2, '0'); }
 
-function buildICS(days: Day[]): string {
-  const start = new Date();
+function absoluteChapterLinks(text: string): string {
+  return text.replace(/\[Ch (\d+)\]\(([^)]+)\)/g, (_match, number, slug) => `[Ch ${number}](https://dive.vladyslavpodoliako.com/chapters/${slug}/)`);
+}
+
+function icsDate(date: Date): string {
+  return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}Z`;
+}
+
+function escapeICS(text: string): string {
+  return text.replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,');
+}
+
+function foldICS(line: string): string {
+  const encoder = new TextEncoder();
+  const lines: string[] = [];
+  let current = '';
+  let bytes = 0;
+  for (const char of line) {
+    const size = encoder.encode(char).length;
+    if (bytes + size > 75) { lines.push(current); current = ' '; bytes = 1; }
+    current += char;
+    bytes += size;
+  }
+  lines.push(current);
+  return lines.join('\r\n');
+}
+
+function buildICS(days: Day[], now = new Date()): string {
+  const start = new Date(now);
   start.setHours(9, 0, 0, 0);
   start.setDate(start.getDate() + 1);
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ai-dive-deep//30day//EN'];
   for (const d of days) {
-    const dt = new Date(start.getTime() + (d.day - 1) * 24 * 60 * 60 * 1000);
-    const dtStart = `${dt.getUTCFullYear()}${pad(dt.getUTCMonth() + 1)}${pad(dt.getUTCDate())}T${pad(dt.getUTCHours())}${pad(dt.getUTCMinutes())}00Z`;
-    const dtEnd = new Date(dt.getTime() + 60 * 60 * 1000);
-    const dtEndStr = `${dtEnd.getUTCFullYear()}${pad(dtEnd.getUTCMonth() + 1)}${pad(dtEnd.getUTCDate())}T${pad(dtEnd.getUTCHours())}${pad(dtEnd.getUTCMinutes())}00Z`;
-    const desc = d.tasks.join('\\n').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+    if (d.minutes === 0) continue;
+    const dt = new Date(start);
+    dt.setDate(start.getDate() + d.day - 1);
+    const dtStart = icsDate(dt);
+    const dtEnd = new Date(dt.getTime() + d.minutes * 60 * 1000);
+    const desc = absoluteChapterLinks(d.tasks.join('\n')).replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1: $2');
     lines.push('BEGIN:VEVENT');
-    lines.push(`UID:dive-deep-day-${d.day}@vladpodolyako`);
+    lines.push(`UID:dive-deep-${icsDate(start).slice(0, 8)}-day-${d.day}@vladpodolyako`);
+    lines.push(`DTSTAMP:${icsDate(now)}`);
     lines.push(`DTSTART:${dtStart}`);
-    lines.push(`DTEND:${dtEndStr}`);
-    lines.push(`SUMMARY:Day ${d.day} — ${d.theme}`);
-    lines.push(`DESCRIPTION:${desc}`);
+    lines.push(`DTEND:${icsDate(dtEnd)}`);
+    lines.push(`SUMMARY:${escapeICS(`Day ${d.day} — ${d.theme}`)}`);
+    lines.push(`DESCRIPTION:${escapeICS(desc)}`);
     lines.push('END:VEVENT');
   }
   lines.push('END:VCALENDAR');
-  return lines.join('\r\n');
+  return lines.map(foldICS).join('\r\n') + '\r\n';
 }
 
 function download(content: string, filename: string) {

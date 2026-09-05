@@ -105,6 +105,7 @@ const chapterCount = CHAPTERS.length;
     <div>
       <div class="text-xs uppercase tracking-wider mb-3 text-muted">Read</div>
       <ul class="space-y-1.5 text-sm">
+        <li><a href={`${base}/library/`}>Library + learning paths</a></li>
         <li><a href={`${base}/how-to-read/`}>How to read this book</a></li>
         <li><a href={`${base}/day-zero/`}>Day zero</a></li>
         <li><a href={`${base}/journey/`}>The journey</a></li>
@@ -118,6 +119,7 @@ const chapterCount = CHAPTERS.length;
     <div>
       <div class="text-xs uppercase tracking-wider mb-3 text-muted">Use</div>
       <ul class="space-y-1.5 text-sm">
+        <li><a href={`${base}/workflow-planner/`}>Workflow planner</a></li>
         <li><a href={`${base}/starter-skills/`}>Starter skills</a></li>
         <li><a href={`${base}/vault-starter/`}>Vault starter</a></li>
         <li><a href={`${base}/weekend-builds/`}>Weekend builds</a></li>
@@ -147,12 +149,10 @@ const chapterCount = CHAPTERS.length;
 </footer>
 
 <script>
-  const resetBtn = document.getElementById('reset-progress');
-  resetBtn?.addEventListener('click', () => {
+  import { resetReadingProgress } from '@/lib/reading-progress';
+  document.addEventListener('click', event => {
+    if (!(event.target instanceof Element) || !event.target.closest('#reset-progress')) return;
     if (!confirm('Reset reading history? This clears which chapters you\'ve read and your resume-reading state. Locally only — nothing is sent anywhere.')) return;
-    try {
-      localStorage.removeItem('cc-progress');
-      window.dispatchEvent(new CustomEvent('cc-progress-changed'));
-    } catch {}
+    if (!resetReadingProgress()) alert('Reading history could not be reset. Browser storage may be unavailable.');
   });
 </script>

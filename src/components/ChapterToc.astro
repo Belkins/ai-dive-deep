@@ -23,7 +23,6 @@ const items = (headings ?? []).filter((h) => h.depth === 2);
               href={`#${s.slug}`}
               data-toc-link={s.slug}
               class="toc-link flex gap-2 px-3 py-1.5 rounded no-underline transition"
-              style="color: rgb(var(--fg) / 0.8)"
             >
               <span class="font-mono text-[0.7rem] shrink-0" style="color: rgb(var(--muted))">{String(i + 1).padStart(2, '0')}</span>
               <span>{s.text.replace(/\s*#+\s*$/, '')}</span>
@@ -36,6 +35,7 @@ const items = (headings ?? []).filter((h) => h.depth === 2);
 )}
 
 <style>
+  .chapter-toc .toc-link { color: rgb(var(--fg) / 0.8); }
   .chapter-toc .toc-link:hover { color: rgb(var(--fg)); background: rgb(var(--accent-2) / 0.06); }
   .chapter-toc .toc-link[data-active="true"] {
     color: rgb(var(--accent-2));
@@ -46,31 +46,48 @@ const items = (headings ?? []).filter((h) => h.depth === 2);
 </style>
 
 <script>
-  let tocScrollHandler: (() => void) | null = null;
+  let disposeToc: (() => void) | null = null;
+  function cleanupChapterToc() {
+    disposeToc?.();
+    disposeToc = null;
+  }
   function initChapterToc() {
-    if (tocScrollHandler) { window.removeEventListener('scroll', tocScrollHandler); tocScrollHandler = null; }
-    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[data-toc-link]'));
+    cleanupChapterToc();
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.chapter-toc a[data-toc-link]'));
     if (!links.length) return;
     const heads = links
       .map((a) => document.getElementById(a.getAttribute('data-toc-link') || ''))
       .filter((el): el is HTMLElement => !!el);
     if (!heads.length) return;
 
-    let ticking = false;
+    let frame: number | null = null;
     const update = () => {
-      ticking = false;
+      frame = null;
       let activeId = heads[0].id;
       for (const h of heads) {
         if (h.getBoundingClientRect().top <= 130) activeId = h.id;
         else break;
       }
-      links.forEach((a) =>
-        a.toggleAttribute('data-active', a.getAttribute('data-toc-link') === activeId),
-      );
+      links.forEach((a) => {
+        if (a.getAttribute('data-toc-link') === activeId) {
+          a.setAttribute('data-active', 'true');
+          a.setAttribute('aria-current', 'location');
+        } else {
+          a.removeAttribute('data-active');
+          a.removeAttribute('aria-current');
+        }
+      });
     };
-    tocScrollHandler = () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } };
-    window.addEventListener('scroll', tocScrollHandler, { passive: true });
+    const schedule = () => { if (frame === null) frame = requestAnimationFrame(update); };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    disposeToc = () => {
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
     update();
   }
   document.addEventListener('astro:page-load', initChapterToc);
+  document.addEventListener('astro:before-swap', cleanupChapterToc);
 </script>

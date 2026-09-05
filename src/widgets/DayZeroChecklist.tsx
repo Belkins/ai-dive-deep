@@ -11,45 +11,59 @@ type Step = {
 
 const STEPS: Step[] = [
   {
-    id: 'github',
-    title: 'GitHub account',
-    estimate: '2 min',
-    body: "If you don't have one, get one. Free. The floor of every workflow in this book lives in a repo. The rest of the day-zero setup assumes you can `git push`.",
-    cta: { label: 'github.com/signup', href: 'https://github.com/signup', external: true },
-  },
-  {
-    id: 'vercel',
-    title: 'Vercel account (linked to GitHub)',
-    estimate: '3 min',
-    body: "Sign in with GitHub. You'll deploy your first product to Vercel by the end of the week. Free tier covers everything in this book. Netlify works too — pick one and don't argue with yourself.",
-    cta: { label: 'vercel.com', href: 'https://vercel.com', external: true },
+    id: 'shutdown',
+    title: 'Set safety boundaries before connecting anything',
+    estimate: '8 min',
+    body: "Start with the security chapter. Use a disposable project and synthetic data, keep permission prompts enabled, and leave production credentials out. Review scopes before granting access and set a budget for metered usage. A deny rule or temporary folder is not a complete security boundary.",
+    cta: { label: 'See Ch 9 — don\'t get owned', href: '/chapters/09-dont-get-owned/' },
   },
   {
     id: 'claude-pro',
-    title: 'Claude Pro or Max plan',
+    title: 'Confirm Claude Code access',
     estimate: '2 min',
-    body: "Cheapest path to Claude Code + Cowork without an API budget. Pro covers the casual operator. Max if you'll burn tokens daily. You can graduate to API keys later.",
+    body: "Use an eligible Claude subscription, an organization-provided account, or approved metered API access. Check current plan limits and billing before choosing; the installation itself does not include usage.",
     cta: { label: 'claude.ai/pricing', href: 'https://claude.ai/pricing', external: true },
   },
   {
     id: 'install-cc',
     title: 'Install Claude Code',
     estimate: '5 min',
-    body: "One npm command, then `claude --version` to confirm. Authenticates against your Pro/Max account on first run.",
+    body: "Use the official native installer in Ch 13; it needs no Node.js runtime. Confirm with `claude --version` and `claude doctor`, then sign in. The optional npm route requires Node.js 22+. Follow your organization's installation policy.",
     cta: { label: 'See Ch 13 — the 10-minute quickstart', href: '/chapters/13-quickstart/' },
   },
   {
+    id: 'first-prompt',
+    title: 'Get a read-only project summary',
+    estimate: '3 min',
+    body: "Inside the disposable project, ask Claude Code to summarize its files and identify one unanswered question. Request no edits, shell execution, or external connections. Check the summary against the files before granting more access.",
+    link: { label: 'See Ch 13 — the quickstart', href: '/chapters/13-quickstart/' },
+  },
+  {
+    id: 'github',
+    title: 'GitHub account (optional later)',
+    estimate: '2 min',
+    body: "Create an account when you need a remote repository. A local read-only task does not require GitHub or a push. Use a test repository for the first publishing workflow.",
+    cta: { label: 'github.com/signup', href: 'https://github.com/signup', external: true },
+  },
+  {
+    id: 'vercel',
+    title: 'Hosting account (optional later)',
+    estimate: '3 min',
+    body: "Add hosting when you have something to deploy. Vercel Hobby is for personal, non-commercial use; check the plan and limits for business work. Hosting is not required for your first local task.",
+    cta: { label: 'Vercel Hobby plan terms', href: 'https://vercel.com/docs/plans/hobby', external: true },
+  },
+  {
     id: 'install-cowork',
-    title: 'Install Cowork (desktop app)',
+    title: 'Cowork and one connector (optional later)',
     estimate: '4 min',
-    body: "Cowork is the desktop driver for ops work — connectors to Slack, HubSpot, Stripe, your calendar. Install, connect 3 things you already pay for, ask 'what's on my plate today.'",
+    body: "Add the desktop workflow only when you need it. Start with one approved read-only connector and a test account. Review its scopes and data destination before connecting; do not connect customer systems just to complete this checklist.",
     cta: { label: 'See Ch 8 — three doors to Claude', href: '/chapters/08-three-doors/' },
   },
   {
     id: 'install-obsidian',
-    title: 'Install Obsidian + create your vault',
+    title: 'Obsidian vault (optional later)',
     estimate: '6 min',
-    body: "Local-first markdown brain. iCloud or Dropbox sync. Five folders: 00-Inbox, 01-Daily, 02-Projects, 03-People, 04-Companies. Numeric prefixes force ordering.",
+    body: "Start with local Markdown and synthetic notes. Add 00-Inbox, 01-Daily, 02-Projects, 03-People, and 04-Companies as needed. Review data-handling rules before syncing work or customer information to another service.",
     cta: { label: 'obsidian.md', href: 'https://obsidian.md', external: true },
     link: { label: 'See Ch 4 — the vault', href: '/chapters/04-the-vault/' },
   },
@@ -57,61 +71,65 @@ const STEPS: Step[] = [
     id: 'claude-md',
     title: 'Drop a CLAUDE.md at your repo root',
     estimate: '5 min',
-    body: "One page. Who you are, what you run, your active projects, your preferences, this week's focus. The handbook every new instance reads on wake-up.",
+    body: "Record the project's purpose, current task, commands, and approval boundaries. Keep secrets and customer records out. Review generated instructions before relying on them; a CLAUDE.md is context, not an access-control mechanism.",
     cta: { label: 'Copy the skeleton from /resources', href: '/resources/' },
   },
   {
-    id: 'first-prompt',
-    title: 'Run your first real prompt',
-    estimate: '3 min',
-    body: "In Cowork: \"Read CLAUDE.md and tell me what's on my plate today.\" In Claude Code (inside a repo): /init then ask it to summarize the codebase. If both work, the loop is live.",
-    link: { label: 'See Ch 13 — the quickstart', href: '/chapters/13-quickstart/' },
-  },
-  {
     id: 'first-skill',
-    title: 'Build your first skill',
+    title: 'Build a skill (optional later)',
     estimate: '15 min',
     body: "Pick a workflow you've explained to Claude three times. Codify it. Drop the SKILL.md into ~/.claude/skills/. Test by typing the natural-language trigger phrase.",
     cta: { label: 'See Ch 11 — build a skill end-to-end', href: '/chapters/11-build-a-skill/' },
   },
   {
     id: 'first-cron',
-    title: 'Schedule one task',
+    title: 'Schedule one task (optional later)',
     estimate: '10 min',
-    body: "The morning briefing is the highest-leverage first scheduled task. Slack DM at 7:30 AM with calendar + overnight signals + open deals. Run it for two weeks before adding a second.",
+    body: "Schedule only after a manual run and failure-case tests pass. Set an explicit timezone, source window, budget, owner, and failure notification. Validate the exact output before delivery; start with a test destination and a way to stop the schedule.",
     cta: { label: 'See Ch 7 — cron jobs', href: '/chapters/07-cron/' },
   },
   {
     id: 'first-swarm',
-    title: 'Spawn your first swarm',
+    title: 'Try a bounded swarm (optional later)',
     estimate: '5 min',
-    body: "In Claude Code: \"Spawn 3 Explore subagents in parallel — one looks at X, one at Y, one at Z.\" Watch them work concurrently. Single-threaded work feels broken after this.",
+    body: "Try a small read-only investigation in the disposable project. Define distinct questions, cap agent count and spend, and review the combined answer yourself. Parallel work is optional, not a prerequisite for a useful result.",
     cta: { label: 'See Ch 6 — the swarm', href: '/chapters/06-the-swarm/' },
-  },
-  {
-    id: 'shutdown',
-    title: 'Read the security chapter before bed',
-    estimate: '8 min',
-    body: "Don't skip this. The 11-minute leak that cost a friend $4,200 lives in chapter 9. Set spend caps. Rotate keys. Add deny rules for Bash(rm -rf*) and Edit(.env*) tonight.",
-    cta: { label: 'See Ch 9 — don\'t get owned', href: '/chapters/09-dont-get-owned/' },
   },
 ];
 
 const STORAGE_KEY = 'cc-dayzero-steps';
 
+function restoreDone(raw: string | null): Record<string, boolean> {
+  try {
+    const value: unknown = raw === null ? null : JSON.parse(raw);
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+    const restored: Record<string, boolean> = {};
+    for (const { id } of STEPS) {
+      const entry = Object.getOwnPropertyDescriptor(value, id);
+      if (entry && typeof entry.value === 'boolean') restored[id] = entry.value;
+    }
+    return restored;
+  } catch {
+    return {};
+  }
+}
+
 export default function DayZeroChecklist() {
   const [done, setDone] = useState<Record<string, boolean>>({});
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setDone(JSON.parse(raw));
-    } catch {}
+      setDone(restoreDone(localStorage.getItem(STORAGE_KEY)));
+    } catch {} finally {
+      setHydrated(true);
+    }
   }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch {}
-  }, [done]);
+  }, [done, hydrated]);
 
   const toggle = (id: string) => setDone((prev) => ({ ...prev, [id]: !prev[id] }));
   const completed = STEPS.filter((s) => done[s.id]).length;

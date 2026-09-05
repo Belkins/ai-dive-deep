@@ -205,7 +205,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <p>Before adding code, read exports, immediate callers, shared utilities. If unsure why existing code is structured a certain way, ask.</p>
     <div class="my-3 rounded-md p-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
       <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Operator overlay</div>
-      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">This is the regression in the cold open above. The agent stopped formatting commits as conventional commits because it hadn't read what the convention was — there was no convention in the file the agent reads. Rule 8 is the most load-bearing of the 12 in my experience: roughly half of every regression I've debugged in portfolio repos traces back to the agent writing without reading the existing pattern first. If you only adopt three rules from the 12, this is one of them. (See <a href={`${base}/#three-rules`}>the 3-rules section below</a>.)</p>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">This is the regression in the cold open above. The agent stopped formatting commits as conventional commits because it hadn't read what the convention was — there was no convention in the file the agent reads. Rule 8 is the most load-bearing of the 12 in my experience: roughly half of every regression I've debugged in portfolio repos traces back to the agent writing without reading the existing pattern first. If you only adopt three rules from the 12, this is one of them. (See <a href="#three-rules">the 3-rules section below</a>.)</p>
     </div>
 
     <!-- RULE 9 -->
@@ -237,7 +237,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
     <p>"Completed" is wrong if anything was skipped silently. "Tests pass" is wrong if any were skipped. Default to surfacing uncertainty, not hiding it.</p>
     <div class="my-3 rounded-md p-4" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent));">
       <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Operator overlay</div>
-      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">"Completed" is the most expensive word in operator-Claude. The origin story — "database migration reported completed successfully; had skipped 14% of records on constraint violations; found 11 days later" — is the same shape as Anthropic's 81k-respondent study landing unreliability as the #1 concern at 26.7% (the highest single number in the whole study). The friday-wrapup canvas, the OPS-204 doc-drift, the migration that ate 14% of records — they're all the same failure: silent success. Rule 12 is the eval-thesis of <a href={`${base}/chapters/25-evals-or-hope/`}>Ch 25</a> written into the rule-file. If you adopt one rule from the 12, this is it.</p>
+      <p class="text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">"Completed" is the most expensive word in operator-Claude. A migration that skips records but reports success and a canvas that silently drops pipeline data both need an explicit failure state. <a href="https://www.anthropic.com/features/81k-interviews">Anthropic's qualitative interviews</a> include concerns about unreliable AI output; they are not a production incident dataset or a measured frequency of these failures. My operational rule is to surface missing work and failed checks before declaring success. Rule 12 is the eval-thesis of <a href={`${base}/chapters/25-evals-or-hope/`}>Ch 25</a> written into the rule-file.</p>
     </div>
   </section>
 
@@ -260,7 +260,7 @@ const fullFile = `# CLAUDE.md — the 12-rule baseline
   <section class="container-prose pt-4 pb-4">
     <h2 id="role-specific">Role-specific layering — which rules are load-bearing for which role</h2>
 
-    <p>The 12 rules are universal. The four role-specific CLAUDE.md skeletons in <a href={`${base}/resources/#claude-md`}>/resources</a> (CLAUDE_MD_SOLO, CLAUDE_MD_B2B_SALES, CLAUDE_MD_NEWSLETTER, CLAUDE_MD_PORTFOLIO_CEO) layer the role-specific conventions on top. Different roles lean on different rules from the 12:</p>
+    <p>The 12 rules are universal. The four role-specific CLAUDE.md skeletons in <a href={`${base}/resources/#working-memory`}>/resources</a> (CLAUDE_MD_SOLO, CLAUDE_MD_B2B_SALES, CLAUDE_MD_NEWSLETTER, CLAUDE_MD_PORTFOLIO_CEO) layer the role-specific conventions on top. Different roles lean on different rules from the 12:</p>
 
     <ul>
       <li><strong>Solo operator (CLAUDE_MD_SOLO).</strong> Lean on <strong>Rule 2 (Simplicity First)</strong> and <strong>Rule 4 (Goal-Driven)</strong>. You're shipping fast across multiple weekend builds. Abstractions are the enemy. Measurable success criteria are how you avoid building the wrong thing for three days before noticing.</li>

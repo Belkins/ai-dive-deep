@@ -68,11 +68,11 @@ When I build a new scheduled task, I make sure I can answer four questions in on
 
 **Trigger.** Time, event, or both? Most start as time-based. Some upgrade to event-driven later. Some need both — event as the real signal, time as a backstop in case the event misfires.
 
-**Inputs.** What does this instance need to read to do its job? Be specific. "HubSpot deals" is not specific. "HubSpot deals where stage changed in the last 24 hours and amount > $10K" is specific.
+**Inputs.** What does this instance need to read to do its job? Be specific. "HubSpot deals" is not specific. "Stage changes since the last successfully processed window, for deals above $10K" is specific. Store the window boundary; a rolling 24-hour query loses coverage after an outage or a weekend.
 
 **Output.** Where does the result land? Slack DM, Slack canvas, email, vault file, dashboard. Match the channel to the urgency and the audience.
 
-**Failure mode.** What happens when the data isn't there or the API is down or there's nothing useful to say? The default should always be "silent skip," never "alert spam." Train your scheduler to shut up when it has nothing useful to report. Silence is a feature.
+**Failure mode.** A successful read with no changes is a quiet result. A failed read, expired credential, incomplete page of results, or failed delivery is not. Retry within a fixed budget, retain the last successful cursor, and notify the workflow owner once per incident. Repeated failures update the same incident; recovery closes it. Silence should mean "nothing changed," not "we stopped checking."
 
 ## The five high-leverage patterns
 
@@ -106,23 +106,25 @@ Most modern AI surfaces hide cron behind a UI — type "every weekday at 7 AM" i
 
 Five lines of design.
 
-**Trigger:** 5 PM ET, weekdays.
+**Trigger:** 5 PM ET, weekdays. Configure the scheduler's timezone as `America/New_York`, not a fixed UTC offset, so daylight saving changes do not move the local delivery time.
 
-**Inputs:** HubSpot stage changes in the last 24 hours, Gong transcripts of new calls, Slack #sales activity.
+**Inputs:** HubSpot stage changes, Gong transcripts, and Slack #sales activity since each source's last successfully processed cursor. Fix the upper boundary at run start and fetch every page. On first use, explicitly choose the starting window; do not pretend earlier history was checked.
 
 **Logic:** identify deals that moved, deals that stalled, deals that went dark. For each, pull a one-paragraph "why" from transcripts where available.
 
-**Output:** Slack DM to me with the daily ticker. Slack canvas shared with leadership for the deep-dive.
+**Output:** Slack DM to me with the daily ticker. Slack canvas shared with leadership for the deep-dive. Validate the actual artifact before either delivery using the gate in [Chapter 25](/chapters/25-evals-or-hope/).
 
-**Failure:** if HubSpot is down, skip silently. Tomorrow's run catches yesterday's motion.
+**Failure:** if a source or delivery fails, keep its cursor unchanged and notify the owner. Resume from that cursor in bounded catch-up windows, including weekends. Advance a window only after complete reads, validation, and confirmed delivery, or a verified no-change result. If the backlog exceeds source retention or the recovery budget, stop and request a reviewed backfill rather than silently jumping to today.
 
-That's it. Five lines. It replaces a 30-minute pipeline review every day and a leadership update meeting every week.
+The recovery rules above are the implementation contract, not evidence that every scheduler supplies them automatically. Test a Friday failure followed by a Monday recovery before trusting this workflow unattended.
 
 ## Idempotency — the trap
 
 A scheduled task that runs twice should produce the same output, not two copies. Otherwise some Friday night yours will misfire and your Slack will light up with three identical wrap-ups, and the next week you'll mute the channel, and a month later you'll forget the system existed.
 
 Build dedup checks. Use unique keys. Add "have I already run for this window?" guards. Boring infrastructure work, but it's the difference between a scheduler that runs for years and one that runs for two weeks.
+
+Use a durable run record keyed by workflow and window, plus source event IDs to deduplicate overlapping reads. Serialize concurrent runs for the same workflow. Track each delivery target separately so a successful DM is not sent again when only the canvas failed. A send timeout is ambiguous: reconcile the existing message before retrying. A cursor alone cannot guarantee exactly-once delivery across two systems.
 
 ## Output channels matter more than the work
 

@@ -8,49 +8,45 @@ import ManifestoQuote from '@/components/ManifestoQuote.astro';
 import TileEyebrow from '@/components/TileEyebrow.astro';
 import { CHANGELOG } from '@/lib/changelog';
 import { SETUP_STATS } from '@/lib/setup';
+import LearningPaths from '@/components/LearningPaths.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const ed = CHANGELOG[0];
 const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
 
 <BaseLayout title="Vlad's Playbook" description={`${CHAPTERS.length} chapters on Claude Code, AI agents, and agentic workflows for operators — free, no email gate. A field manual for running AI like an OS, by Vlad Podoliako.`}>
-  <section class="container-wide pt-16 md:pt-24 pb-10">
+  <section class="container-wide pt-10 md:pt-14 pb-10">
     <div class="text-xs uppercase tracking-[0.25em] mb-4" style="color: rgb(var(--accent))">A field manual</div>
-    <h1 class="font-display font-medium leading-[0.95] text-[clamp(3rem,8vw,7rem)] tracking-tight">
+    <h1 class="font-display font-medium leading-[0.95] text-5xl md:text-7xl" style="letter-spacing: 0">
       VLAD'S<br/>
       <span style="color: rgb(var(--accent))">PLAYBOOK</span>
     </h1>
-    <p class="mt-4 text-sm uppercase tracking-[0.2em]" style="color: rgb(var(--muted))">The Ultimate AI Dive Deep</p>
     <p class="mt-6 max-w-[55ch] text-lg md:text-xl" style="color: rgb(var(--fg) / 0.85)">
-      For operators who want to stop juggling tabs and start running AI like an OS.
-      {CHAPTERS.length} chapters. One operator. Belkins, Folderly, the Newsletter, and a portfolio of others.
+      Put AI to work. Build a repeatable workflow, ship a product, or get a team past the demo.
+      {CHAPTERS.length} chapters from operating Belkins, Folderly, and a portfolio of products. The failures are in here, too.
     </p>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">by Vlad Podoliako · {ed.edition} · {edWhen}</p>
 
     <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-mono" style="color: rgb(var(--muted))">
-      <span><span style="color: rgb(var(--accent))">3-10B</span> tokens / mo</span>
-      <span style="opacity: 0.4">·</span>
-      <span><span style="color: rgb(var(--accent))">5</span> companies</span>
-      <span style="opacity: 0.4">·</span>
       <span><span style="color: rgb(var(--accent))">{CHAPTERS.length}</span> chapters</span>
-      <span style="opacity: 0.4">·</span>
-      <span><span style="color: rgb(var(--accent))">25</span> widgets</span>
       <span style="opacity: 0.4">·</span>
       <span><span style="color: rgb(var(--accent))">$0</span> to read</span>
       <span style="opacity: 0.4">·</span>
       <span>no email gate</span>
     </div>
 
-    <div class="mt-10 flex flex-wrap gap-3">
-      <a href={`${base}/learn/`} class="btn-ghost">New to AI? Start with Learn →</a>
-      <a href={`${base}/how-to-read/`} class="btn-flame">Read the prologue first →</a>
-      <a href={`${base}/tier-list/`} class="btn-ghost">Build/share your tier list</a>
-      <a href={`${base}/day-zero/`} class="btn-ghost">Day zero (operator path)</a>
-      <a href={`${base}/journey/`} class="btn-ghost">The journey (reader path)</a>
-      <a href={`${base}/questions/`} class="btn-ghost">Questions people ask me</a>
+    <div class="mt-7 flex flex-wrap gap-3">
+      <a href={`${base}/library/`} class="btn-ghost">Explore the library →</a>
+      <a href={`${base}/workflow-planner/`} class="btn-ghost">Plan a workflow →</a>
     </div>
 
     <ResumeReading client:load />
+  </section>
+
+  <section class="container-wide pt-4 pb-8">
+    <h2 class="font-display text-3xl m-0 mb-6" style="letter-spacing:0">What do you want to get done?</h2>
+    <LearningPaths compact />
+    <p class="text-sm mt-3" style="color:rgb(var(--muted))">New to AI? <a href={`${base}/learn/`}>Start with the basics.</a> Prefer reading cover to cover? <a href={`${base}/how-to-read/`}>Read the prologue.</a></p>
   </section>
 
   <section class="container-wide pt-4 pb-12">
@@ -66,7 +62,7 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
 
   <section class="container-wide pt-16 pb-8">
     <div class="flex items-baseline justify-between mb-8 flex-wrap gap-3">
-      <h2 class="m-0 font-display text-3xl md:text-4xl">Forty-Six Chapters</h2>
+      <h2 class="m-0 font-display text-3xl md:text-4xl">{CHAPTERS.length} Chapters</h2>
       <p class="text-sm" style="color: rgb(var(--muted))">Read straight or jump where you need it. Each chapter stands alone.</p>
     </div>
 
@@ -103,7 +99,7 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
         <div class="min-w-0">
           <div class="text-[0.7rem] uppercase tracking-[0.28em] mb-2" style="color: rgb(var(--accent))">Now · {ed.edition} · {edWhen}</div>
           <div class="font-display text-2xl md:text-3xl leading-tight" style="letter-spacing: -0.01em;">
-            <strong>Vlad's Playbook is public.</strong> 47 chapters, 3 live embedded case studies, the source is open and is the recipe.
+            <strong>Vlad's Playbook is public.</strong> {CHAPTERS.length} chapters, 3 live embedded case studies, the source is open and is the recipe.
           </div>
         </div>
         <div class="shrink-0 inline-flex items-center gap-2 font-semibold whitespace-nowrap" style="color: rgb(var(--accent))">
@@ -214,7 +210,7 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
       <a href={`${base}/launch/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <TileEyebrow added="2026-05-20" category="The launch" />
         <h3 class="m-0 font-display text-2xl">{ed.edition} is public</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Typewriter hero, animated stat odometer, three live embedded artifacts, all 47 chapters as a click-anywhere mosaic, a post-credit scene.</p>
+        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The story behind the playbook, three live embedded artifacts, and all {CHAPTERS.length} chapters in one place.</p>
       </a>
       <a href={`${base}/launch-week/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <TileEyebrow added="2026-05-20" category="Live diary" />

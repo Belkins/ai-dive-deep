@@ -1,6 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-
-type Item = { type: 'chapter' | 'page' | 'section' | 'glossary' | 'note'; title: string; subtitle?: string; href: string; keywords?: string };
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import type { KeyboardEvent } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { BookOpen, Delete, Search, X } from 'lucide-react';
+import { createSearchIndex, MAX_SEARCH_QUERY_LENGTH, moveSearchSelection, POPULAR_PATHS, searchItems } from '@/lib/search';
+import type { SearchItem as Item, SearchResult } from '@/lib/search';
 
 // These are populated at module load — small enough to inline.
 import { CHAPTERS } from '@/lib/chapters';
@@ -10,25 +13,6 @@ import { RESEARCH_NOTES } from '@/lib/research-notes';
 
 const slugify = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-
-// Min edit distance — used only as a fuzzy fallback when substring search
-// returns < 3 hits. Bounded inputs (<60 chars) so the O(m·n) cost is negligible.
-function levenshtein(a: string, b: string): number {
-  if (a === b) return 0;
-  if (!a.length) return b.length;
-  if (!b.length) return a.length;
-  const v0 = new Array(b.length + 1).fill(0).map((_, i) => i);
-  const v1 = new Array(b.length + 1).fill(0);
-  for (let i = 0; i < a.length; i++) {
-    v1[0] = i + 1;
-    for (let j = 0; j < b.length; j++) {
-      const cost = a[i] === b[j] ? 0 : 1;
-      v1[j + 1] = Math.min(v1[j] + 1, v0[j + 1] + 1, v0[j] + cost);
-    }
-    for (let j = 0; j <= b.length; j++) v0[j] = v1[j];
-  }
-  return v1[b.length];
-}
 
 // Deep-link section anchors so Cmd-K resolves "permissions", "hooks",
 // "model routing", etc. straight to the right block on long reference pages.
@@ -234,16 +218,7 @@ const RESOURCES_SECTIONS: { id: string; label: string }[] = [
   { id: 'github-action', label: 'GitHub Action' },
 ];
 
-export default function CommandPalette() {
-  const [open, setOpen] = useState(false);
-  const [q, setQ] = useState('');
-  const [active, setActive] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const baseUrl = (typeof window !== 'undefined' && (window as any).BASE_URL) || (import.meta as any).env?.BASE_URL || '/';
-  const base = baseUrl.replace(/\/$/, '');
-
-  const items: Item[] = useMemo(() => {
+export function getPaletteItems(base = ''): Item[] {
     const chapterItems: Item[] = CHAPTERS.map((c) => ({
       type: 'chapter',
       title: `${String(c.number).padStart(2, '0')} — ${c.title}`,
@@ -252,9 +227,11 @@ export default function CommandPalette() {
       keywords: `${c.title} ${c.subtitle} ${CHAPTER_SYNONYMS[c.slug] || ''}`.toLowerCase(),
     }));
     const pages: Item[] = [
+      { type: 'page', title: 'Library', href: `${base}/library/`, subtitle: 'Search the playbook and choose a learning path', keywords: 'library index catalog catalogue browse search chapters learning paths reading roadmap topics filters' },
+      { type: 'page', title: 'Workflow planner', href: `${base}/workflow-planner/`, subtitle: 'Plan an AI workflow', keywords: 'workflow planner builder plan design workflow steps task automation' },
       { type: 'page', title: 'How to read this book', href: `${base}/how-to-read/`,     subtitle: 'The prologue — start here if new',                                                                  keywords: 'prologue start beginner first time intro reading guide' },
       { type: 'page', title: 'Learn — the on-ramp',    href: `${base}/learn/`,           subtitle: 'New to AI? Official free courses in order, then the book',                                            keywords: 'learn onboarding beginner new courses curriculum anthropic academy claude 101 claude code 101 cowork agent skills mcp openai academy chatgpt google gemini deeplearning hugging face microsoft start here getting started fundamentals tutorial how to learn' },
-      { type: 'page', title: 'Day zero',              href: `${base}/day-zero/`,        subtitle: 'First 30 minutes, 12 steps',                                                                          keywords: 'day zero getting started onboarding first install setup quickstart' },
+      { type: 'page', title: 'Day zero',              href: `${base}/day-zero/`,        subtitle: 'A first-session setup path, with optional next steps',                                                 keywords: 'day zero getting started onboarding first install setup quickstart' },
       { type: 'page', title: 'Starter skills',         href: `${base}/starter-skills/`,  subtitle: 'Six drop-in SKILL.md files',                                                                          keywords: 'starter skill SKILL.md template recipe drop-in' },
       { type: 'page', title: 'Good taste, on tap',     href: `${base}/good-taste/`,      subtitle: 'Before/after: stop AI design slop (Leon Lin\'s taste-skill)',                                          keywords: 'good taste taste-skill slop design before after imagegen art direction leon lin leonxlnx showcase steal skill flicked reach moon base anti-slop npx skills add' },
       { type: 'page', title: 'Vault starter',          href: `${base}/vault-starter/`,   subtitle: 'PARA vs 7 others. Project-as-entity. Working vault to clone.',                                       keywords: 'vault obsidian PARA notes zettelkasten knowledge graph clone' },
@@ -420,77 +397,65 @@ export default function CommandPalette() {
       type: 'note',
       title: n.title,
       subtitle: n.tagline,
-      href: `${base}/research-notes/`,
+      href: `${base}/research-notes/#${slugify(n.title)}`,
       keywords: `${n.title} ${n.tagline} ${(n.implications || []).join(' ')}`.toLowerCase(),
     }));
     return [...pages, ...chapterItems, ...sectionItems, ...glossaryItems, ...noteItems];
-  }, [base]);
+}
 
-  // Curated defaults for the empty-state — high-intent entry points, not
-  // first-N by array order. Keep this list under 10; render with a "Popular"
-  // header so users see they're not search results.
-  const POPULAR_HREFS = useMemo(() => [
-    '/learn', '/dynamic-workflows', '/dreaming', '/day-zero', '/cheat-sheet',
-    '/tier-list', '/sovereign-stack', '/html-first', '/showcase',
-  ].map((p) => `${base}${p}`), [base]);
+export default function CommandPalette() {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState('');
+  const [active, setActive] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+  const navigatingRef = useRef(false);
+  const listboxId = useId();
 
-  const popularDefaults = useMemo(() => {
-    const byHref = new Map(items.map((it) => [it.href, it] as const));
-    return POPULAR_HREFS.map((href) => byHref.get(href)).filter(Boolean) as Item[];
-  }, [items, POPULAR_HREFS]);
+  const baseUrl = (typeof window !== 'undefined' && (window as any).BASE_URL) || (import.meta as any).env?.BASE_URL || '/';
+  const base = baseUrl.replace(/\/$/, '');
+  const items = useMemo(() => getPaletteItems(base), [base]);
 
-  const filtered = useMemo(() => {
-    if (!q.trim()) return popularDefaults;
-    const needle = q.toLowerCase();
-    const typeBonus: Record<Item['type'], number> = { page: 5, chapter: 4, section: 3, glossary: 2, note: 1 };
-
-    const scored = items.map((it) => {
-      const title = it.title.toLowerCase();
-      const subtitle = (it.subtitle || '').toLowerCase();
-      const keywords = (it.keywords || '').toLowerCase();
-      let score = 0;
-      if (title === needle) score += 200;                              // exact title match
-      else if (title.startsWith(needle)) score += 100;                 // prefix
-      else if (title.includes(needle)) score += 50;                    // anywhere in title
-      if (subtitle.includes(needle)) score += 20;
-      // word-boundary match in keywords scores higher than substring
-      if ((' ' + keywords + ' ').includes(' ' + needle + ' ')) score += 15;
-      else if (keywords.includes(needle)) score += 10;
-      if (score > 0) score += typeBonus[it.type] || 0;
-      return { it, score };
-    });
-
-    const exact = scored.filter((s) => s.score > 0).sort((a, b) => b.score - a.score).map((s) => s.it).slice(0, 24);
-    if (exact.length >= 3 || needle.length < 3) return exact;
-
-    // Fuzzy fallback — Levenshtein over titles only, max edit distance 2,
-    // capped at 5 approximate matches. Runs only when substring is thin.
-    const fuzzy: Item[] = items
-      .filter((it) => !exact.includes(it))
-      .map((it) => ({ it, d: levenshtein(needle, it.title.toLowerCase().slice(0, Math.max(needle.length + 2, it.title.length))) }))
-      .filter(({ d, it }) => d > 0 && d <= 2 && Math.abs(it.title.length - needle.length) <= 4)
-      .sort((a, b) => a.d - b.d)
-      .slice(0, 5)
-      .map(({ it }) => it);
-    // Tag fuzzy results so the UI can render them under a divider.
-    return [...exact, ...fuzzy.map((it) => ({ ...it, _fuzzy: true } as Item & { _fuzzy?: boolean }))];
-  }, [q, items, popularDefaults]);
-
-  const exactCount = useMemo(() => {
-    if (!q.trim()) return filtered.length;
-    return filtered.filter((it) => !(it as Item & { _fuzzy?: boolean })._fuzzy).length;
-  }, [filtered, q]);
+  const index = useMemo(() => createSearchIndex(items), [items]);
+  const popularHrefs = useMemo(() => POPULAR_PATHS.map((path) => `${base}${path}`), [base]);
+  const filtered = useMemo(() => searchItems(index, q, popularHrefs), [index, q, popularHrefs]);
+  const exactCount = filtered.filter((item) => !item.fuzzy).length;
+  const activeIndex = filtered.length ? Math.max(0, Math.min(active, filtered.length - 1)) : -1;
+  const activeId = activeIndex < 0 ? undefined : `${listboxId}-option-${activeIndex}`;
 
   useEffect(() => {
     const onOpen = () => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        return;
+      }
+      openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      navigatingRef.current = false;
+      setActive(0);
       setOpen(true);
-      setTimeout(() => inputRef.current?.focus(), 0);
     };
+    const onNavigate = () => { navigatingRef.current = true; setOpen(false); };
     window.addEventListener('open-palette', onOpen);
-    return () => window.removeEventListener('open-palette', onOpen);
+    document.addEventListener('astro:before-swap', onNavigate);
+    const root = document.getElementById('cc-palette-root');
+    if (root) {
+      root.dataset.paletteReady = 'true';
+      root.dispatchEvent(new Event('palette-ready'));
+      if (root.dataset.openRequested === 'true') {
+        delete root.dataset.openRequested;
+        onOpen();
+      }
+    }
+    return () => {
+      window.removeEventListener('open-palette', onOpen);
+      document.removeEventListener('astro:before-swap', onNavigate);
+      if (root) delete root.dataset.paletteReady;
+    };
   }, []);
 
-  useEffect(() => { setActive(0); }, [q, open]);
+  useEffect(() => {
+    if (open && activeId) document.getElementById(activeId)?.scrollIntoView({ block: 'nearest' });
+  }, [activeId, open, filtered]);
 
   // PostHog: capture searches (debounced 500ms) and clicks. No-op when
   // window.posthog isn't loaded (env var absent or ad-blocker active).
@@ -503,85 +468,128 @@ export default function CommandPalette() {
     return () => clearTimeout(t);
   }, [q, open, filtered.length]);
 
-  const trackClick = (it: Item, position: number) => {
+  const trackClick = (it: SearchResult, position: number) => {
     const ph = (window as any).posthog;
-    if (ph?.capture) ph.capture('cmd_k_click', { query: q, href: it.href, type: it.type, position, fuzzy: !!(it as Item & { _fuzzy?: boolean })._fuzzy });
+    if (ph?.capture) ph.capture('cmd_k_click', { query: q, href: it.href, type: it.type, position, fuzzy: it.fuzzy });
   };
 
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-      if (e.key === 'ArrowDown') { e.preventDefault(); setActive((i) => Math.min(filtered.length - 1, i + 1)); }
-      if (e.key === 'ArrowUp')   { e.preventDefault(); setActive((i) => Math.max(0, i - 1)); }
-      if (e.key === 'Enter')     {
-        e.preventDefault();
-        const it = filtered[active];
-        if (it) { trackClick(it, active); window.location.href = it.href; }
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [open, filtered, active]);
+  const handleSearchKey = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.nativeEvent.isComposing || event.keyCode === 229) return;
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      setActive(moveSearchSelection(activeIndex, filtered.length, event.key === 'ArrowDown' ? 1 : -1));
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      if (activeId) document.getElementById(activeId)?.click();
+    }
+  };
 
-  if (!open) return null;
+  const clearSearch = () => {
+    setQ('');
+    setActive(0);
+    inputRef.current?.focus();
+  };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-20 sm:pt-32 px-4"
-      style={{ background: 'rgb(0 0 0 / 0.6)' }}
-      onClick={() => setOpen(false)}
-    >
-      <div
-        className="w-full max-w-xl rounded-xl overflow-hidden shadow-2xl"
-        style={{ background: 'rgb(var(--bg))', border: '1px solid rgb(var(--line))' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center gap-3 px-4 py-3 border-b" style={{ borderColor: 'rgb(var(--line))' }}>
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: 'rgb(var(--muted))' }}>
-            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
-          </svg>
-          <input
-            ref={inputRef}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search chapters, pages, sections, glossary, notes…"
-            className="flex-1 bg-transparent outline-none text-base"
-            style={{ color: 'rgb(var(--fg))' }}
-          />
-          <kbd className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>esc</kbd>
-        </div>
-        <div className="max-h-[60vh] overflow-y-auto">
-          {filtered.length === 0 && <div className="px-4 py-8 text-sm text-center" style={{ color: 'rgb(var(--muted))' }}>No matches.</div>}
-          {!q.trim() && filtered.length > 0 && (
-            <div className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-wider" style={{ color: 'rgb(var(--muted))' }}>Popular</div>
-          )}
-          {filtered.map((it, idx) => {
-            const isFuzzy = (it as Item & { _fuzzy?: boolean })._fuzzy === true;
-            const showFuzzyDivider = isFuzzy && idx === exactCount;
-            return (
-              <div key={it.href}>
-                {showFuzzyDivider && (
-                  <div className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-wider border-t" style={{ color: 'rgb(var(--muted))', borderColor: 'rgb(var(--line))' }}>Approximate matches</div>
-                )}
-                <a
-                  href={it.href}
-                  className="flex items-center gap-3 px-4 py-2.5 no-underline"
-                  style={{ background: idx === active ? 'rgb(var(--line) / 0.6)' : 'transparent', color: 'rgb(var(--fg))', opacity: isFuzzy ? 0.75 : 1 }}
-                  onMouseEnter={() => setActive(idx)}
-                  onClick={() => trackClick(it, idx)}
-                >
-                  <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>{it.type}</span>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-medium truncate" style={{ fontStyle: isFuzzy ? 'italic' : 'normal' }}>{it.title}</div>
-                    {it.subtitle && <div className="text-xs truncate" style={{ color: 'rgb(var(--muted))' }}>{it.subtitle}</div>}
-                  </div>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-50" style={{ background: 'rgb(0 0 0 / 0.6)' }} />
+        <Dialog.Content
+          className="fixed top-16 sm:top-24 left-1/2 -translate-x-1/2 z-[60] flex flex-col max-h-[calc(100dvh-6rem)] rounded-lg overflow-hidden shadow-2xl"
+          style={{ width: 'min(36rem, calc(100vw - 2rem))', background: 'rgb(var(--bg))', border: '1px solid rgb(var(--line))' }}
+          onOpenAutoFocus={(event) => { event.preventDefault(); inputRef.current?.focus(); }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            if (navigatingRef.current) return;
+            const opener = openerRef.current?.isConnected ? openerRef.current : document.getElementById('open-palette-btn');
+            opener?.focus({ preventScroll: true });
+          }}
+        >
+          <Dialog.Title className="sr-only">Search the playbook</Dialog.Title>
+          <Dialog.Description className="sr-only">Chapters, pages, sections, glossary terms, and research notes.</Dialog.Description>
+          <div className="flex shrink-0 items-center gap-2 px-3 py-3 border-b" style={{ borderColor: 'rgb(var(--line))' }}>
+            <Search aria-hidden="true" className="h-4 w-4 shrink-0" style={{ color: 'rgb(var(--muted))' }} />
+            <input
+              ref={inputRef}
+              value={q}
+              onChange={(event) => { setQ(event.target.value); setActive(0); }}
+              onKeyDown={handleSearchKey}
+              role="combobox"
+              aria-label="Search the playbook"
+              aria-autocomplete="list"
+              aria-expanded={open}
+              aria-controls={listboxId}
+              aria-activedescendant={activeId}
+              autoComplete="off"
+              spellCheck={false}
+              maxLength={MAX_SEARCH_QUERY_LENGTH}
+              enterKeyHint="go"
+              placeholder="Search the playbook…"
+              className="min-w-0 flex-1 bg-transparent outline-none text-base"
+              style={{ color: 'rgb(var(--fg))' }}
+            />
+            {q && (
+              <button type="button" onClick={clearSearch} aria-label="Clear search" title="Clear search" className="flex h-9 w-9 shrink-0 items-center justify-center rounded hover:bg-white/5" style={{ color: 'rgb(var(--muted))' }}>
+                <Delete aria-hidden="true" className="h-4 w-4" />
+              </button>
+            )}
+            <Dialog.Close aria-label="Close search" title="Close search (Escape)" className="flex h-9 w-9 shrink-0 items-center justify-center rounded hover:bg-white/5" style={{ color: 'rgb(var(--fg))', border: '1px solid rgb(var(--line))' }}>
+              <X aria-hidden="true" className="h-4 w-4" />
+            </Dialog.Close>
+          </div>
+          <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+            {!q.trim() ? `${filtered.length} popular pages.` : filtered.length ? `${filtered.length} results. ${filtered.length - exactCount} approximate matches.` : 'No matches.'}
+          </div>
+          <div className="min-h-0 max-h-[60dvh] overflow-y-auto">
+            {!q.trim() && filtered.length > 0 && (
+              <div className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-wider" style={{ color: 'rgb(var(--muted))' }}>Popular</div>
+            )}
+            <div id={listboxId} role="listbox" aria-label={q.trim() ? 'Search results' : 'Popular pages'}>
+              {filtered.map((it, idx) => (
+                <div key={it.id} role="presentation">
+                  {it.fuzzy && idx === exactCount && (
+                    <div aria-hidden="true" className="px-4 pt-3 pb-1 text-[10px] uppercase tracking-wider border-t" style={{ color: 'rgb(var(--muted))', borderColor: 'rgb(var(--line))' }}>Approximate matches</div>
+                  )}
+                  <a
+                    id={`${listboxId}-option-${idx}`}
+                    role="option"
+                    aria-selected={idx === activeIndex}
+                    tabIndex={-1}
+                    href={it.href}
+                    className="flex items-center gap-3 px-4 py-2.5 no-underline"
+                    style={{ background: idx === activeIndex ? 'rgb(var(--line) / 0.6)' : 'transparent', color: 'rgb(var(--fg))', opacity: it.fuzzy ? 0.75 : 1 }}
+                    onMouseEnter={() => setActive(idx)}
+                    onMouseDown={(event) => { if (event.button === 0) event.preventDefault(); }}
+                    onClick={(event) => {
+                      trackClick(it, idx);
+                      if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                        navigatingRef.current = true;
+                        setOpen(false);
+                      }
+                    }}
+                  >
+                    <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ background: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>{it.type}</span>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium truncate" style={{ fontStyle: it.fuzzy ? 'italic' : 'normal' }}>{it.title}</div>
+                      {it.subtitle && <div className="text-xs truncate" style={{ color: 'rgb(var(--muted))' }}>{it.subtitle}</div>}
+                      {it.fuzzy && <span className="sr-only">Approximate match</span>}
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </div>
+            {filtered.length === 0 && (
+              <div className="px-4 py-8 text-sm text-center" style={{ color: 'rgb(var(--muted))' }}>
+                <p className="m-0">No matches.</p>
+                <a href={`${base}/library/`} onClick={() => { navigatingRef.current = true; setOpen(false); }} className="mt-4 inline-flex items-center gap-2" style={{ color: 'rgb(var(--accent))' }}>
+                  <BookOpen aria-hidden="true" className="h-4 w-4" /> Browse chapters
                 </a>
               </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+            )}
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

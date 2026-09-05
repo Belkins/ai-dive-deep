@@ -75,7 +75,6 @@ const jsonLd: Record<string, unknown> = isChapter
         description: desc,
         image: og,
         bookFormat: 'EBook',
-        numberOfPages: chapterCount,
         hasPart: CHAPTERS.map((c) => ({
           '@type': 'Chapter',
           name: c.title,
@@ -83,7 +82,7 @@ const jsonLd: Record<string, unknown> = isChapter
           url: `https://dive.vladyslavpodoliako.com/chapters/${c.slug}/`,
         })),
         inLanguage: 'en',
-        license: 'https://dive.vladyslavpodoliako.com/llms.txt',
+        license: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
       }
     : {
         '@context': 'https://schema.org',

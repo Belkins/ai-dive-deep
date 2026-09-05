@@ -862,42 +862,36 @@ move: text the champ today. proposal day 5 is the silent-dead window.
 
 export const SKILL_EMAIL_DELIVERABILITY = `---
 name: email-deliverability-eval
-description: Audit a sending domain before launching a campaign. Returns ship / throttle / warm-down based on SPF + DKIM + DMARC presence, recent bounce rate from Google Postmaster + Microsoft SNDS, and 7-day sender reputation. Use when the user says "is the domain healthy", "can we send", "deliverability check", or when the pre-launch cron fires.
-allowed-tools: [Bash, Read, WebFetch]
+description: Review a configured sending domain using read-only evidence. Use for a deliverability check or campaign-readiness review. Missing data requires human review, not an invented rate or an automatic send decision.
+allowed-tools: [Read, WebFetch]
 ---
 
 # email-deliverability-eval
 
-## When to fire
-- Manual: before any campaign over 500 recipients.
-- Scheduled: weekly Sunday 17:00 ET, audit all 4 active sending domains.
-- After any DNS change on a sending domain.
+## Required context
+- Domain, configured DKIM selectors, workflow owner, and approved data sources.
+- Read-only DNS/authentication results and authorized ESP/reputation exports.
+- Explicit UTC start/end timestamps, provider metric definitions, and operator-approved thresholds.
+- Do not change DNS, send mail, adjust campaign volume, or fetch another account's data.
 
-## What to do
-1. Run \`dig +short TXT <domain>\` and confirm SPF record exists with \`v=spf1\` and ends in \`~all\` or \`-all\`.
-2. Run \`dig +short TXT default._domainkey.<domain>\` (or the configured selector) — must return a \`v=DKIM1\` record with \`p=\` key body.
-3. Run \`dig +short TXT _dmarc.<domain>\` — must return \`v=DMARC1\`, with \`p=\` set to \`quarantine\` or \`reject\`. \`p=none\` is a yellow flag.
-4. Pull Google Postmaster reputation for the domain — HIGH / MEDIUM / LOW / BAD.
-5. Pull last 7 days of bounce rate from the ESP. Soft-bounce >2% = caution, hard-bounce >0.5% = warm-down.
-6. Compose verdict.
+## Measurement rules
+1. Record SPF, DKIM, DMARC, and reputation evidence with its source and timestamp. Missing access or an API error is UNKNOWN, not a healthy result.
+2. For bounce rates, use bounce counts and the provider-defined denominator from the same account, message cohort, and exact requested interval. Keep hard and soft bounces separate. Calculate 100 * bounce_count / denominator.
+3. A zero denominator means NO_DATA, not a 0% bounce rate. Do not average daily percentages; aggregate compatible counts and denominators first.
+4. If only a 14-day aggregate exists, report that exact 14-day window and mark the requested 7-day value UNKNOWN. Never divide a 14-day rate or count to invent a 7-day result. Recompute only from compatible dated records covering the requested interval.
+5. Compare complete evidence with the configured thresholds. Missing thresholds or required evidence means REVIEW_REQUIRED. A human owns the campaign decision.
 
-## Output format
-One block per audited domain:
+## Output
+- Domain and exact measurement window.
+- Evidence source, collection time, and status for each check.
+- Bounce counts, denominators, and computed rates; UNKNOWN or NO_DATA where necessary.
+- Status: READY_FOR_HUMAN_REVIEW or REVIEW_REQUIRED, with reasons and the named owner.
 
-\`\`\`
-domain: partners.belkins.io
-SPF: ok      DKIM: ok      DMARC: p=quarantine (ok)
-postmaster: HIGH      bounce 7d: 0.31% hard, 1.4% soft
-verdict: SHIP — under target thresholds, no DNS drift.
-\`\`\`
-
-verdict values: SHIP / THROTTLE (cut volume 60%, watch 48h) / WARM-DOWN (stop fresh sends, finish in-flight, fix DNS first).
-
-## Failure modes
-- Postmaster API unavailable — note \`postmaster: UNKNOWN\` and downgrade the verdict by one tier (SHIP becomes THROTTLE, THROTTLE becomes WARM-DOWN). Never SHIP on unknown reputation.
-- DNS lookup hits a stale resolver cache — append \`(cache_age: Ns)\` so the operator knows whether to wait or trust.
-- ESP doesn't expose 7-day bounce — read 14-day and divide; flag the imputation in the output.
-- Domain has no email traffic in last 30 days — postmaster will return \`NO_DATA\`. Treat as a fresh warm-up domain, cap at 500/day until reputation populates.
+## Acceptance checks before scheduling
+- A synthetic 10 bounces / 1,000 eligible messages fixture yields 1%, not a measured production result.
+- A 14-day-only export does not yield a 7-day estimate.
+- Empty exports, zero denominators, expired access, and incomplete reads require review.
+- Replaying a fixture produces the same calculation and causes no sends or account changes.
 `;
 
 export const SKILL_SUBAGENT_WATCHDOG = `---

@@ -2,5 +2,21 @@
 import CommandPalette from '@/widgets/CommandPalette.tsx';
 ---
 <div id="cc-palette-root">
-  <CommandPalette client:idle />
+  <CommandPalette client:load />
+  <script is:inline data-astro-rerun>
+    (() => {
+      const root = document.getElementById('cc-palette-root');
+      if (!root || root.dataset.paletteReady === 'true') return;
+      // Preserve an early click while the island's JavaScript is loading.
+      const rememberOpen = () => { root.dataset.openRequested = 'true'; };
+      const cleanup = () => {
+        window.removeEventListener('open-palette', rememberOpen);
+        root.removeEventListener('palette-ready', cleanup);
+        document.removeEventListener('astro:before-swap', cleanup);
+      };
+      window.addEventListener('open-palette', rememberOpen);
+      root.addEventListener('palette-ready', cleanup, { once: true });
+      document.addEventListener('astro:before-swap', cleanup, { once: true });
+    })();
+  </script>
 </div>

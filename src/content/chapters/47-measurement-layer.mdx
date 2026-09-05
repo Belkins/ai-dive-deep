@@ -15,7 +15,7 @@ import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
 Here's a language-tutor reply that would sail straight through a smoke test. A beginner types *"Je voudrais un café, s'il vous plaît"* — already correct — and the AI tutor "corrects" it anyway, dumps three C1 vocabulary words on someone who's barely at A1, and signs off by asking where they're from. Fluent. Well-formed. Encouraging. And wrong on every axis that matters for a learner who's one discouraging session away from deleting the app. Nothing crashed. The transcript arrived intact.
 
-[Chapter 25](/chapters/25-evals-or-hope/)'s three-line <GlossaryTerm term="Eval">eval</GlossaryTerm> — the one that saved me from shipping a $0-pipeline canvas to my COO — would have stayed green the whole time. Because "did a well-formed reply arrive?" is the right question for an internal skill's artifact, and exactly the wrong question when the reply *is* the product.
+[Chapter 25](/chapters/25-evals-or-hope/)'s small <GlossaryTerm term="Eval">eval</GlossaryTerm> checks source health and artifact structure. Those are necessary checks, but they do not establish whether a tutor's correction is accurate. Internal reports need factual checks too; customer-facing replies add task-specific quality requirements.
 
 That's the altitude jump this chapter is about. Some of the things I ship aren't skills with a side-effect artifact you can smoke-test. They're products where **the model's output is the thing the customer pays for**. When the output *is* the product, the question isn't "did something arrive?" It's: *across a hundred realistic inputs, how often is the output actually good — and can you prove it before you charge for it?*
 
@@ -38,7 +38,7 @@ The course is Python and teaches by code — there are no lecture cells, the tea
 
 Four moving parts, in the order they fire.
 
-**Generate the dataset.** You describe the task and the inputs your prompt takes; the harness asks the model for a set of *diverse* scenarios (so the test set isn't ten variations of the same easy case) and turns each into a concrete test case. This is the step that feels like cheating — the labeled test set [Chapter 25](/chapters/25-evals-or-hope/) told you to skip for an internal skill, now cheap enough to justify when the output is the product. You get a hundred-row test set without hand-writing one.
+**Generate the dataset.** You describe the task and the inputs your prompt takes; the harness asks the model for a set of *diverse* scenarios (so the test set isn't ten variations of the same easy case) and turns each into a concrete test case. Treat generated cases as candidates, not automatically correct labels. Review the expected answers, include real failure cases, and keep a held-out set separate from prompt tuning. This expands [Chapter 25's golden-set checks](/chapters/25-evals-or-hope/); it does not replace them.
 
 **Grade cheap first.** Before you spend a single token on a judge, run the free checks. Does the output parse as JSON? Does it match a schema? Does the regex compile? These are deterministic, zero-cost, and perfectly reliable — `json.loads` doesn't have opinions. Brand rule in my shop: never pay an LLM to grade something a parser can grade for free.
 
@@ -110,6 +110,8 @@ The one place I changed the course's approach: fusing by **rank** (reciprocal ra
 </figure>
 
 ## What this is for — and what I refuse to do with it
+
+Choose the acceptance criteria before running the harness. The companion [AI agent evaluation metrics that matter](https://vladyslavpodoliako.com/thoughts/ai-agent-evaluation-metrics-that-matter) connects task success, human intervention, cost, and failures to an operating scoreboard. Record the dataset version, model configuration, and failed cases alongside the score so the next run can be compared honestly.
 
 This isn't a product. It's the internal trust dial for every AI feature across the portfolio, and the discipline matters more than the code.
 

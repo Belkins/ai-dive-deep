@@ -88,8 +88,8 @@
         "decides": "the prebuild guards — template literals, stack integrity, stale numbers, internal links, glossary terms, chapter dates — then astro build"
       },
       {
-        "command": "node --test tests/",
-        "decides": "the SEO test suites (run locally; deploy.yml does not run them)"
+        "command": "node --test tests/*.test.mjs",
+        "decides": "SEO, reader, workflow, and rendered-link regression suites; also required in pull-request verification and deployment"
       }
     ],
     "agents": {
@@ -142,7 +142,7 @@
   "verification": [
     "npm run check",
     "npm run build",
-    "node --test tests/"
+    "node --test tests/*.test.mjs"
   ],
   "docs": {
     "root": "docs",

@@ -16,10 +16,21 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 14',
+    date: '2026-09-05',
+    tagline: 'The working edition. Find the right chapter, resume where you left off, and turn a task into a reviewable workflow specification.',
+    bannerText: 'New: a searchable library, four learning paths, and the AI workflow planner.',
+    bannerHref: '/library/',
+    shipped: [
+      'New library: chapters, selected guides, and tools with topic and format filters, plus four outcome-based reading paths.',
+      'New workflow planner: four task presets, explicit inputs and approval boundaries, acceptance tests, and a downloadable Markdown specification. It plans a workflow; it does not execute one.',
+      'Search, reading-history, and navigation fixes across client-side page transitions. Reading history stays in your browser.',
+      'Corrections to setup instructions, scheduled-workflow recovery, research citations, and broken reference links.',
+    ],
+  },
+  {
     edition: 'Edition 13',
     date: '2026-08-17',
-    bannerText: 'New — Agent workflow: the agent doesn\'t pick what to work on, the board does. Boards, issue discipline, six path-routed reviewers.',
-    bannerHref: '/agent-workflow/',
     tagline: 'The queue edition. The swarm chapters taught running many sessions; this page is what those sessions should be fed. One GitHub Projects board per product family, issues written for an agent with no memory of the conversation that produced them, a pickup command that refuses vague specs, and a six-agent review fleet routed by file path — none of which gates a merge, all of which must be answered in writing. Installed across sixteen repos in one pass; fourteen went clean, and the four failure modes from the other two are on the page as rules the next install checks automatically. Screenshots are reconstructions with decoy repo names — the boards carry client work.',
     shipped: [
       'New page — /agent-workflow/. The five rules (one issue = one PR; the issue is the spec; the board answers "what can I start"; review before a human looks; nothing an agent says is a gate), the three slash commands (/task, /pick, /review), and the six-agent review fleet with path-glob routing a shell script can print and a human can audit.',
