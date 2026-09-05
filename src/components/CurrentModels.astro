@@ -1,0 +1,29 @@
+---
+import { MODEL_RELEASES, MODEL_RELEASES_CHECKED } from '@/lib/model-releases';
+---
+<section id="sec-models" class="container-prose pt-8 pb-4 scroll-mt-28">
+  <p class="eyebrow text-accent">Model releases checked {MODEL_RELEASES_CHECKED}</p>
+  <h2 class="text-2xl md:text-3xl">Astra and Fable 5.1</h2>
+  <p class="text-sm text-muted mt-3">New releases, not new personal tiers. The workflow candidates below are editorial hypotheses based on documented capabilities. Dive's matched-workload evaluation is pending.</p>
+  <div class="mt-6 grid gap-5">
+    {MODEL_RELEASES.map((model) => (
+      <article class="border border-line rounded-lg p-5 min-w-0">
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <h3 class="text-xl m-0">{model.name}</h3>
+          <span class="text-xs text-muted">Released <time datetime={model.released}>{model.released}</time></span>
+        </div>
+        <p class="text-sm mt-2"><code class="break-all">{model.modelId}</code></p>
+        <p class="text-sm text-muted mt-3">{model.availability}</p>
+        <dl class="text-sm mt-4 space-y-3">
+          <div><dt class="font-semibold">API context / maximum output</dt><dd class="text-muted mt-1">{model.context}</dd></div>
+          <div><dt class="font-semibold">API input / output</dt><dd class="text-muted mt-1"><strong class="text-fg">${model.inputPerMillion} / ${model.outputPerMillion} per million tokens.</strong> {model.pricingNote}</dd></div>
+          <div><dt class="font-semibold">Work to evaluate</dt><dd class="text-muted mt-1">{model.candidate}</dd></div>
+          <div><dt class="font-semibold">Comparison boundary</dt><dd class="text-muted mt-1">{model.boundary}</dd></div>
+        </dl>
+        <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs list-none p-0" aria-label={`${model.name} sources`}>
+          {model.sources.map((source) => <li><a class="text-accent underline underline-offset-4" href={source.href} target="_blank" rel="noopener noreferrer">{source.label}</a></li>)}
+        </ul>
+      </article>
+    ))}
+  </div>
+</section>

@@ -16,11 +16,22 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 14.1',
+    date: '2026-09-05',
+    tagline: 'The model reference refresh: Astra, Fable 5.1, and benchmark comparisons with their conditions intact.',
+    bannerText: 'Updated model reference: GPT-6 Astra, Claude Fable 5.1, and dated benchmarks.',
+    bannerHref: '/tier-list/#sec-models',
+    shipped: [
+      'Source-linked Astra and Fable 5.1 release notes: model IDs, access boundaries, API pricing qualifiers, and candidate workflows explicitly pending local evaluation.',
+      'Current independent benchmark evidence with effort and fallback labels. Intelligence Index version changes are not presented as model performance changes.',
+      'Historical lab comparisons and personal tool tiers remain separately dated; older model guides point to the current reference.',
+      'New chapter outlines and a matched-workload evaluation protocol are planned, not published chapters or completed experiments.',
+    ],
+  },
+  {
     edition: 'Edition 14',
     date: '2026-09-05',
     tagline: 'The working edition. Find the right chapter, resume where you left off, and turn a task into a reviewable workflow specification.',
-    bannerText: 'New: a searchable library, four learning paths, and the AI workflow planner.',
-    bannerHref: '/library/',
     shipped: [
       'New library: chapters, selected guides, and tools with topic and format filters, plus four outcome-based reading paths.',
       'New workflow planner: four task presets, explicit inputs and approval boundaries, acceptance tests, and a downloadable Markdown specification. It plans a workflow; it does not execute one.',

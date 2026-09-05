@@ -4,76 +4,67 @@ import TierListBuilder from '@/widgets/TierListBuilder.tsx';
 import LMArenaLeaderboard from '@/widgets/LMArenaLeaderboard.tsx';
 import ArtificialAnalysisPanel from '@/widgets/ArtificialAnalysisPanel.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
-import { LAB_CLAIMS, VENDOR_META, ARENA_AGENT, ARENA_AGENT_META } from '@/lib/lmarena';
-import { AA_SNAPSHOT, AA_INDEX_VERSION } from '@/lib/artificial-analysis';
+import CurrentModels from '@/components/CurrentModels.astro';
+import { LAB_CLAIMS, VENDOR_META, ARENA_AGENT, ARENA_AGENT_META, LMARENA_SNAPSHOT } from '@/lib/lmarena';
+import { AA_SNAPSHOT, AA_INDEX_VERSION, AA_MODELS, AA_SOURCE_URL } from '@/lib/artificial-analysis';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-// FAQPage JSON-LD — AEO/answer-engine surface. Answers are deliberately structural
-// (no dollar figures) so they can't drift from the dated panel data; the one named
-// model is capture-dated. See FOUNDER-DECISION.md §stat-drift.
+const pricedModels = AA_MODELS.filter((model) => Number.isFinite(model.intelligence) && Number.isFinite(model.costPerTaskUsd) && model.costPerTaskUsd >= 0);
+const highestScore = Math.max(...pricedModels.map((model) => model.intelligence));
+const lowestCost = Math.min(...pricedModels.map((model) => model.costPerTaskUsd));
+const leaders = pricedModels.filter((model) => model.intelligence === highestScore).map((model) => model.model).join(', ');
+const cheapest = pricedModels.filter((model) => model.costPerTaskUsd === lowestCost).map((model) => model.model).join(', ');
+const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 3 });
+const capturedAnswer = pricedModels.length
+  ? `In our ${AA_SNAPSHOT} capture of Artificial Analysis's ${AA_INDEX_VERSION}, the highest listed score in this economics subset is ${highestScore} (${leaders}); the lowest listed cost is ${usd.format(lowestCost)} per Intelligence Index task (${cheapest}). Only models with both a score and a task cost are included. These are captured configurations, not a universal winner or a quote for your workflow.`
+  : `Our ${AA_SNAPSHOT} capture of Artificial Analysis's ${AA_INDEX_VERSION} has no comparable rows with both a score and task cost. No winner or cheapest model is inferred from missing data.`;
+
+// Visible answers and FAQPage use the same items so the schema cannot drift.
+const faqItems = [
+  {
+    question: 'What does an independent benchmark establish?',
+    answer: 'Artificial Analysis provides an evaluation separate from vendor launch claims and crowd preference votes. Independence does not remove uncertainty: check the harness, dataset version, model configuration and any disclosed vendor coordination before applying the result to your work.',
+  },
+  {
+    question: 'What does cost per task mean here?',
+    answer: 'It is the reported US-dollar cost to run an Artificial Analysis Intelligence Index task, not a token list price or the cost of a successful production job. Retries, tool calls, latency and human review can change your workflow economics.',
+  },
+  {
+    question: 'Does a leaderboard rank decide the operator tier?',
+    answer: 'No. Rank describes one board and tested configuration. Effort settings, tools, harnesses and safety fallbacks can change what was actually evaluated. Match those conditions, then validate quality, cost and reliability on your own tasks. The operator defaults remain the July 27, 2026 personal-test snapshot; new models await local evaluation.',
+  },
+  {
+    question: 'Which captured models lead on score and task cost?',
+    answer: capturedAnswer,
+  },
+];
 const faqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Is Artificial Analysis an independent AI benchmark?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Yes. Artificial Analysis runs its own evaluation harness on dedicated hardware, so it is neither a crowdsourced preference vote (like LMArena) nor a vendor launch-deck number. On this tier list it sits as the independent referee between the public LMArena crowd leaderboard and the vendors’ own lab-claims.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What does cost per task mean for an AI model?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Cost per task is the weighted-average cost in US dollars to run one standardized Artificial Analysis Intelligence Index task. It prices a model’s real economics in agentic loops — the number that shows up on the invoice — rather than the headline capability score, so the most capable model is often not the cheapest to run.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Which AI model is cheapest per agentic task in 2026?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: `As of the ${AA_SNAPSHOT} capture of Artificial Analysis’s ${AA_INDEX_VERSION} board, GPT-5.6 Luna at max effort had the lowest cost per Intelligence Index task of any scored model, delivering roughly five-sixths of the board leader’s Index score at about a fiftieth of its per-task cost. Note that the most capable model is no longer the most expensive one — that link broke in July 2026. The panel shows the dated per-task figures; sort by "Cost / task" to compare.`,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What is the effort dial on Claude Opus 5?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'The effort dial is a parameter on Claude Opus 5 with five settings — low, medium, high, xhigh and max — that trades capability against token spend and latency. The API default is high; max is not the default. Anthropic’s launch benchmark table is reported at max effort, so an application that never sets the parameter is running a materially different configuration from the one the launch numbers describe. More effort is also not monotonically better: on some agentic coding evaluations the score peaks at medium and declines above high, because the model begins making changes the task did not require.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Is Claude Opus 5 better than Claude Fable 5?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'The independent evaluators keep them within or near their own stated confidence intervals, and Opus 5 costs half as much per million tokens. As of the 2026-08-17 captures: Artificial Analysis puts Opus 5 at max effort first by under a point on its Intelligence Index and by about 2.6 on its Agentic Index; Arena’s crowd Text board puts Fable 5 first — the one gap that now clears both confidence intervals — while Arena’s Agent board ranks Opus 5 (High) narrowly above Fable 5 (High) with fully overlapping intervals. Anthropic’s own guidance keeps Fable 5 as the highest available capability while recommending Opus 5 as the starting point for agentic coding and enterprise work.',
-      },
-    },
-  ],
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
 };
 ---
 <BaseLayout title="The Tier List" description="Drag-and-drop your own AI tools tier list. Share via URL. Public benchmarks vs operator usefulness, side by side.">
   <section class="container-prose pt-16 pb-4">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Chapter 24</div>
     <h1>The tier list. Without mercy.</h1>
-    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Public leaderboards rank capability. Operators rank usefulness. Below, five readings of the same models: the crowd's public benchmark, an independent referee that prices every run, the labs' own launch decks, the one crowd board that scores agents doing work — then Vlad's actual stack, a builder you can drag, share, and argue about.</p>
-    <div class="mt-6 rounded-lg p-5 text-sm leading-relaxed" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent)); color: rgb(var(--fg) / 0.9)">
-      <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Refreshed 2026-08-17</div>
-      <p class="m-0">Three weeks moved a lot. <strong>Opus 5</strong>, absent or trailing on several boards at its July capture, now holds #1 on Arena's Code board (which dethroned Kimi K3), debuts #1 on Image-to-Code, and — the one operators should read twice — leads <strong>Arena's Agent board</strong>, the closest thing to a crowd measurement of agentic work. Meanwhile the field arrived: <strong>Grok 4.6</strong>, <strong>Qwen3.8</strong>, <strong>Muse Spark 1.2</strong> and <strong>Gemini 3.7 Flash</strong> are all new since July, and Meta broke Anthropic's clean sweep of the Text top six. The independent panel below also gains a column: Artificial Analysis now publishes its agentic benches as a standalone <a href="https://artificialanalysis.ai/models/capabilities/agentic" target="_blank" rel="noopener" style="color: rgb(var(--accent))">Agentic Index</a>, and Opus 5 leads that too. The July finding still holds: the top of the independent index costs <em>less</em> per task than the model below it — the <a href={`${base}/opus-5/`} style="color: rgb(var(--accent))">Opus 5 model file</a> has that story.</p>
-      <p class="mt-2 mb-0" style="color: rgb(var(--muted))">Housekeeping from Arena: three boards were renamed (WebDev → <strong>Code</strong>, Image-to-WebDev → <strong>Image-to-Code</strong>, Video Edit → <strong>Video-to-Video</strong>), boards still don't share an update date (this capture's cutoffs span 25 days, and Document and Search haven't been recomputed since July), and there is still no public API — the mirror below is hand-verified, cross-checked against a community mirror on ten of eleven boards.</p>
+    <p class="mt-3 text-lg" style="color: rgb(var(--muted))">Public leaderboards rank performance under specific conditions. Operators rank usefulness. Start with the current model notes, then compare crowd votes, independent task economics, archived lab claims, agent results and Vlad's personal tiers. These are different questions, not five votes for one universal winner.</p>
+    <div class="mt-6 border-l-2 pl-5 text-sm leading-relaxed" style="border-color: rgb(var(--accent)); color: rgb(var(--fg) / 0.9)">
+      <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Captured evidence, not a live feed</div>
+      <p class="m-0">Arena captured <time datetime={LMARENA_SNAPSHOT}>{LMARENA_SNAPSHOT}</time>; Artificial Analysis captured <time datetime={AA_SNAPSHOT}>{AA_SNAPSHOT}</time> ({AA_INDEX_VERSION}). Each Arena board carries its own vote cutoff. Capture dates describe when we read a source, not when every result was measured.</p>
+      <p class="mt-2 mb-0" style="color: rgb(var(--muted))">Keep effort settings, harnesses and fallback conditions attached to every score. New Index versions are not numerically comparable with earlier versions, and an unavailable source does not justify carrying an old score forward as current. The lab comparison archive and July 27 personal tiers remain separately dated.</p>
     </div>
   </section>
 
   <nav id="tl-sectionnav" aria-label="Tier list sections" class="sticky z-30 border-b backdrop-blur" style="top: 3.5rem; background: rgb(var(--bg) / 0.82); border-color: rgb(var(--line))">
     <div class="container-prose flex items-center gap-1 py-2.5 overflow-x-auto text-xs">
       <span class="uppercase tracking-wider mr-1 shrink-0" style="color: rgb(var(--muted))">Jump to</span>
+      <a href="#sec-models" data-spy="sec-models" class="tl-link">Models</a>
       <a href="#sec-crowd" data-spy="sec-crowd" class="tl-link">Crowd</a>
       <a href="#sec-independent" data-spy="sec-independent" class="tl-link">Independent</a>
       <a href="#sec-labs" data-spy="sec-labs" class="tl-link">Labs</a>
@@ -82,11 +73,13 @@ const faqLd = {
     </div>
   </nav>
 
+  <CurrentModels />
+
   <section id="sec-crowd" style="scroll-margin-top: 7rem" class="container-prose pt-6 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the public says</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Arena public leaderboard</h2>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://arena.ai/" target="_blank" rel="noopener" style="color: rgb(var(--accent))">arena.ai</a>, the platform formerly called LMArena. This is the canonical "which model is better at benchmark tasks" public ranking. It's the right answer to one specific question — and the wrong answer to the question you actually care about as an operator.</p>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Two things to hold while reading it. First, <strong>the sample sizes are not comparable across rows</strong>: Opus 5 debuts at #1 on Document on 1,663 votes against the 37,271 behind the model it displaced, with fully overlapping confidence intervals. That is a leaderboard fact, not yet a statistical one, and the per-board notes say so where it applies. Second, effort suffixes are load-bearing: the crowd now votes on <code>claude-opus-5-high</code> (the API default) and <code>claude-opus-5-max</code> (the launch-deck configuration) as <em>separate rows</em> — on Code they sit at #4 and #1 respectively. A number quoted for "Opus 5" without its suffix is a number for a configuration you may not be running.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://arena.ai/" target="_blank" rel="noopener" style="color: rgb(var(--accent))">arena.ai</a>, formerly LMArena. Each board measures preference within its own task category and voting pool. A top row is not a guarantee of better results in your repository or workflow.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Read the board's date, vote coverage and confidence intervals before treating a rank gap as a meaningful difference. Model suffixes matter: effort levels, harnesses and preview variants are distinct configurations, not interchangeable names. An absent model is unmeasured here, not proven worse.</p>
   </section>
 
   <section class="pt-4 pb-2">
@@ -96,8 +89,8 @@ const faqLd = {
   <section id="sec-independent" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What an independent referee measures</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Artificial Analysis — the independent referee</h2>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is the crowd's taste; the boards below are the vendors' launch slides. This is neither — <a href="https://artificialanalysis.ai/models" target="_blank" rel="noopener" style="color: rgb(var(--accent))">Artificial Analysis</a> runs its own agentic harness (the v4.1 redesign rebuilt the Index around long agentic chains — Terminal-Bench 2.1, 𝜏³-Banking, GDPval v2; v4.1.1 is the current maintenance cut) and reports the one number the other two never do: what each run <em>costs</em>. Cost per task, not just capability — the column where the leaderboard starts speaking the operator's language. New in this capture: AA's <a href="https://artificialanalysis.ai/models/capabilities/agentic" target="_blank" rel="noopener" style="color: rgb(var(--accent))">Agentic Index</a> — the agentic benches published as their own board — joins the panel as its own column. Read it as a referee's reading, not a verdict: independent buys disinterest, not the last word. Captured {AA_SNAPSHOT}; dated sourcing on <a href={`${base}/research-notes/`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Two disclosures this board earns. At the Opus 5 launch (July 2026) AA disclosed it <em>"supported Anthropic to evaluate Claude Opus 5 ahead of release"</em> — its own harness and hardware, so not a vendor claim, but pre-release coordination on the row that came first. And the top of this board is a tie, not a ranking: AA's own stated confidence interval is ±1%, and the gap between the top two models — Opus 5 at max and Fable 5 — is 0.98 points. (The board now lists one effort setting per model; in July it ranked variants separately, and the literal #2 was Opus 5 again at xhigh.) A page that discounts launch decks has to apply the same arithmetic to the referee.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))"><a href={AA_SOURCE_URL} target="_blank" rel="noopener" style="color: rgb(var(--accent))">Artificial Analysis</a> provides an independent evaluation and reported task costs, separate from crowd preferences and vendor launch tables. This economics subset includes models with both an Intelligence Index score and a cost per Index task. Captured {AA_SNAPSHOT}, using {AA_INDEX_VERSION}; the panel carries the methodology and source disclosures.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))"><strong>Compare within this Index version, not against older captures.</strong> A changed benchmark mix or weighting changes what the score means. Keep the exact effort and fallback labels when comparing rows, distinguish unavailable metrics from zero, and do not interpret small score gaps without uncertainty. A cheaper Index task is not automatically a cheaper successful workflow.</p>
   </section>
 
   <section class="pt-4 pb-2">
@@ -105,13 +98,14 @@ const faqLd = {
   </section>
 
   <section id="sec-labs" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
-    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the labs claim</div>
-    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Launch-deck numbers — discounted on arrival</h2>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">The arena above is crowd votes on chat prompts. The boards below are what vendors shipped on launch day for the question operators actually ask — agentic work — which the arena doesn't measure. Read every row as a claim, not a receipt: Berkeley RDI reward-hacked 8 of 8 major agent benchmarks, so launch numbers carry a 10–15 point discount until your own eval confirms them. Models you can't buy don't appear — capability ceilings are not tier-list entries. Dated sourcing for every figure lives on <a href={`${base}/research-notes/`} style="color: rgb(var(--accent))">the research notes timeline</a>.</p>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Three of these four cards are vendor claims. One was run by a third party. Watch what happens to the numbers when the referee changes — that difference is the entire argument of this chapter, and it is now visible in a column rather than asserted in a sentence.</p>
+    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">Dated comparison archive</div>
+    <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Lab claims, with their test conditions</h2>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))"><strong>Historical comparison captured 2026-07-27, not the latest model ranking.</strong> These cards preserve the Opus 5 launch-window claims and independent comparisons available then. Their scores, absences and commentary belong to that archive; Astra and Fable 5.1 are covered in the <a href="#sec-models" style="color: rgb(var(--accent))">current model notes</a>.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Vendor-run and independently run results carry different provenance, not an automatic point adjustment. Check the dataset split, grader, tool access, effort setting and fallback model before trusting a comparison. Where those conditions differ, the gap is not a clean model-to-model result. Validate on your own workload; dated sources remain on the <a href={`${base}/research-notes/`} style="color: rgb(var(--accent))">research notes timeline</a>.</p>
     <div class="mt-6 grid gap-4 sm:grid-cols-2">
       {LAB_CLAIMS.map((c) => (
-        <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+        <div class="min-w-0 rounded-lg p-5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
+          <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--muted))">Comparison archive · 2026-07-27</div>
           <div class="flex items-baseline justify-between gap-2 flex-wrap">
             <div class="font-display text-lg leading-tight">{c.bench}</div>
             <span
@@ -123,20 +117,20 @@ const faqLd = {
           </div>
           <div class="text-xs mt-1" style="color: rgb(var(--muted))">{c.what}</div>
           {c.columns && (
-            <div class="mt-3 flex items-baseline gap-3 text-[9px] uppercase tracking-[0.12em]" style="color: rgb(var(--muted))">
-              <span class="flex-1"></span>
-              <span class="w-[86px] text-right">{c.columns[0]}</span>
-              <span class="w-[72px] text-right">{c.columns[1]}</span>
+            <div class="mt-3 flex items-baseline gap-2 text-[9px] uppercase tracking-[0.12em]" style="color: rgb(var(--muted))">
+              <span class="flex-1 min-w-0"></span>
+              <span class="w-14 shrink-0 text-right [overflow-wrap:anywhere]">{c.columns[0]}</span>
+              <span class="w-14 shrink-0 text-right [overflow-wrap:anywhere]">{c.columns[1]}</span>
             </div>
           )}
           <div class="mt-2 flex flex-col gap-1.5">
             {c.entries.map((e) => (
-              <div class="flex items-baseline gap-3">
-                <span class="font-mono text-sm flex-1 truncate" style={`color: ${VENDOR_META[e.vendor].color}`}>{e.model}</span>
-                <span class={c.columns ? 'font-mono text-sm font-semibold w-[86px] text-right' : 'font-mono text-sm font-semibold text-right'}>{e.score}</span>
+              <div class="flex items-baseline gap-2 min-w-0">
+                <span class="font-mono text-sm flex-1 min-w-0 [overflow-wrap:anywhere]" style={`color: ${VENDOR_META[e.vendor].color}`}>{e.model}</span>
+                <span class={c.columns ? 'font-mono text-sm font-semibold w-14 shrink-0 text-right' : 'font-mono text-sm font-semibold shrink-0 text-right'}>{e.score}</span>
                 {c.columns && (
                   <span
-                    class="font-mono text-sm w-[72px] text-right"
+                    class="font-mono text-sm w-14 shrink-0 text-right [overflow-wrap:anywhere]"
                     style={e.score2 && !/^[\d.]/.test(e.score2) ? 'color: rgb(var(--accent)); font-size: 11px' : 'color: rgb(var(--muted))'}
                   >{e.score2 ?? '—'}</span>
                 )}
@@ -152,25 +146,26 @@ const faqLd = {
   </section>
 
   <section id="sec-agent" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
-    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">The board that measures the actual job</div>
+    <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">A separate measure of agent work</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Arena's Agent board — and why it isn't a tab above</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">
-      Arena runs an agent board too, over {ARENA_AGENT_META.sessions}. It is deliberately not one of the tabs above, because it does not use Elo — its metric is a <em>{ARENA_AGENT_META.metric}</em>, a percentage. Rendering 12.19 in a column that reads 1506 two tabs over would be the exact category error this chapter exists to argue against, so it gets its own shape. It is also the closest any crowd board comes to measuring what operators actually buy — and since the August recompute, its top reads like the boards above it.
+      <a href={ARENA_AGENT_META.source} target="_blank" rel="noopener" style="color: rgb(var(--accent))">Arena's agent results</a> use <em>{ARENA_AGENT_META.metric}</em>, not the Elo scale of the crowd boards. The published snapshot covers {ARENA_AGENT_META.sessions}, captured {ARENA_AGENT_META.captured}. These scores describe agent performance under that board's conditions, not a direct comparison with the Intelligence Index or a substitute for testing your own workflow.
     </p>
     <div class="mt-5 rounded-lg overflow-hidden" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
       <div class="px-5 py-3 text-xs uppercase tracking-wider flex items-center justify-between gap-3 flex-wrap" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--muted))">
-        <span>Net improvement score</span>
+        <span>{ARENA_AGENT_META.metric}</span>
         <span>board published {ARENA_AGENT_META.published}</span>
       </div>
       {ARENA_AGENT.map((r) => (
         <div class="px-5 py-2 flex items-baseline gap-3 text-sm" style="border-bottom: 1px solid rgb(var(--line) / 0.5)">
-          <span class="font-display w-6" style="color: rgb(var(--muted))">{r.rank}</span>
-          <span class="flex-1 truncate" style={`color: ${VENDOR_META[r.vendor].color}`}>{r.model}</span>
-          <span class="font-mono text-xs" style="color: rgb(var(--fg))">{r.net}</span>
+          <span class="font-display w-6 shrink-0" style="color: rgb(var(--muted))">{r.rank}</span>
+          <span class="flex-1 min-w-0 [overflow-wrap:anywhere]" style={`color: ${VENDOR_META[r.vendor].color}`}>{r.model}</span>
+          <span class="font-mono text-xs shrink-0" style="color: rgb(var(--fg))">{r.net}</span>
         </div>
       ))}
       <div class="px-5 py-3 text-[11px] leading-relaxed" style="color: rgb(var(--muted))">
-        In July, Opus 5 was not on this board at all — three days old at capture. It now holds #1 (High) and #3 (Max) with Fable 5 between them, all three inside each other's intervals: read the top three as one band, not a ranking. Kimi K3 — open weights — still sits inside the top five. One trap when comparing to the July snapshot: Fable 5 "fell" from 12.72% to 12.01% without getting worse. The metric is relative to the average model in the pool, so scores drift down as the field strengthens — compare ranks across captures, never raw percentages.
+        <p class="m-0">{ARENA_AGENT_META.note}</p>
+        <p class="mt-2 mb-0">Read the displayed intervals alongside rank and retain each row's effort setting. Net improvement is relative to the model pool: changes in that pool can move scores without a change in the model itself. Neither a raw-score delta nor a rank change across captures establishes a capability gain.</p>
       </div>
     </div>
   </section>
@@ -179,11 +174,24 @@ const faqLd = {
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent))">What an operator actually uses</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Vlad's tier list</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">
-      The arena measures capability head-to-head on neutral prompts. This list measures what runs Vlad's portfolio on a Tuesday at 11am. They disagree more than you'd expect — Claude Code and Cowork don't appear on the arena at all, Perplexity loses head-to-head but is S-tier here because it answers the actual question 90% of the time. Drag tools, build your own, share the URL.
+      <strong>Personal-test snapshot: 2026-07-27.</strong> These are Vlad's workflow preferences, not a fresh benchmark ranking. The default placements are unchanged. Astra and Fable 5.1 still need matched-workload testing before any personal tier is assigned; appearing on a leaderboard does not earn an S-tier placement here.
     </p>
   </section>
 
   <TierListBuilder client:load />
+
+  <section class="container-prose pt-12 pb-2" aria-labelledby="tier-faq-title">
+    <h2 id="tier-faq-title" class="m-0 font-display text-2xl md:text-3xl leading-tight">Reading the evidence</h2>
+    <dl class="mt-6 space-y-5">
+      {faqItems.map((item) => (
+        <div>
+          <dt class="font-semibold">{item.question}</dt>
+          <dd class="mt-2 text-sm leading-relaxed" style="color: rgb(var(--muted))">{item.answer}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="mt-4 text-xs" style="color: rgb(var(--muted))">Score and cost source: <a href={AA_SOURCE_URL} target="_blank" rel="noopener" style="color: rgb(var(--accent))">Artificial Analysis</a>, captured {AA_SNAPSHOT}. Compare the exact configurations in the independent panel.</p>
+  </section>
 
   <section class="container-prose pt-8 pb-16">
     <div class="rounded-lg p-5 text-sm leading-relaxed" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2)); color: rgb(var(--fg) / 0.9)">

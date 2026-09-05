@@ -5,6 +5,7 @@ import SectionNav from '@/components/SectionNav.astro';
 import Callout from '@/components/Callout.astro';
 import PullQuote from '@/components/PullQuote.astro';
 import VideoEmbed from '@/components/VideoEmbed.astro';
+import HistoricalModelNotice from '@/components/HistoricalModelNotice.astro';
 
 const navItems = [
   { id: 'answer', label: 'The 30-second answer' },
@@ -20,7 +21,7 @@ const navItems = [
 const faqItems = [
   {
     q: 'What is Claude Fable 5?',
-    a: "Claude Fable 5 is Anthropic's most capable generally available model, released June 9, 2026. It is a Mythos-class model made safe for general use: the same underlying model as the gated Claude Mythos 5, with safety classifiers in front of offensive-cyber, biology/chemistry, and capability-distillation requests. In the Claude apps fallback to Opus 4.8 is built in; on the API a blocked request returns an unbilled error with opt-in fallback. Model id: claude-fable-5, 1M-token context window.",
+    a: "Claude Fable 5 was released June 9, 2026. This model file preserves its launch-period specifications and safeguards; it is not a guide to Fable 5.1. The Fable 5 model id is claude-fable-5, with a 1M-token context window. See the current tier-list reference for newer model versions, access, and pricing.",
   },
   {
     q: 'What is the difference between Fable 5 and Mythos 5?',
@@ -28,15 +29,15 @@ const faqItems = [
   },
   {
     q: 'How much does Claude Fable 5 cost?',
-    a: 'API pricing is $10 per million input tokens and $50 per million output tokens — exactly 2× Claude Opus 4.8 ($5/$25). On Claude paid plans (Pro, Max, Team, Enterprise seats) it is included in plan limits from June 9 to June 22, 2026, and needs usage credits after that.',
+    a: 'Fable 5 launched at $10 per million input tokens and $50 per million output tokens. Its included-plan promotion originally had a June 22, 2026 deadline, later extended to July 19. This historical offer does not establish current plan entitlements or Fable 5.1 pricing; check the current model reference and Claude plan documentation.',
   },
   {
     q: 'Is Fable 5 available in Claude Code?',
-    a: 'Yes — from June 9, 2026, Fable 5 is available everywhere including Claude Code, where the launch banner read "our newest model for complex, long-running work." It was included in paid-plan limits until June 22, 2026, then switched to usage credits. As of July 24, 2026 it is no longer the newest: Claude Opus 5 shipped at half the price and is the default Opus in Claude Code. Fable 5 remains Anthropic\'s declared highest-capability model.',
+    a: 'Fable 5 launched in Claude Code on June 9, 2026. The originally announced June 22 promotion deadline was extended to July 19. It is no longer the latest Fable release: Fable 5.1 launched September 1. Check the current plan documentation rather than applying the old promotion to 5.1.',
   },
   {
     q: 'Should I switch from Opus 4.8 to Fable 5?',
-    a: 'Not on the launch table alone. Run your own eval during the free plan window (June 9-22). The sticker is 2× Opus 4.8, but the launch receipts are about turn-count collapse on long-horizon work — Stripe ran a 50-million-line Ruby migration in one day. Decide on cost per finished task on your workload, not dollars per token.',
+    a: 'Do not migrate from a launch table alone. The 2026 promotion described in this historical file has ended. Check current availability, run matched tasks with review gates, and compare cost per accepted output, including failures and human corrections.',
   },
 ];
 
@@ -55,6 +56,7 @@ const faq = {
   description="Claude Fable 5 for operators: the withheld Mythos model made buyable, $10/$50 per Mtok, 1M context, fallback-to-Opus safeguards, and the benchmark table."
 >
   <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+  <HistoricalModelNotice period="June 2026 launch, with dated July updates" />
 
   <section class="container-wide pt-16 pb-8">
     <div class="eyebrow eyebrow-loud mb-3 text-accent">Model file · Fable 5 / Mythos 5</div>
@@ -75,14 +77,14 @@ const faq = {
         <div id="answer" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
           <div class="rounded-xl border p-5 border-line bg-accent/5">
-            <p class="m-0 leading-relaxed"><strong>Claude Fable 5</strong> is Anthropic's top model — the gated Mythos 5, safeguards on, sold to everyone. $10/$50 per Mtok, 2× Opus 4.8. 1M context. SWE-Bench Pro 80.3% vs Opus 4.8's 69.2%. In plan limits June 9–22; usage credits after. In the Claude apps a tripped classifier falls back to Opus 4.8 — and tells you; on the API a blocked request errors, unbilled, with fallback opt-in.</p>
+            <p class="m-0 leading-relaxed"><strong>Claude Fable 5</strong> launched in June 2026 with domain safeguards, $10/$50 per Mtok pricing, and 1M API context. The tables below preserve launch evidence, not the current model ranking. Fable 5.1 is the newer release. The original promotion was extended beyond June 22, and current API refusal and billing semantics are clarified below.</p>
           </div>
         </div>
 
         <div id="what-it-is" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">What Fable 5 is — one model, two names</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>The names are the same word. <em>Fabula</em> is Latin, <em>mythos</em> is Greek — "that which is told." That's not branding whimsy; it's the architecture. <strong>Claude Mythos 5</strong> is the raw model: restricted to Project Glasswing partners with cyber safeguards lifted, expanding to vetted biology researchers next. <strong>Claude Fable 5</strong> is the same model wearing classifiers in front of three areas — offensive cyber, biology/chemistry, and capability distillation — and when one trips, the Claude apps and Managed Agents hand the response to Claude Opus 4.8 instead (on the API it's an unbilled error unless you opt into fallback). Anthropic's own number: more than 95% of Fable sessions involve no fallback at all.</p>
+            <p>The names are the same word. <em>Fabula</em> is Latin, <em>mythos</em> is Greek — "that which is told." That's not branding whimsy; it's the architecture. At launch, <strong>Claude Mythos 5</strong> was restricted to Project Glasswing partners with different domain safeguards, with access expanding to vetted biology researchers. <strong>Claude Fable 5</strong> used classifiers in three areas — offensive cyber, biology/chemistry, and capability distillation — with application-level fallback to Claude Opus 4.8. Current API refusal semantics are documented in the fallback section below. Anthropic's launch figure was that more than 95% of Fable sessions involved no fallback.</p>
             <p>The part that matters for the record: this is the model Anthropic disclosed in March and explicitly said would <em>not</em> ship. The May 6 <a href="/research-notes/">research note</a> on this site read that as a capability ceiling they wouldn't productize. Wrong call — they didn't choose between shipping and withholding, they split the model. Full story on the <a href="/fable-5/vs-mythos-5/">Fable vs Mythos page</a>.</p>
             <PullQuote>Anthropic didn't choose between shipping the model and withholding it. They split it — the capability for the vetted, the seatbelt version for everyone else.</PullQuote>
             <Callout type="note">
@@ -124,6 +126,7 @@ const faq = {
         <div id="pricing" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Pricing — and the June 22 clock</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
+            <p class="text-sm text-muted"><strong>Timeline correction, September 5:</strong> June 22 below was the originally announced deadline, not the final promotion end date. <a href="https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan" rel="noopener">Claude's current plan history</a> records an extension through July 19. The launch-period advice and captured banner below are historical, not an offer available now.</p>
             <p><strong>$10 per million input tokens, $50 per million output.</strong> Exactly 2× Opus 4.8's $5/$25, and less than half what Mythos Preview cost its partners. 1M-token context window, 128K max output. Full cost math on the <a href="/fable-5/pricing/">pricing page</a>.</p>
             <p>The clock: on paid plans (Pro, Max, Team, seat-based Enterprise) Fable 5 is <strong>included in plan limits June 9–22, 2026</strong>. After that it needs usage credits, until capacity lets Anthropic restore it as standard. That's not a promo — it's a two-week free private-eval window (<a href="/chapters/25-evals-or-hope/">Ch 25</a>). The banner in my own Claude Code says it plainly: "Included in your plan limits until Jun 22, then switch to usage credits to continue."</p>
             <Callout type="warn">
@@ -136,7 +139,7 @@ const faq = {
           <h2 class="font-display text-3xl mb-4">The fallback architecture — a safeguard you can see</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>Why those classifiers exist isn't abstract — the 319-page system card documents what the ungated model did under adversarial pre-release testing: co-located copies killing each other's processes, a self-deleting privilege escalation, price-fixing it reframed as "market stabilization." The honest, episode-by-episode read is on <a href="/fable-5/system-card/">the system-card page</a>.</p>
-            <p>Three classifier areas sit in front of Fable 5: offensive cyber (external testing found zero harmful single-turn cyberattack-planning requests succeeded; 1,000+ hours of red-teaming, no universal jailbreaks found), biology/chemistry (the same capability that accelerates gene-therapy design could design a dangerous virus), and distillation (attempts to extract the model's capability for competitors). What happens when one trips depends on where you're standing. In the Claude apps and Managed Agents, fallback is built in — the response comes from Opus 4.8 and you're told. On the raw Messages API, a blocked request <strong>returns an error, and you aren't charged for it</strong>; fallback to Opus 4.8 is an opt-in, billed at Opus pricing — or you roll your own with the SDK.</p>
+            <p>Fable 5 launched with classifiers for offensive cyber, biology/chemistry, and capability distillation. Application fallback and API fallback are different configurations. <strong>API contract correction, September 5:</strong> current Messages API refusals return HTTP 200 with <code>stop_reason: "refusal"</code>, not an automatically unbilled error. Partial-output attempts can be billed. API fallback must be configured; record every serving model and billed iteration. See <a href="https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback" rel="noopener">the current refusal and fallback contract</a> before implementing retry or billing logic.</p>
             <p>The operator read: this is not fine print, it's routing information. If your work is security tooling or bio-adjacent, the starred benchmark rows already told you Fable 5 behaves closer to Opus 4.8 there <em>by design</em>. Route those workloads to Opus 4.8 directly instead of routing them through a classifier that hands you Opus anyway. Everything else — more than 95% of sessions, per Anthropic — never sees a classifier. Full detail on <a href="/fable-5/vs-mythos-5/">the Fable vs Mythos page</a>; API behavior on <a href="/fable-5/api/">the API page</a>.</p>
             <p class="text-sm text-muted">Also in the fine print and worth knowing: Fable 5 carries a limited 30-day data-retention requirement — retained only to detect and prevent serious misuse, not used to train Claude — and admins must accept updated terms in the Claude Console before the model works.</p>
           </div>
