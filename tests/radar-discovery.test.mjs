@@ -165,7 +165,7 @@ function buildFixture({ isPublic = true, liveCount = 12, siteUrl = defaultOrigin
       'astro.config.mjs', 'tsconfig.json', 'package.json', 'src/lib/radar-config.mjs',
       'src/components/RadarBoard.astro', 'src/pages/radar/index.astro', 'src/pages/radar/[date].astro',
       'src/layouts/BaseLayout.astro', 'src/lib/chapters.ts', 'src/lib/author.ts', 'src/lib/seo.ts',
-      'src/data/chapter-dates.json',
+      'src/lib/radar-age.ts', 'src/data/chapter-dates.json',
     ]) copy(name);
     symlinkSync(join(repo, 'node_modules'), join(root, 'node_modules'), 'dir');
     write(root, 'src/pages/index.astro', '<a href="/radar/">Radar</a>');
@@ -226,6 +226,39 @@ for (const options of [
         assert.equal(existsSync(join(root, `dist/radar/${excluded}/index.html`)), false);
         assert.equal(sitemap.includes(`/radar/${excluded}/`), false);
       }
+
+      // Snapshot age (issue #31). The live board must hand the client the exact ISO
+      // stamp beside an absolute one it renders server-side, so the page still reads
+      // correctly with JavaScript off; a frozen edition is a snapshot of a past day
+      // and must gain no staleness state at all.
+      const live = html('');
+      assert.ok(live.includes(`data-generated="${liveDate}T12:00:00Z"`), 'live board hands the client the ISO stamp the age script reads');
+      // Absolute stamp first, then the empty span the script fills — drop either half
+      // and the board either says nothing about its age or says it only with JS on.
+      assert.match(live, /snapshot [^<]+<span data-radar-age /);
+      assert.match(live, /<span data-radar-age [^>]*><\/span>/);
+      // Match the attribute in the markup, not the same name inside the script's own
+      // querySelector string, which ships on every live board either way.
+      const eyebrowHook = /<div class="[^"]*radar-eyebrow"[^>]*\sdata-radar-eyebrow[\s>]/;
+      const dotHook = /<span class="[^"]*radar-dot"[^>]*\sdata-radar-dot[\s>]/;
+      assert.match(live, dotHook, 'the pulsing dot is hooked up so a stale board can stop pulsing');
+
+      // The preview board keeps its own eyebrow: the script rewrites
+      // [data-radar-eyebrow] to "Radar · live", which an unindexable draft must never
+      // claim, so the hook is withheld there. The dot IS hooked up on every live-board
+      // render — muting the pulse on a stale preview is honest either way.
+      const isPreviewBoard = !options.isPublic || options.liveCount < 12;
+      assert.ok(live.includes(isPreviewBoard ? 'Radar · private preview' : 'Radar · live'));
+      assert.equal(eyebrowHook.test(live), !isPreviewBoard, 'only the public live board lets the script rewrite the eyebrow');
+
+      const frozenPage = html(date(10));
+      for (const marker of ['data-radar-age', 'data-radar-dot', 'data-radar-eyebrow', 'last snapshot']) {
+        assert.equal(frozenPage.includes(marker), false, `frozen edition must not carry ${marker}`);
+      }
+      // The muted-state rule ships in RadarBoard's shared scoped stylesheet, but no
+      // archive element can ever carry the class that triggers it.
+      assert.equal(/class="[^"]*is-stale/.test(frozenPage), false, 'no frozen element renders the muted state');
+
       const result = runChecker(root, options.siteUrl);
       assert.equal(result.status, 0, result.stdout + result.stderr);
       assert.match(result.stdout, options.isPublic ? /13 indexable archives, 13 reachable/ : /0 indexable archives, 0 reachable/);

@@ -152,45 +152,6 @@ const faqLd = {
   mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
 
-// Snapshot age — LIVE BOARD ONLY (never an archive: a frozen edition has no staleness
-// state). Tiny inline script, no framework and no request: it reads the ISO stamp the
-// server already rendered into data-generated and writes the relative reading beside the
-// absolute one, so with JavaScript off the absolute stamp still reads correctly. Past
-// STALE_H the eyebrow drops from "live" to "last snapshot N ago" and the dot stops
-// pulsing — the page cannot claim to be live while the pipeline is throttled.
-const STALE_H = 3;
-const AGE_SCRIPT = `(function () {
-  var STALE_H = ${STALE_H};
-  var el = document.querySelector('[data-radar-age]');
-  if (!el) return;
-  var gen = Date.parse(el.getAttribute('data-generated') || '');
-  if (!gen) return;
-  var eyebrow = document.querySelector('[data-radar-eyebrow]');
-  var dot = document.querySelector('[data-radar-dot]');
-  var rel = function (h) {
-    if (h < 1) return Math.max(1, Math.round(h * 60)) + ' min';
-    if (h < 48) return Math.round(h) + ' h';
-    return Math.round(h / 24) + ' d';
-  };
-  var tick = function () {
-    var h = Math.max(0, (Date.now() - gen) / 36e5);
-    var text = rel(h);
-    var stale = h >= STALE_H;
-    el.textContent = ' \\u00b7 ' + text + ' ago';
-    if (eyebrow) {
-      eyebrow.textContent = stale ? 'Radar \\u00b7 last snapshot ' + text + ' ago' : 'Radar \\u00b7 live';
-      eyebrow.classList.toggle('is-stale', stale);
-    }
-    if (dot) {
-      dot.classList.toggle('radar-pulse', !stale);
-      dot.classList.toggle('is-stale', stale);
-    }
-  };
-  tick();
-  var timer = window.setInterval(tick, 30000);
-  document.addEventListener('astro:before-swap', function () { window.clearInterval(timer); }, { once: true });
-})();`;
-
 const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="true"><rect x="0" y="6" width="2" height="3" fill="currentColor"/><rect x="3.5" y="3" width="2" height="6" fill="currentColor"/><rect x="7" y="0" width="2" height="9" fill="currentColor"/></svg>`;
 ---
 <script type="application/ld+json" set:html={JSON.stringify(datasetLd)} />
@@ -485,19 +446,64 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
   .radar-pulse { animation: radar-pulse 2.4s ease-in-out infinite; }
 
   /* Resting colours as classes, not inline styles, so the age script can flip them
-     (an inline style would win over any rule it could toggle). Token-only. */
+     (an inline style would win over any rule it could toggle). Token-only.
+     The muted counterparts sit here beside them, not in a separate block, so a
+     re-tint cannot update the resting rule and miss the stale one. Only the live
+     board renders an element that can carry .is-stale — on an archive these two
+     rules match nothing. */
   .radar-eyebrow { color: rgb(var(--accent)); }
   .radar-dot { background: rgb(var(--accent-2)); }
+  .radar-eyebrow.is-stale { color: rgb(var(--muted)); }
+  .radar-dot.is-stale { background: rgb(var(--muted)); }
 </style>
 
+{/* Snapshot age — LIVE BOARD ONLY (never an archive: a frozen edition has no staleness
+    state to report). No framework and no request: it reads the ISO stamp the server
+    already rendered into data-generated and writes the relative reading beside the
+    absolute one, so with JavaScript off the absolute stamp still reads correctly. Past
+    STALE_H the eyebrow drops from "live" to "last snapshot N ago" and the dot stops
+    pulsing — the page cannot claim to be live while the pipeline is throttled. The rule
+    itself lives in src/lib/radar-age.ts, where tests can inject a clock. */}
 {!isArchive && (
-  <>
-    {/* The muted state ships only on the live board: an archive is a frozen snapshot and
-        has no staleness to report, so neither the rule nor the script reaches its page. */}
-    <style is:inline>
-      [data-radar-eyebrow].is-stale { color: rgb(var(--muted)); }
-      [data-radar-dot].is-stale { background: rgb(var(--muted)); }
-    </style>
-    <script is:inline data-astro-rerun set:html={AGE_SCRIPT} />
-  </>
+  <script>
+    import { AGE_TICK_MS, radarAge } from '@/lib/radar-age';
+
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    function stopAge() {
+      clearInterval(timer);
+      timer = undefined;
+    }
+
+    function initAge() {
+      stopAge();
+      const el = document.querySelector<HTMLElement>('[data-radar-age]');
+      if (!el) return;
+      const generated = Date.parse(el.dataset.generated ?? '');
+      if (Number.isNaN(generated)) return;
+      // The eyebrow hook is absent on the private preview board on purpose — that
+      // label says "private preview" and must not be rewritten to "live".
+      const eyebrow = document.querySelector<HTMLElement>('[data-radar-eyebrow]');
+      const dot = document.querySelector<HTMLElement>('[data-radar-dot]');
+      const tick = () => {
+        const state = radarAge(generated, Date.now());
+        el.textContent = state.age;
+        if (eyebrow) {
+          eyebrow.textContent = state.eyebrow;
+          eyebrow.classList.toggle('is-stale', state.stale);
+        }
+        if (dot) {
+          dot.classList.toggle('radar-pulse', !state.stale);
+          dot.classList.toggle('is-stale', state.stale);
+        }
+      };
+      tick();
+      timer = setInterval(tick, AGE_TICK_MS);
+    }
+
+    // The bundled module runs once; each ClientRouter navigation re-arms it.
+    document.addEventListener('astro:before-swap', stopAge);
+    document.addEventListener('astro:page-load', initAge);
+    initAge();
+  </script>
 )}
