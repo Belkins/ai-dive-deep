@@ -6,7 +6,7 @@
  * While `added` is within NEW_WINDOW_DAYS of the build date the eyebrow
  * renders "New · Aug 17 · Method" in the accent tone; after that it
  * renders the category alone in the secondary tone. The comparison runs
- * at build time — the hourly radar auto-update push rebuilds the site,
+ * at build time — each radar auto-update push rebuilds the site,
  * so the badge expires without anyone editing a label. The derivation
  * itself lives in src/lib/eyebrow.ts, where tests can inject a clock.
  *
