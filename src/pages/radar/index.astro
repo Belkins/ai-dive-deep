@@ -5,8 +5,9 @@ import RadarBoard from '@/components/RadarBoard.astro';
 import today from '@/data/radar/today.json';
 import { RADAR_PUBLIC, getRadarArchiveDates, isRadarEditionIndexable } from '@/lib/radar-config.mjs';
 
-// /radar — the live board. Auto-updated hourly by the private radar-pipeline (deploy-key
-// push of src/data/radar/*). Server-rendered; design per the Direction-B build spec.
+// /radar — the live board. Re-snapshotted on every ingest run of the private radar-pipeline
+// (deploy-key push of src/data/radar/*), several times a day and on no fixed clock — the
+// board carries its own age readout. Server-rendered; design per the Direction-B build spec.
 // The public/content policy drives noindex, the sitemap, and archive discovery.
 const PREVIEW = !isRadarEditionIndexable(today);
 
@@ -17,7 +18,7 @@ const archiveDates = getRadarArchiveDates(Object.values(archives).map((m) => m.d
   noindex={PREVIEW}
   followLinks={RADAR_PUBLIC}
   title="Radar"
-  description="What's moving through the AI ecosystem, ranked by the lead-time gradient: papers to repos to community to analysis. Updated hourly."
+  description="What's moving through the AI ecosystem, ranked by the lead-time gradient: papers to repos to community to analysis. A fresh snapshot on every ingest run."
 >
   <RadarBoard data={today} archiveDates={archiveDates} preview={PREVIEW} />
   <CommandPaletteMount />

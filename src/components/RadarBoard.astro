@@ -128,7 +128,7 @@ const FAQ: [string, string][] = [
   // page must not describe a spectrum it is not rendering.
   ...(flow ? [['What does the lead-time spectrum show?', 'Every story that entered Radar’s watched feeds in the last 24 hours, bucketed by the gradient station where it first appeared — papers, repos, community, or analysis. It is the day’s flow through the whole watched ecosystem, not the composition of the scored top 40 below it: a paper counts in the flow the moment it is observed, even while its signal score is still too low to earn a board row.'] as [string, string]] : []),
   ['How is Radar ranked?', 'By a recency-decayed signal score: each source tier has a weight and a half-life, a story scores higher when independent source families corroborate it, and a small bonus applies when a story has visibly climbed the gradient. Stories past their tier max age expire from the board. Popularity on a single site is not corroboration.'],
-  ['How often does Radar update?', 'Hourly. The page is server-rendered and a frozen snapshot is archived at a dated permalink each day, so the record is both current and citable.'],
+  ['How often does Radar update?', 'On every ingest run of the pipeline behind it — several times a day, on no fixed clock. Each run re-renders this page, so the stamp under the headline is the exact time of the snapshot you are reading, and the live board shows how old it is. A frozen snapshot is archived at a dated permalink each day, so the record is both current and citable.'],
   ['What does "heating" mean?', 'A story has surfaced in two or more independent source families — not two feeds of the same site. It is corroboration, not popularity.'],
   ['What is the lead time reading?', 'When the same story is observed first at an earlier gradient stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv 14 hours before it reached the Hacker News front page. That gap is your lead time. The fires ledger is rolling: a fire ages out with its story, roughly 45 days after the story’s last sighting, so the median lead always describes recent motion.'],
   ['What sources does Radar watch?', `Around ${data.stats.feedsTotal} verified feeds across five tiers: live signal (Hacker News, Lobsters, GitHub trending, arXiv, Hugging Face papers), AI labs and firehose blogs, operator newsletters, contrarian essayists, and primary analysis. The registry is curated; aggregators are used only to corroborate a story, never to be the first to report it.`],
@@ -140,7 +140,7 @@ const datasetLd = {
   name: isArchive ? `Radar — AI ecosystem lead-time index, ${data.date}` : 'Radar — AI ecosystem lead-time index',
   description: isArchive
     ? `A frozen daily snapshot (${data.date}) of what was moving through the AI ecosystem, ranked by the lead-time gradient (papers → repos → community → analysis), with source provenance and first-seen time per item.`
-    : 'An hourly index of what is moving through the AI ecosystem, ranked by the lead-time gradient (papers → repos → community → analysis), with the source provenance and first-seen time recorded for each item.',
+    : 'A re-snapshotted index of what is moving through the AI ecosystem, rebuilt on every ingest run of its pipeline — several times a day, on no fixed clock — ranked by the lead-time gradient (papers → repos → community → analysis), with the source provenance and first-seen time recorded for each item. The dateModified stamp is the exact time of the snapshot on the page.',
   creator: { '@type': 'Person', name: 'Vlad Podoliako', url: SITE },
   isAccessibleForFree: true, license: `${SITE}/llms.txt`, url: pageUrl,
   temporalCoverage: isArchive ? data.date : `${data.stats.sinceFirstSeen}/${data.generated}`,
@@ -152,6 +152,45 @@ const faqLd = {
   mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
 
+// Snapshot age — LIVE BOARD ONLY (never an archive: a frozen edition has no staleness
+// state). Tiny inline script, no framework and no request: it reads the ISO stamp the
+// server already rendered into data-generated and writes the relative reading beside the
+// absolute one, so with JavaScript off the absolute stamp still reads correctly. Past
+// STALE_H the eyebrow drops from "live" to "last snapshot N ago" and the dot stops
+// pulsing — the page cannot claim to be live while the pipeline is throttled.
+const STALE_H = 3;
+const AGE_SCRIPT = `(function () {
+  var STALE_H = ${STALE_H};
+  var el = document.querySelector('[data-radar-age]');
+  if (!el) return;
+  var gen = Date.parse(el.getAttribute('data-generated') || '');
+  if (!gen) return;
+  var eyebrow = document.querySelector('[data-radar-eyebrow]');
+  var dot = document.querySelector('[data-radar-dot]');
+  var rel = function (h) {
+    if (h < 1) return Math.max(1, Math.round(h * 60)) + ' min';
+    if (h < 48) return Math.round(h) + ' h';
+    return Math.round(h / 24) + ' d';
+  };
+  var tick = function () {
+    var h = Math.max(0, (Date.now() - gen) / 36e5);
+    var text = rel(h);
+    var stale = h >= STALE_H;
+    el.textContent = ' \\u00b7 ' + text + ' ago';
+    if (eyebrow) {
+      eyebrow.textContent = stale ? 'Radar \\u00b7 last snapshot ' + text + ' ago' : 'Radar \\u00b7 live';
+      eyebrow.classList.toggle('is-stale', stale);
+    }
+    if (dot) {
+      dot.classList.toggle('radar-pulse', !stale);
+      dot.classList.toggle('is-stale', stale);
+    }
+  };
+  tick();
+  var timer = window.setInterval(tick, 30000);
+  document.addEventListener('astro:before-swap', function () { window.clearInterval(timer); }, { once: true });
+})();`;
+
 const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="true"><rect x="0" y="6" width="2" height="3" fill="currentColor"/><rect x="3.5" y="3" width="2" height="6" fill="currentColor"/><rect x="7" y="0" width="2" height="9" fill="currentColor"/></svg>`;
 ---
 <script type="application/ld+json" set:html={JSON.stringify(datasetLd)} />
@@ -159,15 +198,15 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
 
 <!-- Hero -->
 <section class="container-prose pt-16 pb-6">
-  <div class="eyebrow eyebrow-loud mb-3" style="color: rgb(var(--accent))">
+  <div class="eyebrow eyebrow-loud mb-3 radar-eyebrow" data-radar-eyebrow={!isArchive && !preview ? '' : undefined}>
     {isArchive ? `Radar · ${data.date}` : preview ? 'Radar · private preview' : 'Radar · live'}
   </div>
   <h1>What's moving through AI, ranked by <span style="color: rgb(var(--accent))">lead time</span>.</h1>
   <p class="mt-4 text-lg leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
-    Radar is an hourly index of what's moving through the AI ecosystem, ranked by where each story sits on the lead-time gradient: papers become repos become community threads become analysis. The earlier a story is caught, the more head start you have before the crowd. Every row carries its receipts — which source saw it first, how many independent sources have it, how long ago — so the ranking explains itself. It's the public face of the same pipeline that feeds Vlad's Newsletter.
+    Radar is a running index of what's moving through the AI ecosystem, ranked by where each story sits on the lead-time gradient: papers become repos become community threads become analysis. Every ingest run of the pipeline takes a fresh snapshot — several times a day, on no fixed clock — and the stamp below is the exact time of the one you're reading. The earlier a story is caught, the more head start you have before the crowd. Every row carries its receipts — which source saw it first, how many independent sources have it, how long ago — so the ranking explains itself. It's the public face of the same pipeline that feeds Vlad's Newsletter.
   </p>
   <p class="mt-4 text-sm font-mono" style="color: rgb(var(--muted))">
-    {isArchive ? 'frozen' : 'snapshot'} {fmtStamp(data.generated)} · {data.stats.feedsLive}/{data.stats.feedsTotal} feeds live · {data.stats.itemsTracked.toLocaleString()} tracked since {fmtDay(data.stats.sinceFirstSeen)}
+    {isArchive ? 'frozen' : 'snapshot'} {fmtStamp(data.generated)}{!isArchive && <span data-radar-age data-generated={data.generated} />} · {data.stats.feedsLive}/{data.stats.feedsTotal} feeds live · {data.stats.itemsTracked.toLocaleString()} tracked since {fmtDay(data.stats.sinceFirstSeen)}
   </p>
 </section>
 
@@ -175,7 +214,7 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
 <section class="container-wide pb-6">
   <div class="max-w-3xl mx-auto rounded-lg p-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
     <div class="flex items-center gap-2">
-      <span class="inline-block h-2 w-2 rounded-full radar-pulse" style="background: rgb(var(--accent-2))" aria-hidden="true"></span>
+      <span class="inline-block h-2 w-2 rounded-full radar-pulse radar-dot" data-radar-dot={!isArchive ? '' : undefined} aria-hidden="true"></span>
       <span class="eyebrow eyebrow-loud" style="color: rgb(var(--accent))">Moving now</span>
       <a href="#board" class="ml-auto font-mono text-xs no-underline" style="color: rgb(var(--muted))">see all {data.count} ↓</a>
     </div>
@@ -444,4 +483,21 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
     50% { opacity: 0.45; }
   }
   .radar-pulse { animation: radar-pulse 2.4s ease-in-out infinite; }
+
+  /* Resting colours as classes, not inline styles, so the age script can flip them
+     (an inline style would win over any rule it could toggle). Token-only. */
+  .radar-eyebrow { color: rgb(var(--accent)); }
+  .radar-dot { background: rgb(var(--accent-2)); }
 </style>
+
+{!isArchive && (
+  <>
+    {/* The muted state ships only on the live board: an archive is a frozen snapshot and
+        has no staleness to report, so neither the rule nor the script reaches its page. */}
+    <style is:inline>
+      [data-radar-eyebrow].is-stale { color: rgb(var(--muted)); }
+      [data-radar-dot].is-stale { background: rgb(var(--muted)); }
+    </style>
+    <script is:inline data-astro-rerun set:html={AGE_SCRIPT} />
+  </>
+)}
