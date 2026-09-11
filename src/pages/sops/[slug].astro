@@ -1,0 +1,48 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { Download, FilePenLine } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import { SOP_LIBRARY, SOP_DATE, SOP_VERSION, SOP_STATUS, SOP_BOUNDARY, getSopSections, sopHref, sopDownloadHref } from '@/lib/sops';
+import { workflowPresetHref } from '@/lib/workflow-plan';
+import '@/styles/sops.css';
+export const getStaticPaths = (() => SOP_LIBRARY.map(sop => ({ params: { slug: sop.slug }, props: { sop } }))) satisfies GetStaticPaths;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { sop } = Astro.props;
+const sections = getSopSections(sop);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout title={sop.title} description={sop.summary}>
+  <article class="sop-page container-wide">
+    <header class="sop-header">
+      <nav aria-label="Breadcrumb"><a href={`${base}/library/`}>Library</a> / <a href={`${base}/sops/`}>SOPs</a> / {sop.department}</nav>
+      <h1>{sop.title}</h1>
+      <p class="sop-intro">{sop.summary}</p>
+      <p class="sop-meta">{SOP_VERSION} / <time datetime={SOP_DATE}>September 5, 2026</time> / {sop.department}</p>
+      <p class="sop-status">{SOP_STATUS}</p>
+      <div class="sop-actions">
+        <a href={`${base}${sopDownloadHref(sop)}`} download={`${sop.slug}.md`} data-astro-reload><Download size={18} aria-hidden="true" /> Download Markdown</a>
+        <a href={workflowPresetHref(sop.presetId, base)}><FilePenLine size={18} aria-hidden="true" /> Adapt planner preset</a>
+      </div>
+      <p class="sop-boundary">{SOP_BOUNDARY}</p>
+    </header>
+    <div class="sop-layout">
+      <SectionNav items={sections.map(({ id, label }) => ({ id, label }))} />
+      <div class="sop-body">
+        {sections.map(section => <section id={section.id} data-section-target aria-labelledby={`${section.id}-title`}>
+          <h2 id={`${section.id}-title`}>{section.label}</h2>
+          {section.kind === 'text' ? section.items.map(item => <p data-sop-content>{item}</p>) :
+            section.kind === 'steps' ? <ol class="sop-procedure">{section.items.map(item => <li><span class="sop-state">Not run</span><p data-sop-content>{item}</p></li>)}</ol> :
+            <ul class:list={{ 'sop-checks': section.kind === 'checks' }}>{section.items.map(item => <li>{section.kind === 'checks' && <span class="sop-state">Not run</span>}<p data-sop-content>{item}</p></li>)}</ul>}
+        </section>)}
+        <footer class="sop-related">
+          <h2>Related procedures</h2>
+          <ul>{SOP_LIBRARY.filter(item => item.slug !== sop.slug).map(item => <li><a href={`${base}${sopHref(item)}`}>{item.title}</a></li>)}</ul>
+          <p><a href={`${base}/sops/`}>All department SOPs</a> / <a href={`${base}/chapters/11-build-a-skill/`}>Build a reusable skill</a></p>
+        </footer>
+      </div>
+    </div>
+  </article>
+  <CommandPaletteMount />
+</BaseLayout>

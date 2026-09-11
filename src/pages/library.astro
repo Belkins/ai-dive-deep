@@ -35,7 +35,7 @@ const topics = [...new Set(items.flatMap(item => item.topics))].sort();
       <h2 id="browse-title">Browse the library</h2>
       <form id="library-filters" class="filters" role="search" aria-label="Filter library" hidden>
         <label class="query">Search<input name="q" type="search" placeholder="A task, concept, or chapter..." autocomplete="off" maxlength="200" /></label>
-        <label>Format<select name="kind"><option value="">All formats</option><option>Chapter</option><option>Guide</option><option>Tool</option></select></label>
+        <label>Format<select name="kind"><option value="">All formats</option><option>Chapter</option><option>Guide</option><option>Tool</option><option>SOP</option></select></label>
         <label>Topic<select name="topic"><option value="">All topics</option>{topics.map(topic => <option>{topic}</option>)}</select></label>
         <button type="reset">Clear</button>
       </form>

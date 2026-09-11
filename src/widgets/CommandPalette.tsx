@@ -10,6 +10,7 @@ import { CHAPTERS } from '@/lib/chapters';
 import { glossary } from '@/lib/glossary';
 import { SETUP_STATS } from '@/lib/setup';
 import { RESEARCH_NOTES } from '@/lib/research-notes';
+import { SOP_LIBRARY, SOP_SECTIONS, SOP_INDEX_SECTIONS, sopHref } from '@/lib/sops';
 
 const slugify = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -229,6 +230,8 @@ export function getPaletteItems(base = ''): Item[] {
       keywords: `${c.title} ${c.subtitle} ${CHAPTER_SYNONYMS[c.slug] || ''}`.toLowerCase(),
     }));
     const pages: Item[] = [
+      { type: 'page', title: 'AI SOP library', href: `${base}/sops/`, subtitle: 'Six untested departmental procedures', keywords: 'sop sops standard operating procedure templates sales marketing operations customer success recruiting agents' },
+      ...SOP_LIBRARY.map(sop => ({ type: 'page' as const, title: sop.title, href: `${base}${sopHref(sop)}`, subtitle: sop.summary, keywords: `sop template ${sop.department} ${sop.slug} ${sop.presetId}` })),
       { type: 'page', title: 'Library', href: `${base}/library/`, subtitle: 'Search the playbook and choose a learning path', keywords: 'library index catalog catalogue browse search chapters learning paths reading roadmap topics filters' },
       { type: 'page', title: 'Workflow planner', href: `${base}/workflow-planner/`, subtitle: 'Plan an AI workflow', keywords: 'workflow planner builder plan design workflow steps task automation' },
       { type: 'page', title: 'How to read this book', href: `${base}/how-to-read/`,     subtitle: 'The prologue — start here if new',                                                                  keywords: 'prologue start beginner first time intro reading guide' },
@@ -296,6 +299,8 @@ export function getPaletteItems(base = ''): Item[] {
       keywords: `${term} ${glossary[term].definition}`.toLowerCase(),
     }));
     const sectionItems: Item[] = [
+      ...SOP_INDEX_SECTIONS.map(section => ({ type: 'section' as const, title: section.label, href: `${base}/sops/#${section.id}`, subtitle: 'AI SOP library', keywords: `sop library ${section.label}` })),
+      ...SOP_LIBRARY.flatMap(sop => SOP_SECTIONS.map(section => ({ type: 'section' as const, title: `${sop.department}: ${section.label}`, subtitle: sop.title, href: `${base}${sopHref(sop)}#${section.id}`, keywords: `sop ${sop.department} ${sop.slug} ${section.label} ${section.id}` }))),
       ...CHEAT_SHEET_SECTIONS.map((h) => ({
         type: 'section' as const,
         title: h,

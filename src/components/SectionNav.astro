@@ -13,7 +13,7 @@ const { items, title = 'On this page' } = Astro.props;
     <span>Jump to section</span>
     <span class="text-xs text-muted">tap to open</span>
   </summary>
-  <nav class="px-2 pb-3">
+  <nav data-section-nav class="px-2 pb-3">
     <ol class="space-y-1 text-sm">
       {items.map((s, i) => (
         <li>
@@ -29,7 +29,7 @@ const { items, title = 'On this page' } = Astro.props;
 
 <!-- Sticky desktop rail (≥ 1024px) -->
 <aside class="hidden lg:block">
-  <nav class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2">
+  <nav data-section-nav class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-2">
     <div class="text-xs uppercase tracking-[0.2em] mb-3 text-muted">{title}</div>
     <ol class="space-y-0.5 text-sm">
       {items.map((s, i) => (
@@ -73,20 +73,41 @@ const { items, title = 'On this page' } = Astro.props;
 </style>
 
 <script>
-  const targets = document.querySelectorAll<HTMLElement>('[data-section-target]');
-  const links = document.querySelectorAll<HTMLAnchorElement>('a[data-toc-link]');
-
-  if (targets.length && links.length && 'IntersectionObserver' in window) {
+  let cleanup: (() => void) | undefined;
+  function initSectionNav() {
+    cleanup?.();
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-section-nav] a[data-toc-link]'));
+    if (!links.length) return;
+    const targets = [...new Set(links.map(a => document.getElementById(a.getAttribute('data-toc-link') || '')).filter((el): el is HTMLElement => !!el))];
+    let disposed = false;
+    let io: IntersectionObserver | undefined;
+    const closeDrawer = (event: Event) => {
+      const drawer = (event.currentTarget as HTMLAnchorElement).closest('details');
+      if (drawer) drawer.open = false;
+    };
+    // Drawer behavior must work even without active-section observation.
+    links.forEach(a => a.addEventListener('click', closeDrawer));
+    cleanup = () => {
+      disposed = true;
+      io?.disconnect();
+      links.forEach(a => a.removeEventListener('click', closeDrawer));
+    };
     const setActive = (id: string) => {
       links.forEach((a) => {
-        if (a.getAttribute('data-toc-link') === id) a.setAttribute('data-active', 'true');
-        else a.removeAttribute('data-active');
+        if (a.getAttribute('data-toc-link') === id) {
+          a.setAttribute('data-active', 'true');
+          a.setAttribute('aria-current', 'location');
+        } else {
+          a.removeAttribute('data-active');
+          a.removeAttribute('aria-current');
+        }
       });
     };
-
+    if (!targets.length || !('IntersectionObserver' in window)) return;
     const visible = new Map<string, number>();
-    const io = new IntersectionObserver(
+    io = new IntersectionObserver(
       (entries) => {
+        if (disposed) return;
         for (const e of entries) {
           const id = (e.target as HTMLElement).id;
           if (e.isIntersecting) visible.set(id, e.intersectionRatio);
@@ -106,13 +127,11 @@ const { items, title = 'On this page' } = Astro.props;
       { rootMargin: '-25% 0px -65% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
     );
 
-    targets.forEach((t) => io.observe(t));
-    const first = (targets[0] as HTMLElement)?.id;
+    targets.forEach((t) => io?.observe(t));
+    const first = targets[0]?.id;
     if (first) setActive(first);
-
-    const drawer = document.querySelector<HTMLDetailsElement>('details');
-    document.querySelectorAll('details a[data-toc-link]').forEach((a) => {
-      a.addEventListener('click', () => { if (drawer) drawer.open = false; });
-    });
   }
+  document.addEventListener('astro:page-load', initSectionNav);
+  document.addEventListener('astro:before-swap', () => { cleanup?.(); cleanup = undefined; });
+  initSectionNav();
 </script>

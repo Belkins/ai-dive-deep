@@ -18,11 +18,12 @@ const {
 
 const firstDraft = () => getWorkflowTemplate('weekly-research-brief');
 
-test('the four requested templates have unique IDs and complete, distinct requirements', () => {
+test('the four original and three new templates have unique IDs and complete, distinct requirements', () => {
   assert.deepEqual(WORKFLOW_TEMPLATES.map(({ id }) => id), [
     'weekly-research-brief', 'call-to-crm-follow-up', 'content-review', 'outbound-campaign-qa',
+    'customer-success-escalation', 'recruiting-question-pack', 'bounded-agent-trial',
   ]);
-  assert.equal(new Set(WORKFLOW_TEMPLATES.map(({ draft }) => draft.objective)).size, 4);
+  assert.equal(new Set(WORKFLOW_TEMPLATES.map(({ draft }) => draft.objective)).size, 7);
   for (const template of WORKFLOW_TEMPLATES) {
     assert.deepEqual(validateWorkflowDraft(template.draft), [], template.id);
     for (const key of ['inputs', 'allowedOutputs', 'approvalBoundaries', 'acceptanceTests']) {
@@ -185,7 +186,7 @@ test('the widget server-renders a readable draft, labeled fields, and disabled p
   const html = renderToStaticMarkup(createElement(exports.default));
   assert.match(html, /ph-no-capture ph-sensitive/);
   assert.match(html, /<fieldset[^>]*disabled=""/);
-  assert.equal((html.match(/<option /g) || []).length, 4);
+  assert.equal((html.match(/<option /g) || []).length, 7);
   assert.equal((html.match(/required=""/g) || []).length, 7);
   for (const { key } of WORKFLOW_FIELDS) {
     assert.ok(html.includes(`for="workflow-${key}"`), key);

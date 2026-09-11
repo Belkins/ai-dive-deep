@@ -150,6 +150,7 @@ const dataDeclarations = paletteAst.statements.filter((statement) => ts.isVariab
   || (ts.isFunctionDeclaration(statement) && statement.name?.text === 'getPaletteItems'));
 const dataImports = [
   ['CHAPTERS', 'chapters'], ['glossary', 'glossary'], ['SETUP_STATS', 'setup'], ['RESEARCH_NOTES', 'research-notes'],
+  ['SOP_LIBRARY, SOP_SECTIONS, SOP_INDEX_SECTIONS, sopHref', 'sops'],
 ].map(([name, file]) => `import { ${name} } from '${moduleUrl(readSource(`../src/lib/${file}.ts`))}';`).join('\n');
 const { getPaletteItems } = await import(moduleUrl(dataImports + '\n' + dataDeclarations.map((statement) => statement.getText(paletteAst)).join('\n')));
 const realItems = getPaletteItems();
@@ -185,6 +186,21 @@ test('model-specific operator queries discover the current canonical guides', ()
     ['Fable 5.1 Claude Code', '50-claude-fable-5-1'],
   ]) {
     assert.ok(searchItems(realIndex, query).some(({ href }) => href === `/chapters/${slug}/`), query);
+  }
+});
+
+test('the SOP index and all six procedures have page and section entries, including base paths', async () => {
+  const { SOP_LIBRARY, SOP_SECTIONS, SOP_INDEX_SECTIONS, sopHref } = await import(moduleUrl(readSource('../src/lib/sops.ts')));
+  for (const base of ['', '/book']) {
+    const items = getPaletteItems(base);
+    for (const path of ['/sops/', ...SOP_LIBRARY.map(sopHref)]) {
+      assert.equal(items.filter(item => item.type === 'page' && item.href === base + path).length, 1);
+    }
+    for (const section of SOP_INDEX_SECTIONS) assert.ok(items.some(item => item.type === 'section' && item.href === `${base}/sops/#${section.id}`));
+    for (const sop of SOP_LIBRARY) {
+      for (const section of SOP_SECTIONS) assert.ok(items.some(item => item.type === 'section' && item.href === `${base}${sopHref(sop)}#${section.id}`));
+      assert.ok(searchItems(createSearchIndex(items), `${sop.department} SOP`).some(item => item.href === base + sopHref(sop)));
+    }
   }
 });
 
