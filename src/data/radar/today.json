@@ -1,11 +1,11 @@
 {
   "date": "2026-09-11",
-  "generated": "2026-09-11T09:53:40.965Z",
+  "generated": "2026-09-11T11:29:52.311Z",
   "count": 40,
   "stats": {
     "feedsTotal": 78,
     "feedsLive": 67,
-    "itemsTracked": 18618,
+    "itemsTracked": 18634,
     "travellingFires": 24,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
@@ -13,36 +13,36 @@
     "byStage": {
       "Papers": 0,
       "Repos": 5,
-      "Community": 33,
-      "Analysis": 2
+      "Community": 35,
+      "Analysis": 0
     },
     "byTier": {
-      "Live Signal": 33,
-      "AI Firehose": 7
+      "Live Signal": 35,
+      "AI Firehose": 5
     },
     "flow": {
-      "Papers": 17,
+      "Papers": 25,
       "Repos": 6,
-      "Community": 277,
+      "Community": 281,
       "Analysis": 31
     },
     "newToday": 40,
-    "heatingNow": 1,
+    "heatingNow": 0,
     "travelledNow": 0,
     "medianLeadHours": 8.6,
-    "freshestHours": 0.4,
-    "oldestSurvivorHours": 33.9,
+    "freshestHours": 0.2,
+    "oldestSurvivorHours": 6.6,
     "topDomains": [
       {
         "domain": "github.com",
-        "count": 13
+        "count": 14
       },
       {
         "domain": "lesswrong.com",
-        "count": 9
+        "count": 6
       },
       {
-        "domain": "kegeltrainer.net",
+        "domain": "researchagenda.news",
         "count": 1
       }
     ]
@@ -107,28 +107,48 @@
   "items": [
     {
       "rank": 1,
-      "title": "Show HN: Beautiful Markdown rendering in your terminal",
-      "url": "https://github.com/spencerldixon/lime",
-      "domain": "github.com",
+      "title": "The Waymo effect: how AI is quietly making research less collaborative",
+      "url": "https://www.researchagenda.news/articles/the-waymo-effect.html",
+      "domain": "researchagenda.news",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
-      "firstSource": "Show HN",
+      "firstSource": "Hacker News front",
       "sources": [
-        "Show HN"
+        "Hacker News front"
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.9,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "ageHours": 0.2,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
       "rank": 2,
-      "title": "Show HN: Jscpd start support type2/type3 clones",
-      "url": "https://github.com/kucherenko/jscpd",
+      "title": "RTK reports token savings, but our cost benchmarks disagree",
+      "url": "https://quesma.com/blog/does-rtk-make-ai-coding-cheaper",
+      "domain": "quesma.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.2,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 3,
+      "title": "Show HN: You can't read every ToS, but the clanker can",
+      "url": "https://github.com/PAndreew/termsinator",
       "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -139,17 +159,37 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "ageHours": 0.5,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 3,
-      "title": "Show HN: FOSS browser-based visual Kegel trainer for men",
-      "url": "https://kegeltrainer.net/",
-      "domain": "kegeltrainer.net",
+      "rank": 4,
+      "title": "Claude is no longer available for minors",
+      "url": "https://support.claude.com/en/articles/15171100-age-assurance-on-claude",
+      "domain": "support.claude.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.7,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 5,
+      "title": "Show HN: Quickly generate and explain complex shell commands",
+      "url": "https://crates.io/crates/watn",
+      "domain": "crates.io",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -159,57 +199,37 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 4,
-      "title": "Could Resolution Help Build Alignment Research as a Discipline?",
-      "url": "https://www.lesswrong.com/posts/CYLK6v4CTuwhmydbK/could-resolution-help-build-alignment-research-as-a",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.1,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 5,
-      "title": "OpenAI-HuggingFace: A Reproduction & Lessons for Alignment Testing",
-      "url": "https://www.lesswrong.com/posts/fMnC6ZD37qrnZAFYz/openai-huggingface-a-reproduction-and-lessons-for-alignment",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.1,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "ageHours": 0.7,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
       "rank": 6,
-      "title": "Cherenkov Radiation - traveling faster than light",
-      "url": "http://www.iaea.org/newscenter/news/what-is-cherenkov-radiation",
-      "domain": "iaea.org",
+      "title": "Show HN: Arcstone – Fail-closed local runtime with sub-12ms execution bounds",
+      "url": "https://github.com/trencinodin-stack/arcstone-continuity-core",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.1,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 7,
+      "title": "Resist \"AI\"",
+      "url": "https://ronjeffries.com/articles/-v026/x/t",
+      "domain": "ronjeffries.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -220,16 +240,16 @@
       "nSources": 1,
       "nFam": 1,
       "ageHours": 1.2,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "firstSeen": "2026-09-11T11:29:46.159Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 7,
-      "title": "Show HN: Reversing a ClickFix malware with a blockchain-based C2",
-      "url": "https://github.com/v-pun215/Tourmaline",
-      "domain": "github.com",
+      "rank": 8,
+      "title": "Show HN: What happened to 14,229 launches from Show HN, YC and Product Hunt",
+      "url": "https://www.buildorskip.com/",
+      "domain": "buildorskip.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -239,17 +259,37 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.3,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "ageHours": 1.8,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 8,
-      "title": "Neijuan",
-      "url": "https://en.wikipedia.org/wiki/Neijuan",
-      "domain": "en.wikipedia.org",
+      "rank": 9,
+      "title": "Show HN: Browse PC Parts on Amazon.com without distractions",
+      "url": "https://findpcpart.com/products?category_key=cpu",
+      "domain": "findpcpart.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.8,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 10,
+      "title": "The Death of Shame Is Tearing Us Apart",
+      "url": "https://www.newyorker.com/news/fault-lines/the-death-of-shame-is-tearing-us-apart",
+      "domain": "newyorker.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -259,57 +299,17 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.4,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 9,
-      "title": "We need good evals for activation faithfulness",
-      "url": "https://www.lesswrong.com/posts/Kmq59dMzKsxFTWAHd/we-need-good-evals-for-activation-faithfulness",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.6,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 10,
-      "title": "Show HN: Updog.link – a URL shortener you can run for free",
-      "url": "https://whats.updog.link/",
-      "domain": "whats.updog.link",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.6,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "ageHours": 2,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
       "rank": 11,
-      "title": "Show HN: Choicer Voicer, put your own voice into movie and game scenes",
-      "url": "https://playchoicervoicer.com/",
-      "domain": "playchoicervoicer.com",
+      "title": "Show HN: Beautiful Markdown rendering in your terminal",
+      "url": "https://github.com/spencerldixon/lime",
+      "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -327,8 +327,108 @@
     },
     {
       "rank": 12,
-      "title": "Show HN: Blender Agent:A live, multi-turn agent that any can use for Blender",
-      "url": "https://github.com/zavora-ai/adk-rust/tree/main/examples/blender_console",
+      "title": "Show HN: Jscpd start support type2/type3 clones",
+      "url": "https://github.com/kucherenko/jscpd",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.6,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 13,
+      "title": "Show HN: FOSS browser-based visual Kegel trainer for men",
+      "url": "https://kegeltrainer.net/",
+      "domain": "kegeltrainer.net",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.6,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 14,
+      "title": "Could Resolution Help Build Alignment Research as a Discipline?",
+      "url": "https://www.lesswrong.com/posts/CYLK6v4CTuwhmydbK/could-resolution-help-build-alignment-research-as-a",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.7,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 15,
+      "title": "OpenAI-HuggingFace: A Reproduction & Lessons for Alignment Testing",
+      "url": "https://www.lesswrong.com/posts/fMnC6ZD37qrnZAFYz/openai-huggingface-a-reproduction-and-lessons-for-alignment",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.7,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 16,
+      "title": "Cherenkov Radiation - traveling faster than light",
+      "url": "http://www.iaea.org/newscenter/news/what-is-cherenkov-radiation",
+      "domain": "iaea.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.8,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 17,
+      "title": "Show HN: Reversing a ClickFix malware with a blockchain-based C2",
+      "url": "https://github.com/v-pun215/Tourmaline",
       "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -346,10 +446,50 @@
       "leadHours": null
     },
     {
-      "rank": 13,
-      "title": "Show HN: Oxlint plugin to auto-fix non-canonical Tailwind classes",
-      "url": "https://github.com/maharshi365/oxlint-plugin-tailwind-canonical",
-      "domain": "github.com",
+      "rank": 18,
+      "title": "Neijuan",
+      "url": "https://en.wikipedia.org/wiki/Neijuan",
+      "domain": "en.wikipedia.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 19,
+      "title": "We need good evals for activation faithfulness",
+      "url": "https://www.lesswrong.com/posts/Kmq59dMzKsxFTWAHd/we-need-good-evals-for-activation-faithfulness",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.2,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 20,
+      "title": "Show HN: Updog.link – a URL shortener you can run for free",
+      "url": "https://whats.updog.link/",
+      "domain": "whats.updog.link",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -366,7 +506,87 @@
       "leadHours": null
     },
     {
-      "rank": 14,
+      "rank": 21,
+      "title": "CSS Curiosities of the Past",
+      "url": "https://vale.rocks/posts/css-relics",
+      "domain": "vale.rocks",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.5,
+      "firstSeen": "2026-09-11T11:29:46.159Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 22,
+      "title": "Show HN: Choicer Voicer, put your own voice into movie and game scenes",
+      "url": "https://playchoicervoicer.com/",
+      "domain": "playchoicervoicer.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.1,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 23,
+      "title": "Show HN: Blender Agent:A live, multi-turn agent that any can use for Blender",
+      "url": "https://github.com/zavora-ai/adk-rust/tree/main/examples/blender_console",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.5,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 24,
+      "title": "Show HN: Oxlint plugin to auto-fix non-canonical Tailwind classes",
+      "url": "https://github.com/maharshi365/oxlint-plugin-tailwind-canonical",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4.8,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 25,
       "title": "Show HN: Automatically keep track of all features implemented in a project",
       "url": "https://github.com/netizer/feature-ledger",
       "domain": "github.com",
@@ -379,14 +599,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.3,
+      "ageHours": 4.9,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 15,
+      "rank": 26,
       "title": "Is functional welfare speakable?",
       "url": "https://www.lesswrong.com/posts/HmQXs4nafd9Ltd2dz/is-functional-welfare-speakable",
       "domain": "lesswrong.com",
@@ -399,14 +619,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.4,
+      "ageHours": 5,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 16,
+      "rank": 27,
       "title": "Astra for Coding: Why Are We Doing This Again?",
       "url": "https://lucumr.pocoo.org/2026/9/7/astra-why",
       "domain": "lucumr.pocoo.org",
@@ -421,14 +641,14 @@
       ],
       "nSources": 3,
       "nFam": 1,
-      "ageHours": 3.5,
+      "ageHours": 5.1,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 17,
+      "rank": 28,
       "title": "Show HN: SideNote Pro – Native Windows 11 AI beside your work",
       "url": "https://sidenotepro.com/",
       "domain": "sidenotepro.com",
@@ -441,134 +661,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.8,
+      "ageHours": 5.4,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 18,
-      "title": "Show HN: I pointed 11 cold AI agents at my own product. 3 finished",
-      "url": "https://pact0.com/notes/agents-vs-our-own-product",
-      "domain": "pact0.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.9,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 19,
-      "title": "Questions for the “New Enlightenment” in the Age of AGI",
-      "url": "https://www.lesswrong.com/posts/MeBf7uGSzx7CqJAku/questions-for-the-new-enlightenment-in-the-age-of-agi",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.1,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 20,
-      "title": "Show HN: VeriCordon – CI evidence for agent/tool authorization decisions",
-      "url": "https://github.com/dgenio/agentfence",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.3,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 21,
-      "title": "(Question) When should I cross-post on LessWrong vs. EA Forum only?",
-      "url": "https://www.lesswrong.com/posts/WaNgXFoFpp8DpRfXz/question-when-should-i-cross-post-on-lesswrong-vs-ea-forum",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.3,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 22,
-      "title": "Show HN: Interactive history of Earth and human civilization",
-      "url": "https://earth.ethanplus.ai/",
-      "domain": "earth.ethanplus.ai",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.6,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 23,
-      "title": "Show HN: Swiftime - time tracking you can talk to, with an API for AI agents",
-      "url": "https://swiftime.ai/",
-      "domain": "swiftime.ai",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.8,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 24,
+      "rank": 29,
       "title": "anomalyco/opencode",
       "url": "https://github.com/anomalyco/opencode",
       "domain": "github.com",
@@ -581,14 +681,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.4,
+      "ageHours": 2,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 25,
+      "rank": 30,
       "title": "google-deepmind/alphagenome",
       "url": "https://github.com/google-deepmind/alphagenome",
       "domain": "github.com",
@@ -601,14 +701,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.4,
+      "ageHours": 2,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 26,
+      "rank": 31,
       "title": "gpustack/gpustack",
       "url": "https://github.com/gpustack/gpustack",
       "domain": "github.com",
@@ -621,14 +721,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.4,
+      "ageHours": 2,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 27,
+      "rank": 32,
       "title": "jiji262/douyin-downloader",
       "url": "https://github.com/jiji262/douyin-downloader",
       "domain": "github.com",
@@ -641,14 +741,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.4,
+      "ageHours": 2,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 28,
+      "rank": 33,
       "title": "ultralytics/ultralytics",
       "url": "https://github.com/ultralytics/ultralytics",
       "domain": "github.com",
@@ -661,14 +761,134 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.4,
+      "ageHours": 2,
       "firstSeen": "2026-09-11T09:29:54.277Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 29,
+      "rank": 34,
+      "title": "Show HN: I pointed 11 cold AI agents at my own product. 3 finished",
+      "url": "https://pact0.com/notes/agents-vs-our-own-product",
+      "domain": "pact0.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 5.5,
+      "firstSeen": "2026-09-11T09:29:54.277Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 35,
+      "title": "Questions for the “New Enlightenment” in the Age of AGI",
+      "url": "https://www.lesswrong.com/posts/MeBf7uGSzx7CqJAku/questions-for-the-new-enlightenment-in-the-age-of-agi",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 5.7,
+      "firstSeen": "2026-09-11T06:04:45.038Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 36,
+      "title": "Show HN: VeriCordon – CI evidence for agent/tool authorization decisions",
+      "url": "https://github.com/dgenio/agentfence",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 5.9,
+      "firstSeen": "2026-09-11T06:04:45.038Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 37,
+      "title": "(Question) When should I cross-post on LessWrong vs. EA Forum only?",
+      "url": "https://www.lesswrong.com/posts/WaNgXFoFpp8DpRfXz/question-when-should-i-cross-post-on-lesswrong-vs-ea-forum",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 5.9,
+      "firstSeen": "2026-09-11T06:04:45.038Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 38,
+      "title": "Show HN: Interactive history of Earth and human civilization",
+      "url": "https://earth.ethanplus.ai/",
+      "domain": "earth.ethanplus.ai",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 6.2,
+      "firstSeen": "2026-09-11T06:04:45.038Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 39,
+      "title": "Show HN: Swiftime - time tracking you can talk to, with an API for AI agents",
+      "url": "https://swiftime.ai/",
+      "domain": "swiftime.ai",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 6.4,
+      "firstSeen": "2026-09-11T06:04:45.038Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 40,
       "title": "The Gemini app is now available for Windows",
       "url": "https://blog.google/innovation-and-ai/products/gemini-app/gemini-app-now-on-windows",
       "domain": "blog.google",
@@ -681,229 +901,8 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5,
+      "ageHours": 6.6,
       "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 30,
-      "title": "Show HN: Hekla, an event sourcing runtime with its own language",
-      "url": "https://hekla.tqwewe.com/",
-      "domain": "hekla.tqwewe.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.2,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 31,
-      "title": "Voluntary Gradual Disempowerment in the Judiciary/Legal System",
-      "url": "https://www.lesswrong.com/posts/6wnKrktRHvHWeAtf4/voluntary-gradual-disempowerment-in-the-judiciary-legal",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.4,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 32,
-      "title": "Show HN: CertArena – Free AI certification simulator (zero deps, native Node 24)",
-      "url": "https://aicertarena.com/",
-      "domain": "aicertarena.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.6,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 33,
-      "title": "Show HN: Self Host Your Own Minecraft Java Server with Ease",
-      "url": "https://github.com/5TN1rcZRS79VAEFuUCRB/MCPersist",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 34,
-      "title": "Exercise intensity is associated with cardiometabolic health",
-      "url": "https://www.cell.com/cell-reports-medicine/fulltext/S2666-3791(26)00405-2",
-      "domain": "cell.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.1,
-      "firstSeen": "2026-09-11T06:04:45.038Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 35,
-      "title": "Models Don't Go Rogue",
-      "url": "https://mail.cyberneticforests.com/models-dont-go-rogue",
-      "domain": "mail.cyberneticforests.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.3,
-      "firstSeen": "2026-09-11T09:29:54.277Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 36,
-      "title": "Build more natural voice experiences with GPT‑Live‑1 in the API",
-      "url": "https://openai.com/index/introducing-gpt-live-1-in-the-api",
-      "domain": "openai.com",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Analysis",
-      "firstSource": "OpenAI News",
-      "sources": [
-        "OpenAI News",
-        "Hacker News front"
-      ],
-      "nSources": 2,
-      "nFam": 2,
-      "ageHours": 33.9,
-      "firstSeen": "2026-09-10T17:52:42.945Z",
-      "heating": true,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 37,
-      "title": "Which character are we evaluating? Persona stability and AI welfare",
-      "url": "https://www.lesswrong.com/posts/3GJCdGhgrRBAbeoR4/which-character-are-we-evaluating-persona-stability-and-ai",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.8,
-      "firstSeen": "2026-09-11T04:19:56.163Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 38,
-      "title": "LLM Visualizer – Build a Transformer from Scratch",
-      "url": "https://jayvisaria.github.io/LLM-Visualizer",
-      "domain": "jayvisaria.github.io",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 7,
-      "firstSeen": "2026-09-11T04:19:56.163Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 39,
-      "title": "All progress from the past millennium gets destroyed in a global disaster. But we have one shot at salvation. We saved the trillions of weights of a superintelligent model that can guide us to abundance: what is the quickest path to accessing that oracle of intelligence again?",
-      "url": "https://www.lesswrong.com/posts/KuudeZXQzaWLkFLNp/all-progress-from-the-past-millennium-gets-destroyed-in-a",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 7.1,
-      "firstSeen": "2026-09-11T04:19:56.163Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 40,
-      "title": "Datasette 1.0a39 and 0.65.4 security releases",
-      "url": "https://simonwillison.net/2026/Sep/11/datasette-security",
-      "domain": "simonwillison.net",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Analysis",
-      "firstSource": "Simon Willison",
-      "sources": [
-        "Simon Willison"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 6.4,
-      "firstSeen": "2026-09-11T04:19:56.163Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
