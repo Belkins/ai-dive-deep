@@ -1,11 +1,11 @@
 {
   "date": "2026-09-15",
-  "generated": "2026-09-15T18:05:23.349Z",
+  "generated": "2026-09-15T18:15:55.551Z",
   "count": 40,
   "stats": {
     "feedsTotal": 78,
-    "feedsLive": 67,
-    "itemsTracked": 18446,
+    "feedsLive": 65,
+    "itemsTracked": 18463,
     "travellingFires": 24,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
@@ -13,30 +13,29 @@
     "byStage": {
       "Papers": 0,
       "Repos": 0,
-      "Community": 38,
-      "Analysis": 2
+      "Community": 39,
+      "Analysis": 1
     },
     "byTier": {
-      "Live Signal": 38,
-      "Contrarian": 1,
-      "AI Firehose": 1
+      "Live Signal": 39,
+      "Contrarian": 1
     },
     "flow": {
       "Papers": 347,
       "Repos": 6,
-      "Community": 253,
+      "Community": 270,
       "Analysis": 26
     },
     "newToday": 39,
     "heatingNow": 3,
     "travelledNow": 0,
     "medianLeadHours": 8.6,
-    "freshestHours": 1,
-    "oldestSurvivorHours": 97.6,
+    "freshestHours": 0.1,
+    "oldestSurvivorHours": 97.8,
     "topDomains": [
       {
         "domain": "github.com",
-        "count": 12
+        "count": 13
       },
       {
         "domain": "lesswrong.com",
@@ -108,6 +107,27 @@
   "items": [
     {
       "rank": 1,
+      "title": "GEFS on OpenBSD: A Early Preview",
+      "url": "https://marc.info/?l=openbsd-tech&m=178948744271633&w=2",
+      "domain": "marc.info",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front",
+        "Lobsters"
+      ],
+      "nSources": 2,
+      "nFam": 2,
+      "ageHours": 1.1,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 2,
       "title": "Show HN: Hacking a $20 4G wireless hotspot into a texting device",
       "url": "https://bkovac.github.io/modem-thing",
       "domain": "bkovac.github.io",
@@ -121,14 +141,134 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 4.7,
+      "ageHours": 4.9,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": true,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 2,
+      "rank": 3,
+      "title": "You Don’t Have to Trust the AI Labs (in order to take their call for regulation seriously)",
+      "url": "https://www.lesswrong.com/posts/ombnX49ccCj3Ax3Hw/you-don-t-have-to-trust-the-ai-labs-in-order-to-take-their",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.1,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 4,
+      "title": "Cooperation with AIs seems to be a low-hanging fruit for better eval practices",
+      "url": "https://www.lesswrong.com/posts/fztW73KCCs3MZXFJh/cooperation-with-ais-seems-to-be-a-low-hanging-fruit-for",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.5,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 5,
+      "title": "Show HN: Local static analysis for coding agents",
+      "url": "https://blog.codacy.com/introducing-codacy-skills-part-4-scan-and-fix-your-code-before-you-push",
+      "domain": "blog.codacy.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 6,
+      "title": "Show HN: AirmailAI, a BYOK LLM chat app with a browser extension backend",
+      "url": "https://airmailai.net/",
+      "domain": "airmailai.net",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.1,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 7,
+      "title": "Performance Improvements in .NET 11",
+      "url": "https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11",
+      "domain": "devblogs.microsoft.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.2,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 8,
+      "title": "Show HN: TrailVid – Cinematic Travel Animations",
+      "url": "https://trailvid.com/",
+      "domain": "trailvid.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.2,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 9,
       "title": "Jiga (YC W21) Is Hiring Product Engineer (Remote/US)",
       "url": "https://jiga.io/about-us?ashby_jid=0b75d72d-c92b-4dca-8062-09d298ada0bd",
       "domain": "jiga.io",
@@ -141,14 +281,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.1,
+      "ageHours": 1.3,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 3,
+      "rank": 10,
       "title": "AI researchers debate how close we are to recursive self-improvement",
       "url": "https://www.dwarkesh.com/p/john-beren-charlie",
       "domain": "dwarkesh.com",
@@ -162,14 +302,134 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 97.6,
+      "ageHours": 97.8,
       "firstSeen": "2026-09-11T17:51:39.474Z",
       "heating": true,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 4,
+      "rank": 11,
+      "title": "Show HN: Omni – Open-source workplace agent, built on Postgres",
+      "url": "https://news.ycombinator.com/item?id=49715402",
+      "domain": "news.ycombinator.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.3,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 12,
+      "title": "Show HN: TabPFN-3.5, a Tabular Foundation Model for messy real-world tables",
+      "url": "https://priorlabs.ai/technical-reports/tabpfn-3-5",
+      "domain": "priorlabs.ai",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.3,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 13,
+      "title": "Show HN: Yapsnap – transcribe anything with audio, no GPU, no language flag",
+      "url": "https://github.com/kouhxp/yapsnap/releases/tag/v0.2.0",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.4,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 14,
+      "title": "Show HN: Scoopkit – An AI news API that returns events, not articles",
+      "url": "https://scoopkit.dev/",
+      "domain": "scoopkit.dev",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.5,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 15,
+      "title": "Show HN: Constraint Programming in Your AI Agent",
+      "url": "https://github.com/carban/minizinc-mcp",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.6,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 16,
+      "title": "Show HN: I ported COLMAP (photogrammetry) to the browser in WASM and WebGPU",
+      "url": "https://offlinetools.io/colmap-landing",
+      "domain": "offlinetools.io",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.6,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 17,
       "title": "There's a 100% Chance AI Agents Are Ruining the Internet",
       "url": "https://www.404media.co/theres-a-100-chance-ai-agents-are-already-ruining-the-internet",
       "domain": "404media.co",
@@ -182,14 +442,54 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.4,
+      "ageHours": 1.6,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 5,
+      "rank": 18,
+      "title": "Show HN: QLIC – JXL e3 speeds with e9 file density",
+      "url": "https://github.com/OzzyMitchell/QLIC",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.7,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 19,
+      "title": "Show HN: ETLFunnel – self-hosted, code-first data pipelines (v1.1.1)",
+      "url": "https://etlfunnel.com/",
+      "domain": "etlfunnel.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.8,
+      "firstSeen": "2026-09-15T18:15:43.363Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 20,
       "title": "Getting the Anubis screen with every click",
       "url": "https://lobste.rs/s/sxumhw/getting_anubis_screen_with_every_click",
       "domain": "lobste.rs",
@@ -202,14 +502,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.7,
+      "ageHours": 1.8,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 6,
+      "rank": 21,
       "title": "Show HN: Open-Source Lightweight Prompt Injection Safety",
       "url": "https://github.com/StackOneHQ/defender",
       "domain": "github.com",
@@ -222,14 +522,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.7,
+      "ageHours": 1.9,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 7,
+      "rank": 22,
       "title": "Show HN: Extract original images from a PDF in the browser",
       "url": "https://imissfiles.com/extract-pdf-images",
       "domain": "imissfiles.com",
@@ -242,76 +542,16 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2,
+      "ageHours": 2.2,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 8,
+      "rank": 23,
       "title": "Show HN: An open source safety layer for AI agent actions",
       "url": "https://github.com/CTRLRun/ctrlrun",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 9,
-      "title": "America's Driver's License Breach Is a National Security Disaster",
-      "url": "https://www.lawfaremedia.org/article/america%27s-drivers-licence-breach-is-a-national-security-disaster",
-      "domain": "lawfaremedia.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.1,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 10,
-      "title": "Show HN: Claude Meter – a macOS menu-bar meter for Claude's usage limits",
-      "url": "https://github.com/sanchitkd/claude-meter",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.1,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 11,
-      "title": "Show HN: Go Bindings for SCIP Optimizer",
-      "url": "https://github.com/egoisutolabs/scipgo",
       "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -329,10 +569,30 @@
       "leadHours": null
     },
     {
-      "rank": 12,
-      "title": "Show HN: Voice AI that runs on CPUs",
-      "url": "https://lokutor.com/",
-      "domain": "lokutor.com",
+      "rank": 24,
+      "title": "America's Driver's License Breach Is a National Security Disaster",
+      "url": "https://www.lawfaremedia.org/article/america%27s-drivers-licence-breach-is-a-national-security-disaster",
+      "domain": "lawfaremedia.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.3,
+      "firstSeen": "2026-09-15T17:16:35.331Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 25,
+      "title": "Show HN: Claude Meter – a macOS menu-bar meter for Claude's usage limits",
+      "url": "https://github.com/sanchitkd/claude-meter",
+      "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -349,7 +609,47 @@
       "leadHours": null
     },
     {
-      "rank": 13,
+      "rank": 26,
+      "title": "Show HN: Go Bindings for SCIP Optimizer",
+      "url": "https://github.com/egoisutolabs/scipgo",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.3,
+      "firstSeen": "2026-09-15T17:16:35.331Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 27,
+      "title": "Show HN: Voice AI that runs on CPUs",
+      "url": "https://lokutor.com/",
+      "domain": "lokutor.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.4,
+      "firstSeen": "2026-09-15T17:16:35.331Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 28,
       "title": "Show HN: Eulix - Code navigation for large codebases",
       "url": "https://news.ycombinator.com/item?id=49714268",
       "domain": "news.ycombinator.com",
@@ -362,14 +662,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.4,
+      "ageHours": 2.6,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 14,
+      "rank": 29,
       "title": "Show HN: Async multi-agent coordination across physical environments",
       "url": "https://github.com/BlahBlah23406/agent-comms",
       "domain": "github.com",
@@ -382,14 +682,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.4,
+      "ageHours": 2.6,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 15,
+      "rank": 30,
       "title": "Show HN: Leo – a Markdown engineering process for AI coding agents",
       "url": "https://github.com/alex-zaporozhan/leo",
       "domain": "github.com",
@@ -402,14 +702,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.4,
+      "ageHours": 2.6,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 16,
+      "rank": 31,
       "title": "Alignment & Succession: Morality Lives in the Human Individual",
       "url": "https://www.lesswrong.com/posts/cGFBX3CokqXpzcFbj/alignment-and-succession-morality-lives-in-the-human",
       "domain": "lesswrong.com",
@@ -422,14 +722,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.5,
+      "ageHours": 2.6,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 17,
+      "rank": 32,
       "title": "Show HN: A malicious NPM install reads your .env. On my Mac it reads a decoy",
       "url": "https://jitpass.com/",
       "domain": "jitpass.com",
@@ -442,14 +742,14 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.6,
+      "ageHours": 2.7,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 18,
+      "rank": 33,
       "title": "Show HN: Talk to Claude – voice agent designs, plans, builds across all projects",
       "url": "https://github.com/ethanplusai/jarvis",
       "domain": "github.com",
@@ -462,117 +762,17 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.6,
+      "ageHours": 2.7,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
       "leadHours": null
     },
     {
-      "rank": 19,
+      "rank": 34,
       "title": "Show HN: Replay the Python calls that failed while a dependency was down",
       "url": "https://github.com/baldurhq/baldur",
       "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.6,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 20,
-      "title": "Show HN: Warp – Run DeepSeek v4.1 Flash with 5 GB of RAM at 3.77 tok/s",
-      "url": "https://github.com/sqliteai/warp",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.6,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 21,
-      "title": "Cartesian – AI 3D Modeling for Design",
-      "url": "https://www.formas.ai/cartesian",
-      "domain": "formas.ai",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.6,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 22,
-      "title": "Show HN: The bottom 50% of U.S. households are short after essentials (BLS data)",
-      "url": "https://whats-left-over.pages.dev/",
-      "domain": "whats-left-over.pages.dev",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.7,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 23,
-      "title": "Show HN: Pizza Bot – An inbox for AI agents that work in the background",
-      "url": "https://github.com/pizza-bot-app/pizza-bot",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.7,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 24,
-      "title": "Show HN: Visual HTML – a source-preserving WYSIWYG editor for AI-generated HTML",
-      "url": "https://kong75.github.io/visual-html-editor",
-      "domain": "kong75.github.io",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -589,7 +789,108 @@
       "leadHours": null
     },
     {
-      "rank": 25,
+      "rank": 35,
+      "title": "Show HN: Warp – Run DeepSeek v4.1 Flash with 5 GB of RAM at 3.77 tok/s",
+      "url": "https://github.com/sqliteai/warp",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.8,
+      "firstSeen": "2026-09-15T17:16:35.331Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 36,
+      "title": "Cartesian – AI 3D Modeling for Design",
+      "url": "https://www.formas.ai/cartesian",
+      "domain": "formas.ai",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.8,
+      "firstSeen": "2026-09-15T17:16:35.331Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 37,
+      "title": "Show HN: The bottom 50% of U.S. households are short after essentials (BLS data)",
+      "url": "https://whats-left-over.pages.dev/",
+      "domain": "whats-left-over.pages.dev",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN",
+        "Hacker News front"
+      ],
+      "nSources": 2,
+      "nFam": 1,
+      "ageHours": 2.9,
+      "firstSeen": "2026-09-15T17:16:35.331Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 38,
+      "title": "Show HN: Pizza Bot – An inbox for AI agents that work in the background",
+      "url": "https://github.com/pizza-bot-app/pizza-bot",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.9,
+      "firstSeen": "2026-09-15T17:16:35.331Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 39,
+      "title": "Show HN: Visual HTML – a source-preserving WYSIWYG editor for AI-generated HTML",
+      "url": "https://kong75.github.io/visual-html-editor",
+      "domain": "kong75.github.io",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3,
+      "firstSeen": "2026-09-15T17:16:35.331Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null
+    },
+    {
+      "rank": 40,
       "title": "Show HN: Rewic – Turn Git commits into client-ready progress updates",
       "url": "https://rewic.in/",
       "domain": "rewic.in",
@@ -602,308 +903,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 26,
-      "title": "Show HN: LoongForge-Train LLMs, VLMs, diffusion and embodied models, faster",
-      "url": "https://github.com/baidu-baige/LoongForge",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 27,
-      "title": "Show HN: FlareDB – a Rust-based streaming database with Apache Beam as interface",
-      "url": "https://news.ycombinator.com/item?id=49713583",
-      "domain": "news.ycombinator.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
       "ageHours": 3.1,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 28,
-      "title": "Show HN: Trendradar for Horizon Scanning and Foresight",
-      "url": "https://technologieradar.tryresearchly.com/",
-      "domain": "technologieradar.tryresearchly.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.1,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 29,
-      "title": "Closing the IPv6 first-packet gap with GRAND",
-      "url": "https://labs.ripe.net/author/pouria/closing-the-ipv6-first-packet-gap-with-grand",
-      "domain": "labs.ripe.net",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.3,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 30,
-      "title": "The CSS Zen Garden dream, finally shipped",
-      "url": "https://josprague.com/blog/the-css-zen-garden-dream-finally-shipped",
-      "domain": "josprague.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.4,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 31,
-      "title": "Why Focus on Extinction?",
-      "url": "https://www.lesswrong.com/posts/JrmLzrCqtpXSvjeDj/why-focus-on-extinction",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.5,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 32,
-      "title": "GRP-Obliteration: Unaligning LLMs with a Single Unlabeled Prompt",
-      "url": "https://arxiv.org/abs/2602.06258",
-      "domain": "arxiv.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.6,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 33,
-      "title": "The Inference Hardware Revolution of 2026",
-      "url": "https://spectrum.ieee.org/inference-hardware-revolution",
-      "domain": "spectrum.ieee.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.7,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 34,
-      "title": "Interpreting Pangram",
-      "url": "https://lucumr.pocoo.org/2026/9/14/interpreting-pangram",
-      "domain": "lucumr.pocoo.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.8,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 35,
-      "title": "The Bad Guy With An AI Named Claude",
-      "url": "https://www.lesswrong.com/posts/qSjH9T83xCfWQkmk2/the-bad-guy-with-an-ai-named-claude",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.9,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 36,
-      "title": "Show HN: Panel – A research workspace where the agent can build its own panes",
-      "url": "https://github.com/greentfrapp/panel",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.1,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 37,
-      "title": "Show HN: Capsule – Single-file web apps that save their data into SQLite",
-      "url": "https://withcapsule.app/",
-      "domain": "withcapsule.app",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.6,
-      "firstSeen": "2026-09-15T17:16:35.331Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 38,
-      "title": "CSS-Tricks in Limbo",
-      "url": "https://vale.rocks/micros/20260915-0135",
-      "domain": "vale.rocks",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front",
-        "Lobsters"
-      ],
-      "nSources": 2,
-      "nFam": 2,
-      "ageHours": 10.6,
-      "firstSeen": "2026-09-15T12:07:49.768Z",
-      "heating": true,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 39,
-      "title": "Java 27 Released",
-      "url": "https://mail.openjdk.org/archives/list/announce@openjdk.org/thread/ORGGLMN75HFEWP7YL3ZLGHLYHVIBJDYT",
-      "domain": "mail.openjdk.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.9,
-      "firstSeen": "2026-09-15T13:24:47.513Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null
-    },
-    {
-      "rank": 40,
-      "title": "Introducing Gemini 3.8 Live and 3.8 Live Extended Thinking",
-      "url": "https://deepmind.google/blog/introducing-gemini-3-8-live-and-3-8-live-extended-thinking",
-      "domain": "deepmind.google",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Analysis",
-      "firstSource": "Google DeepMind",
-      "sources": [
-        "Google DeepMind"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1,
       "firstSeen": "2026-09-15T17:16:35.331Z",
       "heating": false,
       "travelled": false,
