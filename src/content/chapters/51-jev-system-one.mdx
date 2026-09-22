@@ -3,7 +3,7 @@ number: 51
 slug: "51-jev-system-one"
 title: "Jev and the System One Layer"
 subtitle: "Typed Questions, Calibrated Confidence, and the First Receipt From My Own Radar"
-tldr: "Jev is a model that never writes text: you send it state and typed questions, it returns probabilities, and your code decides. I wired it into the Radar page's pipeline and measured it against a labelled set and a logistic regression trained on the same labels. It won the yes/no question by fifteen points and lost the eight-way one by eleven. Install it in five minutes, but ship nothing without a receipt."
+tldr: "Jev is a model that never writes text: you send it state and typed questions, it returns probabilities, and your code decides. I wired it into the Radar page's pipeline and measured it against a labelled set and a logistic regression trained on the same labels. It won the yes/no question by sixteen points and lost the eight-way one by eleven. Install it in five minutes, but ship nothing without a receipt."
 seoDescription: "Jev, TypeSafe AI's System One model: install the SDK and plugin, primitives, confidence gates, failure modes, and a measured receipt from a live pipeline."
 keyConcepts: ["System One model", "Noul", "Calibration", "Receipt", "Demote, never remove"]
 readingMinutes: 13
@@ -103,7 +103,7 @@ Everything in this section is from my own calls. The full files live beside the 
 | --- | --- |
 | Ten serial requests, about 500 tokens each, from a home connection | p50 289 ms, p95 791 ms (the first request carries connection warm-up) |
 | Same request repeated three times | 0 decisions flipped, no probability moved by more than 0.01 |
-| 250 titles scored, four in flight | 18 seconds, $0.0054 |
+| 250 titles scored, four in flight | 18 seconds, $0.0054 (128,965 input tokens) |
 | Three questions packed into one request | 409 input tokens, $0.000017, or $0.0057 per 1,000 packed rows |
 
 Then the receipt. The Radar page ranks about forty stories an hour from 78 feeds, and five of its eleven top-tier feeds are general Hacker News feeds, so a board that promises an AI index was carrying a ZX Spectrum sound experiment at rank 8 and a piece on two Christian saints at rank 15. I sampled 250 August titles across 44 source families, had three agents label each one blind (245 of 250 unanimous; 18 with no majority excluded), and asked Jev one Noul: is this story about AI, judging the subject and not the site.
@@ -120,14 +120,14 @@ Then the receipt. The Radar page ranks about forty stories an hour from 78 feeds
   ratio="16/9"
 />
 
-The yes/no question is the win: fifteen points over a logistic regression trained on the same labels, with the confident band almost perfect. The eight-way topic question is the honest counterpart: the same labelled baseline beats Jev by eleven points and its calibration error is 0.226, so I measured it and did not ship it. That is the community's "labels beat zero-shot on classification" result reproduced on my own data, and it belongs in the chapter as much as the win does.
+The yes/no question is the win: sixteen points over a logistic regression trained on the same labels, with the confident band almost perfect. The eight-way topic question is the honest counterpart: the same labelled baseline beats Jev by eleven points and its calibration error is 0.226, so I measured it and did not ship it. That is the community's "labels beat zero-shot on classification" result reproduced on my own data, and it belongs in the chapter as much as the win does.
 
 The policy the receipt licenses: demote when the probability is below 0.20, review the 0.20 to 0.50 band by hand, keep everything else. At 0.20 the demoted set was 97.5% truly not about AI and caught 93% of the non-AI items; the two mistakes were bare release tags like `v2.1.224`, where the model saw only `github.com` while the labellers knew the repository. That is a state-design fix, not a threshold change. Demote means sink below the fold; nothing is ever removed, and the frozen score still decides what is on the board.
 
 <ScreenshotPlaceholder
   id="51-jev-system-one-2"
   caption="The public board, before and after the demote at 0.20"
-  note="Twenty of the forty items on the committed board sank, including seven of the top fifteen. Rank 1, a repository about ADHD, gave way to an agent framework. Every item is still on the page."
+  note="Twenty-two of the forty items on the board snapshot sank, including seven of the top fifteen. Rank 1, a repository about ADHD, gave way to an agent framework. Every item is still on the page."
   ratio="16/9"
 />
 

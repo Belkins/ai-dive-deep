@@ -30,7 +30,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     receipts: [
       { label: 'Radar relevance, yes/no', value: '96.6% on 232 labelled rows, ECE 0.051' },
       { label: 'Labelled baseline on the same rows', value: '80.2% logistic regression, 78.9% keywords' },
-      { label: 'Board effect at the shipped threshold', value: '20 of 40 items demoted, none removed' },
+      { label: 'Board effect at the shipped threshold', value: '22 of 40 items demoted, none removed' },
     ],
   },
   {
