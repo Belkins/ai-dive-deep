@@ -60,6 +60,8 @@ for (ed_a, d_a), (ed_b, d_b) in zip(parsed, parsed[1:]):
 for i, e in enumerate(entries):
     if e["banner"] and i != 0:
         failures.append(f"{e['edition']}: bannerText/bannerHref set on a non-latest entry (AnnouncementBar reads CHANGELOG[0] only)")
+    if i == 0 and not e["banner"]:
+        failures.append(f"{e['edition']}: the latest entry carries no bannerText/bannerHref (the homepage announcement bar renders nothing)")
 
 if not entries:
     failures.append("no entries parsed from changelog.ts — parser or file structure changed")

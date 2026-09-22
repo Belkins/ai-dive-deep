@@ -93,6 +93,8 @@ export const SCREENSHOTS: Record<string, string> = {
   "47-measurement-layer-1": "47-measurement-layer-1.webp",
   "48-traffic-graph-that-lies-1": "48-traffic-graph-that-lies-1.webp",
   "48-traffic-graph-that-lies-2": "48-traffic-graph-that-lies-2.webp",
+  "51-jev-system-one-1": "51-jev-system-one-1.svg",
+  "51-jev-system-one-2": "51-jev-system-one-2.svg",
   "ad-x-90k-delete": "ad-x-90k-delete.svg",
   "agent-workflow-delta": "agent-workflow-delta.svg",
   "agent-workflow-plan": "agent-workflow-plan.svg",
@@ -119,4 +121,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "swarms-3": "swarms-3.webp"
 };
 
-export const SCREENSHOT_COUNT = 114;
+export const SCREENSHOT_COUNT = 116;

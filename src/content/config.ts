@@ -1,3 +1,4 @@
+import { CHAPTERS } from '../lib/chapters';
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { SEO_DESCRIPTION_MAX_LENGTH, seoTextLength } from '../lib/seo';
@@ -5,7 +6,7 @@ import { SEO_DESCRIPTION_MAX_LENGTH, seoTextLength } from '../lib/seo';
 const chapters = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/chapters' }),
   schema: z.object({
-    number: z.number().int().min(1).max(50),
+    number: z.number().int().min(1).max(CHAPTERS.length), // bound derived from the registry: no literal to bump per chapter
     slug: z.string(),
     title: z.string(),
     subtitle: z.string(),

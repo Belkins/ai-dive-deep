@@ -1,0 +1,171 @@
+---
+number: 51
+slug: "51-jev-system-one"
+title: "Jev and the System One Layer"
+subtitle: "Typed Questions, Calibrated Confidence, and the First Receipt From My Own Radar"
+tldr: "Jev is a model that never writes text: you send it state and typed questions, it returns probabilities, and your code decides. I wired it into the Radar page's pipeline and measured it against a labelled set and a logistic regression trained on the same labels. It won the yes/no question by sixteen points and lost the eight-way one by eleven. Install it in five minutes, but ship nothing without a receipt."
+seoDescription: "Jev, TypeSafe AI's System One model: install the SDK and plugin, primitives, confidence gates, failure modes, and a measured receipt from a live pipeline."
+keyConcepts: ["System One model", "Noul", "Calibration", "Receipt", "Demote, never remove"]
+readingMinutes: 13
+---
+
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+Most AI calls in a real product are not asking for prose. They are asking a small question about messy text: which team owns this ticket, is this urgent, is this story about AI at all. We answer those questions today by spinning up a full generative model, streaming JSON, parsing it, validating it, and using three fields. Jev is a bet that this is the wrong tool. It reads the state once, answers every question you attach in one parallel pass, and hands back a probability per option. No tokens to parse. Your code owns the decision. TypeSafe calls the class <GlossaryTerm term="System One model">System One models</GlossaryTerm>; their own pitch is "smart if-statements".
+
+<Callout type="note" title="Evidence status: 2026-09-22">
+Unlike chapters 49 and 50, this one is run. The numbers in "What I measured" come from my own calls from my own machine on 2026-09-21 and 2026-09-22, against a labelled sample of the Radar page's own data, with the receipt files on disk. The labels were produced by three independent agents (two Fable framings, one Opus) reading title and domain only; I have not hand-checked all 250, and the chapter says so where it matters. Vendor numbers are attributed to TypeSafe; community numbers to their authors with the source. One production surface, one receipt. That is what "first" means here.
+</Callout>
+
+## Identify the model before judging it
+
+The model is `jev-1.13.0`. The aliases `jev-latest` and `jev-preview` both resolve to it today, and TypeSafe's models page says aliases move when a release ships, while the response's `model` field always reports the versioned ID that answered. Pin the version once you have tuned a threshold, log the field from every response, and store the probability distribution next to the decision so a logged answer can be replayed. Price is $0.042 per million input tokens and output is free; rate limits are 250,000 tokens a second and 1,200 requests a minute per account, "adjusting dynamically" and able to "change without notice"; context is 64k tokens per request with 32k for the state plus the longest question; input is text only, English first. All of that is the vendor's [models page](https://docs.typesafe.ai/models), read on 2026-09-21.
+
+Two things the launch coverage got wrong and the docs get right: there is no waitlist as of the week after launch, and there is no per-request latency figure anywhere in the documentation. The "70 to 500 ms" you will see quoted is launch material. My own numbers are below.
+
+## Install it in five minutes
+
+```bash
+# Claude Code: the vendor's skill, so your agent writes questions the way the docs do
+claude plugin marketplace add typesafe-ai/skills
+claude plugin install typesafe@typesafe-ai
+
+# Node 20+ (Vercel, Astro server endpoints, Workers, scripts)
+npm install @typesafe-ai/sdk
+
+# Python 3.10+ (scripts, scheduled jobs)
+pip install typesafe-sdk
+```
+
+Create a key at console.typesafe.ai/keys and export it as `TYPESAFE_API_KEY`, server-side only. The JavaScript SDK ships a `dangerouslyAllowBrowser` flag whose name is the whole warning. Then the first call:
+
+```ts
+import { TypeSafeClient, choice, noul, score } from "@typesafe-ai/sdk";
+
+const client = new TypeSafeClient({ defaultModel: "jev-1.13.0" });
+const { answers, model, usage } = await client.systemOne({
+  state: { message: "Payments have been failing for three days. Fix this now or refund us." },
+  questions: {
+    department: choice("Which team should own this ticket?", { billing: null, technical: null, account: null, other: null }),
+    urgency: noul("Does the ticket describe an ongoing loss that needs attention today?"),
+    refundRequested: noul("Does the customer explicitly ask for money back?"),
+    frustration: score("How frustrated is the customer, from the wording alone?", ["Calm", "Irritated", "Angry"]),
+  },
+});
+```
+
+On my first live run that request took 608 ms end to end, used 570 input tokens, cost $0.000024, and came back with `technical` at 0.84, urgency 0.97, refund 0.94, frustration 1.99 of 2. Four decisions, one round trip, nothing to parse.
+
+## Three primitives and the trap
+
+**Choice** picks one option from a set you define, up to 255 of them, and returns a probability for each plus a `confidence` number. **Score** places the state on an ordered rubric of two to ten levels whose descriptions you write, and returns an expected position that can land between levels. **<GlossaryTerm term="Noul">Noul</GlossaryTerm>** answers a yes/no statement with the probability that it is true.
+
+The trap is that a Noul has no `confidence` field. Confidence exists only on Choice and Score, where it is derived from how peaked the distribution is. Everyone who thresholds on `answer.confidence` for a Noul finds it undefined. Threshold the probability itself, and remember what the docs say plainly: a Noul near 0.5 means "as likely yes as no", not "medium".
+
+Two more rules from TypeSafe's own jaggedness page that bite: a Noul and a yes/no Choice on the same question do not agree numerically, and a question and its negation do not sum to one. Ask each decision once, in the form you will threshold on, and never carry a threshold from one primitive to another.
+
+## Confidence is a second axis
+
+For a Choice with `n` options and a peak probability `p`, confidence is `(n·p − 1)/(n − 1)`: 1.0 when one option takes everything, 0 when the distribution is flat. The vendor's [confidence page](https://docs.typesafe.ai/confidence) draws three bands, act, verify, route to a human, and adds the sentence that matters: a threshold is not one number, it is one number per action, scaled to the consequence of being wrong. Filing a story below the fold and issuing a refund deserve different nerve.
+
+<PullQuote>Your code encodes the risk tolerance. The model only tells you how sure it is.</PullQuote>
+
+## Where it does not belong
+
+TypeSafe publishes nine failure modes for `jev-1.13`. The two that bite operators hardest are arithmetic and dates. It does not count reliably, it reads dates as text, and it cannot tell whether two hex colours are close. Extract in the model, compute in code. The third is literal reading: it answers the question you wrote, not the one you meant, so every boundary case belongs in the criteria. The fourth is adversarial content. State is data, not a hostile input, and the first measured attack on it is instructive: crude "ignore the question" injection barely moved it, but a sentence asserting that a human had already decided flipped most tickets at high confidence in a pre-registered evaluation of 123,805 requests ([willkelly](https://github.com/willkelly/jev-evaluation)). If the text you grade can carry a human-sounding approval, it is adversarial input.
+
+And it does not belong anywhere a deterministic formula already does the job. The Radar page's ranking is a frozen decay formula with a written no-tuning pre-commitment. Jev never touches it. What it does is described below, and the distinction is the whole design.
+
+## The receipt discipline
+
+A <GlossaryTerm term="Receipt">receipt</GlossaryTerm> is a labelled sample from the real decision surface, the model's accuracy with an interval, its <GlossaryTerm term="Calibration">calibration</GlossaryTerm> per confidence band, the cost and latency measured by you, and the same rows scored by the cheapest alternative. No receipt, no rollout. That is not caution for its own sake; the community's strongest finding is that a labelled classical head catches or beats Jev at a task-dependent label count somewhere between a hundred and ten thousand, so the cheap baseline is a live threat to every integration, not a formality.
+
+The convention that makes this reviewable is one constants file per integration: the pinned model, every question, every threshold, and the receipt it was tuned on, in a file a human reads.
+
+```js
+export const MODEL = "jev-1.13.0";              // pinned: the thresholds were tuned on this version
+export const QUESTIONS_VERSION = "radar-relevance/0.1.1";
+export const RECEIPT = "radar-relevance-v011-2026-09-22"; // never ship with this empty
+export const QUESTIONS = { ai_relevant: { type: "noul", instructions: "…", criteria: { true: "…", false: "…" } } };
+export const THRESHOLDS = { demoteBelow: 0.2, reviewBelow: 0.5 };
+```
+
+My receipt engine is a 300-line script: labelled JSONL in, per-question accuracy with Wilson intervals, expected calibration error suppressed below 200 rows, a `--baseline` arm scored on the same gold, request-level cost and latency, a repeat mode for stability, and a refusal to emit a receipt when more than 2% of rows error. Nothing in it is clever. The point is that a threshold cannot exist without it.
+
+## What I measured
+
+Everything in this section is from my own calls. The full files live beside the pipeline.
+
+| Measurement | Result |
+| --- | --- |
+| Ten serial requests, about 500 tokens each, from a home connection | p50 289 ms, p95 791 ms (the first request carries connection warm-up) |
+| Same request repeated three times | 0 decisions flipped, no probability moved by more than 0.01 |
+| 250 titles scored, four in flight | 18 seconds, $0.0054 (128,965 input tokens) |
+| Three questions packed into one request | 409 input tokens, $0.000017, or $0.0057 per 1,000 packed rows |
+
+Then the receipt. The Radar page ranks about forty stories an hour from 78 feeds, and five of its eleven top-tier feeds are general Hacker News feeds, so a board that promises an AI index was carrying a ZX Spectrum sound experiment at rank 8 and a piece on two Christian saints at rank 15. I sampled 250 August titles across 44 source families, had three agents label each one blind (245 of 250 unanimous; 18 with no majority excluded), and asked Jev one Noul: is this story about AI, judging the subject and not the site.
+
+| Question | Rows | Jev | Labelled logistic regression | Keyword list |
+| --- | --- | --- | --- | --- |
+| Is it about AI (yes/no) | 232 | **96.6%** [93.3, 98.2] | 80.2% [74.6, 84.8] | 78.9% |
+| Which of eight topics | 250 | 61.6% | **72.8%** | not applicable |
+
+<ScreenshotPlaceholder
+  id="51-jev-system-one-1"
+  caption="Accuracy by confidence band on the yes/no question"
+  note="194 of 232 rows landed in the 0.9 to 1.0 band and 99% of them were right; the 0.7 to 0.9 band held 28 rows at 89%; the ten rows at 0.5 to 0.7 were right 70% of the time. Expected calibration error 0.051. Both baselines were trained and cross-validated on the same 232 labels."
+  ratio="16/9"
+/>
+
+The yes/no question is the win: sixteen points over a logistic regression trained on the same labels, with the confident band almost perfect. The eight-way topic question is the honest counterpart: the same labelled baseline beats Jev by eleven points and its calibration error is 0.226, so I measured it and did not ship it. That is the community's "labels beat zero-shot on classification" result reproduced on my own data, and it belongs in the chapter as much as the win does.
+
+The policy the receipt licenses: demote when the probability is below 0.20, review the 0.20 to 0.50 band by hand, keep everything else. At 0.20 the demoted set was 97.5% truly not about AI and caught 93% of the non-AI items; the two mistakes were bare release tags like `v2.1.224`, where the model saw only `github.com` while the labellers knew the repository. That is a state-design fix, not a threshold change. Demote means sink below the fold; nothing is ever removed, and the frozen score still decides what is on the board.
+
+<ScreenshotPlaceholder
+  id="51-jev-system-one-2"
+  caption="The public board, before and after the demote at 0.20"
+  note="Twenty-two of the forty items on the board snapshot sank, including seven of the top fifteen. Rank 1, a repository about ADHD, gave way to an agent framework. Every item is still on the page."
+  ratio="16/9"
+/>
+
+The column costs under a cent a month: at most forty items, each asked once and cached. The cheapest alternative, a keyword list, sat at 78.9% on the same rows. That is the comparison I would want to see from any vendor and none of them publish it.
+
+## What the community measured, and what it did not
+
+A week after launch there were more than three hundred public takes. The ones with numbers, attributed:
+
+| Who | What they found | Source |
+| --- | --- | --- |
+| Good Start Labs | 6,003 rubric checks over 1,203 answers: $160 per million graded answers with Jev against $33,000 with a frontier judge | goodstartlabs.com |
+| Arize | Four grading workflows: Jev 68% at $0.0004 and 0.4 s per case; GPT-5.6 Terra 68% at $0.03 and 10 s | arize.com |
+| Rajesh Beri | 2,000 phishing emails: one coarse question 62.6%, five atomic questions with per-question weights caught up to a frontier model's 81.3% | beri.net |
+| MindStudio | A 22-million-parameter encoder plus logistic regression at 93.2% beats Jev zero-shot at 80.1% on Banking77, in 8 ms | mindstudio.ai |
+| vcjdeboer | Pre-registered reliability study: identical requests never flipped a decision; rewording a question flipped 12.5% | github.com/vcjdeboer |
+| hindsight, xerj | Reranking a shortlist with a targeted question lifted recall@1 from 0.80 to 0.95; an untargeted question scored 0.38 against BM25's 0.78 | GitHub pull requests |
+| Vercel | "Up to 18x faster" for its coding tool's safety reviewer: partner-claimed, no sample size, and the reviewer shipped opt-in, not default | vercel.com, github.com/vercel-labs/fx |
+| Browser Use | The "books a flight in seconds" demo is a Google Flights search that does not book: 7.1 s, $0.0039, three run pairs | github.com/browser-use |
+
+Across 215 reported figures the community's median speed-up is about 7x. The vendor's headline multipliers, 193.6x and 444.6x, are unverified by anyone outside the vendor, and the launch was agency-seeded to 80 to 100 accounts by the agency's own case study, so week-one star counts are not evidence. Nobody had published cold-email reply intent, ICP scoring, hiring-rubric accuracy, or a curated-feed relevance gate. This chapter is the first of those four.
+
+## Use cases that survived scrutiny
+
+I ran the same discipline across my whole portfolio before touching anything: fourteen repositories inventoried for decision points, sixteen candidates verified by two adversarial readers each. One survived as written, the Radar gate above. Three revived in a narrower shape: a pre-screen in front of the expensive refute agents in my Claude Code audit workflows, run in shadow until it has two hundred labels; the receipt engine itself, ported into the eval kit from [Chapter 47](/chapters/47-measurement-layer/); and grading synthetic email drafts offline. Twelve were refuted, and the reasons are the useful part: labelled sets that turned out to be a zero-byte placeholder file, a feature already removed from the product, a repository with a written decision against any model judge, zero real traffic. Ten defects were fixable with a regex or a reordering and no model at all.
+
+The pattern that holds: Jev sits in front of a generative call (route, gate), beside it (many questions on one state), or behind it (grade the output field by field). It never replaces generation, and at this portfolio's volume it is not a cost play either; the largest priced saving anyone could find was under forty dollars a month. What it buys is judgments nobody was making, and a calibrated number where a keyword list used to pretend.
+
+## The legal footnote you should read
+
+TypeSafe's customer agreement dated 2026-08-27 forbade publishing "benchmarks or performance information about the Services". The revision of 2026-09-19 removed that clause, three days after two customers redacted their numbers because of it. Under the current text you may publish your receipts; §2.3(b) still forbids using outputs to train an imitation, §2.3(g) forbids security testing the service, and §4.3 lets the vendor process "telemetry" including classifications without restriction. Screenshot the agreement the day you create a key, and diff it before you publish.
+
+## What to do this week
+
+1. Install the plugin and the SDK, create a key, and make the four-question call above. Ten minutes.
+2. Pick one decision your product makes with a regex or a "return JSON" prompt. Write the question and its boundary cases in a constants file.
+3. Label 200 rows blind. If you cannot get 200 labels, you do not have a decision worth a model.
+4. Run the receipt with the logistic-regression arm. If the baseline wins, that is your finding; write it down.
+5. Ship in shadow: score, log the distribution, change nothing. Flip the switch only when the band accuracies hold and one hand-reversal sends it back.
+
+[Chapter 25](/chapters/25-evals-or-hope/) explains why the eval is the product. This chapter is that argument applied to the cheapest model call you will ever make.

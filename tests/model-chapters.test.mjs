@@ -10,6 +10,48 @@ const { outputText } = ts.transpileModule(read('src/lib/chapters.ts'), {
 const { CHAPTERS, PARTS, SECTIONS, getNeighbors } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 const additions = ['49-gpt-6-astra', '50-claude-fable-5-1'];
 
+const { outputText: changelogJs } = ts.transpileModule(read('src/lib/changelog.ts'), {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const { CHANGELOG } = await import(`data:text/javascript;base64,${Buffer.from(changelogJs).toString('base64')}`);
+const { outputText: screenshotsJs } = ts.transpileModule(read('src/lib/screenshots.ts'), {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const { SCREENSHOTS } = await import(`data:text/javascript;base64,${Buffer.from(screenshotsJs).toString('base64')}`);
+const { outputText: glossaryJs } = ts.transpileModule(read('src/lib/glossary.ts'), {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const { glossary } = await import(`data:text/javascript;base64,${Buffer.from(glossaryJs).toString('base64')}`);
+
+test('every registered chapter has its file, its number, exactly one part and at least one section, in number order', () => {
+  const numbers = CHAPTERS.map(chapter => chapter.number);
+  assert.deepEqual(numbers, [...numbers].sort((a, b) => a - b), 'CHAPTERS must be sorted by number: prev/next navigation is derived from list order');
+  assert.equal(new Set(numbers).size, numbers.length, 'chapter numbers must be unique');
+  for (const chapter of CHAPTERS) {
+    const content = read(`src/content/chapters/${chapter.slug}.mdx`);
+    assert.match(content, new RegExp(`^number: ${chapter.number}$`, 'm'), `${chapter.slug}: frontmatter number`);
+    assert.match(content, new RegExp(`^slug: ['"]?${chapter.slug}['"]?$`, 'm'), `${chapter.slug}: frontmatter slug`);
+    assert.equal(PARTS.filter(part => part.slugs.includes(chapter.slug)).length, 1, `${chapter.slug}: exactly one part`);
+    assert.ok(SECTIONS.some(section => section.slugs.includes(chapter.slug)), `${chapter.slug}: at least one section`);
+  }
+});
+
+test('chapter 51 is wired: neighbours, the latest edition banner, both figures and every glossary key', () => {
+  const slug = '51-jev-system-one';
+  assert.equal(getNeighbors('50-claude-fable-5-1').next.slug, slug);
+  assert.equal(getNeighbors(slug).prev.slug, '50-claude-fable-5-1');
+  assert.equal(getNeighbors(slug).next, null);
+  assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
+  assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
+  const content = read(`src/content/chapters/${slug}.mdx`);
+  for (const id of [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+  }
+  for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
+  }
+});
+
 test('model chapters register once with matching content, topic and narrative navigation', () => {
   for (const [index, slug] of additions.entries()) {
     const entries = CHAPTERS.filter(chapter => chapter.slug === slug);

@@ -517,6 +517,30 @@ export const glossary: Record<string, GlossaryEntry> = {
       'The bar an issue passes before an agent may pick it up: entry points name real paths plus an explicit must-not-touch list, every acceptance criterion is checkable by someone who did not write the code, and Open questions literally says "none". Fail any of it and the pickup command refuses — a vague issue produces a plausible PR that solves the wrong problem, which costs more than the refusal. See <a href="/agent-workflow/">Agent workflow</a>.',
     related: ['Review fleet', 'Claude Code'],
   },
+  'System One model': {
+    term: 'System One model',
+    definition:
+      'A model trained to make fast, typed decisions instead of generating text: you send state and questions with a defined answer space, it returns a calibrated probability per option, and your code decides. TypeSafe\u2019s Jev (September 2026) is the first public one. It cannot write, count, or compare dates; it can answer hundreds of narrow questions about one state in a single pass.',
+    related: ['Noul', 'Calibration', 'Receipt'],
+  },
+  Noul: {
+    term: 'Noul',
+    definition:
+      'Jev\u2019s yes/no primitive: the probability that a statement about the state is true, from 0 to 1. It carries no confidence field, so you threshold the probability itself, and a value near 0.5 means as likely yes as no, not medium. Its siblings are Choice (one option from a set) and Score (a position on an ordered rubric).',
+    related: ['System One model', 'Calibration'],
+  },
+  Calibration: {
+    term: 'Calibration',
+    definition:
+      'Whether a model\u2019s stated probabilities match reality in aggregate: among answers given at 0.9, about 90% should be right. Measured on a labelled sample as expected calibration error (ECE) and as accuracy per confidence band. It is per task, not per model, so a threshold tuned on one question never transfers to another.',
+    related: ['Receipt', 'Eval'],
+  },
+  Receipt: {
+    term: 'Receipt',
+    definition:
+      'The evidence a model decision must carry before it ships: a labelled sample from the real surface, accuracy with an interval, calibration per band, cost and latency measured by you, and the same rows scored by the cheapest alternative. No receipt, no rollout. A vendor benchmark is not one.',
+    related: ['Calibration', 'Eval'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);
