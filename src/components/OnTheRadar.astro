@@ -1,0 +1,29 @@
+---
+// "On the Radar" strip on a chapter page: live Radar items the pipeline linked to this
+// chapter (receipt-gated, radar-pipeline issue #13). Renders nothing when there are none.
+import today from '@/data/radar/today.json';
+import { radarItemsForChapter } from '@/lib/radar-chapters';
+
+interface Props { slug: string }
+const { slug } = Astro.props;
+const items = radarItemsForChapter((today as any).items, slug);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+{items.length > 0 && (
+  <aside class="container-prose my-8" aria-label="On the Radar">
+    <div class="rounded-lg p-5" style="background: rgb(var(--paper)); border-left: 3px solid rgb(var(--accent-2));">
+      <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2));">On the Radar</div>
+      <ul class="space-y-2">
+        {items.map((it) => (
+          <li class="leading-snug">
+            <a href={it.url} target="_blank" rel="noopener nofollow" class="hover:underline" style="color: rgb(var(--fg))">{it.title}</a>
+            {it.domain && <span class="text-sm" style="color: rgb(var(--muted))"> · {it.domain}</span>}
+          </li>
+        ))}
+      </ul>
+      <p class="text-sm mt-3 mb-0" style="color: rgb(var(--muted))">
+        Stories on this chapter's subject from today's <a href={`${base}/radar/`} style="color: rgb(var(--accent))">Radar</a>, matched by a receipt-checked classifier.
+      </p>
+    </div>
+  </aside>
+)}

@@ -8,6 +8,7 @@ import ChapterFooter from '@/components/ChapterFooter.astro';
 import ProgressBar from '@/components/ProgressBar.astro';
 import VideoEmbed from '@/components/VideoEmbed.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import OnTheRadar from '@/components/OnTheRadar.astro';
 import { createChapterSeoDescription } from '@/lib/seo';
 
 export async function getStaticPaths() {
@@ -39,6 +40,8 @@ const seoDescription = createChapterSeoDescription(data);
   <article class="chapter-body container-prose pt-6 pb-12">
     <Content />
   </article>
+
+  <OnTheRadar slug={data.slug} />
 
   {data.video && <VideoEmbed youtubeId={data.video.youtubeId} title={data.video.title} />}
 
