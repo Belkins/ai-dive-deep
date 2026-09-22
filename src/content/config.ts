@@ -5,7 +5,7 @@ import { SEO_DESCRIPTION_MAX_LENGTH, seoTextLength } from '../lib/seo';
 const chapters = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/chapters' }),
   schema: z.object({
-    number: z.number().int().min(1).max(50),
+    number: z.number().int().min(1).max(60),
     slug: z.string(),
     title: z.string(),
     subtitle: z.string(),

@@ -16,11 +16,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 15',
+    date: '2026-09-22',
+    tagline: 'Jev and the System One layer: the first model chapter that carries a receipt from my own pipeline.',
+    bannerText: 'New chapter: Jev, the model that never writes text, measured on the Radar with a receipt.',
+    bannerHref: '/chapters/51-jev-system-one/',
+    shipped: [
+      'Chapter 51: what a System One model is, install in five minutes (plugin, SDKs, key), the three primitives and the Noul-has-no-confidence trap, confidence as a second axis, the nine failure modes, the receipt discipline.',
+      'Measured on 2026-09-21 and 2026-09-22 from my own machine: p50 289 ms and p95 791 ms per request, 0 decision flips over repeats, $0.0057 per 1,000 packed rows.',
+      'The Radar relevance receipt: 232 labelled titles, 96.6% on the yes/no question against 80.2% for a logistic regression trained on the same labels; the eight-way topic question lost to that baseline and was not shipped.',
+      'Community measurements attributed by author, the vendor multipliers marked unverified, and the customer-agreement clause that forbade publishing benchmarks until 2026-09-19.',
+    ],
+    receipts: [
+      { label: 'Radar relevance, yes/no', value: '96.6% on 232 labelled rows, ECE 0.051' },
+      { label: 'Labelled baseline on the same rows', value: '80.2% logistic regression, 78.9% keywords' },
+      { label: 'Board effect at the shipped threshold', value: '20 of 40 items demoted, none removed' },
+    ],
+  },
+  {
     edition: 'Edition 14.2',
     date: '2026-09-05',
     tagline: 'Astra and Fable 5.1: source-backed operator guides, with the evaluation work still ahead.',
-    bannerText: 'New chapters: Astra and Fable 5.1, from launch claims to reviewable workflows.',
-    bannerHref: '/chapters/49-gpt-6-astra/',
     shipped: [
       'Chapter 49: GPT-6 Astra performance evidence, harness caveats, scoped workflow recipes and cost per accepted output.',
       'Chapter 50: Claude Fable 5.1 use-case candidates, refusal and fallback accounting, document reconciliation and migration boundaries.',

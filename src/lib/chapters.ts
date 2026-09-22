@@ -57,6 +57,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 48, slug: '48-traffic-graph-that-lies', title: 'The Traffic Graph That Lies', subtitle: 'Agentic SEO Done Right vs. the Vanity Version' },
   { number: 49, slug: '49-gpt-6-astra', title: 'GPT-6 Astra for Real Work', subtitle: 'Performance, Use Cases, and the Cost of a Finished Job' },
   { number: 50, slug: '50-claude-fable-5-1', title: 'Claude Fable 5.1 for Difficult Workflows', subtitle: 'Best-Fit Workflows, Fallbacks, and Real Costs' },
+  { number: 51, slug: '51-jev-system-one', title: 'Jev and the System One Layer', subtitle: 'Typed Questions, Calibrated Confidence, and the First Receipt From My Own Radar' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -104,7 +105,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part VI — The Frontier and the Tier',
     tagline: 'Agents that talk, write, browse, and the honest tier list.',
     intro: 'Voice, browser, persona, archetype agents. Two-agent infrastructure. Frameworks beyond Claude Code. Team adoption when twelve people need to use it. Failure stories with dollar amounts. The tier list, ranked without diplomatic phrasing. Plus the community skill ecosystem — what to steal and what to publish.',
-    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '42-codex-on-a-loop', '43-codex-saviour', '36-frameworks-beyond', '39-skills-you-should-steal', '26-team-adoption', '28-failure-receipts', '24-tier-list', '49-gpt-6-astra', '50-claude-fable-5-1'],
+    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '42-codex-on-a-loop', '43-codex-saviour', '36-frameworks-beyond', '39-skills-you-should-steal', '26-team-adoption', '28-failure-receipts', '24-tier-list', '49-gpt-6-astra', '50-claude-fable-5-1', '51-jev-system-one'],
   },
 ];
 
@@ -154,7 +155,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'resources',
     label: 'Team + Tier',
     description: "Get twelve people to use this. Rate every tool without diplomatic phrasing.",
-    slugs: ['26-team-adoption', '24-tier-list', '49-gpt-6-astra', '50-claude-fable-5-1'],
+    slugs: ['26-team-adoption', '24-tier-list', '49-gpt-6-astra', '50-claude-fable-5-1', '51-jev-system-one'],
   },
 ];
 

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, system-ui, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="90" fill="#F4F1EA" font-size="40" font-weight="700">Jev on the Radar: accuracy by confidence band</text>
+  <text x="80" y="132" fill="#9A9789" font-size="22">Question: is this story about AI (Noul). 232 labelled August titles, jev-1.13.0, measured 2026-09-22.</text>
+  <!-- axis -->
+  <line x1="200" y1="700" x2="1520" y2="700" stroke="#56544B" stroke-width="2"/>
+  <line x1="200" y1="700" x2="200" y2="180" stroke="#56544B" stroke-width="2"/>
+  <g fill="#9A9789" font-size="20">
+    <text x="150" y="708">0%</text><line x1="192" y1="700" x2="200" y2="700" stroke="#56544B"/>
+    <text x="140" y="448">50%</text><line x1="192" y1="440" x2="200" y2="440" stroke="#56544B"/>
+    <text x="130" y="188">100%</text><line x1="192" y1="180" x2="200" y2="180" stroke="#56544B"/>
+  </g>
+  <!-- baselines -->
+  <line x1="200" y1="283" x2="1520" y2="283" stroke="#FF6B2C" stroke-width="2" stroke-dasharray="10 8"/>
+  <text x="1522" y="290" fill="#FF6B2C" font-size="20">LR 80.2%</text>
+  <line x1="200" y1="290" x2="1520" y2="290" stroke="#9A9789" stroke-width="2" stroke-dasharray="4 8"/>
+  <text x="1522" y="318" fill="#9A9789" font-size="20">keywords 78.9%</text>
+  <!-- bars: 0.5-0.7 n=10 70%, 0.7-0.9 n=28 89%, 0.9-1.0 n=194 99% -->
+  <g>
+    <rect x="320" y="336" width="260" height="364" fill="#2A2D33" stroke="#56544B"/>
+    <text x="450" y="322" fill="#F4F1EA" font-size="28" text-anchor="middle" font-weight="700">70%</text>
+    <text x="450" y="745" fill="#F4F1EA" font-size="22" text-anchor="middle">0.5 – 0.7</text>
+    <text x="450" y="775" fill="#9A9789" font-size="20" text-anchor="middle">n = 10</text>
+  </g>
+  <g>
+    <rect x="700" y="237" width="260" height="463" fill="#3A3F47" stroke="#56544B"/>
+    <text x="830" y="223" fill="#F4F1EA" font-size="28" text-anchor="middle" font-weight="700">89%</text>
+    <text x="830" y="745" fill="#F4F1EA" font-size="22" text-anchor="middle">0.7 – 0.9</text>
+    <text x="830" y="775" fill="#9A9789" font-size="20" text-anchor="middle">n = 28</text>
+  </g>
+  <g>
+    <rect x="1080" y="185" width="260" height="515" fill="#22D3A0" stroke="#56544B"/>
+    <text x="1210" y="171" fill="#F4F1EA" font-size="28" text-anchor="middle" font-weight="700">99%</text>
+    <text x="1210" y="745" fill="#F4F1EA" font-size="22" text-anchor="middle">0.9 – 1.0</text>
+    <text x="1210" y="775" fill="#9A9789" font-size="20" text-anchor="middle">n = 194</text>
+  </g>
+  <text x="80" y="850" fill="#9A9789" font-size="20">Overall 96.6% [93.3, 98.2] · ECE 0.051 · both baselines trained and cross-validated on the same 232 labels · receipt radar-relevance-v011-2026-09-22</text>
+</svg>
