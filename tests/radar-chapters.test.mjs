@@ -28,7 +28,8 @@ test('items without the field (pipeline off or older payload) render nothing', (
   assert.deepEqual(radarItemsForChapter(undefined, '12-connectors-mcp'), []);
 });
 
-test('capped at MAX_ITEMS so the strip stays a strip', () => {
-  const many = Array.from({ length: MAX_ITEMS + 3 }, (_, i) => it(`t${i}`, ['25-evals-or-hope']));
-  assert.equal(radarItemsForChapter(many, '25-evals-or-hope').length, MAX_ITEMS);
+test('capped at four, keeping the first four in board order', () => {
+  const many = Array.from({ length: 7 }, (_, i) => it(`t${i}`, ['25-evals-or-hope']));
+  assert.deepEqual(radarItemsForChapter(many, '25-evals-or-hope').map((x) => x.title), ['t0', 't1', 't2', 't3']);
+  assert.equal(MAX_ITEMS, 4);
 });
