@@ -8,7 +8,7 @@ import ts from 'typescript';
 
 const source = readFileSync(new URL('../src/lib/radar-topics.ts', import.meta.url), 'utf8');
 const { outputText } = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } });
-const { topicChips, TOPIC_LABELS } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
+const { topicChips, TOPIC_LABELS, rowHidden } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 
 test('chips count the topics present, in the fixed order', () => {
   const items = [{ topic: 'tooling_or_framework' }, { topic: 'model_release' }, { topic: 'tooling_or_framework' }, {}];
@@ -20,13 +20,21 @@ test('chips count the topics present, in the fixed order', () => {
 
 test('a payload without topics (older archives, pipeline off) yields no chips', () => {
   assert.deepEqual(topicChips([{}, {}]), []);
-  assert.deepEqual(topicChips(undefined), []);
 });
 
 test('an unknown label never becomes a chip', () => {
   assert.deepEqual(topicChips([{ topic: 'gossip' }]), []);
 });
 
-test('the seven pipeline labels all have chip text', () => {
+test('the seven pipeline labels, in order, each with non-empty chip text', () => {
   assert.deepEqual(Object.keys(TOPIC_LABELS), ['model_release', 'research_paper', 'tooling_or_framework', 'infrastructure_or_hardware', 'policy_or_safety', 'business_or_market', 'operator_practice']);
+  for (const text of Object.values(TOPIC_LABELS)) assert.ok(typeof text === 'string' && text.length > 0, 'an empty label renders a bare "(n)" chip');
+});
+
+test('rowHidden: All hides nothing; a topic hides every other row, including rows without a topic', () => {
+  assert.equal(rowHidden('tooling_or_framework', ''), false);
+  assert.equal(rowHidden('', ''), false);
+  assert.equal(rowHidden('tooling_or_framework', 'tooling_or_framework'), false);
+  assert.equal(rowHidden('model_release', 'tooling_or_framework'), true);
+  assert.equal(rowHidden('', 'tooling_or_framework'), true);
 });

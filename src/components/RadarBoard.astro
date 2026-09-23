@@ -529,6 +529,8 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
     and every row shows. Filtering only toggles `hidden` on rows; ranking is untouched. */}
 {chips.length > 0 && (
   <script>
+    import { rowHidden } from '@/lib/radar-topics';
+
     function initChips() {
       const bar = document.querySelector<HTMLElement>('[data-radar-chips]');
       if (!bar) return;
@@ -538,7 +540,7 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
         btn.addEventListener('click', () => {
           const t = btn.dataset.topic ?? '';
           bar.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-          rows.forEach((r) => { r.hidden = t !== '' && r.dataset.topic !== t; });
+          rows.forEach((r) => { r.hidden = rowHidden(r.dataset.topic ?? '', t); });
         });
       });
     }
