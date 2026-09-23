@@ -165,7 +165,7 @@ function buildFixture({ isPublic = true, liveCount = 12, siteUrl = defaultOrigin
       'astro.config.mjs', 'tsconfig.json', 'package.json', 'src/lib/radar-config.mjs',
       'src/components/RadarBoard.astro', 'src/pages/radar/index.astro', 'src/pages/radar/[date].astro',
       'src/layouts/BaseLayout.astro', 'src/lib/chapters.ts', 'src/lib/author.ts', 'src/lib/seo.ts',
-      'src/lib/radar-age.ts', 'src/data/chapter-dates.json',
+      'src/lib/radar-age.ts', 'src/lib/radar-topics.ts', 'src/data/chapter-dates.json',
     ]) copy(name);
     symlinkSync(join(repo, 'node_modules'), join(root, 'node_modules'), 'dir');
     write(root, 'src/pages/index.astro', '<a href="/radar/">Radar</a>');
