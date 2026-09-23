@@ -1,5 +1,6 @@
 ---
 import { getRadarArchiveNavigation } from '@/lib/radar-config.mjs';
+import { topicChips, TOPIC_LABELS } from '@/lib/radar-topics';
 
 // RadarBoard — shared render for /radar (live) and /radar/[date] (archive).
 // Direction A "Continuous Spectrum + Live Sweep" (instrument-redesign swarm): the masthead
@@ -15,6 +16,7 @@ interface RadarItem {
   tier: number; tierLabel: string; stage: string; firstSource: string;
   sources: string[]; nSources: number; nFam: number; ageHours: number;
   firstSeen: string; heating: boolean; travelled: boolean; leadHours: number | null;
+  topic?: string; // pipeline #16: present only when the classifier is confident; absent on older payloads
 }
 interface RadarFire {
   title: string; url: string; domain: string;
@@ -48,6 +50,7 @@ const fmtDay = (iso: string) =>
   new Date(iso.length === 10 ? `${iso}T00:00:00Z` : iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 const age = (h: number) => (h < 1 ? `${Math.round(h * 60)}m` : h < 48 ? `${Math.round(h)}h` : `${Math.round(h / 24)}d`);
 
+const chips = topicChips(data.items);
 const s = data.summary;
 // The spectrum reads the day's FLOW — every story that entered the watched feeds in the
 // last 24h, by gradient station — because the scored top-40's composition is structurally
@@ -280,11 +283,19 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
 
 <!-- Ranked list -->
 <section id="board" class="container-wide pb-10">
+  {chips.length > 0 && (
+    <div class="max-w-3xl mx-auto mb-4 flex flex-wrap gap-2 font-mono" style="font-size: 12px" role="group" aria-label="Filter by topic" data-radar-chips hidden>
+      <button type="button" class="px-2 py-1 rounded radar-chip" aria-pressed="true" data-topic="">All ({data.items.length})</button>
+      {chips.map((c) => (
+        <button type="button" class="px-2 py-1 rounded radar-chip" aria-pressed="false" data-topic={c.topic}>{c.label} ({c.count})</button>
+      ))}
+    </div>
+  )}
   <ol role="list" class="list-none p-0 m-0 max-w-3xl mx-auto">
     {data.items.map((it) => {
       const sr = stageRank(it.stage);
       return (
-        <li class="grid gap-x-4 px-3 py-5 radar-row" style="grid-template-columns: 2rem 1fr; border-top: 1px solid rgb(var(--line))">
+        <li class="grid gap-x-4 px-3 py-5 radar-row" style="grid-template-columns: 2rem 1fr; border-top: 1px solid rgb(var(--line))" data-topic={it.topic ?? ''}>
           <svg viewBox="0 0 8 96" class="radar-rail hidden h-full w-2 self-stretch" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
             <line x1="4" y1="6" x2="4" y2="90" stroke="rgb(var(--line))" stroke-width="2" />
             {it.travelled && sr > 0 && (
@@ -320,6 +331,7 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
                   : 'color: rgb(var(--muted)); border: 1px solid rgb(var(--line))'
               }>{it.tierLabel}</span>
               <span style="color: rgb(var(--muted))">{it.stage}</span>
+              {it.topic && TOPIC_LABELS[it.topic] && (<><span style="opacity: 0.4">·</span><span style="color: rgb(var(--accent-2))">{TOPIC_LABELS[it.topic]}</span></>)}
               <span style="opacity: 0.4">·</span>
               <span style="color: rgb(var(--muted))">{age(it.ageHours)} old</span>
               <span style="opacity: 0.4">·</span>
@@ -348,7 +360,8 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
     <p><strong>The gradient.</strong> Stories travel through the AI ecosystem in a rough sequence: they appear first in <em>papers</em> (arXiv, Hugging Face) or <em>repos</em> (GitHub), then surface in <em>community</em> discussion (Hacker News, Lobsters, LessWrong), then get interpreted in <em>analysis</em> (operator newsletters and essays). Radar ranks by where a story sits on that gradient. The earlier it is caught, the more lead time you have before it reaches consensus.{flow ? ' The spectrum at the top of the page shows the last 24 hours of that flow — every story that entered the watched feeds, counted at the station where it first appeared.' : ''}</p>
     <p><strong>The score.</strong> Each story gets a recency-decayed signal score. Every source tier carries a weight and a half-life, so live signal moves fast and fades fast while analysis sources move slowly and stay relevant longer. A story scores higher when two or more <em>independent source families</em> carry it — corroboration, not popularity, which is why five feeds of the same site count once. A small bonus applies when a story has visibly climbed the gradient. Stories past their tier's maximum age expire from the board.</p>
     <p><strong>Heating and lead time.</strong> A story is <em>heating</em> when it has surfaced in two or more independent source families. When the same story is observed first at an earlier stage and later at a higher one, Radar records the gap in hours — for example, seen on arXiv fourteen hours before it reached the Hacker News front page. That gap is the reader's lead time, and it is a measured span, never an estimate.</p>
-    <p><strong>The honesty rule.</strong> Every value on this page is an observed fact from the feed log — which source carried a story, when, and how many. Radar makes no claim about what a story <em>means</em>; that is the newsletter's job. When a reading does not exist yet — no stories heating, nothing upstream — the page says so rather than inventing one.</p>
+    <p><strong>The classifier.</strong> Two judgments on this page are made by a model, not read from the feed log. A small typed classifier (TypeSafe's Jev) answers one question per story — is it about AI? — and stories it judges not to be about AI move to the bottom of the board; nothing is removed. It was checked against 232 hand-labelled titles before it shipped and agreed with 97.8% of them. The same classifier assigns the topic shown on a story and used by the filter above; a topic appears only when the classifier is confident, and at that setting it matched the labels on 115 of 116 stories. Stories without a confident topic are listed under All.</p>
+    <p><strong>The honesty rule.</strong> Every other value on this page is an observed fact from the feed log — which source carried a story, when, and how many. Beyond those two labelled judgments, Radar makes no claim about what a story <em>means</em>; that is the newsletter's job. When a reading does not exist yet — no stories heating, nothing upstream — the page says so rather than inventing one.</p>
   </div>
 </section>
 
@@ -455,6 +468,9 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
   .radar-dot { background: rgb(var(--accent-2)); }
   .radar-eyebrow.is-stale { color: rgb(var(--muted)); }
   .radar-dot.is-stale { background: rgb(var(--muted)); }
+  .radar-row[hidden] { display: none; } /* the row's `grid` utility would otherwise override [hidden] */
+  .radar-chip { color: rgb(var(--muted)); border: 1px solid rgb(var(--line)); background: transparent; cursor: pointer; }
+  .radar-chip[aria-pressed="true"] { color: rgb(var(--fg)); border-color: rgb(var(--accent-2)); background: rgb(var(--accent-2) / 0.12); }
 </style>
 
 {/* Snapshot age — LIVE BOARD ONLY (never an archive: a frozen edition has no staleness
@@ -505,5 +521,29 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
     document.addEventListener('astro:before-swap', stopAge);
     document.addEventListener('astro:page-load', initAge);
     initAge();
+  </script>
+)}
+
+
+{/* Topic filter — progressive enhancement: without JavaScript the chip bar stays hidden
+    and every row shows. Filtering only toggles `hidden` on rows; ranking is untouched. */}
+{chips.length > 0 && (
+  <script>
+    import { rowHidden } from '@/lib/radar-topics';
+
+    function initChips() {
+      const bar = document.querySelector<HTMLElement>('[data-radar-chips]');
+      if (!bar) return;
+      bar.hidden = false;
+      const rows = document.querySelectorAll<HTMLElement>('#board li[data-topic]');
+      bar.querySelectorAll<HTMLButtonElement>('button[data-topic]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const t = btn.dataset.topic ?? '';
+          bar.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+          rows.forEach((r) => { r.hidden = rowHidden(r.dataset.topic ?? '', t); });
+        });
+      });
+    }
+    document.addEventListener('astro:page-load', initChips);
   </script>
 )}

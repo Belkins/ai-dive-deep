@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -165,7 +165,7 @@ function buildFixture({ isPublic = true, liveCount = 12, siteUrl = defaultOrigin
       'astro.config.mjs', 'tsconfig.json', 'package.json', 'src/lib/radar-config.mjs',
       'src/components/RadarBoard.astro', 'src/pages/radar/index.astro', 'src/pages/radar/[date].astro',
       'src/layouts/BaseLayout.astro', 'src/lib/chapters.ts', 'src/lib/author.ts', 'src/lib/seo.ts',
-      'src/lib/radar-age.ts', 'src/data/chapter-dates.json',
+      'src/lib/radar-age.ts', 'src/lib/radar-topics.ts', 'src/data/chapter-dates.json',
     ]) copy(name);
     symlinkSync(join(repo, 'node_modules'), join(root, 'node_modules'), 'dir');
     write(root, 'src/pages/index.astro', '<a href="/radar/">Radar</a>');
@@ -182,10 +182,16 @@ function buildFixture({ isPublic = true, liveCount = 12, siteUrl = defaultOrigin
       write(root, 'src/lib/radar-config.mjs', policy.replace('export const RADAR_PUBLIC = true;', 'export const RADAR_PUBLIC = false;'));
     }
     const template = JSON.parse(readFileSync(join(repo, 'src/data/radar/today.json'), 'utf8'));
-    const payload = ({ date, items }) => ({ ...template, date, generated: `${date}T12:00:00Z`, count: items.length,
-      items: items.map((_, index) => ({ ...template.items[0], rank: index + 1, title: `Fixture item ${index + 1}` })),
+    // Topic chips (issue #37): only the live edition carries topics — 2 Tools, 1 Models — as the pipeline
+    // publishes them; frozen archives predate the field and must render no chip bar.
+    const LIVE_TOPICS = ['tooling_or_framework', 'model_release', 'tooling_or_framework'];
+    const payload = ({ date, items }, topics = []) => ({ ...template, date, generated: `${date}T12:00:00Z`, count: items.length,
+      items: items.map((_, index) => {
+        const { topic: _drop, ...base } = template.items[0];
+        return { ...base, rank: index + 1, title: `Fixture item ${index + 1}`, ...(topics[index] ? { topic: topics[index] } : {}) };
+      }),
     });
-    write(root, 'src/data/radar/today.json', JSON.stringify(payload(edition(liveDate, liveCount))));
+    write(root, 'src/data/radar/today.json', JSON.stringify(payload(edition(liveDate, liveCount), LIVE_TOPICS)));
     for (const entry of fixtures) write(root, `src/data/radar/archive/${entry.date}.json`, JSON.stringify(payload(entry)));
     const result = spawnSync(process.execPath, [join(repo, 'node_modules/astro/astro.js'), 'build'], {
       cwd: root, encoding: 'utf8', timeout: 120000, maxBuffer: 10 * 1024 * 1024,
@@ -250,6 +256,18 @@ for (const options of [
       const isPreviewBoard = !options.isPublic || options.liveCount < 12;
       assert.ok(live.includes(isPreviewBoard ? 'Radar · private preview' : 'Radar · live'));
       assert.equal(eyebrowHook.test(live), !isPreviewBoard, 'only the public live board lets the script rewrite the eyebrow');
+
+      // Topic chips (issue #37): the bar ships hidden (no-JS readers see the plain list), All is pressed,
+      // each chip carries its count, rows carry data-topic, and the rule that makes [hidden] win over
+      // the row's `grid` utility ships in the CSS — the exact bug a browser check caught once.
+      assert.match(live, /<div [^>]*data-radar-chips[^>]*\shidden[\s>]/, 'chip bar is hidden until the script runs');
+      assert.match(live, /aria-pressed="true" data-topic=""[^>]*>All \(\d+\)</);
+      assert.match(live, /aria-pressed="false" data-topic="tooling_or_framework"[^>]*>Tools \(2\)</);
+      assert.match(live, /aria-pressed="false" data-topic="model_release"[^>]*>Models \(1\)</);
+      assert.match(live, /<li [^>]*data-topic="tooling_or_framework"/);
+      const css = readdirSync(join(root, 'dist/_astro')).filter((f) => f.endsWith('.css')).map((f) => readFileSync(join(root, 'dist/_astro', f), 'utf8')).join('');
+      assert.match(css + live, /\.radar-row[^{}]*\[hidden\][^{}]*\{display:none/, 'the [hidden] override rule ships');
+      assert.equal(html(date(10)).includes('data-radar-chips'), false, 'a frozen edition without topics renders no chip bar');
 
       const frozenPage = html(date(10));
       for (const marker of ['data-radar-age', 'data-radar-dot', 'data-radar-eyebrow', 'last snapshot']) {
