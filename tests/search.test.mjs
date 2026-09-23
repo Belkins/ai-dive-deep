@@ -146,12 +146,14 @@ test('keyboard selection is absent for no results and recovers after a query cha
 // on the Node 20 CI runtime, using the same TypeScript compiler as SEO tests.
 const paletteSource = readSource('../src/widgets/CommandPalette.tsx');
 const paletteAst = ts.createSourceFile('CommandPalette.tsx', paletteSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-const dataDeclarations = paletteAst.statements.filter((statement) => ts.isVariableStatement(statement)
+const catalogSource = readSource('../src/lib/search-catalog.ts');
+const catalogAst = ts.createSourceFile('search-catalog.ts', catalogSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+const dataDeclarations = catalogAst.statements.filter((statement) => ts.isVariableStatement(statement)
   || (ts.isFunctionDeclaration(statement) && statement.name?.text === 'getPaletteItems'));
 const dataImports = [
   ['CHAPTERS', 'chapters'], ['glossary', 'glossary'], ['SETUP_STATS', 'setup'], ['RESEARCH_NOTES', 'research-notes'],
 ].map(([name, file]) => `import { ${name} } from '${moduleUrl(readSource(`../src/lib/${file}.ts`))}';`).join('\n');
-const { getPaletteItems } = await import(moduleUrl(dataImports + '\n' + dataDeclarations.map((statement) => statement.getText(paletteAst)).join('\n')));
+const { getPaletteItems } = await import(moduleUrl(dataImports + '\n' + dataDeclarations.map((statement) => statement.getText(catalogAst)).join('\n')));
 const realItems = getPaletteItems();
 const realIndex = createSearchIndex(realItems);
 const { CHAPTERS } = await import(moduleUrl(readSource('../src/lib/chapters.ts')));
