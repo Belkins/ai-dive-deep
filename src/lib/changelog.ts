@@ -25,7 +25,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Chapter 52: one working day on my menu-bar usage app with Claude Code and about 85 workflow agents, told as what the agents could read and what they could not.',
       'Two review rounds caught two major code bugs before either shipped; the suite went from 501 passing and 2 failing to 768 passing and 0 failing.',
       'The design stages worked from text reconstructions, so no stage rendered the menu; offscreen renders in light and dark came next, and a render on the wrong background hid a usage bar that read full at 0 %.',
-      'The rule that came out of it: a visual ask is verified on rendered pixels in both themes, on the background the user has. Every figure is synthetic, with placeholder accounts.',
+      'The rule that came out of it: a visual ask is verified on rendered pixels in both themes; the tint bug adds, on the background the user has. Every figure is synthetic, with placeholder accounts.',
     ],
     receipts: [
       { label: 'Workflow agents and tokens', value: 'about 85 agents, about 12.8M tokens' },

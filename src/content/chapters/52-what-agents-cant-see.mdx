@@ -3,10 +3,10 @@ number: 52
 slug: "52-what-agents-cant-see"
 title: "What Agents Can't See"
 subtitle: "Two Review Rounds That Caught the Code, and a Menu Design Nobody Rendered"
-tldr: "Agents judge what they can read; users judge what they can see. I spent one working day on my menu-bar usage app with Claude Code and about 85 workflow agents. The reviews read the code and caught two major bugs before either shipped, and the suite ended at 768 passing tests. The same process designed, built and reviewed a new menu from text descriptions, and nobody rendered a pixel until I sent a screenshot back. On my real wallpaper, an account at 0 % then drew as full. Give every design stage rendered images, or it is reviewing a description."
+tldr: "Agents judge what they can read; users judge what they can see. I spent one working day on my menu-bar usage app with Claude Code and about 85 workflow agents. The first two review rounds read the code and caught two major bugs before either shipped, and the suite ended at 768 passing tests. The same process designed, built and reviewed a new menu from text descriptions, and nobody rendered a pixel until I sent a screenshot back. On my real wallpaper, an account at 0 % then drew as full. Give every design stage rendered images, or it is reviewing a description."
 seoDescription: "A day with about 85 Claude Code agents: reviews caught two major code bugs, and a menu design got built unseen because no agent rendered a pixel."
 keyConcepts: ["Text reconstruction", "Offscreen render", "Fail closed", "Review fleet", "Memory curation"]
-readingMinutes: 15
+readingMinutes: 16
 ---
 
 import Callout from '@/components/Callout.astro';
@@ -14,7 +14,7 @@ import PullQuote from '@/components/PullQuote.astro';
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
 import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
-That afternoon I opened the new menu of my own menu-bar app, took a screenshot, and sent it back to Claude Code with one line under it: "is this the best you can do with design of menu widget?" The screenshot showed a menu about 1,000 pt wide, set mostly in monospace, with dim grey lines that looked disabled against the blurred material behind them. A remedy line wrapped halfway through its sentence. Every fact was printed twice. Three designer agents and a judge had chosen that layout, a builder had built it, and two review rounds had read the code that draws it. Not one of them had seen it.
+That afternoon I opened the new menu of my own menu-bar app, took a screenshot, and sent it back to Claude Code with one line under it: "is this the best you can do with design of menu widget?" The screenshot showed a menu about 1,000 pt wide, set mostly in monospace, with dim grey lines that looked disabled against the blurred material behind them. A remedy line wrapped halfway through its sentence. Every fact was printed twice. Three designer agents and a judge had chosen that layout, a builder had built it, and the code that draws it had been reviewed twice. Not one of them had seen it.
 
 Agents judge what they can read. Users judge what they can see. Everything that went right that day went right because the thing under review was text, and the one thing that went wrong went wrong because I handed the design stages text as well.
 
@@ -28,14 +28,14 @@ The app is the Belkins Usage Bar: a macOS menu-bar app in Python, built on rumps
 
 The day started with a bug that hid in plain view. For five days every Codex row read "relogin" with no figures, and the log said nothing about it: zero Codex lines from 2026-09-20 11:13 to 2026-09-25 09:57. The cause was dull, which is what made it expensive. The app keeps its own copy of each Codex login, those access tokens live 10 days, mine were written on 2026-09-10 and expired on 2026-09-20, and automatic refresh was switched off. No crash, no warning. Five days of silence.
 
-I fixed the symptom by hand before anyone wrote code. Three logins refreshed with the app's own probe command, new expiry 2026-10-05. The desktop Codex app's own login kept answering HTTP 200 before and after each refresh, which settled the thing I was most worried about: refreshing one login of an account does not log out a separate login of the same account. The shipped fix leans on that.
+I fixed the symptom by hand before anyone wrote code. Three logins refreshed with the app's own probe command, new expiry 2026-10-05. The ChatGPT desktop app's own login kept answering HTTP 200 before and after each refresh, which settled the thing I was most worried about: refreshing one login of an account does not log out a separate login of the same account. The shipped fix leans on that.
 
 Then the rest of the backlog, run as a swarm in the fan-out shape from [Chapter 6](/chapters/06-the-swarm/). Six read-only scouts read the code and a judge read the scouts. The judge kept 37 items, deferred 16, and split the keepers into six builder lanes with disjoint file ownership. A seventh lane, for reset credits, went in on top.
 
 | Stage | Agents | Tokens | Tests after |
 | --- | --- | --- | --- |
 | Start of day | none | none | 501 passing, 2 failing |
-| Scout wave: 6 scouts, 1 judge | 7 | 1.15M | not run |
+| Scout wave: 6 scouts, 1 judge | 7 | 1.15M | unchanged (read-only) |
 | Wave 1: 7 builders, 1 integrator, 4 reviewers, 4 verifiers | 16 | 3.0M | 614 |
 | Wave 2: 3 fixers, 3 designers, 1 design judge, 1 design builder, 2 integrators, 4 reviewers, 1 verifier | 15 | 2.83M | 652 |
 | Fix pass 2 and a final verifier | 4 | 0.70M | 661 |
@@ -52,12 +52,12 @@ Both catches were bugs in text, found by agents reading text. That is the work r
 
 ## The design was judged from a description
 
-The design work rode inside wave 2: three designers, one design judge, one design builder. They worked from <GlossaryTerm term="Text reconstruction">text reconstructions</GlossaryTerm> of the menu, the rows and labels written out as lines with the bars drawn in block characters. The designers proposed, the judge compared three texts and picked one, the builder built it, and two review rounds read the code. No stage rendered the menu to an image and put that image in front of a model.
+The design work rode inside wave 2: three designers, one design judge, one design builder. They worked from <GlossaryTerm term="Text reconstruction">text reconstructions</GlossaryTerm> of the menu, the rows and labels written out as lines with the bars drawn in block characters. The designers proposed, the judge compared three texts and picked one, the builder built it, and the code was reviewed twice. No stage rendered the menu to an image and put that image in front of a model.
 
 A text preview reads fine as a list. It says nothing about weight, contrast, width or wrapping, and that is where every problem in my screenshot lived. A menu about 1,000 pt wide is one long line in a text file. A grey secondary label is a label; on a blurred menu it reads as disabled. A remedy sentence that wraps mid-thought looks whole when nothing sets the width. A fact printed twice looks like thoroughness. The designers designed a document, the judge judged a document, the reviewers reviewed the code that produced the document, and all of it was correct as a document.
 
 <ScreenshotPlaceholder
-  id="52-what-agents-cant-see-4"
+  id="52-what-agents-cant-see-1"
   caption="Text preview vs pixels: the same menu state, two ways to look at it"
   note="Diagram built from one synthetic state with placeholder accounts at example.com. The left block is a monospace text reconstruction written for this figure; it is not a transcript of the real judge's input. The right is the Cards view of the same state, rendered by the app's own view code. The left reads fine as a list; it says nothing about weight, contrast, width or wrapping."
   ratio="16/9"
@@ -65,7 +65,7 @@ A text preview reads fine as a list. It says nothing about weight, contrast, wid
 
 The agents did not fail to look. I never gave them anything to look at. Handing a design stage a text reconstruction was my process decision, and it left every review after it blind to the one property a menu exists for: how it reads at a glance, to a person looking up from other work.
 
-[Chapter 46](/chapters/46-designing-with-ai/) argues that generation is cheap and selection needs an eye. I wrote that chapter, and then built a design stage with no eye anywhere in it. It is also the same failure as that chapter's light-theme screenshots, where a green QA check trusted a setting instead of looking at what shipped. There, the check measured the wrong thing. Here, there was no check at all, and two passing review rounds made it feel as though there had been.
+[Chapter 46](/chapters/46-designing-with-ai/) argues that generation is cheap and selection needs an eye. That argument is on this site, and I still built a design stage with no eye anywhere in it. It is also the same failure as that chapter's light-theme screenshots, where a green QA check trusted a setting instead of looking at what shipped. There, the check measured the wrong thing. Here, there was no check at all, and two passing reviews made it feel as though there had been.
 
 <PullQuote>A review is only as good as what it is shown. Show it text, and it reviews a description.</PullQuote>
 
@@ -86,17 +86,17 @@ I did not pick one. I asked for all three, live, with a switcher between themes 
 
 ## Flat grey hid an honesty bug
 
-Offscreen renders were a real step forward, and they were still the wrong pixels.
+Two bugs lived in what the screen draws, not in what the code says.
 
-The first small one: a coloured menu-bar title came out 15 pt wider than the plain one, 158 → 173 pt. The status bar draws plain titles at 13 pt while the APIs report 14 pt, so code that trusts the reported size builds a different width from the one drawn. Recolouring the button's own title instead fixed it at 165 pt; the rest of that width is content. No reviewer could have caught this by reading, because only one of the two sizes is visible from inside the repo. The narrow rule I kept: in the menu bar, trust the drawn size, not the reported one.
+The first small one: a coloured menu-bar title came out 15 pt wider than the plain one, 158 → 173 pt. The status bar draws plain titles at 13 pt while the APIs report 14 pt, so code that trusts the reported size builds a different width from the one drawn. Recolouring the button's own title instead fixed it at 165 pt; the rest of that width is content. Reading the code, the reported 14 pt looks right; only the drawn menu bar shows 13 pt. The narrow rule I kept: in the menu bar, trust the drawn size, not the reported one.
 
 The second one mattered. On my real wallpaper the menu material is tinted. Sampled from my own screenshot, it runs from rgb(212,176,168) at the top to rgb(179,192,204) at the bottom. On that tint the light grey text washed out, and the empty progress tracks rendered white. An account at 0 % looked full.
 
-That is not a styling complaint. A usage bar that reads full at zero is wrong about the one number it exists to show, the same class of bug as the morning's silent rows. The offscreen renders sat on a flat grey background, and flat grey hid all of it. A <GlossaryTerm term="Contrast ratio">contrast ratio</GlossaryTerm> is only as honest as the background you compute it against.
+That is not a styling complaint. A usage bar that reads full at zero is wrong about the one number it exists to show, the same class of bug as the morning's silent rows. Offscreen renders were a real step forward, and they were still the wrong pixels: they sat on a flat grey background, and flat grey hid all of it. A <GlossaryTerm term="Contrast ratio">contrast ratio</GlossaryTerm> is only as honest as the background you compute it against.
 
 <ScreenshotPlaceholder
   id="52-what-agents-cant-see-3"
-  caption="The tint bug, before and after, on the menu tint sampled from my wallpaper"
+  caption="The tint bug, before and after, on the menu tint sampled from my screenshot"
   note="Synthetic render with placeholder accounts, Apple-native theme, on the gradient sampled from my screenshot, rgb(212,176,168) to rgb(179,192,204). Left, the app's colour roles before the fix; right, current main. Rings mark the washed-out grey text and the 0 % tracks that almost disappear. Live, behind the real menu material, those tracks drew white."
   ratio="1800/1342"
 />
@@ -128,27 +128,29 @@ Like the bills in [Chapter 28](/chapters/28-failure-receipts/), these are receip
 | Real names and spend in tests and docstrings | Live data on my machine | The privacy sweep before the push | Grep every merged diff for the live identity set |
 | Judge refused on every pinned model | An organisation setting | The stage died | Pinned stages get an unpinned fallback |
 
-Read the second column. The first two rows live where an agent reads. Every other row lives where it does not: on the glass, in the wallpaper, in knowing which strings are secret, in a setting on an account. The two rows the agents caught are the two rows made of text.
+Read the second column. The first two rows live where an agent reads. Every other row lives where it does not: on the glass, in the wallpaper, in knowing which strings are secret, in a setting on an account. The two rows the review agents caught are the two rows made of code. The privacy row is text too, and it proves the point from the other side: nothing told the reviewers which strings were secret.
 
 ## A rule on the second sighting
 
 By the end of the day one lesson had become a standing rule, loaded into every session I run:
 
 <Callout type="warn" title="The rule">
-**A visual ask is verified on rendered pixels in both themes.** Never on text or structure; design stages judge images. And render on the background the user has, not on the one that is convenient.
+**A visual ask is verified on rendered pixels in both themes.** Never on text or structure; design stages judge images.
 </Callout>
 
 It was not new. I had learned it once before, in August, on a badge on this site, and then forgotten it. Chapter 46 calls the general form "verify the capture, not the claim". The second sighting is what promoted it from a note to a rule. A lesson that has to be learned twice is not a knowledge problem. It is a memory problem.
+
+The tint bug adds a clause of its own: render on the background the user has, not on the one that is convenient.
 
 Four smaller lessons went into memory beside it: agents copy live data into fixtures; custom menu views wash out on a tinted material; the status bar draws titles at 13 pt; a refusal on a pinned model needs an unpinned fallback.
 
 Then I cleaned the store those lessons land in, which is the <GlossaryTerm term="Memory curation">memory curation</GlossaryTerm> half of what [Chapter 44](/chapters/44-dreaming/) describes. In the Claude-Code-wide store, 62 related lesson notes merged into 7. Each original survives as its own section, each group was checked lossless by a literal-token check and a semantic check, and the originals were archived, not deleted. The index file went from 85 lines and 16.3 KB to 23 lines and 2.3 KB. All 160 of 160 notes are still reachable, and 11 dead links were fixed. That took 14 agents and 1.18M tokens against my estimate of about 0.6M.
 
-That cleanup is the counter-example that proves the rule. Memory is text. The check that made the merge trustworthy is mechanical: every token of every original has to be present in the merged note, and nobody needed eyes for it. Where the thing you are checking is text, agents check it well. Where it is not, the check has to produce something they can open.
+That cleanup is the counter-example that proves the rule. Memory is text. The literal-token check at the core of the merge is mechanical: every token of every original has to be present in the merged note. The semantic check beside it reads text too. Nobody needed eyes for either. Where the thing you are checking is text, agents check it well. Where it is not, the check has to produce something they can open.
 
 ## What the day cost, and what I can't show you
 
-The workflow stages add up to about 85 agents and about 12.8M tokens. My first estimate for the original scope was about 5M; the design work and the memory cleanup were added during the day, so the estimate did not survive the scope, and it stays here next to the actuals. The app went from 31,125 lines of Python to 40,409 across 61 commits: 45 files changed, +19,892 / −692 lines. The suite went from 501 passing and 2 failing to 768 passing and 0 failing, in 23 test modules.
+The workflow stages add up to about 85 agents and about 12.8M tokens. My first estimate for the original scope was about 5M; the design work and the memory cleanup were added during the day, so the estimate did not survive the scope, and it stays here next to the actuals. The Python package went from 31,125 lines to 40,409; across the whole repo, 61 commits changed 45 files: +19,892 / −692 lines. The suite went from 501 passing and 2 failing to 768 passing and 0 failing, in 23 test modules.
 
 What is missing is missing on purpose. I did not meter the main session's own tokens, so the totals undercount. There is no cost in money here and no timing per stage, because I measured neither. There is no real screenshot of the menu either: every real one carries account names, so every screen in this chapter is synthetic. The tint figure draws the old and new colour roles on the sampled colours. It is close to what I saw, and it is not what I saw: live, behind the real material, the empty tracks drew white, and offscreen they only fade.
 
@@ -156,7 +158,7 @@ One app, one day, one wallpaper. Another wallpaper would show a different bug, w
 
 ## The closer
 
-The receipts are modest on purpose. Two major bugs caught in review, a suite that went from 501 passing to 768, public CI green twice. That is the agents working. The menu at the top of this chapter is the agents working too: three designers, a judge, a builder and two review rounds, each doing its job on the text I gave it. The code reviews were excellent, and they were excellent at code. The design was the one thing nobody looked at, because I had given nobody anything to look at.
+The receipts are modest on purpose. Two major bugs caught by the first two review rounds, a suite that went from 501 passing to 768, public CI green twice. That is the agents working. The menu at the top of this chapter is the agents working too: three designers, a judge, a builder and two reviews of its code, each doing its job on the text I gave it. The code reviews were excellent, and they were excellent at code. The design was the one thing nobody looked at, because I had given nobody anything to look at.
 
 [Chapter 25](/chapters/25-evals-or-hope/) is about a broken output that stayed broken because no eval was watching it. A design that no stage renders has the same gap: nothing is watching the output a person sees. Now every design stage gets a picture.
 
