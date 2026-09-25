@@ -3,7 +3,7 @@ number: 52
 slug: "52-what-agents-cant-see"
 title: "What Agents Can't See"
 subtitle: "Two Review Rounds That Caught the Code, and a Menu Design Nobody Rendered"
-tldr: "Agents judge what they can read; users judge what they can see. I spent one working day on my menu-bar usage app with Claude Code and about 85 workflow agents. The first two review rounds read the code and caught two major bugs before either shipped, and the suite ended at 768 passing tests. The same process designed, built and reviewed a new menu from text descriptions, and nobody rendered a pixel until I sent a screenshot back. On my real wallpaper, an account at 0 % then drew as full. Give every design stage rendered images, or it is reviewing a description."
+tldr: "Agents judge what they can read; users judge what they can see. I spent one working day on my menu-bar usage app with Claude Code and about 85 workflow agents. The first two review rounds read the code and caught two major bugs before either shipped, and the suite ended at 768 passing tests. The same process designed, built and reviewed a new menu from text descriptions, and nobody rendered a pixel until I sent a screenshot back. On my real wallpaper, an account at 0% then drew as full. Give every design stage rendered images, or it is reviewing a description."
 seoDescription: "A day with about 85 Claude Code agents: reviews caught two major code bugs, and a menu design got built unseen because no agent rendered a pixel."
 keyConcepts: ["Text reconstruction", "Offscreen render", "Fail closed", "Review fleet", "Memory curation"]
 readingMinutes: 16
@@ -90,18 +90,18 @@ Two bugs lived in what the screen draws, not in what the code says.
 
 The first small one: a coloured menu-bar title came out 15 pt wider than the plain one, 158 → 173 pt. The status bar draws plain titles at 13 pt while the APIs report 14 pt, so code that trusts the reported size builds a different width from the one drawn. Recolouring the button's own title instead fixed it at 165 pt; the rest of that width is content. Reading the code, the reported 14 pt looks right; only the drawn menu bar shows 13 pt. The narrow rule I kept: in the menu bar, trust the drawn size, not the reported one.
 
-The second one mattered. On my real wallpaper the menu material is tinted. Sampled from my own screenshot, it runs from rgb(212,176,168) at the top to rgb(179,192,204) at the bottom. On that tint the light grey text washed out, and the empty progress tracks rendered white. An account at 0 % looked full.
+The second one mattered. On my real wallpaper the menu material is tinted. Sampled from my own screenshot, it runs from rgb(212,176,168) at the top to rgb(179,192,204) at the bottom. On that tint the light grey text washed out, and the empty progress tracks rendered white. An account at 0% looked full.
 
 That is not a styling complaint. A usage bar that reads full at zero is wrong about the one number it exists to show, the same class of bug as the morning's silent rows. Offscreen renders were a real step forward, and they were still the wrong pixels: they sat on a flat grey background, and flat grey hid all of it. A <GlossaryTerm term="Contrast ratio">contrast ratio</GlossaryTerm> is only as honest as the background you compute it against.
 
 <ScreenshotPlaceholder
   id="52-what-agents-cant-see-3"
   caption="The tint bug, before and after, on the menu tint sampled from my screenshot"
-  note="Synthetic render with placeholder accounts, Apple-native theme, on the gradient sampled from my screenshot, rgb(212,176,168) to rgb(179,192,204). Left, the app's colour roles before the fix; right, current main. Rings mark the washed-out grey text and the 0 % tracks that almost disappear. Live, behind the real menu material, those tracks drew white."
+  note="Synthetic render with placeholder accounts, Apple-native theme, on the gradient sampled from my screenshot, rgb(212,176,168) to rgb(179,192,204). Left, the app's colour roles before the fix; right, current main. Rings mark the washed-out grey text and the 0% tracks that almost disappear. Live, behind the real menu material, those tracks drew white."
   ratio="1800/1342"
 />
 
-The fix was explicit colour roles, near-opaque card panels, and renders on the sampled material rather than on grey. A colour and typography pass took 4 agents and 0.66M tokens: SF Pro Rounded figures, readable secondary text, visible 0 % tracks. A spacing pass took 2 agents and 0.30M tokens and brought Cards from 862 to 984 pt tall, inside the 1,035 pt my screen shows.
+The fix was explicit colour roles, near-opaque card panels, and renders on the sampled material rather than on grey. A colour and typography pass took 4 agents and 0.66M tokens: SF Pro Rounded figures, readable secondary text, visible 0% tracks. A spacing pass took 2 agents and 0.30M tokens and brought Cards from 862 to 984 pt tall, inside the 1,035 pt my screen shows.
 
 One limit stayed. The capture that could have shown the app's own window with true vibrancy returned nothing without Screen Recording permission. My screenshots were the ground truth, and they were the only pixels in the day that matched what I see.
 
