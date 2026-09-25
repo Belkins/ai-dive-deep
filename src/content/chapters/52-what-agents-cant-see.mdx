@@ -1,0 +1,165 @@
+---
+number: 52
+slug: "52-what-agents-cant-see"
+title: "What Agents Can't See"
+subtitle: "Two Review Rounds That Caught the Code, and a Menu Design Nobody Rendered"
+tldr: "Agents judge what they can read; users judge what they can see. I spent one working day on my menu-bar usage app with Claude Code and about 85 workflow agents. The first two review rounds read the code and caught two major bugs before either shipped, and the suite ended at 768 passing tests. The same process designed, built and reviewed a new menu from text descriptions, and nobody rendered a pixel until I sent a screenshot back. On my real wallpaper, an account at 0% then drew as full. Give every design stage rendered images, or it is reviewing a description."
+seoDescription: "A day with about 85 Claude Code agents: reviews caught two major code bugs, and a menu design got built unseen because no agent rendered a pixel."
+keyConcepts: ["Text reconstruction", "Offscreen render", "Fail closed", "Review fleet", "Memory curation"]
+readingMinutes: 16
+---
+
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+That afternoon I opened the new menu of my own menu-bar app, took a screenshot, and sent it back to Claude Code with one line under it: "is this the best you can do with design of menu widget?" The screenshot showed a menu about 1,000 pt wide, set mostly in monospace, with dim grey lines that looked disabled against the blurred material behind them. A remedy line wrapped halfway through its sentence. Every fact was printed twice. Three designer agents and a judge had chosen that layout, a builder had built it, and the code that draws it had been reviewed twice. Not one of them had seen it.
+
+Agents judge what they can read. Users judge what they can see. Everything that went right that day went right because the thing under review was text, and the one thing that went wrong went wrong because I handed the design stages text as well.
+
+<Callout type="note" title="Evidence status: 2026-09-25">
+This is one working day, 2026-09-25, on one app. The counts come from the workflow completion notices, the app's git history, full test-suite runs and the app's own log, all read the same day. I did not measure the main session's own tokens, any cost in money, or how long each stage took, so none of those appear. Agent and token totals are sums of workflow stages, which is why they carry "about". Every image here is a diagram or a synthetic render with placeholder accounts, never a screenshot of my real menu, which shows real account names.
+</Callout>
+
+## What the reviews could read, they caught
+
+The app is the Belkins Usage Bar: a macOS menu-bar app in Python, built on rumps and PyObjC, that shows Claude and Codex usage windows per account. It tracks several Claude accounts through the open-source claude-swap tool and four Codex logins, and it lives in a [public repository](https://github.com/Belkins/belkins-usage-bar) under the MIT licence.
+
+The day started with a bug that hid in plain view. For five days every Codex row read "relogin" with no figures, and the log said nothing about it: zero Codex lines from 2026-09-20 11:13 to 2026-09-25 09:57. The cause was dull, which is what made it expensive. The app keeps its own copy of each Codex login, those access tokens live 10 days, mine were written on 2026-09-10 and expired on 2026-09-20, and automatic refresh was switched off. No crash, no warning. Five days of silence.
+
+I fixed the symptom by hand before anyone wrote code. Three logins refreshed with the app's own probe command, new expiry 2026-10-05. The ChatGPT desktop app's own login kept answering HTTP 200 before and after each refresh, which settled the thing I was most worried about: refreshing one login of an account does not log out a separate login of the same account. The shipped fix leans on that.
+
+Then the rest of the backlog, run as a swarm in the fan-out shape from [Chapter 6](/chapters/06-the-swarm/). Six read-only scouts read the code and a judge read the scouts. The judge kept 37 items, deferred 16, and split the keepers into six builder lanes with disjoint file ownership. A seventh lane, for reset credits, went in on top.
+
+| Stage | Agents | Tokens | Tests after |
+| --- | --- | --- | --- |
+| Start of day | none | none | 501 passing, 2 failing |
+| Scout wave: 6 scouts, 1 judge | 7 | 1.15M | unchanged (read-only) |
+| Wave 1: 7 builders, 1 integrator, 4 reviewers, 4 verifiers | 16 | 3.0M | 614 |
+| Wave 2: 3 fixers, 3 designers, 1 design judge, 1 design builder, 2 integrators, 4 reviewers, 1 verifier | 15 | 2.83M | 652 |
+| Fix pass 2 and a final verifier | 4 | 0.70M | 661 |
+
+The two failing tests at the start were date-fragile: they broke because the calendar moved, not because the code did. Every lane in wave 1 finished every item, and the suite went to 614 of 614.
+
+The shipped fix reads the account the ChatGPT desktop app is signed into with that app's own token, read-only, and turns refresh on for the other logins behind three guards. Never rotate the desktop account. Compare before writing, in case another process has rotated the same file. Treat a refused refresh as final until the file changes.
+
+The <GlossaryTerm term="Review fleet">review</GlossaryTerm> rounds earned their tokens twice. Round 1 confirmed a major bug in the first guard: the check meant to stop the app refreshing the desktop account would **fail open** if that login file was unreadable at startup. An unreadable file meant the app did not know which account to protect, and not knowing meant not protecting. It now <GlossaryTerm term="Fail closed">fails closed</GlossaryTerm>.
+
+Round 2 confirmed another. Two new tests required claude-swap, and the public CI does not install it, so the first public push would have gone red. The suite now also passes with claude-swap uninstalled, the final verifier came back "ship-with-notes" at 661 tests, and public CI was green on both public syncs of the day, commits `c6eac49` and `e0f711f`.
+
+Both catches were bugs in text, found by agents reading text. That is the work review agents are built for, and they did it.
+
+## The design was judged from a description
+
+The design work rode inside wave 2: three designers, one design judge, one design builder. They worked from <GlossaryTerm term="Text reconstruction">text reconstructions</GlossaryTerm> of the menu, the rows and labels written out as lines with the bars drawn in block characters. The designers proposed, the judge compared three texts and picked one, the builder built it, and the code was reviewed twice. No stage rendered the menu to an image and put that image in front of a model.
+
+A text preview reads fine as a list. It says nothing about weight, contrast, width or wrapping, and that is where every problem in my screenshot lived. A menu about 1,000 pt wide is one long line in a text file. A grey secondary label is a label; on a blurred menu it reads as disabled. A remedy sentence that wraps mid-thought looks whole when nothing sets the width. A fact printed twice looks like thoroughness. The designers designed a document, the judge judged a document, the reviewers reviewed the code that produced the document, and all of it was correct as a document.
+
+<ScreenshotPlaceholder
+  id="52-what-agents-cant-see-1"
+  caption="Text preview vs pixels: the same menu state, two ways to look at it"
+  note="Diagram built from one synthetic state with placeholder accounts at example.com. The left block is a monospace text reconstruction written for this figure; it is not a transcript of the real judge's input. The right is the Cards view of the same state, rendered by the app's own view code. The left reads fine as a list; it says nothing about weight, contrast, width or wrapping."
+  ratio="16/9"
+/>
+
+The agents did not fail to look. I never gave them anything to look at. Handing a design stage a text reconstruction was my process decision, and it left every review after it blind to the one property a menu exists for: how it reads at a glance, to a person looking up from other work.
+
+[Chapter 46](/chapters/46-designing-with-ai/) argues that generation is cheap and selection needs an eye. That argument is on this site, and I still built a design stage with no eye anywhere in it. It is also the same failure as that chapter's light-theme screenshots, where a green QA check trusted a setting instead of looking at what shipped. There, the check measured the wrong thing. Here, there was no check at all, and two passing reviews made it feel as though there had been.
+
+<PullQuote>A review is only as good as what it is shown. Show it text, and it reviews a description.</PullQuote>
+
+## Pixels every iteration
+
+The fix to the process was a camera, not a smarter judge. The app's custom native views now <GlossaryTerm term="Offscreen render">render offscreen</GlossaryTerm> to PNG, in light and dark, so every designer, judge and QA agent looks at real images on every iteration. Three designers then built three different prototypes from real data: Cards, close to CodexBar's look; Apple-native; and Dense.
+
+Then the judge stage died. Every pinned model refused it with the same line: "Your organization has disabled Claude subscription access for Claude Code". Agents on the default model kept working, so the main session judged from the images instead. That is a weaker arrangement than an independent judge, and it stays on the page because it happened. It also carried a small irony: the stage I had finally given eyes lost its seat, and the images carried the decision anyway, because anyone could open them.
+
+I did not pick one. I asked for all three, live, with a switcher between themes in settings. That build took 16 agents and 2.31M tokens: a shared foundation, three theme lanes in parallel, a visual QA loop per theme, and two reviewers, ending at 753 tests. Cards later became the default.
+
+<ScreenshotPlaceholder
+  id="52-what-agents-cant-see-2"
+  caption="Three themes, one state: Cards (the default), Apple-native and Dense"
+  note="Synthetic render, placeholder accounts at example.com. One snapshot drawn offscreen in light mode by the app's own view code, the same path the designers and judges now look at on every iteration. Not a screenshot of my menu; the fixed native rows at the bottom of the real menu are left out."
+  ratio="2400/1217"
+/>
+
+## Flat grey hid an honesty bug
+
+Two bugs lived in what the screen draws, not in what the code says.
+
+The first small one: a coloured menu-bar title came out 15 pt wider than the plain one, 158 → 173 pt. The status bar draws plain titles at 13 pt while the APIs report 14 pt, so code that trusts the reported size builds a different width from the one drawn. Recolouring the button's own title instead fixed it at 165 pt; the rest of that width is content. Reading the code, the reported 14 pt looks right; only the drawn menu bar shows 13 pt. The narrow rule I kept: in the menu bar, trust the drawn size, not the reported one.
+
+The second one mattered. On my real wallpaper the menu material is tinted. Sampled from my own screenshot, it runs from rgb(212,176,168) at the top to rgb(179,192,204) at the bottom. On that tint the light grey text washed out, and the empty progress tracks rendered white. An account at 0% looked full.
+
+That is not a styling complaint. A usage bar that reads full at zero is wrong about the one number it exists to show, the same class of bug as the morning's silent rows. Offscreen renders were a real step forward, and they were still the wrong pixels: they sat on a flat grey background, and flat grey hid all of it. A <GlossaryTerm term="Contrast ratio">contrast ratio</GlossaryTerm> is only as honest as the background you compute it against.
+
+<ScreenshotPlaceholder
+  id="52-what-agents-cant-see-3"
+  caption="The tint bug, before and after, on the menu tint sampled from my screenshot"
+  note="Synthetic render with placeholder accounts, Apple-native theme, on the gradient sampled from my screenshot, rgb(212,176,168) to rgb(179,192,204). Left, the app's colour roles before the fix; right, current main. Rings mark the washed-out grey text and the 0% tracks that almost disappear. Live, behind the real menu material, those tracks drew white."
+  ratio="1800/1342"
+/>
+
+The fix was explicit colour roles, near-opaque card panels, and renders on the sampled material rather than on grey. A colour and typography pass took 4 agents and 0.66M tokens: SF Pro Rounded figures, readable secondary text, visible 0% tracks. A spacing pass took 2 agents and 0.30M tokens and brought Cards from 862 to 984 pt tall, inside the 1,035 pt my screen shows.
+
+One limit stayed. The capture that could have shown the app's own window with true vibrancy returned nothing without Screen Recording permission. My screenshots were the ground truth, and they were the only pixels in the day that matched what I see.
+
+<PullQuote>A render on the wrong background is a text preview with better lighting.</PullQuote>
+
+At 15:46 a live click on a Cards account row switched the account, and the log recorded `manual switch -> main requested … succeeded`. That was the first live proof that the new views' click path works, and it came from a person clicking, not from a render.
+
+## Agents copy what they read, too
+
+The same blind spot has a second face. Before the first public push, a privacy sweep found 42 occurrences of real account names and real spend figures in 8 files, in tests and docstrings. Agents had copied them from live data, and every brief that day had said "synthetic fixtures only". All 42 were replaced with synthetic values of the same length. The first public commit also carried my personal email as its author; that was caught before the push and amended to the GitHub noreply identity.
+
+My reading of the mechanism: a brief is an instruction, and a live value on screen is material. Agents build from what is in front of them. To an agent, a real account name is a string like any other, and it has no way to know which strings on my disk are private unless someone hands it the list. So the rule hands over the list: grep every merged diff for the live identity set before anything leaves the machine.
+
+## The ledger
+
+Like the bills in [Chapter 28](/chapters/28-failure-receipts/), these are receipts I would rather not show. Here they are side by side, with the place each finding lived.
+
+| Finding | Where it lived | Caught by | What it became |
+| --- | --- | --- | --- |
+| Desktop-login guard failed open on an unreadable file | Code | Review round 1 | Fails closed |
+| Two new tests needed claude-swap | Code and the CI setup | Review round 2 | Suite passes with claude-swap uninstalled |
+| Redesign chosen from a text reconstruction | Pixels | My screenshot | Design stages judge rendered images, in both themes |
+| Empty tracks drew white on a tinted material | The menu material | My screenshots | Renders on the sampled material, explicit colour roles |
+| Real names and spend in tests and docstrings | Live data on my machine | The privacy sweep before the push | Grep every merged diff for the live identity set |
+| Judge refused on every pinned model | An organisation setting | The stage died | Pinned stages get an unpinned fallback |
+
+Read the second column. The first two rows live where an agent reads. Every other row lives where it does not: on the glass, in the wallpaper, in knowing which strings are secret, in a setting on an account. The two rows the review agents caught are the two rows made of code. The privacy row is text too, and it proves the point from the other side: nothing told the reviewers which strings were secret.
+
+## A rule on the second sighting
+
+By the end of the day one lesson had become a standing rule, loaded into every session I run:
+
+<Callout type="warn" title="The rule">
+**A visual ask is verified on rendered pixels in both themes.** Never on text or structure; design stages judge images.
+</Callout>
+
+It was not new. I had learned it once before, in August, on a badge on this site, and then forgotten it. Chapter 46 calls the general form "verify the capture, not the claim". The second sighting is what promoted it from a note to a rule. A lesson that has to be learned twice is not a knowledge problem. It is a memory problem.
+
+The tint bug adds a clause of its own: render on the background the user has, not on the one that is convenient.
+
+Four smaller lessons went into memory beside it: agents copy live data into fixtures; custom menu views wash out on a tinted material; the status bar draws titles at 13 pt; a refusal on a pinned model needs an unpinned fallback.
+
+Then I cleaned the store those lessons land in, which is the <GlossaryTerm term="Memory curation">memory curation</GlossaryTerm> half of what [Chapter 44](/chapters/44-dreaming/) describes. In the Claude-Code-wide store, 62 related lesson notes merged into 7. Each original survives as its own section, each group was checked lossless by a literal-token check and a semantic check, and the originals were archived, not deleted. The index file went from 85 lines and 16.3 KB to 23 lines and 2.3 KB. All 160 of 160 notes are still reachable, and 11 dead links were fixed. That took 14 agents and 1.18M tokens against my estimate of about 0.6M.
+
+That cleanup is the counter-example that proves the rule. Memory is text. The literal-token check at the core of the merge is mechanical: every token of every original has to be present in the merged note. The semantic check beside it reads text too. Nobody needed eyes for either. Where the thing you are checking is text, agents check it well. Where it is not, the check has to produce something they can open.
+
+## What the day cost, and what I can't show you
+
+The workflow stages add up to about 85 agents and about 12.8M tokens. My first estimate for the original scope was about 5M; the design work and the memory cleanup were added during the day, so the estimate did not survive the scope, and it stays here next to the actuals. The Python package went from 31,125 lines to 40,409; across the whole repo, 61 commits changed 45 files: +19,892 / −692 lines. The suite went from 501 passing and 2 failing to 768 passing and 0 failing, in 23 test modules.
+
+What is missing is missing on purpose. I did not meter the main session's own tokens, so the totals undercount. There is no cost in money here and no timing per stage, because I measured neither. There is no real screenshot of the menu either: every real one carries account names, so every screen in this chapter is synthetic. The tint figure draws the old and new colour roles on the sampled colours. It is close to what I saw, and it is not what I saw: live, behind the real material, the empty tracks drew white, and offscreen they only fade.
+
+One app, one day, one wallpaper. Another wallpaper would show a different bug, which is the argument for rendering on the real thing.
+
+## The closer
+
+The receipts are modest on purpose. Two major bugs caught by the first two review rounds, a suite that went from 501 passing to 768, public CI green twice. That is the agents working. The menu at the top of this chapter is the agents working too: three designers, a judge, a builder and two reviews of its code, each doing its job on the text I gave it. The code reviews were excellent, and they were excellent at code. The design was the one thing nobody looked at, because I had given nobody anything to look at.
+
+[Chapter 25](/chapters/25-evals-or-hope/) is about a broken output that stayed broken because no eval was watching it. A design that no stage renders has the same gap: nothing is watching the output a person sees. Now every design stage gets a picture.
+
+If nothing rendered it, nothing reviewed it.

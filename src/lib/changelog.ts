@@ -16,11 +16,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 16',
+    date: '2026-09-25',
+    tagline: "What agents can't see: reviews that caught the code, and a menu design nobody rendered.",
+    bannerText: "New chapter: what agents can't see. The reviews read the code; nobody rendered the menu.",
+    bannerHref: '/chapters/52-what-agents-cant-see/',
+    shipped: [
+      'Chapter 52: one working day on my menu-bar usage app with Claude Code and about 85 workflow agents, told as what the agents could read and what they could not.',
+      'Two review rounds caught two major code bugs before either shipped; the suite went from 501 passing and 2 failing to 768 passing and 0 failing.',
+      'The design stages worked from text reconstructions, so no stage rendered the menu; offscreen renders in light and dark came next, and a render on the wrong background hid a usage bar that read full at 0 %.',
+      'The rule that came out of it: a visual ask is verified on rendered pixels in both themes; the tint bug adds, on the background the user has. Every figure is synthetic, with placeholder accounts.',
+    ],
+    receipts: [
+      { label: 'Workflow agents and tokens', value: 'about 85 agents, about 12.8M tokens' },
+      { label: 'Test suite', value: '501 passing + 2 failing to 768 passing, 0 failing' },
+      { label: 'Memory cleanup', value: '62 lesson notes merged into 7, 160 of 160 still reachable' },
+    ],
+  },
+  {
     edition: 'Edition 15',
     date: '2026-09-22',
     tagline: 'Jev and the System One layer: the first model chapter that carries a receipt from my own pipeline.',
-    bannerText: 'New chapter: Jev, the model that never writes text, measured on the Radar with a receipt.',
-    bannerHref: '/chapters/51-jev-system-one/',
     shipped: [
       'Chapter 51: what a System One model is, install in five minutes (plugin, SDKs, key), the three primitives and the Noul-has-no-confidence trap, confidence as a second axis, the nine failure modes, the receipt discipline.',
       'Measured on 2026-09-21 and 2026-09-22 from my own machine: p50 289 ms and p95 791 ms per request, 0 decision flips over repeats, $0.0057 per 1,000 packed rows.',
