@@ -36,15 +36,31 @@ test('every registered chapter has its file, its number, exactly one part and at
   }
 });
 
-test('chapter 51 is wired: neighbours, the latest edition banner, both figures and every glossary key', () => {
+test('chapter 51 is wired: neighbours, both figures and every glossary key', () => {
   const slug = '51-jev-system-one';
   assert.equal(getNeighbors('50-claude-fable-5-1').next.slug, slug);
   assert.equal(getNeighbors(slug).prev.slug, '50-claude-fable-5-1');
+  assert.equal(getNeighbors(slug).next.slug, '52-what-agents-cant-see');
+  const content = read(`src/content/chapters/${slug}.mdx`);
+  for (const id of [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+  }
+  for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
+  }
+});
+
+test('chapter 52 is wired: neighbours, the latest edition banner, every figure and every glossary key', () => {
+  const slug = '52-what-agents-cant-see';
+  assert.equal(getNeighbors(slug).prev.slug, '51-jev-system-one');
   assert.equal(getNeighbors(slug).next, null);
   assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
+  assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
   const content = read(`src/content/chapters/${slug}.mdx`);
-  for (const id of [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1])) {
+  const ids = [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
+  assert.ok(ids.length > 0, 'the chapter must carry its figures');
+  for (const id of ids) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
   }
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {

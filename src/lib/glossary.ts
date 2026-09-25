@@ -541,6 +541,24 @@ export const glossary: Record<string, GlossaryEntry> = {
       'The evidence a model decision must carry before it ships: a labelled sample from the real surface, accuracy with an interval, calibration per band, cost and latency measured by you, and the same rows scored by the cheapest alternative. No receipt, no rollout. A vendor benchmark is not one.',
     related: ['Calibration', 'Eval'],
   },
+  'Text reconstruction': {
+    term: 'Text reconstruction',
+    definition:
+      'A written-out stand-in for a screen: rows and labels as lines, bars drawn in block characters. It reads fine as a list and says nothing about weight, contrast, width or wrapping, so a design judged from one has not been seen.',
+    related: ['Offscreen render', 'Contrast ratio', 'Review fleet'],
+  },
+  'Offscreen render': {
+    term: 'Offscreen render',
+    definition:
+      'An app\u2019s real views drawn to an image file without appearing on screen, so an agent can open the PNG and judge what a person would see. Only as honest as the background it is drawn on.',
+    related: ['Text reconstruction', 'Contrast ratio'],
+  },
+  'Fail closed': {
+    term: 'Fail closed',
+    definition:
+      'A guard that refuses when it cannot tell whether an action is safe, instead of allowing it. Its opposite, failing open, drops the protection in exactly the case nobody is watching.',
+    related: ['Hook', 'Permissions'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);

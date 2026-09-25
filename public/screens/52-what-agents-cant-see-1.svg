@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8C897C"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="80" fill="#F4F1EA" font-size="40" font-weight="700">The day as a pipeline</text>
+  <text x="80" y="120" fill="#9A9789" font-size="22">Workflow agents on 2026-09-25. The reviews caught real bugs in the code. The design was only ever read as text.</text>
+
+  <!-- ===== Row 1 ===== -->
+  <!-- wave brackets -->
+  <g stroke="#56544B" stroke-width="2" fill="none">
+    <path d="M80 190 V180 H460 V190"/>
+    <path d="M500 190 V180 H1300 V190"/>
+  </g>
+  <text x="80" y="168" fill="#9A9789" font-size="18">Scout wave · 7 agents · 1.15M tokens</text>
+  <text x="500" y="168" fill="#9A9789" font-size="18">Wave 1 · 16 agents · 3.0M tokens · 614 tests</text>
+
+  <!-- scouts -->
+  <rect x="80" y="210" width="190" height="130" rx="10" fill="#16171B" stroke="#3A3933" stroke-width="2"/>
+  <text x="100" y="248" fill="#F4F1EA" font-size="24" font-weight="700">6 scouts</text>
+  <text x="100" y="276" fill="#9A9789" font-size="18">read-only</text>
+  <g fill="#8C897C">
+    <circle cx="108" cy="312" r="7"/><circle cx="132" cy="312" r="7"/><circle cx="156" cy="312" r="7"/>
+    <circle cx="180" cy="312" r="7"/><circle cx="204" cy="312" r="7"/><circle cx="228" cy="312" r="7"/>
+  </g>
+  <line x1="270" y1="275" x2="306" y2="275" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- judge -->
+  <rect x="310" y="210" width="150" height="130" rx="10" fill="#16171B" stroke="#3A3933" stroke-width="2"/>
+  <text x="330" y="248" fill="#F4F1EA" font-size="24" font-weight="700">1 judge</text>
+  <text x="330" y="280" fill="#9A9789" font-size="18">37 items kept</text>
+  <text x="330" y="306" fill="#9A9789" font-size="18">16 deferred</text>
+  <line x1="460" y1="275" x2="496" y2="275" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- builders -->
+  <rect x="500" y="210" width="300" height="130" rx="10" fill="#16171B" stroke="#3A3933" stroke-width="2"/>
+  <text x="520" y="244" fill="#F4F1EA" font-size="24" font-weight="700">7 builder lanes</text>
+  <g fill="#3A3F47">
+    <rect x="520" y="258" width="150" height="7" rx="3"/>
+    <rect x="520" y="268" width="150" height="7" rx="3"/>
+    <rect x="520" y="278" width="150" height="7" rx="3"/>
+    <rect x="520" y="288" width="150" height="7" rx="3"/>
+    <rect x="520" y="298" width="150" height="7" rx="3"/>
+    <rect x="520" y="308" width="150" height="7" rx="3"/>
+  </g>
+  <rect x="520" y="318" width="150" height="7" rx="3" fill="#8C897C"/>
+  <text x="684" y="280" fill="#9A9789" font-size="16">disjoint files</text>
+  <text x="684" y="326" fill="#9A9789" font-size="16">+ reset credits</text>
+  <line x1="800" y1="275" x2="836" y2="275" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- integrator -->
+  <rect x="840" y="210" width="170" height="130" rx="10" fill="#16171B" stroke="#3A3933" stroke-width="2"/>
+  <text x="860" y="248" fill="#F4F1EA" font-size="24" font-weight="700">1 integrator</text>
+  <text x="860" y="280" fill="#9A9789" font-size="18">every lane,</text>
+  <text x="860" y="306" fill="#9A9789" font-size="18">every item</text>
+  <line x1="1010" y1="275" x2="1046" y2="275" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- review 1 -->
+  <rect x="1050" y="210" width="250" height="130" rx="10" fill="#16171B" stroke="#22D3A0" stroke-width="2"/>
+  <text x="1070" y="248" fill="#F4F1EA" font-size="24" font-weight="700">Review round 1</text>
+  <text x="1070" y="280" fill="#9A9789" font-size="18">4 reviewers</text>
+  <text x="1070" y="306" fill="#9A9789" font-size="18">4 verifiers</text>
+  <line x1="1300" y1="275" x2="1326" y2="275" stroke="#22D3A0" stroke-width="2"/>
+
+  <!-- caught 1 -->
+  <rect x="1330" y="200" width="230" height="150" rx="10" fill="#0F201B" stroke="#22D3A0" stroke-width="2"/>
+  <text x="1348" y="230" fill="#22D3A0" font-size="16" font-weight="700" letter-spacing="1.5">CAUGHT · MAJOR</text>
+  <g fill="#F4F1EA" font-size="17">
+    <text x="1348" y="256">The guard that protects</text>
+    <text x="1348" y="277">the desktop login failed</text>
+    <text x="1348" y="298">open if its file was</text>
+    <text x="1348" y="319">unreadable at startup.</text>
+    <text x="1348" y="340">Now it fails closed.</text>
+  </g>
+
+  <!-- connector row 1 -> row 2 -->
+  <path d="M1175 340 V420 H50 V560 H76" fill="none" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ===== Row 2 ===== -->
+  <path d="M80 492 V482 H1000 V492" fill="none" stroke="#56544B" stroke-width="2"/>
+  <text x="80" y="470" fill="#9A9789" font-size="18">Wave 2 · 15 agents · 2.83M tokens · 652 tests</text>
+
+  <!-- fixes + design -->
+  <rect x="80" y="500" width="420" height="120" rx="10" fill="#16171B" stroke="#3A3933" stroke-width="2"/>
+  <text x="100" y="538" fill="#F4F1EA" font-size="24" font-weight="700">3 fixers</text>
+  <text x="100" y="568" fill="#9A9789" font-size="18">review 1</text>
+  <text x="100" y="592" fill="#9A9789" font-size="18">findings</text>
+  <rect x="206" y="512" width="282" height="96" rx="8" fill="#1E1611" stroke="#FF6B2C" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="222" y="540" fill="#F4F1EA" font-size="20" font-weight="700">Design</text>
+  <text x="222" y="568" fill="#9A9789" font-size="17">3 designers → 1 judge</text>
+  <text x="222" y="592" fill="#9A9789" font-size="17">→ 1 builder</text>
+  <text x="472" y="540" fill="#FF6B2C" font-size="14" font-weight="700" text-anchor="end" letter-spacing="1">TEXT ONLY</text>
+  <line x1="500" y1="560" x2="536" y2="560" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- integrators -->
+  <rect x="540" y="500" width="170" height="120" rx="10" fill="#16171B" stroke="#3A3933" stroke-width="2"/>
+  <text x="560" y="538" fill="#F4F1EA" font-size="24" font-weight="700">2 integrators</text>
+  <line x1="710" y1="560" x2="746" y2="560" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- review 2 -->
+  <rect x="750" y="500" width="250" height="120" rx="10" fill="#16171B" stroke="#22D3A0" stroke-width="2"/>
+  <text x="770" y="538" fill="#F4F1EA" font-size="24" font-weight="700">Review round 2</text>
+  <text x="770" y="568" fill="#9A9789" font-size="18">4 reviewers</text>
+  <text x="770" y="592" fill="#9A9789" font-size="18">1 verifier</text>
+  <line x1="1000" y1="560" x2="1036" y2="560" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- fix pass -->
+  <rect x="1040" y="500" width="220" height="120" rx="10" fill="#16171B" stroke="#3A3933" stroke-width="2"/>
+  <text x="1060" y="538" fill="#F4F1EA" font-size="24" font-weight="700">Fix pass 2</text>
+  <text x="1060" y="568" fill="#9A9789" font-size="18">+ final verifier</text>
+  <text x="1060" y="592" fill="#9A9789" font-size="18">4 agents · 0.70M</text>
+  <line x1="1260" y1="560" x2="1296" y2="560" stroke="#8C897C" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ship -->
+  <rect x="1300" y="500" width="260" height="120" rx="10" fill="#16171B" stroke="#F4F1EA" stroke-width="2"/>
+  <text x="1320" y="538" fill="#F4F1EA" font-size="24" font-weight="700">Ship</text>
+  <text x="1320" y="568" fill="#9A9789" font-size="18">"ship-with-notes"</text>
+  <text x="1320" y="592" fill="#9A9789" font-size="18">661 tests · public CI green</text>
+
+  <!-- blind spot callout -->
+  <line x1="347" y1="608" x2="347" y2="660" stroke="#FF6B2C" stroke-width="2" stroke-dasharray="4 4"/>
+  <rect x="80" y="660" width="560" height="150" rx="10" fill="#1E1611" stroke="#FF6B2C" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="100" y="692" fill="#FF6B2C" font-size="16" font-weight="700" letter-spacing="1.5">BLIND SPOT</text>
+  <g fill="#F4F1EA" font-size="19">
+    <text x="100" y="722">The designers and their judge worked from TEXT</text>
+    <text x="100" y="748">reconstructions of the menu. The design was</text>
+    <text x="100" y="774">built and reviewed twice, and nobody rendered</text>
+    <text x="100" y="800">a single pixel.</text>
+  </g>
+
+  <!-- caught 2 callout -->
+  <line x1="875" y1="620" x2="875" y2="660" stroke="#22D3A0" stroke-width="2"/>
+  <rect x="690" y="660" width="500" height="150" rx="10" fill="#0F201B" stroke="#22D3A0" stroke-width="2"/>
+  <text x="710" y="692" fill="#22D3A0" font-size="16" font-weight="700" letter-spacing="1.5">CAUGHT · MAJOR</text>
+  <g fill="#F4F1EA" font-size="19">
+    <text x="710" y="722">Two new tests needed claude-swap. The public</text>
+    <text x="710" y="748">CI does not install it, so it would have</text>
+    <text x="710" y="774">gone red.</text>
+  </g>
+
+  <text x="80" y="862" fill="#9A9789" font-size="18">Counts are workflow agents. The later waves (three themes, colour, spacing, memory) are not drawn.</text>
+</svg>
