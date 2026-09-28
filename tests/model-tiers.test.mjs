@@ -28,6 +28,7 @@ test('published model tiers match the list Vlad supplied on 2026-09-28', () => {
 
 test('every tier renders and no model holds two placements', () => {
   assert.deepEqual(Object.keys(MODEL_TIERS), [...MODEL_TIER_ORDER]);
+  for (const tier of MODEL_TIER_ORDER) assert.ok(MODEL_TIERS[tier].length > 0, `${tier} would render an empty row`);
   const all = MODEL_TIER_ORDER.flatMap(names);
   assert.equal(new Set(all).size, all.length);
 });

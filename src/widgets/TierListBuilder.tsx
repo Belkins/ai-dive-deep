@@ -268,7 +268,7 @@ export default function TierListBuilder() {
               <div className="flex items-center gap-3 flex-wrap">
                 <div
                   className="font-display text-2xl font-semibold w-12 h-12 rounded-md flex items-center justify-center flex-shrink-0"
-                  style={{ background: TIER_COLOR[tier], color: tier === 'B' ? '#0E0F11' : 'white' }}
+                  style={{ background: TIER_COLOR[tier], color: ['S', 'A', 'B', 'C'].includes(tier) ? '#0E0F11' : 'white' }}
                 >
                   {tier === 'pool' ? '·' : tier}
                 </div>

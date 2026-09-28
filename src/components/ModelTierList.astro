@@ -5,13 +5,14 @@ import { VENDOR_META } from '@/lib/lmarena';
 
 // S–D reuse TierListBuilder's colours so a letter reads the same in both lists;
 // SSS/SS run hotter along the flame ramp, E takes the builder's floor and
-// Google its off-scale grey.
+// Google its off-scale grey. Light fills take dark text: white on S/A/C sits
+// under 3:1.
 const TIER_COLOR: Record<ModelTier, string> = {
   SSS: '#C2410C', SS: '#E1561C', S: '#FF6B2C', A: '#FF8E54', B: '#FFB48C',
   C: '#22D3A0', D: '#56544B', E: '#26251F', Google: '#8C897C',
 };
-const DARK_TEXT = new Set<ModelTier>(['B', 'Google']);
-const labelSize = (tier: ModelTier) => (tier.length === 1 ? 'text-2xl' : tier.length <= 3 ? 'text-xl' : 'text-xs font-sans');
+const DARK_TEXT = new Set<ModelTier>(['SS', 'S', 'A', 'B', 'C', 'Google']);
+const labelFont = (tier: ModelTier) => (tier.length === 1 ? 'font-display text-2xl' : tier.length <= 3 ? 'font-display text-xl' : 'font-sans text-xs');
 ---
 <div class="container-wide" style="margin-top: 2rem; margin-bottom: 1rem">
   <div class="rounded-xl overflow-hidden" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
@@ -19,14 +20,14 @@ const labelSize = (tier: ModelTier) => (tier.length === 1 ? 'text-2xl' : tier.le
       <span>Vlad's model tiers</span>
       <span>Updated <time datetime={MODEL_TIERS_UPDATED}>{MODEL_TIERS_UPDATED}</time></span>
     </div>
-    <ol class="p-3 sm:p-5 grid gap-2 list-none m-0" aria-label="Vlad's model tiers, highest first">
+    <ol role="list" class="p-3 sm:p-5 grid gap-2 list-none m-0" aria-label="Vlad's model tiers, highest first">
       {MODEL_TIER_ORDER.map((tier) => (
         <li class="rounded-md p-3 flex items-center gap-3" style="background: rgb(var(--bg)); border: 1px solid rgb(var(--line))">
           <span
-            class:list={['font-display font-semibold w-14 h-12 rounded-md flex items-center justify-center flex-shrink-0 self-start', labelSize(tier)]}
+            class:list={['font-semibold w-14 h-12 rounded-md flex items-center justify-center flex-shrink-0 self-start', labelFont(tier)]}
             style={`background: ${TIER_COLOR[tier]}; color: ${DARK_TEXT.has(tier) ? '#0E0F11' : '#FFFFFF'}`}
           ><span class="sr-only">Tier </span>{tier}</span>
-          <ul class="flex flex-wrap gap-1.5 list-none m-0 p-0 min-w-0">
+          <ul role="list" class="flex flex-wrap gap-1.5 list-none m-0 p-0 min-w-0">
             {MODEL_TIERS[tier].map((model) => (
               <li class="text-xs px-2 py-1 rounded-md inline-flex items-center gap-1.5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line)); color: rgb(var(--fg))">
                 {model.vendor !== 'other' && <span aria-hidden="true" class="inline-block w-1.5 h-1.5 rounded-full shrink-0" style={`background: ${VENDOR_META[model.vendor].color}`}></span>}
