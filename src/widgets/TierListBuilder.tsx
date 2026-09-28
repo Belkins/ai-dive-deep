@@ -24,24 +24,25 @@ const TIER_COLOR: Record<Tier, string> = {
 // and Kimi 2.6 is replaced by Kimi K3, which took #1 on Arena's WebDev board
 // with open weights. Placements are keyed by name — a retired name simply stops
 // rendering, so old shared URLs degrade quietly instead of breaking.
+//
+// 2026-09-28: models moved to their own list (src/lib/model-tiers.ts), so Opus 5,
+// Sonnet 5 and Kimi K3 left this tools list rather than carry a second, older
+// placement. tests/model-tiers.test.mjs keeps the two lists disjoint.
 const DEFAULT_PLACEMENTS: Record<string, Tier> = {
   // S — load-bearing
   'Claude Code': 'S',
   'Cowork': 'S',
-  'Opus 5': 'S',
   'Perplexity': 'S',
   'Nano Banana': 'S',
   'ElevenLabs': 'S',
   'SeeDance': 'S',
   // A — open every day
-  'Sonnet 5': 'A',
   'Gemini Pro': 'A',
   'Codex (OpenAI)': 'A',
   'Suno': 'A',
   'OpenClaw': 'A',
   'Hermes': 'A',
   'NemoClaw': 'A',
-  'Kimi K3': 'A',
   // B — useful for one job
   'Claude web chat': 'B',
   'Grok': 'B',
@@ -267,7 +268,7 @@ export default function TierListBuilder() {
               <div className="flex items-center gap-3 flex-wrap">
                 <div
                   className="font-display text-2xl font-semibold w-12 h-12 rounded-md flex items-center justify-center flex-shrink-0"
-                  style={{ background: TIER_COLOR[tier], color: tier === 'B' ? '#0E0F11' : 'white' }}
+                  style={{ background: TIER_COLOR[tier], color: ['S', 'A', 'B', 'C'].includes(tier) ? '#0E0F11' : 'white' }}
                 >
                   {tier === 'pool' ? '·' : tier}
                 </div>

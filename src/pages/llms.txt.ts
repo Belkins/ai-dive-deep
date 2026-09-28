@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { AA_SNAPSHOT, AA_INDEX_VERSION, OPUS5_EFFORT_CAPTURED } from '@/lib/artificial-analysis';
 import { LMARENA_SNAPSHOT } from '@/lib/lmarena';
 import { MODEL_RELEASES_CHECKED } from '@/lib/model-releases';
+import { MODEL_TIERS_UPDATED } from '@/lib/model-tiers';
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
 
@@ -37,7 +38,7 @@ export const GET: APIRoute = async () => {
   lines.push(`- [Sections](${SITE}/sections/) — chapters grouped by topic`);
   lines.push(`- [Research notes](${SITE}/research-notes/) — external papers folded into operator implications (OPS-204, Anthropic 81k-interviews, etc.)`);
   lines.push(`- [Radar](${SITE}/radar/) — running index of what's moving in AI, re-snapshotted on every ingest run of its pipeline (several times a day, on no fixed clock; the page carries the exact stamp of the snapshot and how old it is), ranked by the lead-time gradient (papers → repos → community → analysis); dated archive permalinks at /radar/YYYY-MM-DD`);
-  lines.push(`- [Tier list](${SITE}/tier-list/) — Astra and Fable 5.1 release notes checked ${MODEL_RELEASES_CHECKED}, followed by Arena crowd boards captured ${LMARENA_SNAPSHOT} with per-board vote cutoffs, Artificial Analysis ${AA_INDEX_VERSION} task economics captured ${AA_SNAPSHOT}, the dated July 27, 2026 lab comparison archive, Arena's separate Net Improvement Score board, and unchanged July 27 personal-test tiers. Index versions are not numerically comparable; effort, harness and fallback conditions remain part of each result. Visible FAQs derive the captured score and cost leaders from the data, not a universal-winner claim. New models await local evaluation before receiving an operator tier. Current model notes: ${SITE}/tier-list/#sec-models.`);
+  lines.push(`- [Tier list](${SITE}/tier-list/) — Astra and Fable 5.1 release notes checked ${MODEL_RELEASES_CHECKED}, followed by Arena crowd boards captured ${LMARENA_SNAPSHOT} with per-board vote cutoffs, Artificial Analysis ${AA_INDEX_VERSION} task economics captured ${AA_SNAPSHOT}, the dated July 27, 2026 lab comparison archive, Arena's separate Net Improvement Score board, Vlad's model tiers updated ${MODEL_TIERS_UPDATED} (personal placements, SSS to Google), and the July 27 tools tiers. Index versions are not numerically comparable; effort, harness and fallback conditions remain part of each result. Visible FAQs derive the captured score and cost leaders from the data, not a universal-winner claim. Current model notes: ${SITE}/tier-list/#sec-models.`);
   lines.push(`- [Day zero](${SITE}/day-zero/) — a safe first task and a full setup checklist budgeted at about 70 minutes`);
   lines.push(`- [Vault starter](${SITE}/vault-starter/) — Obsidian as working memory, with a cloneable starter vault`);
   lines.push(`- [Weekend builds](${SITE}/weekend-builds/) — the multi-AI 3-agent swarm pattern`);
