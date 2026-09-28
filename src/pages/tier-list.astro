@@ -5,8 +5,10 @@ import LMArenaLeaderboard from '@/widgets/LMArenaLeaderboard.tsx';
 import ArtificialAnalysisPanel from '@/widgets/ArtificialAnalysisPanel.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import CurrentModels from '@/components/CurrentModels.astro';
+import ModelTierList from '@/components/ModelTierList.astro';
 import { LAB_CLAIMS, VENDOR_META, ARENA_AGENT, ARENA_AGENT_META, LMARENA_SNAPSHOT } from '@/lib/lmarena';
 import { AA_SNAPSHOT, AA_INDEX_VERSION, AA_MODELS, AA_SOURCE_URL } from '@/lib/artificial-analysis';
+import { MODEL_TIERS_UPDATED } from '@/lib/model-tiers';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -32,7 +34,7 @@ const faqItems = [
   },
   {
     question: 'Does a leaderboard rank decide the operator tier?',
-    answer: 'No. Rank describes one board and tested configuration. Effort settings, tools, harnesses and safety fallbacks can change what was actually evaluated. Match those conditions, then validate quality, cost and reliability on your own tasks. The operator defaults remain the July 27, 2026 personal-test snapshot; new models await local evaluation.',
+    answer: `No. Rank describes one board and tested configuration. Effort settings, tools, harnesses and safety fallbacks can change what was actually evaluated. Match those conditions, then validate quality, cost and reliability on your own tasks. Vlad's model tiers were updated on ${MODEL_TIERS_UPDATED} and the tools defaults remain the July 27, 2026 snapshot; both are personal placements, not matched-workload results.`,
   },
   {
     question: 'Which captured models lead on score and task cost?',
@@ -57,7 +59,7 @@ const faqLd = {
     <div class="mt-6 border-l-2 pl-5 text-sm leading-relaxed" style="border-color: rgb(var(--accent)); color: rgb(var(--fg) / 0.9)">
       <div class="text-[10px] uppercase tracking-wider mb-2" style="color: rgb(var(--accent))">Captured evidence, not a live feed</div>
       <p class="m-0">Arena captured <time datetime={LMARENA_SNAPSHOT}>{LMARENA_SNAPSHOT}</time>; Artificial Analysis captured <time datetime={AA_SNAPSHOT}>{AA_SNAPSHOT}</time> ({AA_INDEX_VERSION}). Each Arena board carries its own vote cutoff. Capture dates describe when we read a source, not when every result was measured.</p>
-      <p class="mt-2 mb-0" style="color: rgb(var(--muted))">Keep effort settings, harnesses and fallback conditions attached to every score. New Index versions are not numerically comparable with earlier versions, and an unavailable source does not justify carrying an old score forward as current. The lab comparison archive and July 27 personal tiers remain separately dated.</p>
+      <p class="mt-2 mb-0" style="color: rgb(var(--muted))">Keep effort settings, harnesses and fallback conditions attached to every score. New Index versions are not numerically comparable with earlier versions, and an unavailable source does not justify carrying an old score forward as current. The lab comparison archive, the {MODEL_TIERS_UPDATED} model tiers and the July 27 tools tiers are each dated separately.</p>
     </div>
   </section>
 
@@ -177,8 +179,15 @@ const faqLd = {
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent))">What an operator actually uses</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Vlad's tier list</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">
-      <strong>Personal-test snapshot: 2026-07-27.</strong> These are Vlad's workflow preferences, not a fresh benchmark ranking. The default placements are unchanged. Astra and Fable 5.1 still need matched-workload testing before any personal tier is assigned; appearing on a leaderboard does not earn an S-tier placement here.
+      <strong>Model tiers updated <time datetime={MODEL_TIERS_UPDATED}>{MODEL_TIERS_UPDATED}</time>; tools tiers from 2026-07-27.</strong> Both are Vlad's workflow preferences, not benchmark rankings. A placement here is not a matched-workload test; Dive's evaluation of Astra and Fable 5.1 is still pending.
     </p>
+  </section>
+
+  <ModelTierList />
+
+  <section class="container-prose pt-6 pb-0">
+    <h3 class="m-0 font-display text-xl leading-tight">Tools and surfaces</h3>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Tools snapshot: 2026-07-27. Drag them into your own order, then share the link.</p>
   </section>
 
   <TierListBuilder client:load />
