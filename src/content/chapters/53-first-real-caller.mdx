@@ -1,0 +1,152 @@
+---
+number: 53
+slug: "53-first-real-caller"
+title: "The First Real Caller"
+subtitle: "A Spelled Email, a Busy Signal and a Grader That Was Too Kind"
+tldr: "I run an AI phone roleplay that assesses cold callers. On 29 September the first SDR from my own team called it, and in one morning production found three things 601 passing tests had not: a spelled surname that broke intake, callbacks that failed with no recorded reason, and a live grader that scored him about 20 points above two other reads of the same calls. Each fix took minutes. Each find needed a real caller. Test with real speech, log the reason before you retry, and never let one model grade alone."
+seoDescription: "One morning with an AI phone roleplay and its first real SDR: a spelled email broke intake, a carrier said busy, and the grader was 20 points too kind."
+keyConcepts: ["Voice agents", "Speech-to-speech", "Grader disagreement", "Carrier codes", "Production feedback"]
+readingMinutes: 15
+---
+
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+At 10:20 an SDR on my team called the line. The AI host asked for his name and email, and he spelled his surname letter by letter to get it right. The host read the email back, letter by letter, correctly. He said "Yep." The host said: "We'll stop here. Thanks for your time. Contact Belkins recruiting if you'd like help or an alternative assessment." The call record said technical failure.
+
+It was the only technical failure in the line's last 31 sessions, and all 601 tests in the suite were passing. By 11:28 the product had shipped six deploys, and the SDR had made three more attempts, the last one on a callback to my phone that had failed twice before it rang. Everything in this chapter was found by one person using the thing for real, and none of it by the tests.
+
+<Callout type="note" title="Evidence status: 2026-09-29">
+This is one morning, 29 September 2026, times in UTC, on one product. The numbers come from the call records in the product's database, the voice platform's conversation logs, the carrier's status callbacks, the deploy history and the git history, all read the same day. The SDR is not named, and nothing here carries his email, phone number or voice; beyond a single "Yep", his own words appear only as paraphrase, while the fictional prospect's lines are quoted as spoken. I did not measure money, the main session's tokens, or anything after 11:30, and the team contest at the end had no results when I wrote this.
+</Callout>
+
+## What the line does
+
+The product is a hiring assessment for SDRs at Belkins. A candidate either calls a phone number or asks the careers page to call them back. An AI host discloses that the call is recorded, takes their name and email, and reads them a short brief: you are a Belkins SDR, call this VP of Sales. Then an AI prospect picks up, with a private situation, objections and a rule for when it will agree to a meeting. The call is scored against 11 weighted criteria, from a clear opener to not pushing past a "no", and a recruiter decides every outcome. The score informs the recruiter's decision; it never makes it.
+
+Two engines run it. The public number runs on a voice platform's native agent. Callbacks run on what I call the frontier runtime: OpenAI's GPT-Live <GlossaryTerm term="Speech-to-speech">speech-to-speech</GlossaryTerm> model, bridged to the phone call through Twilio's media streams by a small server that holds two live sessions, one for the host and one for the prospect. [Chapter 27](/chapters/27-voice-agents/) covers how voice agents are built. This chapter is about what happened when one of them met a real caller.
+
+<ScreenshotPlaceholder
+  id="53-first-real-caller-3"
+  caption="One morning with the first real caller: calls, callbacks and deploys"
+  note="Built from the call records and the deploy history, 29 Sep 2026, UTC. Bars are the recorded call length; scores are the live grader's. All three callbacks went to the same mobile, mine."
+  ratio="16/9"
+/>
+
+## Your tests type, your users speak
+
+The failure took a minute to find, because the platform logs every tool call. The model that extracts intake fields had written the email as something like `first.surn ame@company.com`, with a space where the spelled correction joined the surname back together. My server rejected it as an invalid email and returned an error. The call flow sends any error from the intake tool to "technical failure", so the host ended the call politely, one confirmation away from the brief.
+
+Every one of those 601 tests had typed its email. `name@example.test` never arrives with a space in it. A person spelling a surname over the phone produces a string no fixture writer would type, because the fixture writer was never listening to it. The fix was one line on each voice path: remove spaces inside an email before checking it, which is safe because no valid email contains one. The web form still rejects spaces, because a typed space is a typo worth showing. It was live at 10:29, nine minutes after the call.
+
+One part of this is not fixed, and I would rather say so. The route from any intake error to "technical failure" is still blunt. The next strange string will end a call the same way instead of asking the caller once more.
+
+<PullQuote>Your fixtures are typed. Your users are spoken.</PullQuote>
+
+## A busy signal is not a diagnosis
+
+Callbacks had been open only to a short list of approved test numbers. I sent one line, "just enable full call backs", and at 10:32 they went public, still behind the careers page's access code, voicemail detection and a limit of two callback requests per number per day, and I asked for one to my own Ukrainian mobile.
+
+It failed in 3.5 seconds. The record said `provider_call_failed`, and nothing else. That was not the carrier's fault. Twilio's status callback for a call that fails carries an error code and a <GlossaryTerm term="SIP response code">SIP response code</GlossaryTerm>, and my server had been throwing both away. With nothing to read, the next step would have been guessing: the caller ID, the new engine, a permission for dialling Ukraine, or my own code.
+
+Logging those two fields went live at 10:34. At 10:36 the second callback failed in 2 seconds, and this time the log said why: `busy`, SIP 486. The call had reached the Ukrainian network, and the far end had refused it. Nothing in my dial path changed after that. At 10:58 the third callback rang, the SDR answered it on my phone, and it ran for 5.4 minutes to a completed, scored roleplay.
+
+I cannot tell you why the network said busy twice and then let the call through. I can tell you where the problem was not, and without the log line I could not have.
+
+<PullQuote>Log the reason before you retry. Without it you debug your own code for the carrier's decision.</PullQuote>
+
+## From seven seconds to under one
+
+The day before, the frontier runtime had its own lesson. GPT-Live streams silence as well as speech, sometimes several seconds of it at once. My bridge buffered the prospect's audio during the ring, then flushed it into the call, and that left Twilio 3.3 seconds behind. Every reply after that reached the caller about 7 seconds late. The fix was to drop silent frames whenever more than 200 ms of sent audio was still unplayed; speech always goes through.
+
+The greeting was worse. Asking the model to say its opening line when the prospect picked up worked in about 1.2 seconds locally and failed on 6 of 6 production calls, with 12 seconds of nothing. I never found out why. I stopped depending on it: each prospect's greeting is now a clip recorded once from GPT-Live in that prospect's own voice, kept only if its transcript matches the line word for word.
+
+<ScreenshotPlaceholder
+  id="53-first-real-caller-2"
+  caption="Nine replies on the first real callback, median 0.74 s"
+  note="Runtime-measured reply gaps: from the end of the caller's turn, as the runtime detects it, to the prospect's first voiced audio sent to the call. One call, n = 9; phone transport to the ear is not included. The dotted line is the public phone line's ordinary-reply median from the voice platform's own metrics on 28 Sep, measured at a different point and shown only for scale."
+  ratio="16/9"
+/>
+
+On the first real callback, the prospect answered nine times. The median gap was 0.74 seconds and the longest was 1.19 seconds. Each time the prospect started speaking, the audio already queued at Twilio was at most 51 ms, so nothing was piling up behind the caller's ear. That is one call, measured by the runtime itself, and it does not include the phone network. It is still the first evidence that the buffering fix holds on a real phone in another country, and not only on my own test calls.
+
+## The grader was too kind
+
+Each call is graded more than once. The live grader writes the recorded score. On the public line it is the voice platform's built-in evaluator; on callbacks it is the runtime's own evaluator. A second review, GPT-6 Astra, reads the same transcript after the call. Its disagreements go to recruiters as notes; they never change the recorded score. For this chapter I added a third reader: a Claude agent per call, prompted as a sales coach, asked to score the call itself and to say where either grader was wrong. It read the transcript together with both graders' criterion ratings, so it is a check on them, not a blind third opinion.
+
+<ScreenshotPlaceholder
+  id="53-first-real-caller-1"
+  caption="Same call, three scores: the live grader against two independent reads"
+  note="Scores out of 100 on the same 11-criterion rubric, recomputed from each reviewer's criterion ratings with the rubric's weights (the recomputation reproduces the recorded live scores exactly). Coach scores: one Claude agent per call, which read the transcript together with both graders' criterion ratings. Try 1 never reached the roleplay."
+  ratio="16/9"
+/>
+
+On the phone line, the live grader was above both other reads on both calls: 30.1 and 14.1 points above the second review, 22.8 and 16.4 above the coach. The second review and the coach landed within 8 points of each other on every call. On the callback the order flipped: the live grader gave 68.1, the second review 79.7, the coach 72. So this is not "AI graders are lenient". It is one grader reading two criteria its own way.
+
+| Criterion (weight) | Live grader, tries 2 / 3 / 4 | Second review, tries 2 / 3 / 4 |
+| --- | --- | --- |
+| Doesn't argue or pressure (10) | 2 / 2 / 1 | 0 / 1 / 1 |
+| Short, relevant response (9) | 2 / 3 / 1 | 1 / 1 / 2 |
+
+The clearest moment was on the second try. The prospect said, "No placeholder. I agreed to an email, not a meeting." The SDR made the case for the placeholder once more, and the prospect had to say no again: "No. Don't put a call on my calendar." The live grader gave that call 2 out of 3 for not pressuring, with the reason that he "respected their boundaries". The rubric was already right. Its level 1 reads "Dismissive rebuttal or repeated pushing after refusal." The grader read a polite re-ask as respect.
+
+The fix was two sentences of grading guidance, one per criterion. A new request for a meeting, call, hold or placeholder after a clear refusal is pushing, however politely it is phrased, and scores at most 1. A reply that keeps going after answering, such as a list of team roles, tools or services nobody asked about, is overexplaining. Both graders read the same guidance text, so the callback grader picked it up with the next deploy. The phone line's grader is prepared and not yet published, because the last evaluator publish there had shortened one JSON instruction and every criterion came back unreadable until it was rolled back. It goes out when no call is live, and the next scored call checks it.
+
+None of this changed a hiring outcome, because none was ever automated: every result is marked for manual review. What it changed is how much a recruiter should trust the number at the top of a row. A single grader gives you a score and no sense of how sure it is. A second, independent grader tells you where to look. [Chapter 25](/chapters/25-evals-or-hope/) says a broken output stays broken until something is watching it. Here, something was watching, and it disagreed.
+
+<PullQuote>One grader gives you a score. Two graders tell you where to look.</PullQuote>
+
+## What the SDR got better at
+
+The coach agent's scores across his three roleplays went 51, 59, 72, and the transcripts show why. In the first, he answered the classic "we tried an agency before, it looked good on paper" by listing the people on a Belkins team, which is exactly the generic promise the prospect had just rejected. In the second, he asked what exactly about the handoff worried the prospect, and the prospect told him the real problem: replies from the last agency had waited three business days with nobody owning them. In the third, he asked why the last agency had failed and what a qualified opportunity looked like to them, then proposed a meeting built on those answers.
+
+One habit stayed in all three: after a clear no, he asked for the meeting again. It is exactly what the grading guidance above now scores.
+
+The third roleplay also had an asterisk. The callback had picked the same prospect as his first phone roleplay, with the same objections, so part of the improvement was rehearsal. It picked it because nothing in the product remembered who had already played what. Now a person's next roleplay gets a prospect they have not met, matched by the calling line or the email across phone and callback, until they have met them all. A failed history lookup falls back to the ordinary assignment, so it can never refuse a call. In fairness to the fix, it would not have caught this particular repeat: that callback went to my phone under a test identity, so nothing linked it to him. A candidate using their own number or email is linked.
+
+The first version of the test for that change passed even with the fix removed. The retake happened to land on a different prospect by luck. The test that shipped fails on both mistakes I could think of: ignoring history, and counting a call that never reached the roleplay as played.
+
+## Twenty callers at once
+
+By late morning the plan was bigger than one SDR. A Slack channel of 20 cold callers, and a contest: the first people to book a meeting with the AI prospect win cash prizes. Before the announcement went out, I had the product's limits read against it, and four of them mattered.
+
+- **The hourly cap was 30 calls.** Twenty people with three tries each can need 60. It is now 100, with the daily cap unchanged.
+- **The per-caller cap counts phone numbers.** Three roleplays per number per 24 hours means a team calling through one shared dialer number would share three calls between them. The announcement now says to call from your own mobile. A withheld caller ID has no cap at all, which the rules have to cover.
+- **One of the three phone-line prospects cannot be booked this week, by design.** It tests whether a caller recognises a real no. In a "book a meeting" contest that has to be said out loud, and the announcement says it.
+- **Concurrency is a guess.** The setup notes say about five simultaneous calls. The API key cannot read the plan, and nobody has tested what a sixth caller hears. The announcement tells people to redial if the line is busy.
+
+A team contest is a load test you schedule yourself. It is cheaper to read the limits before you send the message than after the first "it's not working" in the channel.
+
+## The ledger
+
+Like the receipts in [Chapter 28](/chapters/28-failure-receipts/), here is the morning side by side.
+
+| Finding | Where it lived | Caught by | What it became |
+| --- | --- | --- | --- |
+| Spelled email came back with a space | Speech-to-text of a spelled correction | The first real caller | Spaces removed on both voice paths |
+| Callback failed with no reason recorded | My log, which dropped the carrier's codes | A 3.5-second failure with nothing to read | Error and SIP codes logged |
+| Callback refused as busy (SIP 486) | The receiving network | The new log line | A retry; the third call connected unchanged |
+| Live grader about 20 points high on the phone line | One grader's reading of two criteria | A second review and a coach agent per call | Grading guidance; phone-line publish pending |
+| Same prospect twice | Scenario assignment ignored history | Reading the transcripts | An unmet prospect first |
+| Hourly cap of 30 | Configuration | Reading limits before the contest | 100 |
+| Shared dialer numbers share a cap | The per-number limit | Reading limits before the contest | "Call from your own mobile" |
+
+Read the "Caught by" column. The first three rows were found by the product meeting reality: a voice, a carrier. The next two were found by reading what a real caller produced. The last two were found by reading the code before reality got there. None of them was found by a test that already existed.
+
+## What it cost, and what I can't show you
+
+The first failure was at 10:20 and the last deploy at 11:28: six deploys in 68 minutes. The suite went from 601 passing tests to 606. Each new test for the fairness change was also run against a deliberately broken version of the fix, to prove it could fail. The coach review took three agents and about 204,000 tokens, below my estimate of 250,000 to 360,000. The code review of the fairness change took one agent and about 139,000 tokens and found no bug.
+
+What is missing is missing on purpose. There is no name, number, email or recording of the SDR, and no line of his longer than a few words; he tested a hiring tool as a colleague, not as material. I did not listen to the recordings for this chapter, so nothing here describes how the voices sounded. I did not meter money or the main session's tokens. The stricter grader has not run on a phone-line call yet, so I cannot show that it works there. And the contest had not started when I wrote this, so there are no winners here.
+
+One product, one morning, one caller.
+
+## The closer
+
+Everything that went wrong that morning was correct in the tests. The email field accepted valid emails. The dial path dialled. The grader returned a score in the right format. The scenario picker spread prospects evenly. Each was right about the thing it had been shown, and none had been shown a person spelling a surname, a carrier saying busy, a polite re-ask, or the same caller coming back.
+
+Shipping a voice agent does not end at the last green test. It starts with the first real caller, and you want that caller to be someone on your own team who will call three more times.
+
+Put it in front of one real person before you put it in front of twenty.

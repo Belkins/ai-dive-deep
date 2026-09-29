@@ -50,9 +50,22 @@ test('chapter 51 is wired: neighbours, both figures and every glossary key', () 
   }
 });
 
-test('chapter 52 is wired: neighbours, the latest edition banner, every figure and every glossary key', () => {
+test('chapter 52 is wired: neighbours, every figure and every glossary key', () => {
   const slug = '52-what-agents-cant-see';
   assert.equal(getNeighbors(slug).prev.slug, '51-jev-system-one');
+  assert.equal(getNeighbors(slug).next.slug, '53-first-real-caller');
+  const content = read(`src/content/chapters/${slug}.mdx`);
+  for (const id of [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+  }
+  for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
+  }
+});
+
+test('chapter 53 is wired: neighbours, the latest edition banner, every figure and every glossary key', () => {
+  const slug = '53-first-real-caller';
+  assert.equal(getNeighbors(slug).prev.slug, '52-what-agents-cant-see');
   assert.equal(getNeighbors(slug).next, null);
   assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
