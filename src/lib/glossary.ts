@@ -559,6 +559,18 @@ export const glossary: Record<string, GlossaryEntry> = {
       'A guard that refuses when it cannot tell whether an action is safe, instead of allowing it. Its opposite, failing open, drops the protection in exactly the case nobody is watching.',
     related: ['Hook', 'Permissions'],
   },
+  'Speech-to-speech': {
+    term: 'Speech-to-speech',
+    definition:
+      'A voice model that listens to audio and answers in audio directly, instead of chaining speech-to-text, a text model and text-to-speech. Faster and more natural on a call, and it streams silence as well as speech, which a phone bridge has to handle.',
+    related: ['Multimodal', 'Inference', 'Agent'],
+  },
+  'SIP response code': {
+    term: 'SIP response code',
+    definition:
+      'The three-digit answer the far end of a phone call sends back, like an HTTP status: 486 means busy, 603 means declined. When a call fails in seconds it is often the only record of whose decision it was, so log it before you retry.',
+    related: ['Webhook'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);

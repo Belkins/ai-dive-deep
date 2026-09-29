@@ -16,11 +16,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 17',
+    date: '2026-09-29',
+    tagline: 'The first real caller: one morning with an AI phone roleplay and the first SDR to use it for real.',
+    bannerText: 'New chapter: the first real caller. A spelled email, a busy signal, a grader that was too kind.',
+    bannerHref: '/chapters/53-first-real-caller/',
+    shipped: [
+      'Chapter 53: one morning, 29 September, with the AI phone roleplay that assesses SDR candidates, when an SDR from my own team called it four times.',
+      'Production found what 601 passing tests had not: a spelled surname that broke intake, callbacks that failed with no recorded reason until the carrier code was logged, and a phone-line grader 14 to 30 points above a second review of the same calls.',
+      'Three charts: the same calls under three graders, nine reply gaps on the first real callback (median 0.74 s), and the morning as a timeline of calls and six deploys.',
+      'A team contest checked against the line\'s limits before it was announced.',
+    ],
+    receipts: [
+      { label: 'Deploys', value: '6 in 68 minutes, first failure to last deploy' },
+      { label: 'Test suite', value: '601 passing to 606 passing' },
+      { label: 'First real callback', value: 'median reply 0.74 s over 9 replies, 5.4 min, completed' },
+    ],
+  },
+  {
     edition: 'Edition 16',
     date: '2026-09-25',
     tagline: "What agents can't see: reviews that caught the code, and a menu design nobody rendered.",
-    bannerText: "New chapter: what agents can't see. The reviews read the code; nobody rendered the menu.",
-    bannerHref: '/chapters/52-what-agents-cant-see/',
     shipped: [
       'Chapter 52: one working day on my menu-bar usage app with Claude Code and about 85 workflow agents, told as what the agents could read and what they could not.',
       'Two review rounds caught two major code bugs before either shipped; the suite went from 501 passing and 2 failing to 768 passing and 0 failing.',

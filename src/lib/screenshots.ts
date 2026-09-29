@@ -98,6 +98,9 @@ export const SCREENSHOTS: Record<string, string> = {
   "52-what-agents-cant-see-1": "52-what-agents-cant-see-1.svg",
   "52-what-agents-cant-see-2": "52-what-agents-cant-see-2.png",
   "52-what-agents-cant-see-3": "52-what-agents-cant-see-3.png",
+  "53-first-real-caller-1": "53-first-real-caller-1.svg",
+  "53-first-real-caller-2": "53-first-real-caller-2.svg",
+  "53-first-real-caller-3": "53-first-real-caller-3.svg",
   "ad-x-90k-delete": "ad-x-90k-delete.svg",
   "agent-workflow-delta": "agent-workflow-delta.svg",
   "agent-workflow-plan": "agent-workflow-plan.svg",
@@ -124,4 +127,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "swarms-3": "swarms-3.webp"
 };
 
-export const SCREENSHOT_COUNT = 119;
+export const SCREENSHOT_COUNT = 122;
