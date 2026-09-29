@@ -67,6 +67,10 @@ test('chapter 53 is wired: neighbours, the latest edition banner, every figure a
   const slug = '53-first-real-caller';
   assert.equal(getNeighbors(slug).prev.slug, '52-what-agents-cant-see');
   assert.equal(getNeighbors(slug).next, null);
+  assert.equal(PARTS.find(part => part.slugs.includes(slug)).key, 'V', 'the chapter hero shows the Part V pill');
+  assert.ok(SECTIONS.find(section => section.key === 'building').slugs.includes(slug), 'listed under Building Products');
+  assert.equal(CHANGELOG[0].edition, 'Edition 17');
+  assert.equal(CHANGELOG[0].date, '2026-09-29');
   assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
   assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');

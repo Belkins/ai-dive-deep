@@ -23,9 +23,9 @@ export const CHANGELOG: ChangelogEntry[] = [
     bannerHref: '/chapters/53-first-real-caller/',
     shipped: [
       'Chapter 53: one morning, 29 September, with the AI phone roleplay that assesses SDR candidates, when an SDR from my own team called it four times.',
-      'Production found what 601 passing tests had not: a spelled surname that broke intake, callbacks that failed with no recorded reason until the carrier code was logged, and a live grader about 20 points above two other reads on the phone line.',
+      'Production found what 601 passing tests had not: a spelled surname that broke intake, callbacks that failed with no recorded reason until the carrier code was logged, and a phone-line grader 14 to 30 points above a second review of the same calls.',
       'Three charts: the same calls under three graders, nine reply gaps on the first real callback (median 0.74 s), and the morning as a timeline of calls and six deploys.',
-      'A team contest checked against the product before it was announced: an hourly cap, shared dialer numbers, an unbookable prospect by design and untested concurrency.',
+      'A team contest checked against the line\'s limits before it was announced.',
     ],
     receipts: [
       { label: 'Deploys', value: '6 in 68 minutes, first failure to last deploy' },
