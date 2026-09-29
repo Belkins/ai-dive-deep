@@ -63,17 +63,12 @@ test('chapter 52 is wired: neighbours, every figure and every glossary key', () 
   }
 });
 
-test('chapter 53 is wired: neighbours, the latest edition banner, every figure and every glossary key', () => {
+test('chapter 53 is wired: neighbours, every figure and every glossary key', () => {
   const slug = '53-first-real-caller';
   assert.equal(getNeighbors(slug).prev.slug, '52-what-agents-cant-see');
-  assert.equal(getNeighbors(slug).next, null);
+  assert.equal(getNeighbors(slug).next.slug, '54-claude-opus-5-5');
   assert.equal(PARTS.find(part => part.slugs.includes(slug)).key, 'V', 'the chapter hero shows the Part V pill');
   assert.ok(SECTIONS.find(section => section.key === 'building').slugs.includes(slug), 'listed under Building Products');
-  assert.equal(CHANGELOG[0].edition, 'Edition 17');
-  assert.equal(CHANGELOG[0].date, '2026-09-29');
-  assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
-  assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
-  assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
   const content = read(`src/content/chapters/${slug}.mdx`);
   const ids = [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
   assert.ok(ids.length > 0, 'the chapter must carry its figures');
@@ -83,6 +78,65 @@ test('chapter 53 is wired: neighbours, the latest edition banner, every figure a
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
   }
+});
+
+const guides55 = ['54-claude-opus-5-5', '55-claude-sonnet-5-5'];
+
+test('chapters 54 and 55 are wired: neighbours, Part VI, Team + Tier, the latest edition banner, figures and glossary keys', () => {
+  assert.equal(getNeighbors(guides55[0]).prev.slug, '53-first-real-caller');
+  assert.equal(getNeighbors(guides55[0]).next.slug, guides55[1]);
+  assert.equal(getNeighbors(guides55[1]).next, null);
+  for (const slug of guides55) {
+    assert.equal(PARTS.find(part => part.slugs.includes(slug)).key, 'VI', `${slug}: sits with the other model guides in Part VI`);
+    assert.ok(SECTIONS.find(section => section.key === 'resources').slugs.includes(slug), `${slug}: listed under Team + Tier`);
+    const content = read(`src/content/chapters/${slug}.mdx`);
+    const ids = [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
+    assert.ok(ids.length > 0, `${slug}: the measured chapter must carry its chart`);
+    for (const id of ids) {
+      assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+    }
+    for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
+      assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
+    }
+  }
+  assert.equal(CHANGELOG[0].edition, 'Edition 17.1');
+  assert.equal(CHANGELOG[0].date, '2026-09-29');
+  assert.equal(CHANGELOG[0].bannerHref, `/chapters/${guides55[0]}/`, 'the homepage banner must point at the newest guides');
+  assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
+  assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
+});
+
+test('the Opus 5.5 and Sonnet 5.5 guides are discoverable and link each other', () => {
+  for (const slug of guides55) {
+    const href = `/chapters/${slug}/`;
+    for (const file of ['src/pages/index.astro', 'src/pages/tier-list.astro']) {
+      assert.ok(read(file).includes(href), `${file} must link to ${href}`);
+    }
+    const other = guides55.find(item => item !== slug);
+    const content = read(`src/content/chapters/${slug}.mdx`);
+    assert.ok(content.includes(`/chapters/${other}/`), `${slug} must link to its sibling guide`);
+    assert.ok(content.includes('/workflow-planner/'));
+    assert.ok(content.includes('/tier-list/'));
+  }
+  assert.ok(read('src/pages/opus-5/index.astro').includes('/chapters/54-claude-opus-5-5/'), 'the historical Opus 5 page must point at its successor');
+});
+
+test('measured guides keep the conditions a reader needs to weigh the numbers', () => {
+  // The receipts are two runs per setting on one task. If an edit drops the date,
+  // the sample size, the grading rule or the harness, the numbers read as a benchmark.
+  for (const slug of guides55) {
+    const content = read(`src/content/chapters/${slug}.mdx`);
+    assert.match(content, /Evidence status: 2026-09-29/);
+    assert.match(content, /calibration, not a benchmark/);
+    assert.match(content, /within two lines of a planted bug/);
+    assert.doesNotMatch(content, /^\s*- \[[xX]\]/m, 'a guide must not read as a completed checklist');
+    assert.doesNotMatch(content, /TODO|TBD/);
+  }
+  const opus = read('src/content/chapters/54-claude-opus-5-5.mdx');
+  assert.match(opus, /workflow subagents/, 'the 22 September sweep ran as workflow subagents');
+  const sonnet = read('src/content/chapters/55-claude-sonnet-5-5.mdx');
+  assert.match(sonnet, /claude -p --model <id> --effort <level>/, 'the 29 September runs name their harness');
+  assert.match(sonnet, /about 17,000 tokens of session context/, 'list cost per run must say what it includes');
 });
 
 test('model chapters register once with matching content, topic and narrative navigation', () => {

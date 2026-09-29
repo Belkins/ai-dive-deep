@@ -153,6 +153,8 @@ const LEARN_SECTIONS: { id: string; label: string }[] = [
 const CHAPTER_SYNONYMS: Record<string, string> = {
   '49-gpt-6-astra':     'astra gpt-6 openai codex chatgpt work pricing cache caching cost benchmark performance use cases trial protocol arc osworld',
   '50-claude-fable-5-1':'fable 5.1 anthropic claude code pricing cache caching cost fallback retention model id benchmark performance use cases trial protocol',
+  '54-claude-opus-5-5': 'opus 5.5 anthropic claude code effort effortlevel medium high xhigh max adaptive thinking early stop end_turn refusal reasoning_extraction fallback pricing cache caching cost fast mode migration breaking changes benchmark measured sweep',
+  '55-claude-sonnet-5-5':'sonnet 5.5 anthropic claude code effort medium high pricing cache caching cost between_tools refusal fallback migration breaking changes benchmark measured opus comparison routing cheaper model',
   '01-killed-my-tabs':  'operating system os tabs workflow productivity daily driver',
   '02-five-tools':      'chatgpt cursor windsurf codex aider continue cline zed jetbrains copilot github copilot v0 bolt lovable replit claude code cowork picker which tool model picker',
   '03-temp-agency':     'context window memory state amnesia session forgets',

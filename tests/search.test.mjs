@@ -185,6 +185,10 @@ test('model-specific operator queries discover the current canonical guides', ()
     ['Astra Codex', '49-gpt-6-astra'],
     ['Fable 5.1 cache pricing', '50-claude-fable-5-1'],
     ['Fable 5.1 Claude Code', '50-claude-fable-5-1'],
+    ['Opus 5.5 effort', '54-claude-opus-5-5'],
+    ['Opus 5.5 refusal', '54-claude-opus-5-5'],
+    ['Sonnet 5.5 pricing', '55-claude-sonnet-5-5'],
+    ['Sonnet 5.5 effort', '55-claude-sonnet-5-5'],
   ]) {
     assert.ok(searchItems(realIndex, query).some(({ href }) => href === `/chapters/${slug}/`), query);
   }
