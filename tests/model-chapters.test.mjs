@@ -136,7 +136,7 @@ test('measured guides keep the conditions a reader needs to weigh the numbers', 
   assert.match(opus, /workflow subagents/, 'the 22 September sweep ran as workflow subagents');
   const sonnet = read('src/content/chapters/55-claude-sonnet-5-5.mdx');
   assert.match(sonnet, /claude -p --model <id> --effort <level>/, 'the 29 September runs name their harness');
-  assert.match(sonnet, /about 17,000 tokens of session context/, 'list cost per run must say what it includes');
+  assert.match(sonnet, /session context every run carries.*?overstates what the review itself cost/, 'list cost per run must say what it includes');
 });
 
 test('model chapters register once with matching content, topic and narrative navigation', () => {

@@ -3,7 +3,7 @@ number: 55
 slug: "55-claude-sonnet-5-5"
 title: "Claude Sonnet 5.5"
 subtitle: "Same-Task Receipts Against Opus 5.5, and When the Cheaper Model Is Enough"
-tldr: "Sonnet 5.5 shipped on 28 September at Sonnet 5's price, $2/$10 per million tokens, half of Opus 5.5 per token. On my planted-bug review it found all six bugs at high effort in both runs, with about half of Opus 5.5's output tokens at the same effort and 40% of its time. At low and medium it missed the same subtle bug four times out of four, and it never reported the real bugs nobody planted, which every Opus 5.5 run did. Run it at high for well-scoped work with a checkable finish, and keep Opus 5.5 for open-ended judgment."
+tldr: "Sonnet 5.5 shipped on 28 September at Sonnet 5's price, $2/$10 per million tokens, half of Opus 5.5 per token. On my planted-bug review it found all six bugs at high effort in both runs, with about half of Opus 5.5's output tokens at the same effort and 41% of its time. At low and medium it missed the same subtle bug four times out of four, and it never reported the real bugs nobody planted, which every Opus 5.5 run did. Run it at high for well-scoped work with a checkable finish, and keep Opus 5.5 for open-ended judgment."
 seoDescription: "Claude Sonnet 5.5 field guide: pricing, effort defaults, breaking changes, refusals, and a same-task review measured against Opus 5.5 and Sonnet 5."
 keyConcepts: ["Effort", "Routing", "Acceptance check", "Refusal", "Cost per accepted output"]
 readingMinutes: 16
@@ -26,7 +26,7 @@ Sonnet 5.5 was released on 28 September 2026 as the second model of the 5.5 fami
 
 - **Claude Code** needs v2.1.284 or later. The `sonnet` alias resolves to Sonnet 5.5 only on the Anthropic API. It resolves to Sonnet 4.6 on Claude Platform on AWS, and to Sonnet 4.5 on Bedrock, Google Cloud and Microsoft Foundry. Claude Code's default model stays Opus 5.5. [Model configuration](https://code.claude.com/docs/en/model-config).
 - **The Claude apps:** anyone can use Sonnet 5.5 on claude.ai, on the web, iOS and Android. No page I found says whether it is now the default model on Free or Pro. [Sonnet](https://www.anthropic.com/claude/sonnet).
-- **Data retention:** not a Covered Model, and compatible with zero data retention. [Why Claude switched models](https://support.claude.com/en/articles/17161993-why-claude-switched-models-in-your-conversation-with-sonnet-5-5).
+- **Data retention:** not a Covered Model, and compatible with zero data retention. [Covered Models](https://support.claude.com/en/articles/15425695-covered-models), [why Claude switched models](https://support.claude.com/en/articles/17161993-why-claude-switched-models-in-your-conversation-with-sonnet-5-5).
 - **Cloud:** on Bedrock, AWS controls access, and structured outputs, including strict tool use, are not available for this model there. On Foundry it supports Global Standard deployments only.
 
 <Callout type="watch" title="Your `sonnet` pin just changed models">
@@ -39,12 +39,12 @@ The price is Sonnet 5's: $2 per million input tokens, $10 output, $0.20 for cach
 
 The defaults differ by surface, and that changes every comparison. "In Claude Code and our apps, the default effort is set to Medium, while the Claude Platform defaults to High." Opus 5.5's API default is `medium`, so two API calls that both omit `effort` run Sonnet 5.5 one level higher than Opus 5.5.
 
-The launch table ran at `max` effort, averaged over five trials, unless noted.
+The system card gives the standard configuration behind these rows: `max` effort, averaged over five trials, unless noted.
 
 | Benchmark | Sonnet 5.5 | Sonnet 5 | Opus 5.5 | Conditions |
 | --- | --- | --- | --- | --- |
 | Terminal-Bench 4.0 | 70.6% | 10.3% | 66.4% | Opus 5.5 at `xhigh` (64.8% at `max`). Sonnet 5's score appears only in the launch post, unexplained |
-| FrontierCode v1.1 | 46.2% | 42.4% | 54.4% | Run by Cognition. Sonnet 5.5 scores 52.1% at `xhigh`; its `max` run used the code-review skill's subagents |
+| FrontierCode v1.1 | 46.2% | 42.4% | 54.4% | Run by Cognition. Sonnet 5.5 scores 52.1% at `xhigh`; at `max` it more often ran the code-review skill's subagents, which in two cases Cognition examined led to a timeout or edits beyond the task |
 | CursorBench 4.0 | 55.5% | 34.1% | 57.8% | Run by Cursor |
 | GDPval-AA v2.1 | 1844 | 1449 | 1846 | Elo, run by Artificial Analysis on a pre-release Sonnet 5.5 deployment with a since-fixed structured-output bug |
 | OSWorld 2.1 | 80.1% | 57.0% | 81.8% | Partial credit. Strict pass rate: 43.5%, 25.6%, 48.7% |
@@ -52,7 +52,7 @@ The launch table ran at `max` effort, averaged over five trials, unless noted.
 
 The Terminal-Bench row is the one to treat with care. Sonnet 5 scores between 3.2% and 10.3% at every effort level in the launch chart, and neither the post nor the system card explains why. My measurement below shows a large efficiency change from Sonnet 5 to 5.5. It does not explain a jump of that size.
 
-The more useful data is behind the charts. For four benchmarks the launch page plots score against cost per task at each effort level, and the numbers are in the page. At each model's API default, Sonnet 5.5 at `high` and Opus 5.5 at `medium`, Opus 5.5 scores higher on all four and costs 1.1 to 1.9 times as much per task:
+The more useful data is behind the charts. For four benchmarks the launch page plots score against cost per task at each effort level, and the numbers are in the page. Sonnet 5.5's costs on FrontierCode and CursorBench are Anthropic's own estimates from token counts at list prices: the system card says Cognition reported no cost for it, and Cursor's published costs cover the other models. At each model's API default, Sonnet 5.5 at `high` and Opus 5.5 at `medium`, Opus 5.5 scores higher on all four and costs 1.1 to 1.9 times as much per task:
 
 | Benchmark | Sonnet 5.5 at `high` | Opus 5.5 at `medium` | Sonnet 5.5 at `xhigh` |
 | --- | --- | --- | --- |
@@ -73,7 +73,7 @@ Captured on 29 September, the day after launch. Most boards had not listed Sonne
 - **Below `max`, it is the efficient one.** At `medium` it scored 40.7 on the same index against Sonnet 5's 28.1 at `medium`, and running the index cost about 40% less.
 - **At the top of the dial it is not cheaper than Opus.** On Vals' Terminal-Bench 4.0 it scored 53.03% at $19.33 per task, against Opus 5.5's 61.62% at $19.07. Artificial Analysis's coding-agent index, run through Claude Code at `max` on a pre-release endpoint, ranks it first at 68.4 against Opus 5.5's 66.0. It took $14.19 per task against $13.04, with 266 steps on average against 155. [Vals](https://www.vals.ai/benchmarks/terminal-bench-4), [coding agents](https://artificialanalysis.ai/agents/coding-agents).
 - **Security work leans on the Sonnet 5 fallback.** On Vals, counting fallback-assisted tasks as failures drops CyberBench from 59.58% to 41.97% and SRE Bench from 30.15% to 19.08%. [Vals](https://www.vals.ai/models/anthropic_claude-sonnet-5-5).
-- **On hard, known bugs, Opus still catches more.** CodeRabbit, one of the customers quoted in Anthropic's launch post, ran 13 hard pull requests with known bugs through its review pipeline. Sonnet 5.5 caught 6 against Sonnet 5's 4, at about 60% less per review than Sonnet 5 at list prices. Opus 5.5 caught 8 in CodeRabbit's Standard setup and 10 in its Max setup, and CodeRabbit's verdict is that Sonnet 5.5 "does not close that gap". [CodeRabbit](https://www.coderabbit.ai/blog/sonnet-5-5-model-review).
+- **On hard, known bugs, Opus still catches more.** CodeRabbit, one of the customers quoted in Anthropic's launch post, ran 13 hard pull requests with known bugs through its review pipeline. Sonnet 5.5 caught 6 against Sonnet 5's 4, and at list prices its Claude model calls cost about 60% less per review than Sonnet 5's. Opus 5.5 caught 8 in CodeRabbit's Standard setup and 10 in its Max setup, and CodeRabbit's verdict is that Sonnet 5.5 "does not close that gap". [CodeRabbit](https://www.coderabbit.ai/blog/sonnet-5-5-model-review).
 - **Practitioners' first receipts.** Simon Willison's `max` SVG attempt thought for 128,000 tokens ($1.28) and produced nothing, while `xhigh` cost 5.74 cents and took 41 seconds. [Simon Willison](https://simonwillison.net/2026/Sep/28/claude-sonnet-5-5/). In a Reddit post, one user ran 10 tasks three times each at `high` in Claude Code: both models passed 30 of 30, and Sonnet took 53 seconds against 108 at about $0.15 against $0.36 per task. That is an anecdote, not a board.
 
 ## What I measured: one review, three models
@@ -98,7 +98,7 @@ On 29 September I gave Sonnet 5.5, Opus 5.5 and Sonnet 5 the same job. The file 
 | Sonnet 5 `medium` | 4, 4 | 0, 0 | 11,419 | 128 s | $0.23–0.30 |
 | Sonnet 5 `high` | 6, 5 | 0, 0 | 18,362 | 187 s | $0.26–0.33 |
 
-"Unplanted real bugs" counts how many of three genuine defects, found during the 22 September sweep but not planted, a run reported. List cost is Claude Code's own figure for the session at API list prices. It includes about 17,000 tokens of session context on every run, so it overstates what the review itself cost. It is not what a subscription charges.
+"Unplanted real bugs" counts how many of three genuine defects, found during the 22 September sweep but not planted, a run reported. List cost is Claude Code's own figure for the session at API list prices. It includes the session context every run carries, about 16,000 to 17,000 tokens on the Sonnet 5.5 and Opus 5.5 runs and about 26,000 on the Sonnet 5 runs, so it overstates what the review itself cost. It is not what a subscription charges.
 
 What it says:
 
@@ -157,7 +157,7 @@ Token counts match Sonnet 5, and are about 30% higher than Sonnet 4.6 for the sa
 
 ## Refusals, fallback and injection
 
-Sonnet 5.5 "declines in more categories than Claude Sonnet 5": `cyber`, `bio`, `frontier_llm`, `reasoning_extraction` and `general_harms`. It is the first Sonnet to launch with classifiers against reasoning extraction. A refusal arrives as HTTP 200 with `stop_reason: "refusal"`. A refusal that arrives before any output is billed when its category is `bio`, `frontier_llm` or `reasoning_extraction`, and every refusal counts against rate limits. [Refusals and fallback](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback).
+Sonnet 5.5 "declines in more categories than Claude Sonnet 5": `cyber`, `bio`, `frontier_llm`, `reasoning_extraction` and `general_harms`. It is the first Sonnet to launch with classifiers against reasoning extraction. A refusal arrives as HTTP 200 with `stop_reason: "refusal"`. A refusal that arrives before any output is billed when its category is `bio`, `frontier_llm` or `reasoning_extraction`, and every refusal counts against rate limits. [Migration guide](https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide), [refusals and fallback](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback).
 
 Server-side fallback is an API beta you opt into, and it retries only `cyber` and `frontier_llm` declines, on Sonnet 5. Biology requests end with a refusal and no fallback, in Claude Code too. The system card is frank about cybersecurity work: "users should expect increased refusals with Sonnet 5.5, even on benign cybersecurity-related tasks." Finding vulnerabilities in source code is allowed; finding them in compiled binaries is blocked. Its cyber classifiers resist jailbreaks much better than Sonnet 5's, but because it is "less cyber capable than our frontier models", Anthropic "opted for more relaxed adversarial robustness" than on those models. [System card](https://www.anthropic.com/claude-sonnet-5-5-system-card).
 
@@ -169,7 +169,7 @@ Three more notes from the system card and prompting guide change how you read it
 
 - **Honesty.** It is "more honest under pressure than Opus 5.5, but hallucinates more". Its AA-Omniscience net score is 0.35, ahead of Sonnet 5 and behind every other Claude model shown.
 - **Legibility.** Its reasoning text is "the least legible of the models we tested".
-- **Injection caution.** It "sometimes treats a genuine user message as a possible injection", so an instruction you add mid-task may be questioned.
+- **Injection caution.** It "sometimes treats a genuine user message as a possible injection". The guide's case is a message typed mid-task that reaches the model after a tool result or inside one, so an instruction your harness injects there may be questioned.
 
 ## Price the finished job
 
