@@ -126,9 +126,12 @@ test('measured guides keep the conditions a reader needs to weigh the numbers', 
   // the sample size, the grading rule or the harness, the numbers read as a benchmark.
   for (const slug of guides55) {
     const content = read(`src/content/chapters/${slug}.mdx`);
-    assert.match(content, /Evidence status: 2026-09-29/);
-    assert.match(content, /calibration, not a benchmark/);
-    assert.match(content, /within two lines of a planted bug/);
+    const status = content.match(/title="Evidence status: 2026-09-29">([\s\S]*?)<\/Callout>/);
+    assert.ok(status, `${slug}: the dated Evidence status callout must be present`);
+    assert.match(status[1], /two runs per (?:setting|model and effort level)/i, `${slug}: the evidence callout must state the sample size`);
+    assert.match(status[1], /calibration, not a benchmark/, `${slug}: the evidence callout must say what the sample can carry`);
+    assert.match(content, /within two lines of a planted bug/, `${slug}: the grading rule must be stated`);
+    assert.match(content, /session context every (?:headless )?run carries/, `${slug}: list cost per run must say what it includes`);
     assert.doesNotMatch(content, /^\s*- \[[xX]\]/m, 'a guide must not read as a completed checklist');
     assert.doesNotMatch(content, /TODO|TBD/);
   }
@@ -136,7 +139,6 @@ test('measured guides keep the conditions a reader needs to weigh the numbers', 
   assert.match(opus, /workflow subagents/, 'the 22 September sweep ran as workflow subagents');
   const sonnet = read('src/content/chapters/55-claude-sonnet-5-5.mdx');
   assert.match(sonnet, /claude -p --model <id> --effort <level>/, 'the 29 September runs name their harness');
-  assert.match(sonnet, /session context every run carries.*?overstates what the review itself cost/, 'list cost per run must say what it includes');
 });
 
 test('model chapters register once with matching content, topic and narrative navigation', () => {
