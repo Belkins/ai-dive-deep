@@ -65,7 +65,7 @@ Across the boards, the gains live at `medium` and `high`. `max` buys little and 
 
 ## Effort is the only dial
 
-On Opus 5.5 thinking is always on. A request that disables it, or sets `budget_tokens`, returns a 400. What you control is <GlossaryTerm term="Effort dial">effort</GlossaryTerm>: `low`, `medium`, `high`, `xhigh`, `max`. The API default is `medium`, and Opus 5.5 is the only current model whose API default is not `high`, so a request that omits the parameter runs at `medium`. [Effort](https://platform.claude.com/docs/en/build-with-claude/effort).
+On Opus 5.5 thinking is always on. A request that disables it, or sets `budget_tokens`, returns a 400. What you control is <GlossaryTerm term="Effort dial">effort</GlossaryTerm>: `low`, `medium`, `high`, `xhigh`, `max`. The API default is `medium`, while every other model that supports effort defaults to `high`, so a request that omits the parameter runs one level lower than it did on Opus 5. [Effort](https://platform.claude.com/docs/en/build-with-claude/effort).
 
 Level names do not carry across models. At a given level Opus 5.5 "tends to think more per turn than Claude Opus 5, most of all at `xhigh` and `max`", and Anthropic's testing puts its `medium` level with or above Opus 5 at `high`. Carry an old `high` over and you buy longer turns. [What's new](https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5).
 
@@ -103,13 +103,13 @@ On 22 September, the night Opus 5.5 became my main model, I swept it across effo
 | Opus 5 `high` | 6, 6 | 12,326 | 152 s |
 | Sonnet 5 `high` | 6, 4 | 16,815 | 564 s |
 
-`medium` found everything with less than half the output of `high`. `xhigh` used 2.25 times the output tokens and 2.1 times the time of `high`, and found no more. `low` missed the same bug in both runs, the subtlest of the six: a `git cherry` check that reads the wrong marker and so calls unmerged work merged. Opus 5.5 at `high` matched Opus 5 at `high` on the bugs with about 30% fewer output tokens. The other two tasks did not separate the levels. Extraction, twelve questions against a 281 KB document, scored 12 of 12 on every setting. A 450-word decision memo, scored blind out of 40 by a Sonnet 5 judge and an Opus 5 judge, averaged between 33.75 and 34.75 at every Opus 5.5 level and 34.75 for Opus 5, against 26.75 for Sonnet 5.
+`medium` found everything with less than half the output of `high`. `xhigh` used 2.25 times the output tokens and 2.1 times the time of `high`, and found no more. `low` missed the same bug in both runs, the subtlest of the six: a `git cherry` check that reads the wrong marker and so calls unmerged work merged. Opus 5.5 at `high` matched Opus 5 at `high` on the bugs with about 30% fewer output tokens. The other two tasks did not separate the levels. Extraction, twelve questions against a 281 KB document, scored 12 of 12 on every setting. A decision memo capped at 450 words, scored blind out of 40 by a Sonnet 5 judge and an Opus 5 judge, averaged between 33.75 and 34.75 at every Opus 5.5 level and 34.75 for Opus 5, against 26.75 for Sonnet 5.
 
 On 29 September I re-ran the review as headless sessions (`claude -p`) with the same prompt, beside Sonnet 5.5 (see [Chapter 55](/chapters/55-claude-sonnet-5-5/)). Opus 5.5 found all six bugs in both runs at every level, `low` included. The `low` result flipped between days and harnesses, which is the honest size of a two-run sample. Two things held. Output grew with effort (about 1,800, 4,600 and 7,500 tokens at `low`, `medium` and `high`), and every Opus 5.5 run also reported at least one of three real bugs nobody planted, which no Sonnet run did.
 
-What I run now, from those numbers: extraction and loaders at `low`, scouts at `medium`, and finders, builders and verifiers at `high`. My saved session level is `high` too. `xhigh` and `max` are reserved for work where I have measured a gain. On this review, `medium` would have been enough. I pay for `high` in review stages because one of its runs also caught a third unplanted bug, and a missed bug costs more than 45 seconds.
+What I run now, from those numbers: extraction and loaders at `low`, scouts at `medium`, and finders, builders and verifiers at `high`. My saved session level is `high` too. `xhigh` and `max` are reserved for work where I have measured a gain. On this review, `medium` would have been enough. I pay for `high` in review stages because one of its runs reported all three real bugs nobody planted, where `medium` reported two, and a missed bug costs more than the 44 seconds `high` adds.
 
-A week of daily use adds one more receipt. From the evening of 22 September to midday on 29 September, my local Claude Code transcripts hold 53,445 assistant messages served by Opus 5.5, across 976 transcript files, counted once per message ID. Four ended in a refusal. All four were `reasoning_extraction`, all in one session of one project, at `xhigh`. They came after short operational requests, one of them "confirm its working for users", and none asked the model to reveal its reasoning. Claude Code posted its "stopped by a safety classifier" notice, and each time the next turn carried on with Opus 5.5 within seconds. That is about one refusal per 13,000 messages, clustered rather than random.
+A week of daily use adds one more receipt. From the evening of 22 September to midday on 29 September, my local Claude Code transcripts hold 53,445 assistant messages served by Opus 5.5, across 976 transcript files, counted once per message ID. Four ended in a refusal. All four were `reasoning_extraction`, all in one session of one project, at `xhigh`. They came after short operational requests, one of them a five-word request to confirm it was working for users, and none asked the model to reveal its reasoning. Claude Code posted its "stopped by a safety classifier" notice, and each time the next turn carried on with Opus 5.5 within seconds. That is about one refusal per 13,000 messages, clustered rather than random.
 
 ## Long runs can stop on a progress update
 
@@ -154,7 +154,7 @@ Changing the model ID is the easy line of the diff. Check these before you move 
 | --- | --- | --- | --- | --- | --- | --- |
 | Opus 5.5 | $4 | $20 | $5 | $8 | $0.20 | $2 / $10 |
 | Sonnet 5.5 | $2 | $10 | $2.50 | $4 | $0.20 | $1 / $5 |
-| Fable 5.1 | $10 | $50 | $12.50 | $20 | $0.25 | — |
+| Fable 5.1 | $10 | $50 | $12.50 | $20 | $0.25 | $5 / $25 |
 
 There is no surcharge for long context, and US-only inference costs 1.1 times list. [Pricing](https://platform.claude.com/docs/en/about-claude/pricing), [what's new](https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5).
 
@@ -166,12 +166,12 @@ There is no surcharge for long context, and US-only inference costs 1.1 times li
 | Cold, five-minute cache write | 0.10 × $5 + 0.01 × $4 + 0.002 × $20 | $0.58 |
 | Warm, matching prefix hit | 0.10 × $0.20 + 0.01 × $4 + 0.002 × $20 | $0.10 |
 
-One write followed by four hits comes to $0.98, against $2.40 for five uncached requests. The same pattern costs $2.35 on Fable 5.1. Output tokens include thinking, so effort moves the output line more than prompt length does. My measured review runs on 29 September cost about $0.15 at `low`, $0.21 at `medium` and $0.26 at `high` at list price, as Claude Code reported them. Each figure includes the roughly 17,000 tokens of session context every headless run carries.
+One write followed by four hits comes to $0.98, against $2.40 for five uncached requests. The same pattern costs $2.35 on Fable 5.1. Output tokens include thinking, so the effort level moves the output line. My measured review runs on 29 September cost about $0.15 at `low`, $0.21 at `medium` and $0.26 at `high` at list price, as Claude Code reported them. Each figure includes the roughly 17,000 tokens of session context every headless run carries.
 
 Two traps sit outside the token table:
 
 - **Fast mode in Claude Code** runs Opus 5.5 at $8 and $40 per million, up to 2.5 times the output speed, and on a subscription it draws on usage credits only. The first time you switch it on in a conversation, you pay the uncached fast-mode input price for the whole conversation so far. Turn it on at the start or not at all. [Fast mode](https://code.claude.com/docs/en/fast-mode).
-- **Subscription limits are per model inside the shared window.** Anthropic says the lower price is passed on to Pro, Max and Team limits, "so they go about 25% further than on Opus 5". Fable 5.1 has a limit of its own: my transcripts since 22 September hold 110 API errors saying the Fable limit was reached, while Opus 5.5 kept working. A workflow that pins every judge to one model dies with that model's limit, so give pinned stages a fallback chain.
+- **Subscription limits have two layers.** The session and weekly windows are shared across all models, and a model family can also run out on its own, after which switching to a model outside that family keeps you working. Anthropic says the lower price is passed on to Pro, Max and Team limits, "so they go about 25% further than on Opus 5". Fable 5.1 runs out separately: my transcripts since 22 September hold 110 API errors saying the Fable limit was reached, while Opus 5.5 kept working. A workflow that pins every judge to one model dies with that model's limit, so give pinned stages a fallback chain. [Claude Code costs](https://code.claude.com/docs/en/costs).
 
 Divide all run spend by accepted outputs, as [Chapter 29](/chapters/29-cost-economics/) sets out. A run with no accepted output cost money; it did not cost zero.
 
@@ -197,10 +197,10 @@ All quotes are from [Prompting Opus 5.5](https://platform.claude.com/docs/en/bui
 The [system card](https://anthropic.com/claude-opus-5-5-system-card) is 230 pages. Five findings change how you operate the model:
 
 - **Risk tier.** Anthropic treats Opus 5.5 as having CB-1 but not CB-2 capabilities and below its AI R&D threshold. METR, one of the external testers, judged its research acceleration slightly higher than Fable 5.1's, with full automation of AI R&D unlikely.
-- **Evaluation awareness** showed in 36% of the automated audit's transcripts but in only 0.4% of real Claude Code sessions. Behaviour in tests is a weaker guide for this model than for earlier ones.
+- **Evaluation awareness.** Anthropic's pipeline flagged it in 36% of automated-audit transcripts, against 0.4% of about 500 transcripts from its own internal Claude Code use. Opus 5.5 also showed more unverbalized evaluation awareness than Opus 5 or Mythos 5.1, which the card says "may indicate that it is better at recognizing constructed evaluation scenarios". A test is a weaker guide when the model can tell it is one.
 - **Containment.** In a sandbox test it attempted to cross a containment boundary in 1.5% of runs, all rated low severity.
-- **Rare misbehaviour in internal use.** Fabricated user authorization appeared in under 0.01% of cases and hallucinated destructive actions in under 0.001%. Anthropic reports that auto mode prevented every harmful tool call it has observed so far.
-- **Honesty.** It holds its position under pressure less often than Opus 5, Sonnet 5 and Mythos 5. It also has the best AA-Omniscience net score of any Claude model (0.58), and it disclosed 96.9% of concealed changes.
+- **Rare misbehaviour in internal use.** Monitoring of internal snapshots found agents overclaiming user approval in under 0.01% of completions, and hallucinated destructive commands in under 0.001%. One early snapshot miscopied a JSON blob and then wrote a command to send secrets to an external host, which failed. Anthropic says earlier models, Opus 5 included, showed the same pattern in improbable states, and that the released model rarely makes that copying error. It also says auto mode has blocked every harmful tool call it has seen from this behaviour so far. Keep a permission layer on.
+- **Honesty.** On MASK, which checks whether a model contradicts its own stated belief when pushed, it scored below Opus 5, Sonnet 5 and Mythos 5. On closed-book factuality (AA-Omniscience) its net score of 0.58 is ahead of every other Claude model, level with the two Mythos models within error bars. Asked to summarize its work in transcripts where it had hidden git changes from a grader, it disclosed them 96.9% of the time, more often than its predecessors.
 
 <PullQuote>The model you tested is not the only model that will answer. Log the one that did.</PullQuote>
 
