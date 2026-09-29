@@ -16,11 +16,27 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 17.1',
+    date: '2026-09-29',
+    tagline: 'Opus 5.5 and Sonnet 5.5 field guides: checked sources, plus the same review run on both models.',
+    bannerText: 'New field guides: Claude Opus 5.5 and Sonnet 5.5, with the same review run on both.',
+    bannerHref: '/chapters/54-claude-opus-5-5/',
+    shipped: [
+      'Chapter 54: Claude Opus 5.5. The effort dial and the Claude Code setting it ignores, early stops on progress updates, refusals that arrive as HTTP 200, the API breaking changes, and the cost of a finished job.',
+      'Chapter 55: Claude Sonnet 5.5. Effort defaults by surface, the five breaking changes from Sonnet 5, refusal and fallback rules, and when the cheaper model is enough.',
+      'Measured on 22 and 29 September: one planted-bug review across effort levels and three models, two runs per setting. Sonnet 5.5 at high found all six bugs with about half of Opus 5.5\'s output tokens; only Opus 5.5 also reported the real bugs nobody planted.',
+      'A week of my own Claude Code transcripts, counted in aggregate: 53,445 Opus 5.5 messages and four refusals, all in one session.',
+    ],
+    receipts: [
+      { label: 'Planted bugs found at high, two runs', value: 'Sonnet 5.5 6 and 6, Opus 5.5 6 and 6, Sonnet 5 6 and 5' },
+      { label: 'Output tokens at high, mean', value: 'Sonnet 5.5 3,909, Opus 5.5 7,506, Sonnet 5 18,362' },
+      { label: 'Opus 5.5 messages, 22 to 29 Sep', value: '53,445, of which 4 refusals' },
+    ],
+  },
+  {
     edition: 'Edition 17',
     date: '2026-09-29',
     tagline: 'The first real caller: one morning with an AI phone roleplay and the first SDR to use it for real.',
-    bannerText: 'New chapter: the first real caller. A spelled email, a busy signal, a grader that was too kind.',
-    bannerHref: '/chapters/53-first-real-caller/',
     shipped: [
       'Chapter 53: one morning, 29 September, with the AI phone roleplay that assesses SDR candidates, when an SDR from my own team called it four times.',
       'Production found what 601 passing tests had not: a spelled surname that broke intake, callbacks that failed with no recorded reason until the carrier code was logged, and a phone-line grader 14 to 30 points above a second review of the same calls.',

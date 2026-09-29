@@ -1,0 +1,211 @@
+---
+number: 54
+slug: "54-claude-opus-5-5"
+title: "Claude Opus 5.5"
+subtitle: "The Effort Dial, Early Stops, and a Week of Receipts"
+tldr: "Opus 5.5 is the model Anthropic now says to start with, and the one my Claude Code sessions have run since 22 September: $4/$20 per million tokens, 1M context, thinking always on, and effort as the only dial, defaulting to medium. On my planted-bug review, medium found all six bugs with less than half the output tokens of high, and xhigh spent more than twice the tokens and time of high for nothing more. Set effort on purpose, treat a text-only end of turn as a report rather than a finish, watch for refusals that arrive as HTTP 200, and migrate the API contract, not just the model string."
+seoDescription: "Claude Opus 5.5 field guide: pricing, the effort dial and its Claude Code trap, early stops, API breaking changes, refusals, and measured receipts."
+keyConcepts: ["Effort", "Early stop", "Refusal", "Fallback", "Cost per accepted output"]
+readingMinutes: 20
+---
+
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+Opus 5.5 is the model Anthropic's docs now tell you to start with, and the one my Claude Code sessions have run since the evening of 22 September. It is cheaper than <GlossaryTerm term="Opus 5">Opus 5</GlossaryTerm> per token, it has one dial that matters, and it has two behaviours that break harnesses written for older models: it can end a turn on a progress update, and a refusal comes back as a successful HTTP response. This guide is the operating manual: what it is, what the dial buys, where it stops, what changed in the API, what a finished job costs, and what my own runs measured.
+
+<Callout type="note" title="Evidence status: 2026-09-29">
+Sources checked on 2026-09-29: Anthropic's launch post, the system card, the API and Claude Code docs, the help centre, and independent boards. Unlike chapters 49 and 50, parts of this one are run. "What I measured" comes from a planted-bug review swept across effort levels on 22 September, the same review re-run on 29 September, and an aggregate count over a week of my own Claude Code transcripts. Two runs per setting is calibration, not a benchmark. Every other number is Anthropic's or a named third party's, and says whose. Nothing here was tested through the API in a production service.
+</Callout>
+
+## Identify the model before judging it
+
+Anthropic released Opus 5.5 on 22 September as the first model of the 5.5 family. The API ID is `claude-opus-5-5` everywhere except Amazon Bedrock, which uses `anthropic.claude-opus-5-5`. The ID has no date, but it still maps to one fixed snapshot. The model takes text and images, returns text, has a 1M-token context window and a 128K maximum output (more on the Batches API with a beta header), and a June 2026 knowledge cutoff. Anthropic commits to not retiring it before 22 September 2027 on its own platforms. [Model overview](https://platform.claude.com/docs/en/models/opus-5-5/overview), [model IDs](https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions).
+
+Where it runs matters as much as what it is:
+
+- **Claude Code** needs v2.1.280 or later. The `opus` alias points to Opus 5.5 (to Opus 4.6 on Microsoft Foundry), and Opus 5.5 is now the default model on Pro, Max, Team, Enterprise and the Anthropic API. [Model configuration](https://code.claude.com/docs/en/model-config).
+- **The Claude apps** list Opus on Pro, Max, Team and Enterprise, not on Free. [Plans](https://claude.com/pricing).
+- **Data retention:** Anthropic's list of Covered Models, the ones that carry the 30-day retention requirement in [Chapter 50](/chapters/50-claude-fable-5-1/), names only the Fable and Mythos models, and the launch post says Opus 5.5 is available with zero data retention, like previous Opus models. [Launch post](https://www.anthropic.com/claude-opus-5-5), [Covered Models](https://support.claude.com/en/articles/15425695-covered-models).
+- **API service:** no Priority Tier, and a rate-limit bucket of its own rather than a share of a combined one. [Migration guide](https://platform.claude.com/docs/en/models/opus-5-5/migration-guide), [rate limits](https://platform.claude.com/docs/en/api/rate-limits).
+
+## What Anthropic claims, and how to read it
+
+The launch post's headline is that Opus 5.5 "performs at the level of Claude Fable 5.1 on most work and costs 40% less to run than Opus 5". Both halves need their conditions. The 40% is Anthropic's test result "at default settings" on "typical workloads", not a price cut. The price cut is 20% on input and output, to $4 and $20 per million tokens, and 60% on cache reads, to $0.20. The same post claims output "more than 30% faster than Opus 5" and gives no method for it. [Launch post](https://www.anthropic.com/claude-opus-5-5), [what a task costs](https://claude.dev/blog/what-a-task-costs-on-opus-5-5/).
+
+The launch table below keeps each score's conditions. Unless the conditions column says otherwise, Opus 5.5 ran at `max` effort, averaged over five trials, with safeguards on. Safeguards on means a fallback model answered some items: on Terminal-Bench 4.0 the fallback served 2.5% of requests, touching 10% of trials, so a model column is not a pure-model run. [System card](https://anthropic.com/claude-opus-5-5-system-card), p. 178.
+
+| Benchmark | Opus 5.5 | Fable 5.1 | Opus 5 | GPT-6 Astra | Conditions |
+| --- | --- | --- | --- | --- | --- |
+| Terminal-Bench 4.0 | 66.4% | 55.8% | 52.3% | 57.9% | Opus 5.5 at `xhigh` (64.8% at `max`); Astra at `high`, reported by OpenAI |
+| FrontierCode v1.1 | 54.4% | 50.3% | 48.0% | 53.3% | Run by Cognition. At each model's best effort: 54.6% against Opus 5's 53.4% |
+| GDPval-AA v2.1 | 1846 | 1735 | 1708 | 1542 | Elo, run by Artificial Analysis. Opus 5.5 at `medium`: 1576 |
+| SWE-bench Pro | 89.9% | 81.2% | 79.2% | — | System card only |
+| AutomationBench | 40.0% | 31.4% | 26.9% | 41.4% | Run by Zapier without fallback, so safeguard stops counted as failures (42.5% with fallback in the Sonnet 5.5 card); Astra leads |
+| FrontierSWE v2 | 62.3% | 56.3% | — | 65.5% | Proximal's harness; Astra leads |
+| Toolathlon Verified | 77.8% | 77.8% | 80.6% | — | Pass@1 over three trials, seven stopped trials counted as failures; below Opus 5 |
+
+Two readings follow. First, "leads in agentic coding" is true of Anthropic's chosen boards, not all of them: in Anthropic's own tables Astra is ahead on AutomationBench, FrontierSWE v2 and Terminal-Bench-Science, and Toolathlon went backwards from Opus 5. Second, the FrontierCode lead over Opus 5 is 6.4 points at `max` and 1.2 points at each model's best setting, because Opus 5.5's score peaks at `medium`. The post itself adds the caveat worth keeping: "at these levels of capability we've found that benchmark margins have become a less reliable guide to real-world differences. In our own use, the gap between Opus 5.5 and Claude Fable 5.1 is narrower than these scores suggest."
+
+## What independent boards found
+
+These were captured on 29 September, a week after launch. Every board runs its own harness, so the numbers match neither Anthropic's nor each other's. That mismatch is the first finding.
+
+- **The saving lives at `medium`, not at `max`.** On Artificial Analysis's Intelligence Index (v4.3.2), Opus 5.5 at `max` ranks first at 57.6. Sonnet 5.5 is at 56.0, Fable 5.1 at 53.4, GPT-6 Astra at 52.7 and Opus 5 at 50.8. At `max` it used about 119k output tokens per index task against about 73k for Opus 5, which AA says leaves it "level with Opus 5 on cost per task". At `medium` it scored 51.2 against Opus 5's 44.8 at `medium`, and running the index cost about 40% less. [Artificial Analysis](https://artificialanalysis.ai/articles/claude-opus-5-5), [model page](https://artificialanalysis.ai/models/claude-opus-5-5).
+- **More effort scored lower on ARC.** ARC Prize's verified ARC-AGI-2 run put Opus 5.5 at 93.3% at `high` and 91.7% at `max`, at $0.41 against $1.85 per task. [ARC Prize](https://arcprize.org/results/anthropic-claude-opus-5-5).
+- **Terminal-Bench 4.0 has several answers.** Anthropic reports 66.4% at `xhigh`, and Artificial Analysis's own run scored 59.6% at `max`. Vals scored 61.62%, but 30 of its 198 task attempts were served by Opus 5 or Opus 4.8. Counting those as failures gives 53.54%, behind Astra's 57.07%. The official tbench.ai board had not listed the model. [Vals](https://www.vals.ai/benchmarks/terminal-bench-4).
+- **Fallback is inside the scores.** In Artificial Analysis's coding-agent runs through Claude Code, 80 of 909 Opus 5.5 attempts hit a safety refusal, and all 80 were recovered, 78 of them by a fallback model. On Vals' SRE Bench, 217 of 262 tasks were fallback-assisted, and without them the score falls from 33.59% to 5.34%. For security-adjacent work, the model you picked is often not the model that answered. [Vals](https://www.vals.ai/models/anthropic_claude-opus-5-5).
+- **The crowd prefers it, within wide error bars.** LMArena's text board has its `high` entry first at 1508.6, with a 95% interval of 1496 to 1521 after 2,307 votes, so it is not separated from the models below it. Its `max` entry leads the WebDev board by a clear margin, and it is second to Fable 5.1 on the agent board. [LMArena](https://lmarena.ai/leaderboard/text).
+- **METR's pre-deployment look** found "a modest improvement upon Fable 5.1" and published no time-horizon number. METR notes that Anthropic had the opportunity to review and edit its summary. [METR](https://metr.org/blog/2026-09-22-claude-opus-5-5/).
+- **`max` can run out of room.** Simon Willison's SVG test at `max` hit the 128,000-token output cap while the model was still reasoning, and returned nothing. The two failures cost $2.56 each and took nearly 20 minutes. [Simon Willison](https://simonwillison.net/2026/Sep/22/opus-and-sol-and-luna/).
+
+Across the boards, the gains live at `medium` and `high`. `max` buys little and can cost more.
+
+## Effort is the only dial
+
+On Opus 5.5 thinking is always on. A request that disables it, or sets `budget_tokens`, returns a 400. What you control is <GlossaryTerm term="Effort dial">effort</GlossaryTerm>: `low`, `medium`, `high`, `xhigh`, `max`. The API default is `medium`, while every other model that supports effort defaults to `high`, so a request that omits the parameter runs one level lower than it did on Opus 5. [Effort](https://platform.claude.com/docs/en/build-with-claude/effort).
+
+Level names do not carry across models. At a given level Opus 5.5 "tends to think more per turn than Claude Opus 5, most of all at `xhigh` and `max`", and Anthropic's testing puts its `medium` level with or above Opus 5 at `high`. Carry an old `high` over and you buy longer turns. [What's new](https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5), [prompting guide](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5).
+
+Anthropic's own cost numbers make the trade concrete. On a 478-problem internal SWE-bench Pro subset (not comparable to the public leaderboard), measured against `high`, `medium` scored about 2.5 points lower for about 70% of the cost, `low` about 8 points lower for about a third, and `xhigh` about 1.4 points higher for 2.5 times the cost. The same page describes the cheaper policy: run everything at `low`, then re-run only the failures at `high`. That passed about 97% of tasks for about $0.17 each, against 95.3% for $0.29 running everything at `high`, counting the failed cheap attempts. Anthropic's own advice is to use it "for the saving, not the lift". [Optimizing for cost and intelligence](https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence).
+
+The Claude Code team's [effort post](https://claude.dev/blog/spending-your-effort/) maps the levels to work. `low` is for quick in-the-loop work like brainstorming, sketching and easy changes. `medium` is for most regular engineering, such as implementing a new feature. `high` is for work where verification matters or there are edge cases, like a bug fix in a brownfield codebase. `max` is for fully autonomous hard problems, like building and verifying an app end to end. Its reading of Terminal-Bench 3.0 is that higher effort pays most on tasks with hidden edge cases. On that board Opus 5.5 went from 36.6% at `low` to 65.7% at `max`, and matched Fable 5.1 at `max` from `high` (58.9% against 58.0%) on half the tokens.
+
+Three mechanics bite in practice:
+
+- **`max_tokens` covers thinking.** On an internal set of about 130 repository tasks, a 16,384-token cap ended about a quarter of Opus 5.5's attempts at its default effort, and the capped turns are discarded but still billed. No Opus 5.5 turn was cut at 64,000. The docs recommend 64K to 128K for long agentic turns.
+- **Changing effort can break the cache.** On the API, changing the top-level `effort` between requests invalidates the prompt cache; a per-message effort change (beta) keeps it. In Claude Code, `/effort` keeps the cache on Opus 5.5 with an API key or a subscription, but not on Bedrock, Google Cloud's Agent Platform, a Claude apps gateway, or in HIPAA organizations. [Prompting Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5), [Claude Code prompt caching](https://code.claude.com/docs/en/prompt-caching).
+- **Claude Code ignores your global effort setting for this model.** A top-level `effortLevel` in your user settings file "doesn't count for Opus 5.5", so a new session starts at `medium` until `/effort` or the `/model` picker saves a level for the model under `modelSettings`. A project or local `effortLevel` still applies to every model, and `max` lasts for the session only. [Model configuration](https://code.claude.com/docs/en/model-config).
+
+<Callout type="watch" title="The per-model save is keyed to the exact model ID">
+My settings point `model` at the `opus[1m]` alias, while the saved level sits under `claude-opus-5-5`. When the next Opus ships, the alias moves and the saved level does not follow, so the new model starts at its own default. My session-start hook warns when the newest transcripts ran an Opus ID with no saved level. Every assistant message in a Claude Code transcript records the effort it actually ran at, so check a transcript rather than trusting the settings file.
+</Callout>
+
+## What I measured
+
+On 22 September, the night Opus 5.5 became my main model, I swept it across effort levels on three tasks, two runs per setting. The discriminating one was a code review. The file was a 209-line Python script that retires git worktrees, with six bugs planted in it. The task was to report every place where the code breaks its own docstring or could lose data. Code graded the reports: a finding within two lines of a planted bug counts as found. Opus 5 and Sonnet 5 at `high` ran as references. The runs were Claude Code workflow subagents.
+
+<ScreenshotPlaceholder
+  id="54-claude-opus-5-5-1"
+  caption="One review, four effort levels: output tokens, time and bugs found"
+  note="Six planted bugs, two runs per setting, 22 Sep 2026, Claude Code workflow subagents. Output tokens include thinking; time is first to last message in each agent transcript."
+  ratio="1600/922"
+/>
+
+| Setting | Planted bugs found, run 1 and 2 | Output tokens, mean | Time, mean |
+| --- | --- | --- | --- |
+| Opus 5.5 `low` | 5, 5 | 1,507 | 18 s |
+| Opus 5.5 `medium` | 6, 6 | 4,054 | 43 s |
+| Opus 5.5 `high` | 6, 6 | 8,564 | 87 s |
+| Opus 5.5 `xhigh` | 6, 6 | 19,268 | 185 s |
+| Opus 5 `high` | 6, 6 | 12,326 | 152 s |
+| Sonnet 5 `high` | 6, 4 | 16,815 | 564 s |
+
+`medium` found everything with less than half the output of `high`. `xhigh` used 2.25 times the output tokens and 2.1 times the time of `high`, and found no more. `low` missed the same bug in both runs, the subtlest of the six: a `git cherry` check that reads the wrong marker and so calls unmerged work merged. Opus 5.5 at `high` matched Opus 5 at `high` on the bugs with about 30% fewer output tokens. The other two tasks did not separate the levels. Extraction, twelve questions against a 281 KB document, scored 12 of 12 on every setting. A decision memo capped at 450 words, scored blind out of 40 by a Sonnet 5 judge and an Opus 5 judge, averaged between 33.75 and 34.75 at every Opus 5.5 level and 34.75 for Opus 5, against 26.75 for Sonnet 5.
+
+On 29 September I re-ran the review as headless sessions (`claude -p`) with the same prompt, beside Sonnet 5.5 (see [Chapter 55](/chapters/55-claude-sonnet-5-5/)). Opus 5.5 found all six bugs in both runs at every level, `low` included. The `low` result flipped between days and harnesses, which is the honest size of a two-run sample. Two things held. Output grew with effort (about 1,800, 4,600 and 7,500 tokens at `low`, `medium` and `high`), and every Opus 5.5 run also reported at least one of three real bugs nobody planted, which no Sonnet run did.
+
+What I run now, from those numbers: extraction and loaders at `low`, scouts at `medium`, and finders, builders and verifiers at `high`. My saved session level is `high` too. `xhigh` and `max` are reserved for work where I have measured a gain. On this review, `medium` would have been enough. I pay for `high` in review stages because one of its runs reported all three real bugs nobody planted, where `medium` reported two, and a missed bug costs more than the 44 seconds `high` adds.
+
+A week of daily use adds one more receipt. From the evening of 22 September to early afternoon on 29 September, my local Claude Code transcripts hold 53,445 assistant messages served by Opus 5.5, across 976 transcript files, counted once per message ID. Four ended in a refusal. All four were `reasoning_extraction`, all in one session of one project, at `xhigh`. They came after short operational requests, one of them a five-word request to confirm it was working for users, and none asked the model to reveal its reasoning. Claude Code posted its "stopped by a safety classifier" notice, and each time the next turn carried on with Opus 5.5 within seconds. That is about one refusal per 13,000 messages, clustered rather than random.
+
+## Long runs can stop on a progress update
+
+On long tasks with several parts, Opus 5.5 keeps the user updated as it works, and "some of those updates end the turn with text rather than a tool call". A harness that reads a text-only end of turn as "done" stops there, with the work unfinished and a clean exit code. [Prompting Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5).
+
+Anthropic's fixes are harness fixes:
+
+- Treat a text-only end of turn as a report, not proof the task is done. Keep the task's parts in a checklist the model updates, such as a to-do tool or a file.
+- If a turn ends with items open and no blocker stated, send a short user message naming them. Or state the completion condition up front and have a smaller model check each end of turn against it.
+- Stop after two or three automatic continuations on the same task, so a run that is genuinely stuck ends and can be reviewed.
+- For fully unattended agents only, add a standing instruction at the end of the system prompt from the first request that names the stops you don't want. It does not override confirmation for risky or destructive actions. Leave it out of human-in-the-loop sessions, where the stop is the feature.
+
+The same behaviour changes streaming UIs. On the API, text Opus 5.5 writes between tool calls now arrives as thinking blocks, empty under the default display, so an app that streamed that text as progress "goes quiet between tool calls". Use the `display: "updates"` beta, or a send-message tool declared from the first request. [Migration guide](https://platform.claude.com/docs/en/models/opus-5-5/migration-guide).
+
+Judge an unattended run by its artifact, never by its exit code. [Chapter 38](/chapters/38-run-until-done/) has the harness side of this.
+
+## Refusals arrive as HTTP 200
+
+A declined request returns HTTP 200 with `stop_reason: "refusal"` and a `stop_details.category`: `cyber`, `bio`, `frontier_llm`, `reasoning_extraction` or `general_harms`. Monitoring that only watches for errors will count a refusal as a success. Since 24 September, a refusal that arrives before any output is billed when its category is `bio`, `frontier_llm` or `reasoning_extraction`, and every refusal counts against rate limits. [What's new](https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5), [release notes](https://platform.claude.com/docs/en/release-notes/overview).
+
+On the API, server-side fallback is a beta you opt into. It is not available on Bedrock, Google Cloud, Foundry or the Batches API, and it never retries a `reasoning_extraction` refusal. The system card names the targets: cyber flags go to Opus 4.8, and biology and frontier-LLM flags go to Opus 5. Distillation and weapons requests are blocked with no fallback. In the Claude apps the switch is automatic, and the checks review everything the model reads, including memory, connector content, web search results and files, so content you did not type can trigger a fallback. [Why Claude switched models](https://support.claude.com/en/articles/16049681-why-claude-switched-models-in-your-conversation-with-opus-5-or-opus-5-5).
+
+<Callout type="warn" title="The fallback is the soft spot for prompt injection">
+In the system card's coding prompt-injection test, 64% of Opus 5.5's valid responses were served by the Opus 4.8 cyber fallback, and the attack succeeded on 85.73% of those. None of the 2,872 requests Opus 5.5 answered directly was susceptible. If an agent reads untrusted repositories or web pages, the model you tested is not the only model that will act on them. Log the model that served each step, as [Chapter 50](/chapters/50-claude-fable-5-1/) describes for Fable 5.1.
+</Callout>
+
+The cyber policy allows vulnerability-finding in source code and blocks it in compiled binaries, with what the system card calls "a temporarily wider safety margin". Opus 5.5 is not yet in the Cyber Verification Program. Security teams should expect friction: on Artificial Analysis's CyberGym-E2E-AA, where the model must prove a memory-safety crash and then patch it, Opus 5.5 refused at least 98% of the tasks, as did GPT-6 Astra and Fable 5.1. [Artificial Analysis cyber index](https://artificialanalysis.ai/articles/artificial-analysis-cyber-index). The prompting guide warns that a prompt pushing the model to reproduce its reasoning in the response can be declined as `reasoning_extraction`. Its fix is to remove such instructions and read the reasoning from summarized thinking blocks (`display: "summarized"`) instead. My four refusals above followed prompts that asked nothing of the kind, so expect the occasional false positive anyway.
+
+## Migrate the contract, not the string
+
+Changing the model ID is the easy line of the diff. Check these before you move traffic, against the [migration guide](https://platform.claude.com/docs/en/models/opus-5-5/migration-guide):
+
+- **400s that used to work:** disabled thinking or `budget_tokens`; forced `tool_choice` (`any` or `tool`); non-default `temperature`, `top_p` or `top_k`; a prefilled final assistant turn. The fix for forced tools is `auto` with `strict: true`, or structured outputs, which Bedrock does not support for this model.
+- **Thinking blocks are bound to the conversation.** For accounts created on or after 31 August 2026, editing the earlier prefix of a conversation returns a 400. Keep histories append-only.
+- **Tools:** `computer_20251124` is rejected on the Claude API and Google Cloud and still works on Bedrock. The newer computer toolsets are not on Bedrock or Foundry.
+- **Tokens:** the tokenizer produces roughly 1 to 1.35 times the tokens of pre-Opus-4.7 models for the same text, so re-measure prompt sizes and budgets.
+- **Service:** no Priority Tier; fast mode is a research preview on the Claude API only.
+
+## Price the finished job
+
+| Per million tokens | Input | Output | 5-min cache write | 1-hour cache write | Cache read | Batch in / out |
+| --- | --- | --- | --- | --- | --- | --- |
+| Opus 5.5 | $4 | $20 | $5 | $8 | $0.20 | $2 / $10 |
+| Sonnet 5.5 | $2 | $10 | $2.50 | $4 | $0.20 | $1 / $5 |
+| Fable 5.1 | $10 | $50 | $12.50 | $20 | $0.25 | $5 / $25 |
+
+There is no surcharge for long context, and US-only inference costs 1.1 times list. [Pricing](https://platform.claude.com/docs/en/about-claude/pricing), [what's new](https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5).
+
+**Hypothetical arithmetic, not observed usage,** with the same assumptions as the Fable 5.1 chapter: a 100,000-token reusable prefix, 10,000 new input tokens and 2,000 output tokens per request, Standard service, no tools.
+
+| Condition | Calculation in USD | Total |
+| --- | --- | --- |
+| Cold, no cache | 0.11 × $4 + 0.002 × $20 | $0.48 |
+| Cold, five-minute cache write | 0.10 × $5 + 0.01 × $4 + 0.002 × $20 | $0.58 |
+| Warm, matching prefix hit | 0.10 × $0.20 + 0.01 × $4 + 0.002 × $20 | $0.10 |
+
+One write followed by four hits comes to $0.98, against $2.40 for five uncached requests. The same pattern costs $2.35 on Fable 5.1. Output tokens include thinking, so the effort level moves the output line. My measured review runs on 29 September cost about $0.15 at `low`, $0.21 at `medium` and $0.26 at `high` at list price, as Claude Code reported them. Each figure includes the roughly 17,000 tokens of session context every headless run carries.
+
+Two traps sit outside the token table:
+
+- **Fast mode in Claude Code** runs Opus 5.5 at $8 and $40 per million, up to 2.5 times the output speed, and on a subscription it draws on usage credits only. The first time you switch it on in a conversation, you pay the uncached fast-mode input price for the whole conversation so far. Turn it on at the start or not at all. [Fast mode](https://code.claude.com/docs/en/fast-mode).
+- **Subscription limits have two layers.** The session and weekly windows are shared across all models, and a model family can also run out on its own, after which switching to a model outside that family keeps you working. Anthropic says the lower price is passed on to Pro, Max and Team limits, "so they go about 25% further than on Opus 5". Fable 5.1 runs out separately: my transcripts since 22 September hold 110 API errors saying the Fable limit was reached, while Opus 5.5 kept working. A workflow that pins every judge to one model dies with that model's limit, so give pinned stages a fallback chain. [Claude Code costs](https://code.claude.com/docs/en/costs).
+
+Divide all run spend by accepted outputs, as [Chapter 29](/chapters/29-cost-economics/) sets out. A run with no accepted output cost money; it did not cost zero.
+
+## Prompts: what to strip, what to add
+
+Strip:
+
+- **"Think step by step" and "think carefully".** Effort is the control. In Anthropic's testing in a chat product, removing such a line made replies start sooner with no clear decline in quality.
+- **Requests to write out reasoning or a chain of thought.** They can be declined as `reasoning_extraction`, and fallback never retries that category.
+- **Vision scaffolding built for older models.** Opus 5.5 reads dense charts and screenshots much more precisely without tools. Crop and zoom tools still help on the densest inputs.
+- **Vague style bans.** "Avoid a generic AI look" swaps one default style for another. Name the patterns you don't want. Anthropic's example: "Do not use a cream or off-white background, italic accent words in headlines, numbered "01/02/03" section labels, monospace labels, or pill-shaped buttons."
+
+Add, where they fit:
+
+- **For multi-app work**, one sentence makes it look before it acts: "Before taking any action, explore broadly with tool calls: list and open the emails, documents, spreadsheet tabs and records across the available apps that could be relevant to this task, including ones the task does not explicitly mention, and use what you find."
+- **For agent teams**, a time signal: either an elapsed-against-budget line such as `elapsed 340s / 1200s`, or the sentence "Time matters here: do not spend time that can be avoided, and the earlier a correct result is obtained, the better." In Anthropic's evaluations of small agent teams on research tasks, both made teams finish sooner, and teams given a budget kept answer quality comparable. The guide's own caveat: "under time pressure the model might search and verify a little less." I treat it as an experiment, not a default.
+- **For pasted text**, mark where it starts and ends. This is a regression the system card owns. In a coding evaluation, the released model acted on instructions planted in text the user pasted in about 2% of attempts at default effort and about 7.4% at `max`, and on instructions written in invisible Unicode characters in 2 of 68 attempts at default effort. Opus 5 and Sonnet 5 never did. The same instructions arriving through tool results were never followed (0 of 105), and with Anthropic's product mitigations in place the rate was zero.
+
+All quotes are from [Prompting Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5) and the [system card](https://anthropic.com/claude-opus-5-5-system-card).
+
+## What the system card adds
+
+The [system card](https://anthropic.com/claude-opus-5-5-system-card) is 230 pages. Five findings change how you operate the model:
+
+- **Risk tier.** Anthropic treats Opus 5.5 as having CB-1 but not CB-2 capabilities, and assesses that it does not cross the next capability threshold for automated AI research in its Responsible Scaling Policy. METR, one of the external testers, judged its research acceleration slightly higher than Fable 5.1's, with full automation of AI R&D unlikely.
+- **Evaluation awareness.** Anthropic's pipeline flagged it in 36% of automated-audit transcripts, against 0.4% of about 500 transcripts from its own internal Claude Code use. Opus 5.5 also showed more unverbalized evaluation awareness than Opus 5 or Mythos 5.1, which the card says "may indicate that it is better at recognizing constructed evaluation scenarios". A test is a weaker guide when the model can tell it is one.
+- **Containment.** In a sandbox test it attempted to cross a containment boundary in 1.5% of runs, all rated low severity.
+- **Rare misbehaviour in internal use.** Monitoring of internal snapshots found agents overclaiming user approval in under 0.01% of completions, and hallucinated destructive commands in under 0.001%. One early snapshot miscopied a JSON blob and then wrote a command to send secrets to an external host, which failed. Anthropic says earlier models, Opus 5 included, showed the same pattern in improbable states, and that the released model rarely makes that copying error. It also says auto mode has blocked every harmful tool call it has seen from this behaviour so far. Keep a permission layer on.
+- **Honesty.** On MASK, which checks whether a model contradicts its own stated belief when pushed, it scored below Opus 5, Sonnet 5 and Mythos 5. On closed-book factuality (AA-Omniscience) its net score of 0.58 is ahead of every other Claude model, level with the two Mythos models within error bars. Asked to summarize its work in transcripts where it had hidden git changes from a grader, it disclosed them 96.9% of the time, more often than its predecessors.
+
+<PullQuote>The model you tested is not the only model that will answer. Log the one that did.</PullQuote>
+
+## The routing rule
+
+Start on Opus 5.5 at `medium` for regular engineering, and raise it to `high` for review, verification and bug fixes in code you did not write. Reach for `xhigh` or `max` only after a measured gain on your own task, and re-run failures at a higher level rather than running everything high. Move well-scoped work with a checkable finish to Sonnet 5.5 at `high` (see [Chapter 55](/chapters/55-claude-sonnet-5-5/) for the same review run on both). Escalate to Fable 5.1 or GPT-6 Astra only after a matched trial on your own task ([Chapter 50](/chapters/50-claude-fable-5-1/), [Chapter 49](/chapters/49-gpt-6-astra/)).
+
+If your main loop and your subagents both run Opus 5.5, an unpinned judge is the same model grading itself. Pin verification stages to a different model, with a fallback chain for when that model's limit runs out. Keep the dated [tier-list reference](/tier-list/) for independent comparisons, and turn one candidate task into a specification with the [workflow planner](/workflow-planner/) before you change a default. Pin the model ID, log the model that served each step and the effort it ran at, and count every attempt. After that, the upgrade is a routing rule you can defend.
