@@ -5,7 +5,7 @@ title: "Read Before You Install"
 subtitle: "700 Ranked Repos, 118 Read From Source and Nine Installs"
 tldr: "A skill leaderboard ranks attention; what a skill costs sits where the board does not look. On 1 October I pointed a 23-agent swarm at one with 700 ranked repos. It read 118 repos from source, and I installed nine things: seven skills copied at the commit a vetter read and two pinned plugins. The seven add about 2,100 characters of description to every session's skill list; the 40 repos the lanes picked, installed whole, would have added 675,367. A review the next morning found gaps in my own plan, and nothing here measures a gain yet. Read the install, not the board."
 seoDescription: "A 23-agent swarm on a public skill leaderboard: 118 repos read from source, nine pinned installs and the hooks the star counts never show."
-keyConcepts: ["Skill listing", "Pinned copy", "Routing recall", "Hook", "Swarm"]
+keyConcepts: ["Skill listing", "Pinned copy", "Supply chain", "Hook", "Swarm"]
 readingMinutes: 15
 ---
 
@@ -14,12 +14,12 @@ import PullQuote from '@/components/PullQuote.astro';
 import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
 import GlossaryTerm from '@/components/GlossaryTooltip.astro';
 
-At 17:36 on 1 October I pasted the address of a public skill leaderboard into Claude Code. I asked for the board's most trending, relevant and starred skills, "to be even more efficient for us and all products, setups etc", read by a swarm of agents, and for which of my own skills could go viral there. That day the board ranked 700 repos and tracked 36,328 skills. By 23:48 nine things were installed on my Mac. Not one came from the home page's top ten.
+At 17:36 on 1 October I pasted the address of [The Skill Leaderboard](https://www.skillleaderboard.com/), a public ranking of agent-skill repos, into Claude Code. I asked for the board's most trending, relevant and starred skills, "to be even more efficient for us and all products, setups etc", read by a swarm of agents, and for which of my own skills could go viral there. That day the board ranked 700 repos and tracked 36,328 skills. By 23:48 nine things were installed on my Mac. Not one came from the home page's top ten.
 
-A leaderboard ranks attention. What a skill costs sits where no leaderboard looks: in the description it adds to every session's skill list, and in what its hooks and installers do on your machine. The night produced nine installs. The next morning produced most of the lessons.
+A leaderboard ranks attention. What a skill costs sits where no leaderboard looks: in the description it adds to every session's skill list, and in what its hooks and installers do on your machine. Most of the lessons came the next morning.
 
 <Callout type="note" title="Evidence status: 2026-10-02">
-This is one Claude Code session on Opus 5.5, from 17:36 on 1 October to early afternoon on 2 October, times in BST, plus one Codex session given the same request the same day. Board figures come from the board's catalogue endpoint, captured on 1 October; repo figures from 120 fresh clones; token totals from the workflow usage blocks; usage counts from my local skill-usage log. I did not measure the main session's tokens, money, any gain from the installs or whether Claude Code trims the longest skill lists, so listing figures are characters, never tokens. Client names, the name of one local skill and my private repos are left out, and every star count is as of 1 October.
+This is one Claude Code session on Opus 5.5, from 17:36 on 1 October to early afternoon on 2 October, times in BST, plus Codex's work on the same words, sent without the board's address, on 1 and 2 October, read from its own output files. Board figures come from the board's catalogue endpoint, captured on 1 October; repo figures from 120 fresh clones; token totals from the workflow usage blocks; usage counts from my local skill-usage log. I did not measure the main session's tokens, money, any gain from the installs or whether Claude Code trims the longest skill lists, so listing figures are characters, never tokens. Client names, the name of one local skill and my private repos are left out, and every star count is as of 1 October.
 </Callout>
 
 ## Two leaderboards in one list
@@ -43,7 +43,7 @@ A repo younger than seven days has no 7-day percentage, so it cannot trend yet. 
 
 Code did everything deterministic, and models got only the judgment. Code built a shortlist of 173 repos from five signals: most stars, biggest 7-day gain, highest Traction Score, new and fast, and fit to my stack. An automatic lane assignment then dropped repos that mattered, such as App Store preflight, Playwright and the sales skills. So I curated the shortlist by hand into nine lanes covering 118 repos, from engineering and security to mobile and skill-building.
 
-Of 121 clones, 120 succeeded, with images and video left out; the miss was the board's own source repo. Code counted each repo's skills, description characters, manifests, hooks and scripts, and wrote risky-pattern leads as file:line for the vetters. Most leads were noise; a few were real.
+Of 121 clone attempts (the 118, two fast-growing repos read for the viral question and the board's own source repo), 120 succeeded, with images and video left out; the miss was the board's source repo. Code counted each repo's skills, description characters, manifests, hooks and scripts, and wrote risky-pattern leads as file:line for the vetters. Most leads were noise; a few were real.
 
 My own rule asks one question before any run estimated at 700,000 tokens or more. The estimate was about 2.8M; I chose the full swarm, which started at 23:06.
 
@@ -54,7 +54,7 @@ Nine lane assessors on Opus 5.5 judged each repo against the skills, plugins and
 | 9 lane assessors, 118 repos | 3 adopt, 14 trial, 23 copy one skill, 78 skip |
 | 9 security vetters, 40 picks | 28 caution, 12 clean |
 | Fable red team, 40 picks | 18 kept, 20 downgraded, 2 dropped |
-| Final call after my check | 5 installed, 5 trial, 12 copy later, 14 parked, 2 dropped, 4 already in my setup, 76 skip |
+| Final call after my check | 5 repos installed (9 skills and plugins), 5 trial, 12 copy later, 14 parked, 2 dropped, 4 already in my setup, 76 skip |
 
 The run used 23 agents and about 3.78M tokens in 35.2 minutes, with 0 errors, about 1.35 times the estimate. No stage came back empty.
 
@@ -67,7 +67,7 @@ The run used 23 agents and about 3.78M tokens in 35.2 minutes, with 0 errors, ab
 
 ## What the top of the board would do to a session
 
-In May, the defence I printed was one grep for `allowed-tools: ["*"]` in SKILL.md frontmatter. It still holds, and none of the leads that changed a decision on 1 October came from it. Those sat in <GlossaryTerm term="Hook">hooks</GlossaryTerm>, manifests and installers.
+In May, the defence I printed was one grep for `allowed-tools: ["*"]` in SKILL.md frontmatter. It still holds, and none of the leads that changed a decision on 1 October came from it. Those sat in <GlossaryTerm term="Hook">hooks</GlossaryTerm>, manifests and installers. I read these files on 1 October 2026, and they may have changed since. They are design choices that suit other setups, so each verdict below is "skipped for this setup", nothing stronger.
 
 | Repo | Stars, 1 Oct | What it would do in my setup |
 | --- | --- | --- |
@@ -79,7 +79,7 @@ In May, the defence I printed was one grep for `allowed-tools: ["*"]` in SKILL.m
 | tigerless-labs/autoharness | 6,250 | A hook starts `claude -p --dangerously-skip-permissions` in the background (`src/autoharness/hook/spawn.py`, about line 81) |
 | railwayapp/railway-skills | 327 | A PreToolUse hook titled "Auto-approve Railway API calls"; marked copy-later, the hook will stay out |
 
-I read these files on 1 October 2026, and they may have changed since. These are design choices that suit other setups, so each verdict is "skipped for this setup", nothing stronger. tigerless-labs/seo-ops, seventh on the trending page at 77.43%, comes from the same publisher as autoharness, and I installed it. Judge the skill you are taking, not the account it comes from.
+tigerless-labs/seo-ops, seventh on the trending page at 77.43%, comes from the same publisher as autoharness, and I installed it after its vetter read both of its scripts and found no hook and no code that runs anything it downloads. Judge the skill you are taking, not the account it comes from.
 
 [Chapter 9](/chapters/09-dont-get-owned/) calls supply chain the surface nobody thinks about until it bites: skills and plugins running with your agent's privileges. A hook is that surface with a trigger attached.
 
@@ -100,11 +100,9 @@ So Chapter 39's top tier, "install the whole thing, prune to what fires", needs 
 
 ## Checked against the disk, then pinned
 
-At 23:41, before installing anything, I had Claude check the synthesis's load-bearing claims against the disk. Most held. Two did not.
+At 23:41, before installing anything, I had Claude check the synthesis's load-bearing claims against the disk. Most held. Two did not. A local skill from another of my projects was a dead link, because its folder had moved. The lane that judged it and its vetter saw only the dead link, so the synthesis guessed its purpose from its name, called it a duplicate of a writing skill and made "delete it" the default. One viral lane had found the moved folder and said what it does, and nothing carried that into the verdict. It does something else entirely. I re-pointed the link. The second miss was Trail of Bits' second-opinion skill, which the red team kept. It shells out to the Codex or Gemini command-line tool, and `which` found neither a `codex` nor a `gemini` binary on this Mac's PATH. Three models agreed on both picks. None of them ran `readlink` or `which` against the machine.
 
-A local skill from another of my projects was a dead link, because its folder had moved. No agent could open it, so the synthesis guessed its purpose from its name, called it a duplicate of a writing skill and made "delete it" the default. It does something else entirely. I re-pointed the link. The second miss was Trail of Bits' second-opinion skill, which the red team kept. It shells out to the Codex or Gemini command-line tool, and `which` found neither a `codex` nor a `gemini` binary on this Mac's PATH. Three models agreed on both picks. None of them ran `readlink` or `which` against the machine.
-
-[Chapter 52](/chapters/52-what-agents-cant-see/) found that agents judge what they can read. Here they judged a skill none of them could open, from its name alone.
+[Chapter 52](/chapters/52-what-agents-cant-see/) found that agents judge what they can read. Here three of them judged a skill from its name while a fourth had read it.
 
 <PullQuote>Agreement between models is not a measurement of your machine.</PullQuote>
 
@@ -114,13 +112,11 @@ Each copy is a pinned copy, with a PROVENANCE.md naming the source repo, the com
 
 ## Same prompt, other model
 
-I gave Codex the same request the same day, and its plan was written by 18:09, about five hours before my swarm started. Its headline: "Make the right existing expertise reliably available, and add a skill only when it improves a specific product task."
+I gave Codex the same words the same day, twelve minutes earlier and without the board's address, and its plan was written by 18:09, about five hours before my swarm started. Its headline: "Make the right existing expertise reliably available, and add a skill only when it improves a specific product task."
 
-Its method line reads "Five waves, twenty specialist assessments, three reused workers, and root synthesis." It reasoned per product task where my swarm reasoned per repo. It recommended the React performance and Postgres guidance already cached on the machine, plus one new candidate, a Go concurrency skill for a product written in Go. On 1 October it installed nothing. On 2 October its pilot installed that one skill, callable only by name, confirmed in its own runtime that all three selected skills are found, and ran two smoke tests in which they were used when called by name; it says that is not proof they fire on their own. It also caught two stacks my swarm missed: that Go product, and an app on Nuxt and Vue. It never used this board; its popularity numbers came from skills.sh and GitHub trending instead.
+Its method line reads "Five waves, twenty specialist assessments, three reused workers, and root synthesis." It reasoned per product task where my swarm reasoned per repo. It recommended the React performance and Postgres guidance already cached on the machine, plus one new candidate, a Go concurrency skill for a product written in Go. On 1 October it installed nothing. On 2 October its pilot installed that one skill, callable only by name, confirmed in its own runtime that all three selected skills are found, and ran two smoke tests in which they were used when called by name; it says that is not proof they fire on their own. It also caught two stacks my swarm missed: that Go product, and an app on Nuxt and Vue. It never saw this board; its popularity numbers came from GitHub's own star counts, GitHub Trending and skills.sh instead.
 
-Where the runs met, they agreed. Neither installed the big packs, both read Trail of Bits at the same commit, `82fe822` (I installed two of its plugins; Codex audited it and held off), and both re-pointed the same moved skill.
-
-Both runs had a point. Mine reads from source, installs a few pinned copies and judges them by use after 45 days. For most readers, Codex's rule is the safer default: add a skill only when a task asks for it.
+Where the runs met, they agreed. Neither installed the big packs, both read Trail of Bits at the same commit, `82fe822` (I installed two of its plugins; Codex audited it and held off), and both re-pointed the same moved skill. Both runs had a point. Mine reads from source, installs a few pinned copies and judges them by use after 45 days. For most readers, Codex's rule is the safer default: add a skill only when a task asks for it.
 
 The difference that matters is timing. I read the Codex plan during my retro, just after midnight and about forty minutes after the installs. They were small and reversible, and the comparison still came too late to shape the decision. [Chapter 35](/chapters/35-codex-and-cc/) splits the work into a night shift and a day shift, and that split pays only when one shift reads the other's output before acting. Codex also ran its one new skill in a smoke test. Nothing in my records shows that test for my nine.
 
@@ -128,7 +124,7 @@ The difference that matters is timing. I read the Codex plan during my retro, ju
 
 At about 11:30 on 2 October, a 12-agent review used 711,155 tokens in 5.8 minutes. It asked what breaks in three months, what one feature is missing, which assumptions were never stated and what would have made the session smoother. A refute pass (Fable first, with fallbacks) kept 3 of 5 three-month risks and killed 2. Direct checks confirmed four findings, three about my plan and one about my output:
 
-- The re-pointed skill sits in a dormant project and can break the same way again; a dependency it needs is not running, so it cannot work yet.
+- The re-pointed skill sits in a dormant project and can break the same way again.
 - The plan said to remove any install with zero uses after 14 days, and nothing would have fired that review.
 - A vetter's warning, "run it on a branch, never a dirty main", sat in PROVENANCE.md, which the agent never loads. A one-line guard went into the skill.
 - The raw output saved beside the redacted report had never been through the same redaction. It has been now.
@@ -145,7 +141,7 @@ The review now waits 45 days and needs zero uses plus no task the skill should h
 
 ## What the board rewards, if you publish
 
-The three viral lanes reported, and I have not decided which of my skills to publish, so this chapter names none. The catalogue does show what the board rewards.
+The three viral lanes came back with candidates, and I have not decided which of my skills to publish, so this chapter names none. The catalogue does show what the board rewards.
 
 The home page rewards stars already earned: place 10 had 91,679 and place 50 had 11,695. The trending page rewards a percentage, so an 810-star repo can lead it. No repo can trend in its first seven days; until then only the new page shows it, where first place had 5,746 stars and 20th had 808.
 
@@ -153,9 +149,9 @@ The gaps are the useful part. Design was the largest category, with 69 repos; Sa
 
 Stars bring a repo to the board. The listing and the hooks are what every user's machine carries afterwards, so publish short descriptions and no hook you do not need.
 
-## Before you install: the check
+## One clone, four checks, no install
 
-Both parts were checked on 2 October. Each bash block passed `bash -n`, and the vetting script ran against a local fixture repo with planted risks: it left the image out, counted both skills and flagged every planted line.
+Both parts were checked on 2 October. Each bash block passed `bash -n`, and the vetting script ran against a local fixture repo with planted risks: it left the fixture's image out of the clone, counted both of its skills and flagged every planted line.
 
 Run `bash vet-skill-repo.sh https://github.com/OWNER/REPO [commit]`. With no commit it checks the default branch and prints the SHA to pin. It needs a recent git (one with `sparse-checkout --no-cone`) and python3.
 
@@ -240,9 +236,7 @@ lead "decode and run"          'base64[[:space:]]+(-d|--decode)|eval[[:space:]]+
 echo; echo "Read every lead. To keep one skill, copy only its folder from $DEST at $SHA."
 ```
 
-A lead is a line to open and read, and most leads are noise.
-
-Then count what fires. Save this as `~/.claude/scripts/log-skill-usage.sh`, a <GlossaryTerm term="PreToolUse">PreToolUse</GlossaryTerm> hook on the Skill tool. It reads stdin, builds each line with `json.dumps` and always exits 0, so a logging failure never blocks a skill. Fed three test payloads, it wrote a line only for the real one.
+Then count what fires. Save this as `~/.claude/scripts/log-skill-usage.sh`, a <GlossaryTerm term="PreToolUse">PreToolUse</GlossaryTerm> hook on the Skill tool, written out here for publication. It reads stdin, builds each line with `json.dumps` and always exits 0, so a logging failure never blocks a skill. Fed three test payloads, it wrote a line only for the real one.
 
 ```bash
 #!/usr/bin/env bash
@@ -294,13 +288,13 @@ This is the third sighting. In May, six installs by reputation left four broken.
 
 The swarm took 23 agents and about 3.78M tokens in 35.2 minutes, about 1.35 times my estimate of 2.8M. The morning review took 12 agents and 711,155 tokens in 5.8 minutes. Nine installs came out of it: seven copies adding about 2,100 characters of description, and two plugins with no hooks.
 
-What is missing is missing on purpose. I did not meter the main session's tokens, money or time per agent, so the totals undercount. I did not test whether Claude Code trims the longest skill lists, which is why listing figures stay in characters. The installs are days old, so there is no speed or quality claim, and nothing shows yet that each of the nine fires on its own trigger.
+What is missing is missing on purpose. I did not meter the main session's tokens, money or time per agent, so the totals undercount. I did not test whether Claude Code trims the longest skill lists, which is why listing figures stay in characters. The installs are hours old, so there is no speed or quality claim, and nothing shows yet that each of the nine fires on its own trigger.
 
 One board, one night, one machine.
 
 ## The closer
 
-The ask was to be "even more efficient". The efficient result was small: nine pinned, removable installs and about 2,100 characters, plus a counter that works and a review date something will read. The swarm earned its tokens by saying no for reasons it could cite. The spot check and the morning review earned theirs by catching what the models agreed on and the machine contradicted.
+The ask was to be "even more efficient". The efficient result was small: nine pinned, removable installs, plus a counter that works and a review date something will read. The swarm earned its tokens by saying no for reasons it could cite. The spot check and the morning review earned theirs by catching what the models agreed on and the machine contradicted.
 
 [Chapter 25](/chapters/25-evals-or-hope/) is about an output that stayed broken because nothing was watching it. A skill nobody counts has the same gap, and so does a counter nobody tested.
 
