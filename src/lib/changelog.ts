@@ -25,7 +25,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Chapter 56: Read Before You Install. A public skill leaderboard ranked 700 repos on 1 October; code shortlisted 173, a 23-agent swarm read 118 from source, and nine skills and plugins went in as copies pinned to the commit a vetter read.',
       'What the board rewards: the home page ranks by total stars and the trending page by 7-day growth in percent, so an 810-star repo led it; no repo matched DMARC, SPF or DKIM.',
       'Why the most-starred repos were skipped, read from their own files: hooks at session and subagent start, an installer that writes into CLAUDE.md, a background claude -p.',
-      'What three models agreed on and a direct check overturned, the same request answered by Codex, and the morning-after review that moved the use check to 45 days.',
+      'What three models agreed on and a direct check overturned, what Codex did with the same words minus the board\'s address, and the morning-after review that moved the use check to 45 days.',
       'Three charts, plus a copy-paste check that counts a repo\'s skills, listing characters, hooks and risky lines before you install, and a hook that logs every skill use.',
     ],
     receipts: [
