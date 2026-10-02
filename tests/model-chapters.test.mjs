@@ -82,10 +82,10 @@ test('chapter 53 is wired: neighbours, every figure and every glossary key', () 
 
 const guides55 = ['54-claude-opus-5-5', '55-claude-sonnet-5-5'];
 
-test('chapters 54 and 55 are wired: neighbours, Part VI, Team + Tier, the latest edition banner, figures and glossary keys', () => {
+test('chapters 54 and 55 are wired: neighbours, Part VI, Team + Tier, figures and glossary keys', () => {
   assert.equal(getNeighbors(guides55[0]).prev.slug, '53-first-real-caller');
   assert.equal(getNeighbors(guides55[0]).next.slug, guides55[1]);
-  assert.equal(getNeighbors(guides55[1]).next, null);
+  assert.equal(getNeighbors(guides55[1]).next.slug, '56-skill-leaderboard');
   for (const slug of guides55) {
     assert.equal(PARTS.find(part => part.slugs.includes(slug)).key, 'VI', `${slug}: sits with the other model guides in Part VI`);
     assert.ok(SECTIONS.find(section => section.key === 'resources').slugs.includes(slug), `${slug}: listed under Team + Tier`);
@@ -99,9 +99,30 @@ test('chapters 54 and 55 are wired: neighbours, Part VI, Team + Tier, the latest
       assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
     }
   }
-  assert.equal(CHANGELOG[0].edition, 'Edition 17.1');
-  assert.equal(CHANGELOG[0].date, '2026-09-29');
-  assert.equal(CHANGELOG[0].bannerHref, `/chapters/${guides55[0]}/`, 'the homepage banner must point at the newest guides');
+});
+
+test('chapter 56 is wired: neighbours, Part VI and AI Agents beside Chapter 39, the latest edition banner, figures and glossary keys', () => {
+  const slug = '56-skill-leaderboard';
+  assert.equal(getNeighbors(slug).prev.slug, '55-claude-sonnet-5-5');
+  assert.equal(getNeighbors(slug).next, null);
+  assert.equal(PARTS.find(part => part.slugs.includes(slug)).key, 'VI', 'the chapter hero shows the Part VI pill');
+  const agents = SECTIONS.find(section => section.key === 'agents');
+  assert.ok(agents.slugs.includes(slug) && agents.slugs.includes('39-skills-you-should-steal'), 'listed under AI Agents with the chapter it follows up');
+  const content = read(`src/content/chapters/${slug}.mdx`);
+  // The board's numbers are a one-day snapshot; without the dated callout they read as current.
+  assert.match(content, /title="Evidence status: 2026-10-02"/, 'the evidence callout must carry the snapshot date');
+  assert.ok(content.includes('/chapters/39-skills-you-should-steal/'), 'the sequel must link back to Chapter 39');
+  const ids = [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
+  assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three charts are placed');
+  for (const id of ids) {
+    assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+  }
+  for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
+  }
+  assert.equal(CHANGELOG[0].edition, 'Edition 18');
+  assert.equal(CHANGELOG[0].date, '2026-10-02');
+  assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
   assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
 });
