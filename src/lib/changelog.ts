@@ -16,11 +16,28 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 18',
+    date: '2026-10-02',
+    tagline: 'Read before you install: a skill leaderboard, 118 repos read from source by a 23-agent swarm, and nine pinned installs.',
+    bannerText: 'New: Read Before You Install. 118 skill repos read from source, nine installed.',
+    bannerHref: '/chapters/56-skill-leaderboard/',
+    shipped: [
+      'Chapter 56: Read Before You Install. A public skill leaderboard ranked 700 repos on 1 October; code shortlisted 173, a 23-agent swarm read 118 from source, and nine skills and plugins went in as copies pinned to the commit a vetter read.',
+      'What the board rewards: the home page ranks by total stars and the trending page by 7-day growth in percent, so an 810-star repo led it; no repo matched DMARC, SPF or DKIM.',
+      'Why the most-starred repos were skipped, read from their own files: hooks at session and subagent start, an installer that writes into CLAUDE.md, a background claude -p.',
+      'What three models agreed on and a direct check overturned, what Codex did with the same words minus the board\'s address, and the morning-after review that moved the use check to 45 days.',
+      'Three charts, plus a copy-paste check that counts a repo\'s skills, listing characters, hooks and risky lines before you install, and a hook that logs every skill use.',
+    ],
+    receipts: [
+      { label: 'Ranked on the board, 1 Oct', value: '700 repos, 36,328 skills tracked' },
+      { label: 'Swarm', value: '23 agents, about 3.78M tokens, 35.2 minutes, 0 errors' },
+      { label: 'Skill-list cost', value: 'about 2,100 characters installed, against 675,367 for the 40 picks installed whole' },
+    ],
+  },
+  {
     edition: 'Edition 17.1',
     date: '2026-09-29',
     tagline: 'Opus 5.5 and Sonnet 5.5 field guides: checked sources, plus the same review run on both models.',
-    bannerText: 'New field guides: Claude Opus 5.5 and Sonnet 5.5, with the same review run on both.',
-    bannerHref: '/chapters/54-claude-opus-5-5/',
     shipped: [
       'Chapter 54: Claude Opus 5.5. The effort dial and the Claude Code setting it ignores, early stops on progress updates, refusals that arrive as HTTP 200, the API breaking changes, and the cost of a finished job.',
       'Chapter 55: Claude Sonnet 5.5. Effort defaults by surface, the five breaking changes from Sonnet 5, refusal and fallback rules, and when the cheaper model is enough.',

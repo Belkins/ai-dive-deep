@@ -62,6 +62,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 53, slug: '53-first-real-caller', title: 'The First Real Caller', subtitle: 'A Spelled Email, a Busy Signal and a Grader That Was Too Kind' },
   { number: 54, slug: '54-claude-opus-5-5', title: 'Claude Opus 5.5 as the Default', subtitle: 'The Effort Dial, Early Stops, and a Week of Receipts' },
   { number: 55, slug: '55-claude-sonnet-5-5', title: 'Claude Sonnet 5.5 for Everyday Work', subtitle: 'Same-Task Receipts Against Opus 5.5, and When the Cheaper Model Is Enough' },
+  { number: 56, slug: '56-skill-leaderboard', title: 'Read Before You Install', subtitle: '700 Ranked Repos, 118 Read From Source and Nine Installs' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -109,7 +110,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part VI — The Frontier and the Tier',
     tagline: 'Agents that talk, write, browse, and the honest tier list.',
     intro: 'Voice, browser, persona, archetype agents. Two-agent infrastructure. Frameworks beyond Claude Code. Team adoption when twelve people need to use it. Failure stories with dollar amounts. The tier list, ranked without diplomatic phrasing. Plus the community skill ecosystem — what to steal and what to publish.',
-    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '42-codex-on-a-loop', '43-codex-saviour', '36-frameworks-beyond', '39-skills-you-should-steal', '26-team-adoption', '28-failure-receipts', '24-tier-list', '49-gpt-6-astra', '50-claude-fable-5-1', '51-jev-system-one', '54-claude-opus-5-5', '55-claude-sonnet-5-5'],
+    slugs: ['10-wild-stuff', '27-voice-agents', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '35-codex-and-cc', '42-codex-on-a-loop', '43-codex-saviour', '36-frameworks-beyond', '39-skills-you-should-steal', '26-team-adoption', '28-failure-receipts', '24-tier-list', '49-gpt-6-astra', '50-claude-fable-5-1', '51-jev-system-one', '54-claude-opus-5-5', '55-claude-sonnet-5-5', '56-skill-leaderboard'],
   },
 ];
 
@@ -147,7 +148,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'agents',
     label: 'AI Agents',
     description: 'The wild stuff. Rick archetypes. Browser agents. Persona agents. Frameworks beyond Claude Code.',
-    slugs: ['10-wild-stuff', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '36-frameworks-beyond', '35-codex-and-cc', '42-codex-on-a-loop', '43-codex-saviour', '27-voice-agents', '39-skills-you-should-steal'],
+    slugs: ['10-wild-stuff', '32-archetypes-rick', '33-browser-agents', '34-write-on-behalf', '36-frameworks-beyond', '35-codex-and-cc', '42-codex-on-a-loop', '43-codex-saviour', '27-voice-agents', '39-skills-you-should-steal', '56-skill-leaderboard'],
   },
   {
     key: 'building',

@@ -1,0 +1,301 @@
+---
+number: 56
+slug: "56-skill-leaderboard"
+title: "Read Before You Install"
+subtitle: "700 Ranked Repos, 118 Read From Source and Nine Installs"
+tldr: "A skill leaderboard ranks attention; what a skill costs sits where the board does not look. On 1 October I pointed a 23-agent swarm at one with 700 ranked repos. It read 118 repos from source, and I installed nine things: seven skills copied at the commit a vetter read and two pinned plugins. The seven add about 2,100 characters of description to every session's skill list; the 40 repos the lanes picked, installed whole, would have added 675,367. A review the next morning found gaps in my own plan, and nothing here measures a gain yet. Read the install, not the board."
+seoDescription: "A 23-agent swarm on a public skill leaderboard: 118 repos read from source, nine pinned installs and the hooks the star counts never show."
+keyConcepts: ["Skill listing", "Pinned copy", "Supply chain", "Hook", "Swarm"]
+readingMinutes: 15
+---
+
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+At 17:36 on 1 October I pasted the address of [The Skill Leaderboard](https://www.skillleaderboard.com/), a public ranking of agent-skill repos, into Claude Code. I asked for the board's most trending, relevant and starred skills, "to be even more efficient for us and all products, setups etc", read by a swarm of agents, and for which of my own skills could go viral there. That day the board ranked 700 repos and tracked 36,328 skills. By 23:48 nine things were installed on my Mac. Not one came from the home page's top ten.
+
+A leaderboard ranks attention. What a skill costs sits where no leaderboard looks: in the description it adds to every session's skill list, and in what its hooks and installers do on your machine. Most of the lessons came the next morning.
+
+<Callout type="note" title="Evidence status: 2026-10-02">
+This is one Claude Code session on Opus 5.5, from 17:36 on 1 October to early afternoon on 2 October, times in BST, plus Codex's work on the same words, sent without the board's address, on 1 and 2 October, read from its own output files. Board figures come from the board's catalogue endpoint, captured on 1 October; repo figures from 120 fresh clones; token totals from the workflow usage blocks; usage counts from my local skill-usage log. I did not measure the main session's tokens, money, any gain from the installs or whether Claude Code trims the longest skill lists, so listing figures are characters, never tokens. Client names, the name of one local skill and my private repos are left out, and every star count is as of 1 October.
+</Callout>
+
+## Two leaderboards in one list
+
+In May, [Chapter 39](/chapters/39-skills-you-should-steal/) sorted the community libraries into tiers after six installs by reputation, four of which broke on first use. That chapter said where to steal from. This one counts what taking costs, with a <GlossaryTerm term="Swarm">swarm</GlossaryTerm> reading and code counting.
+
+The board's llms.txt points to a JSON endpoint, which worked, and a public source repo, which returned "not found". Read by code from the page payloads, the home page ranks by total GitHub stars. The trending page ranks by growth over seven days, in percent, 50 to a page. The new page lists, by stars, the 45 repos created between 18 August and 30 September.
+
+The two lists answer different questions. On the home page, obra/superpowers led with 293,708 stars, up 0.91% in the week. On the trending page, scenario-labs/skills led with 810 stars, up 2,150%. The trending top ten needed 50.29% in a week, 50th place needed 9.45%, and the smallest repo on that page had 229 stars. On the star ranking, place 100 had 4,299 and place 700 had 23.
+
+<ScreenshotPlaceholder
+  id="56-skill-leaderboard-1"
+  caption="Two leaderboards in one list: total stars against 7-day growth"
+  note="Built from the board's catalogue endpoint, captured 1 Oct 2026. Each dot is a ranked repo with a 7-day gain above zero; the home-page top 10 and the trending top 10 are marked. Log scales on both axes. One day's snapshot, not a trend."
+  ratio="16/9"
+/>
+
+A repo younger than seven days has no 7-day percentage, so it cannot trend yet. rehan-remade/universal-modder was created on 30 September and had 1,276 stars a day later, and the trending page had no place for it. Because stars can be faked, the board adds a Traction Score with an unpublished formula. Neither list says whether a skill fires or what it costs to keep. Trending's leader was also the sixth-heaviest of the 120 repos I cloned: 128 skills and 59,589 characters of description.
+
+## From 700 to nine, code first
+
+Code did everything deterministic, and models got only the judgment. Code built a shortlist of 173 repos from five signals: most stars, biggest 7-day gain, highest Traction Score, new and fast, and fit to my stack. An automatic lane assignment then dropped repos that mattered, such as App Store preflight, Playwright and the sales skills. So I curated the shortlist by hand into nine lanes covering 118 repos, from engineering and security to mobile and skill-building.
+
+Of 121 clone attempts (the 118, two fast-growing repos read for the viral question and the board's own source repo), 120 succeeded, with images and video left out; the miss was the board's source repo. Code counted each repo's skills, description characters, manifests, hooks and scripts, and wrote risky-pattern leads as file:line for the vetters. Most leads were noise; a few were real.
+
+My own rule asks one question before any run estimated at 700,000 tokens or more. The estimate was about 2.8M; I chose the full swarm, which started at 23:06.
+
+Nine lane assessors on Opus 5.5 judged each repo against the skills, plugins and rules I already run: adopt, trial, copy one skill or skip. One security vetter per lane, on a different model (`claude-opus-5`), read every file a pick would bring in and checked the assessor's claims against it. Three more lanes took the viral question. A Fable red team challenged every pick, and a Fable synthesis wrote the report.
+
+| Stage | Result |
+| --- | --- |
+| 9 lane assessors, 118 repos | 3 adopt, 14 trial, 23 copy one skill, 78 skip |
+| 9 security vetters, 40 picks | 28 caution, 12 clean |
+| Fable red team, 40 picks | 18 kept, 20 downgraded, 2 dropped |
+| Final call after my check | 5 repos installed (9 skills and plugins), 5 trial, 12 copy later, 14 parked, 2 dropped, 4 already in my setup, 76 skip |
+
+The run used 23 agents and about 3.78M tokens in 35.2 minutes, with 0 errors, about 1.35 times the estimate. No stage came back empty.
+
+<ScreenshotPlaceholder
+  id="56-skill-leaderboard-2"
+  caption="From 700 to 9: what happened to the ranked repos between the board and my machine"
+  note="Built from the board's catalogue and the swarm's result file, 1 Oct 2026. One linear scale; 5 repos became 9 installed skills and plugins. Counts of repos, not a quality score."
+  ratio="16/9"
+/>
+
+## What the top of the board would do to a session
+
+In May, the defence I printed was one grep for `allowed-tools: ["*"]` in SKILL.md frontmatter. It still holds, and none of the leads that changed a decision on 1 October came from it. Those sat in <GlossaryTerm term="Hook">hooks</GlossaryTerm>, manifests and installers. I read these files on 1 October 2026, and they may have changed since. They are design choices that suit other setups, so each verdict below is "skipped for this setup", nothing stronger.
+
+| Repo | Stars, 1 Oct | What it would do in my setup |
+| --- | --- | --- |
+| obra/superpowers | 293,708 | A session-start hook makes the agent invoke a skill before any response; duplicates my planning skills |
+| multica-ai/andrej-karpathy-skills | 216,125 | Already the source of the rules file my setup loads every session |
+| DietrichGebert/ponytail | 149,858 | A hook injected into every subagent start, so into every workflow stage |
+| Graphify-Labs/graphify | 122,952 | `graphify install` writes into `~/.claude/CLAUDE.md` (`graphify/install.py`, about line 867) |
+| JuliusBrussee/caveman | 108,672 | Shortens replies; my cost is cache writes, not reply length |
+| tigerless-labs/autoharness | 6,250 | A hook starts `claude -p --dangerously-skip-permissions` in the background (`src/autoharness/hook/spawn.py`, about line 81) |
+| railwayapp/railway-skills | 327 | A PreToolUse hook titled "Auto-approve Railway API calls"; marked copy-later, the hook will stay out |
+
+tigerless-labs/seo-ops, seventh on the trending page at 77.43%, comes from the same publisher as autoharness, and I installed it after its vetter read both of its scripts and found no hook and no code that runs anything it downloads. Judge the skill you are taking, not the account it comes from.
+
+[Chapter 9](/chapters/09-dont-get-owned/) calls supply chain the surface nobody thinks about until it bites: skills and plugins running with your agent's privileges. A hook is that surface with a trigger attached.
+
+<PullQuote>A hook runs on every session that fires its event, whether or not you ever ask for the skill.</PullQuote>
+
+The second cost is quieter. Every installed <GlossaryTerm term="Skill">skill</GlossaryTerm> puts its name and description into the skill listing that Claude Code builds for each session, so the model can pick one. Chapter 39 named the cost, "every loaded skill costs context budget on session start", without its size.
+
+<ScreenshotPlaceholder
+  id="56-skill-leaderboard-3"
+  caption="What a whole install would add to every session's skill list"
+  note="SKILL.md description characters, counted by code from fresh clones on 1 Oct 2026: the six heaviest of 120 clones, the 40 picks installed whole and my 7 copies (plugins not counted). Log scale. Characters, not tokens; trimming of long lists was not tested."
+  ratio="16/9"
+/>
+
+The heaviest clone, sickn33/agentic-awesome-skills, holds 8,125 skills and 1,215,047 characters of description. Two of Chapter 39's tier-list libraries sit in the top four: alirezarezvani/claude-skills at 846 skills and 373,441 characters, ComposioHQ/awesome-claude-skills at 864 and 94,430. All 40 picks installed whole would add 1,604 skills and 675,367 characters. What went in adds about 2,100, about 320 times less; the exact figure moves by a few characters with how a counter reads YAML block markers.
+
+So Chapter 39's top tier, "install the whole thing, prune to what fires", needs a number beside it. For a small library it still works. For a collection of hundreds, copy what you need at a commit, because every session pays until the prune happens.
+
+## Checked against the disk, then pinned
+
+At 23:41, before installing anything, I had Claude check the synthesis's load-bearing claims against the disk. Most held. Two did not. A local skill from another of my projects was a dead link, because its folder had moved. The lane that judged it and its vetter saw only the dead link, so the synthesis guessed its purpose from its name, called it a duplicate of a writing skill and made "delete it" the default. One viral lane had found the moved folder and said what it does, and nothing carried that into the verdict. It does something else entirely. I re-pointed the link. The second miss was Trail of Bits' second-opinion skill, which the red team kept. It shells out to the Codex or Gemini command-line tool, and `which` found neither a `codex` nor a `gemini` binary on this Mac's PATH. Three models agreed on both picks. None of them ran `readlink` or `which` against the machine.
+
+[Chapter 52](/chapters/52-what-agents-cant-see/) found that agents judge what they can read. Here three of them judged a skill from its name while a fourth had read it.
+
+<PullQuote>Agreement between models is not a measurement of your machine.</PullQuote>
+
+The installs took three minutes, from 23:45. Seven skills were copied into `~/.claude/skills` from the commit the vetter had read: humanizer (blader/humanizer, `225a6f3`), fixing-accessibility and fixing-metadata (ibelick/ui-skills, `ebf5f26`), seo-ops (tigerless-labs/seo-ops, `c637138`) and audit-website-aeo, improve-aeo-geo and audit-content (onvoyage-ai/gtm-engineer-skills, `3777930`). seo-ops got its own Python environment. Two Trail of Bits plugins, insecure-defaults 2.0.3 and variant-analysis 2.0.4, came from a local copy of their marketplace pinned at `82fe822`. Neither ships a hook.
+
+Each copy is a pinned copy, with a PROVENANCE.md naming the source repo, the commit and how to remove it. Chapter 39 offered pinning "if you want stability over freshness" and otherwise suggested `git pull`. Here the pin is the default: nothing updates itself into code nobody read, and moving a pin means reading the new commit first.
+
+## Same words, other model
+
+I gave Codex the same words the same day, twelve minutes earlier and without the board's address, and its plan was written by 18:09, about five hours before my swarm started. Its headline: "Make the right existing expertise reliably available, and add a skill only when it improves a specific product task."
+
+Its method line reads "Five waves, twenty specialist assessments, three reused workers, and root synthesis." It reasoned per product task where my swarm reasoned per repo. It recommended the React performance and Postgres guidance already cached on the machine, plus one new candidate, a Go concurrency skill for a product written in Go. On 1 October it installed nothing. On 2 October its pilot installed that one skill, callable only by name, confirmed in its own runtime that all three selected skills are found, and ran two smoke tests in which they were used when called by name; it says that is not proof they fire on their own. It also caught two stacks my swarm missed: that Go product, and an app on Nuxt and Vue. It never saw this board; its popularity numbers came from GitHub's own star counts, GitHub Trending and skills.sh instead.
+
+Where the runs met, they agreed. Neither installed the big packs, both read Trail of Bits at the same commit, `82fe822` (I installed two of its plugins; Codex audited it and held off), and both re-pointed the same moved skill. Both runs had a point. Mine reads from source, installs a few pinned copies and judges them by use after 45 days. For most readers, Codex's rule is the safer default: add a skill only when a task asks for it.
+
+The difference that matters is timing. I read the Codex plan during my retro, just after midnight and about forty minutes after the installs. They were small and reversible, and the comparison still came too late to shape the decision. [Chapter 35](/chapters/35-codex-and-cc/) splits the work into a night shift and a day shift, and that split pays only when one shift reads the other's output before acting. Codex also ran its one new skill in a smoke test. Nothing in my records shows that test for my nine.
+
+## The morning after: four questions
+
+At about 11:30 on 2 October, a 12-agent review used 711,155 tokens in 5.8 minutes. It asked what breaks in three months, what one feature is missing, which assumptions were never stated and what would have made the session smoother. A refute pass (Fable first, with fallbacks) kept 3 of 5 three-month risks and killed 2. Direct checks confirmed four findings, three about my plan and one about my output:
+
+- The re-pointed skill sits in a dormant project and can break the same way again.
+- The plan said to remove any install with zero uses after 14 days, and nothing would have fired that review.
+- A vetter's warning, "run it on a branch, never a dirty main", sat in PROVENANCE.md, which the agent never loads. A one-line guard went into the skill.
+- The raw output saved beside the redacted report had never been through the same redaction. It has been now.
+
+Refuted: the pipeline survives a reboot, and every pin matched upstream that day.
+
+The 14-day rule also trusted a counter. My skill-usage hook read an environment variable Claude Code never sets, so from 3 June to 1 September it logged nothing. Since the fix, one of my most-used skills logged 14 uses on 8 active days, with a median gap of 1 day and a longest gap of 21. A 14-day window could have flagged it. The swarm's own 45-day window, which showed three of my skills at 1, 0 and 0 uses, starts about two weeks before the counter worked.
+
+In June, three gstack skills with 283 KB of SKILL.md between them showed zero fires in seven weeks "in both telemetry sources", and two were archived. One source was this broken hook. The decision may still have been right, on half its claimed evidence.
+
+<PullQuote>Before you prune by fires, prove the counter fires.</PullQuote>
+
+The review now waits 45 days and needs zero uses plus no task the skill should have handled. A session-start check now prints any review date that has passed. The review also proposed routing recall: join each typed prompt to the skill that fired after it, to see whether a skill was needed and lost to another. I have not built it.
+
+## What the board rewards, if you publish
+
+The three viral lanes came back with candidates, and I have not decided which of my skills to publish, so this chapter names none. The catalogue does show what the board rewards.
+
+The home page rewards stars already earned: place 10 had 91,679 and place 50 had 11,695. The trending page rewards a percentage, so an 810-star repo can lead it. No repo can trend in its first seven days; until then only the new page shows it, where first place had 5,746 stars and 20th had 808.
+
+The gaps are the useful part. Design was the largest category, with 69 repos; Sales had 3. A regex over every repo's name, tagline and summary found 0 matches for DMARC, SPF, DKIM, warmup, inbox placement or blocklist, 1 for deliverability and 2 for cold email or cold outbound. Chapter 39 named deliverability as a vertical worth publishing, and on this board it is still open.
+
+Stars bring a repo to the board. The listing and the hooks are what every user's machine carries afterwards, so publish short descriptions and no hook you do not need.
+
+## One clone, four checks, no install
+
+Both parts were checked on 2 October. Each bash block passed `bash -n`, and the vetting script ran against a local fixture repo with planted risks: it left the fixture's image out of the clone, counted both of its skills and flagged every planted line.
+
+Run `bash vet-skill-repo.sh https://github.com/OWNER/REPO [commit]`. With no commit it checks the default branch and prints the SHA to pin. It needs a recent git (one with `sparse-checkout --no-cone`) and python3.
+
+```bash
+#!/usr/bin/env bash
+# vet-skill-repo.sh <https-repo-url> [commit]
+# Look before you install. Clones one skill repo into a temp folder at one commit, leaves images
+# and video out, and prints what a whole install would bring: skills, listing characters, plugin
+# manifests, hooks and risky-pattern leads as file:line. Copies nothing into ~/.claude.
+set -euo pipefail
+URL="${1:?usage: vet-skill-repo.sh <https-repo-url> [commit]}"
+REF="${2:-origin/HEAD}"
+T="${TMPDIR:-/tmp}"
+WORK="$(mktemp -d "${T%/}/skillvet.XXXXXX")"
+DEST="$WORK/repo"
+
+# 1. Clone without media, then check out exactly one commit.
+git clone --quiet --filter=blob:none --no-checkout "$URL" "$DEST"
+git -C "$DEST" sparse-checkout set --no-cone '/*' \
+  '!*.png' '!*.jpg' '!*.jpeg' '!*.gif' '!*.webp' '!*.avif' '!*.ico' \
+  '!*.mp4' '!*.mov' '!*.webm' '!*.mp3' '!*.wav' '!*.psd' '!*.zip'
+git -C "$DEST" checkout --quiet --detach "$REF"
+SHA="$(git -C "$DEST" rev-parse HEAD)"
+echo "repo:   $URL"
+echo "commit: $SHA ($(git -C "$DEST" log -1 --format=%cs))"
+echo "folder: $DEST"
+
+# 2. Skills and the characters their descriptions add to every session's skill listing.
+echo; echo "--- skills and listing cost"
+python3 - "$DEST" <<'PY'
+import os, re, sys
+root = sys.argv[1]
+skills, chars, rows = 0, 0, []
+for d, dirs, files in os.walk(root):
+    dirs[:] = [x for x in dirs if x != ".git"]
+    if "SKILL.md" not in files:
+        continue
+    text = open(os.path.join(d, "SKILL.md"), encoding="utf-8", errors="replace").read()
+    m = re.match(r"---\s*\n(.*?)\n---", text, re.S)
+    desc, grab = [], False
+    for line in (m.group(1).splitlines() if m else []):
+        if re.match(r"description\s*:", line):
+            grab = True
+            rest = line.split(":", 1)[1].strip()
+            if rest not in ("", ">", "|", ">-", "|-"):
+                desc.append(rest.strip("'\""))
+        elif grab and (line.startswith((" ", "\t")) or not line.strip()):
+            desc.append(line.strip())
+        elif grab:
+            break
+    n = len(" ".join(x for x in desc if x))
+    skills += 1
+    chars += n
+    rows.append((n, os.path.relpath(d, root)))
+print(f"SKILL.md files: {skills}   description characters: {chars:,}")
+for n, p in sorted(rows, reverse=True)[:10]:
+    print(f"  {n:>6,}  {p}")
+PY
+
+# 3. Plugin manifests and hooks.
+echo; echo "--- plugin manifests and hooks"
+find "$DEST" -path "$DEST/.git" -prune -o -type f \
+  \( -name plugin.json -o -name marketplace.json -o -name hooks.json -o -name settings.json \) -print \
+  | sed "s|^$DEST/||"
+grep -rnIE --exclude-dir=.git \
+  '"(SessionStart|UserPromptSubmit|PreToolUse|PostToolUse|SubagentStart|Stop)"' "$DEST" \
+  | sed "s|^$DEST/||" | cut -c1-180 | head -20 || true
+
+# 4. Risky-pattern leads. A lead is a line to read, not a verdict.
+echo; echo "--- risky-pattern leads (file:line)"
+lead() {
+  echo "[$1]"
+  grep -rnIE --exclude-dir=.git "$2" "$DEST" | sed "s|^$DEST/||" | cut -c1-180 | head -15 || true
+}
+lead "pipe to shell"           '(curl|wget)[^|]*[|][[:space:]]*(sudo[[:space:]]+)?(ba|z)?sh'
+lead "permission bypass"       'dangerously-skip-permissions|bypassPermissions|permissionDecision"?[[:space:]]*:[[:space:]]*"allow"'
+lead "wildcard tools"          'allowed-tools:.*[*]'
+lead "credential paths"        '[.]ssh/|[.]aws/credentials|id_rsa|[.]netrc|find-generic-password|[.]env[^a-z]'
+lead "writes agent config"     'CLAUDE[.]md|AGENTS[.]md|[.]claude/settings'
+lead "background agent spawn"  'claude[[:space:]]+-p|nohup|disown'
+lead "decode and run"          'base64[[:space:]]+(-d|--decode)|eval[[:space:]]+"?[$][(]'
+echo; echo "Read every lead. To keep one skill, copy only its folder from $DEST at $SHA."
+```
+
+Then count what fires. Save this as `~/.claude/scripts/log-skill-usage.sh`, a <GlossaryTerm term="PreToolUse">PreToolUse</GlossaryTerm> hook on the Skill tool, written out here for publication. It reads stdin, builds each line with `json.dumps` and always exits 0, so a logging failure never blocks a skill. Fed three test payloads, it wrote a line only for the real one.
+
+```bash
+#!/usr/bin/env bash
+# ~/.claude/scripts/log-skill-usage.sh: PreToolUse hook, matcher "Skill".
+# Claude Code sends the hook input as JSON on stdin; the skill name is tool_input.skill.
+# Do not read $CLAUDE_TOOL_INPUT: Claude Code never sets it. Appends one JSONL line per use.
+# Always exits 0, so a logging failure can never block the skill.
+LOG="${SKILL_LOG:-$HOME/.claude/analytics/skill-usage.jsonl}"
+mkdir -p "$(dirname "$LOG")" 2>/dev/null
+python3 -c '
+import json, sys, time
+try:
+    d = json.load(sys.stdin)
+except Exception:
+    sys.exit(0)
+name = (d.get("tool_input") or {}).get("skill", "")
+if name:
+    print(json.dumps({"skill": name, "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                      "cwd": d.get("cwd", ""), "source": "hook"}))
+' >> "$LOG" 2>/dev/null
+exit 0
+```
+
+Register it in `~/.claude/settings.json` as a `PreToolUse` entry with matcher `"Skill"` and one hook of type `"command"` running `bash ~/.claude/scripts/log-skill-usage.sh`, merged into any existing `PreToolUse` array. Call one skill, then run `tail -1 ~/.claude/analytics/skill-usage.jsonl`. An empty file means the counter is broken. Before any "zero uses, remove it" decision, set the window longer than the longest gap of a skill you know you need.
+
+## The ledger
+
+Like the receipts in [Chapter 28](/chapters/28-failure-receipts/), here are the night and the morning after side by side.
+
+| Finding | Where it lived | Caught by | What it became |
+| --- | --- | --- | --- |
+| One collection adding 1,215,047 characters to the skill list | The session's skill listing | Code over 120 clones | Copies only, about 2,100 characters |
+| Hooks at session and subagent start, an auto-approve hook, a background `claude -p` | Hooks and installers | Vetters reading code-made leads | Skipped, or deferred to a copy without the hook |
+| A local skill called a duplicate from its name | A dead link on disk | My spot check before installing | Re-pointed, not deleted |
+| A pick that needs tools this Mac lacks | PATH | `which` | Skipped |
+| A narrower plan and two missed stacks | Another model's output folder | My retro, after midnight | Compared after the installs |
+| A 14-day review nothing would fire, on a broken counter | A memory note and a hook | The four-question review | 45 days, two conditions, a session-start check |
+| A vetter's warning in a file the agent never loads | PROVENANCE.md | The four-question review | A one-line guard in the skill |
+
+Read the second column. Not one row lived in a star count, the only thing the board measures. Code and vetters caught the first two before anything went in. The rest needed someone to check the machine or question my own plan.
+
+This is the third sighting. In May, six installs by reputation left four broken. In June, three gstack skills sat unfired with 283 KB of SKILL.md. In October, the top of the board was skipped for its hooks and installers.
+
+<Callout type="warn" title="The rule">
+**Read the install, not the board.** Count the listing characters, read every hook and installer, copy at the commit you read and check the machine yourself before acting on what models agree about it.
+</Callout>
+
+## What it cost, and what I can't show you
+
+The swarm took 23 agents and about 3.78M tokens in 35.2 minutes, about 1.35 times my estimate of 2.8M. The morning review took 12 agents and 711,155 tokens in 5.8 minutes. Nine installs came out of it: seven copies adding about 2,100 characters of description, and two plugins with no hooks.
+
+What is missing is missing on purpose. I did not meter the main session's tokens, money or time per agent, so the totals undercount. I did not test whether Claude Code trims the longest skill lists, which is why listing figures stay in characters. The installs are hours old, so there is no speed or quality claim, and nothing shows yet that each of the nine fires on its own trigger.
+
+One board, one night, one machine.
+
+## The closer
+
+The ask was to be "even more efficient". The efficient result was small: nine pinned, removable installs, plus a counter that works and a review date something will read. The swarm earned its tokens by saying no for reasons it could cite. The spot check and the morning review earned theirs by catching what the models agreed on and the machine contradicted.
+
+[Chapter 25](/chapters/25-evals-or-hope/) is about an output that stayed broken because nothing was watching it. A skill nobody counts has the same gap, and so does a counter nobody tested.
+
+The board counts who starred a skill, and only your own log counts what it did.
