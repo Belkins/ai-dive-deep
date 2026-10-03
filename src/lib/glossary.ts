@@ -583,6 +583,18 @@ export const glossary: Record<string, GlossaryEntry> = {
       'The three-digit answer the far end of a phone call sends back, like an HTTP status: 486 means busy, 603 means declined. When a call fails in seconds it is often the only record of whose decision it was, so log it before you retry.',
     related: ['Webhook'],
   },
+  Mod: {
+    term: 'Mod',
+    definition:
+      'A Claude Code plugin of function hooks that changes how Claude Code behaves or what it draws: a band above the prompt, a status line, a pane, a toast or its own slash command. Installed with /plugin, or loaded from a folder with --plugin-dir.',
+    related: ['Function hook', 'Plugin', 'Hook'],
+  },
+  'Function hook': {
+    term: 'Function hook',
+    definition:
+      'A TypeScript or JavaScript function a mod registers on an event, shaped ($, e, next): it can let the event carry on, change it on the way, or answer it itself. Unlike a settings hook, it runs inside the session and can draw on screen.',
+    related: ['Mod', 'Hook'],
+  },
 };
 
 export const glossaryTerms = Object.keys(glossary);
