@@ -161,9 +161,33 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
   }
-  assert.equal(CHANGELOG[0].edition, 'Edition 19');
+  const edition = CHANGELOG.find(entry => entry.edition === 'Edition 19');
+  assert.equal(edition?.date, '2026-10-03', 'Edition 19 ships the chapter');
+  assert.ok(edition.shipped.some(line => line.startsWith('Chapter 57: Claude Code Mods.')));
+});
+
+test('the Claude Code mods reference page keeps its search fields and its ways in', () => {
+  const page = read('src/pages/claude-code-mods.astro');
+  // These two strings make the page the landing for the query; check-seo only checks length.
+  assert.match(page, /^\s*title="[^"]*Claude Code Mods[^"]*"/m, 'the <title> carries the query');
+  const description = page.match(/^\s*description="([^"]*)"/m)?.[1] ?? '';
+  assert.ok(description.includes('Claude Code mods') && description.length <= 160, 'the description names the query within 160 characters');
+  for (const href of ['/chapters/57-claude-code-mods/', '/claude-code-hooks/', '/terminal-setup/']) {
+    assert.ok(page.includes(`\${base}${href}`), `the page links to ${href}`);
+  }
+  // Answer engines read the FAQPage; the visible FAQ and the JSON-LD both come from faqItems, so they match by construction.
+  assert.ok(page.includes('set:html={JSON.stringify(faq)}') && /'@type': 'FAQPage'/.test(page), 'the FAQPage JSON-LD is emitted');
+  assert.ok((page.match(/^\s+q: '/gm) ?? []).length >= 5, 'the FAQ has at least five questions');
+  // Cmd-K alone keeps search tests green; the homepage tile, llms.txt and the nav are the other ways in.
+  for (const file of ['src/pages/index.astro', 'src/pages/llms.txt.ts', 'src/components/Nav.astro']) {
+    assert.ok(read(file).includes('/claude-code-mods/'), `${file} must link to /claude-code-mods/`);
+  }
+});
+
+test('the Claude Code mods reference page carries the latest edition banner', () => {
+  assert.equal(CHANGELOG[0].edition, 'Edition 19.1');
   assert.equal(CHANGELOG[0].date, '2026-10-03');
-  assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
+  assert.equal(CHANGELOG[0].bannerHref, '/claude-code-mods/', 'the banner points at the page a search lands on');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
   assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
 });

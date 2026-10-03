@@ -16,11 +16,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 19.1',
+    date: '2026-10-03',
+    tagline: 'A reference page for Claude Code mods: the answer, the comparison, a first mod to copy and six real ones.',
+    bannerText: 'New: Claude Code mods, the reference. What a mod is, six real ones, and a first mod to copy.',
+    bannerHref: '/claude-code-mods/',
+    shipped: [
+      '/claude-code-mods: what a Claude Code mod is, how it differs from settings hooks, skills, MCP servers and the status line, and how to install or load one with /plugin, --plugin-dir or CLAUDE_CODE_PLUGIN_DIRS.',
+      'A copy-paste first mod that refuses an unquoted zsh =word and hands Claude the fix, checked with validate, strict tsc and the engine test runner on 2026-10-03.',
+      'Six real mods with the gap each fills, how to test a mod, and an FAQ with structured data. Receipts in Chapter 57.',
+    ],
+    receipts: [
+      { label: 'Example mod', value: 'validate, strict tsc and 1 engine test passing on Claude Code 2.1.288' },
+      { label: 'FAQ', value: '6 questions, structured data generated from the visible text' },
+    ],
+  },
+  {
     edition: 'Edition 19',
     date: '2026-10-03',
     tagline: 'Claude Code mods: what a mod is, how it differs from hooks, skills and MCP, and six built and tested in 32 minutes.',
-    bannerText: 'New: Claude Code Mods. Six built and tested in 32 minutes, and the guard that blocked its author.',
-    bannerHref: '/chapters/57-claude-code-mods/',
     shipped: [
       'Chapter 57: Claude Code Mods. Mods shipped on 1 October; on 3 October one session built six, each checked by validate, a strict type check and the engine\'s own test runner before it ran.',
       'What a mod is and where it sits: function hooks that rewrite or refuse an event and draw UI, above the settings hooks from Chapter 16, with a comparison against hooks, skills, MCP servers and the status line.',

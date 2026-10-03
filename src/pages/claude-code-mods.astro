@@ -1,0 +1,202 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import CopyBlock from '@/widgets/CopyBlock.tsx';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Plugin API, loading flags and the example below checked against Claude Code 2.1.288 on this date;
+// the example mod passed `claude plugin validate`, strict tsc and `claude plugin test`. Receipts: Chapter 57.
+const MODS_VERIFIED = '2026-10-03';
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'what', label: 'What a mod is' },
+  { id: 'compare', label: 'Mods vs hooks, skills, MCP' },
+  { id: 'load', label: 'Installing and loading' },
+  { id: 'build', label: 'Your first mod' },
+  { id: 'six', label: 'Six real mods' },
+  { id: 'test', label: 'Testing a mod' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+const MOD_MANIFEST = `{ "name": "quote-guard", "version": "0.1.0", "description": "Refuses an unquoted zsh =word before it runs and tells Claude the fix" }`;
+
+const MOD_HOOKS = `{ "modules": ["./register.ts"] }`;
+
+const MOD_MODULE = `import type { Register } from 'claude-code'
+
+// zsh reads an unquoted word that starts with = as a command lookup
+// ("= not found") and drops the rest of the line. Refuse it, say why.
+export const register: Register = on => {
+  on('tool.call', { tool: 'Bash' }, ($, e, next) => {
+    const trap = e.command.split(/\\s+/).some(word => /^=\\S/.test(word))
+    if (!trap) return next(e)
+    $.ui.toast('quote-guard: blocked an unquoted =word')
+    return { deny: "zsh reads a word starting with = as a command. Quote it: echo '===='." }
+  })
+}`;
+
+const faqItems = [
+  {
+    q: 'What is a Claude Code mod?',
+    a: 'A plugin of function hooks: a TypeScript or JavaScript module Claude Code loads into the session. It can rewrite or refuse an event such as a tool call or a prompt, and draw its own interface: a band above the prompt, a status line, a docked pane, a toast or its own slash command.',
+  },
+  {
+    q: 'How is a mod different from a Claude Code hook?',
+    a: 'A settings hook is a shell command in settings.json that reads JSON on stdin and blocks with exit code 2; it draws nothing. A mod runs inside the session, can change the event on its way through, and can draw on screen. Settings hooks still run beneath a mod, as classic.PreToolUse.',
+  },
+  {
+    q: 'How do I install a Claude Code mod?',
+    a: 'Install a published one with /plugin. Load a folder for one session with claude --plugin-dir <folder>, repeated per mod, or list folders in CLAUDE_CODE_PLUGIN_DIRS in the env block of ~/.claude/settings.json so every session loads them.',
+  },
+  {
+    q: 'What files does a mod need?',
+    a: 'Three: .claude-plugin/plugin.json with the name, hooks/hooks.json naming one module, and that module, which exports register(on). Each on(event, hook) adds a hook shaped ($, e, next).',
+  },
+  {
+    q: 'How do I test a Claude Code mod?',
+    a: 'Run claude plugin validate to read it the way the engine will, type-check it in strict mode against the type file the engine writes, and run claude plugin test, which loads the mod into the engine with your test standing in for what sits beneath it. Test that it fires, and that it does not fire on the wrong thing.',
+  },
+  {
+    q: 'Can a mod show its own interface in the terminal?',
+    a: 'Yes. A hook on ui.render draws a band above the prompt, a pane beside the transcript or a line under the prompt, and $.ui.toast shows a short notice. A pane the person did not ask for opens only on a terminal at least 144 columns wide.',
+  },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+<BaseLayout
+  title="Claude Code Mods: 6 Real Mods, What They Caught, How to Build One"
+  description="Claude Code mods explained from six real ones: what a mod is, how it differs from hooks, skills and MCP, how to install one and build your own."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Reference</div>
+    <h1>Claude Code mods: what they are, six real ones, and how to build yours.</h1>
+    <p class="mt-3 max-w-2xl" style="color: rgb(var(--muted))">Six mods built and tested in one afternoon, four bugs the tests caught first, one guard that blocked its author. Plugin API checked against Claude Code 2.1.288 on {MODS_VERIFIED}.</p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="card">
+            <p class="m-0">A Claude Code mod is a plugin of function hooks: a small TypeScript or JavaScript module that Claude Code loads into the session. It can rewrite or refuse a tool call or a prompt, and draw its own interface, from a line above the prompt to a docked pane. Install one with <code>/plugin</code>, or load a folder with <code>--plugin-dir</code>. Mods shipped on 1 October 2026.</p>
+          </div>
+        </div>
+
+        <div id="what" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What is a Claude Code mod?</h2>
+          <p>A mod is a plugin folder with three files: a manifest that names it, a <code>hooks/hooks.json</code> that names one module, and the module, which exports <code>register(on)</code>. Every <code>on(event, hook)</code> adds a function hook shaped <code>($, e, next)</code>. <code>$</code> is the engine, <code>e</code> is what is happening, and <code>next(e)</code> lets it carry on. Return without calling <code>next</code> and your hook answers instead; call it with a changed <code>e</code> and everything after you sees the change.</p>
+          <p>The events cover tool calls, prompts, turns, sessions and drawing. Drawing is the new part: a hook on <code>ui.render</code> can put a band above the prompt, a pane beside the transcript or a line under the prompt. The module runs with no Node and no DOM, and reaches everything else through <code>$</code>: files, commands, the model, state and toasts.</p>
+          <p>The contract is a type file the engine writes as it loads the mod. Grep it for the event you need. The full story, with receipts, is in <a href={`${base}/chapters/57-claude-code-mods/`}>Chapter 57</a>.</p>
+        </div>
+
+        <div id="compare" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">How do mods differ from hooks, skills and MCP?</h2>
+          <p>A skill changes what the model does. A mod changes what Claude Code does around the model, including what you see. <a href={`${base}/claude-code-hooks/`}>Settings hooks</a> do not go away: they run beneath every mod's <code>tool.call</code> hook, and a mod can wrap them.</p>
+          <div class="overflow-x-auto">
+            <table>
+              <thead><tr><th></th><th>What it changes</th><th>Where it lives</th><th>Draws UI</th><th>How you test it</th></tr></thead>
+              <tbody>
+                <tr><td>Mod</td><td>What the harness does and draws</td><td>A plugin folder, loaded by <code>/plugin</code> or <code>--plugin-dir</code></td><td>Yes</td><td><code>claude plugin test</code>, against the engine</td></tr>
+                <tr><td>Settings hook</td><td>Allows, blocks or annotates a lifecycle event</td><td>A shell command in <code>settings.json</code></td><td>No</td><td>Pipe it a real payload</td></tr>
+                <tr><td>Skill</td><td>What the model knows how to do, loaded on demand</td><td>A <code>SKILL.md</code> folder</td><td>No</td><td>Use it and read the transcript</td></tr>
+                <tr><td>MCP server</td><td>Which outside tools the model can call</td><td>A separate process (<a href={`${base}/claude-code-mcp/`}>setup</a>)</td><td>No</td><td>Call the tool</td></tr>
+                <tr><td>Status line</td><td>One line under the prompt</td><td>A shell script fed JSON (<a href={`${base}/terminal-setup/`}>setup</a>)</td><td>One line</td><td>Run it on sample input</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="load" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">How do you install or load a mod?</h2>
+          <ul>
+            <li><strong>Published:</strong> <code>/plugin</code> in the CLI installs it like any plugin.</li>
+            <li><strong>A folder, one session:</strong> <code>claude --plugin-dir &lt;folder&gt;</code>, repeated once per mod.</li>
+            <li><strong>A folder, every session:</strong> list folders in <code>CLAUDE_CODE_PLUGIN_DIRS</code>, in your shell or the <code>env</code> block of <code>~/.claude/settings.json</code>. A project's settings cannot set it.</li>
+            <li><strong>Built in the session:</strong> the first time a session writes a mod, Claude Code asks "Enable hot reloading for this session?". Only the person can answer; after a yes, each save reloads the mod when the turn ends.</li>
+          </ul>
+        </div>
+
+        <div id="build" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">How do you build your first mod?</h2>
+          <p>Start with a mistake you keep correcting. This one refuses a zsh trap, a word that starts with <code>=</code>, before the command runs, and hands Claude the fix so it rewrites and reruns. It is the smallest version of the guard in <a href={`${base}/chapters/57-claude-code-mods/`}>Chapter 57</a>, and it passed validate, a strict type check and an engine test on {MODS_VERIFIED}.</p>
+          <CopyBlock client:visible text={MOD_MANIFEST} filename="quote-guard/.claude-plugin/plugin.json" language="json" />
+          <CopyBlock client:visible text={MOD_HOOKS} filename="quote-guard/hooks/hooks.json" language="json" />
+          <CopyBlock client:visible text={MOD_MODULE} filename="quote-guard/hooks/register.ts" language="ts" />
+          <p>Load it with <code>claude --plugin-dir ./quote-guard</code>, then ask Claude to run <code>echo ==== done</code>. The command is refused, a toast says why, and the model gets the fix.</p>
+        </div>
+
+        <div id="six" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">What do real mods look like?</h2>
+          <p>Six mods built in 32 minutes on 3 October 2026. Each fills a gap the existing setup had, not one from the launch video.</p>
+          <div class="grid gap-4 sm:grid-cols-2 mt-6">
+            <div class="card">
+              <h3 class="m-0 text-xl">Token Weather</h3>
+              <p class="mt-2 mb-0 text-sm" style="color: rgb(var(--muted))">A band above the prompt: fill against the auto-compact line, a sparkline of twelve turns and turns left at the current growth. The status line already showed the percentage; this adds the trend.</p>
+            </div>
+            <div class="card">
+              <h3 class="m-0 text-xl">Blast Radius</h3>
+              <p class="mt-2 mb-0 text-sm" style="color: rgb(var(--muted))">Before <code>rm -r</code>, <code>git reset --hard</code>, <code>git clean -f</code> or a force push, it works out what would be lost and adds it to the prompt the careful hook already raises. One prompt, not two.</p>
+            </div>
+            <div class="card">
+              <h3 class="m-0 text-xl">Replay Theater</h3>
+              <p class="mt-2 mb-0 text-sm" style="color: rgb(var(--muted))">Records every file edit by turn. <code>/replay</code> steps through the diffs in a docked pane; turns without edits are skipped.</p>
+            </div>
+            <div class="card">
+              <h3 class="m-0 text-xl">Gotcha Guard</h3>
+              <p class="mt-2 mb-0 text-sm" style="color: rgb(var(--muted))">Refuses ten shell traps from a rules file the model kept ignoring, and sends Claude the fix. Caught a missed <code>/tmp</code> pattern in its tests, then blocked its own author on a heredoc.</p>
+            </div>
+            <div class="card">
+              <h3 class="m-0 text-xl">Peers</h3>
+              <p class="mt-2 mb-0 text-sm" style="color: rgb(var(--muted))">Every 30 seconds it reads the other live sessions in the folder. Edit a file a peer touched in the last half hour and Claude is told to check the diff first.</p>
+            </div>
+            <div class="card">
+              <h3 class="m-0 text-xl">5h Pacer</h3>
+              <p class="mt-2 mb-0 text-sm" style="color: rgb(var(--muted))">The burn rate over the last hour, and whether the five-hour window fills before it resets. Warns once per window and names the pace that lands on the reset.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="test" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">How do you test a Claude Code mod?</h2>
+          <p>Three gates, in this order: <code>claude plugin validate</code>, a strict type check against the engine's type file, and <code>claude plugin test</code>. On the six mods above the tests caught four bugs before anything ran live: a quoted path split in two, a pattern that missed a space after <code>&gt;</code>, an engine refusal over where <code>$</code> was passed, and a value that was only set at session start, which a test never fires.</p>
+          <Callout type="warn">
+            A guard needs two tests: one that proves it can fail, and one that proves it does not misfire. Gotcha Guard passed the first kind and then refused a Python heredoc as if it were shell. Two regression tests later it did not.
+          </Callout>
+          <PullQuote attribution="Ch 57, Claude Code Mods">Build only what your status line, hooks and skills do not already do, and test the mod before you trust it.</PullQuote>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          {faqItems.map(item => (
+            <>
+              <h3>{item.q}</h3>
+              <p>{item.a}</p>
+            </>
+          ))}
+          <p class="mt-6 text-sm" style="color: rgb(var(--muted))">Related: <a href={`${base}/chapters/57-claude-code-mods/`}>Ch 57: Claude Code Mods</a> · <a href={`${base}/claude-code-hooks/`}>Claude Code hooks</a> · <a href={`${base}/terminal-setup/`}>terminal setup</a> · <a href={`${base}/chapters/16-hooks-subagents/`}>Ch 16: Hooks and Custom Subagents</a></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>
