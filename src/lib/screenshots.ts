@@ -106,6 +106,9 @@ export const SCREENSHOTS: Record<string, string> = {
   "56-skill-leaderboard-1": "56-skill-leaderboard-1.svg",
   "56-skill-leaderboard-2": "56-skill-leaderboard-2.svg",
   "56-skill-leaderboard-3": "56-skill-leaderboard-3.svg",
+  "57-claude-code-mods-1": "57-claude-code-mods-1.svg",
+  "57-claude-code-mods-2": "57-claude-code-mods-2.svg",
+  "57-claude-code-mods-3": "57-claude-code-mods-3.svg",
   "ad-x-90k-delete": "ad-x-90k-delete.svg",
   "agent-workflow-delta": "agent-workflow-delta.svg",
   "agent-workflow-plan": "agent-workflow-plan.svg",
@@ -132,4 +135,4 @@ export const SCREENSHOTS: Record<string, string> = {
   "swarms-3": "swarms-3.webp"
 };
 
-export const SCREENSHOT_COUNT = 127;
+export const SCREENSHOT_COUNT = 130;
