@@ -174,6 +174,12 @@ test('all nine popular destinations exist in the real index, including a deploym
   assert.deepEqual(searchItems(createSearchIndex(getPaletteItems(prefix)), '', paths).map(({ href }) => href), paths);
 });
 
+test('a search for mods lands on the Claude Code mods reference page first', () => {
+  for (const query of ['mods', 'claude code mods']) {
+    assert.equal(searchItems(realIndex, query)[0]?.href, '/claude-code-mods/', query);
+  }
+});
+
 test('the new library and workflow planner are searchable', () => {
   assert.equal(searchItems(realIndex, 'library')[0].href, '/library/');
   assert.equal(searchItems(realIndex, 'planner workflow')[0].href, '/workflow-planner/');

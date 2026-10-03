@@ -586,7 +586,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   Mod: {
     term: 'Mod',
     definition:
-      'A Claude Code plugin of function hooks that changes how Claude Code behaves or what it draws: a band above the prompt, a status line, a pane, a toast or its own slash command. Installed with /plugin, or loaded from a folder with --plugin-dir.',
+      'A Claude Code plugin of function hooks that changes how Claude Code behaves or what it draws: a band above the prompt, a status line, a pane, a toast or its own slash command. Installed with /plugin, or loaded from a folder with --plugin-dir. Six real ones and a first mod to copy: <a href="/claude-code-mods/">Claude Code mods</a>.',
     related: ['Function hook', 'Plugin', 'Hook'],
   },
   'Function hook': {

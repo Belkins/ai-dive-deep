@@ -161,9 +161,15 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
   }
-  assert.equal(CHANGELOG[0].edition, 'Edition 19');
+  const edition = CHANGELOG.find(entry => entry.edition === 'Edition 19');
+  assert.equal(edition?.date, '2026-10-03', 'Edition 19 ships the chapter');
+  assert.ok(edition.shipped.some(line => line.startsWith('Chapter 57: Claude Code Mods.')));
+});
+
+test('the Claude Code mods reference page carries the latest edition banner', () => {
+  assert.equal(CHANGELOG[0].edition, 'Edition 19.1');
   assert.equal(CHANGELOG[0].date, '2026-10-03');
-  assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
+  assert.equal(CHANGELOG[0].bannerHref, '/claude-code-mods/', 'the banner points at the page a search lands on');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
   assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
 });
