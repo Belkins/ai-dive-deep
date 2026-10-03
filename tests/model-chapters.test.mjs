@@ -142,10 +142,16 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
   assert.match(frontmatter, /^title: ".*Claude Code Mods.*"$/m, 'the page <title> comes from the chapter title');
   const seoDescription = frontmatter.match(/^seoDescription: "(.*)"$/m)?.[1] ?? '';
   assert.ok(seoDescription.includes('Claude Code mods') && seoDescription.length <= 160, 'seoDescription names the query within 160 characters');
-  const opening = content.split("import GlossaryTerm from '@/components/GlossaryTooltip.astro';")[1].trim().split('\n\n')[0];
+  const body = content.split('---').slice(2).join('---');
+  const opening = body.split(/\n\s*\n/).map(block => block.trim()).find(block => block && !block.startsWith('import '));
   assert.ok(opening.startsWith('A Claude Code mod is'), 'the first paragraph is the definition');
   assert.ok(opening.split(/\s+/).length <= 60, 'the definition stands alone in 60 words or fewer');
-  const ids = [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1]);
+  // Answer engines quote the comparison; without it the "how do mods differ" heading has nothing under it.
+  assert.match(content, /^\|.*\| Draws UI \|/m, 'the comparison table has its header');
+  for (const row of ['Mod', 'Settings hook', 'Skill', 'MCP server', 'Status line']) {
+    assert.match(content, new RegExp(`^\\| ${row} \\|`, 'm'), `the comparison table has a ${row} row`);
+  }
+  const ids = [...content.matchAll(new RegExp(`id="(${slug}-\\d+)"`, 'g'))].map(m => m[1]);
   assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three figures are placed');
   for (const id of ids) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
