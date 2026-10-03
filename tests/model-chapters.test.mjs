@@ -166,6 +166,21 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
   assert.ok(edition.shipped.some(line => line.startsWith('Chapter 57: Claude Code Mods.')));
 });
 
+test('the Claude Code mods reference page keeps its search fields and its ways in', () => {
+  const page = read('src/pages/claude-code-mods.astro');
+  // These two strings make the page the landing for the query; check-seo only checks length.
+  assert.match(page, /^\s*title="[^"]*Claude Code Mods[^"]*"/m, 'the <title> carries the query');
+  const description = page.match(/^\s*description="([^"]*)"/m)?.[1] ?? '';
+  assert.ok(description.includes('Claude Code mods') && description.length <= 160, 'the description names the query within 160 characters');
+  for (const href of ['/chapters/57-claude-code-mods/', '/claude-code-hooks/', '/terminal-setup/']) {
+    assert.ok(page.includes(`\${base}${href}`), `the page links to ${href}`);
+  }
+  // Cmd-K alone keeps search tests green; the homepage tile, llms.txt and the nav are the other ways in.
+  for (const file of ['src/pages/index.astro', 'src/pages/llms.txt.ts', 'src/components/Nav.astro']) {
+    assert.ok(read(file).includes('/claude-code-mods/'), `${file} must link to /claude-code-mods/`);
+  }
+});
+
 test('the Claude Code mods reference page carries the latest edition banner', () => {
   assert.equal(CHANGELOG[0].edition, 'Edition 19.1');
   assert.equal(CHANGELOG[0].date, '2026-10-03');
