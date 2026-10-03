@@ -175,6 +175,9 @@ test('the Claude Code mods reference page keeps its search fields and its ways i
   for (const href of ['/chapters/57-claude-code-mods/', '/claude-code-hooks/', '/terminal-setup/']) {
     assert.ok(page.includes(`\${base}${href}`), `the page links to ${href}`);
   }
+  // Answer engines read the FAQPage; the visible FAQ and the JSON-LD both come from faqItems, so they match by construction.
+  assert.ok(page.includes('set:html={JSON.stringify(faq)}') && /'@type': 'FAQPage'/.test(page), 'the FAQPage JSON-LD is emitted');
+  assert.ok((page.match(/^\s+q: '/gm) ?? []).length >= 5, 'the FAQ has at least five questions');
   // Cmd-K alone keeps search tests green; the homepage tile, llms.txt and the nav are the other ways in.
   for (const file of ['src/pages/index.astro', 'src/pages/llms.txt.ts', 'src/components/Nav.astro']) {
     assert.ok(read(file).includes('/claude-code-mods/'), `${file} must link to /claude-code-mods/`);
