@@ -101,10 +101,10 @@ test('chapters 54 and 55 are wired: neighbours, Part VI, Team + Tier, figures an
   }
 });
 
-test('chapter 56 is wired: neighbours, Part VI and AI Agents beside Chapter 39, the latest edition banner, figures and glossary keys', () => {
+test('chapter 56 is wired: neighbours, Part VI and AI Agents beside Chapter 39, figures and glossary keys', () => {
   const slug = '56-skill-leaderboard';
   assert.equal(getNeighbors(slug).prev.slug, '55-claude-sonnet-5-5');
-  assert.equal(getNeighbors(slug).next, null);
+  assert.equal(getNeighbors(slug).next.slug, '57-claude-code-mods');
   assert.equal(PARTS.find(part => part.slugs.includes(slug)).key, 'VI', 'the chapter hero shows the Part VI pill');
   const agents = SECTIONS.find(section => section.key === 'agents');
   assert.ok(agents.slugs.includes(slug) && agents.slugs.includes('39-skills-you-should-steal'), 'listed under AI Agents with the chapter it follows up');
@@ -120,8 +120,49 @@ test('chapter 56 is wired: neighbours, Part VI and AI Agents beside Chapter 39, 
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
   }
-  assert.equal(CHANGELOG[0].edition, 'Edition 18');
-  assert.equal(CHANGELOG[0].date, '2026-10-02');
+});
+
+test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside Chapter 20, the latest edition banner, figures and glossary keys', () => {
+  const slug = '57-claude-code-mods';
+  assert.equal(getNeighbors(slug).prev.slug, '56-skill-leaderboard');
+  assert.equal(getNeighbors(slug).next, null);
+  const part = PARTS.find(item => item.slugs.includes(slug));
+  assert.equal(part.key, 'IV', 'the chapter hero shows the Part IV pill');
+  assert.equal(part.slugs[part.slugs.indexOf(slug) - 1], '16-hooks-subagents', 'it follows the hooks chapter it is the sequel to');
+  const claude = SECTIONS.find(section => section.key === 'claude');
+  assert.equal(claude.slugs[claude.slugs.indexOf(slug) - 1], '20-terminal-windows', 'listed under Claude beside running six sessions');
+  const content = read(`src/content/chapters/${slug}.mdx`);
+  // The mods were hours old when written; without the dated callout the chapter reads as a usage report.
+  assert.match(content, /title="Evidence status: 2026-10-03"/, 'the evidence callout must carry the build date');
+  for (const href of ['/chapters/16-hooks-subagents/', '/chapters/20-terminal-windows/', '/terminal-setup/']) {
+    assert.ok(content.includes(href), `the chapter must link to ${href}`);
+  }
+  // Search and answer engines quote the opening: it has to name the thing and define it on its own.
+  const frontmatter = content.split('---')[1];
+  assert.match(frontmatter, /^title: ".*Claude Code Mods.*"$/m, 'the page <title> comes from the chapter title');
+  const seoDescription = frontmatter.match(/^seoDescription: "(.*)"$/m)?.[1] ?? '';
+  assert.ok(seoDescription.includes('Claude Code mods') && seoDescription.length <= 160, 'seoDescription names the query within 160 characters');
+  const body = content.split('---').slice(2).join('---');
+  const opening = body.split(/\n\s*\n/).map(block => block.trim()).find(block => block && !block.startsWith('import '));
+  assert.ok(opening.startsWith('A Claude Code mod is'), 'the first paragraph is the definition');
+  assert.ok(opening.split(/\s+/).length <= 60, 'the definition stands alone in 60 words or fewer');
+  // Answer engines quote the comparison; without it the "how do mods differ" heading has nothing under it.
+  const lines = content.split('\n');
+  const header = lines.findIndex(line => line.startsWith('|') && line.includes('| Draws UI |'));
+  assert.ok(header >= 0, 'the comparison table has its header');
+  const end = lines.findIndex((line, i) => i > header && !line.startsWith('|'));
+  const firstColumn = lines.slice(header + 2, end).map(line => line.split('|')[1].trim());
+  assert.deepEqual(firstColumn, ['Mod', 'Settings hook', 'Skill', 'MCP server', 'Status line'], 'the comparison table compares exactly these five');
+  const ids = [...content.matchAll(new RegExp(`id="(${slug}-\\d+)"`, 'g'))].map(m => m[1]);
+  assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three figures are placed');
+  for (const id of ids) {
+    assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+  }
+  for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
+  }
+  assert.equal(CHANGELOG[0].edition, 'Edition 19');
+  assert.equal(CHANGELOG[0].date, '2026-10-03');
   assert.equal(CHANGELOG[0].bannerHref, `/chapters/${slug}/`, 'the homepage banner must point at the newest chapter');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
   assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');

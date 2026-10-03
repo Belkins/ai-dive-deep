@@ -16,11 +16,28 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 19',
+    date: '2026-10-03',
+    tagline: 'Claude Code mods: what a mod is, how it differs from hooks, skills and MCP, and six built and tested in 32 minutes.',
+    bannerText: 'New: Claude Code Mods. Six built and tested in 32 minutes, and the guard that blocked its author.',
+    bannerHref: '/chapters/57-claude-code-mods/',
+    shipped: [
+      'Chapter 57: Claude Code Mods. Mods shipped on 1 October; on 3 October one session built six, each checked by validate, a strict type check and the engine\'s own test runner before it ran.',
+      'What a mod is and where it sits: function hooks that rewrite or refuse an event and draw UI, above the settings hooks from Chapter 16, with a comparison against hooks, skills, MCP servers and the status line.',
+      'Three mods from the launch thread rebuilt around a setup that already had a status line and a careful hook, and three only that setup needed: a shell-trap guard, a peer-session watcher and a five-hour pacer.',
+      'Four bugs the engine tests caught before anything ran live, and the guard blocking its own author an hour later.',
+      'Three figures: the line each mod adds to the screen, where a mod sits on a tool call, and the 32-minute timeline.',
+    ],
+    receipts: [
+      { label: 'Mods built, 3 Oct', value: '6, in 32 minutes from the first prompt' },
+      { label: 'Engine tests', value: '42 passing; 4 bugs caught before any mod ran live' },
+      { label: 'Build', value: 'Claude Code 2.1.288' },
+    ],
+  },
+  {
     edition: 'Edition 18',
     date: '2026-10-02',
     tagline: 'Read before you install: a skill leaderboard, 118 repos read from source by a 23-agent swarm, and nine pinned installs.',
-    bannerText: 'New: Read Before You Install. 118 skill repos read from source, nine installed.',
-    bannerHref: '/chapters/56-skill-leaderboard/',
     shipped: [
       'Chapter 56: Read Before You Install. A public skill leaderboard ranked 700 repos on 1 October; code shortlisted 173, a 23-agent swarm read 118 from source, and nine skills and plugins went in as copies pinned to the commit a vetter read.',
       'What the board rewards: the home page ranks by total stars and the trending page by 7-day growth in percent, so an 810-star repo led it; no repo matched DMARC, SPF or DKIM.',

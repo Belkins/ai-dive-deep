@@ -63,6 +63,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 54, slug: '54-claude-opus-5-5', title: 'Claude Opus 5.5 as the Default', subtitle: 'The Effort Dial, Early Stops, and a Week of Receipts' },
   { number: 55, slug: '55-claude-sonnet-5-5', title: 'Claude Sonnet 5.5 for Everyday Work', subtitle: 'Same-Task Receipts Against Opus 5.5, and When the Cheaper Model Is Enough' },
   { number: 56, slug: '56-skill-leaderboard', title: 'Read Before You Install', subtitle: '700 Ranked Repos, 118 Read From Source and Nine Installs' },
+  { number: 57, slug: '57-claude-code-mods', title: 'Claude Code Mods', subtitle: 'Six Built and Tested in 32 Minutes, and the Guard That Blocked Its Author' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -96,7 +97,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part IV — Policy and Discipline',
     tagline: 'Hooks turn ad-hoc prompting into policy. Permissions turn speed into safety.',
     intro: "Don't get owned. Don't skip the gates. Don't let the agent off the leash on your main machine. This part is the one most operators skim and most postmortems start with.",
-    slugs: ['09-dont-get-owned', '15-permissions', '16-hooks-subagents', '37-context-files'],
+    slugs: ['09-dont-get-owned', '15-permissions', '16-hooks-subagents', '57-claude-code-mods', '37-context-files'],
   },
   {
     key: 'V',
@@ -136,7 +137,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'claude',
     label: 'Claude',
     description: 'Three doors (Chat / Cowork / Code), the swarm, the modes, sessions, the cheat sheet.',
-    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '11-build-a-skill', '12-connectors-mcp', '37-context-files', '38-run-until-done', '44-dreaming', '40-prompting-knob'],
+    slugs: ['08-three-doors', '06-the-swarm', '13-quickstart', '14-cheat-sheet', '16-hooks-subagents', '21-three-modes', '22-sessions', '20-terminal-windows', '57-claude-code-mods', '11-build-a-skill', '12-connectors-mcp', '37-context-files', '38-run-until-done', '44-dreaming', '40-prompting-knob'],
   },
   {
     key: 'security',

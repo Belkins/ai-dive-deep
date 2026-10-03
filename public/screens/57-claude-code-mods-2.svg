@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <rect width="1600" height="900" fill="#0E0F11"/>
+  <text x="80" y="84" fill="#F4F1EA" font-size="50" font-weight="700" text-anchor="start">Where a mod sits on a tool call</text>
+  <text x="80" y="134" fill="#9A9789" font-size="26" font-weight="400" text-anchor="start">Function hooks run first and can refuse, rewrite or pass the call on.</text>
+  <text x="80" y="168" fill="#9A9789" font-size="26" font-weight="400" text-anchor="start">The settings hooks from Chapter 16 run beneath them, then the tool.</text>
+  <rect x="80" y="250" width="300" height="230" rx="10" fill="#17191C" stroke="#2A2D31" stroke-width="2"/>
+  <text x="104" y="302" fill="#C9C3B3" font-size="28" font-weight="700" text-anchor="start">The model asks</text>
+  <text x="104" y="350" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">Bash: git clean -fdx</text>
+  <rect x="460" y="250" width="300" height="230" rx="10" fill="#1C1A17" stroke="#FF6B2C" stroke-width="2"/>
+  <text x="484" y="302" fill="#F4F1EA" font-size="28" font-weight="700" text-anchor="start">Mods: tool.call</text>
+  <text x="484" y="350" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">function hooks ($, e, next)</text>
+  <text x="484" y="388" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">refuse, rewrite or pass on</text>
+  <text x="484" y="426" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">run inside the session</text>
+  <rect x="840" y="250" width="300" height="230" rx="10" fill="#17191C" stroke="#2A2D31" stroke-width="2"/>
+  <text x="864" y="302" fill="#F4F1EA" font-size="28" font-weight="700" text-anchor="start">classic.PreToolUse</text>
+  <text x="864" y="350" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">settings.json hooks</text>
+  <text x="864" y="388" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">a shell command, JSON in</text>
+  <text x="864" y="426" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">exit 2 blocks the call</text>
+  <rect x="1220" y="250" width="300" height="230" rx="10" fill="#17191C" stroke="#2A2D31" stroke-width="2"/>
+  <text x="1244" y="302" fill="#C9C3B3" font-size="28" font-weight="700" text-anchor="start">The tool runs</text>
+  <text x="1244" y="350" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">or the model reads</text>
+  <text x="1244" y="388" fill="#9A9789" font-size="21" font-weight="400" text-anchor="start">why it was refused</text>
+  <line x1="384" y1="365" x2="444" y2="365" stroke="#9A9789" stroke-width="3"/>
+  <polygon points="456,365 444,358 444,372" fill="#9A9789"/>
+  <line x1="764" y1="365" x2="824" y2="365" stroke="#9A9789" stroke-width="3"/>
+  <polygon points="836,365 824,358 824,372" fill="#9A9789"/>
+  <line x1="1144" y1="365" x2="1204" y2="365" stroke="#9A9789" stroke-width="3"/>
+  <polygon points="1216,365 1204,358 1204,372" fill="#9A9789"/>
+  <text x="460" y="560" fill="#F4F1EA" font-size="24" font-weight="600" text-anchor="start">A mod can also hook ui.render and draw:</text>
+  <rect x="460" y="588" width="279.59999999999997" height="52" rx="8" fill="#1C1A17" stroke="#FF6B2C" stroke-width="2"/>
+  <text x="474" y="622" fill="#F4F1EA" font-size="20" font-weight="400" text-anchor="start">a band above the prompt</text>
+  <rect x="755.5999999999999" y="588" width="167.6" height="52" rx="8" fill="#1C1A17" stroke="#FF6B2C" stroke-width="2"/>
+  <text x="769.5999999999999" y="622" fill="#F4F1EA" font-size="20" font-weight="400" text-anchor="start">a status line</text>
+  <rect x="939.1999999999999" y="588" width="167.6" height="52" rx="8" fill="#1C1A17" stroke="#FF6B2C" stroke-width="2"/>
+  <text x="953.1999999999999" y="622" fill="#F4F1EA" font-size="20" font-weight="400" text-anchor="start">a docked pane</text>
+  <rect x="1122.8" y="588" width="100.39999999999999" height="52" rx="8" fill="#1C1A17" stroke="#FF6B2C" stroke-width="2"/>
+  <text x="1136.8" y="622" fill="#F4F1EA" font-size="20" font-weight="400" text-anchor="start">a toast</text>
+  <rect x="1239.2" y="588" width="257.2" height="52" rx="8" fill="#1C1A17" stroke="#FF6B2C" stroke-width="2"/>
+  <text x="1253.2" y="622" fill="#F4F1EA" font-size="20" font-weight="400" text-anchor="start">its own slash command</text>
+  <rect x="460" y="690" width="1060" height="120" rx="10" fill="#17191C" stroke="#2A2D31" stroke-width="2"/>
+  <text x="484" y="735" fill="#C9C3B3" font-size="23" font-weight="400" text-anchor="start">Blast Radius wraps classic.PreToolUse: when the careful hook asks,</text>
+  <text x="484" y="772" fill="#C9C3B3" font-size="23" font-weight="400" text-anchor="start">it adds what the command would destroy to that same prompt. One prompt, not two.</text>
+  <text x="80" y="860" fill="#9A9789" font-size="20" font-weight="400" text-anchor="start">Event order from the plugin API type file, Claude Code 2.1.288.</text>
+</svg>
