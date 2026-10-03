@@ -147,10 +147,12 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
   assert.ok(opening.startsWith('A Claude Code mod is'), 'the first paragraph is the definition');
   assert.ok(opening.split(/\s+/).length <= 60, 'the definition stands alone in 60 words or fewer');
   // Answer engines quote the comparison; without it the "how do mods differ" heading has nothing under it.
-  assert.match(content, /^\|.*\| Draws UI \|/m, 'the comparison table has its header');
-  for (const row of ['Mod', 'Settings hook', 'Skill', 'MCP server', 'Status line']) {
-    assert.match(content, new RegExp(`^\\| ${row} \\|`, 'm'), `the comparison table has a ${row} row`);
-  }
+  const lines = content.split('\n');
+  const header = lines.findIndex(line => line.startsWith('|') && line.includes('| Draws UI |'));
+  assert.ok(header >= 0, 'the comparison table has its header');
+  const end = lines.findIndex((line, i) => i > header && !line.startsWith('|'));
+  const firstColumn = lines.slice(header + 2, end).map(line => line.split('|')[1].trim());
+  assert.deepEqual(firstColumn, ['Mod', 'Settings hook', 'Skill', 'MCP server', 'Status line'], 'the comparison table compares exactly these five');
   const ids = [...content.matchAll(new RegExp(`id="(${slug}-\\d+)"`, 'g'))].map(m => m[1]);
   assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three figures are placed');
   for (const id of ids) {
