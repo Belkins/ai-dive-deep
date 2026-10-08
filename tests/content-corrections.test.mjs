@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -179,6 +179,20 @@ test('published block-push hooks read JSON stdin and return blocking decisions',
     assert.ifError(missingJq.error);
     assert.equal(missingJq.status, 2, 'missing jq must not silently allow a push');
     assert.match(missingJq.stderr, /Blocked:/);
+    const jqPath = spawnSync('sh', ['-c', 'command -v jq'], { encoding: 'utf8' }).stdout.trim();
+    const bin = mkdtempSync(join(tmpdir(), 'hook-jq-only-'));
+    try {
+      symlinkSync(jqPath, join(bin, 'jq'));
+      const noGrep = spawnSync('/bin/sh', ['-c', command], {
+        input: JSON.stringify({ tool_input: { command: 'git push origin main' } }),
+        env: { PATH: bin }, encoding: 'utf8', timeout: 5000,
+      });
+      assert.ifError(noGrep.error);
+      assert.equal(noGrep.status, 2, 'the matcher must block with only jq on PATH');
+      assert.equal(noGrep.stderr, 'Blocked: push to main requires a human.\n');
+    } finally {
+      rmSync(bin, { recursive: true, force: true });
+    }
   }
 });
 

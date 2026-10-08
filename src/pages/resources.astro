@@ -165,6 +165,7 @@ const toc = [
         <p class="text-sm" style="color: rgb(var(--muted))">Stop typing the same correction 50 times. Drop into <code>.claude/settings.json</code>.</p>
         <CopyBlock client:visible text={HOOK_FORMAT_ON_SAVE} filename="hook-format-on-save.json" language="json" />
         <CopyBlock client:visible text={HOOK_TEST_ON_WRITE} filename="hook-test-on-write.json" language="json" />
+        <p class="text-sm" style="color: rgb(var(--muted))">The block-push example below requires <code>jq</code> and reads JSON on stdin. It blocks unreadable input and the literal text <code>git push origin main</code>; alternate push syntax can bypass it, and quoted text can match. Use Git-host branch protection for a complete policy. <a href={`${import.meta.env.BASE_URL}claude-code-hooks/#config`}>Input contract and limitations</a>.</p>
         <CopyBlock client:visible text={HOOK_BLOCK_PUSH_TO_MAIN} filename="hook-block-push-main.json" language="json" />
         <CopyBlock client:visible text={HOOK_SLACK_NOTIFY_LONG_TASK} filename="hook-slack-notify-long.json" language="json" />
 

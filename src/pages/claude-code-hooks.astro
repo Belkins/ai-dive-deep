@@ -117,7 +117,7 @@ const faq = {
               <tbody>
                 <tr><td>format-on-save</td><td>PostToolUse</td><td>prettier on every Write|Edit</td><td><strong>keep</strong> — killed the 47×/week nag</td></tr>
                 <tr><td>test-on-write</td><td>PostToolUse</td><td>run the matching test file</td><td><strong>keep</strong> on small trees; see the 15k-file failure below</td></tr>
-                <tr><td>block-push-to-main</td><td>PreToolUse</td><td>greps tool input for <code>git push origin main</code></td><td><strong>keep, everywhere</strong> — three "oh no" saves at Belkins (Ch 16)</td></tr>
+                <tr><td>block-push-to-main</td><td>PreToolUse</td><td>checks command text for <code>git push origin main</code></td><td><strong>keep, everywhere</strong> — three "oh no" saves at Belkins (Ch 16)</td></tr>
                 <tr><td>commit-message-template</td><td>PreToolUse</td><td>enforce commit format</td><td>situational — teams yes, solo it's friction</td></tr>
                 <tr><td>slack-notify-on-long-task</td><td>Stop</td><td>ping when a long run ends</td><td>situational — only if you actually walk away</td></tr>
                 <tr><td>secrets-scan</td><td>PreToolUse Write|Edit</td><td>8 live-key patterns, blocks the write</td><td><strong>keep, everywhere</strong> — it has fired on a real Anthropic key</td></tr>
@@ -159,7 +159,7 @@ const faq = {
           <ul>
             <li><strong>Telemetry before deletion.</strong> A one-line JSONL invocation logger per hook. "Zero fires in seven weeks, across two independent telemetry sources" is kill evidence; a feeling isn't (<a href={`${base}/self-audit/`}>/self-audit</a>).</li>
             <li><strong>Warn-only for heuristics.</strong> Anything that can false-positive (size guards, style lints) warns; only deterministic policy (push-to-main, live keys) blocks with exit 2.</li>
-            <li><strong>Never break the parent agent because logging broke.</strong> Every script ends in a way that degrades to exit 0 when its own plumbing fails.</li>
+            <li><strong>Separate logging failures from policy failures.</strong> Telemetry can degrade to exit 0; a blocking policy hook that cannot inspect its input should return exit 2 with an explanation.</li>
             <li><strong>Quarterly re-verify against the official reference.</strong> This page's own block-push example had the wrong input source and exit code. Re-stamp only the examples you have actually checked.</li>
           </ul>
           <p>Want the next hook to write? List the three corrections you've typed more than five times this month — those are your next three hooks (<a href={`${base}/chapters/17-tips-tricks/`}>Ch 17</a>).</p>
