@@ -9,9 +9,8 @@ import { HOOK_BLOCK_PUSH_TO_MAIN, HOOK_SECRETS_SCAN } from '@/lib/snippets';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-// Exit-code semantics verified against code.claude.com/docs/en/hooks on 2026-06-10.
-// Ch 16's published examples predate the exit-2 special-casing — this page is exact.
-const CONFIGS_VERIFIED = '2026-06-10';
+// Block-push input and exit-code contract checked against the official reference.
+const BLOCK_PUSH_VERIFIED = '2026-10-08';
 
 const navItems = [
   { id: 'answer', label: 'The 30-second answer' },
@@ -42,7 +41,7 @@ const faq = {
     {
       '@type': 'Question',
       name: 'How do I block Claude Code from pushing to main?',
-      acceptedAnswer: { '@type': 'Answer', text: 'A PreToolUse hook on Bash that greps the tool input for "git push origin main" and exits 2. The stderr message is fed back into the model context, so the agent reads the reason and adapts instead of blindly retrying. Note: exit 2, not exit 1 — Claude Code treats exit 1 as a non-blocking error and proceeds.' },
+      acceptedAnswer: { '@type': 'Answer', text: 'The example requires jq, reads tool_input.command from JSON on stdin, and exits 2 when it contains "git push origin main". For this PreToolUse hook with no JSON decision output, exit 1 does not block. This literal text check can miss other push syntax; enforce the full branch policy with Git-host branch protection.' },
     },
     {
       '@type': 'Question',
@@ -66,7 +65,7 @@ const faq = {
   <section class="container-wide pt-16 pb-8">
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Reference</div>
     <h1>Hooks: the rules my agent can't talk its way out of.</h1>
-    <p class="mt-3 max-w-2xl" style="color: rgb(var(--muted))">Ten published configs, three production saves, three expensive failures. Configs verified against the official hooks reference on {CONFIGS_VERIFIED}.</p>
+    <p class="mt-3 max-w-2xl" style="color: rgb(var(--muted))">Ten published configs, three production saves, three expensive failures. Block-push input and exit-code contract verified against the official hooks reference on {BLOCK_PUSH_VERIFIED}.</p>
   </section>
 
   <section class="container-wide pb-24">
@@ -95,16 +94,18 @@ const faq = {
 
         <div id="config" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">What does a hook config actually look like?</h2>
-          <p>A matcher (which tool, regex'd) plus a command. The contract — verified against the <a href="https://code.claude.com/docs/en/hooks">official hooks reference</a> on {CONFIGS_VERIFIED} — is stricter than it looks:</p>
+          <p>A matcher (which tool, regex'd) plus a command. Claude Code sends command-hook input as <strong>JSON on stdin</strong>; for Bash, read <code>.tool_input.command</code>. The block-push contract — checked against the <a href="https://code.claude.com/docs/en/hooks">official hooks reference</a> on {BLOCK_PUSH_VERIFIED} — uses these exit codes for a <code>PreToolUse</code> command hook with no JSON decision on stdout:</p>
           <ul>
-            <li><strong>Exit 0</strong> — success; stdout is parsed for JSON output fields.</li>
+            <li><strong>Exit 0</strong> — success; no blocking decision, so the normal permission flow applies.</li>
             <li><strong>Exit 2</strong> — blocking error; stderr is fed back into the model's context, so the agent reads the reason and adapts.</li>
             <li><strong>Exit 1 (and everything else)</strong> — a <em>non-blocking</em> error. The action proceeds.</li>
           </ul>
           <Callout type="warn">
-            That last line is the one that bites. Exit 1 is the conventional Unix failure code, and Claude Code ignores it for enforcement purposes — only exit 2 blocks. The block-push hook below originally shipped in Ch 16 with <code>exit 1</code>, and the semantics moved under it. If a hook is meant to enforce a policy, <code>exit 2</code> — and re-verify your configs quarterly, because this page is the proof they drift.
+            The previous block-push example read <code>CLAUDE_TOOL_INPUT</code> and returned <code>exit 1</code>. Both were wrong for this hook: read the JSON on stdin and return <code>exit 2</code> to block. Hooks that emit a valid JSON decision have additional controls; the example below uses exit codes alone.
           </Callout>
+          <p>Requires <code>jq</code>. The example blocks if JSON input cannot be read or <code>jq</code> is unavailable, and otherwise checks the command without executing it.</p>
           <CopyBlock client:visible text={HOOK_BLOCK_PUSH_TO_MAIN} filename="hook-block-push-main.json" language="json" />
+          <p>This is a literal text check for <code>git push origin main</code>, not a shell parser: flags, aliases, other remotes or refspecs can bypass it, and quoted text can match. Use branch protection on your Git host for a complete branch policy.</p>
         </div>
 
         <div id="which" data-section-target class="scroll-mt-24 mt-14">
@@ -159,7 +160,7 @@ const faq = {
             <li><strong>Telemetry before deletion.</strong> A one-line JSONL invocation logger per hook. "Zero fires in seven weeks, across two independent telemetry sources" is kill evidence; a feeling isn't (<a href={`${base}/self-audit/`}>/self-audit</a>).</li>
             <li><strong>Warn-only for heuristics.</strong> Anything that can false-positive (size guards, style lints) warns; only deterministic policy (push-to-main, live keys) blocks with exit 2.</li>
             <li><strong>Never break the parent agent because logging broke.</strong> Every script ends in a way that degrades to exit 0 when its own plumbing fails.</li>
-            <li><strong>Quarterly re-verify against the official reference.</strong> The exit-code semantics under this page's own Ch 16 examples moved once already. Re-stamp the verified date or assume drift.</li>
+            <li><strong>Quarterly re-verify against the official reference.</strong> This page's own block-push example had the wrong input source and exit code. Re-stamp only the examples you have actually checked.</li>
           </ul>
           <p>Want the next hook to write? List the three corrections you've typed more than five times this month — those are your next three hooks (<a href={`${base}/chapters/17-tips-tricks/`}>Ch 17</a>).</p>
           <CopyBlock client:visible text={HOOK_SECRETS_SCAN} filename="secrets-scan.sh" language="bash" />
@@ -172,7 +173,7 @@ const faq = {
           <h3>Where do Claude Code hooks go?</h3>
           <p><code>~/.claude/settings.json</code> for global, <code>&lt;repo&gt;/.claude/settings.json</code> committed for the team.</p>
           <h3>How do I block Claude Code from pushing to main?</h3>
-          <p>A PreToolUse hook on Bash that greps the tool input and exits 2 — the stderr message goes back into the model's context, so it adapts instead of retrying.</p>
+          <p>The example requires <code>jq</code>, reads <code>.tool_input.command</code> from JSON on stdin, and exits 2 when it contains <code>git push origin main</code>. The stderr message goes back into the model's context. This literal check can miss other push syntax; enforce the full branch policy with Git-host branch protection.</p>
           <h3>Can a hook stop Claude Code from leaking secrets?</h3>
           <p>Yes — PreToolUse on Write|Edit scanning live-key patterns. It only sees the tool-input payload; re-verify the blind spot after harness updates.</p>
           <h3>What's the difference between a Stop hook and /goal?</h3>

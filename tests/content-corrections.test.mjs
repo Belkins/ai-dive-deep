@@ -142,6 +142,46 @@ test('resources no longer offers the unsafe aggregate-imputation download', () =
 const compile = (code) => ts.transpileModule(code, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 }).outputText;
+
+test('published block-push hooks read JSON stdin and return blocking decisions', async () => {
+  const { HOOK_BLOCK_PUSH_TO_MAIN } = await import(`data:text/javascript;base64,${Buffer.from(compile(source('src/lib/snippets.ts'))).toString('base64')}`);
+  const section = chapter('16-hooks-subagents').split('### 3. block-push-to-main')[1].split('### 4.')[0];
+  const chapterConfig = JSON.parse(section.match(/```json\n([\s\S]*?)\n```/)[1]);
+  const configs = [JSON.parse(HOOK_BLOCK_PUSH_TO_MAIN).hooks, chapterConfig];
+  for (const config of configs) {
+    assert.equal(config.PreToolUse[0].matcher, 'Bash');
+    const command = config.PreToolUse[0].hooks[0].command;
+    for (const [input, expectedStatus, legacyInput] of [
+      [{ tool_input: { command: 'git push origin main' } }, 2, ''],
+      [{ tool_input: { command: 'git status && git push origin main' } }, 2, ''],
+      [{ tool_input: { command: 'git push origin feature/hooks' } }, 0, 'git push origin main'],
+      [{ tool_input: { command: 'git status', description: 'git push origin main' } }, 0, ''],
+      [{ tool_input: { command: 'printf "quoted text\\n"' } }, 0, ''],
+      [{ tool_input: {} }, 2, ''],
+      [{ tool_input: { command: 42 } }, 2, ''],
+      ['{invalid', 2, ''],
+    ]) {
+      const result = spawnSync('sh', ['-c', command], {
+        input: typeof input === 'string' ? input : JSON.stringify(input),
+        env: { ...process.env, CLAUDE_TOOL_INPUT: legacyInput },
+        encoding: 'utf8', timeout: 5000,
+      });
+      assert.ifError(result.error);
+      assert.equal(result.status, expectedStatus, JSON.stringify(input));
+      assert.equal(result.stdout, '', 'exit-code hooks must not emit a JSON decision');
+      if (expectedStatus === 2) assert.match(result.stderr, /Blocked:/);
+      else assert.equal(result.stderr, '');
+    }
+    const missingJq = spawnSync('/bin/sh', ['-c', command], {
+      input: JSON.stringify({ tool_input: { command: 'git push origin main' } }),
+      env: { PATH: '/nonexistent' }, encoding: 'utf8', timeout: 5000,
+    });
+    assert.ifError(missingJq.error);
+    assert.equal(missingJq.status, 2, 'missing jq must not silently allow a push');
+    assert.match(missingJq.stderr, /Blocked:/);
+  }
+});
+
 const widgetSource = source('src/widgets/DayZeroChecklist.tsx');
 const widgetAst = ts.createSourceFile('DayZeroChecklist.tsx', widgetSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 const helpers = widgetAst.statements.filter((statement) => ts.isVariableStatement(statement)

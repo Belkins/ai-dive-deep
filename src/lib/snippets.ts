@@ -82,7 +82,7 @@ export const HOOK_BLOCK_PUSH_TO_MAIN = `{
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \\"$CLAUDE_TOOL_INPUT\\" | grep -q 'git push origin main'; then echo 'Blocked: push to main requires a human.' >&2; exit 1; fi"
+            "command": "command=$(jq -er '.tool_input.command | strings') || { echo 'Blocked: cannot read hook input; check JSON and install jq.' >&2; exit 2; }; if printf '%s\\\\n' \\"$command\\" | grep -q 'git push origin main'; then echo 'Blocked: push to main requires a human.' >&2; exit 2; fi; exit 0"
           }
         ]
       }
