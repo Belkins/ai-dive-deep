@@ -101,14 +101,19 @@ Wrote to a test file? Run that one test. Tight feedback loop, no orchestration l
     {
       "matcher": "Bash",
       "hooks": [
-        { "type": "command", "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -q 'git push origin main'; then echo 'Blocked: push to main requires a human.' >&2; exit 1; fi" }
+        {
+          "type": "command",
+          "command": "command=$(jq -er '.tool_input.command | strings') || { echo 'Blocked: cannot read hook input; check JSON and install jq.' >&2; exit 2; }; case \"$command\" in *'git push origin main'*) echo 'Blocked: push to main requires a human.' >&2; exit 2;; esac; exit 0"
+        }
       ]
     }
   ]
 }
 ```
 
-Non-zero exit blocks the tool call. The stderr message goes back into the model's context, so the agent reads "Blocked: push to main requires a human." and adapts. This single hook has saved me from three "oh no" moments at Belkins this year.
+This command requires `jq` and reads `.tool_input.command` from the JSON Claude Code sends on stdin. Exit `2` blocks the `PreToolUse` call; exit `1` with no JSON decision does not. Missing `jq` or unreadable input also returns `2`. The stderr message goes back into the model's context, so the agent reads "Blocked: push to main requires a human." and adapts. This single hook has saved me from three "oh no" moments at Belkins this year.
+
+This is a literal text check for `git push origin main`, not a shell parser: flags, aliases, other remotes or refspecs can bypass it, and quoted text can match. Use branch protection on your Git host for a complete branch policy. See the [current hook contract](/claude-code-hooks/#config).
 
 ### 4. commit-message-template
 
@@ -146,16 +151,17 @@ Two-minute threshold, Slack DM, done. Now I can launch a long refactor, walk awa
 
 ## Hooks return values matter
 
-This is the part most people miss. Hooks aren't fire-and-forget. They have a contract:
+This is the part most people miss. Hooks aren't fire-and-forget. For a `PreToolUse` command hook with no JSON decision on stdout:
 
-- Exit 0 — tool call proceeds.
-- Non-zero exit — tool call is blocked.
-- stdout — surfaces to the agent as additional context.
-- stderr — surfaces to the agent as a warning/error message.
+- Exit 0 — no blocking decision; the normal permission flow applies.
+- Exit 2 — blocks the tool call and sends the stderr reason to Claude.
+- Other exit codes, including 1 — non-blocking errors.
+
+Valid JSON on stdout can also control the decision. Other events have their own output rules; `SessionStart`, for example, adds plain-text stdout to Claude's context. See the [official reference](https://code.claude.com/docs/en/hooks#hook-input-and-output).
 
 Which means a hook is also a way to talk back to Claude. Two patterns I lean on:
 
-- **Reject with a why.** A `PreToolUse` hook can exit 1 with a stderr message that explains the rejection — "this branch is frozen, switch to a feature branch first" — and the agent will pick up the redirection on its next move.
+- **Reject with a why.** A `PreToolUse` hook can exit 2 with a stderr message that explains the rejection — "this branch is frozen, switch to a feature branch first" — and the agent will pick up the redirection on its next move.
 - **Inject context.** A `SessionStart` hook can `cat` a file to stdout, and that text gets prepended to the model's context for the session. Great for "current sprint priorities" or "things this codebase has been burned by."
 
 Hooks aren't just guardrails. They're a side-channel for policy.
