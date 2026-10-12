@@ -16,11 +16,28 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 20',
+    date: '2026-10-12',
+    tagline: 'Two product builds at once with agent swarms: a conductor that never codes, four checkers per builder, one merge lock and 201 watched deploys.',
+    bannerText: 'New: Chapter 58, The Conductor Never Codes. Two product builds, one swarm system.',
+    bannerHref: '/chapters/58-conductor-never-codes/',
+    shipped: [
+      'Chapter 58: The Conductor Never Codes. Two product builds ran at once with scripted agent swarms in October 2026, and the session in charge of each one was barred from writing product code: it planned, delegated and decided.',
+      'Unit cards someone else can check, a fresh verifier and a refuter for every unit, one merge lock gated on the staged merge, and a deploy watcher that smoke-tests every sitemap URL and rolls back on a failure.',
+      'Twelve breaks in one ledger, from a verifier that kept moving the goalposts to a homepage sent back for drifting from the approved design, with who caught each one and what it became.',
+      'Estimate against actual for both builds, what was never recorded, and an honest status for each product.',
+      'Three figures: two builds on one calendar, agent starts by role, and units merged against production deploys per day.',
+    ],
+    receipts: [
+      { label: 'Prompts typed, 25 Sep to 12 Oct', value: '223, median 52 characters' },
+      { label: 'Rightmark production deploys, 8 to 12 Oct', value: '201 live, each smoke-tested; 2 failed attempts caught' },
+      { label: 'Rightmark checkers to builders', value: '1,353 to 337' },
+    ],
+  },
+  {
     edition: 'Edition 19.1',
     date: '2026-10-03',
     tagline: 'A reference page for Claude Code mods: the answer, the comparison, a first mod to copy and six real ones.',
-    bannerText: 'New: Claude Code mods, the reference. What a mod is, six real ones, and a first mod to copy.',
-    bannerHref: '/claude-code-mods/',
     shipped: [
       '/claude-code-mods: what a Claude Code mod is, how it differs from settings hooks, skills, MCP servers and the status line, and how to install or load one with /plugin, --plugin-dir or CLAUDE_CODE_PLUGIN_DIRS.',
       'A copy-paste first mod that refuses an unquoted zsh =word and hands Claude the fix, checked with validate, strict tsc and the engine test runner on 2026-10-03.',

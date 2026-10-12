@@ -64,6 +64,7 @@ export const CHAPTERS: ChapterMeta[] = [
   { number: 55, slug: '55-claude-sonnet-5-5', title: 'Claude Sonnet 5.5 for Everyday Work', subtitle: 'Same-Task Receipts Against Opus 5.5, and When the Cheaper Model Is Enough' },
   { number: 56, slug: '56-skill-leaderboard', title: 'Read Before You Install', subtitle: '700 Ranked Repos, 118 Read From Source and Nine Installs' },
   { number: 57, slug: '57-claude-code-mods', title: 'Claude Code Mods', subtitle: 'Six Built and Tested in 32 Minutes, and the Guard That Blocked Its Author' },
+  { number: 58, slug: '58-conductor-never-codes', title: 'The Conductor Never Codes', subtitle: 'Two Products, Five Sessions at Once and the Homepage I Sent Back' },
 ];
 
 // Narrative parts — the journey shape. Different from SECTIONS (which is by topic).
@@ -104,7 +105,7 @@ export const PARTS: { key: PartKey; label: string; tagline: string; intro: strin
     label: 'Part V — The Building Site',
     tagline: 'From Saturday idea to deployed URL with receipts.',
     intro: "Six stages: ideation → foundation → creation → polishing → security → deploy. Plus cron, headless, vibe coding, evals, the bill. This is the part that turns reading into shipping.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done', '41-send-the-link', '45-app-store-no-swift', '46-designing-with-ai', '47-measurement-layer', '48-traffic-graph-that-lies', '52-what-agents-cant-see', '53-first-real-caller'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '38-run-until-done', '41-send-the-link', '45-app-store-no-swift', '46-designing-with-ai', '47-measurement-layer', '48-traffic-graph-that-lies', '52-what-agents-cant-see', '53-first-real-caller', '58-conductor-never-codes'],
   },
   {
     key: 'VI',
@@ -155,7 +156,7 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
     key: 'building',
     label: 'Building Products',
     description: "From Saturday idea to deployed URL. Six stages. Cron. Headless. Vibe coding. The bill, demystified.",
-    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '41-send-the-link', '45-app-store-no-swift', '46-designing-with-ai', '47-measurement-layer', '48-traffic-graph-that-lies', '52-what-agents-cant-see', '53-first-real-caller'],
+    slugs: ['31-stages', '07-cron', '18-headless-ci', '19-build-products', '23-vibe-coding', '25-evals-or-hope', '29-cost-economics', '30-sdk-direct', '41-send-the-link', '45-app-store-no-swift', '46-designing-with-ai', '47-measurement-layer', '48-traffic-graph-that-lies', '52-what-agents-cant-see', '53-first-real-caller', '58-conductor-never-codes'],
   },
   {
     key: 'resources',
