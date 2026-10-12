@@ -9,8 +9,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Every count on this page is frozen at the 12 October 2026 snapshot; receipts in Chapter 58.
 // The templates are rewritten from the two builds with decoy names: no real account, path, repo, lock or script name.
-// Each TEMPLATE_* constant must equal its file in playbook-templates/ byte for byte (checked by a node one-off).
-const EVIDENCE_DATE = '2026-10-12';
+// The TEMPLATE_* strings below are the source. Their two scripts were checked outside the repo with bash -n and a dry run (PR for #61).
 
 const navItems = [
   { id: 'answer', label: 'The 30-second answer' },
@@ -29,7 +28,7 @@ const navItems = [
   { id: 'faq', label: 'FAQ' },
 ];
 
-// BEGIN TEMPLATES (generated from playbook-templates/; edit the files, not these strings)
+// BEGIN TEMPLATES
 const TEMPLATE_CONDUCTOR = `> Exists because on 9 October, at 10:30 UTC, it was a sibling session, not the builder, that caught sign-in answering 500 after a deploy.
 # Conductor prompt
 
@@ -267,7 +266,7 @@ const TEMPLATE_INTEGRATE = `#!/usr/bin/env bash
 #   merge-unit.sh compose <branch> <branch> [...]   all branches in one throwaway tree, gate once, keep nothing
 #
 # Exit: 0 merged or composed clean; 1 conflict or gate failed, main untouched; 2 usage or precondition; 3 no lock.
-# Runs on macOS bash 3.2 and Linux bash. Needs git, plus node when PLAN_FILE is set.
+# Tested on macOS bash 3.2. Needs git, plus node when PLAN_FILE is set.
 
 set -eu
 set -o pipefail
@@ -571,7 +570,7 @@ const TEMPLATE_WATCHER = `#!/usr/bin/env bash
 #
 # Usage: deploy-watcher.sh [--once]      (--once: one pass, for cron or a launchd job)
 # Exit: 0 fine; 1 stopped after MAX_FAILURES failed passes in a row; 2 rollback failed or bad setup.
-# Runs on macOS bash 3.2 and Linux bash. Needs git, curl, tar, grep, sed.
+# Tested on macOS bash 3.2. Needs git, curl, tar, grep, sed.
 
 set -eu
 set -o pipefail
@@ -1035,7 +1034,7 @@ const faq = {
     <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Playbook</div>
     <h1>The swarm build playbook: ten templates, and the break each one prevents.</h1>
     <p class="mt-3 max-w-2xl text-lg" style="color: rgb(var(--muted))">The conductor prompt, unit contract, verifier rubric, merge lock, deploy watcher and budget card behind two product builds in October 2026. Decoy names, real numbers.</p>
-    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The numbers are frozen on {EVIDENCE_DATE}. The story, with the failures in order, is in <a href={`${base}/chapters/58-conductor-never-codes/`}>Chapter 58</a>.</p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The numbers are frozen on 12 October 2026. The story, with the failures in order, is in <a href={`${base}/chapters/58-conductor-never-codes/`}>Chapter 58</a>.</p>
   </section>
 
   <section class="container-wide pb-24">

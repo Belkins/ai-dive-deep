@@ -23,7 +23,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     bannerHref: '/swarm-build-playbook/',
     shipped: [
       '/swarm-build-playbook: the conductor prompt, a role roster with model, effort and turn caps, the unit contract as JSON, a planning swarm, and the verifier and refuter rubric.',
-      'Two scripts written for macOS bash 3.2 and Linux bash: a merge-lock integrator that gates the staged merge and keeps its lock alive, and a deploy watcher that smoke-tests every sitemap URL and rolls back.',
+      'Two scripts tested on macOS bash 3.2: a merge-lock integrator that gates the staged merge and keeps its lock alive, and a deploy watcher that smoke-tests every sitemap URL and rolls back.',
       'A guard hook with probe payloads and a self-test, a budget card with the stop rule at 1.5 times, a taste lock for CLAUDE.md, and an FAQ with structured data. Receipts in Chapter 58.',
     ],
     receipts: [

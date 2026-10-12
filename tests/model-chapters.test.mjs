@@ -182,6 +182,7 @@ test('chapter 58 is wired: neighbours, Part V and Building Products after Chapte
   for (const href of ['/chapters/28-failure-receipts/', '/chapters/25-evals-or-hope/', '/swarm-build-playbook/']) {
     assert.ok(content.includes(href), `the chapter must link to ${href}`);
   }
+  assert.equal((content.match(/\(\/swarm-build-playbook\/\)/g) ?? []).length, 2, 'the playbook is linked from section 2 and from the ledger');
   const ids = [...content.matchAll(new RegExp(`id="(${slug}-\\d+)"`, 'g'))].map(m => m[1]);
   assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three figures are placed');
   for (const id of ids) {
@@ -221,8 +222,10 @@ test('the swarm build playbook page keeps its search fields and its ways in', ()
   for (const href of ['/chapters/58-conductor-never-codes/', '/swarms/', '/dynamic-workflows/', '/agent-workflow/']) {
     assert.ok(page.includes(`\${base}${href}`), `the page links to ${href}`);
   }
-  // The visible FAQ and the JSON-LD both come from faqItems, so they match by construction.
+  // The visible FAQ and the JSON-LD both come from faqItems, so they match by construction; pin that construction.
   assert.ok(page.includes('set:html={JSON.stringify(faq)}') && /'@type': 'FAQPage'/.test(page), 'the FAQPage JSON-LD is emitted');
+  assert.match(page, /mainEntity: faqItems\.map\(item => \(\{/, 'the JSON-LD carries every FAQ item');
+  assert.match(page, /\{faqItems\.map\(item => \(\s*<>\s*<h3>\{item\.q\}<\/h3>\s*<p>\{item\.a\}<\/p>/, 'the visible FAQ renders the same items');
   assert.ok((page.match(/^\s+q: '/gm) ?? []).length >= 5, 'the FAQ has at least five questions');
   assert.ok(!page.includes('var(--border)'), 'borders use rgb(var(--line)); --border does not exist');
   for (const file of ['src/pages/index.astro', 'src/pages/llms.txt.ts', 'src/components/Nav.astro']) {
