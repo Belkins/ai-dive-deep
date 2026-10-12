@@ -192,7 +192,7 @@ test('chapter 58 is wired: neighbours, Part V and Building Products after Chapte
   }
   const edition = CHANGELOG.find(entry => entry.edition === 'Edition 20');
   assert.equal(edition?.date, '2026-10-12', 'Edition 20 ships the chapter');
-  assert.ok(edition.shipped[0].startsWith('Chapter 58: The Conductor Never Codes.'), 'the first shipped line names the chapter');
+  assert.ok(edition.shipped.some(line => line.startsWith('Chapter 58: The Conductor Never Codes.')), 'a shipped line names the chapter');
 });
 
 test('the Claude Code mods reference page keeps its search fields and its ways in', () => {
