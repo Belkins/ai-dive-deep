@@ -125,7 +125,7 @@ test('chapter 56 is wired: neighbours, Part VI and AI Agents beside Chapter 39, 
 test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside Chapter 20, the latest edition banner, figures and glossary keys', () => {
   const slug = '57-claude-code-mods';
   assert.equal(getNeighbors(slug).prev.slug, '56-skill-leaderboard');
-  assert.equal(getNeighbors(slug).next, null);
+  assert.equal(getNeighbors(slug).next.slug, '58-conductor-never-codes');
   const part = PARTS.find(item => item.slugs.includes(slug));
   assert.equal(part.key, 'IV', 'the chapter hero shows the Part IV pill');
   assert.equal(part.slugs[part.slugs.indexOf(slug) - 1], '16-hooks-subagents', 'it follows the hooks chapter it is the sequel to');
@@ -166,6 +166,35 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
   assert.ok(edition.shipped.some(line => line.startsWith('Chapter 57: Claude Code Mods.')));
 });
 
+test('chapter 58 is wired: neighbours, Part V and Building Products after Chapter 53, the dated evidence callout, figures and glossary keys', () => {
+  const slug = '58-conductor-never-codes';
+  assert.equal(getNeighbors(slug).prev.slug, '57-claude-code-mods');
+  assert.equal(getNeighbors(slug).next, null);
+  const part = PARTS.find(item => item.slugs.includes(slug));
+  assert.equal(part.key, 'V', 'the chapter hero shows the Part V pill');
+  assert.equal(part.slugs[part.slugs.indexOf(slug) - 1], '53-first-real-caller', 'it follows the last build story in Part V');
+  const building = SECTIONS.find(section => section.key === 'building');
+  assert.equal(building.slugs[building.slugs.indexOf(slug) - 1], '53-first-real-caller', 'listed under Building Products after Chapter 53');
+  const content = read(`src/content/chapters/${slug}.mdx`);
+  // Every count is a snapshot of sessions that were still running on 12 October; without the dated callout the numbers read as current.
+  assert.match(content, /title="Evidence status: 2026-10-12"/, 'the evidence callout must carry the snapshot date');
+  // The ledger is introduced from Chapter 28 and the closer goes back to Chapter 25.
+  for (const href of ['/chapters/28-failure-receipts/', '/chapters/25-evals-or-hope/']) {
+    assert.ok(content.includes(href), `the chapter must link to ${href}`);
+  }
+  const ids = [...content.matchAll(new RegExp(`id="(${slug}-\\d+)"`, 'g'))].map(m => m[1]);
+  assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three figures are placed');
+  for (const id of ids) {
+    assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+  }
+  for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
+  }
+  const edition = CHANGELOG.find(entry => entry.edition === 'Edition 20');
+  assert.equal(edition?.date, '2026-10-12', 'Edition 20 ships the chapter');
+  assert.ok(edition.shipped[0].startsWith('Chapter 58: The Conductor Never Codes.'), 'the first shipped line names the chapter');
+});
+
 test('the Claude Code mods reference page keeps its search fields and its ways in', () => {
   const page = read('src/pages/claude-code-mods.astro');
   // These two strings make the page the landing for the query; check-seo only checks length.
@@ -184,10 +213,10 @@ test('the Claude Code mods reference page keeps its search fields and its ways i
   }
 });
 
-test('the Claude Code mods reference page carries the latest edition banner', () => {
-  assert.equal(CHANGELOG[0].edition, 'Edition 19.1');
-  assert.equal(CHANGELOG[0].date, '2026-10-03');
-  assert.equal(CHANGELOG[0].bannerHref, '/claude-code-mods/', 'the banner points at the page a search lands on');
+test('chapter 58 carries the latest edition banner', () => {
+  assert.equal(CHANGELOG[0].edition, 'Edition 20');
+  assert.equal(CHANGELOG[0].date, '2026-10-12');
+  assert.equal(CHANGELOG[0].bannerHref, '/chapters/58-conductor-never-codes/', 'the banner points at the new chapter');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
   assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
 });

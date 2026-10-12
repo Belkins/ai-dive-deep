@@ -1,0 +1,230 @@
+---
+number: 58
+slug: "58-conductor-never-codes"
+title: "The Conductor Never Codes"
+subtitle: "Two Products, Five Sessions at Once and the Homepage I Sent Back"
+tldr: "In October 2026 I ran two product builds at once with agent swarms. Rightmark is a standalone data licensing product. Dylan is an AI SDR. Across 18 days I typed 223 prompts, the median one 52 characters. Each build's lead session was barred from writing product code: it planned, delegated and decided. Fresh verifiers reran every unit, refuters attacked every finding, and checkers outnumbered builders four to one. Rightmark merged through one lock and shipped 201 smoke-tested production deploys, and a watcher rolled back the attempt that broke sign-in. Make the session in charge a conductor, and turn every break into a gate before the next unit."
+seoDescription: "How one founder ran two AI swarm builds at once: a conductor that never codes, four checkers per builder, one merge lock and 201 watched deploys."
+keyConcepts: ["Conductor", "Unit contract", "Merge lock", "Deploy watcher", "Independent verification"]
+readingMinutes: 17
+---
+
+import Callout from '@/components/Callout.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import ScreenshotPlaceholder from '@/components/ScreenshotPlaceholder.astro';
+import GlossaryTerm from '@/components/GlossaryTooltip.astro';
+
+At 16:47 UTC on 6 October I typed this into a Claude Code session: "No lets start to build it NOW, launch 20 agents simultaniesy with workflows to make this live asap". Three days later, at 17:35 on 9 October, five sessions were live on my Mac at the same moment. Two were building Rightmark. Three were building Dylan. Across 18 days and 20 sessions I typed 223 prompts, and the median one was 52 characters long.
+
+The agents were never the hard part. The system around them was, and every rule in it was paid for by a failure you can read below.
+
+<Callout type="note" title="Evidence status: 2026-10-12">
+The window is 25 September to 12 October 2026, times in UTC. The numbers come from session transcripts, workflow journals and result files, git logs, the unit graph, the deploy log, build-state notes and live pages, read on 12 October while two sessions still ran, so every count is a snapshot of that morning. I did not measure the main sessions' own tokens or any cost in money, and two build phases never recorded their actual tokens; the chapter says which. Every figure is rebuilt from logs, because the real dashboards carry account names. Nobody besides me is named.
+</Callout>
+
+## Two products, one Mac
+
+Rightmark helps companies license their private data to AI developers, and it pays the people who introduce them, the Rightmark Scouts. Its home page states the thesis: "AI labs have read the public internet. Now they pay for what is private." An owner gets an appraisal in about a minute, with no files and no access. Rightmark's build ran as a seven-day burst from 6 October, in two long sessions.
+
+Dylan is an AI SDR. His page title says it: "the AI SDR that books B2B meetings, billed when held." He finds buyers, writes to them from his own mailboxes, answers their replies and books qualified meetings into your calendar. The site went live on 8 October at 12:20, under the eyebrow line "AI agent · Built by Belkins". His build ran in eighteen sessions, across the site and the platform.
+
+The builds ran beside each other. Two or more sessions were live for about 70.8 hours, three or more for about 26.8 and four or more for about 8.2. Seventeen of my prompts contained "continue", and 15 asked some form of "what is left". Run two builds at once only if each one can go a day without you.
+
+<ScreenshotPlaceholder
+  id="58-conductor-never-codes-1"
+  caption="Two builds on one calendar: prompts, workflow runs and agents per day"
+  note="Built from the session transcripts and workflow journals, 25 September to 12 October 2026, UTC. Three lanes. The top lane is Rightmark. The two lower lanes are Dylan, its site and ops sessions and its platform sessions. Markers show each go-live on 8 October and the five-session peak on 9 October at 17:35. Snapshot taken 12 October 2026 at 08:11, with two sessions still running, so the last day is partial."
+  ratio="16/9"
+/>
+
+## The conductor never codes
+
+The Rightmark build doc opens on one rule: "The main Claude Code session is the conductor. It plans, delegates, merges through one integrator, and reports. It does not write application code."
+
+It casts the <GlossaryTerm term="Swarm">swarm</GlossaryTerm> as a film shoot: "The conductor is the director. The architect is the production designer who draws the sets before anyone builds." Ten roles make up the crew: conductor, architect, builder, designer, writer, verifier, security, leak-guard, red-team and integrator. Builders, designers, writers and verifiers each get a <GlossaryTerm term="Worktree">worktree</GlossaryTerm>.
+
+Dylan's build kit says it in four sentences: "You lead. Specialists build. Independent agents check. Scripts hold the plan." It names eight roles, each with a model and an effort level. The architect, the security reviewer and the skeptic run on Opus at xhigh. The web, app and engine builders and the content editor run on Opus at high. The QA verifier runs on Sonnet at high.
+
+Almost none of it was hand-spawned. My main sessions made 132 Workflow calls and only 27 plain Agent calls: the fan-out of [Chapter 6](/chapters/06-the-swarm/), written down as [dynamic workflows](/dynamic-workflows/), with the patterns from [/swarms/](/swarms/) underneath.
+
+Rightmark ran as two sessions that talked: 116 cross-session messages arrived between them, and the second queued approved units for the builder. It also watched production. At 10:30 on 9 October it reported that the sign-in pages had been answering 500 since a morning deploy. A second session watching production is a checker nobody has to schedule.
+
+Give the lead one job: decide.
+
+## A plan someone else can check
+
+Rightmark's Phase 0 planned with competing drafts. Three architects drafted independently, one optimizing for delivery speed, one for security and privacy, one for SEO and performance. A judge merged them, then three critics and a refuter attacked the merge. Out came 51 architecture decision records, 41 TypeScript contract files and a dependency graph of 90 units.
+
+Every unit in that graph is a card with the same fields: id, deps, owns, reads, acceptance, evidence and review. A builder knows what it may touch, a verifier knows what done looks like. Shared files belong only to integrator units.
+
+Dylan's planning added one habit: pilot every workflow on one unit first. The Phase 0 pilot lane cost 297,733 tokens against 260,000 estimated and checked 58 facts: 47 confirmed, 11 corrected, 0 refuted.
+
+Decisions ran on defaults. Rightmark's decisions file says it in one line: "The swarm uses the default until Vlad decides." The conductor batched open questions to the next gate instead of stopping the graph, and by 12 October the file held 27 decision rows and 24 dated answers.
+
+If a verifier cannot read done off the card, the unit is not planned yet.
+
+The Rightmark stages:
+
+| Stage | Agents | Tokens | Tests after |
+| --- | --- | --- | --- |
+| Phase 0 planning | 26 | 8.7M | a 90-unit graph |
+| Dataflow build, finished 9 October | 235 | 43.0M | not recorded; ran 23.3 hours |
+| All 75 finished workflows, 6 to 12 October | 2,284 | about 316.0M | last full gate 25 pass, 6 fail, 1 pending, each failure owned by a fix unit; 11,326 unit tests: 11,295 passed, 31 skipped, 0 failed |
+
+The Dylan stages:
+
+| Stage | Agents | Tokens | Tests after |
+| --- | --- | --- | --- |
+| Phase 0 full run, the web program's plan, 6 October | 126 | 21.8M against 12M estimated | plan only; 50 panel findings, 40 fixed |
+| Phase 3 build run, waitlist and ways to pay | 40 | 10.4M (about 12M with planning and sheet work) | review rounds found 14, then 6, then 2 blockers or majors |
+| Phase 4, free tools and hubs | ten build lanes | estimate 10M to 14M, actual not recorded | 189 of 191 node tests, 1 skipped by design |
+| Search pages, 10 October | 12 | 2.42M against about 1.3M | 199 of 199 tests |
+
+## Four checkers for every builder
+
+Rightmark's build doc has four quality patterns. The first matters most: "The agent that built a unit never grades it. A fresh verifier checks out the branch, reruns every command, and tries the feature like a user." The second: every finding goes to a second agent whose job is to disprove it, and only survivors become fix units.
+
+From 6 to 12 October, 85 Rightmark workflow runs logged 3,021 agent starts. By label: 434 verify, 334 refute, 320 leak-guard and 265 security, against 337 build. That is 1,353 checker starts, four for every builder.
+
+<ScreenshotPlaceholder
+  id="58-conductor-never-codes-2"
+  caption="Who the agents were: Rightmark agent starts by role"
+  note="Counted from the started events in 85 Rightmark workflow journals, 6 to 12 October 2026, by the first word of each agent's label: sync 800, verify 434, build 337, refute 334, leak-guard 320, security 265, merge 244, fix 133. Every start counts, retries included. Sync and merge agents are plumbing, not checkers."
+  ratio="16/9"
+/>
+
+The checkers had a failure of their own first. On 6 October the scaffold unit, the one every other unit depended on, burned three hours: three verify rounds and two fix rounds. It came back blocked with zero P0 or P1 findings. The verifier kept inventing new bypasses, and the whole graph waited. The conductor read a blocked unit with nothing serious in it and saw the goalposts moving.
+
+The fix was a severity rubric. Verifiers now grade each unmet criterion by severity, and only P0 and P1 gaps block. The scaffold was accepted later that day, with a parallel hardening unit.
+
+Dylan's kit caps the same loop from the other side. A finding is a blocker or a major only if it cites a gate, a promise or a failing test. After three fix rounds the unit is "stuck": "Never loop a fourth time." Reviewers never fix what they found; a fresh builder does.
+
+The <GlossaryTerm term="Review fleet">review fleet</GlossaryTerm> earned that rule in Phase 4. Round 2 found focus lost on a failed submit, and a guard test that could not fail. The kit already said what a guard test owes you: the reviewer removes the guard locally and watches the test go red.
+
+<PullQuote>Tests that cannot fail prove nothing.</PullQuote>
+
+## One lock on main
+
+Rightmark's parallel runs shared one main branch through one merge lock. The integrator takes the lock, merges with no commit, runs the quick gate on the staged merge, commits, marks the unit merged and removes its worktree. Anything that fails aborts the merge and leaves main untouched: the integrator <GlossaryTerm term="Fail closed">fails closed</GlossaryTerm>.
+
+The run generator says why in a parenthesis.
+
+<PullQuote>A merge commit diffs nothing.</PullQuote>
+
+Gate the staged merge and you test what main is about to become.
+
+9 October tested the lock four ways. First, dead syncs: a run learns of other runs' merges only through sync agents, and after about 4 hours of quiet it gave up. Five runs died that way and stranded 54 units that never started. The generator now allows 64 idle syncs by default, about 17 hours.
+
+Second, a sync agent wrote a stray file into the main checkout and, in the generator's words, "blocked every merge". Sync agents may no longer write there.
+
+Third, contention. At a load average near 400 a gate on a staged merge ran 50 minutes, and a waiting integrator decided the lock was stale and took it mid-merge. A keeper script now refreshes the lock during long merges.
+
+Fourth, merges failed on vitest's 5-second default at load averages of 40 to 180. Known-slow tests got explicit 30-second limits.
+
+On 10 October I pushed: "please i need all features on my website be ready now". Two runs restarted with more slots. The same day, resuming a stopped parallel run replayed reviews that had already finished, because the resume cache is positional. The conductor's README now carries the rule: "Never resume a stopped run: the resume cache is positional, so start a fresh one".
+
+## Production is the last test
+
+Between 8 and 12 October Rightmark's deploy script shipped 201 production deploys, every one smoke-tested: 20, 71, 47, 49 and 14 a day. A watcher woke every 10 minutes. When main had moved, it exported main cleanly, never the working checkout or a peer's edits, deployed it, smoke-tested key pages and every sitemap URL, and rolled back on a failure. After three failed deploys in a row it stops.
+
+Two further attempts failed, and both were caught. On 8 October one deploy failed and production stayed unchanged. On 9 October a smoke test found /sign-in/ answering 500, and the watcher rolled back on its own.
+
+The same day a nested-layout redirect sent Scouts to the wrong page after sign-in, and a live GET check found it, not the tests.
+
+<ScreenshotPlaceholder
+  id="58-conductor-never-codes-3"
+  caption="Merged, then live: Rightmark units merged and production deploys per day"
+  note="Units merged per day from the unit graph, dated by each merged unit's commit, 6 to 12 October 2026: 14, 24, 14, 54, 43, 42, 21. Production deploys per day from the deploy log, 8 to 12 October: 20, 71, 47, 49, 14. Marked: the failed deploy with production unchanged on 8 October and the automatic rollback on 9 October. 12 October is partial. The deploy log carries account names, so this chart is rebuilt from it, not captured."
+  ratio="16/9"
+/>
+
+The host's Git trigger never deployed Dylan's Phase 3 merge: no deployment, no commit status. The lead deployed that exact commit from Git through the host's API. Then a production end-to-end found every waitlist step after the first answering 503: the storage served a weak etag that the update check never matched. Local tests had used a file store, which is why they never saw it.
+
+[Chapter 53](/chapters/53-first-real-caller/) found the same pattern in a different build, where production caught what 601 passing tests missed. Smoke every URL on every deploy, roll back without asking, and run one end-to-end on production against the real store.
+
+## Taste is not a gate
+
+On 8 October rightmark.ai went live, and the same day I sent the homepage back.
+
+<PullQuote>"its not the website we initially design, that is not the main page i prepared at the beggining"</PullQuote>
+
+On 4 October, before any platform code, five parallel builders had made a 56-page static prototype, and an independent review had checked it. I approved that design. Then the conductor applied its own brief rules over my copy, and a style rule quietly rewrote my approved hero. Each rule made sense on its own.
+
+The fix was to make the 4 October design binding: the reference for every page it contains, where only hard rules may force a difference, each one listed. The hero keeps "See what yours is worth". Fifteen parity units brought the rest back, all 15 merged, and parity joined the full gate, so the next drift shows up red.
+
+Dylan's design started with options. Five designer agents worked in parallel from one brief, one direction each, and with the existing first site that made six. The winner, The Meeting, starts from the only thing a client pays for: the page is a week calendar, and time is the spacing unit. In the search-pages run a fixer reverted page titles, and the lead restored them.
+
+[Chapter 46](/chapters/46-designing-with-ai/) argues a model cannot pick the right interface; [Chapter 52](/chapters/52-what-agents-cant-see/) found a design nobody rendered. Here a chosen design was rewritten one sensible rule at a time. Write taste down as a reference, and put parity in the gate.
+
+## I automated the clicks and kept the signatures
+
+Rightmark's build doc lists what always needs my explicit OK in chat: production deploys, domains and DNS, purchases, emails or messages to real people, pushes to a remote, publishing anything, accepting terms, and changes to the guardrail files. A content firewall scans source and build output for names and phrases that must never ship. On day one a probe found it missed two banned phrases, and the fix went into a content-lint unit. The legal pages and Scout terms are drafts for counsel review, and Rightmark takes no health data until a HIPAA program and vendor agreements are in place.
+
+Dylan's kit draws its line in two <GlossaryTerm term="Hook">hooks</GlossaryTerm>. The first blocks pushes to main, force pushes, check-skipping merges, production deploys, DNS writes, live payment mode, secret reads, dashes in commits and edits to the guardrails. Its header calls it "a seatbelt, not a security boundary." The second blocks new dashes and secrets in files. On install, five probe payloads were refused. Live payments stay off until counsel approves the Terms, and the page promises that the client approves the plan, the first emails of every new angle and any new spend.
+
+Clicks were different. "Please i dont wnat to do anything manualy use chrome and do all of it", I wrote on 9 October, and the session in charge installed the sheet's script itself. A day later I drew the line from the other side: "i will handle leads, payments manualy for now". I refused manual clicks and kept the money.
+
+[Chapter 38](/chapters/38-run-until-done/) is about letting an agent run until a goal is met. This is its other half: the short list it never touches alone. Automate the clicks, keep the signatures.
+
+## The machine is the budget
+
+11 October was the day the Mac said no. Rightmark's parallel slots across runs summed to 11, the load average hit 460, and gates timed out. A test leak filled the disk; 12.6 GB was cleared, and the watcher now alerts below 12 GiB. A scheduler bug froze one run for four hours, so a watcher now flags any run idle for 75 minutes. A stale 906 MB build folder in the main checkout held the lock for more than 80 minutes. The budget that came out of it: about 5 units in flight, a disk floor and an idle watcher.
+
+Dylan's platform waves hit the same wall that day: a load average of about 900, a dead Docker daemon and 32 orphaned test workers. CI became the gate, and agents stopped running the full local suite. Turn caps were a limit too: the architect at 80 turns and the skeptic at 50 ran out and returned nothing, so every prompt now states a tool budget.
+
+The clock rationed the work as well: one Dylan prompt on 9 October paced it against the 5-hour usage window. On 7 October, and on the morning of 12 October up to the snapshot, the swarms kept building with zero prompts from me.
+
+On 10 October Dylan's site turned out to be invisible: "URL is unknown to Google". An audit named the gap as search demand: the pages buyers search for had never been built. A 12-agent run in four lanes built 26 of them and took the sitemap from 54 pages to 80, at 2.42M tokens against about 1.3M estimated, 1.9 times.
+
+## The ledger
+
+Like the receipts in [Chapter 28](/chapters/28-failure-receipts/), here are the twelve breaks side by side.
+
+| Finding | Where it lived | Caught by | What it became |
+| --- | --- | --- | --- |
+| A verifier invented bypasses for three hours | The scaffold's verify loop | The conductor, reading a blocked unit with no P0 or P1 | Severity grading |
+| Style rules rewrote my approved hero | The live homepage | Me, on the live site | A binding design, 15 parity units |
+| Sign-in answering 500 after a deploy | Production | A sibling session; the smoke test | Automatic rollback |
+| 54 units stranded by dead syncs | Runs that went quiet | The conductor, reading each run's sync state | An idle allowance of about 17 hours |
+| A lock broken mid-merge at load 400 | The merge lock | A failed merge | A lock keeper |
+| Scouts redirected after sign-in | A nested layout | A live GET, not tests | A fix unit |
+| A firewall missing banned phrases | The leak guard | A day-one probe | A content lint |
+| A merge that never deployed | The Git trigger | The lead, checking deploys | Deploy the exact commit via the API |
+| Waitlist steps answering 503 | A weak etag in production | A production end-to-end | A fix; the file store named as the blind spot |
+| A guard test that could not fail | Phase 4 tests | Review round 2 | Break the guard, watch it go red |
+| Google had never seen the site | Pages never built | An AEO audit | 26 search pages, 54 to 80 |
+| Load 460 and about 900, a full disk | The Mac | Gates timing out; Docker dying | About 5 in flight, a disk floor, CI as gate |
+
+Read the Caught by column. No row was caught by the agent that built the thing. The conductor, a reviewer and the scripts caught the plumbing; the rest needed what no builder had: my eyes on the live site, a sibling session, production checks, an audit, a machine out of room.
+
+<Callout type="warn" title="The rule">
+**Make the session in charge a conductor that never codes, and turn every failure into a script, a gate or a role before the next unit starts.**
+</Callout>
+
+## What it cost, and what I can't show you
+
+Rightmark's Phase 0 estimate was 90 units, about 512 to 520 agents and about 69M to 140M tokens. By 12 October the plan held 304 units, 212 merged, and 105 of the 304 were fix units. The 75 finished workflows ran 2,284 agents and used about 316.0M tokens, a floor that leaves out runs still live and both main sessions. Even as a floor that is 3.4 times the units, 4.4 times the agents and 2.3 times the top of the token range. The repo took 2,106 commits in seven days.
+
+Dylan's Phase 0 full run took 126 agents and 21.8M tokens against an estimate of 12M, 1.82 times, over the kit's own 1.5 times line. The lead reported the cause: 14 decision records instead of 10, more agents, more reading. Phase 4 was estimated at 10M to 14M tokens and Phase 2 at 6M to 8M; neither actual was recorded. [Chapter 29](/chapters/29-cost-economics/) does the token maths.
+
+What is missing is missing on purpose. I did not meter the main sessions' tokens, so every total undercounts. There is no cost in money. Unit ids, run names, accounts and people are left out.
+
+Rightmark today: the public site, the appraisal, the Scout program's first milestone, Repo Check v2.1.0, the Price Index and the intake form are live. Owner, buyer, partner and console features, hardening, the red team and the launch runbook are not built yet, and the roadmap gives no dates on purpose.
+
+Dylan today: a waitlist, beta pricing, payments only in test mode, and no results of his own yet: no meetings, reply rates or customers to report.
+
+<Callout type="tip" title="Run it on your own repo">
+Your Claude Code repos have history, and git history often carries more than half of a repo's standing-rate value. [Repo Check](https://rightmark.ai/repo-check/) is a free local script that values a repo on your own machine, never uploads code, and also runs as a Claude skill. Every price on the site and in the [appraisal](https://rightmark.ai/appraise/) is an indicative range with a confidence level, not an offer. Most repos are worth hundreds to low thousands per sale, and code takes about 4 to 10 months from submission to first payment. The [Scout program](https://rightmark.ai/scouts/join/) pays for introductions, and its terms are still a draft.
+
+Dylan is an AI SDR. He bills per held meeting, a person reads every waitlist entry, and there are no results to show yet. Beta pricing as of 12 October 2026 starts with Lite at $250 per held meeting. [Join the waitlist](https://meetdylan.ai/waitlist).
+</Callout>
+
+One Mac, two products, 223 prompts.
+
+## The closer
+
+A verifier with no stop rule, a style rule with no reference, a lock with no keeper, a file store that was not production. Each gap is now closed by something the system does on its own.
+
+[Chapter 25](/chapters/25-evals-or-hope/) is about an output that stayed broken because nothing was watching it. In a swarm build the watching is the system, and one person still decides what the product looks like and what it may sign.
+
+The agents build the product. I build the thing that builds it.
