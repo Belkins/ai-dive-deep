@@ -16,11 +16,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    edition: 'Edition 20.1',
+    date: '2026-10-12',
+    tagline: 'The Swarm Build Playbook: ten copyable templates from two product builds in one week.',
+    bannerText: 'New: The Swarm Build Playbook, the templates behind two product builds in one week.',
+    bannerHref: '/swarm-build-playbook/',
+    shipped: [
+      '/swarm-build-playbook: the conductor prompt, a role roster with model, effort and turn caps, the unit contract as JSON, a planning swarm, and the verifier and refuter rubric.',
+      'Two scripts tested on macOS bash 3.2: a merge-lock integrator that gates the staged merge and keeps its lock alive, and a deploy watcher that smoke-tests every sitemap URL and rolls back.',
+      'A guard hook with probe payloads and a self-test, a budget card with the stop rule at 1.5 times, a taste lock for CLAUDE.md, and an FAQ with structured data. Receipts in Chapter 58.',
+    ],
+    receipts: [
+      { label: 'Templates', value: '10, each opening with the break it prevents' },
+      { label: 'Production deploys, 8 to 12 Oct', value: '201 live, each smoke-tested; 2 failed attempts caught' },
+    ],
+  },
+  {
     edition: 'Edition 20',
     date: '2026-10-12',
     tagline: 'Two product builds at once with agent swarms: a conductor that never codes, four checkers per builder, one merge lock and 201 watched deploys.',
-    bannerText: 'New: Chapter 58, The Conductor Never Codes. Two product builds, one swarm system.',
-    bannerHref: '/chapters/58-conductor-never-codes/',
     shipped: [
       'Chapter 58: The Conductor Never Codes. Two product builds ran at once with scripted agent swarms in October 2026, and the session in charge of each one was barred from writing product code: it planned, delegated and decided.',
       'Unit cards someone else can check, a fresh verifier and a refuter for every unit, one merge lock gated on the staged merge, and a deploy watcher that smoke-tests every sitemap URL and rolls back on a failure.',

@@ -166,7 +166,7 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
   assert.ok(edition.shipped.some(line => line.startsWith('Chapter 57: Claude Code Mods.')));
 });
 
-test('chapter 58 is wired: neighbours, Part V and Building Products after Chapter 53, the dated evidence callout, figures and glossary keys', () => {
+test('chapter 58 is wired: neighbours, Part V and Building Products after Chapter 53, the dated evidence callout, the playbook link, figures and glossary keys', () => {
   const slug = '58-conductor-never-codes';
   assert.equal(getNeighbors(slug).prev.slug, '57-claude-code-mods');
   assert.equal(getNeighbors(slug).next, null);
@@ -178,10 +178,11 @@ test('chapter 58 is wired: neighbours, Part V and Building Products after Chapte
   const content = read(`src/content/chapters/${slug}.mdx`);
   // Every count is a snapshot of sessions that were still running on 12 October; without the dated callout the numbers read as current.
   assert.match(content, /title="Evidence status: 2026-10-12"/, 'the evidence callout must carry the snapshot date');
-  // The ledger is introduced from Chapter 28 and the closer goes back to Chapter 25.
-  for (const href of ['/chapters/28-failure-receipts/', '/chapters/25-evals-or-hope/']) {
+  // The ledger is introduced from Chapter 28, the closer goes back to Chapter 25, and the templates live on the playbook page.
+  for (const href of ['/chapters/28-failure-receipts/', '/chapters/25-evals-or-hope/', '/swarm-build-playbook/']) {
     assert.ok(content.includes(href), `the chapter must link to ${href}`);
   }
+  assert.equal((content.match(/\(\/swarm-build-playbook\/\)/g) ?? []).length, 2, 'the playbook is linked from section 2 and from the ledger');
   const ids = [...content.matchAll(new RegExp(`id="(${slug}-\\d+)"`, 'g'))].map(m => m[1]);
   assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three figures are placed');
   for (const id of ids) {
@@ -213,10 +214,29 @@ test('the Claude Code mods reference page keeps its search fields and its ways i
   }
 });
 
-test('chapter 58 carries the latest edition banner', () => {
-  assert.equal(CHANGELOG[0].edition, 'Edition 20');
+test('the swarm build playbook page keeps its search fields and its ways in', () => {
+  const page = read('src/pages/swarm-build-playbook.astro');
+  assert.match(page, /^\s*title="[^"]*Swarm Build Playbook[^"]*"/m, 'the <title> carries the query');
+  const description = page.match(/^\s*description="([^"]*)"/m)?.[1] ?? '';
+  assert.ok(description.includes('swarm') && description.length <= 160, 'the description names the query within 160 characters');
+  for (const href of ['/chapters/58-conductor-never-codes/', '/swarms/', '/dynamic-workflows/', '/agent-workflow/']) {
+    assert.ok(page.includes(`\${base}${href}`), `the page links to ${href}`);
+  }
+  // The visible FAQ and the JSON-LD both come from faqItems, so they match by construction; pin that construction.
+  assert.ok(page.includes('set:html={JSON.stringify(faq)}') && /'@type': 'FAQPage'/.test(page), 'the FAQPage JSON-LD is emitted');
+  assert.match(page, /mainEntity: faqItems\.map\(item => \(\{/, 'the JSON-LD carries every FAQ item');
+  assert.match(page, /\{faqItems\.map\(item => \(\s*<>\s*<h3>\{item\.q\}<\/h3>\s*<p>\{item\.a\}<\/p>/, 'the visible FAQ renders the same items');
+  assert.ok((page.match(/^\s+q: '/gm) ?? []).length >= 5, 'the FAQ has at least five questions');
+  assert.ok(!page.includes('var(--border)'), 'borders use rgb(var(--line)); --border does not exist');
+  for (const file of ['src/pages/index.astro', 'src/pages/llms.txt.ts', 'src/components/Nav.astro']) {
+    assert.ok(read(file).includes('/swarm-build-playbook/'), `${file} must link to /swarm-build-playbook/`);
+  }
+});
+
+test('the swarm build playbook carries the latest edition banner', () => {
+  assert.equal(CHANGELOG[0].edition, 'Edition 20.1');
   assert.equal(CHANGELOG[0].date, '2026-10-12');
-  assert.equal(CHANGELOG[0].bannerHref, '/chapters/58-conductor-never-codes/', 'the banner points at the new chapter');
+  assert.equal(CHANGELOG[0].bannerHref, '/swarm-build-playbook/', 'the banner points at the page a search lands on');
   assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
   assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
 });

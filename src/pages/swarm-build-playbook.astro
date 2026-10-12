@@ -1,0 +1,1361 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import SectionNav from '@/components/SectionNav.astro';
+import PullQuote from '@/components/PullQuote.astro';
+import CopyBlock from '@/widgets/CopyBlock.tsx';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Every count on this page is frozen at the 12 October 2026 snapshot; receipts in Chapter 58.
+// The templates are rewritten from the two builds with decoy names: no real account, path, repo, lock or script name.
+// The TEMPLATE_* strings below are the source. Their two scripts were checked outside the repo with bash -n and a dry run (PR for #61).
+
+const navItems = [
+  { id: 'answer', label: 'The 30-second answer' },
+  { id: 'loop', label: 'The loop' },
+  { id: 'conductor', label: '1. Conductor prompt' },
+  { id: 'roster', label: '2. Role roster' },
+  { id: 'contract', label: '3. Unit contract' },
+  { id: 'planning', label: '4. Planning swarm' },
+  { id: 'verify', label: '5. Verifier and refuter' },
+  { id: 'integrate', label: '6. Merge lock' },
+  { id: 'watcher', label: '7. Deploy watcher' },
+  { id: 'guard', label: '8. Guard hook' },
+  { id: 'budget', label: '9. Budget card' },
+  { id: 'taste', label: '10. Taste lock' },
+  { id: 'do-this', label: 'Do this Monday' },
+  { id: 'faq', label: 'FAQ' },
+];
+
+// BEGIN TEMPLATES
+const TEMPLATE_CONDUCTOR = `> Exists because on 9 October, at 10:30 UTC, it was a sibling session, not the builder, that caught sign-in answering 500 after a deploy.
+# Conductor prompt
+
+Paste this at the start of the conductor session, or into the repo's CLAUDE.md.
+Assumptions: Claude Code in one repo; the unit plan at plan/units.json (template 3); the integrator at scripts/merge-unit.sh (template 6); the deploy watcher at scripts/deploy-watcher.sh (template 7).
+Change first: the ASK FIRST list and the BUDGET numbers.
+
+Copy everything below this line into the session.
+
+You lead. Specialists build. Independent agents check. Scripts hold the plan.
+
+## Your job
+- Plan, delegate, merge through one integrator, and report. You never write product code yourself. A one-line fix still goes to a builder.
+- Read results, not diffs: unit reports, gate output, the deploy log, the live site.
+- Every finished unit goes to a fresh verifier. Every finding goes to a refuter. Only findings that survive become fix units (template 5).
+- Merge only through scripts/merge-unit.sh. Never merge by hand. Never resume a stopped run: start a fresh one with the units that are left.
+- Decisions run on defaults. When something needs me, add a row to docs/DECISIONS.md with the default you will use, keep building on the default, and batch the open rows to the next gate.
+- When something breaks, do not just fix it. Turn it into a script, a gate or a role before the next unit starts, and say which.
+
+## Ask first, every time (say what and why, then wait for a yes in chat)
+- Production deploys. The deploy watcher runs only after I start it.
+- Domains and DNS.
+- Purchases and paid services.
+- Emails or messages to real people.
+- Pushes to a remote.
+- Publishing anything.
+- Accepting terms.
+- Changes to guardrail files: hooks, CLAUDE.md, this prompt, the gate scripts.
+
+## Budget
+- Pilot every new workflow on one unit first.
+- Before each phase, write the estimate: agents, tokens, hours. If a phase reaches 1.5 times its estimate, stop and report the cause and the options.
+- About 5 units in flight on this machine, summed across every run. Stop new work below the disk floor in the budget card (template 9).
+
+## Report, every time
+1. What merged since the last report, by unit id.
+2. What is live, with the URL you checked and what you saw there.
+3. What failed, and the unit that owns the fix.
+4. What waits on me, each with its default.
+5. What you did not verify.
+`;
+
+const TEMPLATE_ROSTER = `> Exists because on 9 October a sync agent wrote a stray file into the main checkout and blocked every merge.
+# Role roster
+
+One subagent file or workflow stage per role, each with a model, an effort level, a turn cap and its own git worktree when it writes.
+Assumptions: Claude Code subagents or a workflow script; git worktrees; the integrator script (template 6).
+Change first: the turn caps and tool budgets, after one pilot unit shows what each role really uses.
+
+Model, effort and turn cap are the values one of the two builds used in its eight-role kit. The writer row uses that kit's content editor, the refuter row its skeptic. Rows marked "set" had no value recorded there: pick your own.
+
+| Role | Model, effort | Turn cap | Where it works | Writes | Job |
+|---|---|---|---|---|---|
+| Conductor | the main session | none | main checkout, read only | the plan and the status file | Plans, delegates, merges through the integrator, reports. Never writes product code. |
+| Architect | Opus, xhigh | 80 | own worktree | decisions, contracts, units | Draws the sets before anyone builds. |
+| Builder | Opus, high | 120 | own worktree | only the files its unit owns | One unit: a feature, a test suite, a port or a fix. |
+| Designer | set | set | own worktree | only the files its unit owns | Pages and components to the binding design (template 10). |
+| Writer | Opus, high | 60 | own worktree | copy files only | Copy under the content rules; every sentence traceable to a source. |
+| Verifier | Sonnet, high | 50 | own worktree | nothing in the repo | Reruns everything and tries the feature like a user (template 5). |
+| Refuter | Opus, xhigh | 50 | read only | nothing | Tries to disprove each finding. |
+| Security | Opus, xhigh | 50 | read only | nothing | Auth, data exposure, secrets, dependencies. |
+| Leak guard | set | set | read only | nothing | Scans source and build output for names and phrases that must never ship. |
+| Red team | set | set | read only | nothing | Attacks the running product once the features land. |
+| Integrator | a script, plus one agent for conflicts | set | main checkout, under the lock | merge commits only | Runs template 6 and owns the shared files. |
+| Sync | set | set | read only | nothing in the main checkout | Tells a run what other runs merged. |
+
+## Rules for every role
+- The agent that built a unit never grades it. Reviewers never fix what they found; a fresh builder fixes.
+- Every prompt states a tool budget, for example: "at most 40 tool calls; at 35, stop and return what you have". An architect and a skeptic that ran past their turn caps (80 and 50) returned nothing at all.
+- Nobody but the integrator writes in the main checkout. Sync agents never write a file there.
+- Every claim in a report carries evidence: a command and its exit code, a test name, a screenshot path, a URL, or a file and line.
+- Shared files (route registries, sitemap, nav, package files) belong to integrator units. Everyone else asks for changes in their unit report.
+`;
+
+const TEMPLATE_CONTRACT = `{
+  "_why": "Exists because on 10 October two lanes each invented their own version of the same shared feature, and the conductor had to unify them by hand.",
+  "_assumptions": "One JSON file holds every unit (plan/units.json). The integrator script marks units merged in it. Change first: owns, reads and the gate commands in evidence. Delete the _why and _assumptions keys if your validator is strict.",
+  "conventions": [
+    "A unit starts only when every id in deps is merged.",
+    "A wave holds at most 12 units, and no two units in a wave own the same file.",
+    "Shared files (route registry, sitemap, nav, package.json, lockfile) belong to integrator units only. Other units request changes in their unit report.",
+    "Every acceptance line has evidence that can fail: a command and its exit code, a test name, a screenshot path, a URL, or a file and line.",
+    "review lists the checkers that must pass before the unit can merge. The builder is never one of them."
+  ],
+  "units": [
+    {
+      "id": "F-12",
+      "title": "Pricing page reads plans from the plans module",
+      "agent": "builder",
+      "priority": "P0",
+      "phase": "Features",
+      "deps": ["F-03", "F-07"],
+      "owns": [
+        "src/pages/pricing.astro",
+        "src/lib/plans.ts",
+        "tests/plans.test.ts"
+      ],
+      "reads": [
+        "docs/contracts/plans.ts",
+        "docs/DESIGN.md",
+        "docs/adr/0014-prices-are-ranges.md"
+      ],
+      "acceptance": [
+        "Every plan on /pricing/ comes from src/lib/plans.ts; no price is typed into the page.",
+        "Each price renders as a range with 'to', never a dash.",
+        "The page matches the approved design at 1440 and 390 wide, light and dark."
+      ],
+      "evidence": [
+        "npm run check exits 0",
+        "tests/plans.test.ts: 'renders every plan from the module' fails when one plan is removed from the page",
+        "screenshots at 1440 and 390, light and dark, in the unit report"
+      ],
+      "review": ["verify", "refute", "security"],
+      "status": "todo"
+    },
+    {
+      "id": "INT-04",
+      "title": "Add /pricing/ to the route registry, sitemap and nav",
+      "agent": "integrator",
+      "priority": "P0",
+      "phase": "Features",
+      "deps": ["F-12"],
+      "owns": [
+        "src/lib/routes.ts",
+        "src/pages/sitemap.xml.ts",
+        "src/components/Nav.astro"
+      ],
+      "reads": ["plan/units.json"],
+      "acceptance": [
+        "/pricing/ is in the sitemap and the nav, once each."
+      ],
+      "evidence": [
+        "npm run check exits 0",
+        "curl -s https://staging.example.com/sitemap.xml contains /pricing/"
+      ],
+      "review": ["verify"],
+      "status": "todo"
+    }
+  ]
+}
+`;
+
+const TEMPLATE_PLANNING = `> Exists because on 6 October a one-lane pilot corrected 11 of 58 facts before the rest of the planning swarm ran.
+# Planning swarm (Phase 0)
+
+Assumptions: a written product brief, the conductor prompt (template 1), and the unit format (template 3). Output goes to docs/adr/, docs/contracts/ and plan/units.json.
+Change first: the three architect lenses. Pick the three things most likely to sink your product.
+
+## Stage 0: pilot one lane
+Run one research lane end to end before the swarm: read the sources, extract the facts, verify each one. Count facts confirmed, corrected and refuted, and compare the tokens with your estimate. If the pilot is off by more than 1.5 times, fix the estimate before you launch the rest.
+
+## Stage 1: three architects, independently
+Each reads the brief and drafts the whole plan alone. None sees another's draft.
+- Architect A optimizes for delivery speed.
+- Architect B optimizes for security and privacy.
+- Architect C optimizes for SEO and performance.
+
+Prompt: "Read <BRIEF>. Draft the architecture decisions (one file each: context, decision, and the default if the founder never answers), the shared contracts as typed files, and a unit graph in the format of plan/units.json. Optimize for <LENS>. Mark every assumption as an assumption."
+
+## Stage 2: a judge merges
+One judge reads the three drafts and writes one plan. Pick, never blend: on each conflict, choose one option and write why. List what the losing drafts saw that the merged plan keeps.
+
+## Stage 3: three critics, then a refuter
+- Critic 1: what breaks first in production.
+- Critic 2: what a skeptical buyer would not believe.
+- Critic 3: which units are too big, overlap in owns, or carry no evidence that can fail.
+
+Every finding goes to a refuter whose only job is to disprove it. Survivors are fixed in the plan before any builder starts.
+
+## Stage 4: decisions on defaults
+Write every open question to docs/DECISIONS.md as a row: the question, the options, the default, who decides, and the gate it waits for. The swarm uses the default until the founder decides. The conductor batches open rows to the next gate and never stops the build for one.
+
+| Question | Options | Default | Decides | Waits for |
+|---|---|---|---|---|
+| <question> | <a, b> | <a> | founder | gate 1 |
+
+## Done when
+- The plan validator passes: every unit has deps, owns, reads, acceptance, evidence and review; no two units in a wave own the same file; the graph has no cycle.
+- Each phase has an estimate in agents, tokens and hours (template 9).
+- The founder has read the gate report once and answered or accepted each default.
+`;
+
+const TEMPLATE_VERIFIER = `> Exists because on 6 October a verifier kept inventing new bypasses for three hours and blocked the scaffold unit with zero P0 or P1 findings.
+# Verifier and refuter rubric
+
+Assumptions: each unit has the contract from template 3, and the builder's report lists the commands it ran. The verifier is a fresh agent that did not build the unit.
+Change first: the severity examples, to your product's real risks.
+
+## Verifier prompt
+You check unit <UNIT ID> on branch <BRANCH>. You did not build it, and you do not fix it.
+1. Check out the branch in your own worktree. Rerun every command in the unit's evidence list and record each exit code.
+2. Try the feature like a user: open the page, submit the form, read the result back.
+3. For each acceptance line, write "met" or "unmet" with its evidence: a command and its exit code, a test name, a screenshot path, a URL, or a file and line.
+4. Grade each unmet line by severity:
+   - P0: data loss, a security hole, money wrong, the main path broken.
+   - P1: a promise on the page is false, a gate fails, or a test that should fail cannot.
+   - P2: it works, but worse than the contract asks.
+   - P3: polish.
+5. A finding is P0 or P1 only if it cites a gate, a promise or a failing test. A new idea for how it might break is P2 at most and goes in the notes.
+6. Show every guard test failing: remove the guard locally, run the test, watch it go red, put the guard back. A test you have not seen fail proves nothing.
+
+Verdict: "pass" when no P0 or P1 is open. P2 and P3 become notes or follow-up units, never blockers.
+
+## Refuter prompt
+Here is one finding from a verifier, security or red-team agent. Your only job is to disprove it. Reproduce it from scratch. If you cannot reproduce it, or the cited gate, promise or test does not say what the finding claims, write "refuted" and why. If it survives, write "upheld" with your own reproduction. Only upheld findings become fix units.
+
+## Rounds
+- A fresh builder fixes. Never the reviewer who found it.
+- At most 3 fix rounds per unit. After the third, mark the unit "stuck" and hand it to the conductor with the open findings. Never loop a fourth time.
+- A unit that passes with P2s open can merge beside a parallel hardening unit.
+
+## Report format
+unit, branch, verdict (pass, fail or stuck), each command rerun with its exit code, acceptance lines met and unmet, findings with severity and evidence, and the guard tests you saw fail.
+`;
+
+const TEMPLATE_INTEGRATE = `#!/usr/bin/env bash
+# Exists because on 9 October a merge gate ran 50 minutes at load 400 and another integrator broke the "stale" lock mid-merge.
+#
+# merge-unit.sh: merge one unit branch into main under one lock. The gate runs on the STAGED merge,
+# because a merge commit's own diff is empty. Anything failing aborts the merge and leaves main untouched.
+#
+# Assumptions, change these first:
+#   1. You run it from the main checkout, on MAIN_BRANCH. Each unit lives on its own branch, usually in its own worktree.
+#   2. GATE_CMD is your quick gate (types, lint, unit tests, content lint). Give known slow tests explicit timeouts:
+#      a 5-second test default failed merges at load averages of 40 to 180.
+#   3. PLAN_FILE is the unit plan (template 3); node marks the unit "merged" inside the merge commit.
+#      Run with PLAN_FILE= (empty) to skip that step.
+#   4. Nothing else writes in the main checkout. A sync agent's stray file once blocked every merge, so the script
+#      refuses to merge into a dirty tree and refuses to commit if the gate left files behind.
+#   5. One machine. The lock is a directory in the git dir and its owner is a process id on this host.
+#   Never resume a stopped run that calls this script. Start a fresh run.
+#
+# Usage:
+#   merge-unit.sh merge <unit-id> <branch>
+#   merge-unit.sh compose <branch> <branch> [...]   all branches in one throwaway tree, gate once, keep nothing
+#
+# Exit: 0 merged or composed clean; 1 conflict or gate failed, main untouched; 2 usage or precondition; 3 no lock.
+# Tested on macOS bash 3.2. Needs git, plus node when PLAN_FILE is set.
+
+set -eu
+set -o pipefail
+
+MAIN_BRANCH="\${MAIN_BRANCH:-main}"
+GATE_CMD="\${GATE_CMD:-npm run check}"
+GATE_MAX_SECONDS="\${GATE_MAX_SECONDS:-5400}"
+COMPOSE_SETUP_CMD="\${COMPOSE_SETUP_CMD:-npm ci}"
+PLAN_FILE="\${PLAN_FILE-plan/units.json}"
+LOCK_WAIT_SECONDS="\${LOCK_WAIT_SECONDS:-7200}"
+LOCK_POLL_SECONDS="\${LOCK_POLL_SECONDS:-2}"
+HEARTBEAT_SECONDS="\${HEARTBEAT_SECONDS:-30}"
+STALE_SECONDS="\${STALE_SECONDS:-600}"
+
+log() { echo "merge-unit: $*" >&2; }
+die() { log "$*"; exit 2; }
+now() { date +%s; }
+
+TOP="$(git rev-parse --show-toplevel 2>/dev/null)" || die "not inside a git work tree"
+COMMON="$(cd "$TOP" && cd "$(git rev-parse --git-common-dir)" && pwd)" || die "cannot find the git dir"
+LOCK_DIR="$COMMON/unit-merge.lock"
+KEEPER_PID=""
+HOLDING=0
+MERGING=0
+COMPOSE_TMP=""
+
+# ---- the lock --------------------------------------------------------------------------------------------
+
+still_own_lock() { [ "$(cat "$LOCK_DIR/pid" 2>/dev/null || true)" = "$$" ]; }
+
+lock_owner_alive() {
+  local pid
+  pid="$(cat "$LOCK_DIR/pid" 2>/dev/null || true)"
+  [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null
+}
+
+lock_is_stale() {
+  # Stale means the heartbeat is old AND the owner process is gone. The age of a lock proves nothing:
+  # a 50-minute gate under load is a slow owner, not a dead one.
+  local beat
+  [ -f "$LOCK_DIR/heartbeat" ] || return 1   # a half-made lock is never broken automatically
+  beat="$(cat "$LOCK_DIR/heartbeat" 2>/dev/null || true)"
+  case "$beat" in '' | *[!0-9]*) return 1 ;; esac
+  if lock_owner_alive; then return 1; fi
+  [ $(($(now) - beat)) -gt "$STALE_SECONDS" ]
+}
+
+start_keeper() {
+  # The lock keeper: refresh the heartbeat while this process lives and still owns the lock,
+  # so no waiting integrator ever reads a long merge as a dead one.
+  local parent=$$
+  (
+    trap - EXIT INT TERM
+    while kill -0 "$parent" 2>/dev/null && [ "$(cat "$LOCK_DIR/pid" 2>/dev/null || true)" = "$parent" ]; do
+      now >"$LOCK_DIR/heartbeat.$parent" 2>/dev/null && mv -f "$LOCK_DIR/heartbeat.$parent" "$LOCK_DIR/heartbeat" 2>/dev/null || true
+      sleep "$HEARTBEAT_SECONDS"
+    done
+  ) &
+  KEEPER_PID=$!
+}
+
+acquire_lock() {
+  local unit=$1 waited=0 holder dead
+  while :; do
+    if mkdir "$LOCK_DIR" 2>/dev/null; then
+      echo "$$" >"$LOCK_DIR/pid"
+      echo "$unit" >"$LOCK_DIR/unit"
+      now >"$LOCK_DIR/heartbeat"
+      HOLDING=1
+      start_keeper
+      log "$unit: lock taken"
+      return 0
+    fi
+    holder="$(cat "$LOCK_DIR/unit" 2>/dev/null || echo 'a half-made lock')"
+    if lock_is_stale; then
+      # Break it only behind a second lock, and only if the dead owner is still the one in the file:
+      # another integrator may have broken this lock and taken a fresh one since the check above.
+      dead="$(cat "$LOCK_DIR/pid" 2>/dev/null || true)"
+      if mkdir "$LOCK_DIR.breaking" 2>/dev/null; then
+        if [ -n "$dead" ] && [ "$(cat "$LOCK_DIR/pid" 2>/dev/null || true)" = "$dead" ] && lock_is_stale; then
+          log "$unit: breaking a stale lock held by $holder (owner gone, no heartbeat for \${STALE_SECONDS}s)"
+          mv "$LOCK_DIR" "$LOCK_DIR.stale.$$" 2>/dev/null && rm -rf "$LOCK_DIR.stale.$$"
+        fi
+        rmdir "$LOCK_DIR.breaking" 2>/dev/null || true
+        continue
+      fi
+    fi
+    if [ "$waited" -ge "$LOCK_WAIT_SECONDS" ]; then
+      log "$unit: no lock after \${waited}s; held by $holder. If the owner is gone, check $LOCK_DIR and $LOCK_DIR.breaking and remove them by hand."
+      exit 3
+    fi
+    # Poll often: a 10-second poll once missed every free window for 30 minutes.
+    sleep "$LOCK_POLL_SECONDS"
+    waited=$((waited + LOCK_POLL_SECONDS))
+  done
+}
+
+release_lock() {
+  if [ -n "$KEEPER_PID" ]; then
+    kill "$KEEPER_PID" 2>/dev/null || true
+    wait "$KEEPER_PID" 2>/dev/null || true
+    KEEPER_PID=""
+  fi
+  if [ "$HOLDING" = 1 ] && still_own_lock; then rm -rf "$LOCK_DIR"; fi
+  HOLDING=0
+}
+
+# ---- helpers ---------------------------------------------------------------------------------------------
+
+run_bounded() {
+  # No timeout binary on stock macOS: run the command in its own process group and stop the group at the limit.
+  local limit=$1 cmd=$2 pid waited=0 status=0
+  set -m
+  bash -c "$cmd" </dev/null &
+  pid=$!
+  set +m
+  while kill -0 "$pid" 2>/dev/null; do
+    if [ "$waited" -ge "$limit" ]; then
+      log "command passed its \${limit}s limit; stopping it"
+      kill -TERM -- "-$pid" 2>/dev/null || kill -TERM "$pid" 2>/dev/null || true
+      sleep 5
+      kill -KILL -- "-$pid" 2>/dev/null || true
+      wait "$pid" 2>/dev/null || true
+      return 124
+    fi
+    sleep 1
+    waited=$((waited + 1))
+  done
+  wait "$pid" || status=$?
+  return "$status"
+}
+
+abort_merge() {
+  if git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then
+    # The tree was clean before the merge, so a hard reset only drops the merge itself.
+    git merge --abort 2>/dev/null || git reset -q --hard HEAD
+  fi
+}
+
+on_exit() {
+  local code=$?
+  if [ "$MERGING" = 1 ]; then abort_merge; fi
+  release_lock
+  exit "$code"
+}
+
+mark_merged() {
+  local unit=$1
+  [ -f "$PLAN_FILE" ] || { log "$unit: PLAN_FILE $PLAN_FILE not found"; exit 1; }
+  command -v node >/dev/null 2>&1 || { log "$unit: node is needed to update $PLAN_FILE"; exit 1; }
+  node -e '
+    const fs = require("fs");
+    const [file, id] = process.argv.slice(1);
+    const plan = JSON.parse(fs.readFileSync(file, "utf8"));
+    const unit = (plan.units || []).find(u => u.id === id);
+    if (!unit) { console.error("unit " + id + " is not in " + file); process.exit(1); }
+    unit.status = "merged";
+    fs.writeFileSync(file, JSON.stringify(plan, null, 2) + "\\n");
+  ' "$PLAN_FILE" "$unit" || exit 1
+  git add -- "$PLAN_FILE"
+}
+
+remove_unit_worktree() {
+  local branch=$1 line cur="" wt=""
+  while IFS= read -r line; do
+    case "$line" in
+      "worktree "*) cur="\${line#worktree }" ;;
+      "branch refs/heads/$branch") wt="$cur" ;;
+    esac
+  done <<EOF
+$(git worktree list --porcelain)
+EOF
+  if [ -n "$wt" ] && [ "$wt" != "$TOP" ]; then
+    git worktree remove "$wt" || log "left the worktree $wt in place: it has changes, look before removing it"
+  fi
+  git branch -d "$branch" >/dev/null 2>&1 || log "left the branch $branch in place"
+}
+
+# ---- merge -----------------------------------------------------------------------------------------------
+
+cmd_merge() {
+  [ $# -eq 2 ] || die "usage: merge-unit.sh merge <unit-id> <branch>"
+  local unit=$1 branch=$2 sha
+  cd "$TOP"
+  [ "$(git symbolic-ref --short -q HEAD || true)" = "$MAIN_BRANCH" ] || die "run this from the main checkout, on $MAIN_BRANCH"
+  git rev-parse -q --verify "refs/heads/$branch" >/dev/null || die "no local branch $branch"
+  trap on_exit EXIT
+  trap 'exit 130' INT TERM
+  acquire_lock "$unit"
+  # Check the tree only once the lock is ours: before that, another integrator's staged merge is expected here.
+  if [ -n "$(git status --porcelain)" ]; then
+    log "$unit: the main checkout is not clean, so something wrote in it: a peer integrator that lost its lock, a sync agent or a person. Find out what before merging."
+    git status --short >&2
+    exit 2
+  fi
+
+  MERGING=1
+  if ! git merge -q --no-ff --no-commit "$branch" </dev/null; then
+    log "$unit: conflict with $MAIN_BRANCH; main untouched. Send it back as a fix unit."
+    exit 1
+  fi
+  if git diff --cached --quiet; then
+    log "$unit: nothing to merge; $branch is already in $MAIN_BRANCH"
+    exit 1
+  fi
+
+  log "$unit: gate on the staged merge: $GATE_CMD"
+  if ! run_bounded "$GATE_MAX_SECONDS" "$GATE_CMD"; then
+    log "$unit: gate failed on the staged merge; main untouched"
+    exit 1
+  fi
+  # The gate must leave nothing behind: tracked edits or new files would ride into the commit unseen.
+  if ! git diff --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+    log "$unit: the gate changed files in the checkout; refusing to commit"
+    git status --short >&2
+    exit 1
+  fi
+
+  if [ -n "$PLAN_FILE" ]; then mark_merged "$unit"; fi
+  still_own_lock || { log "$unit: lost the merge lock before the commit; aborting"; exit 1; }
+  git commit -q -m "merge($unit): $branch"
+  MERGING=0
+  sha="$(git rev-parse --short HEAD)"
+  release_lock
+  log "$unit: merged as $sha"
+  remove_unit_worktree "$branch"
+}
+
+# ---- compose ---------------------------------------------------------------------------------------------
+
+cleanup_compose() {
+  local code=$?
+  if [ -n "$COMPOSE_TMP" ]; then
+    git -C "$TOP" worktree remove --force "$COMPOSE_TMP/tree" >/dev/null 2>&1 || true
+    rm -rf "$COMPOSE_TMP"
+    git -C "$TOP" worktree prune >/dev/null 2>&1 || true
+  fi
+  exit "$code"
+}
+
+cmd_compose() {
+  # Two units can each pass review alone and break together. Merge every branch of a wave into one
+  # throwaway tree and gate it once before the first real merge.
+  [ $# -ge 2 ] || die "usage: merge-unit.sh compose <branch> <branch> [...]"
+  local b
+  cd "$TOP"
+  for b in "$@"; do
+    git rev-parse -q --verify "refs/heads/$b" >/dev/null || die "no local branch $b"
+  done
+  COMPOSE_TMP="$(mktemp -d "\${TMPDIR:-/tmp}/compose.XXXXXX")"
+  trap cleanup_compose EXIT
+  trap 'exit 130' INT TERM
+  git worktree add -q --detach "$COMPOSE_TMP/tree" "$MAIN_BRANCH"
+  for b in "$@"; do
+    if ! git -C "$COMPOSE_TMP/tree" merge -q --no-ff --no-edit "$b" </dev/null; then
+      log "compose: $b conflicts with the branches before it"
+      exit 1
+    fi
+  done
+  log "compose: $# branches in one throwaway tree; gating once"
+  if ! (cd "$COMPOSE_TMP/tree" && run_bounded "$GATE_MAX_SECONDS" "$COMPOSE_SETUP_CMD && $GATE_CMD"); then
+    log "compose: the branches fail together; fix that before merging any of them"
+    exit 1
+  fi
+  log "compose: clean"
+}
+
+case "\${1:-}" in
+  merge) shift; cmd_merge "$@" ;;
+  compose) shift; cmd_compose "$@" ;;
+  *) die "usage: merge-unit.sh merge <unit-id> <branch> | compose <branch> <branch> [...]" ;;
+esac
+`;
+
+const TEMPLATE_WATCHER = `#!/usr/bin/env bash
+# Exists because on 9 October a production smoke test found /sign-in/ answering 500 after a deploy, and the watcher rolled it back on its own.
+#
+# deploy-watcher.sh: every 10 minutes, deploy main to production when it has moved. Each pass ships a clean export
+# of the main commit (never the working checkout or a peer's edits), waits until production serves that commit,
+# smoke-tests the key pages and every sitemap URL, runs one production end-to-end, and rolls back on any failure.
+# After three failed passes in a row it stops and says so.
+#
+# Assumptions, change these first:
+#   DEPLOY_CMD    deploys the directory it runs in to production and exits 0 on success. It runs inside a fresh
+#                 export, so it installs and builds there. Point it at a committed script, for example "./deploy-prod.sh",
+#                 that runs npm ci, the build and your host's production deploy. The guard hook (template 8) refuses a
+#                 deploy command with --prod written inline, so keep the flag inside the script.
+#                 GIT_SHA is set for it. A merge your host's git hook never deployed cannot happen here: this deploys
+#                 the exact commit itself.
+#   PROD_URL      the production origin, no trailing slash.
+#   VERSION_PATH  a path that serves the deployed commit sha (write GIT_SHA into it at build time). A deploy that
+#                 reports green does not prove the new build runs; this marker does. Set it empty to skip.
+#   SITEMAP_PATH  /sitemap.xml, or /sitemap-index.xml on many static site generators. Index files are followed.
+#                 Each URL keeps its path and moves onto PROD_URL, so a staging build whose sitemap lists production
+#                 URLs still smokes staging.
+#   SMOKE_PATHS   pages that must answer 200 even if the sitemap forgets them: sign-in, the form, pricing.
+#   E2E_CMD       one end-to-end against production: submit the real form, read it back, delete the test record.
+#                 Local tests on a file store cannot see a production storage bug. Empty skips it.
+#   ROLLBACK_CMD  empty means: redeploy the last good commit through the same clean-export path.
+#   Starting this watcher is the one production deploy approval. Anything else that deploys still asks first.
+#
+# Usage: deploy-watcher.sh [--once]      (--once: one pass, for cron or a launchd job)
+# Exit: 0 fine; 1 stopped after MAX_FAILURES failed passes in a row; 2 rollback failed or bad setup.
+# Tested on macOS bash 3.2. Needs git, curl, tar, grep, sed.
+
+set -eu
+set -o pipefail
+
+DEPLOY_CMD="\${DEPLOY_CMD:-}"
+PROD_URL="\${PROD_URL:-}"
+[ -n "$DEPLOY_CMD" ] || { echo "deploy-watcher: set DEPLOY_CMD to the command that deploys the current directory to production" >&2; exit 2; }
+[ -n "$PROD_URL" ] || { echo "deploy-watcher: set PROD_URL, for example https://www.example.com" >&2; exit 2; }
+DEPLOY_REF="\${DEPLOY_REF:-main}"
+VERSION_PATH="\${VERSION_PATH-/version.txt}"
+SITEMAP_PATH="\${SITEMAP_PATH:-/sitemap.xml}"
+SMOKE_PATHS="\${SMOKE_PATHS:-/ /sign-in/}"
+E2E_CMD="\${E2E_CMD:-}"
+ROLLBACK_CMD="\${ROLLBACK_CMD:-}"
+INTERVAL_SECONDS="\${INTERVAL_SECONDS:-600}"
+MAX_FAILURES="\${MAX_FAILURES:-3}"
+VERSION_WAIT_SECONDS="\${VERSION_WAIT_SECONDS:-240}"
+STATE_DIR="\${STATE_DIR:-$(git rev-parse --git-common-dir)/deploy-watcher}"
+LOG_FILE="\${LOG_FILE:-$STATE_DIR/deploy-history.log}"
+ONCE=0
+[ "\${1:-}" = "--once" ] && ONCE=1
+
+mkdir -p "$STATE_DIR"
+log() { printf '%s %s\\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" | tee -a "$LOG_FILE" >&2; }
+short() { printf '%.7s' "$1"; }
+
+# One watcher at a time. A lock left by a dead watcher is cleared; a live one stops this start.
+if ! mkdir "$STATE_DIR/running" 2>/dev/null; then
+  other="$(cat "$STATE_DIR/running/pid" 2>/dev/null || true)"
+  if [ -n "$other" ] && kill -0 "$other" 2>/dev/null; then log "another watcher is running (pid $other)"; exit 2; fi
+  [ -n "$other" ] || { log "a half-made watcher lock exists at $STATE_DIR/running; check it and remove it by hand"; exit 2; }
+  rm -rf "$STATE_DIR/running"
+  mkdir "$STATE_DIR/running" || { log "could not take the watcher lock"; exit 2; }
+fi
+echo "$$" >"$STATE_DIR/running/pid"
+trap 'rm -rf "$STATE_DIR/running"' EXIT
+trap 'exit 130' INT TERM
+
+http_code() {   # final status after redirects; 000 when the request fails
+  local code
+  code="$(curl -s -o /dev/null -L --max-time 30 -w '%{http_code}' "$1" 2>/dev/null || true)"
+  [ -n "$code" ] || code=000
+  printf '%s' "$code"
+}
+
+on_prod() {   # keep each URL's path and put it on PROD_URL
+  local u rest
+  while IFS= read -r u; do
+    [ -n "$u" ] || continue
+    case "$u" in
+      *://*) rest="\${u#*://}"
+        case "$rest" in */*) printf '%s/%s\\n' "$PROD_URL" "\${rest#*/}" ;; *) printf '%s/\\n' "$PROD_URL" ;; esac ;;
+      /*) printf '%s%s\\n' "$PROD_URL" "$u" ;;
+      *) printf '%s/%s\\n' "$PROD_URL" "$u" ;;
+    esac
+  done
+}
+
+locs() { { grep -o '<loc>[^<]*</loc>' || true; } | sed 's#<loc>##; s#</loc>##' | on_prod; }
+
+sitemap_urls() {   # every URL in the sitemap, following one level of sitemap index
+  local body child
+  body="$(curl -sf -L --max-time 30 "$PROD_URL$SITEMAP_PATH")" || return 1
+  if printf '%s' "$body" | grep -q '<sitemapindex'; then
+    printf '%s\\n' "$body" | locs | while IFS= read -r child; do
+      curl -sf -L --max-time 30 "$child" | locs || exit 1
+    done
+  else
+    printf '%s\\n' "$body" | locs
+  fi
+}
+
+wait_for_version() {   # the host can serve the old build for a minute or two after a deploy reports ready
+  local sha=$1 waited=0 body
+  while [ "$waited" -lt "$VERSION_WAIT_SECONDS" ]; do
+    body="$(curl -sf -L --max-time 15 "$PROD_URL$VERSION_PATH?t=$(date +%s)" 2>/dev/null || true)"
+    case "$body" in *"$sha"*) return 0 ;; esac
+    sleep 10
+    waited=$((waited + 10))
+  done
+  return 1
+}
+
+smoke() {   # smoke <sha>: version marker, key pages, every sitemap URL, then one end-to-end
+  local sha=$1 path url code urls n=0 k=0
+  if [ -n "$VERSION_PATH" ]; then
+    wait_for_version "$sha" || { log "smoke FAILED: $VERSION_PATH never served $(short "$sha")"; return 1; }
+  fi
+  while IFS= read -r path; do
+    [ -n "$path" ] || continue
+    code="$(http_code "$PROD_URL$path")"
+    [ "$code" = 200 ] || { log "smoke FAILED: $path=$code"; return 1; }
+    k=$((k + 1))
+  done <<EOF
+$(printf '%s' "$SMOKE_PATHS" | tr ' ' '\\n')
+EOF
+  urls="$(sitemap_urls)" || { log "smoke FAILED: $SITEMAP_PATH unreadable"; return 1; }
+  [ -n "$urls" ] || { log "smoke FAILED: $SITEMAP_PATH lists no URLs"; return 1; }
+  while IFS= read -r url; do
+    [ -n "$url" ] || continue
+    code="$(http_code "$url")"
+    [ "$code" = 200 ] || { log "smoke FAILED: $url=$code"; return 1; }
+    n=$((n + 1))
+  done <<EOF
+$urls
+EOF
+  if [ -n "$E2E_CMD" ]; then
+    PROD_URL="$PROD_URL" bash -c "$E2E_CMD" </dev/null >>"$LOG_FILE" 2>&1 || { log "smoke FAILED: production end-to-end"; return 1; }
+  fi
+  log "smoke ok: $k key pages, $n sitemap URLs$([ -n "$E2E_CMD" ] && echo ', end-to-end')"
+}
+
+deploy_commit() {   # deploy_commit <sha>: a clean export of that commit, then DEPLOY_CMD inside it
+  local sha=$1 dir status=0
+  dir="$(mktemp -d "\${TMPDIR:-/tmp}/deploy.XXXXXX")"
+  if ! git archive --format=tar "$sha" | tar -xf - -C "$dir"; then
+    rm -rf "$dir"
+    return 1
+  fi
+  (cd "$dir" && GIT_SHA="$sha" bash -c "$DEPLOY_CMD" </dev/null) >>"$LOG_FILE" 2>&1 || status=$?
+  rm -rf "$dir"
+  return "$status"
+}
+
+rollback() {   # back to the last commit that passed smoke, then prove it with the same smoke
+  local good
+  good="$(cat "$STATE_DIR/last-good" 2>/dev/null || true)"
+  [ -n "$good" ] || { log "no last good commit to roll back to"; return 1; }
+  log "rolling back to $(short "$good")"
+  if [ -n "$ROLLBACK_CMD" ]; then
+    GIT_SHA="$good" bash -c "$ROLLBACK_CMD" </dev/null >>"$LOG_FILE" 2>&1 || return 1
+  else
+    deploy_commit "$good" || return 1
+  fi
+  smoke "$good"
+}
+
+one_pass() {   # 0 deployed and smoke ok; 1 failed and production is on the last good commit; 2 rollback failed; 3 nothing to do
+  local head last
+  head="$(git rev-parse -q --verify "$DEPLOY_REF^{commit}")" || { log "cannot read $DEPLOY_REF"; return 1; }
+  last="$(cat "$STATE_DIR/last-deployed" 2>/dev/null || true)"
+  [ "$head" != "$last" ] || return 3
+  echo "$head" >"$STATE_DIR/last-deployed"   # a broken commit is tried once, not every 10 minutes
+  log "deploying $(short "$head")"
+  if ! deploy_commit "$head"; then
+    log "deploy FAILED for $(short "$head"); checking that production still serves the last good commit"
+    if [ -s "$STATE_DIR/last-good" ] && smoke "$(cat "$STATE_DIR/last-good")"; then return 1; fi
+    rollback && return 1
+    return 2
+  fi
+  if smoke "$head"; then
+    echo "$head" >"$STATE_DIR/last-good"
+    log "live as $(short "$head"), smoke ok"
+    return 0
+  fi
+  if rollback; then log "rolled back; production is on the last good commit"; return 1; fi
+  return 2
+}
+
+# The failure count lives on disk, so --once runs from cron stop after three in a row too.
+failures="$(cat "$STATE_DIR/failures" 2>/dev/null || true)"
+case "$failures" in '' | *[!0-9]*) failures=0 ;; esac
+if [ "$failures" -ge "$MAX_FAILURES" ]; then
+  log "stopped after $failures failed passes in a row; fix main, delete $STATE_DIR/failures, then start again"
+  exit 1
+fi
+while :; do
+  rc=0
+  one_pass || rc=$?
+  case "$rc" in
+    0) failures=0 ;;
+    3) : ;;
+    2)
+      echo "$MAX_FAILURES" >"$STATE_DIR/failures"
+      log "ROLLBACK FAILED: production may be broken. Stopping; look now."
+      exit 2
+      ;;
+    *) failures=$((failures + 1)); log "failed passes in a row: $failures of $MAX_FAILURES" ;;
+  esac
+  echo "$failures" >"$STATE_DIR/failures"
+  if [ "$failures" -ge "$MAX_FAILURES" ]; then
+    log "stopping after $failures failed passes in a row; fix main, delete $STATE_DIR/failures, then start again"
+    exit 1
+  fi
+  if [ "$ONCE" = 1 ]; then
+    [ "$rc" = 1 ] && exit 1
+    exit 0
+  fi
+  sleep "$INTERVAL_SECONDS"
+done
+`;
+
+const TEMPLATE_GUARD = `#!/usr/bin/env node
+// Exists because on day one of a build a probe showed the content firewall missed two banned phrases and the names of public AI labs.
+//
+// guard-hook.mjs: a Claude Code PreToolUse hook. It reads the tool call as JSON on stdin and denies the calls on the
+// lists below, with a reason the agent can act on. It is a seatbelt, not a security boundary: it stops an honest
+// agent's mistakes, not a person who wants to get around it. Real limits live in permissions, accounts and CI.
+//
+// Install in .claude/settings.json:
+//   { "hooks": { "PreToolUse": [ { "matcher": "Bash|Write|Edit|MultiEdit|Read",
+//       "hooks": [ { "type": "command", "command": "node .claude/hooks/guard-hook.mjs" } ] } ] } }
+// Then prove it can fail before you trust it: node .claude/hooks/guard-hook.mjs --self-test
+// The self-test pipes every probe below through the hook as a real payload; it exits 1 if one gets through
+// or if a harmless control is blocked. Run it again after every change to the lists.
+// Once installed it also refuses edits to itself and to the scripts it guards: change those by hand, outside the agent.
+//
+// Change first: MAIN, the CLI names in DENY_SHELL (yours for deploys, DNS and payments), BANNED_PHRASES and
+// BANNED_NAMES (your content rules), CONTENT_PATHS and GUARDRAIL_FILES.
+// Fails closed: if the hook cannot read its input, the call is denied.
+
+import { readFileSync, realpathSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+const MAIN = 'main';
+const DASH = /[\\u2013\\u2014]|&(?:mdash|ndash);|&#821[12];/g; // em and en dashes, and their HTML entities
+const BANNED_PHRASES = ['guaranteed results', 'risk free']; // decoys: put your own banned phrases here
+const BANNED_NAMES = ['Acme Labs', 'Globex']; // decoys: names your copy must never print
+const CONTENT_PATHS = /(^|\\/)(src|content|public)\\//; // where copy lives
+const GUARDRAIL_FILES = /(^|\\/)(\\.claude\\/(hooks\\/|settings(\\.local)?\\.json)|CLAUDE\\.md$|scripts\\/(merge-unit|deploy-watcher)\\.sh$)/;
+const ENV_FILE = /(^|\\/)\\.env(\\.(?!example$)[\\w.]+)?$/;
+const SECRET = /-----BEGIN [A-Z ]*PRIVATE KEY-----|\\bAKIA[0-9A-Z]{16}\\b|\\bgh[pousr]_[A-Za-z0-9]{36,}\\b|\\b(?:api|secret)[_-]?key\\s*[:=]\\s*['"][A-Za-z0-9_\\-]{20,}['"]/i;
+
+// Shell commands. Each entry: [pattern, reason]. Patterns read one command line at a time.
+const DENY_SHELL = [
+  [new RegExp(\`\\\\bgit\\\\s+push\\\\b[^;&|]*\\\\s(?:\\\\S+:)?(?:refs/heads/)?\${MAIN}(?=$|[\\\\s;&|])\`), \`Never push to \${MAIN}. Push a branch and open a draft pull request.\`],
+  [/\\bgit\\s+push\\b[^;&|]*\\s(?:--force(?:-with-lease)?|-f)\\b/, 'No force pushes. Ask in chat if history really must change.'],
+  [/\\s--no-verify\\b/, 'No skipping checks. Fix what the hook or the gate found.'],
+  [/\\b(?:deploy|release)\\b[^;&|]*\\s--prod\\b|\\bhostcli\\s+promote\\b/, 'Production deploys belong to the deploy watcher, or need a yes in chat.'],
+  [/\\bdnsctl\\s+(?:record\\s+)?(?:create|update|delete|set)\\b/, 'DNS changes need a yes in chat.'],
+  [/\\bpayctl\\b[^;&|]*\\s--live\\b|\\bPAYMENTS_LIVE=1\\b/, 'Live payments stay off until counsel approves the terms.'],
+  [/(?:^|[\\s;&|(])(?:cat|less|more|head|tail|bat|grep|source|\\.)\\s+[^;&|]*\\.env(?:\\.(?!example\\b)[\\w.]+)?(?=$|[\\s;&|)])/, 'Do not read env files. Ask for the variable name you need.'],
+  [/\\becho\\s+[^;&|]*\\$\\{?\\w*(?:SECRET|TOKEN|KEY|PASSWORD)\\w*\\}?|(?:^|[;&|]\\s*)(?:printenv|env)\\s*(?:$|[;&|])/, 'Do not print secrets or the whole environment.'],
+  [/\\bsecurity\\s+find-(?:generic|internet)-password\\b[^;&|]*\\s-w\\b/, 'Do not read keychain secrets into the transcript.'],
+  [/\\bcloudctl\\b(?![^;&|]*\\s--project[= ]\\S)/, 'Scope every cloud CLI call with --project so it cannot touch the wrong account.'],
+  [/(?:>|\\btee\\b|\\bsed\\s+-i|\\bmv\\b|\\brm\\b|\\bcp\\b|\\bchmod\\b)[^;&|]*(?:\\.claude\\/(?:hooks|settings)|CLAUDE\\.md|scripts\\/(?:merge-unit|deploy-watcher)\\.sh)/, 'Guardrail files change only with a yes in chat.'],
+];
+
+const count = (text, re) => (String(text || '').match(re) || []).length;
+
+function shellReason(command, cwd) {
+  for (const [pattern, reason] of DENY_SHELL) if (pattern.test(command)) return reason;
+  if (/\\bgit\\s+commit\\b/.test(command) && count(command, DASH) > 0) return 'No em or en dashes in commit messages. Use a comma, a colon or "to".';
+  if (/^\\s*git\\s+push\\s*(?:origin\\s*)?$/.test(command)) {
+    const branch = spawnSync('git', ['symbolic-ref', '--short', 'HEAD'], { cwd: cwd || process.cwd(), encoding: 'utf8' });
+    if ((branch.stdout || '').trim() === MAIN) return \`This push would land on \${MAIN}. Push a branch instead.\`;
+  }
+  return '';
+}
+
+function writeReason(tool, input) {
+  const path = String(input.file_path || '');
+  if (GUARDRAIL_FILES.test(path)) return 'Guardrail files change only with a yes in chat.';
+  const edits = tool === 'MultiEdit' ? input.edits || [] : tool === 'Edit' ? [input] : [{ old_string: '', new_string: input.content }];
+  for (const { old_string = '', new_string = '' } of edits) {
+    if (count(new_string, DASH) > count(old_string, DASH)) return 'New em or en dashes. Use a comma, a colon, a full stop, or "to" in ranges.';
+    if (SECRET.test(new_string) && !SECRET.test(old_string)) return 'This looks like a secret. Read it from the environment at run time instead.';
+    if (CONTENT_PATHS.test(path)) {
+      const added = new_string.toLowerCase();
+      const before = String(old_string).toLowerCase();
+      for (const word of [...BANNED_PHRASES, ...BANNED_NAMES]) {
+        const w = word.toLowerCase();
+        if (added.includes(w) && !before.includes(w)) return \`The content rules ban "\${word}" in copy.\`;
+      }
+    }
+  }
+  return '';
+}
+
+export function decide(payload) {
+  const tool = payload.tool_name;
+  const input = payload.tool_input || {};
+  if (tool === 'Bash') return shellReason(String(input.command || ''), payload.cwd);
+  if (tool === 'Write' || tool === 'Edit' || tool === 'MultiEdit') return writeReason(tool, input);
+  if (tool === 'Read' && ENV_FILE.test(String(input.file_path || ''))) return 'Do not read env files. Ask for the variable name you need.';
+  return '';
+}
+
+function deny(reason) {
+  const out = { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: \`Blocked by the build guard: \${reason}\` } };
+  process.stdout.write(JSON.stringify(out) + '\\n');
+  process.exit(0);
+}
+
+// ---- probes: every one must be denied; every control must pass ----------------------------------------------
+
+const bash = (command) => ({ tool_name: 'Bash', tool_input: { command } });
+const write = (file_path, content) => ({ tool_name: 'Write', tool_input: { file_path, content } });
+const PROBES = [
+  bash('echo $API_SECRET_KEY'),
+  bash(\`git push origin \${MAIN}\`),
+  write('src/pages/index.astro', 'Fast \\u2014 and cheap'),
+  { tool_name: 'Read', tool_input: { file_path: '.env' } },
+  bash('cloudctl deploy'),
+  bash('cat .env.local'),
+  bash('git push --force origin feature/pricing'),
+  bash('git commit --no-verify -m "wip"'),
+  bash('yourhost deploy --prod'),
+  bash('dnsctl record create www CNAME example.net'),
+  bash('payctl charges create --live'),
+  bash('git commit -m "pricing \\u2013 done"'),
+  bash('printenv'),
+  write('.claude/settings.json', '{}'),
+  bash("sed -i '' 's/deny/allow/' .claude/hooks/guard-hook.mjs"),
+  write('config/keys.ts', 'export const api_key = "abcdefghijklmnopqrstuvwxyz123456";'),
+  ...[...BANNED_PHRASES, ...BANNED_NAMES].map((word) => write('src/pages/about.md', \`We work with \${word}.\`)),
+];
+const CONTROLS = [
+  bash('git push origin feature/pricing'),
+  bash('npm test'),
+  bash('DEPLOY_CMD=./deploy-prod.sh PROD_URL=https://staging.example.com bash scripts/deploy-watcher.sh --once'),
+  bash('cloudctl deploy --project staging-demo'),
+  bash('cat .env.example'),
+  write('src/pages/index.astro', 'Fast, and cheap.'),
+  write('notes/research.md', 'Competitor list: Globex.'),
+  { tool_name: 'Read', tool_input: { file_path: 'src/app.ts' } },
+  { tool_name: 'Read', tool_input: { file_path: '.env.example' } },
+  { tool_name: 'Edit', tool_input: { file_path: 'src/x.md', old_string: 'a \\u2014 b', new_string: 'a \\u2014 b, c' } },
+];
+
+function selfTest() {
+  const me = fileURLToPath(import.meta.url);
+  const run = (payload) => {
+    const r = spawnSync(process.execPath, [me], { input: JSON.stringify(payload), encoding: 'utf8' });
+    return r.status === 0 && /"permissionDecision":"deny"/.test(r.stdout);
+  };
+  let bad = 0;
+  for (const p of PROBES) if (!run(p)) { bad++; console.log('NOT BLOCKED:', JSON.stringify(p.tool_input)); }
+  for (const c of CONTROLS) if (run(c)) { bad++; console.log('WRONGLY BLOCKED:', JSON.stringify(c.tool_input)); }
+  const broken = spawnSync(process.execPath, [me], { input: 'not json', encoding: 'utf8' });
+  if (!/"permissionDecision":"deny"/.test(broken.stdout)) { bad++; console.log('DID NOT FAIL CLOSED on unreadable input'); }
+  console.log(\`\${PROBES.length} probes, \${CONTROLS.length} controls, 1 fail-closed check: \${bad ? \`\${bad} wrong\` : 'all correct'}\`);
+  process.exit(bad ? 1 : 0);
+}
+
+// Runs as a hook when executed directly; importing it (for your own tests) only exposes decide().
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
+  if (process.argv.includes('--self-test')) selfTest();
+  let payload;
+  try {
+    payload = JSON.parse(readFileSync(0, 'utf8'));
+  } catch {
+    deny('the hook could not read its input, so it fails closed. Check the hook install.');
+  }
+  let reason = '';
+  try {
+    reason = decide(payload);
+  } catch (err) {
+    reason = \`the hook hit an error (\${err.message}), so it fails closed.\`;
+  }
+  if (reason) deny(reason);
+  process.exit(0);
+}
+`;
+
+const TEMPLATE_BUDGET = `> Exists because on 11 October the parallel slots across runs summed to 11, the machine's load hit 460 and the gates timed out.
+# Budget card
+
+Fill this in before the first run and keep it next to the plan.
+Assumptions: one machine, a subscription with a 5-hour usage window, a quick gate and a full gate.
+Change first: the machine floors for your hardware, then the estimate table.
+
+## The stop rule
+- Pilot every new workflow on one unit before the full run.
+- Write the estimate before each phase. At 1.5 times the estimate, stop, report the cause and the options, and wait for a decision.
+- After every phase, report the estimate and the actual side by side, with the ratio. Say what was not measured.
+
+| Phase | Units | Agents (estimate) | Tokens (estimate) | Hours (estimate) | Actual | Ratio | Cause if over 1.5 |
+|---|---|---|---|---|---|---|---|
+| 0 plan | | | | | | | |
+| 1 build | | | | | | | |
+| 2 harden | | | | | | | |
+
+## Machine
+- About 5 units in flight per machine, summed across every run, not per run.
+- Disk floor: stop new work below 12 GB free, and alert before you reach it. Start a build with at least 30 GB free.
+- If gates time out under load, cut the slots before you raise any timeout.
+- CI is the gate for full suites. Agents run the checks their own diff can move, never the full local suite.
+- Every agent prompt states a turn cap and a tool budget. An agent that hits its cap returns nothing.
+- A watcher flags any run whose journal has been idle for more than 75 minutes.
+
+## Clock
+- The 5-hour usage window is a planning input. Write the reset time in the status file and pace heavy stages around it.
+- Never resume a stopped run. Start a fresh one with only the units that are left.
+
+## Receipts from the two builds (12 October 2026)
+- Rightmark Phase 0 estimate: 90 units, about 512 to 520 agents, about 69M to 140M tokens. By 12 October the plan held 304 units, and the 75 finished workflows alone had used 316.0M tokens and 2,284 agents. That is a floor: it leaves out runs still going and the main sessions.
+- Dylan Phase 0: 126 agents and 21.8M tokens against an estimate of 12M, 1.82 times. Cause: 14 decision records instead of 10, more agents, more reading.
+- Dylan search pages: 12 agents and 2.42M tokens against about 1.3M, 1.9 times.
+- 11 October: 11 slots in flight, load 460, gates timing out. On the Dylan platform build the load reached about 900 and the Docker daemon died.
+`;
+
+const TEMPLATE_TASTE = `> Exists because on 8 October the live homepage was sent back: the swarm's own style rules had rewritten copy from the design approved on 4 October.
+# Taste lock (paste into CLAUDE.md)
+
+Assumptions: an approved design exists as files or a URL (a prototype, a static build, an export). The full gate can render pages in a browser.
+Change first: the reference path, the date and the protected copy list.
+
+## Binding design reference
+- The design approved on <DATE> at <REFERENCE PATH OR URL> is the reference for every page that exists in it. Build to it. Do not reinterpret it.
+- Only hard rules may force a difference: accessibility, a legal requirement, a security rule, a broken build. Every forced difference is listed in docs/DESIGN-DIFFS.md with the page, the rule that forced it and the date.
+- Style rules in briefs, role files and content guides never rewrite approved copy. Protected: the hero headline and lead, page titles, button labels, prices, and every line the founder wrote. When a rule conflicts with approved copy, keep the copy and raise the conflict at the next gate.
+- Pages that are not in the reference use its tokens, type scale and components, and a person looks at them before they ship.
+- A design change is a unit with a designer, a reviewer and screenshots at phone and desktop width, in light and dark.
+
+## Parity in the full gate
+- A parity check renders each reference page and its built page at 1440 and 390 wide, in light and dark. It compares the text of headings, leads, buttons and prices exactly, and the layout by screenshot within a threshold you set.
+- A parity failure blocks the full gate like a failing test. It is fixed in a parity unit, never by editing the reference.
+`;
+// END TEMPLATES
+
+const faqItems = [
+  {
+    q: 'How many agents can one Mac run at once?',
+    a: 'Plan for about 5 units in flight per machine, summed across every run. On 11 October the Rightmark runs had 11 slots between them, the load hit 460 and gates timed out. On the Dylan platform build the load reached about 900 and the Docker daemon died, so CI became the gate. Keep a disk floor too: the Dylan build stopped new work below 12 GB free, and the Rightmark watcher alerted below 12 GiB.',
+  },
+  {
+    q: 'Why run the gate on the staged merge and not on the merge commit?',
+    a: 'Because a merge commit diffs nothing: its own diff is empty, so a check that reads the last commit sees no change. Merge with --no-commit, run the quick gate on what is staged, and commit only if it passes. Any failure aborts the merge and leaves main untouched.',
+  },
+  {
+    q: 'What stops a verifier from looping forever?',
+    a: 'A severity grade and a round limit. Only P0 and P1 gaps block, a finding is a blocker only if it cites a gate, a promise or a failing test, and after three fix rounds the unit is marked stuck and handed back for a decision. Before that rule, one verifier held a scaffold unit for three hours with zero P0 or P1 findings.',
+  },
+  {
+    q: 'How far over the estimate did the builds run?',
+    a: 'Rightmark\'s Phase 0 estimated 90 units, about 512 to 520 agents and about 69M to 140M tokens. By 12 October the plan held 304 units, and the 75 finished workflows alone had used 316.0M tokens and 2,284 agents, a floor that leaves out live runs and the main sessions. Dylan\'s Phase 0 used 21.8M tokens against 12M, 1.82 times.',
+  },
+  {
+    q: 'Why do checkers outnumber builders?',
+    a: 'Because the builder never grades its own unit. Of 3,021 agent starts in the Rightmark workflows, 337 were build starts and 1,353 were checker starts: 434 verify, 334 refute, 320 leak-guard and 265 security, four for every build start. The 800 sync and 244 merge starts were plumbing, not checking.',
+  },
+  {
+    q: 'What can only production catch?',
+    a: 'Anything that depends on the real storage, network or host. Dylan\'s waitlist answered 503 on every step after the first, because the production blob store served a weak etag that the update check never matched. Local tests used a file store and could not see it; a production end-to-end found it.',
+  },
+  {
+    q: 'Who reviews the reviewers?',
+    a: 'A refuter. Every finding from a verifier, security or red-team agent goes to a second agent whose only job is to disprove it, and only findings that survive become fix units.',
+  },
+];
+
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+<BaseLayout
+  title="The Swarm Build Playbook: Templates From Two Product Builds in One Week"
+  description="Copyable templates from two AI swarm builds: conductor prompt, unit contract, verifier and refuter rubric, merge lock, deploy watcher, budget card, hooks."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faq)} />
+
+  <section class="container-wide pt-16 pb-8">
+    <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent))">Playbook</div>
+    <h1>The swarm build playbook: ten templates, and the break each one prevents.</h1>
+    <p class="mt-3 max-w-2xl text-lg" style="color: rgb(var(--muted))">The conductor prompt, unit contract, verifier rubric, merge lock, deploy watcher and budget card behind two product builds in October 2026. Decoy names, real numbers.</p>
+    <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The numbers are frozen on 12 October 2026. The story, with the failures in order, is in <a href={`${base}/chapters/58-conductor-never-codes/`}>Chapter 58</a>.</p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
+      <SectionNav items={navItems} title="On this page" />
+      <div class="max-w-3xl">
+
+        <div id="answer" data-section-target class="scroll-mt-24">
+          <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
+          <div class="card">
+            <p class="m-0">Make the session in charge a conductor that plans, delegates, merges and reports, and never writes product code. Write each piece of work as a unit contract that names the files it owns and the evidence that proves it done. Send every finished unit to a fresh verifier and every finding to a refuter. Merge one unit at a time through a lock, with the gate run on the staged merge. Let a watcher deploy main every 10 minutes, smoke every sitemap URL and roll back on a failure. Then turn each break into a script, a gate or a role before the next unit starts.</p>
+          </div>
+          <p class="mt-6">The templates come from two builds that ran on one Mac in October 2026. Rightmark helps companies license private data to AI developers. Dylan is an AI SDR that books B2B meetings and bills when they are held. Each template is rewritten from the real file, opens with the break it prevents, and says what to change first. Start with the conductor prompt, the unit contract and the two scripts.</p>
+        </div>
+
+        <div id="loop" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">The loop</h2>
+          <p>The conductor hands a ready unit to a builder in its own worktree. A fresh verifier reruns everything and a refuter tries to disprove each finding; survivors go back into the graph as fix units. A passing unit takes the merge lock, merges without committing and passes the gate on the staged merge before it reaches main. Within 10 minutes the watcher deploys a clean export, smokes every sitemap URL and rolls back on a failure.</p>
+          <figure class="my-8">
+            <div class="overflow-x-auto rounded-md p-3" style="border: 1px solid rgb(var(--line)); background: rgb(var(--bg))">
+              <svg class="loop-svg" viewBox="0 0 760 330" role="img" aria-labelledby="loop-title loop-desc" style="min-width: 640px; width: 100%; height: auto">
+                <title id="loop-title">The swarm build loop</title>
+                <desc id="loop-desc">Conductor to unit graph to builder to verifier to refuter. Upheld findings return to the graph as fix units. A passing unit takes the merge lock, the gate runs on the staged merge, and a passing merge lands on main; a failing gate aborts the merge. The watcher deploys main and smoke-tests it, rolls back on a failed smoke, and reports to the conductor.</desc>
+                <defs>
+                  <marker id="loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M0,0 L10,5 L0,10 z" class="loop-head" />
+                  </marker>
+                  <marker id="loop-arrow-fail" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M0,0 L10,5 L0,10 z" class="loop-head-fail" />
+                  </marker>
+                </defs>
+
+                <path class="loop-fail" d="M670,58 C670,18 226,18 226,58" marker-end="url(#loop-arrow-fail)" />
+                <text class="loop-label-fail" x="448" y="24" text-anchor="middle">upheld findings become fix units</text>
+
+                <rect class="loop-box" x="16" y="58" width="124" height="56" rx="8" />
+                <text class="loop-title" x="78" y="82" text-anchor="middle">Conductor</text>
+                <text class="loop-sub" x="78" y="100" text-anchor="middle">plans, never codes</text>
+                <rect class="loop-box" x="164" y="58" width="124" height="56" rx="8" />
+                <text class="loop-title" x="226" y="82" text-anchor="middle">Unit graph</text>
+                <text class="loop-sub" x="226" y="100" text-anchor="middle">deps, owns, evidence</text>
+                <rect class="loop-box" x="312" y="58" width="124" height="56" rx="8" />
+                <text class="loop-title" x="374" y="82" text-anchor="middle">Builder</text>
+                <text class="loop-sub" x="374" y="100" text-anchor="middle">own worktree</text>
+                <rect class="loop-box" x="460" y="58" width="124" height="56" rx="8" />
+                <text class="loop-title" x="522" y="82" text-anchor="middle">Verifier</text>
+                <text class="loop-sub" x="522" y="100" text-anchor="middle">reruns everything</text>
+                <rect class="loop-box" x="608" y="58" width="124" height="56" rx="8" />
+                <text class="loop-title" x="670" y="82" text-anchor="middle">Refuter</text>
+                <text class="loop-sub" x="670" y="100" text-anchor="middle">disproves findings</text>
+
+                <line class="loop-edge" x1="140" y1="86" x2="162" y2="86" marker-end="url(#loop-arrow)" />
+                <line class="loop-edge" x1="288" y1="86" x2="310" y2="86" marker-end="url(#loop-arrow)" />
+                <line class="loop-edge" x1="436" y1="86" x2="458" y2="86" marker-end="url(#loop-arrow)" />
+                <line class="loop-edge" x1="584" y1="86" x2="606" y2="86" marker-end="url(#loop-arrow)" />
+                <line class="loop-edge" x1="670" y1="114" x2="670" y2="226" marker-end="url(#loop-arrow)" />
+                <text class="loop-label" x="678" y="176">pass</text>
+
+                <path class="loop-fail" d="M500,228 L500,170 L396,170 L396,116" marker-end="url(#loop-arrow-fail)" />
+                <text class="loop-label-fail" x="404" y="160">gate fails: abort, main untouched</text>
+
+                <rect class="loop-box" x="608" y="228" width="124" height="56" rx="8" />
+                <text class="loop-title" x="670" y="252" text-anchor="middle">Merge lock</text>
+                <text class="loop-sub" x="670" y="270" text-anchor="middle">one unit at a time</text>
+                <rect class="loop-box" x="460" y="228" width="124" height="56" rx="8" />
+                <text class="loop-title" x="522" y="252" text-anchor="middle">Staged gate</text>
+                <text class="loop-sub" x="522" y="270" text-anchor="middle">merge --no-commit</text>
+                <rect class="loop-box-main" x="312" y="228" width="124" height="56" rx="8" />
+                <text class="loop-title" x="374" y="252" text-anchor="middle">Main</text>
+                <text class="loop-sub" x="374" y="270" text-anchor="middle">one commit per unit</text>
+                <rect class="loop-box" x="164" y="228" width="124" height="56" rx="8" />
+                <text class="loop-title" x="226" y="252" text-anchor="middle">Watcher</text>
+                <text class="loop-sub" x="226" y="270" text-anchor="middle">every 10 minutes</text>
+                <rect class="loop-box" x="16" y="228" width="124" height="56" rx="8" />
+                <text class="loop-title" x="78" y="252" text-anchor="middle">Rollback</text>
+                <text class="loop-sub" x="78" y="270" text-anchor="middle">last good commit</text>
+
+                <line class="loop-edge" x1="608" y1="256" x2="586" y2="256" marker-end="url(#loop-arrow)" />
+                <line class="loop-edge" x1="460" y1="256" x2="438" y2="256" marker-end="url(#loop-arrow)" />
+                <line class="loop-edge" x1="312" y1="256" x2="290" y2="256" marker-end="url(#loop-arrow)" />
+                <line class="loop-fail" x1="164" y1="256" x2="142" y2="256" marker-end="url(#loop-arrow-fail)" />
+                <text class="loop-label-fail" x="152" y="306" text-anchor="middle">smoke fails</text>
+                <path class="loop-edge" d="M226,228 L226,170 L110,170 L110,116" marker-end="url(#loop-arrow)" />
+                <text class="loop-label" x="234" y="206">deploy log, live URL</text>
+                <line class="loop-edge" x1="46" y1="228" x2="46" y2="116" marker-end="url(#loop-arrow)" />
+                <text class="loop-label" x="54" y="176">report</text>
+              </svg>
+            </div>
+            <figcaption class="mt-2 text-sm" style="color: rgb(var(--muted))">One unit's path from plan to production. Dashed lines are the failure paths; every one of them ends somewhere a script or a person reads.</figcaption>
+          </figure>
+          <p>Rightmark merged 212 of 304 planned units through this loop by 12 October. Give every arrow on it a script or an owner before the first unit starts.</p>
+        </div>
+
+        <div id="conductor" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">1. The conductor prompt</h2>
+          <p>On 9 October at 10:30 UTC it was a sibling session, not the builder, that noticed sign-in answering 500 after a morning deploy and reported it. A conductor busy building is a conductor not watching production. Rightmark's build doc says the conductor plans, delegates, merges through one integrator and reports, and does not write application code. Dylan's kit puts it in one line, the first line of the prompt below: "You lead. Specialists build. Independent agents check. Scripts hold the plan."</p>
+          <p>The ask-first list is Rightmark's, generalized: production deploys, DNS, purchases, emails to real people, pushes, publishing and guardrail files.</p>
+          <CopyBlock client:visible text={TEMPLATE_CONDUCTOR} filename="conductor-prompt.md" language="markdown" />
+        </div>
+
+        <div id="roster" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">2. The role roster</h2>
+          <p>Rightmark ran ten roles, cast like a film crew: conductor, architect, builder, designer, writer, verifier, security, leak-guard, red-team and integrator. Dylan's kit ran eight, each with a model, an effort level and a turn cap. The roster below merges both lists and adds the refuter and sync agent the loop needs.</p>
+          <p>Reviewers never fix what they found; a fresh builder does. And every prompt states a tool budget, because an architect and a skeptic that ran past their caps returned nothing at all. The break in the template's first line came on 9 October: a sync agent wrote a stray file into the main checkout and blocked every merge, so sync agents now write nothing there.</p>
+          <CopyBlock client:visible text={TEMPLATE_ROSTER} filename="role-roster.md" language="markdown" />
+        </div>
+
+        <div id="contract" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">3. The unit contract</h2>
+          <p>Rightmark's planning phase produced a 90-unit graph. By 12 October it held 304 units, every one with the same seven keys: id, deps, owns, reads, acceptance, evidence and review. Shared files belong only to integrator units; everyone else asks for a change in their unit report. A wave holds at most 12 units, and no two units in a wave own the same file.</p>
+          <p>The break this prevents happened on Dylan's search pages on 10 October: two lanes each invented a "links under a post" design, and the conductor had to unify them. One owner per shared file stops that before it starts.</p>
+          <CopyBlock client:visible text={TEMPLATE_CONTRACT} filename="plan/units.json" language="json" />
+        </div>
+
+        <div id="planning" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">4. The planning swarm</h2>
+          <p>Planning is a swarm too, built to disagree. Rightmark's Phase 0 had three architects draft alone, one optimizing for delivery speed, one for security and privacy, one for SEO and performance. One judge turned the three drafts into one plan, and three critics and a refuter attacked it. Out came 51 decision records, 41 contract files and the 90-unit graph.</p>
+          <p>Dylan piloted one lane of Phase 0 before fanning out the rest: 58 facts, 47 confirmed, 11 corrected, 0 refuted, for 297,733 tokens against 260,000 estimated. Decisions run on defaults. Rightmark logged 27 decision rows and 24 dated answers; the swarm used the default until I decided, and open questions waited for the next gate.</p>
+          <CopyBlock client:visible text={TEMPLATE_PLANNING} filename="planning-swarm.md" language="markdown" />
+        </div>
+
+        <div id="verify" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">5. The verifier and refuter rubric</h2>
+          <p>On 6 October Rightmark's scaffold unit burned three hours, three verify rounds and two fix rounds, and came back blocked with zero P0 or P1 findings. The verifier kept inventing new bypasses, and every other unit waited on it. The fix was a severity grade on each unmet criterion, with only P0 and P1 blocking. The unit was accepted the same day, with a hardening unit running beside it.</p>
+          <p>Dylan's kit adds two limits. Nothing counts as a blocker or a major unless it cites a gate, a promise or a failing test. After three fix rounds a unit is "stuck" and goes back to the architect, to split it, change the approach or name the decision a person must make. Guard tests must be shown to fail, and that rule paid off: in Dylan's Phase 4, the second review round caught a guard test that could not fail.</p>
+          <CopyBlock client:visible text={TEMPLATE_VERIFIER} filename="verifier-rubric.md" language="markdown" />
+          <PullQuote>Tests that cannot fail prove nothing.</PullQuote>
+        </div>
+
+        <div id="integrate" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">6. The merge lock</h2>
+          <p>On 9 October the lock broke under load. A 10-second poll missed every free window for 30 minutes. A gate on a staged merge ran 50 minutes at a load average near 400, and another integrator took the "stale" lock mid-merge. And vitest's 5-second default failed merges at load averages of 40 to 180.</p>
+          <p>So the script takes the lock with an atomic mkdir, keeps a heartbeat while it holds it, and breaks a lock only when the heartbeat is old and the owner is gone. It merges with --no-commit, gates the staged merge, and checks it still owns the lock before it commits: on 11 October a 69-minute merge ran without the keeper and lost its lock to another run's integrator. The compose mode exists because two units on Dylan's platform each passed review alone and broke together.</p>
+          <p>One rule lives outside the script: never resume a stopped run. On 10 October a resumed run replayed finished reviews, because the resume cache is positional.</p>
+          <CopyBlock client:visible text={TEMPLATE_INTEGRATE} filename="scripts/merge-unit.sh" language="bash" />
+        </div>
+
+        <div id="watcher" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">7. The deploy watcher</h2>
+          <p>Rightmark went live on 8 October. From then until 12 October, 201 production deploys went live, every one smoke-tested. Two more attempts failed and both were caught: one deploy failed with production unchanged, and on 9 October the watcher's smoke test found /sign-in/ answering 500 and the watcher rolled back on its own. Three failed passes in a row stop the watcher. Each pass deploys a clean export of main, never the working checkout or a peer's edits.</p>
+          <p>The smoke list is the sitemap plus a few key pages, never a hand-kept list alone, because the sitemap grows. Dylan's went from 13 pages at go-live to 80 after the search pages.</p>
+          <figure class="my-8">
+            <div class="rounded-xl p-4" style="border: 1px solid rgb(var(--line))">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 420" role="img" aria-labelledby="pbs-title pbs-desc" font-family="Inter, system-ui, -apple-system, sans-serif" style="width:100%;height:auto;display:block">
+                <title id="pbs-title">Dylan sitemap growth, 13 pages at go-live to 80</title>
+                <desc id="pbs-desc">Pages in the meetdylan.ai sitemap after each build stage: 13 at go-live on 8 October, 36 after Phase 2, 44 after Phase 3, 54 after Phase 4 and 80 after the search pages run. The live sitemap had 80 URLs on 12 October 2026. Linear scale starting at zero.</desc>
+                <text x="20.0" y="30.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="13" font-weight="700" text-anchor="start">DYLAN SITEMAP, PAGES</text>
+                <text x="20.0" y="56.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="15" font-weight="400" text-anchor="start">From go-live on 8 October to 80 live on 12 October.</text>
+                <line x1="52" y1="316.0" x2="460" y2="316.0" style="stroke:rgb(var(--line, 38 37 31))" stroke-width="2"/>
+                <text x="42.0" y="321.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="end">0</text>
+                <line x1="52" y1="263.0" x2="460" y2="263.0" style="stroke:rgb(var(--line, 38 37 31))" stroke-width="1"/>
+                <text x="42.0" y="268.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="end">20</text>
+                <line x1="52" y1="210.0" x2="460" y2="210.0" style="stroke:rgb(var(--line, 38 37 31))" stroke-width="1"/>
+                <text x="42.0" y="215.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="end">40</text>
+                <line x1="52" y1="157.0" x2="460" y2="157.0" style="stroke:rgb(var(--line, 38 37 31))" stroke-width="1"/>
+                <text x="42.0" y="162.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="end">60</text>
+                <line x1="52" y1="104.0" x2="460" y2="104.0" style="stroke:rgb(var(--line, 38 37 31))" stroke-width="1"/>
+                <text x="42.0" y="109.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="end">80</text>
+                <path d="M70.0,316 V285.6 Q70.0,281.6 74.0,281.6 H111.6 Q115.6,281.6 115.6,285.6 V316 Z" style="fill:rgb(var(--accent-2, 34 211 160))"><title>Live 8 October: 13 pages</title></path>
+                <text x="92.8" y="273.6" fill="currentColor" font-size="16" font-weight="700" text-anchor="middle">13</text>
+                <text x="92.8" y="338.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="middle">Live</text>
+                <text x="92.8" y="356.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="middle">8 October</text>
+                <path d="M151.6,316 V224.6 Q151.6,220.6 155.6,220.6 H193.2 Q197.2,220.6 197.2,224.6 V316 Z" style="fill:rgb(var(--accent-2, 34 211 160))"><title>Phase 2: 36 pages</title></path>
+                <text x="174.4" y="212.6" fill="currentColor" font-size="16" font-weight="700" text-anchor="middle">36</text>
+                <text x="174.4" y="338.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="middle">Phase 2</text>
+                <path d="M233.2,316 V203.4 Q233.2,199.4 237.2,199.4 H274.8 Q278.8,199.4 278.8,203.4 V316 Z" style="fill:rgb(var(--accent-2, 34 211 160))"><title>Phase 3: 44 pages</title></path>
+                <text x="256.0" y="191.4" fill="currentColor" font-size="16" font-weight="700" text-anchor="middle">44</text>
+                <text x="256.0" y="338.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="middle">Phase 3</text>
+                <path d="M314.8,316 V176.9 Q314.8,172.9 318.8,172.9 H356.4 Q360.4,172.9 360.4,176.9 V316 Z" style="fill:rgb(var(--accent-2, 34 211 160))"><title>Phase 4: 54 pages</title></path>
+                <text x="337.6" y="164.9" fill="currentColor" font-size="16" font-weight="700" text-anchor="middle">54</text>
+                <text x="337.6" y="338.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="middle">Phase 4</text>
+                <path d="M396.4,316 V108.0 Q396.4,104.0 400.4,104.0 H438.0 Q442.0,104.0 442.0,108.0 V316 Z" style="fill:rgb(var(--accent-2, 34 211 160))"><title>Search pages: 80 pages</title></path>
+                <text x="419.2" y="96.0" fill="currentColor" font-size="16" font-weight="700" text-anchor="middle">80</text>
+                <text x="419.2" y="338.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="middle">Search</text>
+                <text x="419.2" y="356.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="middle">pages</text>
+                <text x="20.0" y="386.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">Source: the Dylan build program log; the live</text>
+                <text x="20.0" y="405.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">sitemap counted 12 October 2026.</text>
+              </svg>
+            </div>
+          </figure>
+          <p>Add one end-to-end on production after each deploy. Dylan's waitlist answered 503 on every step after the first, because the blob store served a weak etag the update check never matched; local tests used a file store. And deploy the commit yourself: Dylan's host never deployed the Phase 3 merge, and the conductor had to deploy that exact commit through the API.</p>
+          <CopyBlock client:visible text={TEMPLATE_WATCHER} filename="scripts/deploy-watcher.sh" language="bash" />
+        </div>
+
+        <div id="guard" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">8. The guard hook and the content lint</h2>
+          <p>Dylan's kit shipped two hooks. One blocks shell commands that push to main, force push, skip checks, deploy to production, write DNS, switch payments to live, read secrets, put dashes in commits or edit the guardrails. The other blocks file writes that add dashes or secrets or touch the guardrails, and refuses to read env files. The first hook's header calls it "a seatbelt, not a security boundary". On install, five probe payloads were refused: echo a secret, push to main, write a dash, read an env file and an unscoped CLI call.</p>
+          <p>Rightmark's content firewall scans every commit for names and phrases that must never ship, and on day one a probe showed it missed two banned phrases and the names of public AI labs. So this template probes every banned phrase, and its self-test fails if any of them gets through.</p>
+          <CopyBlock client:visible text={TEMPLATE_GUARD} filename=".claude/hooks/guard-hook.mjs" language="js" />
+        </div>
+
+        <div id="budget" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">9. The budget card</h2>
+          <p>On 11 October the parallel slots across Rightmark's runs summed to 11, the Mac's load hit 460 and gates timed out. The same day a test leak filled the disk and a stale 906 MB build folder held the merge lock for more than 80 minutes. On the Dylan platform build the load reached about 900 and the Docker daemon died.</p>
+          <p>The rules that came out: about 5 units in flight per machine, a disk floor, CI as the gate, and a stop at 1.5 times any estimate. Dylan's Phase 0 hit that line: 21.8M tokens against an estimate of 12M, 1.82 times, because it wrote 14 decision records instead of 10, ran 126 agents instead of about 100, and its writers and judges read more than planned. Its Phase 2 and Phase 4 token totals were never recorded, so only the estimates exist: 6M to 8M and 10M to 14M. The 5-hour usage window is a planning input: write its reset time in the status file.</p>
+          <figure class="my-8">
+            <div class="rounded-xl p-4" style="border: 1px solid rgb(var(--line))">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 849" role="img" aria-labelledby="pbe-title pbe-desc" font-family="Inter, system-ui, -apple-system, sans-serif" style="width:100%;height:auto;display:block">
+                <title id="pbe-title">Estimate against actual: two swarm builds ran over their plans</title>
+                <desc id="pbe-desc">Rightmark: the plan grew from an estimated 90 work units to 304 on 12 October; tokens were estimated at about 69M to 140M and finished workflows alone used 316.0M, a floor; agents were estimated at about 512 to 520 and the 75 finished workflows ran 2,284. Dylan: Phase 0 used 21.8M tokens against an estimate of 12M, and the search pages run used 2.42M against about 1.3M. Each row has its own linear scale starting at zero.</desc>
+                <defs><pattern id="pbe-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" style="stroke:rgb(var(--muted, 170 167 154))" stroke-width="2"/></pattern></defs>
+                <text x="20.0" y="30.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="13" font-weight="700" text-anchor="start">ESTIMATE AGAINST ACTUAL</text>
+                <text x="20.0" y="56.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="15" font-weight="400" text-anchor="start">Each row has its own linear scale, from zero.</text>
+                <rect x="20" y="75" width="26" height="12" fill="none" style="stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"/>
+                <text x="54.0" y="86.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">estimate</text>
+                <rect x="140" y="75" width="26" height="12" style="fill:url(#pbe-hatch);stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"/>
+                <text x="174.0" y="86.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">estimate given as a range</text>
+                <rect x="20" y="99" width="12" height="12" rx="2" style="fill:rgb(var(--accent, 255 107 44))"/>
+                <rect x="34" y="99" width="12" height="12" rx="2" style="fill:rgb(var(--accent-2, 34 211 160))"/>
+                <text x="54.0" y="110.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">actual</text>
+                <path d="M140,105 h18" style="stroke:rgb(var(--muted, 170 167 154))" stroke-width="2" stroke-dasharray="4 4"/>
+                <path d="M158,100 l8,5 l-8,5 z" style="fill:rgb(var(--muted, 170 167 154))"/>
+                <text x="174.0" y="110.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">a floor: the full figure is higher</text>
+                <line x1="20" y1="132" x2="460" y2="132" style="stroke:rgb(var(--line, 38 37 31))" stroke-width="1.5"/>
+                <text x="20.0" y="158.0" fill="currentColor" font-size="20" font-weight="700" text-anchor="start">Rightmark</text>
+                <text x="20.0" y="194.0" fill="currentColor" font-size="17" font-weight="600" text-anchor="start">Work units in the plan</text>
+                <text x="460.0" y="194.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="15" font-weight="400" text-anchor="end">3.4 times</text>
+                <rect x="20" y="206" width="440" height="14" style="fill:rgb(var(--paper, 22 23 27))"/>
+                <rect x="20" y="206" width="113.1" height="14" fill="none" style="stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"><title>estimate 90</title></rect>
+                <text x="144.1" y="218.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">estimate 90</text>
+                <rect x="20" y="226" width="382.2" height="20" rx="3" style="fill:rgb(var(--accent, 255 107 44))"><title>304 on 12 October</title></rect>
+                <text x="20.0" y="265.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="start">304 on 12 October</text>
+                <text x="460.0" y="265.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="13" font-weight="400" text-anchor="end">scale 0 to 350</text>
+                <text x="20.0" y="299.0" fill="currentColor" font-size="17" font-weight="600" text-anchor="start">Tokens</text>
+                <text x="460.0" y="299.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="15" font-weight="400" text-anchor="end">2.3 times the top of the range</text>
+                <rect x="20" y="311" width="440" height="14" style="fill:rgb(var(--paper, 22 23 27))"/>
+                <rect x="20" y="311" width="86.7" height="14" fill="none" style="stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"><title>estimate about 69M to 140M</title></rect>
+                <rect x="106.7" y="311" width="89.3" height="14" style="fill:url(#pbe-hatch);stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"><title>estimate about 69M to 140M</title></rect>
+                <text x="204.0" y="323.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">estimate about 69M to 140M</text>
+                <rect x="20" y="331" width="397.3" height="20" rx="3" style="fill:rgb(var(--accent, 255 107 44))"><title>316.0M, a floor: finished workflows only</title></rect>
+                <path d="M421.3,341.0 H450" style="stroke:rgb(var(--accent, 255 107 44))" stroke-width="2" stroke-dasharray="4 4"/>
+                <path d="M450,335.0 l10,6 l-10,6 z" style="fill:rgb(var(--accent, 255 107 44))"/>
+                <text x="20.0" y="370.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="start">316.0M, a floor: finished workflows only</text>
+                <text x="460.0" y="370.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="13" font-weight="400" text-anchor="end">scale 0 to 350M</text>
+                <text x="20.0" y="404.0" fill="currentColor" font-size="17" font-weight="600" text-anchor="start">Agents</text>
+                <text x="460.0" y="404.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="15" font-weight="400" text-anchor="end">4.4 times the top of the range</text>
+                <rect x="20" y="416" width="440" height="14" style="fill:rgb(var(--paper, 22 23 27))"/>
+                <rect x="20" y="416" width="90.1" height="14" fill="none" style="stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"><title>estimate about 512 to 520</title></rect>
+                <rect x="110.1" y="416" width="3.0" height="14" style="fill:url(#pbe-hatch);stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"><title>estimate about 512 to 520</title></rect>
+                <text x="121.1" y="428.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">estimate about 512 to 520</text>
+                <rect x="20" y="436" width="402.0" height="20" rx="3" style="fill:rgb(var(--accent, 255 107 44))"><title>2,284 in the 75 finished workflows</title></rect>
+                <text x="20.0" y="475.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="start">2,284 in the 75 finished workflows</text>
+                <text x="460.0" y="475.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="13" font-weight="400" text-anchor="end">scale 0 to 2,500</text>
+                <line x1="20" y1="491" x2="460" y2="491" style="stroke:rgb(var(--line, 38 37 31))" stroke-width="1.5"/>
+                <text x="20.0" y="517.0" fill="currentColor" font-size="20" font-weight="700" text-anchor="start">Dylan</text>
+                <text x="20.0" y="553.0" fill="currentColor" font-size="17" font-weight="600" text-anchor="start">Phase 0 tokens</text>
+                <text x="460.0" y="553.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="15" font-weight="400" text-anchor="end">1.82 times</text>
+                <rect x="20" y="565" width="440" height="14" style="fill:rgb(var(--paper, 22 23 27))"/>
+                <rect x="20" y="565" width="211.2" height="14" fill="none" style="stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"><title>estimate 12M</title></rect>
+                <text x="242.2" y="577.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">estimate 12M</text>
+                <rect x="20" y="585" width="383.7" height="20" rx="3" style="fill:rgb(var(--accent-2, 34 211 160))"><title>21.8M</title></rect>
+                <text x="20.0" y="624.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="start">21.8M</text>
+                <text x="460.0" y="624.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="13" font-weight="400" text-anchor="end">scale 0 to 25M</text>
+                <text x="20.0" y="658.0" fill="currentColor" font-size="17" font-weight="600" text-anchor="start">Search pages run, tokens</text>
+                <text x="460.0" y="658.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="15" font-weight="400" text-anchor="end">1.9 times</text>
+                <rect x="20" y="670" width="440" height="14" style="fill:rgb(var(--paper, 22 23 27))"/>
+                <rect x="20" y="670" width="190.7" height="14" fill="none" style="stroke:rgb(var(--muted, 170 167 154))" stroke-width="1.5"><title>estimate about 1.3M</title></rect>
+                <text x="221.7" y="682.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">estimate about 1.3M</text>
+                <rect x="20" y="690" width="354.9" height="20" rx="3" style="fill:rgb(var(--accent-2, 34 211 160))"><title>2.42M</title></rect>
+                <text x="20.0" y="729.0" fill="currentColor" font-size="15" font-weight="600" text-anchor="start">2.42M</text>
+                <text x="460.0" y="729.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="13" font-weight="400" text-anchor="end">scale 0 to 3M</text>
+                <text x="20.0" y="769.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">Source: the Rightmark plan report and workflow run records;</text>
+                <text x="20.0" y="788.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">the Dylan build program log. Counted 12 October 2026.</text>
+                <text x="20.0" y="807.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">Dylan ratios as recorded in the program log;</text>
+                <text x="20.0" y="826.0" style="fill:rgb(var(--muted, 170 167 154))" font-size="14" font-weight="400" text-anchor="start">Rightmark ratios computed from the counts shown.</text>
+              </svg>
+            </div>
+          </figure>
+          <CopyBlock client:visible text={TEMPLATE_BUDGET} filename="budget-card.md" language="markdown" />
+        </div>
+
+        <div id="taste" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">10. The taste lock</h2>
+          <p>On 8 October rightmark.ai went live, and the same day I sent the homepage back: "its not the website we initially design". The swarm's own style rules had rewritten copy from the design I approved on 4 October, a 56-page prototype built by five parallel builders. The fix was a rule that makes that design binding, 15 parity units that brought it back, and parity as a check in the full gate.</p>
+          <p>Taste does not delegate. Write down what is approved, make it a reference the gate can compare against, and list every forced difference with the rule that forced it.</p>
+          <CopyBlock client:visible text={TEMPLATE_TASTE} filename="taste-lock.md" language="markdown" />
+        </div>
+
+        <div class="card mt-14">
+          <p class="mt-0">Repo Check is the free local script that values a Git repo on your own machine; it also runs as a Claude skill. <a href="https://rightmark.ai/repo-check/">https://rightmark.ai/repo-check/</a></p>
+          <p>Dylan is an AI SDR billed per held meeting. Join the waitlist: <a href="https://meetdylan.ai/waitlist">https://meetdylan.ai/waitlist</a></p>
+          <p class="mb-0 text-sm" style="color: rgb(var(--muted))">How the two builds ran, failure by failure: <a href={`${base}/chapters/58-conductor-never-codes/`}>Chapter 58: The Conductor Never Codes</a>.</p>
+        </div>
+
+        <div id="do-this" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">Do this Monday</h2>
+          <ol>
+            <li>Paste the conductor prompt into a fresh session on a repo you know, fill in the ask-first list, and give it one small feature.</li>
+            <li>Have it write three units in the contract format, with no file owned twice, and send one through a fresh verifier and a refuter.</li>
+            <li>Install merge-unit.sh, set GATE_CMD to your quick gate, run <code>bash scripts/merge-unit.sh compose</code> on all three unit branches in one throwaway tree, then merge them one at a time through the lock.</li>
+            <li>Run <code>bash scripts/deploy-watcher.sh --once</code> against staging on a good commit, then break one page, run it again and watch it roll back. Only then point it at production.</li>
+            <li>Install the guard hook, run --self-test, add one banned phrase of your own and run it again. Fill in the budget card before the next run.</li>
+          </ol>
+          <p class="mt-6 text-sm" style="color: rgb(var(--muted))">Related: <a href={`${base}/chapters/58-conductor-never-codes/`}>Ch 58: The Conductor Never Codes</a> · <a href={`${base}/chapters/06-the-swarm/`}>Ch 06: Parallel Subagents and Fan-Out</a> · <a href={`${base}/chapters/28-failure-receipts/`}>Ch 28: Six Failures, Six Bills</a> · <a href={`${base}/chapters/38-run-until-done/`}>Ch 38: Run Until Done</a> · <a href={`${base}/chapters/53-first-real-caller/`}>Ch 53: The First Real Caller</a> · <a href={`${base}/swarms/`}>Swarms</a> · <a href={`${base}/dynamic-workflows/`}>Dynamic workflows</a> · <a href={`${base}/agent-workflow/`}>Agent workflow</a></p>
+        </div>
+
+        <div id="faq" data-section-target class="scroll-mt-24 mt-14">
+          <h2 class="font-display text-3xl mb-4">FAQ</h2>
+          {faqItems.map(item => (
+            <>
+              <h3>{item.q}</h3>
+              <p>{item.a}</p>
+            </>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <CommandPaletteMount />
+</BaseLayout>
+
+<style>
+  .loop-box { fill: rgb(var(--paper)); stroke: rgb(var(--line)); stroke-width: 1.5; }
+  .loop-box-main { fill: rgb(var(--paper)); stroke: rgb(var(--accent-2)); stroke-width: 2; }
+  .loop-title { fill: rgb(var(--fg)); font-size: 14px; font-weight: 600; }
+  .loop-sub { fill: rgb(var(--muted)); font-size: 11px; }
+  .loop-edge { stroke: rgb(var(--muted)); stroke-width: 1.5; fill: none; }
+  .loop-fail { stroke: rgb(var(--accent)); stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; }
+  .loop-label { fill: rgb(var(--muted)); font-size: 11px; }
+  .loop-label-fail { fill: rgb(var(--accent)); font-size: 11px; }
+  .loop-head { fill: rgb(var(--muted)); }
+  .loop-head-fail { fill: rgb(var(--accent)); }
+</style>
