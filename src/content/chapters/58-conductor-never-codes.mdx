@@ -49,7 +49,7 @@ Almost none of it was hand-spawned. My main sessions made 132 Workflow calls and
 
 Rightmark ran as two sessions that talked: 116 cross-session messages arrived between them, and the second queued approved units for the builder. It also watched production. At 10:30 on 9 October it reported that the sign-in pages had been answering 500 since a morning deploy. A second session watching production is a checker nobody has to schedule.
 
-Give the lead one job: decide.
+Give the lead one job: decide. The conductor prompt and role roster are templates in [the Swarm Build Playbook](/swarm-build-playbook/).
 
 ## A plan someone else can check
 
@@ -195,7 +195,7 @@ Like the receipts in [Chapter 28](/chapters/28-failure-receipts/), here are the 
 | Google had never seen the site | Pages never built | An AEO audit | 26 search pages, 54 to 80 |
 | Load 460 and about 900, a full disk | The Mac | Gates timing out; Docker dying | About 5 in flight, a disk floor, CI as gate |
 
-Read the Caught by column. No row was caught by the agent that built the thing. The conductor, a reviewer and the scripts caught the plumbing; the rest needed what no builder had: my eyes on the live site, a sibling session, production checks, an audit, a machine out of room.
+Read the Caught by column. No row was caught by the agent that built the thing. The conductor, a reviewer and the scripts caught the plumbing; the rest needed what no builder had: my eyes on the live site, a sibling session, production checks, an audit, a machine out of room. Every last-column entry is a template in [the playbook](/swarm-build-playbook/).
 
 <Callout type="warn" title="The rule">
 **Make the session in charge a conductor that never codes, and turn every failure into a script, a gate or a role before the next unit starts.**

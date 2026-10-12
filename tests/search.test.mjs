@@ -180,6 +180,12 @@ test('a search for mods lands on the Claude Code mods reference page first', () 
   }
 });
 
+test('a search for the swarm playbook lands on the swarm build playbook page first', () => {
+  for (const query of ['swarm playbook', 'swarm build playbook', 'swarm templates', 'merge lock', 'deploy watcher']) {
+    assert.equal(searchItems(realIndex, query)[0]?.href, '/swarm-build-playbook/', query);
+  }
+});
+
 test('the new library and workflow planner are searchable', () => {
   assert.equal(searchItems(realIndex, 'library')[0].href, '/library/');
   assert.equal(searchItems(realIndex, 'planner workflow')[0].href, '/workflow-planner/');
