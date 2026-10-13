@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import ts from 'typescript';
 
@@ -18,6 +18,8 @@ const { outputText: screenshotsJs } = ts.transpileModule(read('src/lib/screensho
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const { SCREENSHOTS } = await import(`data:text/javascript;base64,${Buffer.from(screenshotsJs).toString('base64')}`);
+// SCREENSHOTS is generated at build time and CI runs these tests first, so a figure check also looks for the file.
+const onDisk = id => existsSync(new URL(`../public/screens/${SCREENSHOTS[id]}`, import.meta.url));
 const { outputText: glossaryJs } = ts.transpileModule(read('src/lib/glossary.ts'), {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
@@ -44,6 +46,7 @@ test('chapter 51 is wired: neighbours, both figures and every glossary key', () 
   const content = read(`src/content/chapters/${slug}.mdx`);
   for (const id of [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+    assert.ok(onDisk(id), `figure file ${SCREENSHOTS[id]} must exist in public/screens/`);
   }
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
@@ -57,6 +60,7 @@ test('chapter 52 is wired: neighbours, every figure and every glossary key', () 
   const content = read(`src/content/chapters/${slug}.mdx`);
   for (const id of [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+    assert.ok(onDisk(id), `figure file ${SCREENSHOTS[id]} must exist in public/screens/`);
   }
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
@@ -74,6 +78,7 @@ test('chapter 53 is wired: neighbours, every figure and every glossary key', () 
   assert.ok(ids.length > 0, 'the chapter must carry its figures');
   for (const id of ids) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+    assert.ok(onDisk(id), `figure file ${SCREENSHOTS[id]} must exist in public/screens/`);
   }
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
@@ -94,6 +99,7 @@ test('chapters 54 and 55 are wired: neighbours, Part VI, Team + Tier, figures an
     assert.ok(ids.length > 0, `${slug}: the measured chapter must carry its chart`);
     for (const id of ids) {
       assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+      assert.ok(onDisk(id), `figure file ${SCREENSHOTS[id]} must exist in public/screens/`);
     }
     for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
       assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
@@ -116,6 +122,7 @@ test('chapter 56 is wired: neighbours, Part VI and AI Agents beside Chapter 39, 
   assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three charts are placed');
   for (const id of ids) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+    assert.ok(onDisk(id), `figure file ${SCREENSHOTS[id]} must exist in public/screens/`);
   }
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
@@ -157,6 +164,7 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
   assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three figures are placed');
   for (const id of ids) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+    assert.ok(onDisk(id), `figure file ${SCREENSHOTS[id]} must exist in public/screens/`);
   }
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
@@ -176,6 +184,8 @@ test('chapter 58 is wired: neighbours, Part V and Building Products after Chapte
   const building = SECTIONS.find(section => section.key === 'building');
   assert.equal(building.slugs[building.slugs.indexOf(slug) - 1], '53-first-real-caller', 'listed under Building Products after Chapter 53');
   const content = read(`src/content/chapters/${slug}.mdx`);
+  // The page <title> is built from the frontmatter title, and #60 requires it to name the chapter.
+  assert.match(content.split('---')[1], /^title: "The Conductor Never Codes"$/m, 'the page <title> comes from the chapter title');
   // Every count is a snapshot of sessions that were still running on 12 October; without the dated callout the numbers read as current.
   assert.match(content, /title="Evidence status: 2026-10-12"/, 'the evidence callout must carry the snapshot date');
   // The ledger is introduced from Chapter 28, the closer goes back to Chapter 25, and the templates live on the playbook page.
@@ -187,6 +197,7 @@ test('chapter 58 is wired: neighbours, Part V and Building Products after Chapte
   assert.deepEqual(ids.slice().sort(), [1, 2, 3].map(n => `${slug}-${n}`), 'all three figures are placed');
   for (const id of ids) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
+    assert.ok(onDisk(id), `figure file ${SCREENSHOTS[id]} must exist in public/screens/`);
   }
   for (const term of [...content.matchAll(/<GlossaryTerm term="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(term in glossary, `glossary term "${term}" must be a key in glossary.ts`);
