@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { closeSync, existsSync, mkdtempSync, openSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -172,16 +172,29 @@ test('published block-push hooks read JSON stdin and return blocking decisions',
       if (expectedStatus === 2) assert.match(result.stderr, /Blocked:/);
       else assert.equal(result.stderr, '');
     }
-    const missingJq = spawnSync('/bin/sh', ['-c', command], {
-      input: JSON.stringify({ tool_input: { command: 'git push origin main' } }),
-      env: { PATH: '/nonexistent' }, encoding: 'utf8', timeout: 5000,
-    });
-    assert.ifError(missingJq.error);
-    assert.equal(missingJq.status, 2, 'missing jq must not silently allow a push');
-    assert.match(missingJq.stderr, /Blocked:/);
     const jqPath = spawnSync('sh', ['-c', 'command -v jq'], { encoding: 'utf8' }).stdout.trim();
     const bin = mkdtempSync(join(tmpdir(), 'hook-jq-only-'));
     try {
+      // Missing jq exits before reading stdin. A pipe races that exit and can
+      // report EPIPE; a file keeps the hook's blocking decision observable.
+      const inputPath = join(bin, 'input.json');
+      writeFileSync(inputPath, JSON.stringify({
+        tool_input: { command: 'git push origin main' },
+        padding: 'x'.repeat(1024 * 1024), // Exceeds pipe capacity to expose regressions.
+      }));
+      const inputFd = openSync(inputPath, 'r');
+      try {
+        const missingJq = spawnSync('/bin/sh', ['-c', command], {
+          stdio: [inputFd, 'pipe', 'pipe'],
+          env: { PATH: '/nonexistent' }, encoding: 'utf8', timeout: 5000,
+        });
+        assert.ifError(missingJq.error);
+        assert.equal(missingJq.status, 2, 'missing jq must not silently allow a push');
+        assert.equal(missingJq.stdout, '', 'exit-code hooks must not emit a JSON decision');
+        assert.match(missingJq.stderr, /Blocked:/);
+      } finally {
+        closeSync(inputFd);
+      }
       symlinkSync(jqPath, join(bin, 'jq'));
       const noGrep = spawnSync('/bin/sh', ['-c', command], {
         input: JSON.stringify({ tool_input: { command: 'git push origin main' } }),
