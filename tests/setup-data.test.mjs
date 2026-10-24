@@ -22,13 +22,15 @@ test('every published skill and agent carries a real description', () => {
     assert.doesNotMatch(text, /^[>|][-+]?$/, `${item.name} publishes the YAML block marker as its description`);
   }
   // use-railway's description is a folded block over five lines. The card shows all five
-  // joined with spaces, cut like every card at the generator's existing 360-character cap;
-  // the patterns come from line one, the join of lines one and two, line four and line five.
+  // joined with spaces, cut like every card at the generator's existing 360-character cap.
+  // The patterns come from line one, the join of lines one and two, line four, line five,
+  // and the cut itself, which moves if the cap does.
   const railway = SKILLS.find((skill) => skill.name === 'use-railway')?.description ?? '';
   assert.match(railway, /^Operate Railway infrastructure: projects, services/);
   assert.match(railway, /buckets, deploys, environments/);
   assert.match(railway, /railway\.toml/);
   assert.match(railway, /Do NOT fire for Vercel/);
+  assert.match(railway, /generic deployment\/build-failure\/M…$/);
 });
 
 // A skill missing from SKILL_CATEGORIES falls back to Meta, which is how use-railway
