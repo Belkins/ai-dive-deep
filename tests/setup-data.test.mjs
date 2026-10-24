@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -60,6 +63,26 @@ test('the published snapshot is the 2026-10-24 one the page describes', () => {
 test('the published data carries no home-directory path or email address', () => {
   assert.doesNotMatch(source, /\/Users\//);
   assert.doesNotMatch(source, /[\w.+-]+@[\w-]+\.[\w.-]+/);
+});
+
+// The generator reads the names it scrubs from the ignored private/venture-map.json, so a
+// machine without that file must get an error, not descriptions with the names left in.
+// The run gets an empty ~/.claude: past that check, nothing stops it writing setup.ts.
+test('without private/venture-map.json the generator stops, names the file and writes nothing', (t) => {
+  const root = mkdtempSync(join(tmpdir(), 'dive-setup-data-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  for (const directory of ['scripts', 'src/lib', 'home/.claude/skills', 'home/.claude/agents']) {
+    mkdirSync(join(root, directory), { recursive: true });
+  }
+  writeFileSync(join(root, 'scripts/build-setup-data.py'), generator);
+  writeFileSync(join(root, 'src/lib/setup.ts'), 'unchanged\n');
+  const result = spawnSync('python3', ['scripts/build-setup-data.py'], {
+    cwd: root, env: { ...process.env, HOME: join(root, 'home') }, encoding: 'utf8', timeout: 10000,
+  });
+  assert.ifError(result.error);
+  assert.notEqual(result.status, 0, 'the generator ran without its scrub list');
+  assert.match(result.stderr, /private\/venture-map\.json is missing/);
+  assert.equal(readFileSync(join(root, 'src/lib/setup.ts'), 'utf8'), 'unchanged\n', 'the generator wrote setup.ts without its scrub list');
 });
 
 const widget = ts.transpileModule(readFileSync(new URL('../src/widgets/SetupShowcase.tsx', import.meta.url), 'utf8'), {
