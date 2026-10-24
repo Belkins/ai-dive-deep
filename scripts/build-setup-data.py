@@ -57,6 +57,27 @@ SKILL_CATEGORIES = {
 
     'agent-wave-verify': 'meta', 'preflight-external-deps': 'meta',
     'teleport': 'meta',
+
+    # added since the 2026-06-09 refresh
+    'claude-md-hygiene': 'ops', 'dream': 'ops', 'substack-push': 'ops',
+
+    'antislop': 'review', 'audit-content': 'review', 'audit-website-aeo': 'review',
+    'credential-helper-lint': 'review', 'eval': 'review', 'fixing-accessibility': 'review',
+    'negative-test-guards': 'review', 'seo-ops': 'review', 'ship-feature': 'review',
+    'verify-live-surface': 'review',
+
+    'bulk-rename-scoped': 'build', 'cutover-preflight': 'build', 'deploy-to-box': 'build',
+    'design-system-extractor': 'build', 'design-taste': 'build', 'fixing-metadata': 'build',
+    'framer': 'build', 'framer-code-components': 'build', 'improve-aeo-geo': 'build',
+    'posthog-wizard-followup': 'build', 'safe-git-cleanup': 'build', 'use-railway': 'build',
+    'vercel-env-verify': 'build', 'visibility-flip-check': 'build', 'vlad-framer': 'build',
+
+    'newsletter-draft': 'strategy', 'humanizer': 'strategy',
+
+    'folderly-external-audit': 'portfolio',
+
+    'arsenal': 'meta', 'remove-ai-marks': 'meta', 'verify-before-asking': 'meta',
+    'wf': 'meta', 'workflow-forge': 'meta',
 }
 
 PLUGIN_CATEGORIES = {
@@ -79,7 +100,7 @@ def parse_frontmatter(text):
     if not m: return {}
     fm = m.group(1)
     out = {}
-    desc_match = re.search(r'^description:\s*\|\s*\n((?:[ \t]+.*\n?)+)', fm, re.MULTILINE)
+    desc_match = re.search(r'^description:\s*[|>][-+]?\s*\n((?:[ \t]+.*\n?)+)', fm, re.MULTILINE)
     if desc_match:
         out['description'] = ' '.join(line.strip() for line in desc_match.group(1).splitlines() if line.strip())
     else:
@@ -100,7 +121,7 @@ def collect_skills():
                 fm = parse_frontmatter(f.read())
         except Exception:
             continue
-        desc = fm.get('description', '').strip()
+        desc = _scrub_private_ventures(fm.get('description', '').strip())
         if len(desc) > 360:
             desc = desc[:357].rstrip() + '…'
         out.append({
@@ -121,7 +142,7 @@ def collect_agents():
         except Exception:
             continue
         name = fm.get('name', f.replace('.md', ''))
-        desc = fm.get('description', '').strip()
+        desc = _scrub_private_ventures(fm.get('description', '').strip())
         # Strip examples and other long-form artifacts; just first sentence(s)
         # Many agent descriptions include `<example>` blocks — cut at the first <example>
         if '<example>' in desc:

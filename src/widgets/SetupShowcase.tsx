@@ -48,7 +48,7 @@ export default function SetupShowcase() {
       {/* Tabs */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <Tab active={tab === 'skills'}  onClick={() => { setTab('skills');  setActiveCat('all'); }} label={`Skills · ${skillCount}`} />
-        <Tab active={tab === 'agents'}  onClick={() => { setTab('agents');  setActiveCat('all'); }} label={`Agents · ${agentCount}`} />
+        {agentCount > 0 && <Tab active={tab === 'agents'}  onClick={() => { setTab('agents');  setActiveCat('all'); }} label={`Agents · ${agentCount}`} />}
         <Tab active={tab === 'plugins'} onClick={() => { setTab('plugins'); setActiveCat('all'); }} label={`Plugins · ${pluginCount}`} />
       </div>
 
