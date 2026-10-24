@@ -21,19 +21,14 @@ test('every published skill and agent carries a real description', () => {
     assert.ok(text.length > 0, `${item.name} has no description`);
     assert.doesNotMatch(text, /^[>|][-+]?$/, `${item.name} publishes the YAML block marker as its description`);
   }
-  // use-railway's description is a folded block over five lines. Reading only the marker
-  // or the first line, or joining the lines without a space, loses text pinned here.
+  // use-railway's description is a folded block over five lines. The card shows all five
+  // joined with spaces, cut like every card at the generator's existing 360-character cap;
+  // the patterns come from line one, the join of lines one and two, line four and line five.
   const railway = SKILLS.find((skill) => skill.name === 'use-railway')?.description ?? '';
   assert.match(railway, /^Operate Railway infrastructure: projects, services/);
   assert.match(railway, /buckets, deploys, environments/);
   assert.match(railway, /railway\.toml/);
-});
-
-// The "All" view groups skills by these six keys (SKILL_CATS in SetupShowcase.tsx),
-// so a skill filed under any other category silently drops out of it.
-test('every skill sits in one of the six groups the All view renders', () => {
-  const groups = ['ops', 'review', 'build', 'strategy', 'portfolio', 'meta'];
-  for (const skill of SKILLS) assert.ok(groups.includes(skill.category), `${skill.name} is filed under "${skill.category}"`);
+  assert.match(railway, /Do NOT fire for Vercel/);
 });
 
 // A skill missing from SKILL_CATEGORIES falls back to Meta, which is how use-railway
@@ -88,4 +83,11 @@ test('the Agents tab shows only when there are agents', () => {
   assert.ok(!html.includes('Agents ·'), 'an empty Agents tab is shown');
   const withAgent = renderShowcase({ ...setup, AGENTS: [{ name: 'probe', description: 'A probe agent.', category: 'agent' }] });
   assert.ok(withAgent.includes('Agents · 1'), 'the Agents tab stays hidden with an agent present');
+});
+
+// The All view renders one group per SKILL_CATS key, so a skill filed under any other
+// category, or a renamed or dropped key, loses skills here even when the data is right.
+test('the All view renders the six groups with 54 skills between them', () => {
+  const groups = [...renderShowcase(setup).matchAll(/<h3[^>]*>([^<]+)<\/h3>[\s\S]*?>(\d+)<\/span>/g)].map((match) => [match[1], Number(match[2])]);
+  assert.deepEqual(groups, [['Daily ops', 7], ['Code review + QA', 15], ['Build + ship', 18], ['Strategy + research', 6], ['Portfolio-specific', 1], ['Meta', 7]]);
 });
