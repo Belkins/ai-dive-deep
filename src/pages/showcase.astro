@@ -11,7 +11,7 @@ const navItems = [
   { id: 'swarm-compositions', label: 'Six swarm compositions' },
   { id: 'skill-chains', label: 'Eight skill chains' },
   { id: 'swarm-deep-dives', label: 'Five swarm deep-dives' },
-  { id: 'setup-list', label: 'The full skill + agent list' },
+  { id: 'setup-list', label: 'The full skill list' },
   { id: 'how-to-read', label: 'How to read this list' },
 ];
 
@@ -245,7 +245,7 @@ suggested fix. No edits. Read-only tools only (Read, Grep, Glob).
 
 After all 6 return, spawn one synthesis agent to dedupe + rank + write
 notes/audit/AUDIT.md with top-10 fix list.`,
-    receipt: 'ran on partner-connector pre-release branch 2026-04-09 — 6 reviewers returned 47 raw findings, synthesis dedupe collapsed to 12 unique issues, 4 were P0 (one missing auth check, two N+1s, one vulnerable dep). that single pass caught more than two human reviewers had in the prior week.',
+    receipt: 'ran on a B2B SaaS pre-release branch 2026-04-09 — 6 reviewers returned 47 raw findings, synthesis dedupe collapsed to 12 unique issues, 4 were P0 (one missing auth check, two N+1s, one vulnerable dep). that single pass caught more than two human reviewers had in the prior week.',
     antiPattern: "the diff is under 200 lines or single-file. overhead of spawning 6 agents costs more than reading it yourself. swarm pays off when the diff is across 10+ files or you're auditing a repo you didn't write.",
     crossLinks: [
       { href: '25-evals-or-hope', label: 'Chapter 25 — Evals: Smoke, Regression, Golden' },
@@ -497,7 +497,7 @@ artifact + segment-specific hook per channel.`,
       <div class="text-xs uppercase tracking-[0.25em] mb-3" style="color: rgb(var(--accent-2))">Deep-dives · the spawn templates</div>
       <h2 class="font-display text-3xl md:text-4xl m-0">Five swarm deep-dives</h2>
       <p class="mt-4 text-base leading-relaxed" style="color: rgb(var(--fg) / 0.92)">
-        These five patterns are the ones I keep reaching for when the work doesn't fit in one context window. Each one has a real receipt — a moment it fired, what it produced, and what it would have cost to do the slow way. The spawn templates are mealy usable: paste, swap the bracketed names, send.
+        These five patterns are the ones I keep reaching for when the work doesn't fit in one context window. Each one has a real receipt — a moment it fired, what it produced, and what it would have cost to do the slow way. The spawn templates are really usable: paste, swap the bracketed names, send.
       </p>
       <p class="mt-3 text-sm leading-relaxed" style="color: rgb(var(--muted))">
         One rule under all of them: <strong style="color: rgb(var(--fg))">3-4 agents per wave is the empirical sweet spot. 5+ invites filesystem contention.</strong> More agents in one wave doesn't mean more output — it means two agents writing to the same file, one agent silently winning, and you discovering it three hours later in a diff. Respect the ceiling.
