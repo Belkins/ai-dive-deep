@@ -10,6 +10,7 @@ const compile = (source) => ts.transpileModule(source, { compilerOptions: { modu
 const source = readFileSync(new URL('../src/lib/setup.ts', import.meta.url), 'utf8');
 const setup = await import(`data:text/javascript;base64,${Buffer.from(compile(source)).toString('base64')}`);
 const { SKILLS, AGENTS, SETUP_STATS } = setup;
+const generator = readFileSync(new URL('../scripts/build-setup-data.py', import.meta.url), 'utf8');
 
 // The generator once read a folded YAML description (`description: >-` and indented
 // lines) as the bare marker, so /showcase published `>` as a skill's whole description.
@@ -37,7 +38,6 @@ test('every skill sits in one of the six groups the All view renders', () => {
 // A skill missing from SKILL_CATEGORIES falls back to Meta, which is how use-railway
 // sat under Meta on main. Every published skill is filed on purpose.
 test('every published skill has its own SKILL_CATEGORIES entry', () => {
-  const generator = readFileSync(new URL('../scripts/build-setup-data.py', import.meta.url), 'utf8');
   const map = generator.slice(generator.indexOf('SKILL_CATEGORIES = {'), generator.indexOf('PLUGIN_CATEGORIES = {'));
   const filed = new Set([...map.matchAll(/'([a-z0-9-]+)':/g)].map((match) => match[1]));
   for (const skill of SKILLS) assert.ok(filed.has(skill.name), `${skill.name} has no SKILL_CATEGORIES entry`);
@@ -53,11 +53,15 @@ test('the published snapshot is the 2026-10-24 one the page describes', () => {
   assert.deepEqual(counts, { ops: 7, review: 15, build: 18, strategy: 6, portfolio: 1, meta: 7 });
 });
 
-// setup.ts is published as generated, and nothing between a skill's frontmatter and
-// the page strips a home-directory path or an address.
-test('the published data carries no home-directory path or email address', () => {
+// setup.ts is published as generated. The generator swaps only the names its
+// _PRIVATE_VENTURE_MAP lists, and nothing strips a home-directory path or an address.
+test('the published data carries no home-directory path, email address or private-venture name', () => {
   assert.doesNotMatch(source, /\/Users\//);
   assert.doesNotMatch(source, /[\w.+-]+@[\w-]+\.[\w.-]+/);
+  const start = generator.indexOf('_PRIVATE_VENTURE_MAP = {');
+  const names = [...generator.slice(start, generator.indexOf('}', start)).matchAll(/'([^']+)':/g)].map((match) => match[1]);
+  assert.ok(names.length > 0, 'read no names from _PRIVATE_VENTURE_MAP');
+  for (const name of names) assert.ok(!source.includes(name), 'the data publishes a name _PRIVATE_VENTURE_MAP replaces');
 });
 
 const widget = ts.transpileModule(readFileSync(new URL('../src/widgets/SetupShowcase.tsx', import.meta.url), 'utf8'), {
