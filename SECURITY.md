@@ -69,6 +69,9 @@ prior clone access (none, since the repo was private until the scrub).
 - `scripts/build-setup-data.py` reads from `~/.claude/` and is run only on a
   trusted machine; the script and its output are intentionally public, the
   source it reads is not
+- The names that script scrubs from descriptions live in the ignored
+  `private/venture-map.json`; `tests/private-names.test.mjs` checks every
+  tracked file against hashes of them
 
 ## Operational rules
 

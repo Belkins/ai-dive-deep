@@ -55,15 +55,11 @@ test('the published snapshot is the 2026-10-24 one the page describes', () => {
 });
 
 // setup.ts is published as generated, so this checks the published text, not the
-// generator: nothing strips a home-directory path or an address, and no current
-// description carries a _PRIVATE_VENTURE_MAP name for the scrub to replace.
-test('the published data carries no home-directory path, email address or private-venture name', () => {
+// generator: nothing strips a home-directory path or an address. The scrubbed names
+// are checked in every tracked file by tests/private-names.test.mjs.
+test('the published data carries no home-directory path or email address', () => {
   assert.doesNotMatch(source, /\/Users\//);
   assert.doesNotMatch(source, /[\w.+-]+@[\w-]+\.[\w.-]+/);
-  const start = generator.indexOf('_PRIVATE_VENTURE_MAP = {');
-  const names = [...generator.slice(start, generator.indexOf('}', start)).matchAll(/'([^']+)':/g)].map((match) => match[1]);
-  assert.ok(names.length > 0, 'read no names from _PRIVATE_VENTURE_MAP');
-  for (const name of names) assert.ok(!source.includes(name), 'the data publishes a name _PRIVATE_VENTURE_MAP replaces');
 });
 
 const widget = ts.transpileModule(readFileSync(new URL('../src/widgets/SetupShowcase.tsx', import.meta.url), 'utf8'), {
