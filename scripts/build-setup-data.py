@@ -6,9 +6,15 @@ Run from repo root: python3 scripts/build-setup-data.py
 import json, os, re, sys
 
 # --- private-venture scrub (durable): applied to all emitted descriptions ---
-_PRIVATE_VENTURE_MAP = {
-    'Partner Connector': 'a B2B SaaS',
-}
+# The names live in private/venture-map.json ({"<name>": "<replacement>"}), which
+# .gitignore keeps out of this public repo; tests/private-names.test.mjs checks every
+# tracked file against hashes of them. Without the file the script stops before it
+# writes anything, rather than publish unscrubbed descriptions.
+_MAP_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'private', 'venture-map.json'))
+if not os.path.isfile(_MAP_PATH):
+    sys.exit(f'{_MAP_PATH} is missing: it lists the names to scrub, so nothing was written.')
+with open(_MAP_PATH) as _f:
+    _PRIVATE_VENTURE_MAP = json.load(_f)
 def _scrub_private_ventures(s):
     """Replace private-venture brand names in any string before it is emitted."""
     if not isinstance(s, str):
