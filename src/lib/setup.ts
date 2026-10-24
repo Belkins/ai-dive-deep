@@ -7,24 +7,19 @@ export type Plugin = { name: string; source: string; category: string };
 
 export const SKILLS: Skill[] = [
   {
-    "name": "agent-wave-verify",
-    "description": "Between-wave audit for parallel agent orchestration. After 3-4 agents finish a wave, run file-count/LOC/commit-hash verification to confirm each agent delivered. Catches silent failures (agent returned OK but left no commit), race conditions (two agents wrote to same file), and scope drift (agent added files outside its assigned directory). Use after any\u2026",
-    "category": "meta"
-  },
-  {
     "name": "ahrefs-budget-check",
     "description": "Preflight check on Ahrefs subscription-info-limits-and-usage before running bulk keyword queries. Prevents 'API units limit reached' errors mid-batch. Estimates cost per operation (keywords-explorer-overview ~50 units minimum, serp-overview variable, site-explorer-organic-keywords 25+). Warns when <100 units remain before a bulk call that needs 500+.",
     "category": "strategy"
   },
   {
-    "name": "api-design",
-    "description": "Design REST API endpoints from requirements \u2014 generates route table, DTOs, response schemas, and auth requirements.",
-    "category": "build"
+    "name": "antislop",
+    "description": "De-slop, build or verify signed-in web app screens, iOS/Flutter/Expo screens, HTML email and generated documents against the repo's brand manifest, its slop checker and a two-theme render receipt. Invoked by design-taste Step 2 or as /antislop; never self-triggers on \"design\" asks. NOT for charts (dataviz), token extraction (design-system-extractor), func\u2026",
+    "category": "review"
   },
   {
-    "name": "apps-script-clasp-push",
-    "description": "Push a local .gs file to a Google Apps Script project and bump an existing deployment \u2014 no editor UI. Handles clasp install/login/API enablement. Use on 'push/redeploy/update the apps script' or 'run clasp push'.",
-    "category": "build"
+    "name": "arsenal",
+    "description": "Four power questions on finished work \u2014 future-proofing, one industry-leading feature, unstated assumptions, what would have made the session smoother. Use on '/arsenal', 'arsenal check', 'power questions', or one of those questions asked after work completes. Report-only; a bare 'retro' means /retro, not this.",
+    "category": "meta"
   },
   {
     "name": "audit",
@@ -32,39 +27,34 @@ export const SKILLS: Skill[] = [
     "category": "review"
   },
   {
+    "name": "audit-content",
+    "description": "Verifies truthfulness, accuracy, and link integrity of content before publishing. Catches fabricated statistics, dead URLs, misattributed sources, and company claims that contradict the brand DNA.",
+    "category": "review"
+  },
+  {
+    "name": "audit-website-aeo",
+    "description": "Audits a live website for AI-engine discoverability (AEO/GEO). Crawls the site, runs 16 deterministic checks plus a 6-dimension content evaluation, and produces a scored report (A-F) with prioritized fixes. Use to get a baseline before improve-aeo-geo, or to measure progress after changes.",
+    "category": "review"
+  },
+  {
     "name": "bulk-rename-scoped",
     "description": "Pre-flight + scoped bulk rename for identifier-like strings (emails, brands, domains, keys): greps the portfolio, breaks down matches by dir, flags DB-lookup contexts, BLOCKS for scope confirmation before writing. Use on 'replace X with Y across/everywhere'.",
-    "category": "meta"
+    "category": "build"
   },
   {
     "name": "claude-md-hygiene",
     "description": "Audit CLAUDE.md files for size bloat and the prepend-cascade accretion pattern (PRIOR ENTRY stacks, multi-date table-cell rows). Reports specific files, lines, and sections to compress. Run biweekly or when CLAUDE.md feels slow.",
-    "category": "meta"
-  },
-  {
-    "name": "competitor-intel",
-    "description": "Compare a domain against competitors using Ahrefs \u2014 keyword gaps, traffic comparison, backlink analysis, and content opportunities.",
-    "category": "strategy"
-  },
-  {
-    "name": "compound-launch",
-    "description": "Multi-surface launch pattern: Day 0 simultaneous newsletter/X/LinkedIn with different openers, Day 1-6 live receipts-diary, Day 7 'Numbers.' post-mortem. Use when launching a public artifact whose thesis touches distribution. Not for quiet ships.",
-    "category": "meta"
-  },
-  {
-    "name": "content-draft",
-    "description": "Draft LinkedIn post, newsletter section, or blog article from recent work \u2014 turns technical insights into engaging content.",
-    "category": "strategy"
-  },
-  {
-    "name": "cross-trio-audit",
-    "description": "Audit consistency across the 3 docs a paying customer touches \u2014 landing page, Day-1 fulfillment page, welcome email \u2014 catching tier/price/refund/cadence contradictions before money moves. Use before any preorder Stripe link or tier change.",
-    "category": "meta"
-  },
-  {
-    "name": "daily",
-    "description": "Morning standup across all projects \u2014 reviews yesterday's git activity, surfaces priorities and blockers.",
     "category": "ops"
+  },
+  {
+    "name": "credential-helper-lint",
+    "description": "Lint a script before handing it to the owner to run with a real credential \u2014 catches secrets in argv, in usage lines, in output, in xtrace and in world-readable files. Use before handing any script that reads or sets a token, secret, password or API key to the owner, when writing a \"credential helper\", when asked to \"set registry credentials\" or to \"pipe\u2026",
+    "category": "review"
+  },
+  {
+    "name": "cutover-preflight",
+    "description": "Acceptance sequence for moving a running service to a new host on the SAME database \u2014 differential old-vs-new probe, the exact candidate digest exercised on staging with a real money path, scheduler tick reading, headless client smoke, and the evidence rows that go into the cutover packet. Fires on \"cutover\", \"migration acceptance\", \"S1\", \"prove parity\",\u2026",
+    "category": "build"
   },
   {
     "name": "debug-swarm",
@@ -72,44 +62,54 @@ export const SKILLS: Skill[] = [
     "category": "review"
   },
   {
-    "name": "debugging-guide",
-    "description": "Systematic debugging methodology \u2014 reproduce, isolate, hypothesize, fix, verify. Reference guide for bug investigation.",
-    "category": "review"
+    "name": "deploy-to-box",
+    "description": "Deploy a code/config fix to a git-tracked box reached over SSH (Raspberry Pi, self-hosted server) so it is LIVE, DURABLE across the next git pull, and visible in the user's warm browser. Use when editing files that run on such a box. Not for Vercel/Railway.",
+    "category": "build"
   },
   {
     "name": "design-system-extractor",
     "description": "Reverse-engineer a verified design system (DTCG-flavored tokens, css, playbooks, component inventory, kitchen-sink page) from an existing site/app/repo/screenshots. Use on 'extract/build the design system or tokens from <X>'. Not for from-scratch design or restyling an existing surface (\u2192 frontend-design).",
-    "category": "meta"
-  },
-  {
-    "name": "device-logs",
-    "description": "Stream and filter logs from a connected iOS device for debugging (purchase/StoreKit/RevenueCat, Sentry/errors, or all app logs). Use when debugging an iOS app on a physical device.",
     "category": "build"
   },
   {
-    "name": "diagnose-iap",
-    "description": "Systematic In-App Purchase failure diagnosis \u2014 checks the 6-link IAP config chain before code. Use when iOS IAP/StoreKit/RevenueCat purchases fail or products won't load.",
+    "name": "design-taste",
+    "description": "Front door to the taste-skill design roster: resolves brand first, then routes to the right taste-skill:* skill. Use for any build-or-change-a-web-surface ask and on '/design-taste'. NOT for schemas/APIs/architecture, charts (dataviz), token extraction (design-system-extractor), or functional QA (gstack-qa).",
     "category": "build"
   },
   {
     "name": "dream",
     "description": "Dreaming for CC \u2014 surface candidate memory-learnings from recent session transcripts (digest -> extract agents -> quote re-verification -> dated REVIEW file). PROPOSE-ONLY, never writes memory. Use on /dream or 'what did we learn lately'.",
-    "category": "meta"
+    "category": "ops"
+  },
+  {
+    "name": "eval",
+    "description": "Generate a synthetic test set for an AI feature, score its output two ways (LLM-judge + deterministic code-grade), and emit an honest HTML scorecard with a real pass rate. Use on '/eval', 'score this prompt', 'is this AI feature actually working', or before charging for model output. Wraps eval-harness/ (TS). Not for generic code review (that is /ship-fea\u2026",
+    "category": "review"
+  },
+  {
+    "name": "fixing-accessibility",
+    "description": "Audit and fix HTML accessibility issues including ARIA labels, keyboard navigation, focus management, color contrast, and form errors. Use when adding interactive controls, forms, dialogs, or reviewing WCAG compliance.",
+    "category": "review"
+  },
+  {
+    "name": "fixing-metadata",
+    "description": "Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives. Use when adding SEO metadata, fixing social share previews, reviewing Open Graph tags, setting up canonical URLs, or shipping new pages that need correct meta tags.",
+    "category": "build"
   },
   {
     "name": "folderly-external-audit",
     "description": "External read-only email-deliverability audit of a domain list -> client-ready report + action register + HTML. Fire on 'Folderly audit', 'deliverability audit', or a domain/mailbox spreadsheet to audit. Not for Folderly app internals or generic Q&A.",
-    "category": "meta"
+    "category": "portfolio"
   },
   {
-    "name": "google-apps-script-debug",
-    "description": "Diagnose Apps Script web-app webhooks that look broken from outside: 302 redirect, Deploy-vs-Manage-Deployments, doPost-in-editor, getActiveSheet, status drift. Use when posts to script.google.com/macros/.../exec aren't arriving.",
+    "name": "framer",
+    "description": "If Framer MCP tools (such as `open_project`) are available, use them instead and do not load this skill. Use when the user wants to design, edit, analyze, or publish a website or web page \u2014 creating layouts, editing sections, updating text or images, querying site analytics, managing CMS collections and content, syncing external data, creating or modifyin\u2026",
     "category": "build"
   },
   {
-    "name": "growth-scan",
-    "description": "Pull Ahrefs metrics for any domain \u2014 traffic, keywords, backlinks, domain rating \u2014 and analyze growth trends.",
-    "category": "strategy"
+    "name": "framer-code-components",
+    "description": "Framer code component implementation guidance, platform constraints, layout annotations, property controls, and authoring best practices. Use only after loading the framer skill and reading the Components row of the generated projects/<safeProjectId>/index.md task map first in the same task; never load this skill directly as the entry point.",
+    "category": "build"
   },
   {
     "name": "gstack-careful",
@@ -127,19 +127,19 @@ export const SKILLS: Skill[] = [
     "category": "ops"
   },
   {
-    "name": "hub-edit",
-    "description": "DEPRECATED redirect \u2014 belkins.app hub changes go through the manifest, not hand-edits. Fires only to point at the correct flow.",
-    "category": "meta"
+    "name": "humanizer",
+    "description": "Rewrite AI-sounding text so it reads like the writer without changing what it says. Use when editing or reviewing prose for AI tells: not-X-but-Y contrasts, one-line closers, staged openers, forced triads, dashes everywhere, inflated claims, sales language, stock AI words, bold labels, or filler. Based on Wikipedia's \"Signs of AI writing.\"",
+    "category": "strategy"
+  },
+  {
+    "name": "improve-aeo-geo",
+    "description": "Audits a website codebase and makes code changes so AI engines (ChatGPT, Claude, Perplexity, Google AI Overviews) can better discover, parse, quote, and cite the site. Covers structured data, content structure, technical signals, and freshness.",
+    "category": "build"
   },
   {
     "name": "learn",
-    "description": "Save a lesson or insight to persistent memory for future sessions. Use when something non-obvious should be remembered.",
+    "description": "Write one lesson to this project's memory dir so future sessions load it \u2014 a correction Vlad made, a gotcha that burned time, or a confirmed non-obvious approach. Saves one lesson (new file or an update to the existing one) plus its MEMORY.md pointer; not the whole-session ceremony (that is /retro) and not the multi-session surfacer (that is /dream).",
     "category": "ops"
-  },
-  {
-    "name": "lingualive",
-    "description": "LinguaLive project quick-reference \u2014 loads non-obvious architecture patterns, state model, payment flow, and gotchas at session start to save investigation time.",
-    "category": "portfolio"
   },
   {
     "name": "memory-hygiene",
@@ -147,34 +147,14 @@ export const SKILLS: Skill[] = [
     "category": "ops"
   },
   {
-    "name": "mirror-pattern",
-    "description": "Prompt template for \"mirror the structure of <existing file>\" when spawning agents to create files matching an established pattern. Reliably produces consistent output across parallel agents where a free-form prompt would drift. Used for: scraper replication, test-file creation, schema migration, deploy-pattern replication.",
-    "category": "strategy"
-  },
-  {
-    "name": "monetize-idea",
-    "description": "Generate monetization strategy for a product \u2014 revenue models, pricing tiers, financial projections, and go-to-market plan.",
-    "category": "strategy"
+    "name": "negative-test-guards",
+    "description": "Prove a guard, watchdog, backup, tripwire, health check or CI gate can actually FAIL before trusting it green. Use whenever you write or review code whose job is to detect a problem \u2014 guards, asserts, alerts, monitors, backups, verifiers, CI checks. Also fires on \"does this check actually work\", \"is this guard real\", \"why didn't this alert fire\".",
+    "category": "review"
   },
   {
     "name": "newsletter-draft",
     "description": "Draft a newsletter/longform post in the author's real voice: fetches 2-3 archive issues FIRST as voice calibration before writing a word. Use on 'draft me a newsletter/Substack/longform' or prose 'in my style' for a named publication.",
-    "category": "meta"
-  },
-  {
-    "name": "pc",
-    "description": "Partner Connector dispatcher \u2014 routes to pc-api (NestJS backend) or pc-client (Nuxt 4 frontend) based on task context. Use /pc <describe your task>.",
-    "category": "portfolio"
-  },
-  {
-    "name": "pc-api",
-    "description": "Partner Connector API quick-reference \u2014 NestJS backend patterns, module map, auth flow, HubSpot CRM loop, and gotchas.",
-    "category": "portfolio"
-  },
-  {
-    "name": "pc-client",
-    "description": "Partner Connector Client quick-reference \u2014 Nuxt 4 SPA patterns, gateway layer, explicit imports requirement, auth flow, and gotchas.",
-    "category": "portfolio"
+    "category": "strategy"
   },
   {
     "name": "pitch-html",
@@ -182,19 +162,9 @@ export const SKILLS: Skill[] = [
     "category": "build"
   },
   {
-    "name": "playbook-new-page",
-    "description": "Add a standalone page to Vlad's Playbook (ai-dive-deep) via the 6 mandatory wiring surfaces \u2014 page, Cmd-K index, cross-link, glossary, homepage tile, changelog. Use on 'add a new page' / 'create a /<slug> page' for dive.vladyslavpodoliako.com.",
-    "category": "meta"
-  },
-  {
-    "name": "portfolio-product-scaffold",
-    "description": "Scaffold a new 10K-MRR portfolio product end-to-end: mirror 09-receiptradar's 18-file pattern, wire the fulfillment trio, hub tile via products.json + make hub, first Vercel deploy, register in github_push.sh. Use when Vlad says 'add product'.",
-    "category": "meta"
-  },
-  {
     "name": "posthog-wizard-followup",
     "description": "Run the PostHog wizard on a Nuxt or Vitest-tested codebase with baseline-test capture before/after \u2014 auto-applies the defensive trackEvent() wrapper if the wizard's `useNuxtApp()` injections break unit tests.",
-    "category": "meta"
+    "category": "build"
   },
   {
     "name": "preflight-external-deps",
@@ -202,14 +172,9 @@ export const SKILLS: Skill[] = [
     "category": "meta"
   },
   {
-    "name": "preflight-ios",
-    "description": "Pre-submission App Store Review checklist \u2014 catches the config issues that cause Apple rejections. Use before submitting an iOS build to App Store Connect.",
-    "category": "build"
-  },
-  {
-    "name": "refactor",
-    "description": "Safe refactoring with test baseline before and after \u2014 ensures no regressions while improving code quality.",
-    "category": "build"
+    "name": "remove-ai-marks",
+    "description": "Strip AI provenance marks: invisible Unicode, statistical text watermarks (rewrite), and C2PA/EXIF/XMP metadata on PNG/JPEG/WebP/SVG/PDF/DOCX/HTML/MD. Use on 'remove watermarks / C2PA / AI metadata / invisible Unicode' or /remove-ai-marks (alias /remove-claude-marks).",
+    "category": "meta"
   },
   {
     "name": "research",
@@ -222,24 +187,24 @@ export const SKILLS: Skill[] = [
     "category": "ops"
   },
   {
-    "name": "scaffold",
-    "description": "Scaffold a new module or component for any framework \u2014 detects project type and generates all boilerplate following existing patterns.",
+    "name": "safe-git-cleanup",
+    "description": "Preflight before any destructive git housekeeping \u2014 worktree remove, branch delete, gc/prune, reflog expire, clean -fdx, reset --hard, stash drop. Fires on \"clean up the repo\", \"remove the worktree\", \"tidy branches\", \"prune\", or before deleting anything git-adjacent.",
     "category": "build"
   },
   {
-    "name": "seo-check",
-    "description": "Quick SEO health check for a URL or domain \u2014 technical issues, keyword performance, and quick-win opportunities from Ahrefs.",
-    "category": "strategy"
+    "name": "seo-ops",
+    "description": "Structural checklist and checker script for SEO foundation engineering. Use when reviewing or accepting a site/page for SEO/GEO structural compliance (robots, sitemap, canonical, 301 canonicalization, JSON-LD, OG, hreflang, CWV, AI crawler access, rendering strategy), when running the machine checks to produce a report, or when judging whether a frontend\u2026",
+    "category": "review"
   },
   {
     "name": "ship-feature",
     "description": "Pre-ship gate \u2014 run a deep code review AND a multi-dimension audit on the current change in parallel, merge into one ship-readiness verdict, then fix blockers before commit. Use when Vlad says \"is this ready to ship\", \"pre-ship check\", \"review + audit this change\", or before committing a non-trivial feature.",
-    "category": "meta"
+    "category": "review"
   },
   {
-    "name": "ship-ios",
-    "description": "Build and upload an iOS release IPA to App Store Connect \u2014 bumps the build number, builds a release IPA, opens Transporter. Use when shipping an iOS build for TestFlight or review.",
-    "category": "build"
+    "name": "substack-push",
+    "description": "Push a finished Vlad's Newsletter draft from the vault (Vlad-Brain/Newsletter/Drafts) into Substack as an UNPUBLISHED draft through Vlad's connected Chrome, title and body both verified after reload. Use on \"push this week's Tuesday/Thursday edition\", \"push the newsletter draft to Substack\", \"create the Substack draft\". Never publishes. Not for writing th\u2026",
+    "category": "ops"
   },
   {
     "name": "supabase-state-check",
@@ -250,11 +215,6 @@ export const SKILLS: Skill[] = [
     "name": "swarm-strategic-plan",
     "description": "Multi-wave swarm planning for greenfield ventures or deep planning on existing decisions. Use on /swarm-strategic-plan, 'mega ultrathink', 'full plan on X', 'design swarm for Y'. Modes: full-swarm / lite-mode / solo-deep-think.",
     "category": "strategy"
-  },
-  {
-    "name": "tdd-workflow",
-    "description": "Test-driven development methodology \u2014 red-green-refactor cycle, test patterns, and TDD best practices for any project.",
-    "category": "review"
   },
   {
     "name": "teleport",
@@ -273,27 +233,17 @@ export const SKILLS: Skill[] = [
   },
   {
     "name": "use-railway",
-    "description": ">",
-    "category": "meta"
-  },
-  {
-    "name": "vault-audit",
-    "description": "Audit the Obsidian vault \u2014 find orphan notes, broken links, empty notes, duplicate titles, and tag inventory.",
-    "category": "ops"
-  },
-  {
-    "name": "vault-note",
-    "description": "Create a structured Obsidian note from current work context \u2014 proper frontmatter, tags, and wikilinks to existing notes.",
-    "category": "ops"
-  },
-  {
-    "name": "vercel-env-flip",
-    "description": "Flip an existing Vercel production env var to a new value and redeploy so the change takes effect. Wraps the CLI 50.x dance of rm + add + redeploy that trips up non-interactive flows. Use when changing a feature flag, rotating a secret, or correcting a misconfigured env var in prod.",
+    "description": "Operate Railway infrastructure: projects, services, databases, buckets, deploys, environments, domains, troubleshooting, docs. Use ONLY when Railway is explicitly named, the project is known to deploy on Railway (e.g. the folderly-dmarc worker), or a railway.toml/railway.app artifact is present. Do NOT fire for Vercel or generic deployment/build-failure/M\u2026",
     "category": "build"
   },
   {
-    "name": "verify-deploy",
-    "description": "Post-push verification for GITHUB PAGES / Actions-built static sites: polls Actions for the pushed SHA, probes live content + exposure patterns + HTTP 200, prints evidence into the transcript. Use after a push to a Pages/Actions site.",
+    "name": "vercel-env-verify",
+    "description": "Verify or flip an env var on Vercel and prove it reached the live bundle. Covers NEXT_PUBLIC_* (Next.js), VITE_* (Vite SPA) \u2014 both bake at build time, so changing them on Vercel does nothing until a redeploy \u2014 and plain production vars (rm + add + redeploy dance of CLI 50.x). Use after changing any Vercel env var, on 'did the env var reach prod', or to ro\u2026",
+    "category": "build"
+  },
+  {
+    "name": "verify-before-asking",
+    "description": "Run before asking Vlad for ANY credential, key, ID, URL, account detail, or fact a past session likely established. Exhausts the derivation paths first. Fires on the impulse \"I need X from you\", \"please provide\", \"I don't have access to\", \"can you paste\", or before writing a hand-off that asks for a value.",
     "category": "meta"
   },
   {
@@ -302,29 +252,19 @@ export const SKILLS: Skill[] = [
     "category": "build"
   },
   {
-    "name": "verify-next-public-env",
-    "description": "Verify a NEXT_PUBLIC_* var actually reached the live prod bundle (they bake at build time; changing on Vercel does nothing until redeploy). Pulls env, checks formatting, greps the deployed bundle. Use after changing any NEXT_PUBLIC_* var.",
-    "category": "build"
-  },
-  {
-    "name": "verify-static-deploy",
-    "description": "Verify a static one-file VERCEL site is actually live after vercel --prod: custom-domain check (not deployment URL), served-bytes match, inline-script lint, re-alias if stale. Use after deploying any static landing/hub to Vercel.",
-    "category": "meta"
+    "name": "verify-live-surface",
+    "description": "Prove a deployed web surface actually serves what you just shipped \u2014 by content marker with controls, never by status code. Use after any deploy, or when checking whether a page, route, endpoint, bundle or auth gate is live and correct. Fires on \"is it deployed\", \"did that go live\", \"check the page works\", \"verify the endpoint\", \"is the fix live on prod/t\u2026",
+    "category": "review"
   },
   {
     "name": "visibility-flip-check",
     "description": "Pre-flight before flipping a GitHub repo public->private: checks Pages tier breakage, committed secrets, lost collab signals. Fire whenever Vlad says make/flip the repo private or runs gh repo edit --visibility private.",
-    "category": "meta"
-  },
-  {
-    "name": "webhook-guide",
-    "description": "Webhook integration patterns \u2014 signature validation, queue processing, idempotency, and retry strategies for external service webhooks.",
     "category": "build"
   },
   {
-    "name": "weekly",
-    "description": "Weekly review across all projects \u2014 git activity summary, metrics, memory cleanup, and next-week planning.",
-    "category": "ops"
+    "name": "vlad-framer",
+    "description": "Work on Vlad Website Main or vladyslavpodoliako.com using its live Framer skills for design, copy, CMS, SEO, accessibility and release. Use for Vlad's personal website, not unrelated Framer projects.",
+    "category": "build"
   },
   {
     "name": "wf",
@@ -338,175 +278,9 @@ export const SKILLS: Skill[] = [
   }
 ];
 
-export const AGENTS: Agent[] = [
-  {
-    "name": "architect",
-    "description": "Software architecture specialist for system design, scalability, and technical decision-making. Use PROACTIVELY when planning new features, refactoring large systems, or making architectural decisions.",
-    "category": "agent"
-  },
-  {
-    "name": "architecture-designer",
-    "description": "Use this agent when you need to design system architecture, make technology stack decisions, plan database schemas, define deployment strategies, or create architectural documentation and diagrams. This includes situations where you're starting a new project, refactoring existing systems, evaluating technology choices, or documenting architectural decisions.",
-    "category": "agent"
-  },
-  {
-    "name": "build-error-resolver",
-    "description": "Build and TypeScript error resolution specialist. Use PROACTIVELY when build fails or type errors occur. Fixes build/type errors only with minimal diffs, no architectural edits. Focuses on getting the build green quickly.",
-    "category": "agent"
-  },
-  {
-    "name": "business-planner",
-    "description": "Use this agent when you need to create comprehensive business plans, develop go-to-market strategies, analyze competitive landscapes, define pricing models, or prepare financial projections. This agent excels at transforming business ideas into structured, actionable plans with clear market positioning and financial forecasts.",
-    "category": "agent"
-  },
-  {
-    "name": "client-acquisition",
-    "description": "Creates plans to secure the first 100 clients. Designs outreach strategies, referral programmes and partnerships. Use this agent when you need to develop strategies, content, or systems for acquiring new clients or customers. This includes creating lead generation campaigns, optimizing conversion funnels, developing outreach strategies, analyzing customer\u2026",
-    "category": "agent"
-  },
-  {
-    "name": "code-builder",
-    "description": "Use this agent when you need to implement new features, create functions, build components, or write any production-ready code. This agent excels at translating requirements into clean, maintainable code following project conventions and best practices.",
-    "category": "agent"
-  },
-  {
-    "name": "code-reviewer",
-    "description": "Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code. MUST BE USED for all code changes.",
-    "category": "agent"
-  },
-  {
-    "name": "doc-updater",
-    "description": "Documentation and codemap specialist. Use PROACTIVELY for updating codemaps and documentation. Runs /update-codemaps and /update-docs, generates docs/CODEMAPS/*, updates READMEs and guides.",
-    "category": "agent"
-  },
-  {
-    "name": "e2e-runner",
-    "description": "End-to-end testing specialist using Playwright. Use PROACTIVELY for generating, maintaining, and running E2E tests. Manages test journeys, quarantines flaky tests, uploads artifacts (screenshots, videos, traces), and ensures critical user flows work.",
-    "category": "agent"
-  },
-  {
-    "name": "error-diagnostics-expert",
-    "description": "Use this agent when you encounter errors, bugs, unexpected behaviors, or need to diagnose why something isn't working as expected. This includes runtime errors, logic errors, performance issues, or any situation where code behavior deviates from expectations.",
-    "category": "agent"
-  },
-  {
-    "name": "marketing-strategist",
-    "description": "Use this agent when you need to develop comprehensive marketing strategies, identify target audiences, create go-to-market plans, or specifically find the most efficient path to acquire your first 100 customers. This agent excels at analyzing market conditions, defining customer personas, mapping customer journeys, and creating actionable marketing funnels.",
-    "category": "agent"
-  },
-  {
-    "name": "monetization-strategist",
-    "description": "Use this agent when you need to develop comprehensive monetization strategies for products or services, analyze revenue potential, design pricing models beyond traditional subscriptions, or optimize profit margins. This includes creating innovative revenue streams, calculating financial projections, analyzing market positioning for pricing, and developing\u2026",
-    "category": "agent"
-  },
-  {
-    "name": "mvp-planner",
-    "description": "Use this agent when you need to define and plan a minimum viable product (MVP), including establishing product vision, gathering requirements, prioritizing features, or creating user stories. This agent excels at translating business goals into actionable development plans and ensuring the MVP focuses on core value delivery.",
-    "category": "agent"
-  },
-  {
-    "name": "ops-automation",
-    "description": "Use this agent when you need to design and implement operational workflows, automation systems, CI/CD pipelines, deployment processes, monitoring solutions, or marketing/CRM automation. This includes setting up GitHub Actions, configuring deployment scripts, implementing automated testing workflows, creating monitoring dashboards, designing email automati\u2026",
-    "category": "agent"
-  },
-  {
-    "name": "orchestrator-manager",
-    "description": "Use this agent when facing complex, multi-faceted tasks that require coordination across different domains or skill sets. This agent excels at breaking down large projects into manageable subtasks, delegating to specialized agents, and synthesizing results. Ideal for projects involving multiple steps, diverse expertise requirements, or when optimal effici\u2026",
-    "category": "agent"
-  },
-  {
-    "name": "pc-api-lead",
-    "description": "Lead development agent for Partner Connector API. Runs a multi-task loop \u2014 builds features, fixes security issues, writes tests, reviews code. Does 3-5 tasks per session to maximize output.",
-    "category": "agent"
-  },
-  {
-    "name": "pc-api-qa",
-    "description": "QA agent for Partner Connector API. Reviews recent commits, writes tests for coverage gaps, fixes bugs. Does 3-5 tasks per session.",
-    "category": "agent"
-  },
-  {
-    "name": "pc-client-lead",
-    "description": "Lead development agent for Partner Connector Client. Runs a multi-task loop \u2014 builds features, fixes UX issues, adds missing states. Does 3-5 tasks per session.",
-    "category": "agent"
-  },
-  {
-    "name": "pc-client-qa",
-    "description": "QA agent for Partner Connector Client. Reviews commits, writes tests, fixes responsive/design/accessibility issues. Does 3-5 tasks per session.",
-    "category": "agent"
-  },
-  {
-    "name": "pc-strategist-data",
-    "description": "Data & analytics strategist for Partner Connector. Identifies what data exists but isn't surfaced, proposes dashboards and insights. Writes to ROADMAP.md.",
-    "category": "agent"
-  },
-  {
-    "name": "pc-strategist-growth",
-    "description": "Growth strategist for Partner Connector. Identifies features that drive acquisition, retention, and network effects. Writes proposals to ROADMAP.md.",
-    "category": "agent"
-  },
-  {
-    "name": "pc-strategist-logic",
-    "description": "Business logic strategist for Partner Connector. Audits API services for edge cases, missing validations, and business rule gaps. Writes findings to ROADMAP.md.",
-    "category": "agent"
-  },
-  {
-    "name": "pc-strategist-product",
-    "description": "Product strategist for Partner Connector. Analyzes the codebase, identifies gaps in user flows, proposes features that drive revenue. Writes findings to ROADMAP.md.",
-    "category": "agent"
-  },
-  {
-    "name": "pc-strategist-ux",
-    "description": "UX/UI strategist for Partner Connector. Audits every page for usability issues, missing states, confusing flows. Writes improvement tasks to ROADMAP.md.",
-    "category": "agent"
-  },
-  {
-    "name": "planner",
-    "description": "Expert planning specialist for complex features and refactoring. Use PROACTIVELY when users request feature implementation, architectural changes, or complex refactoring. Automatically activated for planning tasks.",
-    "category": "agent"
-  },
-  {
-    "name": "project-manager",
-    "description": "Use this agent when you need to coordinate development efforts across multiple tasks, manage project timelines, assign work to team members or other agents, track progress on deliverables, or ensure proper communication between different parts of a project. This agent excels at breaking down complex projects into manageable tasks, monitoring dependencies,\u2026",
-    "category": "agent"
-  },
-  {
-    "name": "refactor-cleaner",
-    "description": "Dead code cleanup and consolidation specialist. Use PROACTIVELY for removing unused code, duplicates, and refactoring. Runs analysis tools (knip, depcheck, ts-prune) to identify dead code and safely removes it.",
-    "category": "agent"
-  },
-  {
-    "name": "security-reviewer",
-    "description": "Security vulnerability detection and remediation specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Flags secrets, SSRF, injection, unsafe crypto, and OWASP Top 10 vulnerabilities.",
-    "category": "agent"
-  },
-  {
-    "name": "seo-aeo-expert",
-    "description": "Use this agent when you need to optimize content, pages, or entire websites for search engines (SEO) and answer engines (AEO). This includes keyword research, on-page optimization, schema markup implementation, technical SEO audits, content optimization for featured snippets, and building authoritative citations. The agent should be engaged for tasks like\u2026",
-    "category": "agent"
-  },
-  {
-    "name": "tdd-guide",
-    "description": "Test-Driven Development specialist enforcing write-tests-first methodology. Use PROACTIVELY when writing new features, fixing bugs, or refactoring code. Ensures 80%+ test coverage.",
-    "category": "agent"
-  },
-  {
-    "name": "test-runner",
-    "description": "Use this agent when you need to execute unit and integration tests after code changes, analyze test failures, and get actionable suggestions for fixes. This includes running test suites, interpreting test output, identifying root causes of failures, and proposing code corrections.",
-    "category": "agent"
-  },
-  {
-    "name": "traffic-growth-strategist",
-    "description": "Use this agent when you need to develop comprehensive strategies for reaching initial traffic milestones, particularly the first 10,000 visitors. This includes planning content calendars, designing viral mechanics, mapping community engagement tactics, and structuring advertising experiments. The agent excels at creating actionable roadmaps that balance o\u2026",
-    "category": "agent"
-  }
-];
+export const AGENTS: Agent[] = [];
 
 export const PLUGINS: Plugin[] = [
-  {
-    "name": "agent-sdk-dev",
-    "source": "claude-plugins-official",
-    "category": "build"
-  },
   {
     "name": "code-review",
     "source": "claude-plugins-official",
@@ -521,16 +295,6 @@ export const PLUGINS: Plugin[] = [
     "name": "feature-dev",
     "source": "claude-plugins-official",
     "category": "build"
-  },
-  {
-    "name": "frontend-design",
-    "source": "claude-plugins-official",
-    "category": "design"
-  },
-  {
-    "name": "github",
-    "source": "claude-plugins-official",
-    "category": "platform"
   },
   {
     "name": "ralph-loop",
@@ -553,16 +317,21 @@ export const PLUGINS: Plugin[] = [
     "category": "platform"
   },
   {
-    "name": "telegram",
-    "source": "claude-plugins-official",
+    "name": "taste-skill",
+    "source": "taste-skill",
     "category": "platform"
   },
   {
     "name": "vercel",
     "source": "claude-plugins-official",
     "category": "platform"
+  },
+  {
+    "name": "workflow-kit",
+    "source": "workflow-kit",
+    "category": "platform"
   }
 ];
 
 // Stats
-export const SETUP_STATS = { skills: 66, agents: 32, plugins: 12 } as const;
+export const SETUP_STATS = { skills: 54, agents: 0, plugins: 10 } as const;
