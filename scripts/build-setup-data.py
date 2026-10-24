@@ -75,6 +75,9 @@ SKILL_CATEGORIES = {
     'newsletter-draft': 'strategy', 'humanizer': 'strategy',
 
     'folderly-external-audit': 'portfolio',
+
+    'arsenal': 'meta', 'remove-ai-marks': 'meta', 'verify-before-asking': 'meta',
+    'wf': 'meta', 'workflow-forge': 'meta',
 }
 
 PLUGIN_CATEGORIES = {
@@ -118,7 +121,7 @@ def collect_skills():
                 fm = parse_frontmatter(f.read())
         except Exception:
             continue
-        desc = fm.get('description', '').strip()
+        desc = _scrub_private_ventures(fm.get('description', '').strip())
         if len(desc) > 360:
             desc = desc[:357].rstrip() + '…'
         out.append({
@@ -139,7 +142,7 @@ def collect_agents():
         except Exception:
             continue
         name = fm.get('name', f.replace('.md', ''))
-        desc = fm.get('description', '').strip()
+        desc = _scrub_private_ventures(fm.get('description', '').strip())
         # Strip examples and other long-form artifacts; just first sentence(s)
         # Many agent descriptions include `<example>` blocks — cut at the first <example>
         if '<example>' in desc:
