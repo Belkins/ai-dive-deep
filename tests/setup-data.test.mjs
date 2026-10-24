@@ -21,10 +21,11 @@ test('every published skill and agent carries a real description', () => {
     assert.ok(text.length > 0, `${item.name} has no description`);
     assert.doesNotMatch(text, /^[>|][-+]?$/, `${item.name} publishes the YAML block marker as its description`);
   }
-  // use-railway's description is a folded block over five lines; reading only the
-  // marker or the first line loses the text pinned here from lines one and four.
+  // use-railway's description is a folded block over five lines. Reading only the marker
+  // or the first line, or joining the lines without a space, loses text pinned here.
   const railway = SKILLS.find((skill) => skill.name === 'use-railway')?.description ?? '';
   assert.match(railway, /^Operate Railway infrastructure: projects, services/);
+  assert.match(railway, /buckets, deploys, environments/);
   assert.match(railway, /railway\.toml/);
 });
 
@@ -44,17 +45,21 @@ test('every published skill has its own SKILL_CATEGORIES entry', () => {
 });
 
 // The page's copy (the date in the meta description, the garden sentence's "36 more
-// skills gone, 24 new") describes the 2026-10-24 snapshot. Regenerated data fails here,
-// so the copy is re-dated with it.
+// skills gone, 24 new") describes the 2026-10-24 snapshot. The copy and the counts are
+// pinned together, so regenerated data fails here until the copy is re-dated with it.
 test('the published snapshot is the 2026-10-24 one the page describes', () => {
+  const page = readFileSync(new URL('../src/pages/showcase.astro', import.meta.url), 'utf8');
+  assert.ok(page.includes('refreshed 2026-10-24'), 'the meta description is not dated 2026-10-24');
+  assert.ok(page.includes('The 2026-10-24 refresh'), 'the garden paragraph does not name the 2026-10-24 refresh');
   assert.deepEqual({ ...SETUP_STATS }, { skills: 54, agents: 0, plugins: 10 });
   const counts = {};
   for (const skill of SKILLS) counts[skill.category] = (counts[skill.category] ?? 0) + 1;
   assert.deepEqual(counts, { ops: 7, review: 15, build: 18, strategy: 6, portfolio: 1, meta: 7 });
 });
 
-// setup.ts is published as generated. The generator swaps only the names its
-// _PRIVATE_VENTURE_MAP lists, and nothing strips a home-directory path or an address.
+// setup.ts is published as generated, so this checks the published text, not the
+// generator: nothing strips a home-directory path or an address, and no current
+// description carries a _PRIVATE_VENTURE_MAP name for the scrub to replace.
 test('the published data carries no home-directory path, email address or private-venture name', () => {
   assert.doesNotMatch(source, /\/Users\//);
   assert.doesNotMatch(source, /[\w.+-]+@[\w-]+\.[\w.-]+/);
