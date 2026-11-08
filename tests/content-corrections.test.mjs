@@ -329,27 +329,32 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
   // Date an event with its day instead ("July 24, 2026").
   const months = 'January|February|March|April|May|June|July|August|September|October|November|December';
   assert.deepEqual(prose.match(new RegExp(`\\b20\\d\\d-\\d\\d-\\d\\d\\b|\\b(?:${months}) 20\\d\\d\\b`, 'g')) ?? [], []);
-  // FAQ answer 2 feeds the FAQPage JSON-LD, so it must carry the plans stamp itself, not a typed or missing date.
+  // Run the frontmatter that turns the stamps into text, with two different stamps: the title and description take the
+  // newer stamp's month, and FAQ answer 2 (the FAQPage JSON-LD) prints the plans stamp, interpolated rather than typed.
+  const code = ['newestStamp', 'stampMonth', 'title', 'description'].map((name) => page.match(new RegExp(`\\nconst ${name} = [^\\n]+`))?.[0] ?? assert.fail(`const ${name} not found`));
   const faq = page.match(/\nconst faqItems = \[[\s\S]*?\n\];\n/)?.[0] ?? assert.fail('faqItems not found');
-  assert.ok(faq.includes('verified against claude.com/pricing on ${PRICES.lastVerified}'), 'FAQ answer 2 does not read PRICES.lastVerified');
-  assert.doesNotMatch(faq, new RegExp(`\\b(?:${months}) \\d{1,2}, 20\\d\\d`));
-  // The title month follows the newer of the two stamps, whichever table was re-verified last.
-  const derive = page.match(/\nconst newestStamp = [^\n]+\nconst stampMonth = [^\n]+/)?.[0] ?? assert.fail('title month derivation not found');
-  const month = (lastVerified, apiLastVerified) => runInNewContext(`${derive}; stampMonth`, { PRICES: { lastVerified, apiLastVerified } });
-  assert.deepEqual([month('2030-01-01', '2029-12-15'), month('2029-12-15', '2030-01-01')], ['January 2030', 'January 2030']);
+  const plan = (name) => ({ monthly: `[${name}]`, annual: `[${name} annual]` });
+  for (const [lastVerified, apiLastVerified] of [['2030-01-01', '2029-12-15'], ['2029-12-15', '2030-01-01']]) {
+    const out = runInNewContext(`${code.join('')}${faq}; ({ title, description, faqItems })`, { PRICES: { lastVerified, apiLastVerified }, plan });
+    assert.ok(out.title.includes('January 2030') && out.description.includes('January 2030'), 'title or description month is not the newer stamp');
+    assert.ok(out.faqItems[1].a.includes(`verified against claude.com/pricing on ${lastVerified},`), 'FAQ answer 2 does not print PRICES.lastVerified');
+    assert.ok(out.faqItems.every((item) => !(item.q + item.a).includes('${')), 'an FAQ string prints template source');
+  }
   assert.doesNotMatch(page, /still the only current Haiku|the current top Opus|is now the default on Claude Max/);
   for (const model of ['Fable 5.1', 'Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5 (prompts up to 100K tokens)']) {
     const row = block.split('\n').find((line) => line.includes(`model: '${model}',`)) ?? '';
     assert.match(row, /input: '\$\d[\d.]*', output: '\$\d[\d.]*'/, `no API row with input and output prices for ${model}`);
   }
   // Each prose price reads the row of the model or plan its sentence names: "Opus 5.5 at {rate('Opus 5 (legacy)')}" is a stale price.
+  // The search runs on the page with whitespace collapsed, so wrapping a paragraph does not change the answer.
+  const flat = page.replace(/\s+/g, ' ');
   const label = /\b(?:(?:Fable|Opus|Sonnet|Haiku|Mythos) \d(?:\.\d)?|Free|Pro|Max|Ultra|Team|Enterprise)\b/g;
-  const reads = [...page.matchAll(/\{(rate|plan)\('([^']+)'\)/g)];
+  const reads = [...flat.matchAll(/\{(rate|plan)\((['"`])(.+?)\2\)/g)];
   assert.ok(reads.length, 'no rate() or plan() reads found');
   for (const read of reads) {
-    const start = page.lastIndexOf('\n', read.index) + 1;
-    const after = page.slice(read.index + read[0].length, page.indexOf('\n', read.index)).replace(/<[^>]+>/g, '');
-    const named = page.slice(start, read.index).replace(/<[^>]+>/g, '').match(label)?.at(-1) ?? after.match(label)?.[0];
-    assert.ok(named && (read[2] === named || read[2].startsWith(`${named} `)), `"${named}" reads ${read[1]}('${read[2]}')`);
+    const from = Math.max(...['<p', '`', '. '].map((mark) => flat.lastIndexOf(mark, read.index)));
+    const after = flat.slice(read.index + read[0].length).split(/[`?]|\. |<\/p>/)[0];
+    const named = flat.slice(from, read.index).replace(/<[^>]+>/g, '').match(label)?.at(-1) ?? after.replace(/<[^>]+>/g, '').match(label)?.[0];
+    assert.ok(named && (read[3] === named || read[3].startsWith(`${named} `)), `"${named}" reads ${read[1]}('${read[3]}')`);
   }
 });
