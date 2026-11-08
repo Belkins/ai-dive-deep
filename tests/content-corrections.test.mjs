@@ -321,17 +321,35 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
   const page = source('src/pages/claude-code-pricing.astro');
   const block = page.match(/\nconst PRICES = \{[\s\S]*?\n\};\n/)?.[0];
   assert.ok(block, 'PRICES block not found');
+  const prose = page.replace(block, '\n');
   // A price typed into prose goes stale at the next price change; only Vlad's own receipts may stay literal (#77).
   const receipts = ['$400', '$2,216', '$556', '$1,200', '$4,312', '$1,108', '$600', '$300'];
-  const literals = page.replace(block, '\n').match(/\$\d(?:[\d,.]*\d)?/g) ?? [];
-  assert.deepEqual(literals.filter((amount) => !receipts.includes(amount)), []);
-  // FAQ answer 2 feeds the FAQPage JSON-LD: a date typed there keeps the old stamp after the next re-verification.
-  assert.deepEqual(page.replace(block, '\n').match(/\b20\d\d-\d\d-\d\d\b/g) ?? [], []);
+  assert.deepEqual((prose.match(/\$\d(?:[\d,.]*\d)?/g) ?? []).filter((amount) => !receipts.includes(amount)), []);
+  // Stamps and month-year phrases reach the page only through PRICES: a typed one reads as current and goes stale.
+  // Date an event with its day instead ("July 24, 2026").
+  const months = 'January|February|March|April|May|June|July|August|September|October|November|December';
+  assert.deepEqual(prose.match(new RegExp(`\\b20\\d\\d-\\d\\d-\\d\\d\\b|\\b(?:${months}) 20\\d\\d\\b`, 'g')) ?? [], []);
+  // FAQ answer 2 feeds the FAQPage JSON-LD, so it must carry the plans stamp itself, not a typed or missing date.
+  const faq = page.match(/\nconst faqItems = \[[\s\S]*?\n\];\n/)?.[0] ?? assert.fail('faqItems not found');
+  assert.ok(faq.includes('verified against claude.com/pricing on ${PRICES.lastVerified}'), 'FAQ answer 2 does not read PRICES.lastVerified');
+  assert.doesNotMatch(faq, new RegExp(`\\b(?:${months}) \\d{1,2}, 20\\d\\d`));
+  // The title month follows the newer of the two stamps, whichever table was re-verified last.
+  const derive = page.match(/\nconst newestStamp = [^\n]+\nconst stampMonth = [^\n]+/)?.[0] ?? assert.fail('title month derivation not found');
+  const month = (lastVerified, apiLastVerified) => runInNewContext(`${derive}; stampMonth`, { PRICES: { lastVerified, apiLastVerified } });
+  assert.deepEqual([month('2030-01-01', '2029-12-15'), month('2029-12-15', '2030-01-01')], ['January 2030', 'January 2030']);
   assert.doesNotMatch(page, /still the only current Haiku|the current top Opus|is now the default on Claude Max/);
-  // The title and description take their month from the verification stamp, so a typed month means a stale title.
-  assert.doesNotMatch(page, /\b(title|description|stampMonth)\s*=\s*\{?\s*[`"'][^`"'\n]*(January|February|March|April|May|June|July|August|September|October|November|December) 20\d\d/);
   for (const model of ['Fable 5.1', 'Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5 (prompts up to 100K tokens)']) {
     const row = block.split('\n').find((line) => line.includes(`model: '${model}',`)) ?? '';
     assert.match(row, /input: '\$\d[\d.]*', output: '\$\d[\d.]*'/, `no API row with input and output prices for ${model}`);
+  }
+  // Each prose price reads the row of the model or plan its sentence names: "Opus 5.5 at {rate('Opus 5 (legacy)')}" is a stale price.
+  const label = /\b(?:(?:Fable|Opus|Sonnet|Haiku|Mythos) \d(?:\.\d)?|Free|Pro|Max|Ultra|Team|Enterprise)\b/g;
+  const reads = [...page.matchAll(/\{(rate|plan)\('([^']+)'\)/g)];
+  assert.ok(reads.length, 'no rate() or plan() reads found');
+  for (const read of reads) {
+    const start = page.lastIndexOf('\n', read.index) + 1;
+    const after = page.slice(read.index + read[0].length, page.indexOf('\n', read.index)).replace(/<[^>]+>/g, '');
+    const named = page.slice(start, read.index).replace(/<[^>]+>/g, '').match(label)?.at(-1) ?? after.match(label)?.[0];
+    assert.ok(named && (read[2] === named || read[2].startsWith(`${named} `)), `"${named}" reads ${read[1]}('${read[2]}')`);
   }
 });
