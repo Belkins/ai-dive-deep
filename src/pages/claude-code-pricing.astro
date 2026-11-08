@@ -11,7 +11,7 @@ import PullQuote from '@/components/PullQuote.astro';
 // and apiLastVerified (API rates) even if unchanged — they date independent checks.
 // Plans: https://claude.com/pricing
 // API:   https://platform.claude.com/docs/en/docs/about-claude/pricing
-// Re-read the support pages the prose quotes with the plans check (the #fable-5 sentence dates its page with lastVerified):
+// Re-read the support pages the prose links with the plans check (the #fable-5 sentence dates its page with lastVerified):
 //   https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan
 //   https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-max-or-ultra-plan
 //   https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans
@@ -67,12 +67,12 @@ const times = (a: string, b: string) => {
 };
 const gap = (mult: string) => `${Math.round(1 / parseFloat(mult))}×`; // "0.1×" → "10×": fresh input vs a cache read
 const fablePremium = times('Fable 5.1', 'Opus 5.5');
-// A plans row's prices, read by label so prose reads the same cell the table shows, in either order: the part of
-// the cell that says "annual" or "year" is the annual price and the one other part is monthly. Any other shape fails the build.
+// A plans row's prices, read by label so prose reads the same cell the table shows, in either order: of the parts that
+// hold a price, the one saying "annual" or "year" is the annual price and the other is monthly. No monthly price, or two, fails the build.
 const plan = (name: string) => {
   const row = PRICES.plans.find((p) => p.plan === name);
   if (!row) throw new Error(`claude-code-pricing: no PRICES.plans row named "${name}"`);
-  const parts = row.price.split('·');
+  const parts = row.price.split('·').filter((part) => part.includes('$'));
   const annualLabel = /annual|year/i;
   const [monthlyPart, ...extra] = parts.filter((part) => !annualLabel.test(part));
   if (extra.length) throw new Error(`claude-code-pricing: PRICES.plans row "${name}" has more than one price without an "annual" label`);
