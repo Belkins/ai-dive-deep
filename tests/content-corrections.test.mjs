@@ -316,3 +316,45 @@ test('incident and measurement chapters link to the existing operating resources
   assert.match(chapter('47-measurement-layer'), /https:\/\/vladyslavpodoliako\.com\/thoughts\/ai-agent-evaluation-metrics-that-matter/);
   assert.doesNotMatch(chapter('47-measurement-layer'), /told you to skip for an internal skill/);
 });
+
+test('pricing page keeps vendor prices in PRICES and no superseded model reads as current', () => {
+  const page = source('src/pages/claude-code-pricing.astro');
+  const block = page.match(/\nconst PRICES = \{[\s\S]*?\n\};\n/)?.[0];
+  assert.ok(block, 'PRICES block not found');
+  const prose = page.replace(block, '\n');
+  // A price typed into prose goes stale at the next price change; only Vlad's own receipts may stay literal (#77).
+  const receipts = ['$400', '$2,216', '$556', '$1,200', '$4,312', '$1,108', '$600', '$300'];
+  assert.deepEqual((prose.match(/\$\d(?:[\d,.]*\d)?/g) ?? []).filter((amount) => !receipts.includes(amount)), []);
+  // Stamps and month-year phrases reach the page only through PRICES: a typed one reads as current and goes stale.
+  // Date an event with its day instead ("July 24, 2026").
+  const months = 'January|February|March|April|May|June|July|August|September|October|November|December';
+  assert.deepEqual(prose.match(new RegExp(`\\b20\\d\\d-\\d\\d-\\d\\d\\b|\\b(?:${months}) 20\\d\\d\\b`, 'g')) ?? [], []);
+  // Run the frontmatter that turns the stamps into text, with two different stamps: the title and description take the
+  // newer stamp's month, and FAQ answer 2 (the FAQPage JSON-LD) prints the plans stamp, interpolated rather than typed.
+  const code = ['newestStamp', 'stampMonth', 'title', 'description'].map((name) => page.match(new RegExp(`\\nconst ${name} = [^\\n]+`))?.[0] ?? assert.fail(`const ${name} not found`));
+  const faq = page.match(/\nconst faqItems = \[[\s\S]*?\n\];\n/)?.[0] ?? assert.fail('faqItems not found');
+  const plan = (name) => ({ monthly: `[${name}]`, annual: `[${name} annual]` });
+  for (const [lastVerified, apiLastVerified] of [['2030-01-01', '2029-12-15'], ['2029-12-15', '2030-01-01']]) {
+    const out = runInNewContext(`${code.join('')}${faq}; ({ title, description, faqItems })`, { PRICES: { lastVerified, apiLastVerified }, plan });
+    assert.ok(out.title.includes('January 2030') && out.description.includes('January 2030'), 'title or description month is not the newer stamp');
+    assert.ok(out.faqItems[1].a.includes(`verified against claude.com/pricing on ${lastVerified},`), 'FAQ answer 2 does not print PRICES.lastVerified');
+    assert.ok(out.faqItems.every((item) => !(item.q + item.a).includes('${')), 'an FAQ string prints template source');
+  }
+  assert.doesNotMatch(page, /still the only current Haiku|the current top Opus|is now the default on Claude Max/);
+  for (const model of ['Fable 5.1', 'Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5 (prompts up to 100K tokens)']) {
+    const row = block.split('\n').find((line) => line.includes(`model: '${model}',`)) ?? '';
+    assert.match(row, /input: '\$\d[\d.]*', output: '\$\d[\d.]*'/, `no API row with input and output prices for ${model}`);
+  }
+  // Each prose price reads the row of the model or plan its sentence names: "Opus 5.5 at {rate('Opus 5 (legacy)')}" is a stale price.
+  // The search runs on the page with whitespace collapsed, so wrapping a paragraph does not change the answer.
+  const flat = page.replace(/\s+/g, ' ');
+  const label = /\b(?:(?:Fable|Opus|Sonnet|Haiku|Mythos) \d(?:\.\d)?|Free|Pro|Max|Ultra|Team|Enterprise)\b/g;
+  const reads = [...flat.matchAll(/\{(rate|plan)\((['"`])(.+?)\2\)/g)];
+  assert.ok(reads.length, 'no rate() or plan() reads found');
+  for (const read of reads) {
+    const from = Math.max(...['<p', '`', '. '].map((mark) => flat.lastIndexOf(mark, read.index)));
+    const after = flat.slice(read.index + read[0].length).split(/[`?]|\. |<\/p>/)[0];
+    const named = flat.slice(from, read.index).replace(/<[^>]+>/g, '').match(label)?.at(-1) ?? after.replace(/<[^>]+>/g, '').match(label)?.[0];
+    assert.ok(named && (read[3] === named || read[3].startsWith(`${named} `)), `"${named}" reads ${read[1]}('${read[3]}')`);
+  }
+});
