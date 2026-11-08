@@ -329,17 +329,39 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
   // Date an event with its day instead ("July 24, 2026").
   const months = 'January|February|March|April|May|June|July|August|September|October|November|December';
   assert.deepEqual(prose.match(new RegExp(`\\b20\\d\\d-\\d\\d-\\d\\d\\b|\\b(?:${months}) 20\\d\\d\\b`, 'g')) ?? [], []);
-  // Run the frontmatter that turns the stamps into text, with two different stamps: the title and description take the
-  // newer stamp's month, and FAQ answer 2 (the FAQPage JSON-LD) prints the plans stamp, interpolated rather than typed.
-  const code = ['newestStamp', 'stampMonth', 'title', 'description'].map((name) => page.match(new RegExp(`\\nconst ${name} = [^\\n]+`))?.[0] ?? assert.fail(`const ${name} not found`));
+  // A bare year ("cost in 2026?") goes stale on January 1, so it comes from the stamps too (#79).
+  const dayBefore = new RegExp(`(?:${months}) \\d{1,2}, $`);
+  assert.deepEqual([...prose.matchAll(/\b20[23]\d\b/g)].filter((m) => !dayBefore.test(prose.slice(Math.max(0, m.index - 20), m.index))).map((m) => m[0]), []);
+  // Run the frontmatter that turns the stamps into text, with two different stamps: the title, description and heading
+  // year take the newer stamp, and FAQ answer 2 (the FAQPage JSON-LD) prints the plans stamp, interpolated rather than typed.
+  // The run uses the real PRICES block and plan(), whose one type annotation is stripped for the vm.
+  const code = ['newestStamp', 'stampMonth', 'stampYear', 'title', 'description'].map((name) => page.match(new RegExp(`\\nconst ${name} = [^\\n]+`))?.[0] ?? assert.fail(`const ${name} not found`));
   const faq = page.match(/\nconst faqItems = \[[\s\S]*?\n\];\n/)?.[0] ?? assert.fail('faqItems not found');
-  const plan = (name) => ({ monthly: `[${name}]`, annual: `[${name} annual]` });
+  const planCode = page.match(/\nconst plan = \(name: string\) => \{[\s\S]*?\n\};\n/)?.[0].replace('(name: string)', '(name)') ?? assert.fail('plan() not found');
   for (const [lastVerified, apiLastVerified] of [['2030-01-01', '2029-12-15'], ['2029-12-15', '2030-01-01']]) {
-    const out = runInNewContext(`${code.join('')}${faq}; ({ title, description, faqItems })`, { PRICES: { lastVerified, apiLastVerified }, plan });
+    const stamps = `PRICES.lastVerified = '${lastVerified}'; PRICES.apiLastVerified = '${apiLastVerified}';`;
+    const out = runInNewContext(`${block}${stamps}${planCode}${code.join('')}${faq}; ({ title, description, stampYear, faqItems })`);
     assert.ok(out.title.includes('January 2030') && out.description.includes('January 2030'), 'title or description month is not the newer stamp');
+    assert.equal(out.stampYear, '2030', 'the heading year is not the newer stamp');
     assert.ok(out.faqItems[1].a.includes(`verified against claude.com/pricing on ${lastVerified},`), 'FAQ answer 2 does not print PRICES.lastVerified');
     assert.ok(out.faqItems.every((item) => !(item.q + item.a).includes('${')), 'an FAQ string prints template source');
   }
+  // plan() reads a price cell by its "annual" label, so a re-check that writes the annual price first cannot print it as monthly.
+  const planOf = (price) => runInNewContext(`const PRICES = { plans: [{ plan: 'X', price: ${JSON.stringify(price)} }] };${planCode}; plan('X')`);
+  for (const price of ['$20/mo · $17/mo annual', '$17/mo annual · $20/mo']) {
+    const { monthly, annual } = planOf(price);
+    assert.ok(monthly === '$20' && annual === '$17', `plan() read "${price}" as monthly ${monthly}, annual ${annual}`);
+  }
+  assert.throws(() => planOf('$17/mo annual'), /no monthly price/);
+  // On the real table annual billing is the cheaper rate, so a monthly price at or below its annual one was misread.
+  const amount = (s) => Number(s.replace(/[^\d.]/g, ''));
+  for (const [name, { monthly, annual }] of runInNewContext(`${block}${planCode}; PRICES.plans.map((p) => [p.plan, plan(p.plan)])`)) {
+    assert.ok(!annual || amount(monthly) > amount(annual), `${name}: monthly ${monthly} is not above annual ${annual}`);
+  }
+  // Max and Ultra API credits can't pay for Claude Code on the plan (Claude support article 11145838), so a plan note
+  // that offers them says so.
+  const credits = block.split('\n').filter((line) => line.includes('API credits'));
+  assert.ok(credits.every((line) => /don[’']t cover Claude Code usage/.test(line)), 'a plan note offers API credits without saying they do not cover Claude Code usage');
   assert.doesNotMatch(page, /still the only current Haiku|the current top Opus|is now the default on Claude Max/);
   for (const model of ['Fable 5.1', 'Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5 (prompts up to 100K tokens)']) {
     const row = block.split('\n').find((line) => line.includes(`model: '${model}',`)) ?? '';

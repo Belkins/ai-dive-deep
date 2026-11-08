@@ -11,6 +11,10 @@ import PullQuote from '@/components/PullQuote.astro';
 // and apiLastVerified (API rates) even if unchanged — they date independent checks.
 // Plans: https://claude.com/pricing
 // API:   https://platform.claude.com/docs/en/docs/about-claude/pricing
+// Re-read the support pages the prose quotes with the plans check (the #fable-5 sentence dates its page with lastVerified):
+//   https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan
+//   https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-max-or-ultra-plan
+//   https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans
 // "(legacy)" and "(specialized)" follow the groups in Anthropic's models docs.
 const PRICES = {
   lastVerified: '2026-11-08', // plans, against claude.com/pricing
@@ -18,8 +22,8 @@ const PRICES = {
   plans: [
     { plan: 'Free', price: '$0', cc: 'No', note: 'chat only — Claude Code is not on the feature list' },
     { plan: 'Pro', price: '$20/mo · $17/mo annual', cc: 'Yes', note: 'the entry ticket — usage caps every 5 hours and every week; Fable paid with usage credits' },
-    { plan: 'Max', price: '$100/mo', cc: 'Yes', note: '5× Pro usage every 5 hours and every week; Fable included up to half the weekly limit; $100 a month in API credits' },
-    { plan: 'Ultra', price: '$200/mo', cc: 'Yes', note: 'everything in Max, plus 10× Pro usage every week, no 5-hour limit for verified accounts, $200 a month in API credits' },
+    { plan: 'Max', price: '$100/mo', cc: 'Yes', note: '5× Pro usage every 5 hours and every week; Fable included up to half the weekly limit; $100 a month in Claude Platform API credits, which don’t cover Claude Code usage on the plan' },
+    { plan: 'Ultra', price: '$200/mo', cc: 'Yes', note: 'everything in Max, plus 10× Pro usage every week, no 5-hour limit for verified accounts, $200 a month in Claude Platform API credits, which don’t cover Claude Code usage on the plan' },
     { plan: 'Team Standard', price: '$25/seat · $20 annual', cc: 'Yes', note: 'teams of 2 to 150 — the plan lists “Claude Code and Claude Cowork”' },
     { plan: 'Team Premium', price: '$125/seat · $100 annual', cc: 'Yes', note: '5× the usage of a standard seat' },
     { plan: 'Enterprise', price: '$20/seat + usage at API rates', cc: 'Yes', note: 'billed annually, 20-seat minimum — usage cost scales with model and task' },
@@ -62,14 +66,18 @@ const times = (a: string, b: string) => {
 };
 const gap = (mult: string) => `${Math.round(1 / parseFloat(mult))}×`; // "0.1×" → "10×": fresh input vs a cache read
 const fablePremium = times('Fable 5.1', 'Opus 5.5');
-// The dollar amounts in a plans row's price, monthly first, so prose reads the same cell the table shows.
+// A plans row's prices, read by label so prose reads the same cell the table shows: the part of the cell
+// that says "annual" is the annual price and the other part is monthly, in either order.
 const plan = (name: string) => {
-  const [monthly, annual] = PRICES.plans.find((p) => p.plan === name)?.price.match(/\$[0-9][0-9.,]*/g) ?? [];
-  if (!monthly) throw new Error(`claude-code-pricing: no priced PRICES.plans row named "${name}"`);
+  const row = PRICES.plans.find((p) => p.plan === name);
+  if (!row) throw new Error(`claude-code-pricing: no PRICES.plans row named "${name}"`);
+  const [monthly, annual] = [false, true].map((isAnnual) => row.price.split('·').find((part) => part.includes('annual') === isAnnual)?.match(/\$[0-9][0-9.,]*/)?.[0]);
+  if (!monthly) throw new Error(`claude-code-pricing: PRICES.plans row "${name}" has no monthly price`);
   return { monthly, annual };
 };
 const newestStamp = PRICES.lastVerified > PRICES.apiLastVerified ? PRICES.lastVerified : PRICES.apiLastVerified;
 const stampMonth = new Date(newestStamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+const stampYear = newestStamp.slice(0, 4);
 
 const navItems = [
   { id: 'answer', label: 'The 30-second answer' },
@@ -151,7 +159,7 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${plan('Pro').month
         </div>
 
         <div id="plans" data-section-target class="scroll-mt-24 mt-14">
-          <h2 class="font-display text-3xl mb-4">How much does Claude Code cost in 2026?</h2>
+          <h2 class="font-display text-3xl mb-4">How much does Claude Code cost in {stampYear}?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>The reference layer first, because the third-party roundups can't agree on it — two of the current top-10 results for this exact query quote different Team seat prices. This table is sourced from the pricing page itself, on a date you can see.</p>
             <div class="overflow-x-auto my-2">
@@ -177,6 +185,7 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${plan('Pro').month
               </table>
             </div>
             <p class="text-sm text-muted">There is no Max 20x row any more: “The Max 20x plan is now called the Ultra plan. Existing Max 20x subscribers move to Ultra automatically, with no price change” (<a href="https://support.claude.com/en/articles/17728952-what-is-the-ultra-plan" rel="noopener">Claude support</a>). The operator receipt for that tier: my two Max 20x seats bill about $400 a month total — {PRICES.max20xReceipt} (<a href="/chapters/29-cost-economics/">Ch 29</a>).</p>
+            <p class="text-sm text-muted">The Max and Ultra API credits are for building on the Claude Platform, not for the plan's Claude Code usage: “Monthly API credits included with the Max plan can’t be used in Claude Code or the Claude apps, including for usage credits” (<a href="https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-max-or-ultra-plan" rel="noopener">Claude support</a>, which says the same of Ultra). The exception is <code>claude -p</code> run with an API key: “API credits cover claude -p and the Claude Agent SDK when you run them yourself with an API key from your linked Claude Console organization” (<a href="https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans" rel="noopener">Claude support</a>).</p>
             <p class="text-sm text-accent-2">Plan prices verified against <a href="https://claude.com/pricing" rel="noopener">claude.com/pricing</a> on {PRICES.lastVerified}; API rates against <a href="https://platform.claude.com/docs/en/docs/about-claude/pricing" rel="noopener">the API pricing docs</a> on {PRICES.apiLastVerified}. When a roundup and the pricing page disagree, the pricing page wins — that's also the rule this table was built under.</p>
           </div>
         </div>
