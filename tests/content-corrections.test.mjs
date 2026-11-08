@@ -331,7 +331,11 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
   assert.deepEqual(prose.match(new RegExp(`\\b20\\d\\d-\\d\\d-\\d\\d\\b|\\b(?:${months}) 20\\d\\d\\b`, 'g')) ?? [], []);
   // A bare year ("cost in 2026?") goes stale on January 1, so it comes from the stamps too (#79).
   const dayBefore = new RegExp(`(?:${months}) \\d{1,2}, $`);
-  assert.deepEqual([...prose.matchAll(/\b20[23]\d\b/g)].filter((m) => !dayBefore.test(prose.slice(Math.max(0, m.index - 20), m.index))).map((m) => m[0]), []);
+  assert.deepEqual([...prose.matchAll(/\b20[23]\d\b/g)].filter((m) => !dayBefore.test(prose.slice(Math.max(0, m.index - 20), m.index))).map((m) => m[0]), [], 'a year outside PRICES must come from stampYear or sit in a "Month D, YYYY" event date');
+  // The heading reads its year from stampYear, and nothing on the page reads the build clock, which would print the
+  // year of the build over prices last checked in an earlier one.
+  assert.match(page, /<h2[^>]*>How much does Claude Code cost in \{stampYear\}\?<\/h2>/, 'the pricing heading does not read stampYear');
+  assert.doesNotMatch(page, /new Date\(\)|Date\.now\(|get(?:UTC)?FullYear/, 'the pricing page reads the build clock');
   // Run the frontmatter that turns the stamps into text, with two different stamps: the title, description and heading
   // year take the newer stamp, and FAQ answer 2 (the FAQPage JSON-LD) prints the plans stamp, interpolated rather than typed.
   // The run uses the real PRICES block and plan(), whose one type annotation is stripped for the vm.
@@ -344,24 +348,40 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
     assert.ok(out.title.includes('January 2030') && out.description.includes('January 2030'), 'title or description month is not the newer stamp');
     assert.equal(out.stampYear, '2030', 'the heading year is not the newer stamp');
     assert.ok(out.faqItems[1].a.includes(`verified against claude.com/pricing on ${lastVerified},`), 'FAQ answer 2 does not print PRICES.lastVerified');
-    assert.ok(out.faqItems.every((item) => !(item.q + item.a).includes('${')), 'an FAQ string prints template source');
+    assert.ok(out.faqItems.every((item) => !/\$\{|undefined/.test(item.q + item.a)), 'an FAQ string prints template source or "undefined"');
+    assert.doesNotMatch(out.title + out.description, /undefined/, 'the title or description prints "undefined"');
   }
   // plan() reads a price cell by its "annual" label, so a re-check that writes the annual price first cannot print it as monthly.
   const planOf = (price) => runInNewContext(`const PRICES = { plans: [{ plan: 'X', price: ${JSON.stringify(price)} }] };${planCode}; plan('X')`);
-  for (const price of ['$20/mo · $17/mo annual', '$17/mo annual · $20/mo']) {
+  for (const price of ['$20/mo · $17/mo annual', '$17/mo annual · $20/mo', '$17/mo Annual · $20/mo', '$17/mo billed yearly · $20/mo']) {
     const { monthly, annual } = planOf(price);
     assert.ok(monthly === '$20' && annual === '$17', `plan() read "${price}" as monthly ${monthly}, annual ${annual}`);
   }
   assert.throws(() => planOf('$17/mo annual'), /no monthly price/);
-  // On the real table annual billing is the cheaper rate, so a monthly price at or below its annual one was misread.
+  // A cell with two unlabelled prices is ambiguous, so it fails the build instead of guessing which one is monthly.
+  assert.throws(() => planOf('$17/mo on a 12-month plan · $20/mo'), /more than one price without an "annual" label/);
+  // On the real table annual billing is the cheaper rate, so a monthly price at or below its annual one was misread,
+  // and a cell with two prices must yield both.
   const amount = (s) => Number(s.replace(/[^\d.]/g, ''));
-  for (const [name, { monthly, annual }] of runInNewContext(`${block}${planCode}; PRICES.plans.map((p) => [p.plan, plan(p.plan)])`)) {
-    assert.ok(!annual || amount(monthly) > amount(annual), `${name}: monthly ${monthly} is not above annual ${annual}`);
+  for (const [name, price, { monthly, annual }] of runInNewContext(`${block}${planCode}; PRICES.plans.map((p) => [p.plan, p.price, plan(p.plan)])`)) {
+    assert.ok(price.includes('·') ? annual && amount(monthly) > amount(annual) : !annual, `${name}: "${price}" read as monthly ${monthly}, annual ${annual}`);
   }
   // Max and Ultra API credits can't pay for Claude Code on the plan (Claude support article 11145838), so a plan note
-  // that offers them says so.
-  const credits = block.split('\n').filter((line) => line.includes('API credits'));
+  // that offers credits, in any wording other than Pro's "usage credits", says so.
+  const credits = block.split('\n').filter((line) => /credit/i.test(line.replace(/usage credits/g, '')));
   assert.ok(credits.every((line) => /don[’']t cover Claude Code usage/.test(line)), 'a plan note offers API credits without saying they do not cover Claude Code usage');
+  // The footnote under the table quotes both support articles behind that qualifier, links both, and keeps where the
+  // claude -p exception stops. Literals copied from the articles as captured on 2026-11-08.
+  const footnote = prose.match(/<p[^>]*>The Max and Ultra API credits[\s\S]*?<\/p>/)?.[0] ?? assert.fail('API credits footnote not found');
+  for (const text of [
+    '“Monthly API credits included with the Max plan can’t be used in Claude Code or the Claude apps, including for usage credits”',
+    '“API credits cover <code>claude -p</code> and the Claude Agent SDK when you run them yourself with an API key from your linked Claude Console organization”',
+    '“Runs started by the Claude Code GitHub Action, an IDE extension or the Claude desktop app count as Claude Code usage, so API credits don\'t cover them, even with <code>-p</code>”',
+    'href="https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-max-or-ultra-plan"',
+    'href="https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans"',
+  ]) {
+    assert.ok(footnote.includes(text), `the API credits footnote lost ${text}`);
+  }
   assert.doesNotMatch(page, /still the only current Haiku|the current top Opus|is now the default on Claude Max/);
   for (const model of ['Fable 5.1', 'Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5 (prompts up to 100K tokens)']) {
     const row = block.split('\n').find((line) => line.includes(`model: '${model}',`)) ?? '';

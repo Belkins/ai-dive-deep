@@ -15,6 +15,7 @@ import PullQuote from '@/components/PullQuote.astro';
 //   https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan
 //   https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-max-or-ultra-plan
 //   https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans
+//   https://support.claude.com/en/articles/17728952-what-is-the-ultra-plan
 // "(legacy)" and "(specialized)" follow the groups in Anthropic's models docs.
 const PRICES = {
   lastVerified: '2026-11-08', // plans, against claude.com/pricing
@@ -66,13 +67,18 @@ const times = (a: string, b: string) => {
 };
 const gap = (mult: string) => `${Math.round(1 / parseFloat(mult))}×`; // "0.1×" → "10×": fresh input vs a cache read
 const fablePremium = times('Fable 5.1', 'Opus 5.5');
-// A plans row's prices, read by label so prose reads the same cell the table shows: the part of the cell
-// that says "annual" is the annual price and the other part is monthly, in either order.
+// A plans row's prices, read by label so prose reads the same cell the table shows, in either order: the part of
+// the cell that says "annual" or "year" is the annual price and the one other part is monthly. Any other shape fails the build.
 const plan = (name: string) => {
   const row = PRICES.plans.find((p) => p.plan === name);
   if (!row) throw new Error(`claude-code-pricing: no PRICES.plans row named "${name}"`);
-  const [monthly, annual] = [false, true].map((isAnnual) => row.price.split('·').find((part) => part.includes('annual') === isAnnual)?.match(/\$[0-9][0-9.,]*/)?.[0]);
+  const parts = row.price.split('·');
+  const annualLabel = /annual|year/i;
+  const [monthlyPart, ...extra] = parts.filter((part) => !annualLabel.test(part));
+  if (extra.length) throw new Error(`claude-code-pricing: PRICES.plans row "${name}" has more than one price without an "annual" label`);
+  const monthly = monthlyPart?.match(/\$[0-9][0-9.,]*/)?.[0];
   if (!monthly) throw new Error(`claude-code-pricing: PRICES.plans row "${name}" has no monthly price`);
+  const annual = parts.find((part) => annualLabel.test(part))?.match(/\$[0-9][0-9.,]*/)?.[0];
   return { monthly, annual };
 };
 const newestStamp = PRICES.lastVerified > PRICES.apiLastVerified ? PRICES.lastVerified : PRICES.apiLastVerified;
@@ -185,7 +191,7 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${plan('Pro').month
               </table>
             </div>
             <p class="text-sm text-muted">There is no Max 20x row any more: “The Max 20x plan is now called the Ultra plan. Existing Max 20x subscribers move to Ultra automatically, with no price change” (<a href="https://support.claude.com/en/articles/17728952-what-is-the-ultra-plan" rel="noopener">Claude support</a>). The operator receipt for that tier: my two Max 20x seats bill about $400 a month total — {PRICES.max20xReceipt} (<a href="/chapters/29-cost-economics/">Ch 29</a>).</p>
-            <p class="text-sm text-muted">The Max and Ultra API credits are for building on the Claude Platform, not for the plan's Claude Code usage: “Monthly API credits included with the Max plan can’t be used in Claude Code or the Claude apps, including for usage credits” (<a href="https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-max-or-ultra-plan" rel="noopener">Claude support</a>, which says the same of Ultra). The exception is <code>claude -p</code> run with an API key: “API credits cover claude -p and the Claude Agent SDK when you run them yourself with an API key from your linked Claude Console organization” (<a href="https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans" rel="noopener">Claude support</a>).</p>
+            <p class="text-sm text-muted">The Max and Ultra API credits are for building on the Claude Platform, not for the plan's Claude Code usage: “Monthly API credits included with the Max plan can’t be used in Claude Code or the Claude apps, including for usage credits” (<a href="https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-max-or-ultra-plan" rel="noopener">Claude support</a>, which says the same of Ultra). The exception is <code>claude -p</code> you run yourself with an API key: “API credits cover <code>claude -p</code> and the Claude Agent SDK when you run them yourself with an API key from your linked Claude Console organization”, though “Runs started by the Claude Code GitHub Action, an IDE extension or the Claude desktop app count as Claude Code usage, so API credits don't cover them, even with <code>-p</code>” (<a href="https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-ultra-and-team-plans" rel="noopener">Claude support</a>).</p>
             <p class="text-sm text-accent-2">Plan prices verified against <a href="https://claude.com/pricing" rel="noopener">claude.com/pricing</a> on {PRICES.lastVerified}; API rates against <a href="https://platform.claude.com/docs/en/docs/about-claude/pricing" rel="noopener">the API pricing docs</a> on {PRICES.apiLastVerified}. When a roundup and the pricing page disagree, the pricing page wins — that's also the rule this table was built under.</p>
           </div>
         </div>
