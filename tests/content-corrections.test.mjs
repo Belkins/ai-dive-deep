@@ -333,24 +333,27 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
   const dayBefore = new RegExp(`(?:${months}) \\d{1,2}, $`);
   assert.deepEqual([...prose.matchAll(/\b20[23]\d\b/g)].filter((m) => !dayBefore.test(prose.slice(Math.max(0, m.index - 20), m.index))).map((m) => m[0]), [], 'a year outside PRICES must come from stampYear or sit in a "Month D, YYYY" event date');
   // The heading reads its year from stampYear, and nothing on the page reads the build clock, which would print the
-  // year of the build over prices last checked in an earlier one.
+  // year of the build over prices last checked in an earlier one. The one Date the page builds is the stamp's.
   assert.match(page, /<h2[^>]*>How much does Claude Code cost in \{stampYear\}\?<\/h2>/, 'the pricing heading does not read stampYear');
-  assert.doesNotMatch(page, /new Date\(\)|Date\.now\(|get(?:UTC)?FullYear|\.format\(\)/, 'the pricing page reads the build clock');
+  assert.doesNotMatch(page, /\bnew Date\b(?!\(newestStamp\))|Date\.now\(|get(?:UTC)?FullYear|\.format\(\)/, 'the pricing page reads the build clock');
   // Run the frontmatter that turns the stamps into text, with two different stamps: the title, description and heading
   // year take the newer stamp, and FAQ answer 2 (the FAQPage JSON-LD) prints the plans stamp, interpolated rather than typed.
+  // The stamps sit in years no build will run in, so a year read from the clock cannot pass for a stamp's.
   // The run uses the real PRICES block and plan(), whose one type annotation is stripped for the vm.
   const code = ['newestStamp', 'stampMonth', 'stampYear', 'title', 'description'].map((name) => page.match(new RegExp(`\\nconst ${name} = [^\\n]+`))?.[0] ?? assert.fail(`const ${name} not found`));
   const faq = page.match(/\nconst faqItems = \[[\s\S]*?\n\];\n/)?.[0] ?? assert.fail('faqItems not found');
   const planCode = page.match(/\nconst plan = \(name: string\) => \{[\s\S]*?\n\};\n/)?.[0].replace('(name: string)', '(name)') ?? assert.fail('plan() not found');
-  for (const [lastVerified, apiLastVerified] of [['2030-01-01', '2029-12-15'], ['2029-12-15', '2030-01-01']]) {
+  for (const [lastVerified, apiLastVerified] of [['2098-01-01', '2097-12-15'], ['2097-12-15', '2098-01-01']]) {
     const stamps = `PRICES.lastVerified = '${lastVerified}'; PRICES.apiLastVerified = '${apiLastVerified}';`;
     const out = runInNewContext(`${block}${stamps}${planCode}${code.join('')}${faq}; ({ title, description, stampYear, faqItems })`);
-    assert.ok(out.title.includes('January 2030') && out.description.includes('January 2030'), 'title or description month is not the newer stamp');
-    assert.equal(out.stampYear, '2030', 'the heading year is not the newer stamp');
+    assert.ok(out.title.includes('January 2098') && out.description.includes('January 2098'), 'title or description month is not the newer stamp');
+    assert.equal(out.stampYear, '2098', 'the heading year is not the newer stamp');
     assert.ok(out.faqItems[1].a.includes(`verified against claude.com/pricing on ${lastVerified},`), 'FAQ answer 2 does not print PRICES.lastVerified');
     assert.ok(out.faqItems.every((item) => !/\$\{|undefined/.test(item.q + item.a)), 'an FAQ string prints template source or "undefined"');
     assert.doesNotMatch(out.title + out.description, /undefined/, 'the title or description prints "undefined"');
-    assert.deepEqual((out.title + out.description).match(/\b20\d\d\b/g).filter((year) => year !== '2030'), [], 'the title or description prints a year other than the newer stamp');
+    assert.deepEqual((out.title + out.description).match(/\b20\d\d\b/g).filter((year) => year !== '2098'), [], 'the title or description prints a year other than the newer stamp');
+    const faqYears = [...out.faqItems].flatMap((item) => (item.q + item.a).match(/\b20\d\d\b/g) ?? []);
+    assert.deepEqual(faqYears.filter((year) => year !== '2098' && year !== lastVerified.slice(0, 4)), [], 'an FAQ string prints a year that is not a stamp\'s');
   }
   // plan() reads a price cell by its "annual" label, so a re-check that writes the annual price first cannot print it as monthly.
   const planOf = (price) => runInNewContext(`const PRICES = { plans: [{ plan: 'X', price: ${JSON.stringify(price)} }] };${planCode}; plan('X')`);
@@ -371,9 +374,10 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
     assert.ok(price.split('$').length > 2 ? annual && amount(monthly) > amount(annual) : !annual, `${name}: "${price}" read as monthly ${monthly}, annual ${annual}`);
   }
   // Max and Ultra API credits can't pay for Claude Code on the plan (Claude support article 11145838), so a plan note
-  // that offers credits says so. "Usage credits" are exempt on every row: that is Anthropic's name for extra usage,
-  // which does pay for Claude Code, so the qualifier would be false there.
-  const credits = block.split('\n').filter((line) => /credit/i.test(line.replace(/usage credits/g, '')));
+  // that offers credits says so. Usage credits, in any case, are exempt on every row: they pay for use past the plan's
+  // limits, Claude Code included (17154008 calls that extra usage), so the qualifier would be false there. "API usage
+  // credits", 11145838's phrase for Console API credits, is not exempt.
+  const credits = block.split('\n').filter((line) => /credit/i.test(line.replace(/(?<!API )usage credits/gi, '')));
   assert.ok(credits.every((line) => /(?:don[’']t|do not) cover Claude Code|can[’']t be used in Claude Code/.test(line)), 'a plan note offers API credits without saying they do not cover Claude Code usage');
   // The footnote under the table quotes both support articles behind that qualifier, each beside its own link, and
   // keeps where the claude -p exception stops. Literals copied from the articles as captured on 2026-11-08, in page order.
