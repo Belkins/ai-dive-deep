@@ -325,10 +325,13 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
   const receipts = ['$400', '$2,216', '$556', '$1,200', '$4,312', '$1,108', '$600', '$300'];
   const literals = page.replace(block, '\n').match(/\$\d(?:[\d,.]*\d)?/g) ?? [];
   assert.deepEqual(literals.filter((amount) => !receipts.includes(amount)), []);
+  // FAQ answer 2 feeds the FAQPage JSON-LD: a date typed there keeps the old stamp after the next re-verification.
+  assert.deepEqual(page.replace(block, '\n').match(/\b20\d\d-\d\d-\d\d\b/g) ?? [], []);
   assert.doesNotMatch(page, /still the only current Haiku|the current top Opus|is now the default on Claude Max/);
   // The title and description take their month from the verification stamp, so a typed month means a stale title.
-  assert.doesNotMatch(page, /\b(title|description)\s*=\s*[`"'][^`"'\n]*(January|February|March|April|May|June|July|August|September|October|November|December) 20\d\d/);
+  assert.doesNotMatch(page, /\b(title|description|stampMonth)\s*=\s*\{?\s*[`"'][^`"'\n]*(January|February|March|April|May|June|July|August|September|October|November|December) 20\d\d/);
   for (const model of ['Fable 5.1', 'Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5 (prompts up to 100K tokens)']) {
-    assert.ok(block.includes(`model: '${model}', input: '$`), `no priced API row for ${model}`);
+    const row = block.split('\n').find((line) => line.includes(`model: '${model}',`)) ?? '';
+    assert.match(row, /input: '\$\d[\d.]*', output: '\$\d[\d.]*'/, `no API row with input and output prices for ${model}`);
   }
 });
