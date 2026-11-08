@@ -41,11 +41,6 @@ const PRICES = {
   // Cache reads: `read` is the standard multiplier; Opus 5.5 + Sonnet 5.5 and Fable 5.1 + Mythos 5.1 read cheaper.
   cache: { write5m: '1.25×', write1h: '2×', read: '0.1×', readOpusSonnet: '0.05×', readFable: '0.025×' },
   batchDiscount: '50%',
-  pro: '$20/month',
-  proAnnual: '$17/month',
-  max: '$100/month',
-  ultra: '$200/month',
-  team: '$25/seat',
   max20xReceipt: '~$200 a seat', // derived from Ch 29: two Max 20x subs ≈ $400/mo total
 };
 
@@ -66,7 +61,13 @@ const times = (a: string, b: string) => {
   return `${input}×`;
 };
 const gap = (mult: string) => `${Math.round(1 / parseFloat(mult))}×`; // "0.1×" → "10×": fresh input vs a cache read
-const amount = (s: string) => s.split('/')[0]; // drops the unit: PRICES.pro → the bare dollar amount
+const fablePremium = times('Fable 5.1', 'Opus 5.5');
+// The dollar amounts in a plans row's price, monthly first, so prose reads the same cell the table shows.
+const plan = (name: string) => {
+  const [monthly, annual] = PRICES.plans.find((p) => p.plan === name)?.price.match(/\$[0-9][0-9.,]*/g) ?? [];
+  if (!monthly) throw new Error(`claude-code-pricing: no priced PRICES.plans row named "${name}"`);
+  return { monthly, annual };
+};
 const newestStamp = PRICES.lastVerified > PRICES.apiLastVerified ? PRICES.lastVerified : PRICES.apiLastVerified;
 const stampMonth = new Date(newestStamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 
@@ -86,10 +87,10 @@ const navItems = [
 const faqItems = [
   {
     q: 'Is Claude Code free?',
-    a: `No. There is no free tier — the Free plan’s feature list does not include Claude Code. The cheapest entry is Claude Pro at ${PRICES.pro} (${PRICES.proAnnual} on annual billing), which includes Claude Code with usage caps every 5 hours and every week.`,
+    a: `No. There is no free tier — the Free plan’s feature list does not include Claude Code. The cheapest entry is Claude Pro at ${plan('Pro').monthly}/month (${plan('Pro').annual}/month on annual billing), which includes Claude Code with usage caps every 5 hours and every week.`,
   },
   {
-    q: `Is Claude Code included in the ${amount(PRICES.pro)} Pro plan?`,
+    q: `Is Claude Code included in the ${plan('Pro').monthly} Pro plan?`,
     a: `Yes. Pro, Max, Ultra, Team (Standard and Premium seats) and Enterprise all include Claude Code — verified against claude.com/pricing on ${PRICES.lastVerified}, where the Team plan lists "Claude Code and Claude Cowork" and Enterprise includes "All Team plan features." Third-party roundups flip-flop on the Team tiers; trust the dated first-party source, not the roundup.`,
   },
   {
@@ -117,7 +118,7 @@ const faq = {
 };
 
 const title = `Claude Code Pricing (${stampMonth}): Plans, API Rates & a Real Monthly Bill`;
-const description = `Claude Code pricing, ${stampMonth}: Pro ${amount(PRICES.pro)}, Max ${amount(PRICES.max)}, Ultra ${amount(PRICES.ultra)}, Team, API token rates — real invoices from running a company on it, one $4,312 mistake.`;
+const description = `Claude Code pricing, ${stampMonth}: Pro ${plan('Pro').monthly}, Max ${plan('Max').monthly}, Ultra ${plan('Ultra').monthly}, Team, API token rates — real invoices from running a company on it, one $4,312 mistake.`;
 ---
 <BaseLayout
   title={title}
@@ -144,7 +145,7 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${amount(PRICES.pro
         <div id="answer" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
           <div class="rounded-xl border p-5 border-line bg-accent/5">
-            <p class="m-0 leading-relaxed">Claude Code is included with every paid Claude plan — <strong>Pro {PRICES.pro}, Max {PRICES.max}, Ultra {PRICES.ultra}, Team {PRICES.team}</strong> on monthly billing — there is no free tier. On the API it bills per token: Sonnet 5.5 at {rate('Sonnet 5.5')} per million, Opus 5.5 at {rate('Opus 5.5')}, Haiku 5.5 from {rate('Haiku 5.5 (prompts up to 100K tokens)')}. Running five companies, Vlad Podoliako pays ~$400/month in Max subscriptions plus an API line cut from $2,216 to a ~$1,200 run-rate.</p>
+            <p class="m-0 leading-relaxed">Claude Code is included with every paid Claude plan — <strong>Pro {plan('Pro').monthly}/month, Max {plan('Max').monthly}/month, Ultra {plan('Ultra').monthly}/month, Team {plan('Team Standard').monthly}/seat</strong> on monthly billing — there is no free tier. On the API it bills per token: Sonnet 5.5 at {rate('Sonnet 5.5')} per million, Opus 5.5 at {rate('Opus 5.5')}, Haiku 5.5 from {rate('Haiku 5.5 (prompts up to 100K tokens)')}. Running five companies, Vlad Podoliako pays ~$400/month in Max subscriptions plus an API line cut from $2,216 to a ~$1,200 run-rate.</p>
           </div>
           <p class="mt-2 text-sm text-accent-2">Plan prices verified against claude.com/pricing on {PRICES.lastVerified}; API rates against the API pricing docs on {PRICES.apiLastVerified}.</p>
         </div>
@@ -183,7 +184,7 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${amount(PRICES.pro
         <div id="free" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">Is there a free version of Claude Code?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>No. The Free plan is chat — Claude Code is not on its feature list, and the entry ticket is Pro at {PRICES.pro}. What you're buying at every subscription tier is a capped allowance, not a meter: the plan includes Claude Code up to weekly usage limits, and the dashboard speaks percent-of-cap instead of dollars.</p>
+            <p>No. The Free plan is chat — Claude Code is not on its feature list, and the entry ticket is Pro at {plan('Pro').monthly}/month. What you're buying at every subscription tier is a capped allowance, not a meter: the plan includes Claude Code up to weekly usage limits, and the dashboard speaks percent-of-cap instead of dollars.</p>
             <p>What the caps feel like in practice, from <a href="/chapters/29-cost-economics/">Ch 29</a>: on a Max 20x plan the number that bites isn't a bill, it's the "all models" weekly bar hitting 88% on a Thursday with the heaviest day still ahead. Same cost question as an API graph — what's burning the budget — wearing a different outfit. If you're on Pro and that bar is your weekly ceiling instead of your Thursday warning, that's the upgrade signal.</p>
           </div>
         </div>
@@ -193,7 +194,7 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${amount(PRICES.pro
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>The principle, in the words of <a href="/chapters/29-cost-economics/">Ch 29</a>: <em>"max out the thing with the predictable ceiling before you touch the thing with the open meter."</em> A Max seat has a wall you hit and a price you already know. The API has no wall and a meter that runs as fast as your worst-written agent loop.</p>
             <p>The structure that falls out of it, running five companies: two Max 20x subscriptions — about $400 a month, total — carry the bulk of the daily work. The direct API only comes out for what a subscription can't do: SDK integrations and the always-on autonomous agents that need a raw API key, not a chat surface. That's a real cost, separate from the $400, and it's the line that gets optimized — the next two sections are about it.</p>
-            <p>So the buying order is the dependency order. Pro at {PRICES.pro} until the weekly cap is your problem. Max when Claude Code is your daily driver and the cap should be a Thursday warning instead of a ceiling. The API last, and only for unattended work — because it's the only tier where a mistake is denominated in dollars instead of percent. The cap is a feature, not a limitation.</p>
+            <p>So the buying order is the dependency order. Pro at {plan('Pro').monthly}/month until the weekly cap is your problem. Max when Claude Code is your daily driver and the cap should be a Thursday warning instead of a ceiling. The API last, and only for unattended work — because it's the only tier where a mistake is denominated in dollars instead of percent. The cap is a feature, not a limitation.</p>
             <PullQuote>A Max seat has a wall you hit and a price you already know. The API has no wall and a meter that runs as fast as your worst-written agent loop.</PullQuote>
           </div>
         </div>
@@ -258,8 +259,8 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${amount(PRICES.pro
           <h2 class="font-display text-3xl mb-4">What does Fable 5 change about Claude Code pricing?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>Two things — a clock and a sticker. The clock ran out: Claude Fable 5 <em>was</em> included in paid-plan limits from June 9 to <strong>July 19, 2026</strong> — the promotion was first announced to end June 22 — and Pro and standard Team seats then moved to usage credits. As of {PRICES.lastVerified}, <a href="https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan" rel="noopener">Anthropic's plan help page</a> lists Fable 5 and Fable 5.1 as a standard part of Max, Ultra and Team premium seats, up to half the weekly limit, while Pro and standard Team seats pay with usage credits. So on Pro the A/B costs usage credits; on Max and Ultra it comes out of your weekly allowance.</p>
-            <p>The sticker: Fable 5.1 lists at {rate('Fable 5.1')} per million tokens on the API — {times('Fable 5.1', 'Opus 5.5')} Opus 5.5 — so every cache miss costs {times('Fable 5.1', 'Opus 5.5')} as much in fresh input. The full pricing file — the ladder, the plan mechanics, when the premium is and isn't worth it — is <a href="/fable-5/pricing/">Fable 5 pricing</a>; the in-terminal view is <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a>.</p>
-            <p><strong>What changed since:</strong> <a href="/opus-5/">Opus 5</a> shipped July 24, 2026 at {rate('Opus 5 (legacy)')}, the same sticker as Opus 4.8. Then the lineup turned over — <a href="/chapters/50-claude-fable-5-1/">Fable 5.1</a> on September 1, <a href="/chapters/54-claude-opus-5-5/">Opus 5.5</a> on September 22, <a href="/chapters/55-claude-sonnet-5-5/">Sonnet 5.5</a> on September 28 and Haiku 5.5 on October 7, 2026, per Anthropic's models overview. Opus 5.5 lists at {rate('Opus 5.5')}, below Opus 5, while Fable 5.1 kept the {rate('Fable 5.1')} sticker, so the premium the "is it worth it" question has to clear is {times('Fable 5.1', 'Opus 5.5')}, up from {times('Fable 5 (legacy)', 'Opus 5 (legacy)')}. The read of Opus 5 against Fable 5 — independent indices and Anthropic's routing at the time — is on <a href="/opus-5/#hierarchy">the Opus 5 model file</a>.</p>
+            <p>The sticker: Fable 5.1 lists at {rate('Fable 5.1')} per million tokens on the API — {fablePremium} Opus 5.5 — so every cache miss costs {fablePremium} as much in fresh input. The full pricing file — the ladder, the plan mechanics, when the premium is and isn't worth it — is <a href="/fable-5/pricing/">Fable 5 pricing</a>; the in-terminal view is <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a>.</p>
+            <p><strong>What changed since:</strong> <a href="/opus-5/">Opus 5</a> shipped July 24, 2026 at {rate('Opus 5 (legacy)')}, the same sticker as Opus 4.8. Then the lineup turned over — <a href="/chapters/50-claude-fable-5-1/">Fable 5.1</a> on September 1, <a href="/chapters/54-claude-opus-5-5/">Opus 5.5</a> on September 22, <a href="/chapters/55-claude-sonnet-5-5/">Sonnet 5.5</a> on September 28 and Haiku 5.5 on October 7, 2026, per Anthropic's models overview. Opus 5.5 lists at {rate('Opus 5.5')}, below Opus 5, while Fable 5.1 kept the {rate('Fable 5.1')} sticker, so the premium the "is it worth it" question has to clear is {fablePremium}, up from {times('Fable 5 (legacy)', 'Opus 5 (legacy)')}. The read of Opus 5 against Fable 5 — independent indices and Anthropic's routing at the time — is on <a href="/opus-5/#hierarchy">the Opus 5 model file</a>.</p>
           </div>
         </div>
 
