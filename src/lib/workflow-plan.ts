@@ -76,7 +76,7 @@ export const WORKFLOW_TEMPLATES = [
     id: 'customer-success-escalation', name: 'Customer success escalation',
     draft: {
       objective: 'Prepare a redacted escalation packet and unsent response from cleared ticket evidence, without changing account access or promising a resolution.',
-      owner: 'Customer success owner; assign a named owner and approver before any trial',
+      owner: 'Customer success owner',
       trigger: 'When a cleared ticket meets documented escalation criteria. Hold on identity mismatch, uncertain permission, or conflicting severity rules. No job is created.',
       inputs: 'Approved ticket reference, account ID, unique run ID, and redacted evidence\nKnown entitlement with source and date, or an explicit unknown\nApproved severity policy, permitted destination team, and handling rules',
       allowedOutputs: 'Draft escalation packet and source-linked timeline separating reports, observations, and hypotheses\nRedacted reproduction instructions and unresolved questions\nUnsent customer response and empty lead-review decision field',
@@ -88,19 +88,19 @@ export const WORKFLOW_TEMPLATES = [
     id: 'recruiting-question-pack', name: 'Role-based interview question pack',
     draft: {
       objective: 'Draft task-linked interview questions and an unfilled evidence-capture sheet from an approved role brief, without analyzing applicants or making hiring decisions.',
-      owner: 'Recruiting coordinator; assign named reviewers before use',
+      owner: 'Recruiting coordinator',
       trigger: 'When a role-only brief and essential tasks are approved for question design. Missing criteria or candidate data blocks preparation.',
       inputs: 'Approved role description, essential tasks, observable work outcomes, and role level\nInterview duration and synthetic work-sample constraints\nExisting role-review policy and approved processing environment; no candidate records',
       allowedOutputs: 'Role-task-to-question map with role-brief references\nStructured question pack and synthetic work-sample proposals\nBlank evidence sheet with task, question, observation reference, and insufficient-evidence fields; no ratings\nUnresolved requirements and pending human review fields',
       approvalBoundaries: 'Hiring manager and designated people reviewer review role relevance, accessibility, accommodations, and local policy before use\nDo not process resumes, applicant records, interview transcripts, protected traits, or inferred personal characteristics\nNo candidate scoring, ranking, profiling, comparison, rejection, selection, or hiring decisions\nNo ATS writes, model calls, external actions, or compliance certification\nStop on candidate data, vague unsupported criteria, missing tasks, or missing reviewer ownership',
-      acceptanceTests: 'A synthetic role yields task-linked questions and an unfilled evidence sheet with no scores or recommendations\nA culture-fit criterion without task support is held, not turned into personality scoring\nA synthetic applicant-record marker stops processing and requests role-only inputs\nA question without an essential-task reference is excluded or held for review\nA question about a protected or personal characteristic, such as age, family status, health or disability, religion, or national origin, is removed or held for people-reviewer rewording\nInsufficient evidence remains a blank recording state, not an adverse judgment about a person',
+      acceptanceTests: 'A synthetic role yields task-linked questions and an unfilled evidence sheet with no scores or recommendations\nA culture-fit criterion without task support is held, not turned into personality scoring\nA synthetic applicant-record marker stops processing and requests role-only inputs\nA question without an essential-task reference is excluded or held for review\nA question about a protected or personal characteristic, such as race, sex or gender, age, family status, health or disability, religion, or national origin, is removed or held for people-reviewer rewording\nInsufficient evidence remains a blank recording state, not an adverse judgment about a person',
     },
   },
   {
     id: 'bounded-agent-trial', name: 'Bounded agent trial specification',
     draft: {
       objective: 'Specify a future synthetic read-only agent trial, expected artifact, permission boundaries, and recovery evidence without running an agent.',
-      owner: 'Agent operator; assign named people before a trial',
+      owner: 'Agent operator',
       trigger: 'Manual planning request after a synthetic fixture and tool/data allowlist are approved. Unknown permission or undefined limits blocks the specification. No runner or schedule is started.',
       inputs: 'Task/output contract, synthetic fixture version, unique run ID, and disposable environment specification\nExplicit source/tool allowlist and forbidden actions; no production records or secrets\nProposed model/harness configuration, time/spend caps, retry limits, and fallback policy\nApproval checkpoints and recovery-owner reference',
       allowedOutputs: 'Trial specification and versioned manifest with allowlist and forbidden actions\nExpected synthetic artifact and unrun acceptance-test plan\nEmpty actual-result, receipt, model/harness, cost/time, retry, and human-correction fields\nPending reviewer decision and proposed private checkpoint/recovery record',

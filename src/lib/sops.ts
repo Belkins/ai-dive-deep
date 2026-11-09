@@ -23,7 +23,7 @@ export const SOP_DATE = '2026-11-09';
 export const SOP_DATE_LABEL = new Date(`${SOP_DATE}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const SOP_SITE = 'https://dive.vladyslavpodoliako.com';
 export const SOP_STATUS = 'Untested general-purpose draft. All procedure steps, quality checks, and acceptance tests are not run.';
-export const SOP_PRESET_NOTE = 'The planner preset is an editable starting specification, not an execution of this procedure. Its owner, approver, and trigger are starting values: replace them with this SOP\'s before use.';
+export const SOP_PRESET_NOTE = 'The planner preset is an editable starting specification, not an execution of this procedure. Its fields are starting values: replace its owner, approver, trigger, and inputs with this SOP\'s, and reconcile the rest before use.';
 export const SOP_BOUNDARY = 'These are proposed templates, not actual Belkins SOPs or hands-on test reports. No external actions, sends, model calls, or schedules are performed or configured. No action is preapproved.';
 
 export const SOP_LIBRARY: readonly Sop[] = [
@@ -240,7 +240,7 @@ export const SOP_LIBRARY: readonly Sop[] = [
       'No candidate data, personal profiling, automated scoring, ranking, or hiring decision is included.',
       'Evidence prompts are consistent, observable, and role-related rather than personality-based.',
       'Insufficient evidence is a recording state, not an adverse judgment about a person.',
-      'No question asks about or invites disclosure of protected or personal characteristics (for example age, family status, health or disability, religion, or national origin); the people reviewer confirms the list under local policy.',
+      'No question asks about or invites disclosure of protected or personal characteristics (for example race, sex or gender, age, family status, health or disability, religion, or national origin); the people reviewer confirms the list under local policy.',
       'Human review of relevance, accessibility, and local policy remains pending before use.',
     ],
     acceptanceTests: [

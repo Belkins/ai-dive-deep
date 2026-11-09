@@ -20,10 +20,13 @@ test('six unique canonical SOP routes have substantive departmental contracts an
   assert.equal(new Set(SOP_LIBRARY.map(sopDownloadHref)).size, 6);
   assert.equal(new Set(SOP_LIBRARY.map(sop => sop.presetId)).size, 6);
   assert.deepEqual(SOP_LIBRARY.slice(0, 3).map(sop => sop.presetId), ['call-to-crm-follow-up', 'content-review', 'weekly-research-brief']);
-  // The three presets written for these SOPs name the SOP's owner. The planner export has the owner obtain every
-  // approval, so a preset owned by the SOP's approver would have that approver sign off their own work.
+  // The three presets written for these SOPs name the SOP's owner, and only that role: the export has the owner obtain
+  // every approval (an approver as owner signs off their own work) and puts the field into sentences.
   assert.deepEqual(SOP_LIBRARY.slice(3).map(sop => sop.presetId), ['customer-success-escalation', 'recruiting-question-pack', 'bounded-agent-trial']);
-  for (const sop of SOP_LIBRARY.slice(3)) assert.equal(workflow.getWorkflowTemplate(sop.presetId).owner.split(';')[0], sop.owner, sop.slug);
+  for (const sop of SOP_LIBRARY.slice(3)) {
+    assert.equal(workflow.getWorkflowTemplate(sop.presetId).owner, sop.owner, sop.slug);
+    assert.ok(workflow.buildWorkflowPlan(workflow.getWorkflowTemplate(sop.presetId)).markdown.includes(`**Confirm scope.** ${sop.owner} confirms the objective`), sop.slug);
+  }
   for (const sop of SOP_LIBRARY) {
     assert.match(sopHref(sop), /^\/sops\/[a-z0-9-]+\/$/);
     assert.equal(sop.steps.length, 6);
@@ -71,7 +74,7 @@ test('every SOP keeps the nine reviewable sections, in order, in its Markdown do
 });
 
 // The built pages are compared with their downloads after every build by scripts/check-sop-parity.py.
-test('every rendered section item comes from the same content as its Markdown download', () => {
+test('renderSopMarkdown includes every section item, including an added step, and the page escapes it', () => {
   const page = read('../src/pages/sops/[slug].astro');
   assert.match(page, /id=\{section.id\}/);
   assert.ok(!page.includes('set:html'), 'content is escaped by Astro, not injected as raw HTML');
@@ -107,13 +110,16 @@ test('downloaded Markdown links work without a website base and identify the can
 
 test('each SOP page and download says its planner preset is a starting point, not an execution', () => {
   // The reused presets carry other owners, approvers and triggers than their SOPs; the reader is told to replace them.
-  const note = 'The planner preset is an editable starting specification, not an execution of this procedure. Its owner, approver, and trigger are starting values: replace them with this SOP\'s before use.';
+  const note = 'The planner preset is an editable starting specification, not an execution of this procedure. Its fields are starting values: replace its owner, approver, trigger, and inputs with this SOP\'s, and reconcile the rest before use.';
   assert.equal(SOP_PRESET_NOTE, note);
   for (const sop of SOP_LIBRARY) assert.ok(renderSopMarkdown(sop).endsWith(`?preset=${sop.presetId})\n\n${note}\n`), sop.slug);
   assert.ok(read('../src/pages/sops/[slug].astro').includes('<p class="sop-boundary">{SOP_PRESET_NOTE}</p>'));
 });
 
 test('all procedure steps and checks are explicitly unrun with no completed results or implied approval', () => {
+  // Every page and download carries these (check-sop-parity.py reads the built pages); softening either must fail here.
+  assert.equal(SOP_STATUS, 'Untested general-purpose draft. All procedure steps, quality checks, and acceptance tests are not run.');
+  assert.equal(SOP_BOUNDARY, 'These are proposed templates, not actual Belkins SOPs or hands-on test reports. No external actions, sends, model calls, or schedules are performed or configured. No action is preapproved.');
   for (const sop of SOP_LIBRARY) {
     const md = renderSopMarkdown(sop);
     assert.ok(md.includes(SOP_STATUS) && md.includes(SOP_BOUNDARY));
@@ -138,9 +144,9 @@ test('recruiting is a role-only question pack with no filled scorecard or decisi
   assert.match(md, /Processing stops and requests role-only inputs/);
   assert.doesNotMatch(md, /\|\s*(?:Candidate|Score|Rank)\s*\||\b[1-5]\/5\b/);
   // A reader who adapts the pack as written must have a check that stops questions about protected characteristics.
-  assert.match(md, /- \[ \] Not run: No question asks about or invites disclosure of protected or personal characteristics/);
+  assert.match(md, /- \[ \] Not run: No question asks about or invites disclosure of protected or personal characteristics \(for example race, sex or gender, age,/);
   assert.match(md, /- \[ \] Not run: Personal-characteristic question\. .*family commitments.*removed or held for people-reviewer rewording/);
-  assert.match(workflow.getWorkflowTemplate(sop.presetId).acceptanceTests, /protected or personal characteristic/);
+  assert.match(workflow.getWorkflowTemplate(sop.presetId).acceptanceTests, /protected or personal characteristic, such as race, sex or gender, age,/);
   assert.doesNotMatch(sop.slug, /scor/, 'the slug and download name do not promise the scorecard this SOP forbids');
 });
 

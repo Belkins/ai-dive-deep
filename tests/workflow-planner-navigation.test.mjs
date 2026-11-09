@@ -72,6 +72,18 @@ test('supplied fields are ignored and the URL is left to Astro', () => {
   assert.match(h.state.notice, /Unsupported URL options/);
   h.cleanup();
 });
+test('a plain or tracked visit keeps the default draft-only status; a preset link announces its template', () => {
+  // The status region is aria-live: announcing "Template loaded" on every plain visit tells screen readers nothing true.
+  for (const path of ['/workflow-planner/', '/workflow-planner/?utm_source=newsletter&fbclid=abc']) {
+    const h = harness(path);
+    assert.equal(h.state.preset, 'weekly-research-brief', path);
+    assert.equal(h.state.notice, '', path);
+    h.cleanup();
+  }
+  const h = harness('/workflow-planner/?preset=content-review');
+  assert.match(h.state.notice, /^Template loaded\./);
+  h.cleanup();
+});
 test('no planner code writes browser history, including Load template and Clear', () => {
   const writes = [];
   const find = node => {

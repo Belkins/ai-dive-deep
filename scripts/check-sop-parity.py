@@ -1,50 +1,64 @@
 #!/usr/bin/env python3
-"""Check that every built SOP page shows the same sections, items and Not run badges as its Markdown download.
+"""Check every built SOP page against its Markdown download, and that it stays indexable.
 
-Both come from src/lib/sops.ts, but through two templates, and the unit tests only read the source.
-This reads what GitHub Pages serves: dist/sops/<slug>/index.html against dist/sops/<slug>.md.
+Page and download come from src/lib/sops.ts through two templates, and the unit tests only read the source.
+This reads what GitHub Pages serves (dist/sops/<slug>/index.html and dist/sops/<slug>.md) and fails when a page
+shows other sections, items or Not run badges than its download, drops the download's status, boundary or preset
+note, carries a noindex robots tag, points its canonical elsewhere, or is missing from the sitemap.
 """
 from html.parser import HTMLParser
 from pathlib import Path
 import re
 import sys
 
-SOP_COUNT = 6
+SITE = 'https://dive.vladyslavpodoliako.com'
 LIST_LINE = re.compile(r'(?:\d+\. |- )(\[ \] Not run: )?(.*)')
 VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr'}
 
 
 class SopPage(HTMLParser):
-    """Collects each <section data-section-target>: its h2, its [data-sop-content] items and its badge texts."""
+    """Collects each <section data-section-target> (its h2, [data-sop-content] items and badge texts), the
+    header notices (p.sop-status, p.sop-boundary), the robots meta and the canonical link."""
 
     def __init__(self, html):
         super().__init__(convert_charrefs=True)
-        self.sections = []
+        self.sections, self.notices, self.robots, self.canonical = [], [], [], None
         self.in_section = False
         self.capture = None
         self.depth = 0
         self.text = []
         self.feed(html)
 
+    def head_tag(self, tag, attrs):
+        if tag == 'meta' and (attrs.get('name') or '').lower() == 'robots':
+            self.robots.append(attrs.get('content') or '')
+        if tag == 'link' and attrs.get('rel') == 'canonical':
+            self.canonical = attrs.get('href')
+
     def handle_starttag(self, tag, attrs):
         if self.capture:
             self.depth += tag not in VOID
             return
         attrs = dict(attrs)
+        classes = (attrs.get('class') or '').split()
+        self.head_tag(tag, attrs)
         if tag == 'section' and 'data-section-target' in attrs:
             self.sections.append({'id': attrs.get('id'), 'heading': None, 'items': [], 'badges': []})
             self.in_section = True
+        elif tag == 'p' and ('sop-status' in classes or 'sop-boundary' in classes):
+            self.capture = 'notices'
         elif self.in_section and tag == 'h2' and self.sections[-1]['heading'] is None:
             self.capture = 'heading'
         elif self.in_section and 'data-sop-content' in attrs:
             self.capture = 'items'
-        elif self.in_section and 'sop-state' in (attrs.get('class') or '').split():
+        elif self.in_section and 'sop-state' in classes:
             self.capture = 'badges'
         if self.capture:
             self.depth, self.text = 1, []
 
     def handle_startendtag(self, tag, attrs):
-        pass  # no self-closed element opens a section, heading, item or badge
+        if not self.capture:
+            self.head_tag(tag, dict(attrs))  # no self-closed element opens a section, heading, item or badge
 
     def handle_endtag(self, tag):
         if not self.capture:
@@ -54,7 +68,9 @@ class SopPage(HTMLParser):
         self.depth -= 1
         if self.depth == 0:
             text = ''.join(self.text)
-            if self.capture == 'heading':
+            if self.capture == 'notices':
+                self.notices.append(text)
+            elif self.capture == 'heading':
                 self.sections[-1]['heading'] = text
             else:
                 self.sections[-1][self.capture].append(text)
@@ -81,30 +97,48 @@ def markdown_sections(markdown):
     return sections
 
 
+def markdown_notices(markdown):
+    """The status line, the boundary paragraph after it, and the preset note that ends the file."""
+    paragraphs = markdown.split('\n## ')[0].split('\n\n')
+    status = next(i for i, p in enumerate(paragraphs) if p.startswith('> '))
+    return [paragraphs[status][2:], paragraphs[status + 1], markdown.rstrip('\n').split('\n\n')[-1]]
+
+
 def check(root):
     sops = root / 'sops'
     pages = {path.parent.name: path for path in sops.glob('*/index.html')}
     downloads = {path.stem: path for path in sops.glob('*.md')}
+    sitemap = ''.join(path.read_text(encoding='utf-8') for path in root.glob('sitemap-*.xml'))
     failures = []
     if sorted(pages) != sorted(downloads):
         failures.append(f'pages {sorted(pages)} and downloads {sorted(downloads)} differ')
-    if len(pages) != SOP_COUNT:
-        failures.append(f'{len(pages)} SOP pages built, expected {SOP_COUNT}')
+    if not pages:
+        failures.append('no SOP pages built')
     items = badges = 0
     for slug in sorted(set(pages) & set(downloads)):
         markdown = downloads[slug].read_text(encoding='utf-8')
         if re.search(r'\[[xX]\]', markdown):
             failures.append(f'{slug}.md marks a check as done')
         expected = markdown_sections(markdown)
-        page = SopPage(pages[slug].read_text(encoding='utf-8')).sections
-        shown = [(section['heading'], section['items']) for section in page]
+        page = SopPage(pages[slug].read_text(encoding='utf-8'))
+        shown = [(section['heading'], section['items']) for section in page.sections]
         if shown != [(heading, section_items) for heading, section_items, _ in expected]:
             failures.append(f'{slug}: page sections or items differ from {slug}.md')
-        for section, (heading, _, not_run) in zip(page, expected):
+        for section, (heading, _, not_run) in zip(page.sections, expected):
             if section['badges'] != ['Not run'] * not_run:
                 failures.append(f'{slug} {heading}: {len(section["badges"])} Not run badges on the page, {not_run} in {slug}.md')
-        items += sum(len(section['items']) for section in page)
-        badges += sum(len(section['badges']) for section in page)
+        for notice in markdown_notices(markdown):
+            if notice not in page.notices:
+                failures.append(f'{slug}: the page lacks this notice from {slug}.md: {notice[:60]}')
+        url = f'{SITE}/sops/{slug}/'
+        if any('noindex' in content.lower() for content in page.robots):
+            failures.append(f'{slug}: the page carries a noindex robots tag')
+        if page.canonical != url:
+            failures.append(f'{slug}: canonical is {page.canonical}, expected {url}')
+        if f'<loc>{url}</loc>' not in sitemap:
+            failures.append(f'{slug}: {url} is not in the sitemap')
+        items += sum(len(section['items']) for section in page.sections)
+        badges += sum(len(section['badges']) for section in page.sections)
     return len(pages), items, badges, failures
 
 

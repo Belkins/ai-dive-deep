@@ -64,7 +64,8 @@ export default function WorkflowPlanner() {
       setTemplateId(selected.presetId);
       setDraft(next);
       baseline.current = next;
-      setNotice(selected.rejected ? 'Unsupported URL options were ignored. Only a known preset ID can load a template. Tests have not been run.' : 'Template loaded. All proposed steps and tests remain not run.');
+      // A plain visit keeps the default draft-only status; only a preset link or a refused option is announced.
+      setNotice(selected.rejected ? 'Unsupported URL options were ignored. Only a known preset ID can load a template. Tests have not been run.' : selected.search ? 'Template loaded. All proposed steps and tests remain not run.' : '');
     };
     restorePreset();
     setHydrated(true);

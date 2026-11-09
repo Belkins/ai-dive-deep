@@ -9,6 +9,7 @@
 .sop-page .sop-meta { font-size: .8125rem; color: rgb(var(--muted)); margin: .75rem 0; }
 .sop-status { border-left: 3px solid rgb(var(--accent-2)); padding: .5rem 0 .5rem 1rem; font-size: .9375rem; }
 .sop-boundary { color: rgb(var(--muted)); font-size: .875rem; }
+.sop-boundary + .sop-boundary { margin-top: .75rem; }
 .sop-actions { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; margin: 1.5rem 0; }
 .sop-actions a { display: inline-flex; gap: .625rem; align-items: center; min-height: 44px; font-weight: 600; }
 .sop-actions svg { flex: 0 0 18px; }
