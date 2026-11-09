@@ -506,19 +506,20 @@ test('the glossary, chapter 38 and every hook page say only exit 2 blocks or sta
   const EXIT_2 = /\bexit(?:s|ed|ing)?(?: with)?(?: code)? 2\b/i;
   const EXIT_1 = /\bexit(?:s|ed|ing)?(?: with)?(?: code)? 1\b/i;
   const EXIT_0_2 = /\bexit(?:s|ed|ing)?(?: with)?(?: code)? [02]\b/i;
-  const NON_ZERO = /\bnon-?\s?zero\b|\bnonzero\b|\bnon-0\b|\b(?:exit|return)(?:s|ed|ing)?(?: with)?(?: code| status)?(?: of)? 1\b|\bexit\(1\)|\bother than (?:0|zero)\b|\b(?:but|except) (?:0|zero)\b|\bfail(?:ing|ed)? exit\b|\berror exit\b|\bexit(?:s|ed|ing)? with (?:an? )?(?:error|failure)\b|\bexit(?:s|ed|ing)? unsuccessfully\b|\bunsuccessful exit\b|\b(?:exit|code|status) (?:above|over|greater than|higher than|more than) (?:0|zero)\b|\bother (?:exit )?codes?\b|\bincluding (?:exit (?:code )?)?1\b/i;
+  const NON_ZERO = /\bnon-?\s?zero\b|\bnonzero\b|\bnon-0\b|\b(?:exit|return)(?:s|ed|ing)?(?: with)?(?: codes?| status(?:es)?)?(?: of)? 1\b|\bexit\(1\)|\bother than (?:0|zero)\b|\b(?:but|except) (?:0|zero)\b|\bfail(?:ing|ed)? exit\b|\berror exit\b|\bexit(?:s|ed|ing)? with (?:an? )?(?:error|failure)\b|\bexit(?:s|ed|ing)? unsuccessfully\b|\bunsuccessful exit\b|\b(?:exit|code|status) (?:above|over|greater than|higher than|more than) (?:0|zero)\b|\bother (?:exit )?codes?\b|\bincluding (?:exit (?:code )?)?1\b/i;
   const CLAIM = /\bblock(?:s|ed)?\b(?!-)|(?<!non-|non )\bblocking\b|\bprevents?\b|\bden(?:y|ies)\b|\breject(?:s|ed|ion)?\b|\bcancel(?:s|led)?\b|\bhalts?\b|\bstops? the (?:tool|call|action)\b|\b(?:next|another) turn\b|\bkeeps? (?:\w+ ){0,2}(?:going|working|running)\b|\bback to work\b|\bcontinues? the (?:conversation|turn|loop)\b|\b(?:loop|conversation|turn|agent|Claude) continues\b|\bmakes? (?:Claude|the agent|it) (?:continue|keep (?:going|working))\b/i;
-  const NEGATION = /\bnot\b|n't\b|\bnever\b|\bunlike\b|\bunless\b|\bonly\b/i;
+  const NEGATION = /\bnot\b|n't\b|\bnever\b|\bunlike\b|\bunless\b|\bonly\b|\bcannot\b|\bfails? to\s*$|\bwithout\s*$|\b(?:block|prevent|den)\w* nothing\b/i;
   const clauseStart = (s, at) => Math.max(...[...',;:—–('].map((c) => s.lastIndexOf(c, at))) + 1;
   // Does a sentence say a non-zero code blocks or starts the next turn? Either the code comes first and a claim follows
   // before any exit 0 or 2 ("a non-zero exit blocks the call"; in "Exit 1 is non-blocking, but exit 2 blocks" the claim
   // is exit 2's), or a claim with no exit 0 or 2 before it is tied to the code by a condition ("the next turn runs if
   // the script returns non-zero"), or the code takes an earlier claim ("exit 2 blocks, and so does exit 1"). Codes
   // joined by "or" or "and" share their claim, so a group with any code but 0 and 2 in it counts as non-zero ("exit 2
-  // or 1 blocks", "exits 2 (or any non-zero code)"). A negation in the claim's own clause clears it ("exit 1 does not
-  // block", "Unlike exit 1, ..."); "only" clears it after the code ("exit 1 only blocks when onFailure is set"), not
-  // before it ("Only a non-zero exit blocks").
-  const GROUP = /\b(?:exit|return)(?:s|ed|ing)?(?: with)?(?: code| status)?(?: of)? \d+(?:\s*,\s*\d+)*(?:,?\s*\(?\s*(?:or|and|and\/or|nor)\s+(?:any )?(?:other )?(?:(?:exit|return)(?:s|ed|ing)? (?:with )?(?:code |status )?)?(?:\d+|non-?\s?zero(?: (?:exit )?codes?)?|nonzero|(?:exit )?codes?)\b\)?)+/gi;
+  // or 1 blocks", "exit codes 1 and 2 block", "exits 2 (or any non-zero code)"). A negation in the claim's own clause
+  // clears it ("exit 1 does not block", "Unlike exit 1, ...", "exit 1 cannot block", "exit 1 blocks nothing"); "only"
+  // clears it after the code ("exit 1 only blocks when onFailure is set"), not before it ("Only a non-zero exit
+  // blocks"); "fails to" and "without" clear it only right before the claim word ("which fails to block the push").
+  const GROUP = /\b(?:exit|return)(?:s|ed|ing)?(?: with)?(?: codes?| status(?:es)?)?(?: of)? \d+(?:\s*,\s*\d+)*(?:,?\s*\(?\s*(?:or|and|and\/or|nor)\s+(?:any )?(?:other )?(?:(?:exit|return)(?:s|ed|ing)? (?:with )?(?:code |status )?)?(?:\d+|non-?\s?zero(?: (?:exit )?codes?)?|nonzero|(?:exit )?codes?)\b\)?)+/gi;
   const ALSO = /\b(?:so|as) (?:does|do|will)\b|\b(?:does|do|will)(?: so)? (?:too|as well|likewise)\b/i;
   const claims = (sentence) => {
     const s = sentence.replace(GROUP, (group) => (/\b(?![02]\b)\d+\b|zero|\bother\b|\bany\b/i.test(group) ? 'non-zero' : group));
@@ -527,6 +528,7 @@ test('the glossary, chapter 38 and every hook page say only exit 2 blocks or sta
     const rest = s.slice(zero).split(EXIT_0_2)[0];
     const after = rest.search(CLAIM);
     if (after >= 0) {
+      if (/^\w+ nothing\b/i.test(rest.slice(after))) return false;
       return !NEGATION.test(s.slice(clauseStart(s, zero), zero).replace(/\bonly\b/gi, '')) && !NEGATION.test(rest.slice(0, after));
     }
     const before = s.slice(0, zero).search(CLAIM);
@@ -535,9 +537,10 @@ test('the glossary, chapter 38 and every hook page say only exit 2 blocks or sta
     return before >= 0 && !EXIT_0_2.test(s.slice(0, zero)) && /\b(?:if|when|while|on)\b/i.test(s.slice(before, zero))
       && !NEGATION.test(s.slice(clauseStart(s, before), zero));
   };
-  // A clause says exit 2 blocks or starts the next turn when it names both, negates nothing and names no other code.
+  // A clause says exit 2 blocks or starts the next turn when it names both, negates nothing and names no other code
+  // or failure ("exit 2 or an error blocks" and "fails or exits 2" do not count).
   const exit2Claim = (clause) => EXIT_2.test(clause) && CLAIM.test(clause)
-    && !/\bnot?\b|n't|\bnever\b|\bnothing\b|\bnon-|\bnon ?zero\b|\b1\b|\bor (?:higher|above|more)\b|\b2\+/i.test(clause);
+    && !/\bnot?\b|n't|\bnever\b|\bnothing\b|\bnon-|\bnon ?zero\b|\b1\b|\bor (?:higher|above|more)\b|\b2\+|\bor (?:\w+ )?(?:errors?|fail\w*|crash\w*)\b|\b(?:errors?|fail\w*|crash\w*) or\b/i.test(clause);
   // Any other clause in the entry that says an exit, a script, a return code or a failure blocks or starts the next turn
   // denies it ("exit 1 doesn't block it") or is about a JSON decision ("a JSON deny blocks too"). So "exit 2 does not
   // block the call" fails even beside an accurate exit-2 clause, and so does a claim that names no code ("a failing exit
@@ -565,7 +568,7 @@ test('the glossary, chapter 38 and every hook page say only exit 2 blocks or sta
   assert.ok(header && row, 'chapter 38 keeps its table with a Stop hook column and a "Next turn starts when" row');
   const cell = plain(row.split('|')[header.split('|').map((c) => c.trim()).indexOf('Stop hook')]);
   assert.match(cell, EXIT_2, 'chapter 38: a Stop hook starts the next turn on exit 2');
-  assert.doesNotMatch(cell, /non-?\s?zero|nonzero|\b(?!2\b)\d+\b|\bor (?:higher|above|more)\b|\b2\+|\bnot\b|n't\b|\bnever\b|\bor (?:\w+ )?(?:errors?|fail(?:s|ed|ing|ures?)?|crash(?:es)?)\b/i,
+  assert.doesNotMatch(cell, /non-?\s?zero|nonzero|\b(?!2\b)\d+\b|\bor (?:higher|above|more)\b|\b2\+|\bnot\b|n't\b|\bnever\b|\bor (?:\w+ )?(?:errors?|fail(?:s|ed|ing|ures?)?|crash(?:es)?)\b|\b(?:errors?|fail(?:s|ed|ing|ures?)?|crash(?:es)?) or\b/i,
     'chapter 38: on no other code or failure, and not denied');
 
   // Every sentence on a page that mentions a hook, except one about git hooks alone, where any non-zero exit does
