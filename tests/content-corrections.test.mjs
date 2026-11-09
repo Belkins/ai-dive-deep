@@ -440,6 +440,8 @@ test('the published Slack hook times the turn itself and posts JSON only after t
       assert.notEqual(message.text, '', label);
       assert.deepEqual(rest, [], label);
       reset();
+      // A turn began 200 s ago and the next one begins now, whatever the Stop hook did with the old stamp.
+      startedAgo(200);
       assert.equal(run(begin, { session_id: 'sess-1', prompt: 'next task' }, env).status, 0, label);
       result = run(stop, { session_id: 'sess-1' }, env);
       assert.equal(result.status, 0, label);
@@ -477,12 +479,18 @@ test('the cheat sheet gives the hook exit codes the reference documents', () => 
   assert.match(row('stdin'), /tool_input/, 'the input arrives as JSON on stdin');
   row('.tool_input.file_path');
   assert.match(row('exit 0'), /success/i, 'exit 0 is success');
-  // The verdict is the clause before the first ; : or (, so a qualifier after it ("events that can't block") is fine.
-  const lead = (key) => row(key).split(/[;:(]/)[0];
-  assert.match(lead('exit 2'), /^\s*(?:block|stop)/i, 'exit 2 blocks');
+  // The verdict is the clause before the first ; , ( or dash, so a qualifier after it ("events that can't block")
+  // is fine, and a colon label ("Blocking: no") stays inside the verdict.
+  const lead = (key) => row(key).split(/[;,(–—]/)[0];
+  assert.match(lead('exit 2'), /^\s*(?:block|stop|den(?:y|ies)|prevent)/i, 'exit 2 blocks');
   assert.doesNotMatch(lead('exit 2'), /non-|\bnot?\b|n't|never|nothing/i, 'exit 2 blocks');
   assert.match(row('exit 2'), /stderr/, 'exit 2 hands Claude stderr as the reason');
-  assert.match(lead('other exit codes'), /non-blocking|does not block|goes ahead|proceeds|continues/i, 'other exit codes do not block on their own');
+  assert.doesNotMatch(row('other exit codes'), /^\s*block/i, 'other exit codes do not block on their own');
+  assert.match(
+    row('other exit codes').split(/[;(]/)[0],
+    /non-?blocking|do(?:es)? not block|don't block|never block|goes ahead|proceeds|continues/i,
+    'other exit codes do not block on their own',
+  );
   assert.match(row('stdout JSON'), /hookSpecificOutput/, 'PreToolUse returns its decision inside hookSpecificOutput');
   assert.doesNotMatch(block, /non-zero/);
 });
