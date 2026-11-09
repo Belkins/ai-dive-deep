@@ -119,11 +119,11 @@ const faq = {
                 <tr><td>test-on-write</td><td>PostToolUse</td><td>run the matching test file</td><td><strong>keep</strong> on small trees; see the 15k-file failure below</td></tr>
                 <tr><td>block-push-to-main</td><td>PreToolUse</td><td>checks command text for <code>git push origin main</code></td><td><strong>keep, everywhere</strong> — three "oh no" saves at Belkins (Ch 16)</td></tr>
                 <tr><td>commit-message-template</td><td>PreToolUse</td><td>enforce commit format</td><td>situational — teams yes, solo it's friction</td></tr>
-                <tr><td>slack-notify-on-long-task</td><td>Stop</td><td>ping when a long run ends</td><td>situational — only if you actually walk away</td></tr>
+                <tr><td>slack-notify-on-long-task</td><td>UserPromptSubmit + Stop</td><td>ping when a long run ends</td><td>situational — only if you actually walk away</td></tr>
                 <tr><td>secrets-scan</td><td>PreToolUse Write|Edit</td><td>8 live-key patterns, blocks the write</td><td><strong>keep, everywhere</strong> — it has fired on a real Anthropic key</td></tr>
                 <tr><td>claude-md-size-guard</td><td>SessionStart</td><td>warn past 300 lines</td><td><strong>keep</strong> — a 340-line CLAUDE.md doubled a token bill in a week</td></tr>
                 <tr><td>prompt-cache-guard</td><td>UserPromptSubmit</td><td>warn before blowing a warm cache</td><td>situational — matters at API spend, noise on Max</td></tr>
-                <tr><td>agent-watchdog-stall-detect</td><td>PreToolUse Task</td><td>JSONL log of agent spawns</td><td>keep if you run swarms; it's telemetry, not a gate</td></tr>
+                <tr><td>agent-watchdog-stall-detect</td><td>PreToolUse Agent</td><td>JSONL log of agent spawns</td><td>keep if you run swarms; it's telemetry, not a gate</td></tr>
                 <tr><td>commit-msg-enforcer</td><td>Stop</td><td>lint the final commit message</td><td>situational — warn-only, never block on style</td></tr>
               </tbody>
             </table>
@@ -160,7 +160,7 @@ const faq = {
             <li><strong>Telemetry before deletion.</strong> A one-line JSONL invocation logger per hook. "Zero fires in seven weeks, across two independent telemetry sources" is kill evidence; a feeling isn't (<a href={`${base}/self-audit/`}>/self-audit</a>).</li>
             <li><strong>Warn-only for heuristics.</strong> Anything that can false-positive (size guards, style lints) warns; only deterministic policy (push-to-main, live keys) blocks with exit 2.</li>
             <li><strong>Separate logging failures from policy failures.</strong> Telemetry can degrade to exit 0; a blocking policy hook that cannot inspect its input should return exit 2 with an explanation.</li>
-            <li><strong>Quarterly re-verify against the official reference.</strong> This page's own block-push example had the wrong input source and exit code. Re-stamp only the examples you have actually checked.</li>
+            <li><strong>Quarterly re-verify against the official reference.</strong> This page's own block-push example had the wrong input source and exit code, and the secrets-scan example below read an environment variable Claude Code never sets, so it never blocked a write. Re-stamp only the examples you have actually checked.</li>
           </ul>
           <p>Want the next hook to write? List the three corrections you've typed more than five times this month — those are your next three hooks (<a href={`${base}/chapters/17-tips-tricks/`}>Ch 17</a>).</p>
           <CopyBlock client:visible text={HOOK_SECRETS_SCAN} filename="secrets-scan.sh" language="bash" />

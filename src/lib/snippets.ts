@@ -65,7 +65,7 @@ export const HOOK_FORMAT_ON_SAVE = `{
         "hooks": [
           {
             "type": "command",
-            "command": "prettier --write \\"$CLAUDE_FILE_PATH\\" 2>/dev/null || ruff format \\"$CLAUDE_FILE_PATH\\""
+            "command": "f=$(jq -r '.tool_input.file_path // empty') && [ -n \\"$f\\" ] || exit 0; prettier --write \\"$f\\" 2>/dev/null || ruff format \\"$f\\" 2>/dev/null; exit 0"
           }
         ]
       }
@@ -99,7 +99,7 @@ export const HOOK_TEST_ON_WRITE = `{
         "hooks": [
           {
             "type": "command",
-            "command": "if [[ \\"$CLAUDE_FILE_PATH\\" == *.test.* ]]; then npx vitest run \\"$CLAUDE_FILE_PATH\\"; fi"
+            "command": "f=$(jq -r '.tool_input.file_path // empty') || exit 0; case \\"$f\\" in *.test.*) npx vitest run \\"$f\\";; esac"
           }
         ]
       }
@@ -110,12 +110,22 @@ export const HOOK_TEST_ON_WRITE = `{
 
 export const HOOK_SLACK_NOTIFY_LONG_TASK = `{
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "s=$(jq -r '.session_id') && date +%s > \\"\${TMPDIR:-/tmp}/cc-turn-$s\\"; exit 0"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "[ \\"$CLAUDE_TURN_DURATION_MS\\" -gt 120000 ] && curl -X POST -d \\"text=CC turn finished: $CLAUDE_SESSION_ID\\" $SLACK_WEBHOOK"
+            "command": "s=$(jq -r '.session_id') && start=$(cat \\"\${TMPDIR:-/tmp}/cc-turn-$s\\" 2>/dev/null) && [ \\"$start\\" -gt 0 ] 2>/dev/null && [ $(( $(date +%s) - start )) -gt 120 ] && jq -nc --arg text \\"CC turn finished: $s\\" '{text: $text}' | curl -s -H 'Content-type: application/json' -d @- \\"$SLACK_WEBHOOK\\"; exit 0"
           }
         ]
       }
@@ -635,13 +645,16 @@ export const HOOK_SECRETS_SCAN = `#!/usr/bin/env bash
 # secrets-scan: block writes containing live API keys
 # PreToolUse on Write|Edit — fires before the file lands on disk
 #
-# Failure mode: only scans the new content payload from $CLAUDE_TOOL_INPUT.
-# If Claude passes content via stdin instead, this hook sees nothing and
-# silently allows. Verify with the test command below after any harness update.
+# Claude Code sends the tool call as JSON on stdin: a Write's new text is in
+# tool_input.content, an Edit's in tool_input.new_string. Needs jq. If the
+# input can't be read, the hook blocks rather than let an unscanned write through.
 
 set -euo pipefail
 
-payload="\${CLAUDE_TOOL_INPUT:-}"
+if ! payload=$(jq -er '(.tool_input.content // .tool_input.new_string // "") | strings'); then
+  echo "secrets-scan: blocked write — cannot read hook input; check the JSON and install jq" >&2
+  exit 2
+fi
 [ -z "$payload" ] && exit 0
 
 # Real-money patterns. Order: most specific first so error message is useful.
@@ -657,7 +670,9 @@ patterns=(
 )
 
 for p in "\${patterns[@]}"; do
-  if echo "$payload" | grep -Eq "$p"; then
+  # A here-string, not echo | grep -q: under pipefail, grep -q stopping early
+  # can fail the pipe and hide a match in a long write.
+  if grep -Eq "$p" <<<"$payload"; then
     echo "secrets-scan: blocked write — matched pattern /$p/" >&2
     echo "secrets-scan: move the value to .env.local + add to .gitignore" >&2
     exit 2
@@ -715,17 +730,20 @@ export const HOOK_PROMPT_CACHE_GUARD = `#!/usr/bin/env bash
 
 set -euo pipefail
 
-prompt="\${CLAUDE_USER_PROMPT:-}"
+# Claude Code sends the submitted text as .prompt in JSON on stdin (needs jq).
+# Unreadable input exits 0: this hook only warns.
+prompt=$(jq -r '.prompt // empty') || exit 0
 [ -z "$prompt" ] && exit 0
 
 # Lowercase for case-insensitive match.
 lower=$(echo "$prompt" | tr '[:upper:]' '[:lower:]')
 
 trigger=""
-if echo "$lower" | grep -Eq '(edit|update|modify|change|rewrite)[^.]{0,40}(claude\\.md|memory\\.md|skill\\.md)'; then
+# Here-strings, not echo | grep -q: under pipefail an early grep exit can hide a match.
+if grep -Eq '(edit|update|modify|change|rewrite)[^.]{0,40}(claude\\.md|memory\\.md|skill\\.md)' <<<"$lower"; then
   trigger="cache-sensitive file edit"
 fi
-if echo "$lower" | grep -Eq '\\.claude/(settings|hooks|skills)'; then
+if grep -Eq '\\.claude/(settings|hooks|skills)' <<<"$lower"; then
   trigger="\${trigger:-harness config edit}"
 fi
 
@@ -745,11 +763,13 @@ exit 0
 
 export const HOOK_AGENT_WATCHDOG = `#!/usr/bin/env bash
 # agent-watchdog-stall-detect: log subagent launches for external stall detection
-# PreToolUse on Task — fires every time the parent spawns a subagent
+# PreToolUse on Agent — fires every time the parent spawns a subagent
 #
+# Reads the tool call Claude Code sends as JSON on stdin (needs jq).
 # Failure mode: log file lives in ~/.claude/health/. If that dir is missing
-# or read-only, hook silently fails (no block — never break the parent agent
-# because logging is broken). Verify dir exists weekly.
+# or read-only, or the input can't be read, the hook logs nothing and exits 0
+# (no block — never break the parent agent because logging is broken).
+# Verify dir exists weekly.
 
 set -euo pipefail
 
@@ -762,19 +782,18 @@ mkdir -p "$log_dir" || exit 0
 # Compact JSONL row. External cron task reads this + flags rows with no
 # matching "done" event within 600s.
 ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-session="\${CLAUDE_SESSION_ID:-unknown}"
 project="\${CLAUDE_PROJECT_DIR:-$PWD}"
-# Best-effort: extract subagent description from tool input (first 80 chars).
-desc=$(echo "\${CLAUDE_TOOL_INPUT:-}" | tr -d '\\n' | cut -c1-80 | sed 's/"/\\\\"/g')
-
-printf '{"ts":"%s","session":"%s","project":"%s","desc":"%s"}\\n' \\
-  "$ts" "$session" "$project" "$desc" >> "$log_file"
+# session_id and the subagent's description (first 80 chars) come from stdin;
+# jq writes the row, so quotes and newlines stay valid JSON.
+row=$(jq -c --arg ts "$ts" --arg project "$project" \\
+  '{ts: $ts, session: (.session_id // "unknown"), project: $project, desc: ((.tool_input.description // "") | tostring | .[0:80])}') || exit 0
+printf '%s\\n' "$row" >> "$log_file" || exit 0
 
 exit 0
 
 # Wire in ~/.claude/settings.json:
 # { "hooks": { "PreToolUse": [
-#   { "matcher": "Task", "hooks": [{ "type": "command", "command": "/Users/vlad/.claude/hooks/agent-watchdog-stall-detect.sh" }]}
+#   { "matcher": "Agent", "hooks": [{ "type": "command", "command": "/Users/vlad/.claude/hooks/agent-watchdog-stall-detect.sh" }]}
 # ]}}
 `;
 
@@ -896,7 +915,7 @@ allowed-tools: [Read, WebFetch]
 
 export const SKILL_SUBAGENT_WATCHDOG = `---
 name: sub-agent-watchdog
-description: Scan recent background agent invocations and flag any running 8+ minutes without an output token. Returns agent IDs, last-seen timestamp, suggested action (kill / take-over / wait one more tick). Use when the user says "any agents stalled", "watchdog", "is the swarm alive", or when a PostToolUse hook fires after a long-running Task call.
+description: Scan recent background agent invocations and flag any running 8+ minutes without an output token. Returns agent IDs, last-seen timestamp, suggested action (kill / take-over / wait one more tick). Use when the user says "any agents stalled", "watchdog", "is the swarm alive", or when a PostToolUse hook fires after a long-running Agent call.
 allowed-tools: [Bash, Read, Write]
 ---
 
@@ -904,7 +923,7 @@ allowed-tools: [Bash, Read, Write]
 
 ## When to fire
 - Manual: "watchdog", "any agents stalled", "is the swarm alive".
-- Hook: PostToolUse on Task tool, tick every 2 minutes during active swarm.
+- Hook: PostToolUse on Agent tool, tick every 2 minutes during active swarm.
 - Hard ceiling: if any agent crosses 9 minutes, fire automatically regardless of user request.
 
 ## What to do

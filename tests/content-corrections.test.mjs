@@ -209,6 +209,242 @@ test('published block-push hooks read JSON stdin and return blocking decisions',
   }
 });
 
+const hookSnippets = await import(`data:text/javascript;base64,${Buffer.from(compile(source('src/lib/snippets.ts'))).toString('base64')}`);
+const hookChapter = chapter('16-hooks-subagents');
+const chapterJson = (start, end) => JSON.parse(hookChapter.split(start)[1].split(end)[0].match(/```json\n([\s\S]*?)\n```/)[1]);
+const hookInput = (input) => (typeof input === 'string' ? input : JSON.stringify(input));
+// Stub tools that log each call, one bracket per argument, so a path with a space shows whether it was quoted.
+const stub = (name, extra = '') => `#!/bin/sh\n{ printf '%s' ${name}; for a in "$@"; do printf ' [%s]' "$a"; done; printf '\\n'; } >> "$HOOK_CALLS"\n${extra}exit "\${STUB_EXIT_${name.toUpperCase()}:-0}"\n`;
+const withStubs = (fn) => {
+  const dir = mkdtempSync(join(tmpdir(), 'hook-stubs-'));
+  const log = join(dir, 'calls.log');
+  try {
+    for (const name of ['prettier', 'ruff', 'npx']) writeFileSync(join(dir, name), stub(name), { mode: 0o755 });
+    writeFileSync(join(dir, 'curl'), stub('curl', 'cat >> "$HOOK_CALLS"\n'), { mode: 0o755 });
+    const run = (command, input, env = {}) => spawnSync('/bin/sh', ['-c', command], {
+      input: hookInput(input),
+      env: { ...process.env, PATH: `${dir}:${process.env.PATH}`, HOOK_CALLS: log, ...env },
+      encoding: 'utf8', timeout: 10000,
+    });
+    const calls = () => (existsSync(log) ? readFileSync(log, 'utf8') : '');
+    const reset = () => rmSync(log, { force: true });
+    return fn({ dir, run, calls, reset });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+};
+const runScript = (script, input, env = {}) => spawnSync('/bin/bash', ['-c', script], {
+  input: hookInput(input), env: { ...process.env, ...env }, encoding: 'utf8', timeout: 10000,
+});
+// Multi-line text far past a pipe buffer: `echo … | grep -q` under pipefail misses a match on its first line.
+const longText = (firstLine) => `${firstLine}\n${`${'x'.repeat(99)}\n`.repeat(10_500)}`;
+
+// Every file under src/ except the generated feed data that every radar run rewrites.
+const srcFiles = (dir = 'src') => readdirSync(new URL(`../${dir}`, import.meta.url), { withFileTypes: true }).flatMap((entry) => {
+  const path = `${dir}/${entry.name}`;
+  if (!entry.isDirectory()) return [path];
+  return path === 'src/data' ? [] : srcFiles(path);
+});
+// Each line under src/ that matches, as `path: trimmed line`.
+const srcLines = (pattern) => srcFiles().flatMap((path) => source(path).split('\n').filter((line) => pattern.test(line)).map((line) => `${path}: ${line.trim()}`));
+
+test('no page names a hook environment variable Claude Code never sets', () => {
+  // The hooks reference names none of these: command hooks get their input as JSON on stdin.
+  const hits = srcLines(/CLAUDE_(?:TOOL_INPUT|FILE_PATH|SESSION_ID|TURN_DURATION_MS|USER_PROMPT)/);
+  // Lines that name one only to say it must not be read.
+  const corrections = [
+    'src/content/chapters/56-skill-leaderboard.mdx: # Do not read $CLAUDE_TOOL_INPUT: Claude Code never sets it. Appends one JSONL line per use.',
+    'src/pages/claude-code-hooks.astro: The previous block-push example read <code>CLAUDE_TOOL_INPUT</code> and returned <code>exit 1</code>. Both were wrong for this hook: read the JSON on stdin and return <code>exit 2</code> to block. Hooks that emit a valid JSON decision have additional controls; the example below uses exit codes alone.',
+  ];
+  assert.deepEqual(corrections.filter((line) => hits.includes(line)), corrections, 'the scan must see the correction lines it allows');
+  assert.deepEqual(hits.filter((line) => !corrections.includes(line)), [], 'Claude Code sends hook input as JSON on stdin and never sets these variables');
+});
+
+test('hook wiring names the subagent tool Agent, as the hooks reference does', () => {
+  // The reference documents the Agent tool's input and has no Task tool.
+  assert.deepEqual(srcLines(/(?:PreToolUse|PostToolUse)\W+(?:on\W+)?Task\b|"matcher": "Task"|\bTask (?:tool|call)\b/), []);
+  const agentPaths = new Set(srcLines(/(?:PreToolUse|PostToolUse)\W+(?:on\W+)?Agent\b|"matcher": "Agent"|\bAgent (?:tool|call)\b/).map((hit) => hit.slice(0, hit.indexOf(': '))));
+  for (const path of ['src/lib/snippets.ts', 'src/pages/claude-code-hooks.astro']) {
+    assert.ok(agentPaths.has(path), `the scan must see the Agent wiring in ${path}`);
+  }
+});
+
+test('the published secrets-scan hook reads the write from JSON stdin and blocks live keys', () => {
+  const script = hookSnippets.HOOK_SECRETS_SCAN;
+  const key = `sk-ant-api03-${'A'.repeat(24)}`; // assembled here so no key-shaped literal sits in the repo
+  for (const [label, input, status, env = {}] of [
+    ['Write content', { tool_input: { file_path: '/tmp/a.env', content: `A=1\n${key}\n` } }, 2],
+    ['Edit new_string', { tool_input: { file_path: '/tmp/a.ts', old_string: 'x', new_string: key } }, 2],
+    ['key on the first line of a long write', { tool_input: { content: longText(key) } }, 2],
+    ['unreadable JSON', '{invalid', 2],
+    ['content that is not a string', { tool_input: { content: 42 } }, 2],
+    ['clean write', { tool_input: { content: 'hello' } }, 0],
+    ['key only in the variable Claude Code never sets', { tool_input: { content: 'hello' } }, 0, { CLAUDE_TOOL_INPUT: key }],
+  ]) {
+    const result = runScript(script, input, { CLAUDE_TOOL_INPUT: '', ...env });
+    assert.ifError(result.error);
+    assert.equal(result.status, status, label);
+    if (status === 2) assert.match(result.stderr, /^secrets-scan: /m, `${label}: exit 2 hands Claude stderr as the reason`);
+    else assert.equal(result.stderr, '', label);
+  }
+  const bin = mkdtempSync(join(tmpdir(), 'hook-no-jq-'));
+  try {
+    // Without jq the hook exits before reading stdin; a file instead of a pipe keeps that exit observable.
+    const inputPath = join(bin, 'input.json');
+    writeFileSync(inputPath, JSON.stringify({ tool_input: { content: key } }));
+    const inputFd = openSync(inputPath, 'r');
+    try {
+      const noJq = spawnSync('/bin/bash', ['-c', script], {
+        stdio: [inputFd, 'pipe', 'pipe'], env: { PATH: bin }, encoding: 'utf8', timeout: 10000,
+      });
+      assert.ifError(noJq.error);
+      assert.equal(noJq.status, 2, 'a missing jq must not let an unscanned write through');
+      assert.match(noJq.stderr, /^secrets-scan: /m);
+    } finally {
+      closeSync(inputFd);
+    }
+  } finally {
+    rmSync(bin, { recursive: true, force: true });
+  }
+});
+
+test('the published agent watchdog logs the subagent from JSON stdin and never blocks', () => {
+  const script = hookSnippets.HOOK_AGENT_WATCHDOG;
+  assert.match(script, /^# PreToolUse on Agent /m);
+  assert.match(script, /"matcher": "Agent"/);
+  const home = mkdtempSync(join(tmpdir(), 'hook-home-'));
+  try {
+    const log = join(home, '.claude', 'health', 'subagent-launches.jsonl');
+    const description = `Find "API" endpoints\nand list them ${'x'.repeat(80)}`;
+    const env = { HOME: home, CLAUDE_PROJECT_DIR: '/work/app', CLAUDE_SESSION_ID: 'stale', CLAUDE_TOOL_INPUT: 'stale' };
+    const logged = runScript(script, { session_id: 'sess-1', tool_name: 'Agent', tool_input: { description, prompt: 'p' } }, env);
+    assert.equal(logged.status, 0);
+    assert.equal(logged.stdout, '');
+    assert.equal(logged.stderr, '');
+    const rows = readFileSync(log, 'utf8').trim().split('\n').map((line) => JSON.parse(line));
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].session, 'sess-1');
+    assert.equal(rows[0].desc, description.slice(0, 80));
+    assert.equal(rows[0].project, '/work/app');
+    assert.match(rows[0].ts, /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/);
+    assert.equal(runScript(script, '{invalid', env).status, 0, 'a logging failure must not block the subagent');
+    assert.equal(readFileSync(log, 'utf8').trim().split('\n').length, 1, 'unreadable input logs nothing');
+  } finally {
+    rmSync(home, { recursive: true, force: true });
+  }
+});
+
+test('the published format and test hooks read the edited file from JSON stdin', () => {
+  const file = '/tmp/hook demo/a b.ts';
+  const testFile = '/tmp/hook demo/a b.test.ts';
+  const formatHooks = [
+    ['snippet', JSON.parse(hookSnippets.HOOK_FORMAT_ON_SAVE).hooks.PostToolUse[0].hooks[0].command],
+    ['chapter hook 1', chapterJson('### 1. format-on-save', '### 2.').hooks[0].command],
+  ];
+  const testHooks = [
+    ['snippet', JSON.parse(hookSnippets.HOOK_TEST_ON_WRITE).hooks.PostToolUse[0].hooks[0].command],
+    ['chapter hook 2', chapterJson('### 2. test-on-write', '### 3.').hooks[0].command],
+  ];
+  withStubs(({ run, calls, reset }) => {
+    const intro = chapterJson('the shape of a real', 'The `matcher` field').hooks.PostToolUse[0].hooks[0].command;
+    assert.equal(run(intro, { tool_input: { file_path: file } }, { CLAUDE_FILE_PATH: '/tmp/stale.ts' }).status, 0);
+    assert.equal(calls(), `prettier [--write] [${file}]\n`, 'chapter intro');
+    for (const [label, command] of formatHooks) {
+      reset();
+      let result = run(command, { tool_input: { file_path: file } }, { CLAUDE_FILE_PATH: '/tmp/stale.ts' });
+      assert.equal(result.status, 0, label);
+      assert.equal(calls(), `prettier [--write] [${file}]\n`, label);
+      reset();
+      result = run(command, { tool_input: { file_path: file } }, { STUB_EXIT_PRETTIER: '1' });
+      assert.equal(result.status, 0, label);
+      assert.equal(calls(), `prettier [--write] [${file}]\nruff [format] [${file}]\n`, `${label}: falls back to Ruff`);
+      reset();
+      result = run(command, { tool_input: { file_path: file } }, { STUB_EXIT_PRETTIER: '1', STUB_EXIT_RUFF: '1' });
+      assert.equal(result.status, 0, `${label}: a file neither formatter takes stays silent`);
+      assert.equal(result.stderr, '', label);
+      reset();
+      result = run(command, { tool_input: {} }, { CLAUDE_FILE_PATH: '/tmp/stale.ts' });
+      assert.equal(result.status, 0, label);
+      assert.equal(calls(), '', `${label}: no file_path, no formatter`);
+    }
+    for (const [label, command] of testHooks) {
+      reset();
+      let result = run(command, { tool_input: { file_path: testFile } }, { CLAUDE_FILE_PATH: '/tmp/stale.ts' });
+      assert.equal(result.status, 0, label);
+      assert.equal(calls(), `npx [vitest] [run] [${testFile}]\n`, label);
+      reset();
+      result = run(command, { tool_input: { file_path: file } }, { CLAUDE_FILE_PATH: '/tmp/stale.test.ts' });
+      assert.equal(result.status, 0, label);
+      assert.equal(calls(), '', `${label}: only *.test.* files run`);
+    }
+  });
+});
+
+test('the published Slack hook times the turn itself and posts JSON only after two minutes', () => {
+  for (const [label, config] of [
+    ['snippet', JSON.parse(hookSnippets.HOOK_SLACK_NOTIFY_LONG_TASK).hooks],
+    ['chapter hook 5', chapterJson('### 5. slack-notify-on-long-task', '\n---\n')],
+  ]) {
+    withStubs(({ dir, run, calls, reset }) => {
+      const begin = config.UserPromptSubmit[0].hooks[0].command;
+      const stop = config.Stop[0].hooks[0].command;
+      const env = { TMPDIR: dir, SLACK_WEBHOOK: 'https://hooks.example.test/T0/B0/x', CLAUDE_TURN_DURATION_MS: '999999', CLAUDE_SESSION_ID: 'stale' };
+      const stamp = join(dir, 'cc-turn-sess-1');
+      const began = run(begin, { session_id: 'sess-1', prompt: 'refactor the app' }, env);
+      assert.equal(began.status, 0, label);
+      assert.equal(began.stdout, '', `${label}: UserPromptSubmit stdout would be added to Claude's context`);
+      const now = Math.floor(Date.now() / 1000);
+      assert.ok(Math.abs(Number(readFileSync(stamp, 'utf8')) - now) <= 5, `${label}: stamps the turn's start`);
+      let result = run(stop, { session_id: 'sess-1' }, env);
+      assert.equal(result.status, 0, label);
+      assert.equal(calls(), '', `${label}: a short turn posts nothing`);
+      writeFileSync(stamp, String(now - 200));
+      result = run(stop, { session_id: 'sess-1' }, env);
+      assert.equal(result.status, 0, label);
+      // Slack's incoming webhooks take a JSON body with a text field, sent as application/json.
+      const [call, body, ...rest] = calls().trim().split('\n');
+      assert.match(call, /^curl .*\[-H\] \[content-type: application\/json\]/i, label);
+      assert.ok(call.endsWith(' [https://hooks.example.test/T0/B0/x]'), `${label}: posts to $SLACK_WEBHOOK`);
+      const message = JSON.parse(body);
+      assert.equal(typeof message.text, 'string', label);
+      assert.notEqual(message.text, '', label);
+      assert.deepEqual(rest, [], label);
+      for (const [why, session, stampText] of [['no stamp', 'sess-2', null], ['empty stamp', 'sess-1', '']]) {
+        reset();
+        if (stampText !== null) writeFileSync(stamp, stampText);
+        result = run(stop, { session_id: session }, env);
+        assert.equal(result.status, 0, `${label}, ${why}: a Stop hook that exits 2 keeps Claude going`);
+        assert.equal(calls(), '', `${label}, ${why}`);
+      }
+    });
+  }
+});
+
+test('the published prompt-cache guard reads the prompt from JSON stdin', () => {
+  const script = hookSnippets.HOOK_PROMPT_CACHE_GUARD;
+  const run = (input, env = {}) => runScript(script, input, { CLAUDE_USER_PROMPT: '', ...env });
+  for (const [label, prompt] of [
+    ['short prompt', 'Please update CLAUDE.md with the new rule'],
+    ['long multi-line prompt', longText('edit CLAUDE.md first')],
+  ]) {
+    const result = run({ prompt });
+    assert.equal(result.status, 0, label);
+    assert.match(result.stderr, /^prompt-cache-guard: /m, label);
+  }
+  const stale = run({ prompt: 'hello' }, { CLAUDE_USER_PROMPT: 'edit CLAUDE.md' });
+  assert.equal(stale.status, 0);
+  assert.equal(stale.stderr, '', 'reads the prompt from stdin, not from the variable Claude Code never sets');
+  assert.equal(run('{invalid').status, 0, 'a warn-only hook must not block a prompt it cannot read');
+});
+
+test('the cheat sheet gives the hook exit codes the reference documents', () => {
+  const block = source('src/pages/cheat-sheet.astro').split("h: 'Hook JSON shape'")[1].split("h: '")[0];
+  assert.match(block, /\['stdin', 'Event JSON: session_id, tool_name, tool_input'\]/);
+  assert.match(block, /\['exit 2', 'Blocks; stderr is the reason'\]/);
+  assert.match(block, /\['other exit codes', 'Non-blocking error; call proceeds'\]/);
+  assert.doesNotMatch(block, /non-zero/);
+});
+
 const widgetSource = source('src/widgets/DayZeroChecklist.tsx');
 const widgetAst = ts.createSourceFile('DayZeroChecklist.tsx', widgetSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 const helpers = widgetAst.statements.filter((statement) => ts.isVariableStatement(statement)
