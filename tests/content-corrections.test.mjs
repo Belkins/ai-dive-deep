@@ -390,6 +390,12 @@ test('the published format and test hooks read the edited file from JSON stdin',
 });
 
 test('the published Slack hook times the turn itself and posts JSON only after two minutes', () => {
+  // The hooks page wires it the same way: the turn's start comes from UserPromptSubmit, its end from Stop.
+  assert.match(
+    source('src/pages/claude-code-hooks.astro'),
+    /<td>slack-notify-on-long-task<\/td><td>(?=[^<]*\bUserPromptSubmit\b)(?=[^<]*\bStop\b)[^<]*<\/td>/,
+    'the hooks page wires Slack notify to UserPromptSubmit and Stop',
+  );
   for (const [label, config] of [
     ['snippet', JSON.parse(hookSnippets.HOOK_SLACK_NOTIFY_LONG_TASK).hooks],
     ['chapter hook 5', chapterJson('### 5. slack-notify-on-long-task', '\n---\n')],
@@ -425,13 +431,14 @@ test('the published Slack hook times the turn itself and posts JSON only after t
       assert.notEqual(message.text, '', label);
       assert.deepEqual(rest, [], label);
       reset();
+      // sess-1's stamp is still 200 s old here, so a Stop hook that reads another session's stamp posts.
+      result = run(stop, { session_id: 'sess-2' }, env);
+      assert.equal(result.status, 0, `${label}, no stamp: a Stop hook that exits 2 keeps Claude going`);
+      assert.equal(calls(), '', `${label}: a session with no stamp posts nothing, whatever other sessions' stamps say`);
       assert.equal(run(begin, { session_id: 'sess-1', prompt: 'next task' }, env).status, 0, label);
       result = run(stop, { session_id: 'sess-1' }, env);
       assert.equal(result.status, 0, label);
       assert.equal(calls(), '', `${label}: a new turn restarts the clock`);
-      result = run(stop, { session_id: 'sess-2' }, env);
-      assert.equal(result.status, 0, `${label}, no stamp: a Stop hook that exits 2 keeps Claude going`);
-      assert.equal(calls(), '', `${label}, no stamp`);
     });
   }
 });
@@ -465,10 +472,12 @@ test('the cheat sheet gives the hook exit codes the reference documents', () => 
   assert.match(row('stdin'), /tool_input/, 'the input arrives as JSON on stdin');
   row('.tool_input.file_path');
   assert.match(row('exit 0'), /success/i, 'exit 0 is success');
-  assert.match(row('exit 2'), /(?<!non-)\bblock/i, 'exit 2 blocks');
-  assert.doesNotMatch(row('exit 2'), /non-?blocking|not block|goes ahead|proceeds/i, 'exit 2 blocks');
+  // A row that blocks says so first; a list of negations alone always misses one ("Doesn't block").
+  assert.match(row('exit 2'), /^\s*block/i, 'exit 2 blocks');
+  assert.doesNotMatch(row('exit 2'), /non-?blocking|not block|n't block|never block|goes ahead|proceeds/i, 'exit 2 blocks');
   assert.match(row('exit 2'), /stderr/, 'exit 2 hands Claude stderr as the reason');
-  assert.match(row('other exit codes'), /non-blocking|does not block|goes ahead|proceeds/i, 'other exit codes do not block on their own');
+  assert.doesNotMatch(row('other exit codes'), /^\s*block/i, 'other exit codes do not block on their own');
+  assert.match(row('other exit codes'), /non-blocking|does not block|goes ahead|proceeds|continues/i, 'other exit codes do not block on their own');
   assert.match(row('stdout JSON'), /hookSpecificOutput/, 'PreToolUse returns its decision inside hookSpecificOutput');
   assert.doesNotMatch(block, /non-zero/);
 });
