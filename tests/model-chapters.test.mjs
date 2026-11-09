@@ -244,11 +244,10 @@ test('the swarm build playbook page keeps its search fields and its ways in', ()
   }
 });
 
-test('the swarm build playbook carries the latest edition banner', () => {
-  assert.equal(CHANGELOG[0].edition, 'Edition 20.1');
-  assert.equal(CHANGELOG[0].date, '2026-10-12');
-  assert.equal(CHANGELOG[0].bannerHref, '/swarm-build-playbook/', 'the banner points at the page a search lands on');
-  assert.ok(CHANGELOG[0].bannerText, 'the latest edition must carry a banner');
+test('the swarm build playbook keeps its Edition 20.1 entry', () => {
+  const edition = CHANGELOG.find(entry => entry.edition === 'Edition 20.1');
+  assert.equal(edition?.date, '2026-10-12', 'Edition 20.1 ships the swarm build playbook');
+  assert.ok(edition.shipped.some(line => line.startsWith('/swarm-build-playbook:')), 'Edition 20.1 lists the page');
   assert.ok(CHANGELOG.slice(1).every(entry => !entry.bannerText && !entry.bannerHref), 'only the latest edition may carry a banner');
 });
 

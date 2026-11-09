@@ -4,7 +4,7 @@ import { Download, FilePenLine } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SectionNav from '@/components/SectionNav.astro';
-import { SOP_LIBRARY, SOP_DATE, SOP_VERSION, SOP_STATUS, SOP_BOUNDARY, getSopSections, sopHref, sopDownloadHref } from '@/lib/sops';
+import { SOP_LIBRARY, SOP_DATE, SOP_DATE_LABEL, SOP_VERSION, SOP_STATUS, SOP_BOUNDARY, getSopSections, sopHref, sopDownloadHref } from '@/lib/sops';
 import { workflowPresetHref } from '@/lib/workflow-plan';
 import '@/styles/sops.css';
 export const getStaticPaths = (() => SOP_LIBRARY.map(sop => ({ params: { slug: sop.slug }, props: { sop } }))) satisfies GetStaticPaths;
@@ -19,7 +19,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <nav aria-label="Breadcrumb"><a href={`${base}/library/`}>Library</a> / <a href={`${base}/sops/`}>SOPs</a> / {sop.department}</nav>
       <h1>{sop.title}</h1>
       <p class="sop-intro">{sop.summary}</p>
-      <p class="sop-meta">{SOP_VERSION} / <time datetime={SOP_DATE}>September 5, 2026</time> / {sop.department}</p>
+      <p class="sop-meta">{SOP_VERSION} / <time datetime={SOP_DATE}>{SOP_DATE_LABEL}</time> / {sop.department}</p>
       <p class="sop-status">{SOP_STATUS}</p>
       <div class="sop-actions">
         <a href={`${base}${sopDownloadHref(sop)}`} download={`${sop.slug}.md`} data-astro-reload><Download size={18} aria-hidden="true" /> Download Markdown</a>

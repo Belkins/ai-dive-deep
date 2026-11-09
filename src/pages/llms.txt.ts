@@ -33,6 +33,7 @@ export const GET: APIRoute = async () => {
   lines.push(`- [Root](${SITE}/) — the field manual entry point`);
   lines.push(`- [Library](${SITE}/library/) — searchable chapters, selected guides and tools, plus four outcome-based learning paths`);
   lines.push(`- [Workflow planner](${SITE}/workflow-planner/) — local, deterministic specification builder with inputs, approval boundaries, acceptance tests and Markdown export; it does not execute workflows`);
+  lines.push(`- [AI SOP library](${SITE}/sops/) — six untested department procedure templates (sales, marketing, operations, customer success, recruiting interview questions, bounded AI agent trials) with approval roles, stop and recovery rules, a planner preset each and Markdown downloads; every step, check and acceptance test is marked not run`);
   lines.push(`- [How to read](${SITE}/how-to-read/) — the prologue`);
   lines.push(`- [The journey](${SITE}/journey/) — chapters in narrative order, six parts`);
   lines.push(`- [Sections](${SITE}/sections/) — chapters grouped by topic`);

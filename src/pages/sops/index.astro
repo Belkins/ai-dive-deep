@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SectionNav from '@/components/SectionNav.astro';
-import { SOP_LIBRARY, SOP_INDEX_SECTIONS, SOP_STATUS, SOP_BOUNDARY, SOP_DATE, sopHref } from '@/lib/sops';
+import { SOP_LIBRARY, SOP_INDEX_SECTIONS, SOP_STATUS, SOP_BOUNDARY, SOP_DATE, SOP_DATE_LABEL, sopHref } from '@/lib/sops';
 import '@/styles/sops.css';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
@@ -12,7 +12,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <nav aria-label="Breadcrumb"><a href={`${base}/library/`}>Library</a> / SOPs</nav>
       <h1>AI SOP Library</h1>
       <p class="sop-intro">Six departmental procedures. Defined inputs, named approval roles, and evidence required before use.</p>
-      <p class="sop-meta">General-purpose templates / <time datetime={SOP_DATE}>September 5, 2026</time></p>
+      <p class="sop-meta">General-purpose templates / <time datetime={SOP_DATE}>{SOP_DATE_LABEL}</time></p>
       <p class="sop-status">{SOP_STATUS}</p>
     </header>
     <div class="sop-layout">

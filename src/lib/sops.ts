@@ -19,7 +19,8 @@ export interface Sop {
 }
 
 export const SOP_VERSION = 'draft-1';
-export const SOP_DATE = '2026-09-05';
+export const SOP_DATE = '2026-11-09';
+export const SOP_DATE_LABEL = new Date(`${SOP_DATE}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const SOP_SITE = 'https://dive.vladyslavpodoliako.com';
 export const SOP_STATUS = 'Untested general-purpose draft. All procedure steps, quality checks, and acceptance tests are not run.';
 export const SOP_BOUNDARY = 'These are proposed templates, not actual Belkins SOPs or hands-on test reports. No external actions, sends, model calls, or schedules are performed or configured. No action is preapproved.';

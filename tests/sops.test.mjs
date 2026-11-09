@@ -129,10 +129,10 @@ test('preset URLs allow only one exact known ID and reject unknown, duplicated, 
   assert.throws(() => workflow.workflowPresetHref('unknown'), /Unknown workflow preset/);
 });
 
-test('Edition 14.3 is latest and owns the only banner; home and Chapter 11 link to the library', () => {
+test('Edition 20.2 is latest and owns the only banner; home and Chapter 11 link to the library', () => {
   const { CHANGELOG } = loadTs(new URL('../src/lib/changelog.ts', import.meta.url));
-  assert.equal(CHANGELOG[0].edition, 'Edition 14.3');
-  assert.equal(CHANGELOG[0].date, '2026-09-05');
+  assert.equal(CHANGELOG[0].edition, 'Edition 20.2');
+  assert.equal(CHANGELOG[0].date, '2026-11-09');
   assert.equal(CHANGELOG[0].bannerHref, '/sops/');
   assert.equal(CHANGELOG.filter(entry => entry.bannerText || entry.bannerHref).length, 1);
   assert.ok(read('../src/pages/index.astro').includes('href={`${base}/sops/`} class="card'));
