@@ -3,8 +3,9 @@ import { Copy, Download, Eraser, FilePlus2, Printer, ShieldCheck } from 'lucide-
 import type { LucideIcon } from 'lucide-react';
 import {
   WORKFLOW_FIELDS, WORKFLOW_TEMPLATES, buildWorkflowPlan, emptyWorkflowDraft, getWorkflowTemplate,
+  isWorkflowPresetId, parseWorkflowPreset,
 } from '@/lib/workflow-plan';
-import type { WorkflowDraft, WorkflowField, WorkflowIssue } from '@/lib/workflow-plan';
+import type { WorkflowDraft, WorkflowField, WorkflowIssue, WorkflowPresetId } from '@/lib/workflow-plan';
 
 function ToolButton({ label, icon: Icon, disabled, onClick }: {
   label: string; icon: LucideIcon; disabled: boolean; onClick: () => void;
@@ -39,15 +40,43 @@ function DraftFields({ draft, issues, disabled, onChange }: {
 }
 
 export default function WorkflowPlanner() {
-  const [templateId, setTemplateId] = useState(WORKFLOW_TEMPLATES[0].id);
+  const [templateId, setTemplateId] = useState<WorkflowPresetId>(WORKFLOW_TEMPLATES[0].id);
   const [draft, setDraft] = useState(() => getWorkflowTemplate(WORKFLOW_TEMPLATES[0].id));
   const [hydrated, setHydrated] = useState(false);
   const [notice, setNotice] = useState('');
   const [copying, setCopying] = useState(false);
   const baseline = useRef(draft);
   const revision = useRef(0);
+  const loadedSearch = useRef<string | null>(null);
   const result = buildWorkflowPlan(draft);
-  useEffect(() => { setHydrated(true); return () => { revision.current += 1; }; }, []);
+  useEffect(() => {
+    const plannerPath = window.location.pathname;
+    const restorePreset = () => {
+      // Back updates location before Astro unmounts this island.
+      if (window.location.pathname !== plannerPath) return;
+      // Only an allowlisted preset ID is read; query fields never reach the draft. The URL is left alone:
+      // a history.replaceState here desyncs Astro's router, and its next in-page link click remounts the planner.
+      const selected = parseWorkflowPreset(window.location.search);
+      if (loadedSearch.current === selected.search) return;
+      loadedSearch.current = selected.search;
+      const next = getWorkflowTemplate(selected.presetId);
+      revision.current += 1;
+      setTemplateId(selected.presetId);
+      setDraft(next);
+      baseline.current = next;
+      // A plain visit keeps the default draft-only status; only a preset link or a refused option is announced.
+      setNotice(selected.rejected ? 'Unsupported URL options were ignored. Only a known preset ID can load a template. Tests have not been run.' : selected.search ? 'Template loaded. All proposed steps and tests remain not run.' : '');
+    };
+    restorePreset();
+    setHydrated(true);
+    window.addEventListener('popstate', restorePreset);
+    document.addEventListener('astro:page-load', restorePreset);
+    return () => {
+      revision.current += 1;
+      window.removeEventListener('popstate', restorePreset);
+      document.removeEventListener('astro:page-load', restorePreset);
+    };
+  }, []);
 
   function updateDraft(next: WorkflowDraft) {
     revision.current += 1;
@@ -105,7 +134,7 @@ export default function WorkflowPlanner() {
     <div className="wp-template-bar wp-no-print">
       <div className="wp-template-choice">
         <label htmlFor="workflow-template">Starting template</label>
-        <select id="workflow-template" value={templateId} disabled={!hydrated} onChange={(event) => setTemplateId(event.target.value)}>
+        <select id="workflow-template" value={templateId} disabled={!hydrated} onChange={(event) => { if (isWorkflowPresetId(event.target.value)) setTemplateId(event.target.value); }}>
           {WORKFLOW_TEMPLATES.map((template) => <option key={template.id} value={template.id}>{template.name}</option>)}
         </select>
       </div>

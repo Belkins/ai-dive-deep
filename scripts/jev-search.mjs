@@ -33,6 +33,7 @@ const CATALOG_DEPENDENCIES = {
   glossary: resolve(REPO_ROOT, 'src/lib/glossary.ts'),
   setup: resolve(REPO_ROOT, 'src/lib/setup.ts'),
   'research-notes': resolve(REPO_ROOT, 'src/lib/research-notes.ts'),
+  sops: resolve(REPO_ROOT, 'src/lib/sops.ts'),
 };
 const VALID_STATUSES = new Set(['prepared', 'ok', 'unavailable', 'error']);
 const VALID_SOURCES = new Set(['none', 'mock', 'transport', 'model', 'local-cli']);
