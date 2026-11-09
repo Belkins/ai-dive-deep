@@ -176,7 +176,7 @@ const sections = [
       ['exit 0', 'Success; a JSON object on stdout applies'],
       ['exit 2', 'Blocks if the event can; stderr is the reason'],
       ['other exit codes', 'Non-blocking; JSON or onFailure can still block'],
-      ['stdout JSON', 'Top-level decision; PreToolUse: hookSpecificOutput'],
+      ['stdout JSON', 'Stop, PostToolUse: decision; PreToolUse: permissionDecision in hookSpecificOutput'],
     ],
   },
   {

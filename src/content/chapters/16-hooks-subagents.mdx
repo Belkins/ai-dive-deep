@@ -59,7 +59,7 @@ Here's the shape of a real `PostToolUse` hook that runs Prettier after every edi
 }
 ```
 
-The `matcher` field lists tool names — here, "Edit or Write." A matcher with any character beyond letters, digits, `_`, `-`, spaces, commas and `|`, such as `^Notebook`, is read as a regex instead. Claude Code hands the hook the tool call as JSON on stdin, so `jq -r '.tool_input.file_path'` reads the file that was just edited; the same JSON carries the tool name and the session ID. For paths, `$CLAUDE_PROJECT_DIR` holds the project root. Most examples below read that JSON with `jq`.
+The `matcher` field lists tool names — here, "Edit or Write." A matcher with any character beyond letters, digits, `_`, `-`, spaces, commas and `|`, such as `^Notebook`, is read as a regex instead; `*` on its own, or no matcher at all, matches every tool. Claude Code hands the hook the tool call as JSON on stdin, so `jq -r '.tool_input.file_path'` reads the file that was just edited; the same JSON carries the tool name and the session ID. For paths, `$CLAUDE_PROJECT_DIR` holds the project root. Most examples below read that JSON with `jq`.
 
 That's the whole concept. Now we make it useful.
 
