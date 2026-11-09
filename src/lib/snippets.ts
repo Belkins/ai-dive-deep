@@ -65,7 +65,7 @@ export const HOOK_FORMAT_ON_SAVE = `{
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty') && [ -n \\"$f\\" ] || exit 0; prettier --write \\"$f\\" 2>/dev/null || ruff format \\"$f\\" 2>/dev/null; exit 0"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); [ -n \\"$f\\" ] || exit 0; prettier --write \\"$f\\" 2>/dev/null || ruff format \\"$f\\" 2>/dev/null; exit 0"
           }
         ]
       }
@@ -99,7 +99,7 @@ export const HOOK_TEST_ON_WRITE = `{
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty') || exit 0; case \\"$f\\" in *.test.*) npx vitest run \\"$f\\";; esac"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \\"$f\\" in *.test.*) npx vitest run \\"$f\\";; esac"
           }
         ]
       }
@@ -115,7 +115,7 @@ export const HOOK_SLACK_NOTIFY_LONG_TASK = `{
         "hooks": [
           {
             "type": "command",
-            "command": "s=$(jq -r '.session_id') && date +%s > \\"\${TMPDIR:-/tmp}/cc-turn-$s\\"; exit 0"
+            "command": "s=$(jq -r '.session_id') && touch \\"\${TMPDIR:-/tmp}/cc-turn-$s\\"; exit 0"
           }
         ]
       }
@@ -125,7 +125,7 @@ export const HOOK_SLACK_NOTIFY_LONG_TASK = `{
         "hooks": [
           {
             "type": "command",
-            "command": "s=$(jq -r '.session_id') && start=$(cat \\"\${TMPDIR:-/tmp}/cc-turn-$s\\" 2>/dev/null) && [ \\"$start\\" -gt 0 ] 2>/dev/null && [ $(( $(date +%s) - start )) -gt 120 ] && jq -nc --arg text \\"CC turn finished: $s\\" '{text: $text}' | curl -s -H 'Content-type: application/json' -d @- \\"$SLACK_WEBHOOK\\"; exit 0"
+            "command": "s=$(jq -r '.session_id') && [ -n \\"$(find \\"\${TMPDIR:-/tmp}/cc-turn-$s\\" -mmin +2 2>/dev/null)\\" ] && jq -nc --arg text \\"CC turn finished: $s\\" '{text: $text}' | curl -s -H 'Content-type: application/json' -d @- \\"$SLACK_WEBHOOK\\"; exit 0"
           }
         ]
       }
@@ -766,8 +766,8 @@ export const HOOK_AGENT_WATCHDOG = `#!/usr/bin/env bash
 # PreToolUse on Agent — fires every time the parent spawns a subagent
 #
 # Reads the tool call Claude Code sends as JSON on stdin (needs jq).
-# Failure mode: log file lives in ~/.claude/health/. If that dir is missing
-# or read-only, or the input can't be read, the hook logs nothing and exits 0
+# Failure mode: log file lives in ~/.claude/health/. If that dir can't be
+# created or written, or the input can't be read, the hook logs nothing and exits 0
 # (no block — never break the parent agent because logging is broken).
 # Verify dir exists weekly.
 
@@ -785,9 +785,8 @@ ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 project="\${CLAUDE_PROJECT_DIR:-$PWD}"
 # session_id and the subagent's description (first 80 chars) come from stdin;
 # jq writes the row, so quotes and newlines stay valid JSON.
-row=$(jq -c --arg ts "$ts" --arg project "$project" \\
-  '{ts: $ts, session: (.session_id // "unknown"), project: $project, desc: ((.tool_input.description // "") | tostring | .[0:80])}') || exit 0
-printf '%s\\n' "$row" >> "$log_file" || exit 0
+jq -c --arg ts "$ts" --arg project "$project" \\
+  '{ts: $ts, session: (.session_id // "unknown"), project: $project, desc: ((.tool_input.description // "") | tostring | .[0:80])}' >> "$log_file" || exit 0
 
 exit 0
 

@@ -94,7 +94,7 @@ const faq = {
 
         <div id="config" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">What does a hook config actually look like?</h2>
-          <p>A matcher (which tool, regex'd) plus a command. Claude Code sends command-hook input as <strong>JSON on stdin</strong>; for Bash, read <code>.tool_input.command</code>. The block-push contract — checked against the <a href="https://code.claude.com/docs/en/hooks">official hooks reference</a> on {BLOCK_PUSH_VERIFIED} — uses these exit codes for a <code>PreToolUse</code> command hook with no JSON decision on stdout:</p>
+          <p>A matcher (which tools, by exact name or by regex) plus a command. Claude Code sends command-hook input as <strong>JSON on stdin</strong>; for Bash, read <code>.tool_input.command</code>. The block-push contract — checked against the <a href="https://code.claude.com/docs/en/hooks">official hooks reference</a> on {BLOCK_PUSH_VERIFIED} — uses these exit codes for a <code>PreToolUse</code> command hook with no JSON decision on stdout:</p>
           <ul>
             <li><strong>Exit 0</strong> — success; no blocking decision, so the normal permission flow applies.</li>
             <li><strong>Exit 2</strong> — blocking error; stderr is fed back into the model's context, so the agent reads the reason and adapts.</li>

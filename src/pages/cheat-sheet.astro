@@ -167,16 +167,16 @@ const sections = [
   {
     h: 'Hook JSON shape',
     items: [
-      ['matcher', 'Regex vs tool name, "Edit|Write"'],
+      ['matcher', 'Tool names, "Edit|Write"; "^Notebook" is a regex'],
       ['type: command', 'Hook runs a shell command'],
       ['command', 'The shell line to execute'],
-      ['stdin', 'Event JSON: session_id, tool_name, tool_input'],
+      ['stdin', 'Event JSON: session_id; tool events add tool_input'],
       ['.tool_input.file_path', 'File the tool touched (read with jq)'],
       ['$CLAUDE_PROJECT_DIR', 'Repo root'],
-      ['exit 0', 'Success; JSON on stdout applies'],
-      ['exit 2', 'Blocks; stderr is the reason'],
-      ['other exit codes', 'Non-blocking error; call proceeds'],
-      ['stdout JSON', 'Decisions, e.g. permissionDecision'],
+      ['exit 0', 'Success; a JSON object on stdout applies'],
+      ['exit 2', 'Blocks if the event can; stderr is the reason'],
+      ['other exit codes', 'Non-blocking; JSON or onFailure can still block'],
+      ['stdout JSON', 'Top-level decision; PreToolUse: hookSpecificOutput'],
     ],
   },
   {

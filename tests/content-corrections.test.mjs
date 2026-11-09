@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { closeSync, existsSync, mkdtempSync, openSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { closeSync, existsSync, mkdtempSync, openSync, readFileSync, readdirSync, rmSync, statSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -214,7 +214,8 @@ const hookChapter = chapter('16-hooks-subagents');
 const chapterJson = (start, end) => JSON.parse(hookChapter.split(start)[1].split(end)[0].match(/```json\n([\s\S]*?)\n```/)[1]);
 const hookInput = (input) => (typeof input === 'string' ? input : JSON.stringify(input));
 // Stub tools that log each call, one bracket per argument, so a path with a space shows whether it was quoted.
-const stub = (name, extra = '') => `#!/bin/sh\n{ printf '%s' ${name}; for a in "$@"; do printf ' [%s]' "$a"; done; printf '\\n'; } >> "$HOOK_CALLS"\n${extra}exit "\${STUB_EXIT_${name.toUpperCase()}:-0}"\n`;
+// Told to fail, a stub complains on stderr the way a real formatter does.
+const stub = (name, extra = '') => `#!/bin/sh\n{ printf '%s' ${name}; for a in "$@"; do printf ' [%s]' "$a"; done; printf '\\n'; } >> "$HOOK_CALLS"\n${extra}[ "\${STUB_EXIT_${name.toUpperCase()}:-0}" = 0 ] || echo '${name}: failed' >&2\nexit "\${STUB_EXIT_${name.toUpperCase()}:-0}"\n`;
 const withStubs = (fn) => {
   const dir = mkdtempSync(join(tmpdir(), 'hook-stubs-'));
   const log = join(dir, 'calls.log');
@@ -262,8 +263,11 @@ test('no page names a hook environment variable Claude Code never sets', () => {
 
 test('hook wiring names the subagent tool Agent, as the hooks reference does', () => {
   // The reference documents the Agent tool's input and has no Task tool.
-  assert.deepEqual(srcLines(/(?:PreToolUse|PostToolUse)\W+(?:on\W+)?Task\b|"matcher": "Task"|\bTask (?:tool|call)\b/), []);
-  const agentPaths = new Set(srcLines(/(?:PreToolUse|PostToolUse)\W+(?:on\W+)?Agent\b|"matcher": "Agent"|\bAgent (?:tool|call)\b/).map((hit) => hit.slice(0, hit.indexOf(': '))));
+  // A hook wired to a tool: the tool as a whole word in a matcher value, after PreToolUse or PostToolUse on the
+  // same line (one table cell at most), or as "<tool> tool" / "<tool> call".
+  const wiring = (tool) => new RegExp(`"matcher"\\s*:\\s*"[^"]*\\b${tool}\\b[^"]*"|(?:PreToolUse|PostToolUse)[^<\\n]*?\\b${tool}\\b|\\b${tool} (?:tool|call)\\b`);
+  assert.deepEqual(srcLines(wiring('Task')), []);
+  const agentPaths = new Set(srcLines(wiring('Agent')).map((hit) => hit.slice(0, hit.indexOf(': '))));
   for (const path of ['src/lib/snippets.ts', 'src/pages/claude-code-hooks.astro']) {
     assert.ok(agentPaths.has(path), `the scan must see the Agent wiring in ${path}`);
   }
@@ -337,6 +341,7 @@ test('the published agent watchdog logs the subagent from JSON stdin and never b
 test('the published format and test hooks read the edited file from JSON stdin', () => {
   const file = '/tmp/hook demo/a b.ts';
   const testFile = '/tmp/hook demo/a b.test.ts';
+  const notATest = '/tmp/hook demo/latest.ts'; // "test" in the name, but not *.test.*
   const formatHooks = [
     ['snippet', JSON.parse(hookSnippets.HOOK_FORMAT_ON_SAVE).hooks.PostToolUse[0].hooks[0].command],
     ['chapter hook 1', chapterJson('### 1. format-on-save', '### 2.').hooks[0].command],
@@ -373,7 +378,7 @@ test('the published format and test hooks read the edited file from JSON stdin',
       assert.equal(result.status, 0, label);
       assert.equal(calls(), `npx [vitest] [run] [${testFile}]\n`, label);
       reset();
-      result = run(command, { tool_input: { file_path: file } }, { CLAUDE_FILE_PATH: '/tmp/stale.test.ts' });
+      result = run(command, { tool_input: { file_path: notATest } }, { CLAUDE_FILE_PATH: '/tmp/stale.test.ts' });
       assert.equal(result.status, 0, label);
       assert.equal(calls(), '', `${label}: only *.test.* files run`);
     }
@@ -393,12 +398,18 @@ test('the published Slack hook times the turn itself and posts JSON only after t
       const began = run(begin, { session_id: 'sess-1', prompt: 'refactor the app' }, env);
       assert.equal(began.status, 0, label);
       assert.equal(began.stdout, '', `${label}: UserPromptSubmit stdout would be added to Claude's context`);
-      const now = Math.floor(Date.now() / 1000);
-      assert.ok(Math.abs(Number(readFileSync(stamp, 'utf8')) - now) <= 5, `${label}: stamps the turn's start`);
+      const now = Date.now() / 1000;
+      assert.ok(existsSync(stamp), `${label}: stamps the turn's start`);
+      assert.ok(Math.abs(statSync(stamp).mtimeMs / 1000 - now) <= 5, `${label}: stamps the turn's start`);
+      assert.equal(run(begin, '{invalid', env).status, 0, `${label}: a failed read still exits 0`);
       let result = run(stop, { session_id: 'sess-1' }, env);
       assert.equal(result.status, 0, label);
       assert.equal(calls(), '', `${label}: a short turn posts nothing`);
-      writeFileSync(stamp, String(now - 200));
+      utimesSync(stamp, now - 100, now - 100);
+      result = run(stop, { session_id: 'sess-1' }, env);
+      assert.equal(result.status, 0, label);
+      assert.equal(calls(), '', `${label}: a 100 s turn posts nothing`);
+      utimesSync(stamp, now - 200, now - 200);
       result = run(stop, { session_id: 'sess-1' }, env);
       assert.equal(result.status, 0, label);
       // Slack's incoming webhooks take a JSON body with a text field, sent as application/json.
@@ -409,13 +420,10 @@ test('the published Slack hook times the turn itself and posts JSON only after t
       assert.equal(typeof message.text, 'string', label);
       assert.notEqual(message.text, '', label);
       assert.deepEqual(rest, [], label);
-      for (const [why, session, stampText] of [['no stamp', 'sess-2', null], ['empty stamp', 'sess-1', '']]) {
-        reset();
-        if (stampText !== null) writeFileSync(stamp, stampText);
-        result = run(stop, { session_id: session }, env);
-        assert.equal(result.status, 0, `${label}, ${why}: a Stop hook that exits 2 keeps Claude going`);
-        assert.equal(calls(), '', `${label}, ${why}`);
-      }
+      reset();
+      result = run(stop, { session_id: 'sess-2' }, env);
+      assert.equal(result.status, 0, `${label}, no stamp: a Stop hook that exits 2 keeps Claude going`);
+      assert.equal(calls(), '', `${label}, no stamp`);
     });
   }
 });
@@ -439,9 +447,19 @@ test('the published prompt-cache guard reads the prompt from JSON stdin', () => 
 
 test('the cheat sheet gives the hook exit codes the reference documents', () => {
   const block = source('src/pages/cheat-sheet.astro').split("h: 'Hook JSON shape'")[1].split("h: '")[0];
-  assert.match(block, /\['stdin', 'Event JSON: session_id, tool_name, tool_input'\]/);
-  assert.match(block, /\['exit 2', 'Blocks; stderr is the reason'\]/);
-  assert.match(block, /\['other exit codes', 'Non-blocking error; call proceeds'\]/);
+  // Checks what each row says, not its wording.
+  const rows = Object.fromEntries([...block.matchAll(/\['([^']+)', '([^']*)'\]/g)].map(([, key, value]) => [key, value]));
+  const row = (key) => {
+    assert.ok(Object.hasOwn(rows, key), `the block keeps its ${key} row`);
+    return rows[key];
+  };
+  assert.match(row('stdin'), /tool_input/, 'the input arrives as JSON on stdin');
+  row('.tool_input.file_path');
+  assert.doesNotMatch(row('exit 0'), /block/i, 'exit 0 never blocks');
+  assert.match(row('exit 2'), /block/i);
+  assert.match(row('exit 2'), /stderr/, 'exit 2 hands Claude stderr as the reason');
+  assert.match(row('other exit codes'), /non-blocking/i, 'other exit codes do not block on their own');
+  assert.match(row('stdout JSON'), /hookSpecificOutput/, 'PreToolUse returns its decision inside hookSpecificOutput');
   assert.doesNotMatch(block, /non-zero/);
 });
 
