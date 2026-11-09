@@ -124,7 +124,7 @@ export const SOP_LIBRARY: readonly Sop[] = [
     summary: 'Compare approved dated sources with the previous reviewed state and propose decisions only when a verified change matters.',
     presetId: 'weekly-research-brief', owner: 'Research analyst', reviewer: 'Operations lead',
     trigger: 'A manually requested observation window closes and its source list is approved. No verified change means skip; no recurring job is created.',
-    purpose: 'Turn verified changes into a short decision brief for an operating team. A proposed weekly cadence is an observation window, not an obligation to manufacture an update or a schedule configured by this SOP.',
+    purpose: 'Turn verified changes into a short decision brief for an operating team. The planner preset\'s weekly cadence is an observation window, not an obligation to manufacture an update or a schedule configured by this SOP.',
     inputs: [
       'Observation window with start/end dates and time zone, plus a unique run identifier.',
       'Approved dated source material, previous reviewed brief, and frozen evidence register.',
@@ -260,7 +260,7 @@ export const SOP_LIBRARY: readonly Sop[] = [
     slug: 'ai-agent-execution', department: 'AI Agents',
     title: 'AI Agent SOP: Bounded trial and recovery specification',
     summary: 'Specify a synthetic read-only trial, permission boundaries, failure cases, and recovery evidence without running an agent.',
-    presetId: 'bounded-agent-trial', owner: 'Agent operator', reviewer: 'Agent owner and recovery approver',
+    presetId: 'bounded-agent-trial', owner: 'Agent operator', reviewer: 'Agent owner and recovery owner',
     trigger: 'A synthetic fixture and explicit tool/data allowlist are approved for trial planning. The specification does not start a runner.',
     purpose: 'Define a future trial within explicit data, tool, write, time, and cost boundaries. Validation must be designed for a disposable synthetic environment before any production use. This page and its planner export do not execute tasks or call a model.',
     inputs: [

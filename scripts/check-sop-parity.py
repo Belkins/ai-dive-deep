@@ -4,7 +4,7 @@
 Page and download come from src/lib/sops.ts through two templates, and the unit tests only read the source.
 This reads what GitHub Pages serves (dist/sops/<slug>/index.html and dist/sops/<slug>.md) and fails when a page
 shows other sections, items or Not run badges than its download, drops the download's status, boundary or preset
-note, carries a noindex robots tag, points its canonical elsewhere, or is missing from the sitemap.
+note, carries a noindex robots tag, or is missing from the sitemap. Canonical URLs are check-seo.mjs's job.
 """
 from html.parser import HTMLParser
 from pathlib import Path
@@ -18,11 +18,11 @@ VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'met
 
 class SopPage(HTMLParser):
     """Collects each <section data-section-target> (its h2, [data-sop-content] items and badge texts), the
-    header notices (p.sop-status, p.sop-boundary), the robots meta and the canonical link."""
+    header notices (p.sop-status, p.sop-boundary) and the robots meta."""
 
     def __init__(self, html):
         super().__init__(convert_charrefs=True)
-        self.sections, self.notices, self.robots, self.canonical = [], [], [], None
+        self.sections, self.notices, self.robots = [], [], []
         self.in_section = False
         self.capture = None
         self.depth = 0
@@ -32,8 +32,6 @@ class SopPage(HTMLParser):
     def head_tag(self, tag, attrs):
         if tag == 'meta' and (attrs.get('name') or '').lower() == 'robots':
             self.robots.append(attrs.get('content') or '')
-        if tag == 'link' and attrs.get('rel') == 'canonical':
-            self.canonical = attrs.get('href')
 
     def handle_starttag(self, tag, attrs):
         if self.capture:
@@ -133,8 +131,6 @@ def check(root):
         url = f'{SITE}/sops/{slug}/'
         if any('noindex' in content.lower() for content in page.robots):
             failures.append(f'{slug}: the page carries a noindex robots tag')
-        if page.canonical != url:
-            failures.append(f'{slug}: canonical is {page.canonical}, expected {url}')
         if f'<loc>{url}</loc>' not in sitemap:
             failures.append(f'{slug}: {url} is not in the sitemap')
         items += sum(len(section['items']) for section in page.sections)

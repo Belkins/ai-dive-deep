@@ -80,8 +80,14 @@ test('a plain or tracked visit keeps the default draft-only status; a preset lin
     assert.equal(h.state.notice, '', path);
     h.cleanup();
   }
+  // Back to the plain planner loads the default template and clears the earlier notice, instead of leaving
+  // "Template loaded" beside a different template.
   const h = harness('/workflow-planner/?preset=content-review');
   assert.match(h.state.notice, /^Template loaded\./);
+  h.navigate('/workflow-planner/');
+  h.window.dispatchEvent(new Event('popstate'));
+  assert.equal(h.state.preset, 'weekly-research-brief');
+  assert.equal(h.state.notice, '');
   h.cleanup();
 });
 test('no planner code writes browser history, including Load template and Clear', () => {
