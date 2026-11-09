@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 
-// May 2026 Anthropic pricing (per million tokens). Adjust if pricing moves.
+// November 2026 Anthropic 5.5 pricing (per million tokens, prompts ≤100K on Haiku 5.5).
 const PRICES = {
-  haiku:  { input: 0.80,  output: 4.00,  cached: 0.08 },
-  sonnet: { input: 3.00,  output: 15.00, cached: 0.30 },
-  opus:   { input: 15.00, output: 75.00, cached: 1.50 },
+  haiku:  { input: 0.10,  output: 0.50,  cached: 0.01 },
+  sonnet: { input: 2.00,  output: 10.00, cached: 0.10 },
+  opus:   { input: 4.00,  output: 20.00, cached: 0.20 },
 };
 
 const SR_ENG_FULLY_LOADED = 120000; // USD/yr
@@ -119,7 +119,7 @@ export default function TokenBurnCalculator() {
         </div>
 
         <div className="px-5 pb-4 text-xs leading-relaxed" style={{ color: 'rgb(var(--muted))' }}>
-          May 2026 pricing. The "without caching" line is the real bill people ship when their CLAUDE.md keeps changing. Cache caps at 95% in the slider — anything higher means you stopped writing.
+          Claude 5.5 lineup pricing (Haiku 5.5 $0.10/$0.50, Sonnet 5.5 $2/$10, Opus 5.5 $4/$20; 0.05× cache reads on Opus/Sonnet 5.5). The "without caching" line is the real bill people ship when their CLAUDE.md keeps changing. Cache caps at 95% in the slider — anything higher means you stopped writing.
         </div>
       </div>
     </div>

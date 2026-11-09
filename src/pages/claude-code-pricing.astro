@@ -19,7 +19,7 @@ import PullQuote from '@/components/PullQuote.astro';
 // "(legacy)" and "(specialized)" follow the groups in Anthropic's models docs.
 const PRICES = {
   lastVerified: '2026-11-08', // plans, against claude.com/pricing
-  apiLastVerified: '2026-11-08', // API rates, against the platform.claude.com pricing docs
+  apiLastVerified: '2026-11-09', // API rates, against the platform.claude.com pricing docs
   plans: [
     { plan: 'Free', price: '$0', cc: 'No', note: 'chat only — Claude Code is not on the feature list' },
     { plan: 'Pro', price: '$20/mo · $17/mo annual', cc: 'Yes', note: 'the entry ticket — usage caps every 5 hours and every week; Fable paid with usage credits' },
@@ -30,12 +30,14 @@ const PRICES = {
     { plan: 'Enterprise', price: '$20/seat + usage at API rates', cc: 'Yes', note: 'billed annually, 20-seat minimum — usage cost scales with model and task' },
   ],
   api: [
-    { model: 'Fable 5.1', input: '$10', output: '$50', read: 'the capability ceiling — “For demanding reasoning and long-horizon agentic work”' },
+    { model: 'Fable 5.2', input: '$8', output: '$40', read: 'the capability ceiling — “Our most intelligent model for complex reasoning and long-horizon agentic work” (20% below Fable 5.1)' },
     { model: 'Opus 5.5', input: '$4', output: '$20', read: 'the top Opus — “For long-running agentic coding and knowledge work”' },
     { model: 'Sonnet 5.5', input: '$2', output: '$10', read: 'the workhorse — “The best combination of speed and intelligence”' },
     { model: 'Haiku 5.5 (prompts up to 100K tokens)', input: '$0.10', output: '$0.50', read: 'the triage tier — “For high-volume, latency-sensitive tasks such as classification, extraction, and routing”' },
     { model: 'Haiku 5.5 (prompts over 100K tokens)', input: '$0.50', output: '$2.50', read: 'a request whose prompt is over 100K tokens, cache reads and writes included, pays these rates' },
+    { model: 'Mythos 5.2 (specialized)', input: '$8', output: '$40', read: 'same input, output, and 0.025× cache-read rates as Fable 5.2; the pricing docs mark Mythos models “Verification required”' },
     { model: 'Mythos 5.1 / Mythos 5 (specialized)', input: '$10', output: '$50', read: 'same input and output rates as Fable 5.1; the pricing docs mark both “Verification required”' },
+    { model: 'Fable 5.1 (legacy)', input: '$10', output: '$50', read: 'the September 2026 Fable; superseded by Fable 5.2 at $8/$40, with 0.025× cache reads' },
     { model: 'Fable 5 (legacy)', input: '$10', output: '$50', read: 'same sticker as Fable 5.1, but cache hits bill at the standard 0.1×' },
     { model: 'Opus 5 (legacy)', input: '$5', output: '$25', read: 'the July 2026 Opus; Opus 5.5 lists below it' },
     { model: 'Sonnet 5 (legacy)', input: '$2', output: '$10', read: 'the September 1 step to $3/$15 was cancelled, so $2/$10 stayed its price' },
@@ -43,7 +45,7 @@ const PRICES = {
     { model: 'Sonnet 4.6 (legacy)', input: '$3', output: '$15', read: 'superseded by Sonnet 5 and Sonnet 5.5; uses the previous tokenizer' },
     { model: 'Haiku 4.5 (legacy)', input: '$1', output: '$5', read: 'the previous triage tier, superseded by Haiku 5.5' },
   ],
-  // Cache reads: `read` is the standard multiplier; Opus 5.5 + Sonnet 5.5 and Fable 5.1 + Mythos 5.1 read cheaper.
+  // Cache reads: `read` is the standard multiplier; Opus 5.5 + Sonnet 5.5 and Fable 5.2/5.1 + Mythos 5.2/5.1 read cheaper.
   cache: { write5m: '1.25×', write1h: '2×', read: '0.1×', readOpusSonnet: '0.05×', readFable: '0.025×' },
   batchDiscount: '50%',
   max20xReceipt: '~$200 a seat', // derived from Ch 29: two Max 20x subs ≈ $400/mo total
@@ -66,7 +68,7 @@ const times = (a: string, b: string) => {
   return `${input}×`;
 };
 const gap = (mult: string) => `${Math.round(1 / parseFloat(mult))}×`; // "0.1×" → "10×": fresh input vs a cache read
-const fablePremium = times('Fable 5.1', 'Opus 5.5');
+const fablePremium = times('Fable 5.2', 'Opus 5.5');
 // A plans row's prices, read by label so prose reads the same cell the table shows, in either order: of the parts that
 // hold a price, the one saying "annual" or "year" is the annual price and the other is monthly. No monthly price, or two, fails the build.
 const plan = (name: string) => {
@@ -217,7 +219,7 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${plan('Pro').month
         <div id="api-cost" data-section-target class="scroll-mt-24 mt-14">
           <h2 class="font-display text-3xl mb-4">What does the API really cost per month?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
-            <p>The pricing page shows input and output. The invoice has four numbers: input, output (~5× the input rate), cache write ({PRICES.cache.write5m} input for the 5-minute tier, {PRICES.cache.write1h} for 1-hour), and cache read ({PRICES.cache.read} input as standard, {PRICES.cache.readOpusSonnet} on Opus 5.5 and Sonnet 5.5, {PRICES.cache.readFable} on Fable 5.1 and Mythos 5.1). That gap between a cache read and fresh input — {gap(PRICES.cache.read)} as standard, {gap(PRICES.cache.readOpusSonnet)} on Opus 5.5 and Sonnet 5.5, {gap(PRICES.cache.readFable)} on Fable 5.1 — is the entire game. Rates per million tokens, as listed on {PRICES.apiLastVerified}:</p>
+            <p>The pricing page shows input and output. The invoice has four numbers: input, output (~5× the input rate), cache write ({PRICES.cache.write5m} input for the 5-minute tier, {PRICES.cache.write1h} for 1-hour), and cache read ({PRICES.cache.read} input as standard, {PRICES.cache.readOpusSonnet} on Opus 5.5 and Sonnet 5.5, {PRICES.cache.readFable} on Fable 5.2, Fable 5.1, Mythos 5.2, and Mythos 5.1). That gap between a cache read and fresh input — {gap(PRICES.cache.read)} as standard, {gap(PRICES.cache.readOpusSonnet)} on Opus 5.5 and Sonnet 5.5, {gap(PRICES.cache.readFable)} on Fable 5.2 and Fable 5.1 — is the entire game. Rates per million tokens, as listed on {PRICES.apiLastVerified}:</p>
             <div class="overflow-x-auto my-2">
               <table class="w-full text-sm border-collapse">
                 <thead>
@@ -274,8 +276,8 @@ const description = `Claude Code pricing, ${stampMonth}: Pro ${plan('Pro').month
           <h2 class="font-display text-3xl mb-4">What does Fable 5 change about Claude Code pricing?</h2>
           <div class="space-y-4 leading-relaxed text-fg/88">
             <p>Two things — a clock and a sticker. The clock ran out: Claude Fable 5 <em>was</em> included in paid-plan limits from June 9 to <strong>July 19, 2026</strong> — the promotion was first announced to end June 22 — and Pro and standard Team seats then moved to usage credits. As of {PRICES.lastVerified}, <a href="https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan" rel="noopener">Anthropic's plan help page</a> lists Fable 5 and Fable 5.1 as a standard part of Max, Ultra and Team premium seats, up to half the weekly limit, while Pro and standard Team seats pay with usage credits. So on Pro the A/B costs usage credits; on Max and Ultra it comes out of your weekly allowance.</p>
-            <p>The sticker: Fable 5.1 lists at {rate('Fable 5.1')} per million tokens on the API — {fablePremium} Opus 5.5 — so every cache miss costs {fablePremium} as much in fresh input. The full pricing file — the ladder, the plan mechanics, when the premium is and isn't worth it — is <a href="/fable-5/pricing/">Fable 5 pricing</a>; the in-terminal view is <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a>.</p>
-            <p><strong>What changed since:</strong> <a href="/opus-5/">Opus 5</a> shipped July 24, 2026 at {rate('Opus 5 (legacy)')}, the same sticker as Opus 4.8. Then the lineup turned over — <a href="/chapters/50-claude-fable-5-1/">Fable 5.1</a> on September 1, <a href="/chapters/54-claude-opus-5-5/">Opus 5.5</a> on September 22, <a href="/chapters/55-claude-sonnet-5-5/">Sonnet 5.5</a> on September 28 and Haiku 5.5 on October 7, 2026, per Anthropic's models overview. Opus 5.5 lists at {rate('Opus 5.5')}, below Opus 5, while Fable 5.1 kept the {rate('Fable 5.1')} sticker, so the premium the "is it worth it" question has to clear is {fablePremium}, up from {times('Fable 5 (legacy)', 'Opus 5 (legacy)')}. The read of Opus 5 against Fable 5 — independent indices and Anthropic's routing at the time — is on <a href="/opus-5/#hierarchy">the Opus 5 model file</a>.</p>
+            <p>The sticker: Fable 5.2 lists at {rate('Fable 5.2')} per million tokens on the API — {fablePremium} Opus 5.5, down from Fable 5.1 at {rate('Fable 5.1 (legacy)')} ({times('Fable 5.1 (legacy)', 'Opus 5.5')} Opus 5.5) — so every cache miss costs {fablePremium} as much in fresh input. The full pricing file — the ladder, the plan mechanics, when the premium is and isn't worth it — is <a href="/fable-5/pricing/">Fable 5 pricing</a>; the in-terminal view is <a href="/fable-5/claude-code/">Fable 5 in Claude Code</a>.</p>
+            <p><strong>What changed since:</strong> <a href="/opus-5/">Opus 5</a> shipped July 24, 2026 at {rate('Opus 5 (legacy)')}, the same sticker as Opus 4.8. Then the lineup turned over — <a href="/chapters/50-claude-fable-5-1/">Fable 5.1</a> on September 1, <a href="/chapters/54-claude-opus-5-5/">Opus 5.5</a> on September 22, <a href="/chapters/55-claude-sonnet-5-5/">Sonnet 5.5</a> on September 28, Haiku 5.5 on October 7, and Fable 5.2 on November 9, 2026, per Anthropic's models overview. Opus 5.5 lists at {rate('Opus 5.5')}, below Opus 5, while Fable 5.2 cut the frontier sticker from Fable 5.1's {rate('Fable 5.1 (legacy)')} to Fable 5.2's {rate('Fable 5.2')}, bringing the premium over Opus 5.5 back to {fablePremium} (matching the {times('Fable 5 (legacy)', 'Opus 5 (legacy)')} gap between Fable 5 and Opus 5). The read of Opus 5 against Fable 5 — independent indices and Anthropic's routing at the time — is on <a href="/opus-5/#hierarchy">the Opus 5 model file</a>.</p>
           </div>
         </div>
 

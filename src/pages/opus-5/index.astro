@@ -73,7 +73,7 @@ const faq = {
   <HistoricalModelNotice period="July 2026 launch, with dated August comparisons" />
 
   <p class="container-wide mt-4 text-sm">For the September successor, read the <a href="/chapters/54-claude-opus-5-5/">Claude Opus 5.5 field guide</a>. This page preserves the older Opus 5 evidence.</p>
-  <p class="container-wide mt-4 text-sm">Considering an escalation from Opus? Read the source-backed <a href="/chapters/50-claude-fable-5-1/">Fable 5.1 workflow guide</a> and <a href="/chapters/49-gpt-6-astra/">Astra evaluation guide</a>. Keep your baseline until a matched trial supports switching.</p>
+  <p class="container-wide mt-4 text-sm">Considering an escalation from Opus? Read the source-backed <a href="/chapters/50-claude-fable-5-1/">Fable 5.1 workflow guide</a> (and see <a href="/claude-code-pricing/">Claude Code pricing</a> for November's Fable 5.2 at $8/$40) and <a href="/chapters/49-gpt-6-astra/">Astra evaluation guide</a>. Keep your baseline until a matched trial supports switching.</p>
   <section class="container-wide pt-16 pb-8">
     <div class="eyebrow eyebrow-loud mb-3 text-accent">Model file · Opus 5</div>
     <h1>Claude Opus 5 — the frontier stopped being the expensive one.</h1>
@@ -262,7 +262,7 @@ const faq = {
               </li>
               <li class="rounded-lg border p-4 border-line">
                 <strong>3. Cap subagent spawning before you upgrade Claude Code past v2.1.219.</strong> Nesting depth silently went from 1 to 3 on the same day as a model Anthropic describes as delegating to subagents "more readily than prior models."
-                <p class="mt-1 mb-0 text-sm text-muted">Set <code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1</code> to disable nesting; <code>CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION</code> defaults to 200. A depth-3 tree of Opus 5 leaves at <code>high</code> is the documented anti-pattern — Anthropic's own effort table names <code>low</code> as the subagent setting, and its model matrix names Haiku 4.5. See <a href={`${base}/swarms/`}>the swarm chapter</a> for the shape of the bill.</p>
+                <p class="mt-1 mb-0 text-sm text-muted">Set <code>CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1</code> to disable nesting (note: the launch-week <code>CLAUDE_CODE_MAX_SUBAGENTS_PER_SESSION</code> cap was later removed in Claude Code v2.1.224). A depth-3 tree of Opus 5 leaves at <code>high</code> is the documented anti-pattern — Anthropic's own effort table names <code>low</code> as the subagent setting, and its model matrix names Haiku. See <a href={`${base}/swarms/`}>the swarm chapter</a> for the shape of the bill.</p>
               </li>
               <li class="rounded-lg border p-4 border-line">
                 <strong>4. Run a fresh effort sweep.</strong> Anthropic explicitly says not to inherit <code>xhigh</code> from Opus 4.7 or 4.8, and Cognition's data says Opus 5 peaks at <code>medium</code> on FrontierCode.

@@ -1,14 +1,13 @@
-name: Verify pull request
+name: Verify (manual dispatch — run checks locally before pushing to main)
 
 on:
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: verify-${{ github.event.pull_request.number }}
+  group: verify-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

@@ -14,8 +14,15 @@ const dataUrl = `data:text/javascript;base64,${Buffer.from(outputText).toString(
 const { MODEL_RELEASES, MODEL_RELEASES_CHECKED } = await import(dataUrl);
 
 test('new models retain exact API identities, release dates, and source provenance', () => {
-  assert.equal(MODEL_RELEASES_CHECKED, '2026-09-05');
-  assert.deepEqual(MODEL_RELEASES.map((m) => m.modelId), ['gpt-6-astra', 'claude-fable-5-1']);
+  assert.equal(MODEL_RELEASES_CHECKED, '2026-11-09');
+  assert.deepEqual(MODEL_RELEASES.map((m) => m.modelId), [
+    'claude-fable-5-2',
+    'claude-haiku-5-5',
+    'claude-sonnet-5-5',
+    'claude-opus-5-5',
+    'gpt-6-astra',
+    'claude-fable-5-1',
+  ]);
   for (const model of MODEL_RELEASES) {
     assert.ok(model.released <= MODEL_RELEASES_CHECKED);
     assert.ok(model.sources.length >= 3);
@@ -25,7 +32,13 @@ test('new models retain exact API identities, release dates, and source provenan
 });
 
 test('pricing qualifiers and fallback boundaries remain adjacent to headline rates', () => {
-  const [astra, fable] = MODEL_RELEASES;
+  const byId = Object.fromEntries(MODEL_RELEASES.map((m) => [m.modelId, m]));
+  const astra = byId['gpt-6-astra'];
+  const fable = byId['claude-fable-5-1'];
+  const fable52 = byId['claude-fable-5-2'];
+  assert.equal(fable52.inputPerMillion, 8);
+  assert.equal(fable52.outputPerMillion, 40);
+  assert.match(fable52.pricingNote, /Cache reads cost \$0\.20/);
   assert.equal(astra.inputPerMillion, 10);
   assert.equal(fable.inputPerMillion, 10);
   assert.equal(astra.outputPerMillion, 50);

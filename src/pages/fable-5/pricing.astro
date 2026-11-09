@@ -20,19 +20,19 @@ const navItems = [
 const faqItems = [
   {
     q: 'How much does Claude Fable 5 cost?',
-    a: 'API pricing is $10 per million input tokens and $50 per million output tokens — exactly 2× Claude Opus 4.8 ($5/$25). Same price for Claude Mythos 5. Context window is 1M tokens, max output 128K. Model id: claude-fable-5.',
+    a: 'Fable 5 (and Fable 5.1) launched at $10 per million input tokens and $50 per million output tokens — 2× Claude Opus 4.8 ($5/$25). Fable 5.2 (November 2026) reduced the frontier sticker to $8/$40 per million tokens — 2× Claude Opus 5.5 ($4/$20) — with cache reads at 2.5% of input ($0.20/Mtok). Context window is 1M tokens, max output 128K.',
   },
   {
     q: 'Is Fable 5 free?',
-    a: 'No. On the Claude API it is metered at $10/$50 per million tokens from the first call. On paid Claude plans (Pro, Max, Team, seat-based Enterprise) it is included in plan limits June 9–22, 2026 — a free evaluation window, not a free tier. After June 22 it requires usage credits on those plans.',
+    a: 'No. On the Claude API it is metered per token from the first call. On paid Claude plans (Pro, Max, Team, seat-based Enterprise) Fable 5 was included in plan limits during the June 9–July 19, 2026 launch promotion (originally announced to end June 22). Since July 19, Fable models remain included on Max, Ultra, and Team Premium up to 50% of the weekly limit, while Pro and Team Standard require usage credits.',
   },
   {
     q: 'Is Fable 5 included in Claude Pro and Max?',
-    a: 'Yes, from June 9 to June 22, 2026, within your plan limits — same for Team and seat-based Enterprise. After June 22 it needs usage credits to continue. Anthropic says it aims to restore Fable 5 as standard on plans when capacity allows.',
+    a: 'During the June 9–July 19, 2026 launch promotion (extended from the original June 22 date), Fable 5 was included across all paid plans. Today, Fable models are included as a standard part of Max, Ultra, and Team Premium seats up to 50% of the weekly allowance; Pro and Team Standard seats use usage credits.',
   },
   {
     q: 'What happens to Fable 5 after June 22, 2026?',
-    a: 'On subscription plans it switches from plan-included to usage credits. The Claude Code banner says it plainly: "Included in your plan limits until Jun 22, then switch to usage credits to continue." API and consumption-based Enterprise access are unaffected — those were metered at $10/$50 from day one.',
+    a: 'The June 22 deadline on the launch banner was extended to July 19, 2026. After July 19, Pro and Team Standard switched to usage credits, while Max, Ultra, and Team Premium kept Fable models included up to half of their weekly limit. API and consumption-based Enterprise access are metered per token throughout.',
   },
   {
     q: 'Is Fable 5 cheaper than Mythos Preview?',
@@ -79,7 +79,7 @@ const faq = {
         <div id="answer" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
           <div class="rounded-xl border p-5 border-line bg-accent/5">
-            <p class="m-0 leading-relaxed"><strong>Claude Fable 5 costs $10 per million input tokens, $50 per million output</strong> — exactly 2× Opus 4.8. On paid Claude plans it's included in plan limits June 9–22, 2026; usage credits after. The sticker doubled. Whether your tasks got cheaper is your eval to run — decide on cost per finished task, not dollars per token.</p>
+            <p class="m-0 leading-relaxed"><strong>Claude Fable 5 launched at $10 per million input tokens, $50 per million output</strong> — 2× Opus 4.8 (since succeeded by <a href="/chapters/50-claude-fable-5-1/">Fable 5.1</a> at $10/$50 and <strong>Fable 5.2</strong> at $8/$40, 2× Opus 5.5, with 0.025× cache reads; see <a href="/claude-code-pricing/">current Claude Code pricing</a>). The June 9–22 launch promo window was extended to July 19, 2026; today Fable models are included on Max, Ultra, and Team Premium up to 50% of the weekly limit (usage credits on Pro and Team Standard). Decide on cost per finished task, not dollars per token.</p>
           </div>
         </div>
 

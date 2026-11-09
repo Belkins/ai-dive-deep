@@ -8,7 +8,7 @@ const cfoMailto = `mailto:?subject=${encodeURIComponent('The case for our AI spe
 
 ${cfoShareUrl}
 
-The short version: one mid-senior engineer costs $120K/year fully loaded. At Sonnet pricing, that same money buys ~24 billion tokens. Even at heavy use, the AI does 5-10x the volume for the same dollar. Math + receipts at the link.`)}`;
+The short version: one mid-senior engineer costs $120K/year fully loaded. At Sonnet 5.5 pricing ($2/$10 per million tokens, $0.10 cache reads), that same money buys ~30–45 billion tokens. Even at heavy use, the AI does 5-10x the volume for the same dollar. Math + receipts at the link.`)}`;
 ---
 <BaseLayout title="The case for the AI spend" description="600 words for your CFO. Forward in Slack. Defend the spend. Unblock the budget.">
   <section class="container-prose pt-16 pb-4">
@@ -31,7 +31,7 @@ The short version: one mid-senior engineer costs $120K/year fully loaded. At Son
 
     <p>One mid-senior engineer in the US costs <strong>~$120,000 a year fully loaded</strong>. Salary plus benefits, taxes, equipment, the all-in number your finance team will recognize.</p>
 
-    <p>At today's Anthropic pricing — roughly <strong>$3 per million input tokens for Sonnet, $15 per million output</strong>, with prompt caching dropping input to ~$0.30 — that same $120K buys somewhere in the band of <strong>20-30 billion tokens a year</strong>, depending on cache hit rates and model mix.</p>
+    <p>At today's Anthropic pricing — <strong>$2 per million input tokens for Sonnet 5.5, $10 per million output</strong>, with prompt caching dropping cache reads to $0.10 (0.05× input; previously $3/$15 and ~$0.30 on Sonnet 4.6) — that same $120K buys somewhere in the band of <strong>30–45 billion tokens a year</strong>, depending on cache hit rates and model mix.</p>
 
     <p>At our actual burn rate of 3-10 billion tokens a month — which sounds insane until you do the math — we're spending the cost of <strong>one to four engineers</strong> on AI that does the work of a small team running 24/7. Not a flex. Actual ratio.</p>
 
@@ -90,7 +90,7 @@ The short version: one mid-senior engineer costs $120K/year fully loaded. At Son
 
     <h3>"Why not just give the team ChatGPT Plus?"</h3>
 
-    <p>ChatGPT Plus is $20 per seat per month. It's a chat window. It doesn't run on a schedule. It doesn't talk to our CRM. It doesn't remember what we decided last Tuesday. Fifty seats of ChatGPT Plus is $1,000/month for fifty operators each individually re-typing the morning briefing context every day. The AI operating layer is one budget line that delivers a finished canvas to all of them, every morning, before they open Slack. <strong>Same cost, 50x the output, zero training</strong>.</p>
+    <p>ChatGPT Plus is $20 per seat per month. Even with personal memory and scheduled prompts inside an individual user's chat account, it's still fifty isolated seats — not a shared company automation pipeline wired to your CRM, repos, and Slack channels with version-controlled skills and hooks. Fifty seats of ChatGPT Plus is $1,000/month for fifty operators each running their own chat window. The AI operating layer is one budget line that delivers a finished, audited canvas to all of them, every morning, before they open Slack. <strong>Same cost, 50x the output, zero training</strong>.</p>
 
     <h3>"Why both Codex AND Claude Code?"</h3>
 

@@ -245,7 +245,7 @@ The CLI isn't pre-baked in Daytona's base image — install it inside the sandbo
 
 ## Plan mode — preview without execution
 
-`claude --plan` (or the in-session toggle) makes the agent describe what it would do without doing it. No Edit, no Write, no Bash side effects. It reads, it thinks, it tells you the plan.
+`claude --permission-mode plan` (or the in-session `Shift+Tab` toggle) makes the agent describe what it would do without doing it. No Edit, no Write, no Bash side effects. It reads, it thinks, it tells you the plan.
 
 I use plan mode for:
 
@@ -381,12 +381,12 @@ Every major agent runtime now has its own version of this flag. None of them are
 | Runtime | Bypass flag | Sandbox model | Network | Recovery |
 |---|---|---|---|---|
 | **Claude Code** | `--dangerously-skip-permissions` (or `defaultMode: "bypassPermissions"`) | Native: Seatbelt / bubblewrap via `/sandbox`. Opt-in. | Proxy + domain allowlist; no TLS termination | OTel metrics, ConfigChange hooks, git rollback. `--auto` softer alternative. |
-| **Cursor** | "Auto-Run in Sandbox" (default) | App-level only. No OS sandbox. | Domain filter; denylist deprecated 1.3 after [Backslash bypasses](https://www.backslash.security/blog/cursor-ai-security-flaw-autorun-denylist) | Checkpoints (preview/restore). Allowlist silently ignored when Auto-Run is on. |
+| **Cursor** | `Auto-review` (sandboxed), `Allowlist`, or `Run Everything` (unsandboxed) | Native OS sandbox under `Auto-review`: Seatbelt on macOS, Landlock + Bubblewrap on Linux | Blocked by default inside the OS sandbox unless allowlisted | Checkpoints (preview/restore). Historical denylist deprecated in 1.3 after [Backslash bypasses](https://www.backslash.security/blog/cursor-ai-security-flaw-autorun-denylist). |
 | **Codex CLI** | `--dangerously-bypass-approvals-and-sandbox` (alias `--yolo`) | Native: Seatbelt / bubblewrap / Windows Sandbox | Blocked under `workspace-write`; binary | `--json` transcript. Two-axis model (`--sandbox` × `--ask-for-approval`) is the cleanest design of the five. |
-| **Antigravity** | Terminal Policy "Turbo" + auto-accept edits | No OS sandbox; Docker recommended | Classifier covers `curl`/`wget`; no domain proxy | `gemini.md` rules, git-branch-per-session. Persistent code-exec vuln ([Mindgard](https://mindgard.ai/blog/google-antigravity-persistent-code-execution-vulnerability)). |
+| **Antigravity** | Terminal Policy "Turbo" (disables OS sandbox) + auto-accept edits | Native OS sandbox on by default (macOS Seatbelt / Linux namespaces); disabled in Turbo mode | Network blocked inside default terminal sandbox; unrestricted in Turbo | `gemini.md` rules, git-branch-per-session. Historical config vuln ([Mindgard](https://mindgard.ai/blog/google-antigravity-persistent-code-execution-vulnerability)). |
 | **Cowork / Agent Mode** | Inherent — the managed VM is the bypass | Anthropic VM per session | 3 tiers: None / Trusted / Custom allowlist | Full audit log, auto VM termination, credential proxy keeps tokens outside the sandbox. |
 
-**The verdict.** Codex CLI has the cleanest "go fast safely" story locally — the two-axis model (sandbox × approval policy) is the only one where you can describe risk posture in two values, and the enforcement is a real OS sandbox. Claude Code is a close second locally and the best of the five remotely via Cowork's managed VM. Cursor and Antigravity ship app-level "sandboxes" that aren't OS-enforced — fine for a focused workspace, dangerous as a default trust boundary, both with documented bypasses in the last six months.
+**The verdict.** Codex CLI has the cleanest "go fast safely" story locally — the two-axis model (sandbox × approval policy) is the only one where you can describe risk posture in two values, and the enforcement is a real OS sandbox. Claude Code is a close second locally and the best of the five remotely via Cowork's managed VM. Cursor (`Auto-review`) and Antigravity now ship real OS-level terminal sandboxes (Seatbelt on macOS, Landlock/bubblewrap or namespaces on Linux), but their full-bypass toggles (`Run Everything` in Cursor, Terminal Policy `Turbo` in Antigravity) turn that OS sandbox off — keep them in sandboxed auto-run or put the whole session inside a container.
 
 If you want one recommendation: **`codex --sandbox workspace-write --ask-for-approval never` for unattended local work, anything truly autonomous inside Cowork**. The blast radius is bounded by the VM, not by your discipline.
 

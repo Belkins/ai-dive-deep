@@ -163,7 +163,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   'Knowledge cutoff': {
     term: 'Knowledge cutoff',
     definition:
-      "The date past which the model can't reliably answer. Mid-2025 for current frontier models.",
+      "The date past which the model can't reliably answer without search or tools. Typically a few months before release — June 2026 on the current Claude 5.5 and Fable 5.2 lineup, April–June 2026 on the GPT-6 family.",
   },
   MCP: {
     term: 'MCP',
@@ -310,7 +310,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   Evaluator: {
     term: 'Evaluator',
     definition:
-      'The small fast model (Haiku by default) that judges a <code>/goal</code> condition from the transcript after each turn. It has no tools — if your output can\'t prove "done," it loops forever.',
+      'The small fast model (Haiku 5.5 on the Anthropic API by default; Haiku 4.5 on cloud providers) that judges a <code>/goal</code> condition from the transcript after each turn. It has no tools — if your output can\'t prove "done," it loops forever.',
     related: ['/goal', 'Eval'],
   },
   'Plan mode': {
@@ -340,7 +340,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   '.mcp.json': {
     term: '.mcp.json',
     definition:
-      'The repo-root file declaring <code>MCP</code> servers, committed so the whole team (and both Codex + CC) gets the same connector set.',
+      'The repo-root file declaring <code>MCP</code> servers for Claude Code, committed so the whole team gets the same connector set. (Codex CLI configures MCP in <code>.codex/config.toml</code>, only reading <code>.mcp.json</code> inside a packaged plugin.)',
     related: ['MCP', 'Connector', 'MCP server'],
   },
   stdio: {
@@ -424,14 +424,26 @@ export const glossary: Record<string, GlossaryEntry> = {
   'Fable 5': {
     term: 'Fable 5',
     definition:
-      'Anthropic\'s most capable generally available model (released June 9, 2026; model id <code>claude-fable-5</code>). A Mythos-class model made safe for general use: safety classifiers gate offensive-cyber, bio/chem, and distillation requests — fallback to Opus 4.8 is built into the Claude apps and Managed Agents, opt-in on the API (blocked API requests error, unbilled). $10/$50 per Mtok, 1M context, 128K output. Also available as an advisor model cheaper workers call mid-task. See <a href="/fable-5/">the model file</a>.',
-    related: ['Mythos 5', 'Mythos-class'],
+      'Anthropic\'s June 2026 Mythos-class flagship (released June 9, 2026; model id <code>claude-fable-5</code>), since superseded by <a href="/glossary/#Fable%205.1">Fable 5.1</a> and <a href="/glossary/#Fable%205.2">Fable 5.2</a>. A Mythos-class model made safe for general use: safety classifiers gate offensive-cyber, bio/chem, and distillation requests — fallback to Opus 4.8 was built into the Claude apps and Managed Agents, opt-in on the API (blocked API requests error, unbilled). $10/$50 per Mtok, 1M context, 128K output. See <a href="/fable-5/">the model file</a>.',
+    related: ['Fable 5.2', 'Fable 5.1', 'Mythos 5', 'Mythos-class'],
+  },
+  'Fable 5.1': {
+    term: 'Fable 5.1',
+    definition:
+      'Anthropic\'s September 2026 Mythos-class update (released September 1, 2026; model id <code>claude-fable-5-1</code>), since superseded by <a href="/glossary/#Fable%205.2">Fable 5.2</a>. Kept Fable 5\'s $10/$50 per Mtok base rates while cutting prompt-cache reads to $0.25/Mtok (0.025× input), and expanded classifier fallback to Opus 5 and Sonnet 5. See <a href="/chapters/50-claude-fable-5-1/">Ch 50</a>.',
+    related: ['Fable 5.2', 'Fable 5', 'Mythos-class'],
+  },
+  'Fable 5.2': {
+    term: 'Fable 5.2',
+    definition:
+      'Anthropic\'s current capability ceiling (released November 9, 2026; model id <code>claude-fable-5-2</code>), launched alongside gated twin <code>claude-mythos-5-2</code>. Cuts Mythos-class pricing 20% to $8/$40 per Mtok (2× <a href="/glossary/#Opus%205.5">Opus 5.5</a>) with $0.20/Mtok cache reads (0.025× input — matching Opus 5.5\'s dollar cache-read rate). 1M context, 128K output, June 2026 cutoff, adaptive thinking always on (API default effort <code>high</code>, Claude Code default <code>medium</code>).',
+    related: ['Fable 5.1', 'Opus 5.5', 'Mythos-class'],
   },
   'Opus 5': {
     term: 'Opus 5',
     definition:
-      'Anthropic\'s Opus-tier model, released July 24, 2026 (model id <code>claude-opus-5</code>). $5/$25 per Mtok — unchanged from Opus 4.8, half of <a href="/glossary/#Fable%205">Fable 5</a> — with a 1M context window, 128K output, and a May 2026 training cutoff, the freshest of any Anthropic model. Default on Claude Max, strongest model on Claude Pro. It deprecates nothing, and two things go backwards versus Opus 4.8: no Priority Tier and no server-side <code>web_fetch</code>. Its headline feature is the <a href="/glossary/#Effort%20dial">effort dial</a>. In aggregate capability it is statistically indistinguishable from Fable 5 at half the price — which makes it a pricing event more than a capability one. See <a href="/opus-5/">the model file</a> and <a href="/opus-5/use-cases/">the use cases</a>.',
-    related: ['Effort dial', 'Fable 5', 'Sonnet 5'],
+      'Anthropic\'s July 2026 Opus-tier model (released July 24, 2026; model id <code>claude-opus-5</code>), since superseded by <a href="/glossary/#Opus%205.5">Opus 5.5</a>. $5/$25 per Mtok — unchanged from Opus 4.8, half of <a href="/glossary/#Fable%205">Fable 5</a> — with a 1M context window, 128K output, and a May 2026 training cutoff. At launch it was the default on Claude Max and strongest model on Claude Pro (Opus 5.5 is now the default across all Claude Code plans). Its headline feature was the five-position <a href="/glossary/#Effort%20dial">effort dial</a>. See <a href="/opus-5/">the model file</a> and <a href="/opus-5/use-cases/">the use cases</a>.',
+    related: ['Opus 5.5', 'Effort dial', 'Fable 5', 'Sonnet 5'],
   },
   'Effort dial': {
     term: 'Effort dial',
@@ -454,20 +466,26 @@ export const glossary: Record<string, GlossaryEntry> = {
   'Sonnet 5.5': {
     term: 'Sonnet 5.5',
     definition:
-      'Anthropic\'s Sonnet-tier model, released September 28, 2026 (model id <code>claude-sonnet-5-5</code>), at Sonnet 5\'s price of $2/$10 per Mtok, half of <a href="/glossary/#Opus%205.5">Opus 5.5</a> per token; cache reads cost $0.20 on both. 1M context, 128K output, June 2026 cutoff. Default effort is <code>high</code> on the API and <code>medium</code> in Claude Code and the apps, and in Claude Code the <code>sonnet</code> alias resolves to it only on the Anthropic API. See <a href="/chapters/55-claude-sonnet-5-5/">the field guide</a>, which runs it against Opus 5.5 on the same review.',
-    related: ['Sonnet 5', 'Opus 5.5', 'Effort dial'],
+      'Anthropic\'s Sonnet-tier model, released September 28, 2026 (model id <code>claude-sonnet-5-5</code>), at Sonnet 5\'s price of $2/$10 per Mtok, half of <a href="/glossary/#Opus%205.5">Opus 5.5</a> per token; cache reads cost $0.10 per Mtok (0.05× input, half of Opus 5.5\'s $0.20). 1M context, 128K output, June 2026 cutoff. Default effort is <code>high</code> on the API and <code>medium</code> in Claude Code and the apps, and in Claude Code the <code>sonnet</code> alias resolves to it only on the Anthropic API. See <a href="/chapters/55-claude-sonnet-5-5/">the field guide</a>, which runs it against Opus 5.5 on the same review.',
+    related: ['Sonnet 5', 'Opus 5.5', 'Haiku 5.5', 'Effort dial'],
+  },
+  'Haiku 5.5': {
+    term: 'Haiku 5.5',
+    definition:
+      'Anthropic\'s triage and evaluator tier, released October 7, 2026 (model id <code>claude-haiku-5-5</code>). $0.10/$0.50 per Mtok for prompts up to 100K tokens ($0.50/$2.50 over 100K), cache reads at $0.01/Mtok, 1M context, 64K output, June 2026 cutoff. Default model for the <code>haiku</code> alias and <code>/goal</code> evaluator on the Anthropic API.',
+    related: ['Sonnet 5.5', 'Opus 5.5', 'Evaluator'],
   },
   'Mythos 5': {
     term: 'Mythos 5',
     definition:
-      'The raw twin of <a href="/glossary/#Fable%205">Fable 5</a> — same underlying model, safeguards lifted in some areas, restricted to Project Glasswing partners and (next) vetted biology researchers. Reported scores sit within 1–3 points of Fable 5 except where the safeguards bite. Not Vlad\'s "Mythos" (that was Opus 3), and not Mythos Preview (the withheld March 2026 disclosure). See <a href="/fable-5/vs-mythos-5/">Fable 5 vs Mythos 5</a>.',
-    related: ['Fable 5', 'Mythos'],
+      'The raw twin of <a href="/glossary/#Fable%205">Fable 5</a> — same underlying model, safeguards lifted in some areas, restricted to Project Glasswing partners and vetted biology researchers. Reported scores sit within 1–3 points of Fable 5 except where the safeguards bite. Followed by Mythos 5.1 (September 2026) and Mythos 5.2 (November 9, 2026). Not Vlad\'s "Mythos" (that was Opus 3), and not Mythos Preview (the withheld March 2026 disclosure). See <a href="/fable-5/vs-mythos-5/">Fable 5 vs Mythos 5</a>.',
+    related: ['Fable 5', 'Fable 5.2', 'Mythos'],
   },
   'Mythos-class': {
     term: 'Mythos-class',
     definition:
-      'Anthropic\'s tier above Opus — currently Fable 5 (generally available) and Mythos 5 (gated). Mythos-class traffic carries a limited 30-day retention requirement (misuse detection only, not training) and the classifier-plus-fallback safety architecture. See <a href="/fable-5/">Fable 5</a>.',
-    related: ['Fable 5', 'Mythos 5'],
+      'Anthropic\'s tier above Opus — currently <a href="/glossary/#Fable%205.2">Fable 5.2</a> (generally available at $8/$40 per Mtok) and Mythos 5.2 (gated, verification required), following Fable 5.1 / Mythos 5.1 and the June 2026 Fable 5 / Mythos 5 launch. Mythos-class traffic carries a limited 30-day retention requirement (misuse detection only, not training) and the classifier-plus-fallback safety architecture. See <a href="/fable-5/">Fable 5</a> and <a href="/chapters/50-claude-fable-5-1/">Ch 50</a>.',
+    related: ['Fable 5.2', 'Fable 5.1', 'Fable 5', 'Mythos 5'],
   },
   'Abliteration': {
     term: 'Abliteration',
@@ -490,13 +508,13 @@ export const glossary: Record<string, GlossaryEntry> = {
   '/effort': {
     term: '/effort',
     definition:
-      'The Claude Code slash command that sets how hard the model thinks before it acts: low → medium → high (the default) → xhigh → max, with a separate <a href="/glossary/#ultracode">ultracode</a> notch. Introduced on Opus 4.7/4.8; on <a href="/glossary/#Opus%205">Opus 5</a> it maps onto the API <a href="/glossary/#Effort%20dial">effort dial</a>, where the guidance inverted — Anthropic now says start at <code>high</code> rather than <code>xhigh</code>, and says explicitly not to carry old effort settings over. Most people leave it on the default and never feel the ceiling. See <a href="/dynamic-workflows/#the-on-ramp">Dynamic Workflows — turning it on</a>.',
+      'The Claude Code slash command that sets how hard the model thinks before it acts: low → medium (the Claude Code default on Fable 5.2, Opus 5.5, Sonnet 5.5, and Haiku 5.5) → high → xhigh → max, plus a separate <a href="/glossary/#ultracode">ultracode</a> toggle. Introduced on Opus 4.7/4.8; on <a href="/glossary/#Opus%205">Opus 5</a> and the 5.5/5.2 lineup it maps onto the API <a href="/glossary/#Effort%20dial">effort dial</a>. Most people leave it on the default and never feel the ceiling. See <a href="/dynamic-workflows/#the-on-ramp">Dynamic Workflows — turning it on</a>.',
     related: ['Effort dial', 'ultracode', 'Dynamic workflows'],
   },
   'ultracode': {
     term: 'ultracode',
     definition:
-      'The top notch of the Opus 4.8 <a href="/glossary/#%2Feffort">/effort</a> dial — xhigh reasoning plus workflows (parallel agents, a deeper plan). A Claude Code setting, not a model effort level: a mode, not a volume knob. See <a href="/dynamic-workflows/#the-loop">Dynamic Workflows</a>.',
+      'The Claude Code toggle inside <a href="/glossary/#%2Feffort">/effort</a> (or <code>"ultracode": true</code> in settings) that enables <a href="/glossary/#Dynamic%20workflows">dynamic workflows</a> alongside your chosen effort level. Originally the top notch of the Opus 4.8 effort slider (forcing <code>xhigh</code>), it is now an independent switch. See <a href="/dynamic-workflows/#the-loop">Dynamic Workflows</a>.',
     related: ['/effort', 'Dynamic workflows'],
   },
   'Self-Audit': {

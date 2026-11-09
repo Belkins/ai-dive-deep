@@ -382,6 +382,10 @@ test('the published format and test hooks read the edited file from JSON stdin',
       assert.equal(result.status, 0, label);
       assert.equal(calls(), `npx [vitest] [run] [${testFile}]\n`, label);
       reset();
+      result = run(command, { tool_input: { file_path: testFile } }, { STUB_EXIT_NPX: '1' });
+      assert.equal(result.status, 2, `${label}: a failing test exits 2 on PostToolUse so Claude sees stderr`);
+      assert.match(result.stderr, /npx: failed/, label);
+      reset();
       result = run(command, { tool_input: { file_path: notATest } }, { CLAUDE_FILE_PATH: '/tmp/stale.test.ts' });
       assert.equal(result.status, 0, label);
       assert.equal(calls(), '', `${label}: only *.test.* files run`);
@@ -450,7 +454,7 @@ test('the published Slack hook times the turn itself and posts JSON only after t
   }
 });
 
-test('the published prompt-cache guard reads the prompt from JSON stdin', () => {
+test('the published prompt-cache guard reads the prompt from JSON stdin and emits systemMessage', () => {
   const script = hookSnippets.HOOK_PROMPT_CACHE_GUARD;
   const run = (input, env = {}) => runScript(script, input, { CLAUDE_USER_PROMPT: '', ...env });
   for (const [label, prompt] of [
@@ -459,12 +463,34 @@ test('the published prompt-cache guard reads the prompt from JSON stdin', () => 
   ]) {
     const result = run({ prompt });
     assert.equal(result.status, 0, label);
-    assert.match(result.stderr, /^prompt-cache-guard: /m, label);
+    assert.equal(result.stderr, '', label);
+    const out = JSON.parse(result.stdout);
+    assert.match(out.systemMessage, /^prompt-cache-guard: /, label);
   }
   const stale = run({ prompt: 'hello' }, { CLAUDE_USER_PROMPT: 'edit CLAUDE.md' });
   assert.equal(stale.status, 0);
-  assert.equal(stale.stderr, '', 'reads the prompt from stdin, not from the variable Claude Code never sets');
+  assert.equal(stale.stdout, '', 'reads the prompt from stdin, not from the variable Claude Code never sets');
+  assert.equal(stale.stderr, '');
   assert.equal(run('{invalid').status, 0, 'a warn-only hook must not block a prompt it cannot read');
+});
+
+test('warn-only hook samples emit systemMessage on stdout and sub-agent-watchdog uses a scheduled trigger', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hook-warn-'));
+  try {
+    writeFileSync(join(dir, 'CLAUDE.md'), 'line\n'.repeat(305));
+    const big = runScript(hookSnippets.HOOK_CLAUDE_MD_SIZE, {}, { CLAUDE_PROJECT_DIR: dir });
+    assert.equal(big.status, 0);
+    assert.match(JSON.parse(big.stdout).systemMessage, /^claude-md-size-guard: /);
+    writeFileSync(join(dir, 'CLAUDE.md'), 'line\n'.repeat(50));
+    const small = runScript(hookSnippets.HOOK_CLAUDE_MD_SIZE, {}, { CLAUDE_PROJECT_DIR: dir });
+    assert.equal(small.status, 0);
+    assert.equal(small.stdout, '');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+  const watchdog = hookSnippets.SKILL_SUBAGENT_WATCHDOG;
+  assert.doesNotMatch(watchdog, /PostToolUse|after a long-running Agent call|Hook:.*tick every/i);
+  assert.match(watchdog, /Scheduled: a job you schedule runs this check every 2 minutes during an active swarm\./);
 });
 
 test('the cheat sheet gives the hook exit codes the reference documents', () => {
@@ -768,7 +794,7 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
     at = next;
   }
   assert.doesNotMatch(page, /still the only current Haiku|the current top Opus|is now the default on Claude Max/);
-  for (const model of ['Fable 5.1', 'Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5 (prompts up to 100K tokens)']) {
+  for (const model of ['Fable 5.2', 'Fable 5.1 (legacy)', 'Opus 5.5', 'Sonnet 5.5', 'Haiku 5.5 (prompts up to 100K tokens)']) {
     const row = block.split('\n').find((line) => line.includes(`model: '${model}',`)) ?? '';
     assert.match(row, /input: '\$\d[\d.]*', output: '\$\d[\d.]*'/, `no API row with input and output prices for ${model}`);
   }

@@ -99,7 +99,7 @@ export const HOOK_TEST_ON_WRITE = `{
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \\"$f\\" in *.test.*) npx vitest run \\"$f\\";; esac"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \\"$f\\" in *.test.*) npx vitest run \\"$f\\" 1>&2 || exit 2;; esac"
           }
         ]
       }
@@ -271,8 +271,10 @@ Write notes back to my vault under [path].
 export const SETTINGS_JSON_EXAMPLE = `{
   "model": "sonnet",
   "theme": "dark",
-  "telemetry": false,
-  "autoUpdater": "weekly",
+  "autoUpdatesChannel": "stable",
+  "env": {
+    "DISABLE_TELEMETRY": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(npm test*)",
@@ -707,9 +709,8 @@ lines=$(wc -l < "$claude_md" | tr -d ' ')
 bytes=$(wc -c < "$claude_md" | tr -d ' ')
 
 if [ "$lines" -gt 300 ]; then
-  echo "claude-md-size-guard: CLAUDE.md is $lines lines / $bytes bytes" >&2
-  echo "claude-md-size-guard: target <100 lines. Move detail into docs/ and link from CLAUDE.md." >&2
-  echo "claude-md-size-guard: every extra 100 lines x every turn = real money." >&2
+  msg="claude-md-size-guard: CLAUDE.md is $lines lines / $bytes bytes. Target <100 lines. Move detail into docs/ and link from CLAUDE.md. Every extra 100 lines x every turn = real money."
+  jq -nc --arg msg "$msg" '{systemMessage: $msg}'
 fi
 
 exit 0
@@ -748,9 +749,8 @@ if grep -Eq '\\.claude/(settings|hooks|skills)' <<<"$lower"; then
 fi
 
 if [ -n "$trigger" ]; then
-  echo "prompt-cache-guard: detected $trigger" >&2
-  echo "prompt-cache-guard: this invalidates the prompt cache for ~5 min across every active session." >&2
-  echo "prompt-cache-guard: batch related edits into one window instead of three." >&2
+  msg="prompt-cache-guard: detected $trigger. This invalidates the prompt cache for ~5 min across every active session. Batch related edits into one window instead of three."
+  jq -nc --arg msg "$msg" '{systemMessage: $msg}'
 fi
 
 exit 0
@@ -824,10 +824,8 @@ last_commit_age=$(( $(date +%s) - $(git log -1 --pretty=%ct) ))
 pattern='^(feat|fix|chore|docs|refactor|test|perf|build|ci|style|revert)(\\([a-z0-9_/-]+\\))?!?: .{3,}'
 
 if ! echo "$subject" | grep -Eq "$pattern"; then
-  echo "commit-msg-enforcer: last commit subject doesn't match conventional-commits:" >&2
-  echo "  $subject" >&2
-  echo "  expected: type(scope): summary  e.g. 'fix(auth): handle expired refresh token'" >&2
-  echo "  amend with: git commit --amend -m 'fix(scope): real summary'" >&2
+  msg="commit-msg-enforcer: last commit subject ($subject) doesn't match conventional-commits. Expected: type(scope): summary  e.g. 'fix(auth): handle expired refresh token' — amend with: git commit --amend -m 'fix(scope): real summary'"
+  jq -nc --arg msg "$msg" '{systemMessage: $msg}'
 fi
 
 exit 0
@@ -914,7 +912,7 @@ allowed-tools: [Read, WebFetch]
 
 export const SKILL_SUBAGENT_WATCHDOG = `---
 name: sub-agent-watchdog
-description: Scan recent background agent invocations and flag any running 8+ minutes without an output token. Returns agent IDs, last-seen timestamp, suggested action (kill / take-over / wait one more tick). Use when the user says "any agents stalled", "watchdog", "is the swarm alive", or when a PostToolUse hook fires after a long-running Agent call.
+description: Scan recent background agent invocations and flag any running 8+ minutes without an output token. Returns agent IDs, last-seen timestamp, suggested action (kill / take-over / wait one more tick). Use when the user says "any agents stalled", "watchdog", "is the swarm alive", or when a scheduled check runs every 2 minutes during an active swarm.
 allowed-tools: [Bash, Read, Write]
 ---
 
@@ -922,7 +920,7 @@ allowed-tools: [Bash, Read, Write]
 
 ## When to fire
 - Manual: "watchdog", "any agents stalled", "is the swarm alive".
-- Hook: PostToolUse on Agent tool, tick every 2 minutes during active swarm.
+- Scheduled: a job you schedule runs this check every 2 minutes during an active swarm.
 - Hard ceiling: if any agent crosses 9 minutes, fire automatically regardless of user request.
 
 ## What to do
@@ -945,8 +943,8 @@ c8a4...f1   2m12s  18s      GREEN     healthy, leave alone
 \`\`\`
 
 ## Failure modes
-- Registry file missing — agent telemetry was never wired. Bootstrap by writing a stub registry and tell the operator to add the PostToolUse hook.
-- Two ticks fire concurrently — file lock contention. Use \`flock -n\` on the registry, second tick exits silent.
+- Registry file missing — agent telemetry was never wired. Bootstrap by writing a stub registry and tell the operator to wire the launch logger.
+- Two scheduled runs overlap — file lock contention. Use \`flock -n\` on the registry, second run exits silent.
 - Agent is "silent" but actually streaming a long tool result (e.g. WebFetch of a slow page) — heuristic risk. Check the agent's last tool_use_id; if it's a known slow tool (WebFetch, large Bash), extend the ORANGE threshold to 12 minutes.
 - Kill command requires Anthropic SDK abort which isn't always exposed — fall back to letting the parent timeout naturally, but flip the registry status so the operator stops waiting.
 `;

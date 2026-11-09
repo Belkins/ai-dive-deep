@@ -86,12 +86,12 @@ Stops "please format this" forever. Picks Prettier first, falls back to Ruff. Fa
 {
   "matcher": "Edit|Write",
   "hooks": [
-    { "type": "command", "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.test.*) npx vitest run \"$f\";; esac" }
+    { "type": "command", "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.test.*) npx vitest run \"$f\" 1>&2 || exit 2;; esac" }
   ]
 }
 ```
 
-Wrote to a test file? Run that one test. Tight feedback loop, no orchestration logic in the chat.
+Wrote to a test file? Run that one test; on a failure, redirecting the output to stderr and exiting `2` hands the failing report back to Claude on `PostToolUse` even though the edit already ran. Tight feedback loop, no orchestration logic in the chat.
 
 ### 3. block-push-to-main
 

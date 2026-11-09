@@ -122,7 +122,7 @@ function decide(cost: Cost, steps: Steps, awake: Awake) {
       mode: 'Plan, then Interactive',
       color: '#FF6B2C',
       why: 'Five-plus files or unfamiliar territory. Get the agent to describe the full plan first; read it; push back; only then run for real.',
-      command: 'claude --plan',
+      command: 'claude --permission-mode plan',
     };
   }
   return {

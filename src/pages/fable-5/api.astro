@@ -41,7 +41,7 @@ const faqItems = [
   },
   {
     q: 'What happens when Fable 5 blocks a request on the API?',
-    a: "The request returns an error rather than a model response, and you aren't charged for it. You can opt in to fallback on the Messages API to continue blocked requests on Claude Opus 4.8 at Opus pricing, roll your own fallback with the Anthropic SDK, or use Managed Agents where fallback is built in. One admin gate first: updated terms must be accepted in the Claude Console before the model works.",
+    a: "Under the current Messages API refusal contract, a classifier refusal returns HTTP 200 with stop_reason: \"refusal\" (and partial-output attempts can be billed). You can opt in to fallback on the Messages API to continue refused requests on Claude Opus, roll your own fallback with the Anthropic SDK, or use Managed Agents where fallback is built in. One admin gate first: updated terms must be accepted in the Claude Console before the model works.",
   },
 ];
 
@@ -80,7 +80,7 @@ const faq = {
         <div id="answer" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
           <div class="rounded-xl border p-5 border-line bg-accent/5">
-            <p class="m-0 leading-relaxed"><strong>Model id: <code>claude-fable-5</code>.</strong> Fully available on the Claude API from June 9, 2026 — no June 22 clock on the API side. 1M-token context, 128K max output, $10/$50 per million tokens (2× Opus 4.8). The request surface is identical to Opus 4.8 plus one new 400: explicit <code>thinking: disabled</code> is rejected — omit the param instead.</p>
+            <p class="m-0 leading-relaxed"><strong>Launch model id: <code>claude-fable-5</code></strong> (succeeded by <code>claude-fable-5-1</code> and <strong><code>claude-fable-5-2</code></strong> at $8/$40 with 0.025× cache reads). Fully available on the Claude API from June 9, 2026 — 1M-token context, 128K max output, $10/$50 per million tokens at launch (2× Opus 4.8). The request surface is identical to Opus 4.8 plus one new 400: explicit <code>thinking: disabled</code> is rejected — omit the param instead.</p>
           </div>
         </div>
 

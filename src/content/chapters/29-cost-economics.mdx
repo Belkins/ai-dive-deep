@@ -29,8 +29,8 @@ When you look at the Anthropic pricing page you see a per-million-token rate for
 
 - **Input tokens** — what you send. The system prompt, the user message, prior turns, tool definitions.
 - **Output tokens** — what the model writes back. Almost always 5x the input price.
-- **Cache write tokens** — the first time a prefix is cached, you pay a 25% premium over the input rate. One-time cost.
-- **Cache read tokens** — every subsequent call that hits the same prefix pays roughly 10% of the input rate. Ten times cheaper.
+- **Cache write tokens** — the first time a prefix is cached, you pay a 25% premium over the input rate (1.25× for the 5-minute tier, 2× for the 1-hour tier). One-time cost.
+- **Cache read tokens** — every subsequent call that hits the same prefix pays 10% of the input rate as standard (and 5% on Opus 5.5 and Sonnet 5.5, or 2.5% on Fable 5.2 and Fable 5.1). Ten to forty times cheaper.
 
 The 10x gap between cache read and full input is the entire game. Every operator-grade Claude workload I run leans on it. A morning briefing that pulls in 40K tokens of portfolio context, MCP tool schemas, and prior week's running summary should pay full price for 40K tokens exactly once a week. The other six mornings, that prefix should be a cache hit costing roughly a tenth of that.
 
@@ -44,7 +44,7 @@ Here's the operator's model of how prompt caching works. The Anthropic SDK lets 
 
 ```python
 response = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-5-5",
     max_tokens=2048,
     system=[
         {
@@ -129,7 +129,7 @@ batch = client.messages.batches.create(
         {
             "custom_id": f"summary-{deal_id}",
             "params": {
-                "model": "claude-sonnet-4-5",
+                "model": "claude-sonnet-5-5",
                 "max_tokens": 1024,
                 "messages": [
                     {"role": "user", "content": deal_transcript}
@@ -155,17 +155,17 @@ Model routing is the second-biggest lever after caching, and the one most operat
 | Sonnet | Default working model. Strong reasoning, tool use, long context. | Morning briefings. Deal summarization. Code reviews on PRs. Skill execution. | Best balance |
 | Opus | Hardest reasoning, longest plans, agentic loops with many steps | Architecture decisions. Multi-step <GlossaryTerm term="Agent">agent</GlossaryTerm> workflows. Anything where a wrong answer costs more than the model run. | Lowest, justifiable when stakes scale |
 
-The honest curve nobody plots: Haiku is roughly 1/15th the price of Sonnet and gets you 80% of the quality on simple, well-bounded tasks. Sonnet is roughly 1/5th the price of Opus and gets you 90% of Opus's quality on the working middle of your workload. Using Opus for everything is the AI equivalent of flying first class to the corner store.
+The honest curve nobody plots: on the current 5.5 lineup, Haiku 5.5 ($0.10/$0.50 up to 100K tokens) is 1/20th the price of Sonnet 5.5 ($2/$10) and gets you 80% of the quality on simple, well-bounded tasks. Sonnet 5.5 is 1/2 the price of Opus 5.5 ($4/$20) — and 1/4 of Fable 5.2 ($8/$40) — and gets you 90% of Opus's quality on the working middle of your workload (in the 4.5/4.6 era when this router first shipped, those gaps were ~1/3 to 1/5). Using the top tier for everything is the AI equivalent of flying first class to the corner store.
 
 The router config I use looks like this:
 
 ```python
 def pick_model(task_type: str) -> str:
     if task_type in ("triage", "classify", "tag", "extract"):
-        return "claude-haiku-4-5"
+        return "claude-haiku-5-5"
     if task_type in ("agent_loop", "architecture", "complex_plan"):
-        return "claude-opus-4-5"
-    return "claude-sonnet-4-5"  # default
+        return "claude-opus-5-5"
+    return "claude-sonnet-5-5"  # default
 ```
 
 Three lines. It cut my bill by roughly 30% the week I shipped it. Not from any one save — from the long tail of triage tasks that no longer ran on the wrong model.

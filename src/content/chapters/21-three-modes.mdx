@@ -49,7 +49,7 @@ The mistake here is graduating out of Interactive too fast. The first week you r
 Plan mode is the agent describing what it WOULD do without doing it. No edits hit disk. No bash runs. No network calls. The output is a step-by-step plan you can read, critique, and approve as a single unit.
 
 ```bash
-claude --plan
+claude --permission-mode plan
 # Then in-session:
 > Migrate every call site of getUser() to the new useUser() hook.
 
@@ -151,7 +151,7 @@ On your main machine: live in Interactive, dip into Plan when the change is big,
 
 The fourth mode shipped May 11, 2026 in Claude Code v2.1.139, and it's a different category of move than the first three. Plan removes the surprise — you see what's coming. Auto removes the per-tool approval — you don't gate every Edit. `/goal` removes the per-turn approval — you don't end the turn. Anthropic's own framing in the docs is the clean version: "auto mode removes per-tool prompts, and `/goal` removes per-turn prompts." That's a stack, not a choice. Plan → approve the plan → Auto → don't approve each tool → `/goal` → don't approve each turn.
 
-How it actually works. You type `/goal <condition up to 4,000 chars>`. Claude takes a turn. After the turn, a small fast model (Haiku 4.5 by default) reads the transcript and judges whether the condition holds. If not, Claude starts another turn instead of returning control. The goal clears automatically once the condition is met. A live overlay labeled `◎ /goal active` shows elapsed time, turns evaluated, tokens spent. One goal per session. Setting a new one replaces the old. `/goal clear` (aliases `stop`, `off`, `reset`, `cancel`) kills it.
+How it actually works. You type `/goal <condition up to 4,000 chars>`. Claude takes a turn. After the turn, a small fast model (Haiku 5.5 by default on the Anthropic API; Haiku 4.5 on Bedrock/Vertex/Foundry) reads the transcript and judges whether the condition holds. If not, Claude starts another turn instead of returning control. The goal clears automatically once the condition is met. A live overlay labeled `◎ /goal active` shows elapsed time, turns evaluated, tokens spent. One goal per session. Setting a new one replaces the old. `/goal clear` (aliases `stop`, `off`, `reset`, `cancel`) kills it.
 
 The killer scene: `/goal deploy until tests pass`. The evaluator's signal is the test runner's exit code Claude already had to print. Roughly 12 turns on a real refactor, fire-and-forget. Same shape for "all P0 issues labeled `auth` are closed" or "the auth migration in `src/auth/*` compiles under strict tsc, and no file outside `src/auth/` has been modified."
 

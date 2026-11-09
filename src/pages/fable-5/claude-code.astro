@@ -23,11 +23,11 @@ const faqItems = [
   },
   {
     q: 'Does Fable 5 cost extra on my Claude plan?',
-    a: 'Not until June 22, 2026. On Pro, Max, Team, and seat-based Enterprise plans, Fable 5 is included in plan limits from June 9 to June 22. After that it requires usage credits — Anthropic says it aims to restore Fable 5 as standard when capacity allows. API pricing is $10 per million input tokens and $50 per million output, exactly 2× Opus 4.8.',
+    a: 'During the launch promotion (originally announced through June 22, 2026, later extended to July 19), Fable 5 was included in plan limits on Pro, Max, Team, and seat-based Enterprise. Since July 19, Fable 5, 5.1, and 5.2 remain included on Max, Ultra, and Team Premium seats up to 50% of the weekly limit, while Pro and Team Standard seats use usage credits. API pricing launched at $10/$50 on Fable 5 and 5.1, and dropped to $8/$40 on Fable 5.2 (2× Opus 5.5).',
   },
   {
     q: 'What happens to Fable 5 after June 22?',
-    a: 'It stays — the accounting changes. Subscription plans switch to usage credits to keep using it; the Claude API and consumption-based Enterprise are fully available throughout and unaffected. Anthropic aims to restore Fable 5 as standard in plan limits when capacity allows. Opus 4.8 is not deprecated and stays a valid default at $5/$25.',
+    a: 'The June 22 launch window was extended to July 19, 2026. After July 19, Max, Ultra, and Team Premium plans keep Fable models included up to half of their weekly allowance, while Pro and Team Standard switch to usage credits. The Claude API and consumption-based Enterprise are metered per token throughout ($10/$50 on Fable 5/5.1; $8/$40 on Fable 5.2).',
   },
   {
     q: 'Should subagents use Fable 5 too?',
@@ -74,7 +74,7 @@ const faq = {
         <div id="answer" data-section-target class="scroll-mt-24">
           <h2 class="font-display text-3xl mb-4">The 30-second answer</h2>
           <div class="rounded-xl border p-5 border-line bg-accent/5">
-            <p class="m-0 leading-relaxed"><strong>Fable 5 is live in Claude Code since June 9, 2026.</strong> Included in paid-plan limits until June 22, usage credits after. Switch via <code>/model</code> — the id is <code>claude-fable-5</code>. Anthropic's own routing advice is in the banner: complex, long-running work. Point it at the gnarly stuff; keep fan-out subagents on cheaper tiers.</p>
+            <p class="m-0 leading-relaxed"><strong>Fable 5 launched in Claude Code on June 9, 2026</strong> (since succeeded by <a href="/chapters/50-claude-fable-5-1/">Fable 5.1</a> and <strong>Fable 5.2</strong> at $8/$40). The launch promo window was originally announced through June 22 and extended to July 19; today Fable models are included on Max, Ultra, and Team Premium up to 50% of the weekly limit (usage credits on Pro and Team Standard). Switch via <code>/model</code> — <code>claude-fable-5-2</code> (or <code>claude-fable-5</code> for the June snapshot). Point it at complex, long-horizon planning and agentic execution; keep fan-out subagents on cheaper tiers.</p>
           </div>
         </div>
 

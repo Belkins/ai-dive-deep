@@ -29,7 +29,7 @@ That's the chapter. The evaluator is the goal. The goal is the evaluator. If you
 
 `/goal <condition>` shipped in **Claude Code v2.1.139 on May 11, 2026**, with a v2.1.140 hotfix the next day for a silent-hang case under certain hook configurations. The docs page at [code.claude.com/docs/en/goal](https://code.claude.com/docs/en/goal) is short and exact about what it does.
 
-It's a session-scoped wrapper around a prompt-based <GlossaryTerm term="Hook">Stop hook</GlossaryTerm>. After every turn, a small fast model — Haiku 4.5 by default per `/en/model-config` — inspects the conversation transcript and judges whether the condition holds. If it does, the goal clears. If it doesn't, Claude takes another turn instead of returning control to you.
+It's a session-scoped wrapper around a prompt-based <GlossaryTerm term="Hook">Stop hook</GlossaryTerm>. After every turn, a small fast model — Haiku 5.5 by default on the Anthropic API (Haiku 4.5 on Bedrock, Vertex, and Foundry) per `/en/model-config` — inspects the conversation transcript and judges whether the condition holds. If it does, the goal clears. If it doesn't, Claude takes another turn instead of returning control to you.
 
 Three properties matter:
 
@@ -227,13 +227,13 @@ The brittle line: if you don't have receipts before you start, `/goal` makes the
 
 ## The Haiku-as-evaluator pattern
 
-The evaluator defaults to Haiku for a reason that becomes obvious the first time you do the math. A single Opus 4.7 turn on a real coding task — read files, think, write, run tests — runs on the order of cents-to-dimes per turn. A Haiku 4.5 evaluator pass on the same transcript runs roughly two orders of magnitude cheaper. The per-turn ratio is what matters, not the exact dollar figure — check your own pricing page before you reason about it.
+The evaluator defaults to Haiku for a reason that becomes obvious the first time you do the math. A single Opus turn on a real coding task — read files, think, write, run tests — runs on the order of cents-to-dimes per turn. A Haiku 5.5 evaluator pass ($0.10/$0.50 per Mtok on the Anthropic API; Haiku 4.5 at $1/$5 on cloud providers) on the same transcript runs roughly two orders of magnitude cheaper. The per-turn ratio is what matters, not the exact dollar figure — check your own pricing page before you reason about it.
 
 If you ran the evaluator on Opus, a 30-turn `/goal` session roughly doubles your cost — eval overhead becomes its own line item. The productivity gain — fire and forget while you make coffee — gets eaten by the evaluator's overhead. The whole pattern only pencils because Haiku is cheap enough to run after every turn without anyone noticing.
 
 The first day I had `/goal`, I tried to force the evaluator to Opus through a custom hook config (I will not explain how — it was a bad idea). A 47-turn session ran roughly 2× the expected cost because the evaluator was as expensive as the worker. The fix was reverting to default. The lesson was that the cheap evaluator isn't a cost-cutting move — it's the move that makes the primitive viable at all.
 
-The same logic applies if you build a custom Stop hook with an LLM-as-judge: judge cheap or don't judge at all. Use Haiku 4.5 or Sonnet 4.6 for the eval step. Save Opus for the work.
+The same logic applies if you build a custom Stop hook with an LLM-as-judge: judge cheap or don't judge at all. Use Haiku 5.5 or Sonnet 5.5 for the eval step. Save Opus for the work.
 
 ## Anti-pattern — open-ended goals
 

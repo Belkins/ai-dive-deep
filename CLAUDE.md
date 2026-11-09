@@ -1,18 +1,14 @@
 
 ## Working agreement
 
-Most code here is written by AI and reviewed by humans. Optimise every change for reviewability.
+Most code here is written by AI and reviewed by humans. Optimise every change for reviewability and zero wasted CI quota.
 
-- **Never commit to the main branch.** Branch first: `<type>/<issue>-<short-description>`, e.g.
-  `feat/31-leads-import`; omit the number only for work that never becomes a pull request.
-- **The PR title is the commit message** — squash-merge. A
-  [Conventional Commit](https://www.conventionalcommits.org) subject, the body as the commit body,
-  and `Closes #n` to record the issue.
-- **Commit freely on the branch.** They are squashed away; do not curate them.
-- **One concern per PR.** Split unrelated work rather than growing a branch.
+- **Run verification locally and push directly to `main`.** Do not open pull requests just to run GitHub Actions CI. Before pushing to `main`, run `npm run check`, `node --test tests/*.test.mjs`, and `npm run build` locally. Only use a feature branch (`<type>/<issue>-<short-description>`) when explicitly running `/pick` or when a preview branch is requested.
+- **Use Conventional Commits** (`feat:`, `fix:`, `docs:`, `chore:`) and include `Closes #n` when resolving a tracked GitHub issue.
+- **One concern per commit.** Split unrelated work rather than bundling unrelated changes.
 - **No drive-by changes.** Reformatting or renaming outside the stated scope makes review harder —
   a small fix a review finding asked for is not one.
-- **State what you verified** in the pull request; never claim a check passed without running it.
+- **State what you verified** in your report; never claim a check passed without running it locally.
 - **Flag uncertainty.** A guess about existing behaviour is labelled as one.
 
 ## Issues, the board and reviews

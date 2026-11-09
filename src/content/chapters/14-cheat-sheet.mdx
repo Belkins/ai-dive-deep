@@ -31,7 +31,7 @@ claude --print "your prompt"        # headless / scriptable, prints answer and e
 claude --model opus                 # pin a model for this session (sonnet | opus | haiku)
 claude --resume                     # pick from a list of past sessions and resume one
 claude --continue                   # resume the most-recent conversation, no prompt
-claude --no-update                  # skip the auto-update check on launch
+DISABLE_AUTOUPDATER=1 claude        # skip the auto-update check on launch
 claude --version                    # which CC am I running?
 claude --help                       # the official menu (incomplete — not every flag is listed)
 ```
@@ -41,7 +41,7 @@ A few field notes:
 - `--print` is what you wire into shell pipelines and cron jobs. Pair with `--output-format json` if you want to parse the response.
 - `--resume` shows a session picker; `--continue` jumps straight back into the last one. Different muscle memory, different use cases.
 - `--model` accepts model aliases (`sonnet`, `opus`, `haiku`) or full model IDs. Aliases are safer — they auto-track the current generation.
-- `--no-update` matters in CI containers and locked-down sandboxes where the updater wastes seconds or fails outright.
+- `DISABLE_AUTOUPDATER=1` matters in CI containers and locked-down sandboxes where the updater wastes seconds or fails outright.
 - `--dangerously-skip-permissions` exists. It bypasses every approval prompt. We cover when (and when not) to use it in [Chapter 15](/chapters/15-permissions/).
 
 ---
@@ -62,7 +62,7 @@ Inside an interactive session, type `/` and you get a fuzzy-search picker. These
 
 `/model` — Switch models mid-session. Sonnet is the workhorse. Flip to Opus for hard reasoning, refactors, architectural calls. Haiku for cheap bulk passes. The session keeps its context across the switch.
 
-`/agents` — Manage <GlossaryTerm term="Subagent">subagent</GlossaryTerm> definitions. Create a new one, edit an existing one, see which agents this repo and your home dir expose.
+`/agents` — Opens the Agent View dashboard for live background sessions (the old `/agents` creation wizard was removed in v2.1.198; subagent definitions are markdown files in `.claude/agents/` or `~/.claude/agents/`).
 
 `/mcp` — List configured <GlossaryTerm term="MCP">MCP</GlossaryTerm> servers, their connection status, and basic management. When a connector is misbehaving, this is where you go first.
 
@@ -70,7 +70,7 @@ Inside an interactive session, type `/` and you get a fuzzy-search picker. These
 
 `/plugins` — Browse the plugin marketplace, install <GlossaryTerm term="Plugin">plugins</GlossaryTerm>, see what's currently loaded. Plugins bundle commands, agents, skills, and MCP servers into a single install.
 
-`/install-ide` — Wire CC into your editor. VS Code, JetBrains family, Neovim. We expand on this in Section 7.
+`/ide` — Wire CC into your editor. VS Code and the JetBrains family are supported. We expand on this in Section 6.
 
 `/login` and `/logout` — Auth controls. Use `/logout` when you're handing your laptop to someone else or switching between work and personal Anthropic accounts.
 
@@ -82,7 +82,7 @@ Inside an interactive session, type `/` and you get a fuzzy-search picker. These
 
 The command surface moved roughly ten entries in 90 days. The ones below are the additions and material updates between February and May 2026 — verified against the official changelog where noted, flagged otherwise.
 
-- `/goal <condition>` — autonomous loop. Sets a finish-line condition, runs turn after turn, and a small fast model (Haiku 4.5) inspects the transcript after every turn to check whether the condition holds. Shipped 2026-05-11, Claude Code v2.1.139. Stops itself when satisfied; aliases for clear include `stop`, `off`, `reset`, `cancel`. See [Chapter 21](/chapters/21-three-modes/) for the mode story.
+- `/goal <condition>` — autonomous loop. Sets a finish-line condition, runs turn after turn, and a small fast model (Haiku 5.5 on the Anthropic API; Haiku 4.5 on Bedrock/Vertex/Foundry) inspects the transcript after every turn to check whether the condition holds. Shipped 2026-05-11, Claude Code v2.1.139. Stops itself when satisfied; aliases for clear include `stop`, `off`, `reset`, `cancel`. See [Chapter 21](/chapters/21-three-modes/) for the mode story.
 - `/loop [interval] [prompt]` — run a prompt on a recurring interval. Existed pre-`/goal`; pairs with it for time-based polling vs goal-directed loops. `/loop 5m check if the deploy finished`.
 - `/agents` — Agent View dashboard. Single CLI surface showing every background session (running, blocked, done), dispatch new sessions inline. Shipped 2026-05-11, v2.1.139. Replaces the tmux-grid hack.
 - `/powerup` — interactive tutorials inside Claude Code. Shipped 2026-04-01, v2.1.90. Onboarding without writing docs.
@@ -147,8 +147,10 @@ Open `~/.claude/settings.json`. Most setups end up looking like this:
 {
   "model": "sonnet",
   "theme": "dark",
-  "telemetry": false,
-  "autoUpdater": "weekly",
+  "autoUpdatesChannel": "stable",
+  "env": {
+    "DISABLE_TELEMETRY": "1"
+  },
   "permissions": {
     "allow": ["Bash(npm test*)", "Edit(src/**/*)"],
     "deny":  ["Bash(rm -rf*)", "WebFetch"]
@@ -158,28 +160,28 @@ Open `~/.claude/settings.json`. Most setups end up looking like this:
 
 What each one does:
 
-- `model` — Default model when you launch with no `--model` flag. `sonnet` is the right default. Override per-session when needed.
+- `model` — Default model when you launch with no `--model` flag. `sonnet` (or `opus` on Max) is the right default. Override per-session when needed.
 - `theme` — `dark`, `light`, or `auto`. Cosmetic. Ignore unless you stare at it eight hours a day.
-- `telemetry` — `false` opts out of usage telemetry. I run with it off on personal machines, on for shared dev environments where the team uses anonymized usage data for capacity planning.
-- `autoUpdater` — `weekly` is the sane default. `disabled` for locked-down build agents. `daily` if you actually want the cutting edge.
+- `env.DISABLE_TELEMETRY` — `"1"` opts out of usage telemetry (there is no top-level `"telemetry"` boolean key in `settings.json`). I run with it set on personal machines, unset for shared dev environments where the team uses anonymized usage data for capacity planning.
+- `autoUpdatesChannel` — `"stable"` (roughly a week old, skips builds with major regressions) or `"latest"` (default). Set `DISABLE_AUTOUPDATER=1` in `"env"` for locked-down build agents.
 - `permissions.allow` / `permissions.deny` — Pre-approved and pre-denied tool calls. The patterns are glob-ish. `Bash(npm test*)` lets `npm test` run without prompting. `Bash(rm -rf*)` blocks any recursive delete outright. `WebFetch` denial is a privacy choice — flip it on for repos that contain customer data.
 
 The repo-level `.claude/settings.json` overrides any of these per project. That's where I lock down permissions tightly for the Belkins customer-data repos and leave them looser on Folderly's marketing site.
 
 ---
 
-## 6. The IDE plugins — /install-ide
+## 6. The IDE plugins — /ide
 
-Run `/install-ide` from inside a session. It detects your editor and walks the install. Currently supported: VS Code, JetBrains (IntelliJ, PyCharm, WebStorm, the whole family), and Neovim.
+Run `/ide` from inside a session. It detects your editor and connects the integration. Currently supported: VS Code (and forks like Cursor/Windsurf) and JetBrains (IntelliJ, PyCharm, WebStorm, the whole family).
 
 What changes inside the editor once it's wired:
 
 - Inline diff preview. When CC proposes an edit, you see the diff in your editor with the same syntax highlighting as your code, not as an opaque block in the terminal.
 - @-mention to reference files. Inside the CC panel, type `@src/api/auth.ts` and the file is loaded into the conversation as context. No more pasting paths.
 - Cmd-Esc (Mac) / Ctrl-Esc (Linux/Windows) to summon CC. Anywhere in your editor. Selection is auto-included.
-- Inline suggestions while you type — closer to Copilot's UX but using whatever model your CC session is on.
+- Diagnostic sharing — lint and type errors from the IDE surface automatically to Claude Code.
 
-JetBrains and VS Code are first-class. Neovim works but expect a slightly more bring-your-own-keymap experience.
+JetBrains and VS Code are first-class via `/ide`.
 
 ---
 
@@ -196,11 +198,10 @@ Bonus muscle memory: Tab autocompletes file paths, `/` opens the slash-command p
 ```bash
 ANTHROPIC_API_KEY=sk-ant-...        # required when scripting headless / CI
 CLAUDE_CONFIG_DIR=/opt/claude       # relocate ~/.claude (sandboxes, CI runners)
-CLAUDE_MODEL=sonnet                 # per-shell default, overrides settings.json
-MCP_SERVER_<NAME>_<KEY>=value       # per-server env passthrough into MCP processes
+ANTHROPIC_MODEL=opus                # per-shell default, overrides settings.json
 ```
 
-`ANTHROPIC_API_KEY` is what CI uses when there's no interactive login. `CLAUDE_CONFIG_DIR` is how you sandbox CC inside a Docker container or move config to an encrypted volume. `CLAUDE_MODEL` lets you alias `claude` in different shells to different defaults (one terminal pinned to Opus for thinking work, another on Sonnet for everything else). `MCP_SERVER_*` vars get forwarded into the corresponding MCP server process — that's how you pass secrets into HubSpot, Stripe, or whatever connector without putting them in `.mcp.json`.
+`ANTHROPIC_API_KEY` is what CI uses when there's no interactive login. `CLAUDE_CONFIG_DIR` is how you sandbox CC inside a Docker container or move config to an encrypted volume. `ANTHROPIC_MODEL` lets you alias `claude` in different shells to different defaults (one terminal pinned to Opus for thinking work, another on Sonnet for everything else). For MCP server secrets, `.mcp.json` expands `${VAR}` and `${VAR:-default}` directly inside `command`, `args`, `env`, `url`, and `headers` — that's how you pass secrets into HubSpot, Stripe, or whatever connector without putting raw keys in `.mcp.json`.
 
 ---
 
