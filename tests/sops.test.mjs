@@ -8,7 +8,7 @@ import { loadTs } from './helpers/load-ts.mjs';
 const sops = loadTs(new URL('../src/lib/sops.ts', import.meta.url));
 const workflow = loadTs(new URL('../src/lib/workflow-plan.ts', import.meta.url));
 const downloads = loadTs(new URL('../src/pages/sops/[slug].md.ts', import.meta.url));
-const { SOP_LIBRARY, SOP_SECTIONS, SOP_STATUS, SOP_BOUNDARY, getSopSections, sopHref, sopDownloadHref, renderSopMarkdown } = sops;
+const { SOP_LIBRARY, SOP_SECTIONS, SOP_STATUS, SOP_BOUNDARY, SOP_PRESET_NOTE, getSopSections, sopHref, sopDownloadHref, renderSopMarkdown } = sops;
 const read = path => readFileSync(new URL(path, import.meta.url), 'utf8');
 
 test('six unique canonical SOP routes have substantive departmental contracts and a planner preset each', () => {
@@ -103,6 +103,14 @@ test('downloaded Markdown links work without a website base and identify the can
     }
     assert.doesNotMatch(md, /\]\(\/(?!\/)/, 'no root-relative links in an offline export');
   }
+});
+
+test('each SOP page and download says its planner preset is a starting point, not an execution', () => {
+  // The reused presets carry other owners, approvers and triggers than their SOPs; the reader is told to replace them.
+  const note = 'The planner preset is an editable starting specification, not an execution of this procedure. Its owner, approver, and trigger are starting values: replace them with this SOP\'s before use.';
+  assert.equal(SOP_PRESET_NOTE, note);
+  for (const sop of SOP_LIBRARY) assert.ok(renderSopMarkdown(sop).endsWith(`?preset=${sop.presetId})\n\n${note}\n`), sop.slug);
+  assert.ok(read('../src/pages/sops/[slug].astro').includes('<p class="sop-boundary">{SOP_PRESET_NOTE}</p>'));
 });
 
 test('all procedure steps and checks are explicitly unrun with no completed results or implied approval', () => {
