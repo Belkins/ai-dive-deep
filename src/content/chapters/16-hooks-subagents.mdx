@@ -51,7 +51,7 @@ Here's the shape of a real `PostToolUse` hook that runs Prettier after every edi
       {
         "matcher": "Edit|Write",
         "hooks": [
-          { "type": "command", "command": "prettier --write \"$CLAUDE_FILE_PATH\"" }
+          { "type": "command", "command": "f=$(jq -r '.tool_input.file_path') && prettier --write \"$f\"" }
         ]
       }
     ]
@@ -59,7 +59,7 @@ Here's the shape of a real `PostToolUse` hook that runs Prettier after every edi
 }
 ```
 
-The `matcher` field is a regex against the tool name — here, "Edit or Write." `$CLAUDE_FILE_PATH` is one of several environment variables Claude Code injects when the hook runs. There are others: `$CLAUDE_PROJECT_DIR`, the tool name, the full JSON payload on stdin if you want it.
+The `matcher` field lists tool names — here, "Edit or Write." A matcher with any character beyond letters, digits, `_`, `-`, spaces, commas and `|`, such as `^Notebook`, is read as a regex instead; `*` on its own, or no matcher at all, matches every tool. Claude Code hands the hook the tool call as JSON on stdin, so `jq -r '.tool_input.file_path'` reads the file that was just edited; the same JSON carries the tool name and the session ID. For paths, `$CLAUDE_PROJECT_DIR` holds the project root. Most examples below read that JSON with `jq`.
 
 That's the whole concept. Now we make it useful.
 
@@ -73,7 +73,7 @@ That's the whole concept. Now we make it useful.
 {
   "matcher": "Edit|Write",
   "hooks": [
-    { "type": "command", "command": "prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || ruff format \"$CLAUDE_FILE_PATH\"" }
+    { "type": "command", "command": "f=$(jq -r '.tool_input.file_path // empty'); [ -n \"$f\" ] || exit 0; prettier --write \"$f\" 2>/dev/null || ruff format \"$f\" 2>/dev/null; exit 0" }
   ]
 }
 ```
@@ -86,7 +86,7 @@ Stops "please format this" forever. Picks Prettier first, falls back to Ruff. Fa
 {
   "matcher": "Edit|Write",
   "hooks": [
-    { "type": "command", "command": "if [[ \"$CLAUDE_FILE_PATH\" == *.test.* ]]; then npx vitest run \"$CLAUDE_FILE_PATH\"; fi" }
+    { "type": "command", "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.test.*) npx vitest run \"$f\";; esac" }
   ]
 }
 ```
@@ -135,17 +135,24 @@ Where `draft-commit.sh` runs `git diff --cached`, summarizes it (with a tiny loc
 
 ```json
 {
+  "UserPromptSubmit": [
+    {
+      "hooks": [
+        { "type": "command", "command": "s=$(jq -r '.session_id') && touch \"${TMPDIR:-/tmp}/cc-turn-$s\"; exit 0" }
+      ]
+    }
+  ],
   "Stop": [
     {
       "hooks": [
-        { "type": "command", "command": "[ \"$CLAUDE_TURN_DURATION_MS\" -gt 120000 ] && curl -X POST -d \"text=CC turn finished: $CLAUDE_SESSION_ID\" $SLACK_WEBHOOK" }
+        { "type": "command", "command": "s=$(jq -r '.session_id') && [ -n \"$(find \"${TMPDIR:-/tmp}/cc-turn-$s\" -mmin +2 2>/dev/null)\" ] && jq -nc --arg text \"CC turn finished: $s\" '{text: $text}' | curl -s -H 'Content-type: application/json' -d @- \"$SLACK_WEBHOOK\"; exit 0" }
       ]
     }
   ]
 }
 ```
 
-Two-minute threshold, Slack DM, done. Now I can launch a long refactor, walk away, and trust the buzz on my watch instead of polling the terminal like a madman.
+Claude Code doesn't give a hook the turn's duration, so the first hook touches a stamp file when each turn starts and the Stop hook posts only if that file is more than two minutes old. Two-minute threshold, Slack ping, done. Now I can launch a long refactor, walk away, and trust the buzz on my watch instead of polling the terminal like a madman.
 
 ---
 
