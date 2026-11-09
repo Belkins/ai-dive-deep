@@ -496,51 +496,77 @@ test('the cheat sheet gives the hook exit codes the reference documents', () => 
 });
 
 test('the glossary, chapter 38 and every hook page say only exit 2 blocks or starts the next turn', async () => {
-  // Hooks reference: "Blocking error: your hook exits 2"; any other code is a "Non-blocking error" and "The action goes
-  // ahead". Exit 2 on PreToolUse "Blocks the tool call"; on Stop it "Prevents Claude from stopping".
+  // Hooks reference: "Blocking error: your hook exits 2"; "Exit code 1 without valid JSON output is a non-blocking
+  // error". Exit 2 on PreToolUse "Blocks the tool call"; on Stop it "Prevents Claude from stopping".
   const { glossary } = await import(`data:text/javascript;base64,${Buffer.from(compile(source('src/lib/glossary.ts'))).toString('base64')}`);
+  // Text as a reader sees it: escaped quotes unescaped, code spans and inline tags dropped ("exit `1`", "<code>2</code>").
+  const plain = (text) => text.replace(/\\(['"])/g, '$1').replace(/`|<\/?(?:code|strong|em|b|i)(?:\s[^>]*)?>/g, '');
+  const sentences = (text) => text.split(/[.;!?](?=\s|$)/);
+  const clauses = (text) => text.split(/[.;:,—–()]/);
   const EXIT_2 = /\bexit(?:s|ed|ing)?(?: with)?(?: code)? 2\b/i;
   const EXIT_1 = /\bexit(?:s|ed|ing)?(?: with)?(?: code)? 1\b/i;
-  const CLAIM = /\bblock(?:s|ed)?\b(?!-)|\bprevents?\b|\bden(?:y|ies)\b|\breject(?:s|ed|ion)?\b|\bstops? the (?:tool )?(?:call|action)\b|\bnext turn\b|\bkeeps? (?:\w+ ){0,2}(?:going|working)\b|\bback to work\b/i;
+  const EXIT_0_2 = /\bexit(?:s|ed|ing)?(?: with)?(?: code)? [02]\b/i;
+  const NON_ZERO = /\bnon-?\s?zero\b|\bnonzero\b|\bnon-0\b|\b(?:exit|return)(?:s|ed|ing)?(?: with)?(?: code| status)?(?: of)? 1\b|\bexit\(1\)|\bother than (?:0|zero)\b|\b(?:but|except) (?:0|zero)\b|\bfail(?:ing|ed)? exit\b|\berror exit\b|\bexit(?:s|ed|ing)? with (?:an? )?(?:error|failure)\b|\bexit(?:s|ed|ing)? unsuccessfully\b|\bunsuccessful exit\b|\b(?:exit|code|status) (?:above|over|greater than|higher than|more than) (?:0|zero)\b/i;
+  const CLAIM = /\bblock(?:s|ed)?\b(?!-)|(?<!non-|non )\bblocking\b|\bprevents?\b|\bden(?:y|ies)\b|\breject(?:s|ed|ion)?\b|\bcancel(?:s|led)?\b|\bhalts?\b|\bstops? the (?:tool )?(?:call|action)\b|\b(?:next|another) turn\b|\bkeeps? (?:\w+ ){0,2}(?:going|working|running)\b|\bback to work\b|\bcontinues? the (?:conversation|turn|loop)\b|\b(?:loop|conversation|turn|agent) continues\b/i;
+  const NEGATION = /\bnot\b|n't\b|\bnever\b|\bunlike\b|\bunless\b|\bonly\b/i;
+  const clauseStart = (s, at) => Math.max(...[...',;:—–('].map((c) => s.lastIndexOf(c, at))) + 1;
+  // Does a sentence say a non-zero code blocks or starts the next turn? Either the code comes first and a claim follows
+  // before any exit 0 or 2 ("a non-zero exit blocks the call"; in "Exit 1 is non-blocking, but exit 2 blocks" the claim
+  // is exit 2's), or a claim with no exit 0 or 2 before it is tied to the code by a condition ("the next turn runs if
+  // the script returns non-zero"). A negation in the claim's own clause clears it ("exit 1 does not block", "Unlike
+  // exit 1, ..."); "only" clears it after the code ("exit 1 only blocks when onFailure is set"), not before it ("Only
+  // a non-zero exit blocks").
+  const claims = (s) => {
+    const zero = s.search(NON_ZERO);
+    if (zero < 0) return false;
+    const rest = s.slice(zero).split(EXIT_0_2)[0];
+    const after = rest.search(CLAIM);
+    if (after >= 0) {
+      return !NEGATION.test(s.slice(clauseStart(s, zero), zero).replace(/\bonly\b/gi, '')) && !NEGATION.test(rest.slice(0, after));
+    }
+    const before = s.slice(0, zero).search(CLAIM);
+    return before >= 0 && !EXIT_0_2.test(s.slice(0, zero)) && /\b(?:if|when|while|on)\b/i.test(s.slice(before, zero))
+      && !NEGATION.test(s.slice(clauseStart(s, before), zero));
+  };
   // A clause says exit 2 blocks or starts the next turn when it names both, negates nothing and names no other code.
   const exit2Claim = (clause) => EXIT_2.test(clause) && CLAIM.test(clause)
-    && !/\bnot?\b|n't|\bnever\b|\bnothing\b|\bnon-|\bnon ?zero\b|\b1\b/i.test(clause);
-  const clauses = (text) => text.split(/[.;:,—–()]/);
+    && !/\bnot?\b|n't|\bnever\b|\bnothing\b|\bnon-|\bnon ?zero\b|\b1\b|\bor (?:higher|above|more)\b|\b2\+/i.test(clause);
+  // Any other clause in the entry that says an exit, a script, a return code or a failure blocks or starts the next turn
+  // denies it ("exit 1 doesn't block it"). So "exit 2 does not block the call" fails even beside an accurate exit-2
+  // clause, and so does a claim that names no code ("a failing exit blocks the call").
+  const otherClaims = (text) => clauses(text).filter((c) => CLAIM.test(c) && /\bexit|\bscript\b|\breturn|\bcodes?\b|\bfail|\berr/i.test(c)
+    && !exit2Claim(c) && (EXIT_2.test(c) || !NEGATION.test(c))).map((c) => c.trim());
+  // What exit 1 does: the call goes ahead, or the agent stops. A clause that gives exit 2 that outcome and names no other
+  // code says exit 2 does not block ("the turn ends if your script exits 2").
+  const GOES_AHEAD = /non-?blocking|do(?:es)?(?: not|n't) block|goes ahead|proceeds/i;
+  const STOPS = /(?<!(?:not|never|n't) )\bstops?\b(?! hooks?\b)|lets (?:it|the agent|Claude) stop|\bends the turn\b|\bturn ends\b|do(?:es)?(?: not|n't) keep (?:\w+ ){1,2}going/i;
+  const reversed = (text, outcome) => clauses(text).filter((c) => EXIT_2.test(c) && !/\b[01]\b/.test(c) && outcome.test(c)).map((c) => c.trim());
 
-  const pre = glossary.PreToolUse.definition;
+  const pre = plain(glossary.PreToolUse.definition);
   assert.ok(clauses(pre).some(exit2Claim), 'PreToolUse: exit 2 blocks the call');
-  assert.ok(pre.split(/[.;]/).some((s) => EXIT_1.test(s) && /non-?blocking|do(?:es)?(?: not|n't) block|goes ahead|proceeds/i.test(s)),
-    'PreToolUse: exit 1 does not block');
-  const stop = glossary['Stop hook'].definition;
+  assert.deepEqual([...otherClaims(pre), ...reversed(pre, GOES_AHEAD)], [], 'PreToolUse: no clause says exit 2 does not block, or that another exit does');
+  assert.ok(sentences(pre).some((s) => EXIT_1.test(s) && !claims(s) && GOES_AHEAD.test(s)), 'PreToolUse: exit 1 does not block');
+  const stop = plain(glossary['Stop hook'].definition);
   assert.ok(clauses(stop).some(exit2Claim), 'Stop hook: exit 2 starts the next turn');
-  assert.ok(stop.split(/[.;]/).some((s) => EXIT_1.test(s) && /non-?blocking|\bstops\b|lets (?:it|the agent) stop/i.test(s)),
-    'Stop hook: exit 1 lets the agent stop');
+  assert.deepEqual([...otherClaims(stop), ...reversed(stop, STOPS)], [], 'Stop hook: no clause says exit 2 does not start the next turn, or that another exit does');
+  assert.ok(sentences(stop).some((s) => EXIT_1.test(s) && !claims(s) && STOPS.test(s)), 'Stop hook: exit 1 lets the agent stop');
 
   const table = chapter('38-run-until-done').split('\n').filter((line) => line.startsWith('|'));
-  const column = table.find((line) => /\|\s*Stop hook\s*\|/.test(line)).split('|').map((cell) => cell.trim()).indexOf('Stop hook');
-  const cell = table.find((line) => /^\|\s*Next turn starts when\s*\|/.test(line)).split('|')[column];
+  const header = table.find((line) => /\|\s*Stop hook\s*\|/.test(line));
+  const row = table.find((line) => /^\|\s*Next turn starts when\s*\|/.test(line));
+  assert.ok(header && row, 'chapter 38 keeps its table with a Stop hook column and a "Next turn starts when" row');
+  const cell = plain(row.split('|')[header.split('|').map((c) => c.trim()).indexOf('Stop hook')]);
   assert.match(cell, EXIT_2, 'chapter 38: a Stop hook starts the next turn on exit 2');
-  assert.doesNotMatch(cell, /non-?\s?zero|nonzero|\b(?!2\b)\d+\b/i, 'chapter 38: and on no other code');
+  assert.doesNotMatch(cell, /non-?\s?zero|nonzero|\b(?!2\b)\d+\b|\bor (?:higher|above|more)\b|\b2\+|\bnot\b|n't\b|\bnever\b/i,
+    'chapter 38: on no other code, and not denied');
 
-  // Every sentence on a page that mentions a hook. "a non-zero exit blocks" names the code, then the claim; "the next
-  // turn runs if the script returns non-zero" ties an earlier claim to the code with a condition. A negation before
-  // the claim clears it: "exit 1 does not block", "Unlike exit 1, exit 2 blocks"; so does naming the code after a
-  // claim with no condition: "exit 2 blocks, exit 1 doesn't". Escaped quotes in source strings (doesn\'t) are read
-  // as written on the page.
-  const NON_ZERO = /\bnon-?\s?zero\b|\bnonzero\b|\bnon-0\b|\b(?:exit|return)(?:s|ed|ing)?(?: with)?(?: code| status)?(?: of)? 1\b|\bexit\(1\)/i;
-  const NEGATION = /\bnot\b|n't\b|\bnever\b|\bunlike\b|\bunless\b|\bonly\b/i;
-  const claims = (sentence) => {
-    const zero = sentence.search(NON_ZERO);
-    if (zero < 0) return false;
-    const after = sentence.slice(zero).search(CLAIM);
-    const before = sentence.slice(0, zero).search(CLAIM);
-    const tied = before >= 0 && /\b(?:if|when|while|on)\b/i.test(sentence.slice(before, zero));
-    const at = after >= 0 ? zero + after : tied ? zero : -1;
-    return at >= 0 && !NEGATION.test(sentence.slice(0, at));
-  };
+  // Every sentence on a page that mentions a hook, except one about git hooks alone, where any non-zero exit does
+  // block the commit.
+  const gitOnly = (s) => /\bgit hooks?\b|\bpre-(?:commit|push|receive)\b|\bcommit-msg\b|\bhusky\b/i.test(s)
+    && !/PreToolUse|PostToolUse|SubagentStop|UserPromptSubmit|\bStop hook/i.test(s);
   const hits = srcFiles().filter((path) => /hook|PreToolUse|PostToolUse|SubagentStop|UserPromptSubmit/i.test(source(path)))
-    .flatMap((path) => source(path).replace(/\\(['"])/g, '$1').split('\n').flatMap((line) => line.split(/[.;!?](?=\s|$)/))
-      .filter(claims).map((sentence) => `${path}: ${sentence.trim()}`));
+    .flatMap((path) => plain(source(path)).split('\n').flatMap(sentences)
+      .filter((s) => claims(s) && !gitOnly(s)).map((s) => `${path}: ${s.trim()}`));
   assert.deepEqual(hits, []);
 });
 
