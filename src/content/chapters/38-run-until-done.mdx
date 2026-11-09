@@ -55,7 +55,7 @@ The autonomous-work surface in Claude Code now reads as a clean three-way. Each 
 
 | | `/goal` | `/loop` | Stop hook |
 |---|---|---|---|
-| Next turn starts when | Previous finishes + evaluator says "not yet" | Interval elapses | Previous finishes + script returns non-zero |
+| Next turn starts when | Previous finishes + evaluator says "not yet" | Interval elapses | Previous finishes + script exits 2 |
 | Stops when | Evaluator says condition met | You stop it | Script returns 0 |
 | Judge | Haiku reads transcript | None — Claude self-paces | Whatever you wrote |
 | Scope | Session-scoped | Session-scoped | Settings-scoped (every session) |
