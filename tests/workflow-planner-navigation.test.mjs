@@ -60,12 +60,24 @@ test('preset changes on the same planner path restore once and clean up listener
   assert.equal(getEventListeners(h.window, 'popstate').length, 0);
   assert.equal(getEventListeners(h.document, 'astro:page-load').length, 0);
 });
-test('planner-only URL sanitization preserves Astro history state and ignores supplied fields', () => {
-  const h = harness('/workflow-planner/?preset=content-review&owner=SYNTHETIC#workflow-preview');
-  assert.equal(h.window.location.search, '?preset=content-review');
-  assert.equal(h.window.location.hash, '#workflow-preview');
-  assert.equal(h.writes[0].value, h.historyState);
+test('supplied fields are ignored and the URL is left to Astro', () => {
+  const path = '/workflow-planner/?preset=content-review&owner=SYNTHETIC&utm_source=newsletter#workflow-preview';
+  const h = harness(path);
+  // Astro's router compares each link with the URL it loaded. A replaceState behind its back turns the next
+  // in-page link (View draft) into a full navigation that remounts the planner and drops unsaved edits.
+  assert.deepEqual(h.writes, []);
+  assert.equal(h.window.location.href, new URL(path, 'https://example.test').href);
+  assert.equal(h.state.preset, 'content-review');
   assert.equal(h.state.draft.owner, workflow.getWorkflowTemplate('content-review').owner);
   assert.match(h.state.notice, /Unsupported URL options/);
   h.cleanup();
+});
+test('no planner code writes browser history, including Load template and Clear', () => {
+  const writes = [];
+  const find = node => {
+    if (ts.isPropertyAccessExpression(node) && ['replaceState', 'pushState'].includes(node.name.text)) writes.push(node.getText(tree));
+    ts.forEachChild(node, find);
+  };
+  find(tree);
+  assert.deepEqual(writes, [], 'see the test above: a history write desyncs Astro and loses edits on View draft');
 });

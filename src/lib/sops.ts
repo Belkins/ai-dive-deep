@@ -23,6 +23,7 @@ export const SOP_DATE = '2026-11-09';
 export const SOP_DATE_LABEL = new Date(`${SOP_DATE}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const SOP_SITE = 'https://dive.vladyslavpodoliako.com';
 export const SOP_STATUS = 'Untested general-purpose draft. All procedure steps, quality checks, and acceptance tests are not run.';
+export const SOP_PRESET_NOTE = 'The planner preset is an editable starting specification, not an execution of this procedure. Its owner, approver, and trigger are starting values: replace them with this SOP\'s before use.';
 export const SOP_BOUNDARY = 'These are proposed templates, not actual Belkins SOPs or hands-on test reports. No external actions, sends, model calls, or schedules are performed or configured. No action is preapproved.';
 
 export const SOP_LIBRARY: readonly Sop[] = [
@@ -30,7 +31,7 @@ export const SOP_LIBRARY: readonly Sop[] = [
     slug: 'sales-call-to-crm', department: 'Sales',
     title: 'Sales SOP: Call to reviewed CRM handoff',
     summary: 'Prepare a timestamped account note, proposed CRM changes, and an unsent follow-up from approved call evidence.',
-    presetId: 'call-to-crm-follow-up', owner: 'Account owner', reviewer: 'Designated sales reviewer and account owner',
+    presetId: 'call-to-crm-follow-up', owner: 'Account owner', reviewer: 'Designated sales reviewer',
     trigger: 'A call record is explicitly cleared for review. Use one unique call/run identifier; an ambiguous account match blocks preparation.',
     purpose: 'Turn an approved call record into a source-linked account note and an unsent follow-up. A human must verify the account match and every proposed field change. This procedure does not change deal state or contact the customer.',
     inputs: [
@@ -208,7 +209,7 @@ export const SOP_LIBRARY: readonly Sop[] = [
     ],
   },
   {
-    slug: 'recruiting-interview-scorecard', department: 'Recruiting',
+    slug: 'recruiting-interview-question-pack', department: 'Recruiting',
     title: 'Recruiting SOP: Role-based interview question pack',
     summary: 'Draft task-linked questions and an unfilled evidence sheet from a role brief. No applicant analysis, scores, or hiring decisions.',
     presetId: 'recruiting-question-pack', owner: 'Recruiting coordinator', reviewer: 'Hiring manager and designated people reviewer',
@@ -239,6 +240,7 @@ export const SOP_LIBRARY: readonly Sop[] = [
       'No candidate data, personal profiling, automated scoring, ranking, or hiring decision is included.',
       'Evidence prompts are consistent, observable, and role-related rather than personality-based.',
       'Insufficient evidence is a recording state, not an adverse judgment about a person.',
+      'No question asks about or invites disclosure of protected or personal characteristics (for example age, family status, health or disability, religion, or national origin); the people reviewer confirms the list under local policy.',
       'Human review of relevance, accessibility, and local policy remains pending before use.',
     ],
     acceptanceTests: [
@@ -246,6 +248,7 @@ export const SOP_LIBRARY: readonly Sop[] = [
       { name: 'Vague criterion', fixture: 'A role draft using culture fit without an essential-task connection.', expected: 'The criterion is held for clarification, not translated into personality scoring.' },
       { name: 'Candidate data supplied', fixture: 'Role input containing a synthetic applicant-record marker.', expected: 'Processing stops and requests role-only inputs; no applicant summary or evaluation is produced.' },
       { name: 'Missing task', fixture: 'A proposed question without support in the approved role brief.', expected: 'The question is excluded or held for human review rather than used to assess a person.' },
+      { name: 'Personal-characteristic question', fixture: 'A drafted question asking about availability given family commitments.', expected: 'The question is removed or held for people-reviewer rewording to a task-based availability question.' },
     ],
     stopRecovery: [
       'Stop when role requirements, review ownership, or policy guidance are missing, or when candidate data is supplied.',
@@ -357,6 +360,6 @@ export function renderSopMarkdown(sop: Sop): string {
     `# ${sop.title}`, `Version: ${SOP_VERSION} / ${SOP_DATE}. Department: ${sop.department}.`,
     `Source: [Canonical SOP](${SOP_SITE}${sopHref(sop)})`,
     `> ${SOP_STATUS}`, SOP_BOUNDARY, sop.summary, ...sections,
-    `## Related planning reference\n\n[SOP library](${SOP_SITE}/sops/) | [Workflow planner preset](${SOP_SITE}/workflow-planner/?preset=${sop.presetId})\n\nThe planner preset is an editable starting specification, not an execution of this procedure.`,
+    `## Related planning reference\n\n[SOP library](${SOP_SITE}/sops/) | [Workflow planner preset](${SOP_SITE}/workflow-planner/?preset=${sop.presetId})\n\n${SOP_PRESET_NOTE}`,
   ].join('\n\n') + '\n';
 }

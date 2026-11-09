@@ -54,11 +54,9 @@ export default function WorkflowPlanner() {
     const restorePreset = () => {
       // Back updates location before Astro unmounts this island.
       if (window.location.pathname !== plannerPath) return;
+      // Only an allowlisted preset ID is read; query fields never reach the draft. The URL is left alone:
+      // a history.replaceState here desyncs Astro's router, and its next in-page link click remounts the planner.
       const selected = parseWorkflowPreset(window.location.search);
-      // Preserve Astro's history metadata, but never copy query fields into the draft.
-      if (window.location.search !== selected.search) {
-        window.history.replaceState(window.history.state, '', `${window.location.pathname}${selected.search}${window.location.hash}`);
-      }
       if (loadedSearch.current === selected.search) return;
       loadedSearch.current = selected.search;
       const next = getWorkflowTemplate(selected.presetId);
@@ -91,9 +89,6 @@ export default function WorkflowPlanner() {
     if (hasContent && (dirty || clear) && !window.confirm('Replace all current entries? Copy or download your draft first if you need to keep it.')) return;
     updateDraft(next);
     baseline.current = next;
-    const search = clear ? '' : `?preset=${templateId}`;
-    loadedSearch.current = search;
-    window.history.replaceState(window.history.state, '', `${window.location.pathname}${search}${window.location.hash}`);
     setNotice(clear ? 'All fields cleared. Add requirements to create a new draft.' : 'Template loaded. Review its requirements before sharing.');
   }
 

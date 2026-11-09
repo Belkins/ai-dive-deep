@@ -52,22 +52,28 @@ test('client navigation disconnects old observers and binds the new drawer once'
   h.document.dispatchEvent(new Event('astro:before-swap'));
   assert.equal(h.observers[0].disconnected, true);
   assert.equal(getEventListeners(old.links[0], 'click').length, 0);
-  h.setPage(page(['new-target']));
+  h.setPage(page(['new-target', 'second']));
   h.load();
   h.page.links[0].dispatchEvent(new Event('click'));
   assert.equal(h.page.drawers[0].open, false);
-  assert.equal(h.page.links[0].getAttribute('aria-current'), 'location');
+  // Exactly one link is the current location, and it moves with the observed section.
+  assert.deepEqual(h.page.links.map(link => link.getAttribute('aria-current')), ['location', undefined]);
+  h.observers.at(-1).callback([{ target: { id: 'second' }, isIntersecting: true, intersectionRatio: 1 }]);
+  assert.deepEqual(h.page.links.map(link => link.getAttribute('aria-current')), [undefined, 'location']);
   h.load();
   assert.equal(getEventListeners(h.page.links[0], 'click').length, 1);
   assert.equal(h.observers.filter(observer => !observer.disconnected).length, 1);
 });
 test('disposed observer callbacks do not alter a later page', () => {
   const h = harness();
+  const old = h.page;
   const observer = h.observers[0];
-  h.setPage(page(['replacement']));
+  // The later page also has a 'procedure' section, so a stale callback that ran would find it and act.
+  h.setPage(page(['procedure', 'replacement']));
   h.load();
   observer.callback([{ target: { id: 'procedure' }, isIntersecting: true, intersectionRatio: 1 }]);
-  assert.equal(h.page.links[0].getAttribute('aria-current'), 'location');
+  assert.deepEqual(old.links.map(link => link.getAttribute('aria-current')), ['location', undefined]);
+  assert.deepEqual(h.page.links.map(link => link.getAttribute('aria-current')), ['location', undefined]);
   h.setPage(page([]));
   h.load();
   assert.equal(h.observers.filter(item => !item.disconnected).length, 0);

@@ -24,7 +24,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     shipped: [
       'Six indexable SOP pages for sales, marketing, operations, customer success, recruiting, and AI agent trial planning, plus a department index.',
       'One typed content source for the procedures and matching Markdown downloads. Steps, quality checks, and acceptance tests remain explicitly not run; these are not actual Belkins SOPs or hands-on test reports.',
-      'Three aligned planner presets reused and three missing presets added; outbound QA remains separate. Only an allowlisted preset ID can seed the planner URL, never entered draft values.',
+      'Three existing planner presets reused as starting points and three new presets added; outbound QA remains separate. Only an allowlisted preset ID can seed the planner URL, never entered draft values.',
       'Library listings and filters, Command Palette page and section links, a homepage tile, and a Chapter 11 callout. Recruiting stays limited to role-based questions and unfilled evidence capture, without applicant evaluation or hiring decisions.',
     ],
     receipts: [

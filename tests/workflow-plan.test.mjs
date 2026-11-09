@@ -157,6 +157,9 @@ test('every template exports the same explicit draft-only gates and unchecked ac
     assert.match(markdown, /Completeness checks do not assess safety or correctness/, id);
     assert.match(markdown, /No schedule or connections have been configured/, id);
     assert.match(markdown, /## Acceptance tests \(not run\)/, id);
+    // An exported plan is a specification; its steps and pre-implementation checks must not read as done.
+    assert.match(markdown, /## Proposed workflow steps \(not run\)/, id);
+    assert.match(markdown, /## Before implementation \(not run\)/, id);
     assert.match(markdown, /Failed or unknown checks hold the handoff/, id);
     assert.match(markdown, /Do not send, publish, write to a CRM/, id);
     assert.match(markdown, /duplicate-prevention key/, id);

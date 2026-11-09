@@ -93,20 +93,23 @@ test('SOP-to-planner client transitions, exports, replacement, and navigation do
     await page.getByRole('link', { name: 'Department SOP library', exact: true }).click();
     await page.waitForURL(origin + '/sops/');
   }
-  await page.goto(origin + '/workflow-planner/?preset=customer-success-escalation&objective=URL_INPUT_MUST_NOT_LOAD&unknown=discard');
+  // The planner never rewrites the URL (a history write behind Astro's router loses edits on View draft), so it stays as typed.
+  const arrival = '?preset=customer-success-escalation&objective=URL_INPUT_MUST_NOT_LOAD&unknown=discard';
+  await page.goto(origin + '/workflow-planner/' + arrival);
   await page.waitForFunction(() => !document.querySelector('#workflow-template').disabled);
-  assert.equal(new URL(page.url()).search, '?preset=customer-success-escalation');
+  assert.equal(new URL(page.url()).search, arrival);
   assert.equal(await page.locator('#workflow-objective').inputValue(), getWorkflowTemplate('customer-success-escalation').objective);
+  assert.match(await page.locator('.wp-draft-status').textContent(), /Unsupported URL options were ignored/);
   await page.locator('#workflow-objective').fill(sentinel);
   await page.locator('#workflow-template').selectOption('recruiting-question-pack');
   page.once('dialog', dialog => dialog.dismiss());
   await page.getByRole('button', { name: 'Load template', exact: true }).click();
   assert.equal(await page.locator('#workflow-objective').inputValue(), sentinel);
-  assert.equal(new URL(page.url()).search, '?preset=customer-success-escalation');
+  assert.equal(new URL(page.url()).search, arrival);
   page.once('dialog', dialog => dialog.accept());
   await page.getByRole('button', { name: 'Load template', exact: true }).click();
   assert.equal(await page.locator('#workflow-objective').inputValue(), getWorkflowTemplate('recruiting-question-pack').objective);
-  assert.equal(new URL(page.url()).search, '?preset=recruiting-question-pack');
+  assert.equal(new URL(page.url()).search, arrival);
   await page.locator('#workflow-objective').fill(sentinel);
   await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async () => { throw new Error('Fixture denial'); } } }));
   await page.getByRole('button', { name: 'Copy Markdown', exact: true }).click();
@@ -130,11 +133,40 @@ test('SOP-to-planner client transitions, exports, replacement, and navigation do
   await page.getByRole('button', { name: 'Clear all fields', exact: true }).click();
   assert.equal(await page.locator('#workflow-objective').inputValue(), '');
   assert.ok(await page.getByRole('button', { name: 'Download Markdown', exact: true }).isDisabled());
-  assert.equal(new URL(page.url()).search, '');
+  assert.equal(new URL(page.url()).search, arrival);
   await page.reload();
   await page.waitForFunction(() => !document.querySelector('#workflow-template').disabled);
-  assert.equal(await page.locator('#workflow-objective').inputValue(), getWorkflowTemplate('weekly-research-brief').objective);
+  assert.equal(await page.locator('#workflow-objective').inputValue(), getWorkflowTemplate('customer-success-escalation').objective);
   assert.ok(requests.every(request => !request.includes(sentinel)), 'entered text never appears in a network request');
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('an unsaved edit survives View draft after Load template and after arriving from a tracked link', async () => {
+  const page = await context.newPage();
+  const edit = 'SOPVIEWDRAFTFIXTURE20261109';
+  const viewDraft = async expectedUrl => {
+    await page.getByRole('link', { name: 'View draft', exact: true }).click();
+    await page.waitForURL(expectedUrl);
+    // If the click had become a full client navigation, the planner would remount here and hydrate again.
+    await page.waitForFunction(() => !document.documentElement.hasAttribute('data-astro-transition') && !document.querySelector('#workflow-template').disabled);
+    assert.equal(await page.locator('#workflow-objective').inputValue(), edit, expectedUrl);
+  };
+  await page.goto(origin + '/workflow-planner/');
+  await page.waitForFunction(() => !document.querySelector('#workflow-template').disabled);
+  await page.locator('#workflow-template').selectOption('customer-success-escalation');
+  await page.getByRole('button', { name: 'Load template', exact: true }).click();
+  assert.equal(await page.locator('#workflow-objective').inputValue(), getWorkflowTemplate('customer-success-escalation').objective);
+  await page.locator('#workflow-objective').fill(edit);
+  await viewDraft(origin + '/workflow-planner/#workflow-preview');
+  // Campaign and click IDs from a shared link load the preset without a warning.
+  const tracked = '/workflow-planner/?preset=content-review&utm_source=newsletter&fbclid=abc';
+  await page.goto(origin + tracked);
+  await page.waitForFunction(() => !document.querySelector('#workflow-template').disabled);
+  assert.equal(await page.locator('#workflow-objective').inputValue(), getWorkflowTemplate('content-review').objective);
+  assert.doesNotMatch(await page.locator('.wp-draft-status').textContent(), /Unsupported/);
+  await page.locator('#workflow-objective').fill(edit);
+  await viewDraft(origin + tracked + '#workflow-preview');
   assert.deepEqual(errors, []);
   await page.close();
 });
@@ -147,7 +179,7 @@ test('Library format/department filters and keyboard search discover the SOPs af
   await page.locator('select[name="topic"]').selectOption('Recruiting');
   assert.equal(await page.locator('[data-library-item]:visible').count(), 1);
   await page.locator('[data-library-item]:visible a').click();
-  await page.waitForURL(origin + '/sops/recruiting-interview-scorecard/');
+  await page.waitForURL(origin + '/sops/recruiting-interview-question-pack/');
   await page.keyboard.press('Meta+k');
   await page.locator('input[role="combobox"]').fill('Sales quality checks');
   await page.getByRole('option').first().waitFor();
