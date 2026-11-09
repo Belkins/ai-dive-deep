@@ -154,6 +154,8 @@ test('Library format/department filters and keyboard search discover the SOPs af
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await page.waitForURL(origin + '/sops/sales-call-to-crm/#quality-checks');
+  // Chrome aborts a view transition when the viewport changes mid-swap (main does the same), so let Astro finish it first.
+  await page.waitForFunction(() => !document.documentElement.hasAttribute('data-astro-transition'));
   await page.setViewportSize({ width: 320, height: 1000 });
   await page.locator('.sop-layout details summary').click();
   await page.locator('.sop-layout details a[href="#acceptance-tests"]').click();
