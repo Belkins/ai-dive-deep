@@ -280,7 +280,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   PreToolUse: {
     term: 'PreToolUse',
     definition:
-      'A <code>Hook</code> event that fires before any tool call. Validate, block, or audit-log; a non-zero exit blocks the call and the stderr goes back into the model\'s context.',
+      'A <code>Hook</code> event that fires before any tool call. Validate, block, or audit-log; exit 2 blocks the call and the stderr goes back into the model\'s context. Exit 1 and other non-zero codes without valid JSON output are non-blocking errors: by default the call goes ahead.',
     related: ['Hook', 'PostToolUse', 'Permission mode'],
   },
   PostToolUse: {
@@ -292,7 +292,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   'Stop hook': {
     term: 'Stop hook',
     definition:
-      'A <code>Hook</code> that fires when the agent\'s turn ends. The custom-logic autonomous-loop primitive — the next turn runs if your script returns non-zero, stops on 0. Determinism beats vibes.',
+      'A <code>Hook</code> that fires when the agent\'s turn ends. The custom-logic autonomous-loop primitive — the next turn runs if your script exits 2, stops on 0. Exit 1 without valid JSON output is a non-blocking error, so it stops too. Determinism beats vibes.',
     related: ['Hook', '/goal', '/loop'],
   },
   '/goal': {
