@@ -147,10 +147,11 @@ test('an unsaved edit survives View draft after Load template and after arriving
   const edit = 'SOPVIEWDRAFTFIXTURE20261109';
   const viewDraft = async expectedUrl => {
     await page.getByRole('link', { name: 'View draft', exact: true }).click();
-    await page.waitForURL(expectedUrl);
+    await page.waitForFunction(() => location.hash === '#workflow-preview');
     // If the click had become a full client navigation, the planner would remount here and hydrate again.
     await page.waitForFunction(() => !document.documentElement.hasAttribute('data-astro-transition') && !document.querySelector('#workflow-template').disabled);
     assert.equal(await page.locator('#workflow-objective').inputValue(), edit, expectedUrl);
+    assert.equal(page.url(), expectedUrl);
   };
   await page.goto(origin + '/workflow-planner/');
   await page.waitForFunction(() => !document.querySelector('#workflow-template').disabled);
