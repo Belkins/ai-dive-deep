@@ -30,7 +30,8 @@ export const AUTHOR = {
     'AI for operators and founders',
     'AI tooling',
   ],
-  // Profile URLs as published on vladyslavpodoliako.com (verified 2026-08-03).
+  // Profile URLs as published on vladyslavpodoliako.com (verified 2026-08-03), then
+  // the five profiles Vlad confirmed on the decision page on 10 Nov 2026.
   sameAs: [
     'https://www.linkedin.com/in/chiefdata/',
     'https://x.com/StBelkins',
@@ -40,6 +41,12 @@ export const AUTHOR = {
     // The personal site's Person node, so both sites describe one entity.
     'https://vladyslavpodoliako.com/#person',
     'https://www.vladsnewsletter.com',
+    // The five confirmed by Vlad on 10 Nov 2026.
+    'https://linktr.ee/vladyslav.podoliako',
+    'https://crunchbase.com/person/vladislav-podolyako',
+    'https://builtin.com/authors/Vladyslav-Podoliako',
+    'https://thenextweb.com/author/vladyslav-podoliako',
+    'https://producthunt.com/@belkins',
   ],
 } as const;
 
