@@ -57,3 +57,18 @@ test('chapter descriptions prefer explicit copy and fall back from oversized TLD
   assert.equal(fallback, 'Agent workflows. A practical field guide');
   assert.ok(Array.from(fallback).length <= seo.SEO_DESCRIPTION_MAX_LENGTH);
 });
+
+test('glossary JSON-LD descriptions are plain text while the set keeps every term', async () => {
+  const { loadTs } = await import('./helpers/load-ts.mjs');
+  const { glossary } = loadTs(new URL('../src/lib/glossary.ts', import.meta.url));
+  const { PUBLISHER } = loadTs(new URL('../src/lib/author.ts', import.meta.url));
+  const url = 'https://dive.vladyslavpodoliako.com/glossary/';
+  const set = seo.createDefinedTermSet(`Glossary — ${PUBLISHER.name}`, url, Object.values(glossary));
+  assert.equal(set.name, "Glossary — Vlad's Playbook");
+  assert.equal(set.hasDefinedTerm.length, 105);
+  const withMarkup = set.hasDefinedTerm.filter((t) => /<\/?[a-z][^>]*>/i.test(t.description));
+  assert.deepEqual(withMarkup.map((t) => t.name), []);
+  const abliteration = set.hasDefinedTerm.find((t) => t.name === 'Abliteration');
+  assert.match(abliteration.description, /Produces a " heretic model "/);
+  assert.equal(abliteration.url, `${url}#Abliteration`);
+});

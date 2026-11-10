@@ -110,3 +110,26 @@ export function createChapterSeoDescription({
 
   return createSeoDescription(`${title}. ${subtitle}`, plainTldr);
 }
+
+interface DefinedTermInput {
+  term: string;
+  definition: string;
+}
+
+// schema.org DefinedTermSet for the glossary. The visible page renders each
+// definition as HTML; machine readers get the same words as plain text.
+export function createDefinedTermSet(name: string, url: string, entries: DefinedTermInput[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTermSet',
+    name,
+    url,
+    hasDefinedTerm: entries.map((e) => ({
+      '@type': 'DefinedTerm',
+      name: e.term,
+      description: toPlainText(e.definition),
+      inDefinedTermSet: url,
+      url: `${url}#${encodeURIComponent(e.term)}`,
+    })),
+  };
+}
