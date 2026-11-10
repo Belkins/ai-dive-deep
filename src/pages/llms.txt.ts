@@ -4,6 +4,7 @@ import { AA_SNAPSHOT, AA_INDEX_VERSION, OPUS5_EFFORT_CAPTURED } from '@/lib/arti
 import { LMARENA_SNAPSHOT } from '@/lib/lmarena';
 import { MODEL_RELEASES_CHECKED } from '@/lib/model-releases';
 import { MODEL_TIERS_UPDATED } from '@/lib/model-tiers';
+import { CONTENT_LICENSE_URL, LICENSE_STATEMENT } from '@/lib/license';
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
 
@@ -20,6 +21,7 @@ export const GET: APIRoute = async () => {
   lines.push('>');
   lines.push("> Voice: operator, anti-hype, real numbers per claim, failure receipts included.");
   lines.push("> No email gate. No upsell. Free to read and to cite.");
+  lines.push(`> License: ${LICENSE_STATEMENT} (${CONTENT_LICENSE_URL}).`);
   lines.push('>');
   lines.push(`> Full concatenated text for ingestion: ${SITE}/llms-full.txt`);
   lines.push('');

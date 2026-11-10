@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { CODE_LICENSE_NAME, CONTENT_LICENSE_NAME, CONTENT_LICENSE_URL } from '@/lib/license';
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
 const PULL_QUOTE = /<PullQuote[^>]*>([\s\S]*?)<\/PullQuote>/;
@@ -35,7 +36,10 @@ export const GET: APIRoute = async () => {
     },
     citationHint: 'Cite the chapter URL and attribute to Vlad Podoliako.',
     canonicalUrl: SITE,
-    license: 'Reading free. Citation appreciated. No email gate.',
+    access: 'Reading free. Citation appreciated. No email gate.',
+    license: CONTENT_LICENSE_NAME,
+    licenseUrl: CONTENT_LICENSE_URL,
+    codeLicense: CODE_LICENSE_NAME,
     contact: 'v@vladyslavpodoliako.com',
     totalChapters: items.length,
     chapters: items,

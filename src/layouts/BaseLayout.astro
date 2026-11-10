@@ -7,6 +7,7 @@ import Footer from '@/components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
 import { CHAPTERS, getPart } from '@/lib/chapters';
 import { AUTHOR, PUBLISHER } from '@/lib/author';
+import { CONTENT_LICENSE_URL } from '@/lib/license';
 import { createSeoDescription } from '@/lib/seo';
 import { pageTitle } from '@/lib/page-title.mjs';
 import chapterDatesJson from '@/data/chapter-dates.json';
@@ -69,6 +70,7 @@ const jsonLd: Record<string, unknown> = isChapter
       ...(chapterDate ? { datePublished: chapterDate.published, dateModified: chapterDate.modified } : {}),
       isPartOf: { '@type': 'Book', name: BRAND, url: 'https://dive.vladyslavpodoliako.com' },
       inLanguage: 'en',
+      license: CONTENT_LICENSE_URL,
     }
   : isRoot
     ? {
@@ -87,7 +89,7 @@ const jsonLd: Record<string, unknown> = isChapter
           url: `https://dive.vladyslavpodoliako.com/chapters/${c.slug}/`,
         })),
         inLanguage: 'en',
-        license: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+        license: CONTENT_LICENSE_URL,
       }
     : {
         '@context': 'https://schema.org',

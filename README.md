@@ -165,4 +165,4 @@ how it's built — but **the site is what it IS.**
 - **Content** — CC BY-NC-SA 4.0. Read it, share it, quote it, credit it; don't
   resell it.
 
-See [`LICENSE`](./LICENSE).
+See [`LICENSE`](./LICENSE) (code, MIT) and [`LICENSE-CONTENT`](./LICENSE-CONTENT) (content, CC BY-NC-SA 4.0).
