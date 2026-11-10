@@ -75,6 +75,11 @@ h4 { font-size: 1.125rem; font-weight: 500; margin-top: 2rem; margin-bottom: 0.5
 /* The same treatment for prose links outside .chapter-body. */
 .link-inline { color: rgb(var(--accent)); text-decoration-line: underline; text-decoration-thickness: 1px; text-decoration-color: rgb(var(--accent) / 0.55); text-underline-offset: 3px; transition: text-decoration-color 150ms; }
 .link-inline:hover { text-decoration-color: rgb(var(--accent)); }
+/* The same underline for every plain link (an <a> with no class) in running text in main
+   outside .chapter-body. A link with a class is a component (card, button, chip, tab) and
+   stays as it is; so do headings, nav, and the link lists and button rows named below. */
+main :where(p, li, dd, dt, td, th, blockquote, figcaption, summary, div, span, em, strong) > a:not([class]):not(:where(.chapter-body, h1, h2, h3, h4, h5, h6, nav, .path ol, .sop-related, .sop-actions, .wp-reading, .wp-page-header, .wp-section-heading) *):not(:where(.lmb-foot, .aap-foot) > a) { text-decoration-line: underline; text-decoration-thickness: 1px; text-decoration-color: rgb(var(--accent) / 0.55); text-underline-offset: 3px; transition: text-decoration-color 150ms; }
+main :where(p, li, dd, dt, td, th, blockquote, figcaption, summary, div, span, em, strong) > a:not([class]):not(:where(.chapter-body, h1, h2, h3, h4, h5, h6, nav, .path ol, .sop-related, .sop-actions, .wp-reading, .wp-page-header, .wp-section-heading) *):not(:where(.lmb-foot, .aap-foot) > a):hover { text-decoration-color: rgb(var(--accent)); }
 .chapter-body hr { border: 0; border-top: 1px solid rgb(var(--line)); margin: 2.5rem 0; }
 .chapter-body blockquote { border-left: 2px solid rgb(var(--accent)); padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; font-size: 1.05em; }
 
