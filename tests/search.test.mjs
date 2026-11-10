@@ -417,6 +417,79 @@ test('the early-open listener is removed on navigation and skipped for a ready i
   assert.equal(ready.root.dataset.openRequested, undefined);
 });
 
+// Most readers never open search, so React, Radix and the catalog must not load with the page.
+// The mount's bundled script imports the palette only on an open request or on the search button.
+const ENTRY_IMPORT = /(?<!typeof )import\('@\/widgets\/command-palette-entry'\)/g;
+const loaderScript = [...mountSource.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)]
+  .find(([, attributes]) => !attributes.includes('is:inline'))?.[2];
+
+function loaderHarness(failures = 0) {
+  assert.ok(loaderScript, 'the mount has a bundled loader script');
+  assert.doesNotMatch(loaderScript, /^\s*import\s/m, 'the palette is never imported statically');
+  assert.equal(loaderScript.match(ENTRY_IMPORT)?.length, 1, 'the palette entry is imported dynamically');
+  const calls = { imports: 0, mounts: 0 };
+  const entry = { mountCommandPalette: () => { calls.mounts += 1; } };
+  let failuresLeft = failures;
+  class Element extends EventTarget {
+    constructor(isSearchButton) { super(); this.isSearchButton = isSearchButton; }
+    closest(selector) { return this.isSearchButton && selector === '#open-palette-btn' ? this : null; }
+  }
+  const window = new EventTarget();
+  const document = new EventTarget();
+  const { outputText } = ts.transpileModule(loaderScript.replace(ENTRY_IMPORT, '__importEntry()'), {
+    compilerOptions: { target: ts.ScriptTarget.ES2022 },
+  });
+  runInNewContext(outputText, {
+    window, document, Element,
+    // An idle or timer route would load the palette without intent; these run it at once so a test sees it.
+    requestIdleCallback: (callback) => callback(), setTimeout: (callback) => callback(),
+    __importEntry: () => {
+      calls.imports += 1;
+      return failuresLeft-- > 0 ? Promise.reject(new Error('offline')) : Promise.resolve(entry);
+    },
+  });
+  const settle = () => new Promise((resolve) => setImmediate(resolve));
+  const fire = (type, isSearchButton) => {
+    for (const listener of getEventListeners(document, type)) listener({ type, target: new Element(isSearchButton) });
+  };
+  return { calls, window, document, settle, fire };
+}
+
+test('the palette code loads on intent only: an open request or the search button, never on page load', async () => {
+  const { calls, window, document, settle, fire } = loaderHarness();
+  await settle();
+  assert.deepEqual(calls, { imports: 0, mounts: 0 }, 'nothing loads before intent');
+  for (const type of ['pointerenter', 'focusin', 'touchstart']) {
+    assert.equal(getEventListeners(document, type).length, 1, type);
+    fire(type, false);
+  }
+  await settle();
+  assert.deepEqual(calls, { imports: 0, mounts: 0 }, 'other elements do not load the palette');
+  fire('pointerenter', true);
+  await settle();
+  assert.deepEqual(calls, { imports: 1, mounts: 1 }, 'hovering the search button warms the palette');
+  window.dispatchEvent(new Event('open-palette'));
+  fire('focusin', true);
+  await settle();
+  assert.deepEqual(calls, { imports: 1, mounts: 3 }, 'the code is fetched once; each intent asks the entry to mount');
+});
+
+test('each intent trigger loads the palette on its own, and a failed load is retried on the next intent', async () => {
+  for (const type of ['pointerenter', 'focusin', 'touchstart']) {
+    const { calls, settle, fire } = loaderHarness();
+    fire(type, true);
+    await settle();
+    assert.deepEqual(calls, { imports: 1, mounts: 1 }, type);
+  }
+  const { calls, window, settle } = loaderHarness(1);
+  window.dispatchEvent(new Event('open-palette'));
+  await settle();
+  assert.deepEqual(calls, { imports: 1, mounts: 0 }, 'an offline first request mounts nothing');
+  window.dispatchEvent(new Event('open-palette'));
+  await settle();
+  assert.deepEqual(calls, { imports: 2, mounts: 1 }, 'the next request tries again');
+});
+
 function keyboardHarness(count) {
   const calls = { selected: null, clicks: [], lookups: [], prevented: 0 };
   const options = new Map();

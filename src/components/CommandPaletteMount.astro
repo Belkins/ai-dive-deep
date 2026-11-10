@@ -1,8 +1,4 @@
----
-import CommandPalette from '@/widgets/CommandPalette.tsx';
----
 <div id="cc-palette-root">
-  <CommandPalette client:load />
   <script is:inline data-astro-rerun>
     (() => {
       const root = document.getElementById('cc-palette-root');
@@ -20,3 +16,20 @@ import CommandPalette from '@/widgets/CommandPalette.tsx';
     })();
   </script>
 </div>
+<script>
+  // The palette's code loads on intent only: an open request (the search button or Cmd/Ctrl-K, which
+  // BaseLayout turns into 'open-palette'), or a pointer, focus or touch on the search button to warm it.
+  // The inline script above remembers the first open request; the palette replays it once mounted.
+  let loading: Promise<typeof import('@/widgets/command-palette-entry')> | null = null;
+  const load = () => {
+    loading ??= import('@/widgets/command-palette-entry').catch((error) => { loading = null; throw error; });
+    loading.then((entry) => entry.mountCommandPalette()).catch(() => {});
+  };
+  const warm = (event: Event) => {
+    if (event.target instanceof Element && event.target.closest('#open-palette-btn')) load();
+  };
+  window.addEventListener('open-palette', load);
+  for (const type of ['pointerenter', 'focusin', 'touchstart']) {
+    document.addEventListener(type, warm, { capture: true, passive: true });
+  }
+</script>
