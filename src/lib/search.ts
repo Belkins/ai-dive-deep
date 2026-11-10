@@ -31,9 +31,16 @@ export function normalizeSearchHref(href: string): string {
   return `${url.origin}${url.pathname.replace(/\/+$/, '') || '/'}${url.search}${url.hash}`;
 }
 
+const isDigit = (char: string | undefined): boolean => char !== undefined && /\p{N}/u.test(char);
+const VERSION_NUMBER = /\p{N}\.\p{N}/u;
+
+// A dot between two digits is part of a version number ("5.5"), so it stays inside the word.
+// Every other run of punctuation or whitespace separates words. No lookbehind: older Safari cannot parse one.
 export function normalizeSearchText(text: string): string {
   return text.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+    .replace(/[^\p{L}\p{N}]+/gu, (run, offset: number, whole: string) =>
+      run === '.' && isDigit(whole[offset - 1]) && isDigit(whole[offset + 1]) ? '.' : ' ')
+    .trim();
 }
 
 export function createSearchIndex(items: readonly SearchItem[]): SearchDocument[] {
@@ -116,7 +123,8 @@ export function searchItems(
     let distance = 0;
     for (const token of tokens) {
       if (tokenScore(document, token)) continue;
-      if (token.length < 4) return [];
+      // A version number one edit away names a different release, never a typo of this one.
+      if (token.length < 4 || VERSION_NUMBER.test(token)) return [];
       const limit = token.length <= 5 ? 1 : 2;
       const closest = Math.min(limit + 1, ...document.words.map((word) => editDistance(token, word, limit)));
       if (closest > limit) return [];

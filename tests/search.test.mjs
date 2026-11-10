@@ -56,6 +56,29 @@ test('query whitespace, capitalization, accents, and technical punctuation norma
   assert.equal(searchItems(index, 'settings.json permissions')[0].href, '/claude-code-hooks/');
 });
 
+// A reader who types "Opus 5.5" means that release. Splitting the number at its dot turned the query
+// into "Opus 5", which put the older model's pages on top (issue #50).
+test('a dot between two digits stays inside its version number; every other dot still separates words', () => {
+  assert.equal(normalizeSearchText('Opus 5.5 effort'), 'opus 5.5 effort');
+  assert.equal(normalizeSearchText('Claude Code v2.1.118'), 'claude code v2.1.118');
+  assert.equal(normalizeSearchText('CLAUDE.md .5 a.5 5. 5 5..5 5.x'), 'claude md 5 a 5 5 5 5 5 5 x');
+});
+
+test('a version query matches only that version, and the bare major number still finds both', () => {
+  const docs = createSearchIndex([
+    { type: 'page', title: 'Opus 5 — the model file', href: '/opus-5/', keywords: 'effort' },
+    { type: 'chapter', title: '54 — Claude Opus 5.5 as the Default', href: '/chapters/54-claude-opus-5-5/', keywords: 'effort' },
+  ]);
+  assert.deepEqual(searchItems(docs, 'Opus 5.5 effort').map(({ href }) => href), ['/chapters/54-claude-opus-5-5/']);
+  assert.deepEqual(searchItems(docs, 'Opus 5 effort').map(({ href }) => href), ['/opus-5/', '/chapters/54-claude-opus-5-5/']);
+});
+
+test('a version number is never typo-corrected to a neighbouring version', () => {
+  const docs = createSearchIndex([{ type: 'page', title: 'Runtime 10.4 notes', href: '/runtime-10-4/' }]);
+  assert.deepEqual(searchItems(docs, 'runtime 10.5'), []);
+  assert.deepEqual(searchItems(docs, 'runtmie 10.4').map(({ href, fuzzy }) => [href, fuzzy]), [['/runtime-10-4/', true]]);
+});
+
 test('all query tokens must match, in any order and across different fields', () => {
   assert.equal(searchItems(index, 'permissions automation hooks')[0].href, '/claude-code-hooks/');
   assert.deepEqual(searchItems(index, 'hooks impossibleword'), []);
@@ -205,6 +228,19 @@ test('model-specific operator queries discover the current canonical guides', ()
   ]) {
     assert.ok(searchItems(realIndex, query).some(({ href }) => href === `/chapters/${slug}/`), query);
   }
+});
+
+test('a version number in a query ranks that version\'s guide first, ahead of the older model\'s pages', () => {
+  for (const [query, href] of [
+    ['Opus 5.5 effort', '/chapters/54-claude-opus-5-5/'],
+    ['Opus 5.5 refusal', '/chapters/54-claude-opus-5-5/'],
+    ['Sonnet 5.5 pricing', '/chapters/55-claude-sonnet-5-5/'],
+    ['Sonnet 5.5 effort', '/chapters/55-claude-sonnet-5-5/'],
+    ['Fable 5.1 cache pricing', '/chapters/50-claude-fable-5-1/'],
+  ]) {
+    assert.equal(searchItems(realIndex, query)[0]?.href, href, query);
+  }
+  assert.equal(searchItems(realIndex, 'Opus 5 effort')[0]?.href, '/opus-5/', 'Opus 5 effort');
 });
 
 test('the SOP index and all six procedures have page and section entries, including base paths', async () => {
