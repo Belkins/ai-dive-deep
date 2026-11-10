@@ -206,7 +206,7 @@ export default function TierListBuilder() {
                   type="button"
                   onClick={copyLink}
                   className={`text-[11px] px-2.5 py-1.5 rounded-md ${copyStatus === 'failed' ? 'text-left' : 'whitespace-nowrap'}`}
-                  style={{ background: copyStatus === 'copied' ? 'rgb(var(--accent-2))' : 'rgb(var(--accent))', color: copyStatus === 'copied' ? 'rgb(var(--bg))' : 'white', border: '0', fontWeight: 500 }}
+                  style={{ background: copyStatus === 'copied' ? 'rgb(var(--accent-2))' : 'rgb(var(--accent))', color: copyStatus === 'copied' ? 'rgb(var(--bg))' : 'rgb(var(--on-accent))', border: '0', fontWeight: 500 }}
                 >
                   {copyStatus === 'copied' ? 'Copied ✓' : copyStatus === 'failed' ? COPY_FAILURE_MESSAGE : 'Copy'}
                 </button>

@@ -46,7 +46,7 @@ export default function ResumeReading() {
     >
       <span
         className="inline-flex shrink-0 items-center justify-center h-8 w-8 rounded-full font-mono text-xs"
-        style={{ background: 'rgb(var(--accent))', color: 'white' }}
+        style={{ background: 'rgb(var(--accent))', color: 'rgb(var(--on-accent))' }}
       >
         {String(resumeAt.number).padStart(2, '0')}
       </span>

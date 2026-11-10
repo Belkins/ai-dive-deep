@@ -66,7 +66,7 @@ export default function StarterSkillCard({ skill, baseUrl }: { skill: StarterSki
           type="button"
           onClick={onCopy}
           className="text-xs px-3 py-1.5 rounded-md"
-          style={{ background: 'rgb(var(--accent))', color: 'white' }}
+          style={{ background: 'rgb(var(--accent))', color: 'rgb(var(--on-accent))' }}
         >
           {status === 'copied' ? '✓ Copied to clipboard' : status === 'failed' ? COPY_FAILURE_MESSAGE : 'Copy SKILL.md'}
         </button>

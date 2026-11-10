@@ -91,7 +91,7 @@ export default function TempAgencyLoop() {
                 transitionDuration: reduceMotion ? '0ms' : '700ms',
               }}
             >
-              <div className="rounded-full w-9 h-9 flex items-center justify-center font-mono text-xs" style={{ background: 'rgb(var(--accent))', color: 'white', border: '2px solid rgb(var(--bg))' }}>
+              <div className="rounded-full w-9 h-9 flex items-center justify-center font-mono text-xs" style={{ background: 'rgb(var(--accent))', color: 'rgb(var(--on-accent))', border: '2px solid rgb(var(--bg))' }}>
                 {shift.icon}
               </div>
             </div>

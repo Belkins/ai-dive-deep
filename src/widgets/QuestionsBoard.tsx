@@ -299,11 +299,11 @@ export default function QuestionsBoard() {
             style={{ background: 'rgb(var(--bg))', border: '1px solid rgb(var(--line))', color: 'rgb(var(--fg))' }}
           />
           <div className="flex flex-wrap items-center gap-1.5">
-            <button type="button" onClick={() => setActiveCat('all')} className="text-[11px] px-2 py-1 rounded-md" style={{ background: activeCat === 'all' ? 'rgb(var(--accent))' : 'transparent', color: activeCat === 'all' ? 'white' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCat === 'all' ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>All ({QUESTIONS.length})</button>
+            <button type="button" onClick={() => setActiveCat('all')} className="text-[11px] px-2 py-1 rounded-md" style={{ background: activeCat === 'all' ? 'rgb(var(--accent))' : 'transparent', color: activeCat === 'all' ? 'rgb(var(--on-accent))' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCat === 'all' ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>All ({QUESTIONS.length})</button>
             {CATEGORIES.map((c) => {
               const count = QUESTIONS.filter((q) => q.category === c.key).length;
               return (
-                <button key={c.key} type="button" onClick={() => setActiveCat(c.key)} className="text-[11px] px-2 py-1 rounded-md" style={{ background: activeCat === c.key ? 'rgb(var(--accent))' : 'transparent', color: activeCat === c.key ? 'white' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCat === c.key ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>
+                <button key={c.key} type="button" onClick={() => setActiveCat(c.key)} className="text-[11px] px-2 py-1 rounded-md" style={{ background: activeCat === c.key ? 'rgb(var(--accent))' : 'transparent', color: activeCat === c.key ? 'rgb(var(--on-accent))' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCat === c.key ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>
                   {c.label} ({count})
                 </button>
               );

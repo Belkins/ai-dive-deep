@@ -83,9 +83,9 @@ export default function ConnectorMap() {
         <div className="px-5 py-3 border-b text-xs uppercase tracking-wider flex flex-wrap items-center gap-2 justify-between" style={{ borderColor: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>
           <span>Connector taxonomy</span>
           <div className="flex flex-wrap gap-1.5">
-            <button onClick={() => setActiveCategory(null)} type="button" className="text-[11px] px-2 py-0.5 rounded-md" style={{ background: !activeCategory ? 'rgb(var(--accent))' : 'transparent', color: !activeCategory ? 'white' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (!activeCategory ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>All</button>
+            <button onClick={() => setActiveCategory(null)} type="button" className="text-[11px] px-2 py-0.5 rounded-md" style={{ background: !activeCategory ? 'rgb(var(--accent))' : 'transparent', color: !activeCategory ? 'rgb(var(--on-accent))' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (!activeCategory ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>All</button>
             {CATEGORIES.map((cat) => (
-              <button key={cat} onClick={() => setActiveCategory(cat)} type="button" className="text-[11px] px-2 py-0.5 rounded-md" style={{ background: activeCategory === cat ? 'rgb(var(--accent))' : 'transparent', color: activeCategory === cat ? 'white' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCategory === cat ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>{cat}</button>
+              <button key={cat} onClick={() => setActiveCategory(cat)} type="button" className="text-[11px] px-2 py-0.5 rounded-md" style={{ background: activeCategory === cat ? 'rgb(var(--accent))' : 'transparent', color: activeCategory === cat ? 'rgb(var(--on-accent))' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCategory === cat ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>{cat}</button>
             ))}
           </div>
         </div>

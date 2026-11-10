@@ -96,7 +96,7 @@ export default function SwarmVisualizer() {
                 className="text-xs px-2.5 py-1.5 rounded-md font-medium transition-colors"
                 style={{
                   background: pattern === p.id ? 'rgb(var(--accent))' : 'transparent',
-                  color: pattern === p.id ? 'white' : 'rgb(var(--fg) / 0.85)',
+                  color: pattern === p.id ? 'rgb(var(--on-accent))' : 'rgb(var(--fg) / 0.85)',
                   border: '1px solid ' + (pattern === p.id ? 'rgb(var(--accent))' : 'rgb(var(--line))'),
                 }}
               >
@@ -188,7 +188,7 @@ function SwarmCanvas({ pattern, agents }: { pattern: Pattern; agents: AgentState
       {/* Orchestrator */}
       <g>
         <circle cx={orchX} cy={orchY} r={26} fill="rgb(255,107,44)" />
-        <text x={orchX} y={orchY + 4} textAnchor="middle" fontSize="11" fontFamily="ui-sans-serif" fontWeight="600" fill="white">
+        <text x={orchX} y={orchY + 4} textAnchor="middle" fontSize="11" fontFamily="ui-sans-serif" fontWeight="600" fill="#0E0F11">
           orch
         </text>
         <text x={orchX} y={orchY + 50} textAnchor="middle" fontSize="10" fill="rgb(var(--muted))" fontFamily="ui-monospace, monospace">
@@ -208,7 +208,7 @@ function SwarmCanvas({ pattern, agents }: { pattern: Pattern; agents: AgentState
         return (
           <g key={i} style={{ transition: 'all 300ms ease' }}>
             <circle cx={p.x} cy={p.y} r={state === 'idle' ? 14 : 18} fill={fill} stroke={stroke} strokeWidth={1.2} />
-            <text x={p.x} y={p.y + 3} textAnchor="middle" fontSize="9" fontFamily="ui-monospace, monospace" fontWeight="600" fill={state === 'idle' ? 'rgb(var(--muted))' : 'white'}>
+            <text x={p.x} y={p.y + 3} textAnchor="middle" fontSize="9" fontFamily="ui-monospace, monospace" fontWeight="600" fill={state === 'idle' ? 'rgb(var(--muted))' : '#0E0F11'}>
               {pattern === 'adversarial' ? (i === 0 ? 'P' : i === 1 ? 'C' : 'A') : `a${i + 1}`}
             </text>
             {(p as any).label && (

@@ -181,7 +181,7 @@ export default function DayZeroChecklist() {
                     height: 32, width: 32,
                     background: isDone ? 'rgb(var(--accent-2))' : 'rgb(var(--bg))',
                     border: '2px solid ' + (isDone ? 'rgb(var(--accent-2))' : 'rgb(var(--line))'),
-                    color: isDone ? 'white' : 'rgb(var(--muted))',
+                    color: isDone ? 'rgb(var(--bg))' : 'rgb(var(--muted))',
                   }}
                 >
                   {isDone ? (
@@ -203,7 +203,7 @@ export default function DayZeroChecklist() {
                         target={step.cta.external ? '_blank' : undefined}
                         rel={step.cta.external ? 'noopener' : undefined}
                         className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md no-underline"
-                        style={{ background: 'rgb(var(--accent))', color: 'white', textDecoration: 'none' }}
+                        style={{ background: 'rgb(var(--accent))', color: 'rgb(var(--on-accent))', textDecoration: 'none' }}
                       >
                         {step.cta.label} →
                       </a>

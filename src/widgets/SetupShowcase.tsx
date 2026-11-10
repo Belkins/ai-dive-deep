@@ -65,13 +65,13 @@ export default function SetupShowcase() {
           />
           {cats.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5">
-              <button type="button" onClick={() => setActiveCat('all')} className="text-[11px] px-2 py-1 rounded-md" style={{ background: activeCat === 'all' ? 'rgb(var(--accent))' : 'transparent', color: activeCat === 'all' ? 'white' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCat === 'all' ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>All</button>
+              <button type="button" onClick={() => setActiveCat('all')} className="text-[11px] px-2 py-1 rounded-md" style={{ background: activeCat === 'all' ? 'rgb(var(--accent))' : 'transparent', color: activeCat === 'all' ? 'rgb(var(--on-accent))' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCat === 'all' ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>All</button>
               {cats.map((c) => {
                 const count = items.filter((it: any) => it.category === c).length;
                 if (count === 0) return null;
                 const label = tab === 'skills' ? (SKILL_CATS.find((s) => s.key === c)?.label ?? c) : (PLUGIN_CATS[c] ?? c);
                 return (
-                  <button key={c} type="button" onClick={() => setActiveCat(c)} className="text-[11px] px-2 py-1 rounded-md" style={{ background: activeCat === c ? 'rgb(var(--accent))' : 'transparent', color: activeCat === c ? 'white' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCat === c ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>
+                  <button key={c} type="button" onClick={() => setActiveCat(c)} className="text-[11px] px-2 py-1 rounded-md" style={{ background: activeCat === c ? 'rgb(var(--accent))' : 'transparent', color: activeCat === c ? 'rgb(var(--on-accent))' : 'rgb(var(--fg) / 0.85)', border: '1px solid ' + (activeCat === c ? 'rgb(var(--accent))' : 'rgb(var(--line))') }}>
                     {label} ({count})
                   </button>
                 );
@@ -130,7 +130,7 @@ function Tab({ active, onClick, label }: { active: boolean; onClick: () => void;
       className="text-sm font-medium px-3 py-2 rounded-md transition-colors"
       style={{
         background: active ? 'rgb(var(--accent))' : 'rgb(var(--paper))',
-        color: active ? 'white' : 'rgb(var(--fg))',
+        color: active ? 'rgb(var(--on-accent))' : 'rgb(var(--fg))',
         border: '1px solid ' + (active ? 'rgb(var(--accent))' : 'rgb(var(--line))'),
       }}
     >
