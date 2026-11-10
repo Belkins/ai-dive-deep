@@ -336,6 +336,33 @@ test('a lastmod ahead of the clock is refused beyond its allowance', () => {
   }
 });
 
+// Vlad's decision of 10 Nov 2026: the brand suffix only where the whole title fits 60
+// characters. The layout applies it; this is the check on what the build actually wrote, so a
+// later edit to the shared layout cannot quietly bring back the over-long suffixed titles.
+test('a built title longer than 60 characters must not carry the brand suffix', () => {
+  const suffix = " — Vlad's Playbook";
+  const cases = [
+    { label: '60 characters with the suffix', title: `${'a'.repeat(42)}${suffix}`, ok: true },
+    { label: '61 characters with the suffix', title: `${'a'.repeat(43)}${suffix}`, error: /title is 61 characters with the brand suffix \(max 60\)/ },
+    { label: '61 characters, apostrophe written as an entity', title: `${'a'.repeat(43)} — Vlad&#39;s Playbook`, error: /title is 61 characters with the brand suffix \(max 60\)/ },
+    { label: 'a long title without the suffix', title: 'a'.repeat(90), ok: true },
+  ];
+  for (const { label, title, ok, error } of cases) {
+    assert.equal(Array.from(suffix).length, 18);
+    const root = fixture({ sitemapIndex: validIndex, sitemapSet: validSet, pageHtml: html({ title }) });
+    try {
+      const result = run(root);
+      if (ok) assert.equal(result.status, 0, `${label}: ${result.stderr}`);
+      else {
+        assert.equal(result.status, 1, `${label}: ${result.stdout}`);
+        assert.match(result.stderr, error, label);
+      }
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});
+
 // A sweep commit gives many chapters the same git modified day. Each of those dates is checked
 // against chapter-dates.json, so they are not a build stamp and must not stop a deploy: with
 // 24 of 127 sitemap URLs on one day (10 Nov 2026), 8 more would have tripped the 25% rule.

@@ -3,6 +3,11 @@ import { join, relative, sep } from 'node:path';
 
 const DIST_DIR = 'dist';
 const DESCRIPTION_MAX_LENGTH = 160;
+// src/lib/page-title.mjs adds the brand suffix only where the whole title stays within 60
+// characters (Vlad's decision, 10 Nov 2026). Written as literals so this check cannot move
+// with the code it guards.
+const TITLE_BRAND_SUFFIX = " — Vlad's Playbook";
+const TITLE_MAX_WITH_SUFFIX = 60;
 const EXPECTED_ORIGIN = new URL(process.env.SITE_URL || 'https://dive.vladyslavpodoliako.com').origin;
 const PLACEHOLDER_VALUE_PATTERN = /^(?:undefined|null|nan)$/i;
 const PLACEHOLDER_URL_SEGMENT_PATTERN = /(?:^|[/?#&=])(?:undefined|null|nan)(?=$|[/?#&=])/i;
@@ -157,7 +162,13 @@ function validateHtml(file) {
 
   const titles = [...head.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title>/gi)].map((match) => textContent(match[1]));
   if (titles.length !== 1) fail(displayFile, `expected one title, found ${titles.length}`);
-  else validateText(displayFile, 'title', titles[0], { allowLong: true });
+  else {
+    validateText(displayFile, 'title', titles[0], { allowLong: true });
+    const titleLength = Array.from(titles[0]).length;
+    if (titles[0].endsWith(TITLE_BRAND_SUFFIX) && titleLength > TITLE_MAX_WITH_SUFFIX) {
+      fail(displayFile, `title is ${titleLength} characters with the brand suffix (max ${TITLE_MAX_WITH_SUFFIX}); a longer title ships without the suffix`);
+    }
+  }
 
   const descriptions = metaContent(head, 'name', 'description');
   const ogDescriptions = metaContent(head, 'property', 'og:description');
