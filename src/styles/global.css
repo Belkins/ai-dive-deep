@@ -392,8 +392,11 @@ main :where(p, li, aside.container-prose > div > div) > :where(code, a):not(:whe
     --paper: 242 241 236;
     --accent: 194 65 12;
     --accent-2: 4 120 87;
+    --on-accent: 255 255 255;
   }
   html, body { background: #fff; color: #000; }
+  /* Callouts and pull quotes start at the same left edge as the chapter text. */
+  aside.container-prose { max-width: none; padding-left: 0; padding-right: 0; }
   body > header,
   #announce-bar,
   #mobile-menu,
