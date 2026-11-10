@@ -58,7 +58,18 @@ test('README widget count is held to the files in src/widgets', () => {
   assert.equal(run({ 'README.md': '- **2 React/Astro widgets** in src/widgets/\n' }).status, 0);
   const r = run({ 'README.md': '- **31 React/Astro widgets** in src/widgets/\n' });
   assert.equal(r.status, 1, r.out);
-  assert.match(r.out, /says 31, src\/widgets\/\* holds 2/);
+  assert.match(r.out, /says 31, src\/widgets\/\[A-Z\]\*\.tsx holds 2/);
+});
+
+// A widget is a component file (PascalCase .tsx). Hooks and loaders that live
+// beside the widgets, such as useCopy.tsx, must not move the count.
+test('helper modules in src/widgets are not counted as widgets', () => {
+  const r = run({
+    'README.md': '- **2 React/Astro widgets** in src/widgets/\n',
+    'src/widgets/useThing.tsx': 'export {};\n',
+    'src/widgets/entry-helper.ts': 'export {};\n',
+  });
+  assert.equal(r.status, 0, r.out);
 });
 
 test('page prose is not held to the live chapter count', () => {
