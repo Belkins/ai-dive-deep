@@ -226,6 +226,10 @@ const sections = [
 const slug = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 const navItems = sections.map((s) => ({ id: slug(s.h), label: s.h }));
+// Key text split for wrapping at 1280 px and up: words at spaces, and dotted paths after a
+// dot that sits between two letters (permissions.allow). Each piece is nowrap there, so a key
+// never breaks inside a word. The characters themselves are unchanged.
+const keyParts = (k: string) => k.split(' ').map((w) => w.split(/(?<=[a-z]\.)(?=[A-Za-z])/));
 ---
 <BaseLayout title="Claude Code Commands — The Cheat Sheet" description="The Claude Code cheat sheet: slash commands, settings, env vars, file paths, keyboard shortcuts. Tape it next to your monitor.">
   <section class="container-wide pt-12 pb-6 print:pt-2 print:pb-2">
@@ -241,14 +245,14 @@ const navItems = sections.map((s) => ({ id: slug(s.h), label: s.h }));
 
   <section class="container-wide pb-24 print:pb-0">
     <div class="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10 print:block">
-      <div class="no-print">
+      <div class="no-print lg:sticky lg:top-20 lg:self-start">
         <SectionNav items={navItems} title="Sections" />
       </div>
-      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 print:grid-cols-3 print:gap-2">
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 print:grid-cols-3 print:gap-2">
         {sections.map((s) => (
           <div id={slug(s.h)} data-section-target class="card print:p-3 scroll-mt-24" style="break-inside: avoid;">
             <h3 class="m-0 font-display text-lg mb-2">{s.h}</h3>
-            <table class="w-full text-xs table-fixed">
+            <table class="w-full text-xs table-fixed xl:table-auto">
               <colgroup>
                 <col style="width: 44%" />
                 <col style="width: 56%" />
@@ -256,7 +260,7 @@ const navItems = sections.map((s) => ({ id: slug(s.h), label: s.h }));
               <tbody>
                 {s.items.map(([k, v]) => (
                   <tr class="border-b align-top" style="border-color: rgb(var(--line))">
-                    <td class="py-1.5 pr-3 font-mono align-top" style="color: rgb(var(--accent)); overflow-wrap: anywhere; word-break: break-word">{k}</td>
+                    <td class="py-1.5 pr-3 font-mono align-top" style="color: rgb(var(--accent)); overflow-wrap: anywhere; word-break: break-word">{keyParts(k).map((word, wi) => (<>{wi > 0 && ' '}{word.map((piece, pi) => (<>{pi > 0 && <wbr />}<span class="xl:whitespace-nowrap">{piece}</span></>))}</>))}</td>
                     <td class="py-1.5 align-top" style="color: rgb(var(--fg) / 0.85)">
                       {v.includes(' | ') ? (
                         <span class="flex flex-wrap gap-1">
