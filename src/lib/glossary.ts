@@ -56,7 +56,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   'Claude Code': {
     term: 'Claude Code',
     definition:
-      "Anthropic's CLI tool. `claude` in your terminal. Reads/writes your repo, spawns subagents, talks to MCP servers.",
+      "Anthropic's CLI tool. <code>claude</code> in your terminal. Reads/writes your repo, spawns subagents, talks to MCP servers.",
   },
   'Design system': {
     term: 'Design system',
@@ -95,7 +95,7 @@ export const glossary: Record<string, GlossaryEntry> = {
   Cron: {
     term: 'Cron',
     definition:
-      'A scheduling syntax. `0 7 * * 1-5` = 7 AM weekdays. Most modern surfaces hide it behind a UI.',
+      'A scheduling syntax. <code>0 7 * * 1-5</code> = 7 AM weekdays. Most modern surfaces hide it behind a UI.',
   },
   // [VLAD: the four definitions below are factual drafts from the design swarm — revoice in your register. Keys/related-wiring are infra.]
   Dreaming: {
