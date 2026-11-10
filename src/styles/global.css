@@ -342,3 +342,36 @@ h4:hover .anchor { opacity: 0.6; }
    a column's min-content width and squeezes table rows taller. The third parent is the
    running text of a Callout, whose slot has no <p> (the /opus-5/use-cases/ overflow). */
 main :where(p, li, aside.container-prose > div > div) > :where(code, a):not(:where(td, th) *) { overflow-wrap: anywhere; }
+
+/* Chapter tables. The table element is already its own sideways scroller (display: block;
+   overflow-x: auto, above). Right-edge cue: a scroll shadow, CSS only. The first layer is a
+   cover in the page colour that scrolls with the content (local) and sits at its right end;
+   the second is a shadow pinned to the scroller's right edge (scroll). The shadow shows only
+   while more of the table is off-screen to the right; a table that fits keeps it covered. */
+.chapter-body table {
+  background:
+    linear-gradient(to left, rgb(var(--bg)) 40%, rgb(var(--bg) / 0)) right center / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 100% 50%, rgb(var(--fg) / 0.22), rgb(var(--fg) / 0)) right center / 0.875rem 100% no-repeat scroll;
+}
+
+/* Phones: a table too wide for the column used to shrink every column to its longest word,
+   so rows grew up to 409 px tall (chapter 54) and 457 px (chapter 51). Cells of a table that
+   already scrolls get a minimum width, so columns keep a readable measure and the table
+   scrolls. The condition "already scrolls" is a scroll-driven animation on the table's own
+   scroll timeline: a table with nothing to scroll has an inactive timeline, so the keyframes
+   never apply and a table that fits today stays exactly as it is. Browsers without
+   animation-timeline skip the whole rule (the @supports guard) and keep today's layout.
+   The last column (usually the notes) and every column of a table with three or fewer
+   columns get the wider minimum. */
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 639px) {
+    .chapter-body :where(td, th) {
+      animation: pp-table-cell-min linear both;
+      animation-timeline: scroll(nearest inline);
+    }
+    .chapter-body :where(td, th):last-child,
+    .chapter-body table:not(:has(:is(td, th):nth-child(4))) :where(td, th) { animation-name: pp-table-cell-min-last; }
+  }
+}
+@keyframes pp-table-cell-min { from, to { min-width: 8.5rem; } }
+@keyframes pp-table-cell-min-last { from, to { min-width: 14rem; } }
