@@ -186,13 +186,16 @@ const heatingGlyph = `<svg width="9" height="9" viewBox="0 0 9 9" aria-hidden="t
     <div class="mt-2 font-mono" style="font-size: 12px; color: rgb(var(--muted))">
       <span style="color: rgb(var(--accent-2))">{data.count}</span> tracked · <span style="color: rgb(var(--accent-2))">{s.heatingNow}</span> heating · {feedsClause} · {darkCount} of 4 stations quiet
     </div>
+    {/* The source column takes at most 55% of a row, so a long host name is cut with an ellipsis
+        instead of pushing the page sideways on a phone (a 310 px host did, on /radar/2026-06-15/).
+        The age after it is never cut. */}
     <ol role="list" class="list-none p-0 mt-3 mb-0 space-y-2">
       {top5.map((it) => (
-        <li class="grid items-baseline gap-x-3" style="grid-template-columns: 1.5rem 1fr auto">
+        <li class="grid items-baseline gap-x-3" style="grid-template-columns: 1.5rem minmax(0, 1fr) fit-content(55%)">
           <span class="font-mono text-sm tabular-nums text-right" style={`color: rgb(var(--${it.rank <= 3 ? 'fg' : 'muted'}))`}>{it.rank}</span>
           <a href={it.url} target="_blank" rel="noopener nofollow" class="truncate min-w-0 no-underline font-display text-base md:text-lg leading-snug hover:underline" style="color: rgb(var(--fg))">{it.title}</a>
-          <span class="font-mono whitespace-nowrap inline-flex items-center gap-1.5" style="font-size: 11px; color: rgb(var(--muted))">
-            {it.domain} · {age(it.ageHours)}{it.heating && (<span style="color: rgb(var(--accent-2))" title="Heating across independent source families" set:html={heatingGlyph} />)}
+          <span class="font-mono whitespace-nowrap inline-flex items-center gap-1.5 min-w-0" style="font-size: 11px; color: rgb(var(--muted))">
+            <span class="inline-flex min-w-0"><span class="truncate min-w-0">{it.domain}</span><span class="shrink-0 whitespace-pre">{` · ${age(it.ageHours)}`}</span></span>{it.heating && (<span style="color: rgb(var(--accent-2))" title="Heating across independent source families" set:html={heatingGlyph} />)}
           </span>
         </li>
       ))}
