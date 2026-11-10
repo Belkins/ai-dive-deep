@@ -171,6 +171,7 @@ function buildFixture({ isPublic = true, liveCount = 12, siteUrl = defaultOrigin
     write(root, 'src/pages/index.astro', '<a href="/radar/">Radar</a>');
     write(root, 'src/pages/private-fixture.astro', '---\nimport BaseLayout from "@/layouts/BaseLayout.astro";\n---\n<BaseLayout title="Private fixture" noindex>Private</BaseLayout>');
     write(root, 'src/styles/global.css', '');
+    write(root, 'src/styles/fonts.css', '');
     const layout = readFileSync(join(root, 'src/layouts/BaseLayout.astro'), 'utf8');
     write(root, 'src/layouts/BaseLayout.astro', layout.replace("import { ClientRouter } from 'astro:transitions';", "import ClientRouter from '@/components/ClientRouter.astro';"));
     for (const component of ['Nav', 'AnnouncementBar', 'Footer', 'CommandPaletteMount', 'ClientRouter']) {
