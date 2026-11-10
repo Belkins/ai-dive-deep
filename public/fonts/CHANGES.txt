@@ -1,0 +1,26 @@
+Changes from the upstream fonts
+===============================
+
+The font files in this folder are modified copies, as the SIL Open Font License 1.1
+(LICENSE.txt) allows. This note says what differs from the upstream files.
+
+All three families (inter-*, jetbrains-mono-*, source-serif-4-*)
+  - Taken from Google Fonts' own woff2 subsets (latin, latin-ext, greek), not from the
+    projects' release files. Google's subsetting stays as Google made it.
+  - Instanced with fontTools to the weight range this site uses: Inter 400-700,
+    JetBrains Mono 400-600, Source Serif 4 400-600. The serif keeps its optical-size
+    axis (8 to 60). No italic is served.
+
+Source Serif 4 (source-serif-4-*.woff2), on 2026-11-11
+  - The names inside the font were changed. In each file's name table, the records that
+    name the font (family, full name, unique ID, PostScript name, and the PostScript names
+    of the three named weights) now read "Vlads Playbook Serif" (PostScript form
+    "VladsPlaybookSerif") instead of "Source Serif 4" ("SourceSerif4"). The style part
+    and version text of each record are unchanged.
+  - Why: the licence names "Source" as a Reserved Font Name, and a modified version of the
+    font may not use a Reserved Font Name as its name. These files are modified (weight
+    range trimmed), so their internal names no longer use it.
+  - Not changed: the copyright, trademark, manufacturer, designer, description, URL and
+    licence records, which keep Adobe's notice including the words "Reserved Font Name
+    'Source'"; every glyph, metric and other table; the file names; and the CSS
+    family name the site's stylesheet uses.
