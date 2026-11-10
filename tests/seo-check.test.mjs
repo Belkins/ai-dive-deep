@@ -287,6 +287,9 @@ test('chapter lastmod must be the git modified date from chapter-dates.json', ()
     { sitemapSet: set(chapter('2026-05-14T00:00:00.000Z')), error: /lastmod 2026-05-14T00:00:00\.000Z does not match its git modified date 2026-05-13/ },
     { sitemapSet: set(chapter()), error: /\/chapters\/01-x is missing its authoritative lastmod/ },
     { sitemapSet: set(chapter('2026-05-13T00:00:00.000Z')).replace('/null-safety/</loc>', '/null-safety/</loc><lastmod>2026-05-13T00:00:00.000Z</lastmod>'), error: /\/null-safety has a non-authoritative lastmod/ },
+    // A chapter the date file does not list has no git date to check against, so its lastmod is
+    // as unverified as any other page's.
+    { sitemapSet: set(chapter('2026-05-13T00:00:00.000Z'), '<url><loc>https://dive.vladyslavpodoliako.com/chapters/02-y/</loc><lastmod>2026-05-13T00:00:00.000Z</lastmod></url>'), error: /\/chapters\/02-y has a non-authoritative lastmod/ },
   ];
   for (const { sitemapSet, ok, error } of cases) {
     const root = fixture({ sitemapIndex: validIndex, sitemapSet });
@@ -312,8 +315,8 @@ test('chapter lastmod must be the git modified date from chapter-dates.json', ()
 test('a lastmod ahead of the clock is refused beyond its allowance', () => {
   const ahead = (minutes) => new Date(Date.now() + minutes * 60 * 1000).toISOString();
   const cases = [
-    { label: 'chapter 10 hours ahead', path: '/chapters/01-x/', lastmod: ahead(10 * 60), ok: true },
-    { label: 'chapter 15 hours ahead', path: '/chapters/01-x/', lastmod: ahead(15 * 60), error: /\/chapters\/01-x has future lastmod/ },
+    { label: 'chapter 13 hours 50 minutes ahead', path: '/chapters/01-x/', lastmod: ahead(13 * 60 + 50), ok: true },
+    { label: 'chapter 14 hours 10 minutes ahead', path: '/chapters/01-x/', lastmod: ahead(14 * 60 + 10), error: /\/chapters\/01-x has future lastmod/ },
     { label: 'radar 2 minutes ahead', path: '/radar/', lastmod: ahead(2), ok: true },
     { label: 'radar 10 minutes ahead', path: '/radar/', lastmod: ahead(10), error: /\/radar has future lastmod/ },
   ];
@@ -346,6 +349,9 @@ test('a built title longer than 60 characters must not carry the brand suffix', 
     { label: '61 characters with the suffix', title: `${'a'.repeat(43)}${suffix}`, error: /title is 61 characters with the brand suffix \(max 60\)/ },
     { label: '61 characters, apostrophe written as an entity', title: `${'a'.repeat(43)} — Vlad&#39;s Playbook`, error: /title is 61 characters with the brand suffix \(max 60\)/ },
     { label: 'a long title without the suffix', title: 'a'.repeat(90), ok: true },
+    // The limit counts characters as a reader sees them. A character outside the basic plane is
+    // one character and two UTF-16 units, so this title is 60 characters and 61 units.
+    { label: '60 characters, one of them outside the basic plane', title: `${'a'.repeat(41)}${String.fromCodePoint(0x1F4D8)}${suffix}`, ok: true },
   ];
   for (const { label, title, ok, error } of cases) {
     assert.equal(Array.from(suffix).length, 18);
@@ -382,6 +388,23 @@ test('chapters that share one git modified date do not trip the blanket-timestam
   }
 });
 
+// The other half of that rule: a date nothing verified is still counted. The only such dates in
+// today's sitemap are the Radar's, and a dated Radar page with another day's date already fails
+// by itself, so the rule is a backstop that reports beside that error.
+test('lastmods that are not verified chapter dates still count toward the blanket-timestamp rule', () => {
+  const days = ['2026-07-06', '2026-07-07', '2026-07-08', '2026-07-09', '2026-07-10'];
+  const urls = days.map((day) => `<url><loc>https://dive.vladyslavpodoliako.com/radar/${day}/</loc><lastmod>2026-07-10T00:00:00.000Z</lastmod></url>`);
+  const sitemapSet = `<urlset><url><loc>https://dive.vladyslavpodoliako.com/null-safety/</loc></url>${urls.join('')}</urlset>`;
+  const root = fixture({ sitemapIndex: validIndex, sitemapSet });
+  try {
+    const result = run(root);
+    assert.equal(result.status, 1, result.stdout);
+    assert.match(result.stderr, /5\/6 URLs share lastmod 2026-07-10T00:00:00\.000Z; possible blanket build timestamp/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('a chapter page must share its own card, and the card must be in dist', () => {
   const route = '/chapters/16-hooks-subagents/';
   const set = `<urlset><url><loc>https://dive.vladyslavpodoliako.com${route}</loc></url></urlset>`;
@@ -397,6 +420,9 @@ test('a chapter page must share its own card, and the card must be in dist', () 
     { label: 'site default card', page: withImage('/og-default.png'), card: true, status: 1, error: /expected \/og\/chapters\/16-hooks-subagents\.png/ },
     { label: 'twitter image differs', page: withImage('/og/chapters/16-hooks-subagents.png', '/og-default.png'), card: true, status: 1, error: /og:image and twitter:image differ/ },
     { label: 'no share image', page: html({ route }), card: true, status: 1, error: /expected one og:image and one twitter:image, found 0 and 0/ },
+    // Two tags of one kind: a preview could show either picture.
+    { label: 'two og:image tags', page: withImage('/og/chapters/16-hooks-subagents.png').replace('</head>', '<meta property="og:image" content="https://dive.vladyslavpodoliako.com/og-default.png"></head>'), card: true, status: 1, error: /expected one og:image and one twitter:image, found 2 and 1/ },
+    { label: 'two twitter:image tags', page: withImage('/og/chapters/16-hooks-subagents.png').replace('</head>', '<meta name="twitter:image" content="https://dive.vladyslavpodoliako.com/og-default.png"></head>'), card: true, status: 1, error: /expected one og:image and one twitter:image, found 1 and 2/ },
     // Share previews are fetched by other sites, which cannot resolve a path without a host.
     { label: 'address without a host', page: withAddress('/og/chapters/16-hooks-subagents.png'), card: true, status: 1, error: /og:image is not an absolute URL: \/og\/chapters\/16-hooks-subagents\.png/ },
     // A card served from another site can change or vanish without this build noticing.
@@ -436,6 +462,27 @@ test('a page outside the chapters must not share an image that is missing from d
       const result = run(root);
       assert.equal(result.status, status, `${label}: ${result.stderr}`);
       if (error) assert.match(result.stderr, error, label);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});
+
+// One tag without the other: one network shows the card and the other shows none.
+test('a page outside the chapters that names a share image names it in both tags', () => {
+  const og = '<meta property="og:image" content="https://dive.vladyslavpodoliako.com/og-default.png">';
+  const twitter = '<meta name="twitter:image" content="https://dive.vladyslavpodoliako.com/og-default.png">';
+  const cases = [
+    { label: 'og:image alone', tags: og, error: /expected one og:image and one twitter:image, found 1 and 0/ },
+    { label: 'twitter:image alone', tags: twitter, error: /expected one og:image and one twitter:image, found 0 and 1/ },
+  ];
+  for (const { label, tags, error } of cases) {
+    const root = fixture({ sitemapIndex: validIndex, sitemapSet: validSet, pageHtml: html().replace('</head>', `${tags}</head>`) });
+    try {
+      writeFileSync(join(root, 'dist', 'og-default.png'), 'png');
+      const result = run(root);
+      assert.equal(result.status, 1, `${label}: ${result.stdout}`);
+      assert.match(result.stderr, error, label);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
