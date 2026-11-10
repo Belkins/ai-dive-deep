@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      indexnow_full:
+        description: 'Resend every page to IndexNow, changed or not'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -36,6 +41,10 @@ jobs:
           # Absent secret = empty value = palette analytics stay dark.
           PUBLIC_POSTHOG_KEY: ${{ secrets.PUBLIC_POSTHOG_KEY }}
           PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST }}
+      # Keep the IndexNow manifest that is live now, before this deploy
+      # replaces it; the indexnow job diffs it against the new one. Missing or
+      # failed = the ping resends every page once. Never fails the build.
+      - run: curl -fsS --max-time 15 -o dist/indexnow-previous.json https://dive.vladyslavpodoliako.com/indexnow-manifest.json || echo "no live IndexNow manifest; the ping will resend every page"
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -71,12 +80,19 @@ jobs:
         if: steps.deployment.outcome == 'failure' && steps.retry1.outcome == 'failure'
         uses: actions/deploy-pages@v5
 
-  # Announce the deployed corpus to IndexNow (Bing/Brave/Yandex ingestion —
+  # Announce new and changed pages to IndexNow (Bing/Brave/Yandex ingestion —
   # the indexes ChatGPT and Claude search retrieve from). Runs after deploy,
   # so a failure here never blocks the site; red job = visible signal only.
+  # Both manifests come from this run's Pages artifact, not the CDN.
   indexnow:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: python3 scripts/indexnow-ping.py
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: github-pages
+          path: pages
+      - run: tar -xf pages/artifact.tar -C pages --wildcards '*indexnow-*.json' || echo "manifests not in the artifact; the ping falls back"
+      - run: python3 scripts/indexnow-ping.py --manifest pages/indexnow-manifest.json --previous pages/indexnow-previous.json ${{ inputs.indexnow_full && '--full' || '' }}
