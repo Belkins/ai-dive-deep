@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { copyFileSync, mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -69,6 +69,28 @@ test('helper modules in src/widgets are not counted as widgets', () => {
     'src/widgets/useThing.tsx': 'export {};\n',
     'src/widgets/entry-helper.ts': 'export {};\n',
   });
+  assert.equal(r.status, 0, r.out);
+});
+
+// Pages share og-default.png, which is rendered by hand from og-default.svg. Correcting a
+// count in the SVG alone would leave every share card on the old number, so the build
+// stays red until the PNG is rendered again and the SVG's hash recorded.
+test('a share-image SVG edited after its PNG was rendered fails and names the PNG and the command', () => {
+  const r = run({ 'public/og-default.svg': '<text>3 chapters · 2 widgets</text>\n' });
+  assert.equal(r.status, 1, r.out);
+  assert.match(r.out, /public\/og-default\.png is the image pages share/);
+  assert.match(r.out, /rsvg-convert public\/og-default\.svg -o public\/og-default\.png/);
+  assert.match(r.out, /"source_sha256": "[0-9a-f]{64}"/);
+});
+
+// The fixture takes its chapter and widget counts from the card itself, so this case is
+// about the hash alone and does not go red when a chapter is added.
+test('the committed share-image SVG is the one its PNG was rendered from', () => {
+  const svg = readFileSync(new URL('../public/og-default.svg', import.meta.url));
+  const text = svg.toString('utf8');
+  const chapters = Number(text.match(/(\d+)[- ]chapters?/)[1]);
+  const widgets = Number(text.match(/(\d+) (?:React\/Astro |interactive )?widgets/)[1]);
+  const r = run({ 'public/og-default.svg': svg }, { chapters, widgets });
   assert.equal(r.status, 0, r.out);
 });
 

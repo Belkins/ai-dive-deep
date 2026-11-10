@@ -29,6 +29,14 @@
       "files": ["README.md", "public/og-default.svg"]
     }
   ],
+  "rendered_images": [
+    {
+      "source": "public/og-default.svg",
+      "render": "public/og-default.png",
+      "command": "rsvg-convert public/og-default.svg -o public/og-default.png",
+      "source_sha256": "9d39636749be87e8b690ca62e8b6609e71cbc51f5892b712f579a5573641d849"
+    }
+  ],
   "soft_facts": [
     {
       "regex": "3 to 10 billion tokens a month",

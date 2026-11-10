@@ -23,11 +23,18 @@ of chapters (files in src/content/chapters/*.mdx), checked on the front-door
 files each entry lists (README.md, the share-image SVGs). Page prose is not
 held to the live count: dated pages legitimately quote older counts.
 
+rendered_images (hard-fail): an image rendered by hand from a source file, such
+as the share-image PNG from its SVG. Pages share the PNG, and the build cannot
+render it (the fonts are not on the build machine), so the ledger records the
+hash of the source the PNG was last rendered from. A source that no longer
+matches fails the build until the PNG is rendered again and the hash updated.
+
 Escape hatch: <!-- NOSTALENUMBERS --> on a line or in first 30 lines of file.
 """
 
 from __future__ import annotations
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -130,6 +137,32 @@ def scan_counts(ledger: dict) -> list[tuple[str, int, str, str, str]]:
     return fails
 
 
+def scan_renders(ledger: dict) -> list[tuple[str, int, str, str, str]]:
+    """Hard rule for an image rendered by hand from a source file. Each
+    rendered_images entry names the source, the render, the command that
+    renders it and the hash of the source at the last render. Same tuple
+    shape as scan_hard."""
+    fails: list[tuple[str, int, str, str, str]] = []
+    for entry in ledger.get('rendered_images', []):
+        source = ROOT / entry['source']
+        if not source.is_file():
+            continue
+        now = hashlib.sha256(source.read_bytes()).hexdigest()
+        if now != entry.get('source_sha256'):
+            fails.append(
+                (
+                    entry['source'],
+                    1,
+                    f'{entry["render"]} was rendered from an older copy of this file',
+                    'rendered_images',
+                    f'{entry["render"]} is the image pages share, and it is rendered by hand. '
+                    f'Render it again ({entry["command"]}), look at it, then set '
+                    f'"source_sha256": "{now}" for it in scripts/numbers-ledger.json',
+                )
+            )
+    return fails
+
+
 def scan_soft(ledger: dict, today: date) -> list[tuple[str, int, str, str, int, str]]:
     """Return list of (path, line_no, snippet, label, age_days, last_verified)."""
     max_age = int(ledger.get('max_age_days', 90))
@@ -196,7 +229,7 @@ def main() -> int:
     ledger = load_ledger()
     today = date.today()
 
-    hard_fails = scan_hard(ledger) + scan_counts(ledger)
+    hard_fails = scan_hard(ledger) + scan_counts(ledger) + scan_renders(ledger)
     soft_warns = scan_soft(ledger, today)
 
     # Soft warnings → stderr, never block (unless --strict)
@@ -219,7 +252,8 @@ def main() -> int:
             print(f'      line:   {snippet}')
         print()
         print('Fix: replace the deprecated ID with the current model name, set a '
-              'wrong count to the number the folder holds, or '
+              'wrong count to the number the folder holds, render a share image again as '
+              'its line says, or '
               'add <!-- NOSTALENUMBERS --> if the historical reference is intentional.')
         return 1
 
