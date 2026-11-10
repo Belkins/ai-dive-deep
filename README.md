@@ -10,7 +10,7 @@
 
 [![Edition](https://img.shields.io/badge/edition-20.2-FF6B2C?style=flat-square)](https://dive.vladyslavpodoliako.com/changelog/) &nbsp;
 [![Live](https://img.shields.io/badge/site-live-22D3A0?style=flat-square)](https://dive.vladyslavpodoliako.com) &nbsp;
-[![License: code MIT, content CC BY-NC-SA 4.0](https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY--NC--SA-71717A?style=flat-square)](./LICENSE)
+[![License: code MIT, content CC BY-NC-SA 4.0](https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY--NC--SA-71717A?style=flat-square)](#license)
 
 </div>
 
@@ -164,5 +164,10 @@ how it's built — but **the site is what it IS.**
   living-link artifacts; that's the entire point.
 - **Content** — CC BY-NC-SA 4.0. Read it, share it, quote it, credit it; don't
   resell it.
+
+The book content (chapter MDX files in src/content/chapters/, copy in
+src/pages/, and resource snippets in src/lib/snippets.ts) is licensed under
+the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+License.
 
 See [`LICENSE`](./LICENSE) (code, MIT) and [`LICENSE-CONTENT`](./LICENSE-CONTENT) (content, CC BY-NC-SA 4.0).
