@@ -20,13 +20,13 @@
       "label": "chapter count",
       "count_glob": "src/content/chapters/*.mdx",
       "regex": "\\b(\\d+)[- ]chapters?\\b",
-      "files": ["README.md", "public/og-default.svg", "public/og-launch.svg"]
+      "files": ["README.md", "public/og-default.svg"]
     },
     {
       "label": "widget count",
       "count_glob": "src/widgets/*",
       "regex": "\\b(\\d+) (?:React/Astro |interactive )?widgets\\b",
-      "files": ["README.md", "public/og-default.svg", "public/og-launch.svg"]
+      "files": ["README.md", "public/og-default.svg"]
     }
   ],
   "soft_facts": [
