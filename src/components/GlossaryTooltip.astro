@@ -11,3 +11,9 @@ const { term } = Astro.props;
      Links inside a definition get the same underline as the popover's own links. */
   .glossary-popover-def a { text-decoration: underline; }
 </style>
+
+<script>
+  // A click made before the term's script has loaded is repeated once it is ready.
+  import { installGlossaryClickReplay } from '@/lib/glossary-click-replay.mjs';
+  installGlossaryClickReplay(document);
+</script>
