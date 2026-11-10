@@ -30,16 +30,19 @@ test('every licence statement in the site data reads the licence module', () => 
   // The authored access sentence is kept, under its own field.
   assert.match(chaptersJson, /access: 'Reading free\. Citation appreciated\. No email gate\.',/);
 
-  const llms = read('src/pages/llms.txt.ts');
-  assert.match(llms, /Free to read and to cite\./);
-  assert.match(llms, /> License: \$\{LICENSE_STATEMENT\} \(\$\{CONTENT_LICENSE_URL\}\)\./);
+  // llms.txt and llms-full.txt carry the same line, right under the authored access sentence.
+  for (const path of ['src/pages/llms.txt.ts', 'src/pages/llms-full.txt.ts']) {
+    const llms = read(path);
+    assert.match(llms, /Free to read and to cite\./, path);
+    assert.match(llms, /> License: \$\{LICENSE_STATEMENT\} \(\$\{CONTENT_LICENSE_URL\}\)\./, path);
+  }
 
   // The Radar Dataset names the content licence, not llms.txt.
   const radar = read('src/components/RadarBoard.astro');
   assert.match(radar, /isAccessibleForFree: true, license: CONTENT_LICENSE_URL, url: pageUrl,/);
   assert.doesNotMatch(radar, /license: `\$\{SITE\}\/llms\.txt`/);
 
-  for (const path of ['src/layouts/BaseLayout.astro', 'src/components/RadarBoard.astro', 'src/pages/chapters.json.ts', 'src/pages/llms.txt.ts']) {
+  for (const path of ['src/layouts/BaseLayout.astro', 'src/components/RadarBoard.astro', 'src/pages/chapters.json.ts', 'src/pages/llms.txt.ts', 'src/pages/llms-full.txt.ts']) {
     assert.doesNotMatch(read(path), /creativecommons\.org/, `${path} hard-codes a licence URL`);
   }
 });

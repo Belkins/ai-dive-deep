@@ -3,6 +3,7 @@ import { glossary } from '@/lib/glossary';
 import { QUESTIONS } from '@/widgets/QuestionsBoard.tsx';
 import { getCollection } from 'astro:content';
 import { RESEARCH_NOTES } from '@/lib/research-notes';
+import { CONTENT_LICENSE_URL, LICENSE_STATEMENT } from '@/lib/license';
 
 const SITE = 'https://dive.vladyslavpodoliako.com';
 
@@ -58,6 +59,7 @@ export const GET: APIRoute = async () => {
   lines.push('>');
   lines.push("> Voice: operator, anti-hype, real numbers per claim, failure receipts included.");
   lines.push("> No email gate. No upsell. Free to read and to cite.");
+  lines.push(`> License: ${LICENSE_STATEMENT} (${CONTENT_LICENSE_URL}).`);
   lines.push('');
   lines.push('## Citation guidance');
   lines.push('');
