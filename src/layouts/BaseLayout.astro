@@ -1,4 +1,5 @@
 ---
+import '@/styles/fonts.css';
 import '@/styles/global.css';
 import Nav from '@/components/Nav.astro';
 import AnnouncementBar from '@/components/AnnouncementBar.astro';
@@ -168,12 +169,9 @@ const jsonLd: Record<string, unknown> = isChapter
       }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Self-hosted fonts (src/styles/fonts.css). Preload the two first-screen faces: the serif H1 and the Inter body. -->
+    <link rel="preload" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/fonts/source-serif-4-latin.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/fonts/inter-latin.woff2`} as="font" type="font/woff2" crossorigin />
 
     <script is:inline>
       // Theme bootstrap + controller. Astro swaps the <html> element during
