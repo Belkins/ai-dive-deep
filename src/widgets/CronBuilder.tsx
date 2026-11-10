@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { COPY_FAILURE_MESSAGE } from '@/lib/copy-feedback';
+import { CopyLiveRegion, useCopy } from './useCopy';
 
 type Cron = { minute: string; hour: string; dom: string; month: string; dow: string };
 
@@ -16,15 +18,8 @@ export default function CronBuilder() {
   const expr = `${cron.minute} ${cron.hour} ${cron.dom} ${cron.month} ${cron.dow}`;
   const human = useMemo(() => describeCron(cron), [cron]);
   const next = useMemo(() => nextRuns(cron, 7), [cron]);
-  const [copied, setCopied] = useState(false);
-
-  const onCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(expr);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {}
-  };
+  const { status, copy, message } = useCopy();
+  const onCopy = () => copy(expr);
 
   return (
     <div className="container-prose" style={{ marginTop: '2.5rem', marginBottom: '2.5rem' }}>
@@ -70,11 +65,12 @@ export default function CronBuilder() {
               <button
                 type="button"
                 onClick={onCopy}
-                className="text-xs px-2 py-1 rounded-md whitespace-nowrap"
+                className={`text-xs px-2 py-1 rounded-md ${status === 'failed' ? 'text-left basis-0 grow' : 'whitespace-nowrap'}`}
                 style={{ background: 'rgb(var(--fg))', color: 'rgb(var(--bg))' }}
               >
-                {copied ? 'Copied' : 'Copy'}
+                {status === 'copied' ? 'Copied' : status === 'failed' ? COPY_FAILURE_MESSAGE : 'Copy'}
               </button>
+              <CopyLiveRegion message={message} />
             </div>
 
             <div className="mt-3 text-sm leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.9)' }}>

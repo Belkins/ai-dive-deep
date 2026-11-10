@@ -21,7 +21,7 @@ The short version: one mid-senior engineer costs $120K/year fully loaded. At Son
     <div class="mt-3 flex flex-wrap gap-2">
       <a href={cfoMailto} class="btn-flame text-sm">Send via email →</a>
       <a href="https://www.linkedin.com/messaging/" target="_blank" rel="noopener" class="btn-ghost text-sm">Open LinkedIn DM</a>
-      <button onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Link copied'; setTimeout(()=>this.textContent='Copy link',1500)" class="btn-ghost text-sm" type="button">Copy link</button>
+      <button id="cfo-copy-link" class="btn-ghost text-sm" type="button">Copy link</button>
     </div>
   </section>
 
@@ -111,3 +111,18 @@ The short version: one mid-senior engineer costs $120K/year fully loaded. At Son
 
   <CommandPaletteMount />
 </BaseLayout>
+
+<script>
+  import { copyLiveRegion, copyMessage, copyText, COPY_FAILURE_MESSAGE, COPY_FAILURE_MS } from '@/lib/copy-feedback';
+  document.addEventListener('astro:page-load', () => {
+    const button = document.getElementById('cfo-copy-link');
+    if (!button) return;
+    const live = copyLiveRegion();
+    button.addEventListener('click', async () => {
+      const result = await copyText(window.location.href);
+      button.textContent = result === 'copied' ? 'Link copied' : COPY_FAILURE_MESSAGE;
+      live.textContent = copyMessage(result);
+      window.setTimeout(() => { button.textContent = 'Copy link'; live.textContent = ''; }, result === 'copied' ? 1500 : COPY_FAILURE_MS);
+    });
+  });
+</script>

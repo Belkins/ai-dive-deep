@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { groupPlacements, restorePlacements, TIER_ORDER } from '@/lib/tier-list';
 import type { Tier } from '@/lib/tier-list';
+import { COPY_FAILURE_MESSAGE } from '@/lib/copy-feedback';
+import { CopyLiveRegion, useCopy } from './useCopy';
 
 const TIER_DESC: Record<Tier, string> = {
   S: 'Run my life — remove this and three things break by Wednesday',
@@ -69,7 +71,7 @@ export default function TierListBuilder() {
   const [hydrated, setHydrated] = useState(false);
   const [draggingTool, setDraggingTool] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
-  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied'>('idle');
+  const { status: copyStatus, copy, message: copyMessage } = useCopy(1800);
   const [canNativeShare, setCanNativeShare] = useState(false);
   const popoverRef = useRef<HTMLDivElement | null>(null);
 
@@ -140,13 +142,7 @@ export default function TierListBuilder() {
 
   const reset = () => setPlacements({ ...DEFAULT_PLACEMENTS });
 
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopyStatus('copied');
-      setTimeout(() => setCopyStatus('idle'), 1800);
-    } catch {}
-  };
+  const copyLink = () => copy(shareUrl);
 
   const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
@@ -162,6 +158,7 @@ export default function TierListBuilder() {
       <div className="rounded-xl overflow-hidden" style={{ background: 'rgb(var(--paper))', border: '1px solid rgb(var(--line))' }}>
         <div className="px-5 py-3 border-b text-xs uppercase tracking-wider flex items-center justify-between gap-3 flex-wrap relative" style={{ borderColor: 'rgb(var(--line))', color: 'rgb(var(--muted))' }}>
           <span>Build your own tier list</span>
+          <CopyLiveRegion message={copyMessage} />
           <div className="flex gap-2 flex-wrap justify-end">
             <button
               type="button"
@@ -208,10 +205,10 @@ export default function TierListBuilder() {
                 <button
                   type="button"
                   onClick={copyLink}
-                  className="text-[11px] px-2.5 py-1.5 rounded-md whitespace-nowrap"
+                  className={`text-[11px] px-2.5 py-1.5 rounded-md ${copyStatus === 'failed' ? 'text-left' : 'whitespace-nowrap'}`}
                   style={{ background: copyStatus === 'copied' ? 'rgb(var(--accent-2))' : 'rgb(var(--accent))', color: copyStatus === 'copied' ? 'rgb(var(--bg))' : 'white', border: '0', fontWeight: 500 }}
                 >
-                  {copyStatus === 'copied' ? 'Copied ✓' : 'Copy'}
+                  {copyStatus === 'copied' ? 'Copied ✓' : copyStatus === 'failed' ? COPY_FAILURE_MESSAGE : 'Copy'}
                 </button>
               </div>
 

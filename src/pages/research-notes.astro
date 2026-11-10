@@ -202,6 +202,7 @@ const confidence = (note: ResearchNote) => {
 </style>
 
 <script>
+  import { copyLiveRegion, copyMessage, copyText, COPY_FAILURE_MESSAGE, COPY_FAILURE_MS } from '@/lib/copy-feedback';
   // All document/window-level listeners bind once at module scope; per-element
   // wiring re-runs on every astro:page-load against the fresh DOM.
   const allNotes = () => Array.from(document.querySelectorAll<HTMLDetailsElement>('details.note'));
@@ -277,15 +278,19 @@ const confidence = (note: ResearchNote) => {
       });
     }
 
+    const live = copyLiveRegion();
     document.querySelectorAll<HTMLButtonElement>('.js-permalink').forEach((btn) => {
+      // Read the label once: a second click inside the 4 s failure window would otherwise
+      // capture the failure sentence as the label to restore.
+      const prev = btn.textContent;
       btn.addEventListener('click', () => {
         const id = btn.dataset.id || '';
         const url = `${location.origin}${location.pathname}#${id}`;
         history.pushState(null, '', `#${id}`);
-        navigator.clipboard?.writeText(url).then(() => {
-          const prev = btn.textContent;
-          btn.textContent = 'copied ✓';
-          window.setTimeout(() => { btn.textContent = prev; }, 1500);
+        copyText(url).then((result) => {
+          btn.textContent = result === 'copied' ? 'copied ✓' : COPY_FAILURE_MESSAGE;
+          live.textContent = copyMessage(result);
+          window.setTimeout(() => { btn.textContent = prev; live.textContent = ''; }, result === 'copied' ? 1500 : COPY_FAILURE_MS);
         });
       });
     });

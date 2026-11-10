@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import type { StarterSkill } from '@/lib/starter-skills';
+import { COPY_FAILURE_MESSAGE } from '@/lib/copy-feedback';
+import { CopyLiveRegion, useCopy } from './useCopy';
 
 export default function StarterSkillCard({ skill, baseUrl }: { skill: StarterSkill; baseUrl: string }) {
-  const [copied, setCopied] = useState(false);
+  const { status, copy, message } = useCopy();
   const [open, setOpen] = useState(false);
   const base = baseUrl.replace(/\/$/, '');
 
-  const onCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(skill.skillMd);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {}
-  };
+  const onCopy = () => copy(skill.skillMd);
 
   const onDownload = () => {
     const blob = new Blob([skill.skillMd], { type: 'text/plain' });
@@ -72,8 +68,9 @@ export default function StarterSkillCard({ skill, baseUrl }: { skill: StarterSki
           className="text-xs px-3 py-1.5 rounded-md"
           style={{ background: 'rgb(var(--accent))', color: 'white' }}
         >
-          {copied ? '✓ Copied to clipboard' : 'Copy SKILL.md'}
+          {status === 'copied' ? '✓ Copied to clipboard' : status === 'failed' ? COPY_FAILURE_MESSAGE : 'Copy SKILL.md'}
         </button>
+        <CopyLiveRegion message={message} />
         <button
           type="button"
           onClick={onDownload}

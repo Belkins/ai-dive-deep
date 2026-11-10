@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { COPY_FAILURE_MESSAGE } from '@/lib/copy-feedback';
+import { CopyLiveRegion, useCopy } from './useCopy';
 
 export default function SkillComposer() {
   const [name, setName] = useState('morning-briefing');
@@ -20,15 +22,8 @@ Don't summarize meetings I haven't attended yet`);
 
   const md = useMemo(() => buildSkill({ name, description, steps, output, antipatterns }), [name, description, steps, output, antipatterns]);
   const issues = useMemo(() => coldRead(description), [description]);
-  const [copied, setCopied] = useState(false);
-
-  const onCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(md);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {}
-  };
+  const { status, copy, message } = useCopy();
+  const onCopy = () => copy(md);
 
   return (
     <div className="container-prose" style={{ marginTop: '2.5rem', marginBottom: '2.5rem' }}>
@@ -60,7 +55,8 @@ Don't summarize meetings I haven't attended yet`);
           <div className="p-5 flex flex-col">
             <div className="flex items-center justify-between mb-2">
               <div className="text-[10px] uppercase tracking-wider" style={{ color: 'rgb(var(--muted))' }}>Generated SKILL.md</div>
-              <button onClick={onCopy} type="button" className="text-xs px-2 py-1 rounded-md" style={{ background: 'rgb(var(--fg))', color: 'rgb(var(--bg))' }}>{copied ? 'Copied' : 'Copy'}</button>
+              <button onClick={onCopy} type="button" className="text-xs px-2 py-1 rounded-md" style={{ background: 'rgb(var(--fg))', color: 'rgb(var(--bg))' }}>{status === 'copied' ? 'Copied' : status === 'failed' ? COPY_FAILURE_MESSAGE : 'Copy'}</button>
+              <CopyLiveRegion message={message} />
             </div>
             <pre className="rounded-md p-4 text-xs font-mono leading-relaxed flex-1 overflow-auto" style={{ background: 'rgb(var(--bg))', border: '1px solid rgb(var(--line))', color: 'rgb(var(--fg) / 0.92)', maxHeight: 520 }}>
               <code>{md}</code>
