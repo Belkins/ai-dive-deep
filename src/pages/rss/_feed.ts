@@ -1,8 +1,9 @@
-// Shared builders for the site's generated feeds. The leading underscore keeps
+// Shared builders for the chapter and radar feeds. The leading underscore keeps
 // this file out of Astro's routes. Dates come from the repo's data, never build time.
 import { toPlainText } from '@/lib/seo';
 
 export const SITE = 'https://dive.vladyslavpodoliako.com';
+export const RADAR_FEED_LIMIT = 60;
 
 export interface FeedItem {
   title: string;
@@ -56,6 +57,31 @@ export function chapterFeedItems(chapters: ChapterFeedInput[], dates: ChapterDat
         guid: link,
         pubDate: rfc822(dates[c.id].published!),
         description: toPlainText(c.tldr),
+      };
+    });
+}
+
+export interface RadarFeedInput {
+  date: string;
+  generated?: string;
+}
+
+// One item per eligible dated archive page, newest first, capped at the newest RADAR_FEED_LIMIT.
+export function radarFeedItems(archives: RadarFeedInput[], eligibleDates: string[], limit = RADAR_FEED_LIMIT): FeedItem[] {
+  const byDate = new Map(archives.map((a) => [a.date, a]));
+  return [...new Set(eligibleDates)]
+    .filter((date) => byDate.has(date))
+    .sort()
+    .reverse()
+    .slice(0, limit)
+    .map((date) => {
+      const link = `${SITE}/radar/${date}/`;
+      return {
+        title: `Radar — ${date}`,
+        link,
+        guid: link,
+        pubDate: rfc822(byDate.get(date)!.generated ?? date),
+        description: `What was moving through the AI ecosystem on ${date}, ranked by the lead-time gradient. A frozen daily snapshot.`,
       };
     });
 }
