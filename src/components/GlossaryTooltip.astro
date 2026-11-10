@@ -6,3 +6,8 @@ const { term } = Astro.props;
 <GlossaryPopover term={term} client:visible>
   <slot />
 </GlossaryPopover>
+<style is:global>
+  /* The popover is portaled to <body>, so this cannot be a scoped style.
+     Links inside a definition get the same underline as the popover's own links. */
+  .glossary-popover-def a { text-decoration: underline; }
+</style>

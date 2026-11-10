@@ -34,21 +34,29 @@ export default function GlossaryPopover({
             color: 'rgb(var(--fg))',
             zIndex: 50,
             maxWidth: '20rem',
+            maxHeight: 'min(60vh, 22rem, var(--radix-popover-content-available-height, 22rem))',
+            overflowY: 'auto',
             animationDuration: '160ms',
           }}
           sideOffset={6}
+          collisionPadding={12}
         >
           <div className="font-medium mb-1.5" style={{ color: 'rgb(var(--accent))' }}>
             {entry.term}
           </div>
-          <div className="leading-relaxed" style={{ color: 'rgb(var(--fg) / 0.92)' }}>
-            {entry.definition}
-          </div>
+          {/* Trusted static HTML from src/lib/glossary.ts, rendered the way /glossary renders it. */}
+          <div
+            className="glossary-popover-def leading-relaxed"
+            style={{ color: 'rgb(var(--fg) / 0.92)' }}
+            dangerouslySetInnerHTML={{ __html: entry.definition }}
+          />
           {entry.related && entry.related.length > 0 && (
             <div className="mt-2 flex items-center gap-1 flex-wrap text-xs" style={{ color: 'rgb(var(--muted))' }}>
               <span>Related:</span>
               {entry.related.map((r) => (
-                <span key={r}>{r}</span>
+                <a key={r} href={`${base}/glossary/#${encodeURIComponent(r)}`} style={{ textDecoration: 'underline' }}>
+                  {r}
+                </a>
               ))}
             </div>
           )}
