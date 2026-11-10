@@ -66,8 +66,15 @@ h3 { font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 500; line-height: 1.3;
 h4 { font-size: 1.125rem; font-weight: 500; margin-top: 2rem; margin-bottom: 0.5rem; }
 
 .chapter-body p { margin-top: 1.25rem; margin-bottom: 1.25rem; line-height: 1.75; color: rgb(var(--fg) / 0.92); }
-.chapter-body a { color: rgb(var(--accent)); text-underline-offset: 4px; transition: color 150ms; }
-.chapter-body a:hover { color: rgb(var(--accent) / 0.85); }
+.chapter-body a { color: rgb(var(--accent)); text-underline-offset: 4px; transition: color 150ms, text-decoration-color 150ms; }
+/* Links in running text carry an underline, not colour alone (WCAG 1.4.1):
+   accent vs body text is only 2.3:1. Heading autolinks (.anchor) and
+   card links (.no-underline) stay bare. */
+.chapter-body a:not(.anchor, .no-underline) { text-decoration-line: underline; text-decoration-thickness: 1px; text-decoration-color: rgb(var(--accent) / 0.55); }
+.chapter-body a:not(.anchor, .no-underline):hover { text-decoration-color: rgb(var(--accent)); }
+/* The same treatment for prose links outside .chapter-body. */
+.link-inline { color: rgb(var(--accent)); text-decoration-line: underline; text-decoration-thickness: 1px; text-decoration-color: rgb(var(--accent) / 0.55); text-underline-offset: 3px; transition: text-decoration-color 150ms; }
+.link-inline:hover { text-decoration-color: rgb(var(--accent)); }
 .chapter-body hr { border: 0; border-top: 1px solid rgb(var(--line)); margin: 2.5rem 0; }
 .chapter-body blockquote { border-left: 2px solid rgb(var(--accent)); padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; font-size: 1.05em; }
 

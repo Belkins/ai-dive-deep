@@ -83,7 +83,7 @@ const faqLd = {
   <section id="sec-crowd" style="scroll-margin-top: 7rem" class="container-prose pt-6 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What the public says</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Arena public leaderboard</h2>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://arena.ai/" target="_blank" rel="noopener" style="color: rgb(var(--accent))">arena.ai</a>, formerly LMArena. Each board measures preference within its own task category and voting pool. A top row is not a guarantee of better results in your repository or workflow.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Crowdsourced head-to-head model votes from <a href="https://arena.ai/" target="_blank" rel="noopener" class="link-inline">arena.ai</a>, formerly LMArena. Each board measures preference within its own task category and voting pool. A top row is not a guarantee of better results in your repository or workflow.</p>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Read the board's date, vote coverage and confidence intervals before treating a rank gap as a meaningful difference. Model suffixes matter: effort levels, harnesses and preview variants are distinct configurations, not interchangeable names. An absent model is unmeasured here, not proven worse.</p>
   </section>
 
@@ -94,7 +94,7 @@ const faqLd = {
   <section id="sec-independent" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">What an independent referee measures</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Artificial Analysis — the independent referee</h2>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))"><a href={AA_SOURCE_URL} target="_blank" rel="noopener" style="color: rgb(var(--accent))">Artificial Analysis</a> provides an independent evaluation and reported task costs, separate from crowd preferences and vendor launch tables. This economics subset includes models with both an Intelligence Index score and a cost per Index task. Captured {AA_SNAPSHOT}, using {AA_INDEX_VERSION}; the panel carries the methodology and source disclosures.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))"><a href={AA_SOURCE_URL} target="_blank" rel="noopener" class="link-inline">Artificial Analysis</a> provides an independent evaluation and reported task costs, separate from crowd preferences and vendor launch tables. This economics subset includes models with both an Intelligence Index score and a cost per Index task. Captured {AA_SNAPSHOT}, using {AA_INDEX_VERSION}; the panel carries the methodology and source disclosures.</p>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))"><strong>Compare within this Index version, not against older captures.</strong> A changed benchmark mix or weighting changes what the score means. Keep the exact effort and fallback labels when comparing rows, distinguish unavailable metrics from zero, and do not interpret small score gaps without uncertainty. A cheaper Index task is not automatically a cheaper successful workflow.</p>
   </section>
 
@@ -105,8 +105,8 @@ const faqLd = {
   <section id="sec-labs" style="scroll-margin-top: 7rem" class="container-prose pt-12 pb-2">
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">Dated comparison archive</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Lab claims, with their test conditions</h2>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))"><strong>Historical comparison captured 2026-07-27, not the latest model ranking.</strong> These cards preserve the Opus 5 launch-window claims and independent comparisons available then. Their scores, absences and commentary belong to that archive; Astra and Fable 5.1 are covered in the <a href="#sec-models" style="color: rgb(var(--accent))">current model notes</a>.</p>
-    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Vendor-run and independently run results carry different provenance, not an automatic point adjustment. Check the dataset split, grader, tool access, effort setting and fallback model before trusting a comparison. Where those conditions differ, the gap is not a clean model-to-model result. Validate on your own workload; dated sources remain on the <a href={`${base}/research-notes/`} style="color: rgb(var(--accent))">research notes timeline</a>.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))"><strong>Historical comparison captured 2026-07-27, not the latest model ranking.</strong> These cards preserve the Opus 5 launch-window claims and independent comparisons available then. Their scores, absences and commentary belong to that archive; Astra and Fable 5.1 are covered in the <a href="#sec-models" class="link-inline">current model notes</a>.</p>
+    <p class="mt-3 text-sm" style="color: rgb(var(--muted))">Vendor-run and independently run results carry different provenance, not an automatic point adjustment. Check the dataset split, grader, tool access, effort setting and fallback model before trusting a comparison. Where those conditions differ, the gap is not a clean model-to-model result. Validate on your own workload; dated sources remain on the <a href={`${base}/research-notes/`} class="link-inline">research notes timeline</a>.</p>
     <div class="mt-6 grid gap-4 sm:grid-cols-2">
       {LAB_CLAIMS.map((c) => (
         <div class="min-w-0 rounded-lg p-5" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
@@ -154,7 +154,7 @@ const faqLd = {
     <div class="text-xs uppercase tracking-wider mb-3" style="color: rgb(var(--accent-2))">A separate measure of agent work</div>
     <h2 class="m-0 font-display text-2xl md:text-3xl leading-tight">Arena's Agent board — and why it isn't a tab above</h2>
     <p class="mt-3 text-sm" style="color: rgb(var(--muted))">
-      <a href={ARENA_AGENT_META.source} target="_blank" rel="noopener" style="color: rgb(var(--accent))">Arena's agent results</a> use <em>{ARENA_AGENT_META.metric}</em>, not the Elo scale of the crowd boards. The published snapshot covers {ARENA_AGENT_META.sessions}, captured {ARENA_AGENT_META.captured}. These scores describe agent performance under that board's conditions, not a direct comparison with the Intelligence Index or a substitute for testing your own workflow.
+      <a href={ARENA_AGENT_META.source} target="_blank" rel="noopener" class="link-inline">Arena's agent results</a> use <em>{ARENA_AGENT_META.metric}</em>, not the Elo scale of the crowd boards. The published snapshot covers {ARENA_AGENT_META.sessions}, captured {ARENA_AGENT_META.captured}. These scores describe agent performance under that board's conditions, not a direct comparison with the Intelligence Index or a substitute for testing your own workflow.
     </p>
     <div class="mt-5 rounded-lg overflow-hidden" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line))">
       <div class="px-5 py-3 text-xs uppercase tracking-wider flex items-center justify-between gap-3 flex-wrap" style="border-bottom: 1px solid rgb(var(--line)); color: rgb(var(--muted))">
@@ -202,7 +202,7 @@ const faqLd = {
         </div>
       ))}
     </dl>
-    <p class="mt-4 text-xs" style="color: rgb(var(--muted))">Score and cost source: <a href={AA_SOURCE_URL} target="_blank" rel="noopener" style="color: rgb(var(--accent))">Artificial Analysis</a>, captured {AA_SNAPSHOT}. Compare the exact configurations in the independent panel.</p>
+    <p class="mt-4 text-xs" style="color: rgb(var(--muted))">Score and cost source: <a href={AA_SOURCE_URL} target="_blank" rel="noopener" class="link-inline">Artificial Analysis</a>, captured {AA_SNAPSHOT}. Compare the exact configurations in the independent panel.</p>
   </section>
 
   <section class="container-prose pt-8 pb-16">

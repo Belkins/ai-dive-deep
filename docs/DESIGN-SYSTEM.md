@@ -187,7 +187,8 @@ In-page display headings frequently override with Tailwind: hero `h1` =
 |---------|------|
 | Body base | Inter, 16px mobile → **17px ≥640px**; `antialiased`, `optimizeLegibility` |
 | `.chapter-body p` | `line-height: 1.75`, `color: --fg / 0.92`, `margin: 1.25rem 0` |
-| `.chapter-body a` | `color: --accent`, `text-underline-offset: 4px`, hover `--accent / 0.85` |
+| `.chapter-body a` | `color: --accent`, **1px underline in `--accent / 0.55`**, `text-underline-offset: 4px`; hover = underline at full `--accent`. `.anchor` and `.no-underline` (card links) stay bare. |
+| `.link-inline` | the same underlined link for **running text outside `.chapter-body`** (page intros, section notes); offset `3px`. Use it in place of an inline `style="color: rgb(var(--accent))"` on a link inside a sentence — never on card, list or nav links. |
 | `.chapter-body blockquote` | `border-left: 2px solid --accent`, italic, `font-size: 1.05em` |
 | `code` (inline) | mono `0.92em`, bg `--line / 0.6`, `padding: 0.15rem 0.4rem`, `radius: 4px` |
 | `pre` (block) | mono `0.86em`, bg `--paper`, `1px --line`, `radius: 0.5rem`, `padding: 1.25rem` · **Shiki `github-dark-dimmed`, fixed-dark (doesn't theme-switch)** |
