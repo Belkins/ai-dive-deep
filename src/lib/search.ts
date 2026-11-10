@@ -4,6 +4,8 @@ export type SearchItem = {
   subtitle?: string;
   href: string;
   keywords?: string;
+  // A chapter H2 or H3 (src/lib/search-sections.ts). These rank below every other match.
+  heading?: boolean;
 };
 
 export type SearchResult = SearchItem & { id: string; fuzzy: boolean };
@@ -114,7 +116,12 @@ export function searchItems(
       score: phraseBonus + scores.reduce((sum, score) => sum + score, 0) + TYPE_BONUS[document.item.type],
     }];
   });
-  const exact = scored.sort((a, b) => b.score - a.score).slice(0, 24).map(({ item }) => item);
+  // Chapter headings follow every other result, so a page, chapter or glossary match always ranks first.
+  const ranked = scored.sort((a, b) => b.score - a.score);
+  const exact = [
+    ...ranked.filter(({ item }) => !item.heading).slice(0, 24),
+    ...ranked.filter(({ item }) => item.heading).slice(0, 8),
+  ].map(({ item }) => item);
   if (exact.length >= 3 || needle.length < 3 || needle.length > 64) return exact;
 
   // Only missing tokens use bounded fuzzy matching against title words.

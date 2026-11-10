@@ -3,14 +3,16 @@ import type { KeyboardEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { BookOpen, Delete, Search, X } from 'lucide-react';
 import { createSearchIndex, MAX_SEARCH_QUERY_LENGTH, moveSearchSelection, POPULAR_PATHS, searchItems } from '@/lib/search';
-import type { SearchResult } from '@/lib/search';
+import type { SearchItem, SearchResult } from '@/lib/search';
 import { getPaletteItems } from '@/lib/search-catalog';
+import { loadChapterSectionItems } from '@/lib/search-sections';
 export { getPaletteItems };
 
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
   const [active, setActive] = useState(0);
+  const [sections, setSections] = useState<SearchItem[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
   const navigatingRef = useRef(false);
@@ -18,7 +20,7 @@ export default function CommandPalette() {
 
   const baseUrl = (typeof window !== 'undefined' && (window as any).BASE_URL) || (import.meta as any).env?.BASE_URL || '/';
   const base = baseUrl.replace(/\/$/, '');
-  const items = useMemo(() => getPaletteItems(base), [base]);
+  const items = useMemo(() => [...getPaletteItems(base), ...sections], [base, sections]);
 
   const index = useMemo(() => createSearchIndex(items), [items]);
   const popularHrefs = useMemo(() => POPULAR_PATHS.map((path) => `${base}${path}`), [base]);
@@ -56,6 +58,14 @@ export default function CommandPalette() {
       if (root) delete root.dataset.paletteReady;
     };
   }, []);
+
+  // Chapter headings arrive as a static JSON file on the first open; search works without them.
+  useEffect(() => {
+    if (!open || sections.length) return;
+    let current = true;
+    loadChapterSectionItems(base).then((loaded) => { if (current && loaded.length) setSections(loaded); });
+    return () => { current = false; };
+  }, [open, base, sections.length]);
 
   useEffect(() => {
     if (open && activeId) document.getElementById(activeId)?.scrollIntoView({ block: 'nearest' });
