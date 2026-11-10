@@ -2,6 +2,7 @@
 import { getRadarArchiveNavigation } from '@/lib/radar-config.mjs';
 import { topicChips, TOPIC_LABELS } from '@/lib/radar-topics';
 import { AUTHOR } from '@/lib/author';
+import { CONTENT_LICENSE_URL } from '@/lib/license';
 
 // RadarBoard — shared render for /radar (live) and /radar/[date] (archive).
 // Direction A "Continuous Spectrum + Live Sweep" (instrument-redesign swarm): the masthead
@@ -146,7 +147,7 @@ const datasetLd = {
     ? `A frozen daily snapshot (${data.date}) of what was moving through the AI ecosystem, ranked by the lead-time gradient (papers → repos → community → analysis), with source provenance and first-seen time per item.`
     : 'A re-snapshotted index of what is moving through the AI ecosystem, rebuilt on every ingest run of its pipeline — several times a day, on no fixed clock — ranked by the lead-time gradient (papers → repos → community → analysis), with the source provenance and first-seen time recorded for each item. The dateModified stamp is the exact time of the snapshot on the page.',
   creator: { '@type': 'Person', '@id': AUTHOR['@id'], name: 'Vlad Podoliako', url: SITE },
-  isAccessibleForFree: true, license: `${SITE}/llms.txt`, url: pageUrl,
+  isAccessibleForFree: true, license: CONTENT_LICENSE_URL, url: pageUrl,
   temporalCoverage: isArchive ? data.date : `${data.stats.sinceFirstSeen}/${data.generated}`,
   dateModified: data.generated,
   variableMeasured: ['lead-time gradient stage', 'source-family corroboration', 'first-seen timestamp', 'signal tier'],
