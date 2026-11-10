@@ -85,3 +85,18 @@ test('the page hash ignores island prefixes and the React ids built from them', 
   assert.equal(pageHash(page('r4', ':r4R0:')), pageHash(page('r9', ':r9R0:')));
   assert.notEqual(pageHash(page('r4', ':r4R0:')), pageHash(page('r4', ':r4R0:').replace('Skill', 'Hook')));
 });
+
+// Chapter 07's CronBuilder renders its next runs from the build clock, so a
+// build on Tuesday and one on Wednesday differ only in those date-times. That
+// must not resubmit the page every day; a prose edit, or a date in the prose,
+// still must.
+test('the page hash ignores build-clock times inside a widget, not dates in the prose', () => {
+  const page = (runs, prose = '<p>Cron runs at 7:30.</p>') =>
+    `<main>${prose}<astro-island uid="Z4" component-url="/_astro/CronBuilder.Bpyg0QF_.js"><ul>${runs.map((r) => `<li><span>${r}</span></li>`).join('')}</ul><p>Next 7 runs</p></astro-island></main>`;
+  const tuesday = page(['Tue, Nov 10, 07:30 AM', 'Wed, Nov 11, 07:30 AM']);
+  const wednesday = page(['Wed, Nov 11, 07:30 AM', 'Thu, Nov 12, 07:30 AM']);
+  assert.equal(pageHash(tuesday), pageHash(wednesday));
+  assert.notEqual(pageHash(tuesday), pageHash(tuesday.replace('Next 7 runs', 'Next 5 runs')));
+  const prose = (when) => page(['Tue, Nov 10, 07:30 AM'], `<p>It was ${when}.</p>`);
+  assert.notEqual(pageHash(prose('Tue, Nov 10, 9:14 AM')), pageHash(prose('Wed, Nov 11, 9:14 AM')));
+});

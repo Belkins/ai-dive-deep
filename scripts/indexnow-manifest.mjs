@@ -23,12 +23,19 @@ const OUT = 'indexnow-manifest.json';
 // Per-build noise inside <main>: Astro island uid and prefix attributes, the
 // React useId values built from the prefix (radix-:r4R0:), and content-hashed
 // asset names.
+// Also clock values a widget renders on the server: CronBuilder (chapter 07)
+// lists its next runs from the build's own clock ("Wed, Nov 11, 07:30 AM"),
+// so they move with every build day while the page's words do not. Only
+// inside <astro-island> markup: the same pattern in chapter prose still counts.
+const CLOCK = /\b(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun), (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{1,2}, \d{1,2}:\d{2}(?: [AP]M)?/g;
+
 export function normalise(html) {
   return html
     .replace(/\suid="[^"]*"/g, '')
     .replace(/\sprefix="r\d+"/g, '')
     .replace(/:r[0-9A-Za-z]+:/g, ':r:')
-    .replace(/(\/_astro\/[\w.-]+?)\.[\w-]{8}\.(js|css|mjs)/g, '$1.$2');
+    .replace(/(\/_astro\/[\w.-]+?)\.[\w-]{8}\.(js|css|mjs)/g, '$1.$2')
+    .replace(/<astro-island[\s\S]*?<\/astro-island>/g, (island) => island.replace(CLOCK, '<clock>'));
 }
 
 export function mainContent(html) {
