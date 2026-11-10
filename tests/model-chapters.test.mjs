@@ -27,7 +27,7 @@ const { glossary } = await import(`data:text/javascript;base64,${Buffer.from(glo
 
 test('every registered chapter has its file, its number, exactly one part and at least one section, in number order', () => {
   const numbers = CHAPTERS.map(chapter => chapter.number);
-  assert.deepEqual(numbers, [...numbers].sort((a, b) => a - b), 'CHAPTERS must be sorted by number: prev/next navigation is derived from list order');
+  assert.deepEqual(numbers, [...numbers].sort((a, b) => a - b), 'CHAPTERS must be sorted by number: the contents lists and feeds follow list order');
   assert.equal(new Set(numbers).size, numbers.length, 'chapter numbers must be unique');
   for (const chapter of CHAPTERS) {
     const content = read(`src/content/chapters/${chapter.slug}.mdx`);
@@ -42,7 +42,7 @@ test('chapter 51 is wired: neighbours, both figures and every glossary key', () 
   const slug = '51-jev-system-one';
   assert.equal(getNeighbors('50-claude-fable-5-1').next.slug, slug);
   assert.equal(getNeighbors(slug).prev.slug, '50-claude-fable-5-1');
-  assert.equal(getNeighbors(slug).next.slug, '52-what-agents-cant-see');
+  assert.equal(getNeighbors(slug).next.slug, '54-claude-opus-5-5');
   const content = read(`src/content/chapters/${slug}.mdx`);
   for (const id of [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1])) {
     assert.ok(id in SCREENSHOTS, `figure id ${id} must have a file in public/screens/`);
@@ -55,7 +55,7 @@ test('chapter 51 is wired: neighbours, both figures and every glossary key', () 
 
 test('chapter 52 is wired: neighbours, every figure and every glossary key', () => {
   const slug = '52-what-agents-cant-see';
-  assert.equal(getNeighbors(slug).prev.slug, '51-jev-system-one');
+  assert.equal(getNeighbors(slug).prev.slug, '48-traffic-graph-that-lies');
   assert.equal(getNeighbors(slug).next.slug, '53-first-real-caller');
   const content = read(`src/content/chapters/${slug}.mdx`);
   for (const id of [...content.matchAll(/id="([^"]+)"/g)].map(m => m[1])) {
@@ -70,7 +70,7 @@ test('chapter 52 is wired: neighbours, every figure and every glossary key', () 
 test('chapter 53 is wired: neighbours, every figure and every glossary key', () => {
   const slug = '53-first-real-caller';
   assert.equal(getNeighbors(slug).prev.slug, '52-what-agents-cant-see');
-  assert.equal(getNeighbors(slug).next.slug, '54-claude-opus-5-5');
+  assert.equal(getNeighbors(slug).next.slug, '58-conductor-never-codes');
   assert.equal(PARTS.find(part => part.slugs.includes(slug)).key, 'V', 'the chapter hero shows the Part V pill');
   assert.ok(SECTIONS.find(section => section.key === 'building').slugs.includes(slug), 'listed under Building Products');
   const content = read(`src/content/chapters/${slug}.mdx`);
@@ -88,7 +88,7 @@ test('chapter 53 is wired: neighbours, every figure and every glossary key', () 
 const guides55 = ['54-claude-opus-5-5', '55-claude-sonnet-5-5'];
 
 test('chapters 54 and 55 are wired: neighbours, Part VI, Team + Tier, figures and glossary keys', () => {
-  assert.equal(getNeighbors(guides55[0]).prev.slug, '53-first-real-caller');
+  assert.equal(getNeighbors(guides55[0]).prev.slug, '51-jev-system-one');
   assert.equal(getNeighbors(guides55[0]).next.slug, guides55[1]);
   assert.equal(getNeighbors(guides55[1]).next.slug, '56-skill-leaderboard');
   for (const slug of guides55) {
@@ -110,7 +110,7 @@ test('chapters 54 and 55 are wired: neighbours, Part VI, Team + Tier, figures an
 test('chapter 56 is wired: neighbours, Part VI and AI Agents beside Chapter 39, figures and glossary keys', () => {
   const slug = '56-skill-leaderboard';
   assert.equal(getNeighbors(slug).prev.slug, '55-claude-sonnet-5-5');
-  assert.equal(getNeighbors(slug).next.slug, '57-claude-code-mods');
+  assert.equal(getNeighbors(slug).next, null);
   assert.equal(PARTS.find(part => part.slugs.includes(slug)).key, 'VI', 'the chapter hero shows the Part VI pill');
   const agents = SECTIONS.find(section => section.key === 'agents');
   assert.ok(agents.slugs.includes(slug) && agents.slugs.includes('39-skills-you-should-steal'), 'listed under AI Agents with the chapter it follows up');
@@ -131,8 +131,8 @@ test('chapter 56 is wired: neighbours, Part VI and AI Agents beside Chapter 39, 
 
 test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside Chapter 20, the latest edition banner, figures and glossary keys', () => {
   const slug = '57-claude-code-mods';
-  assert.equal(getNeighbors(slug).prev.slug, '56-skill-leaderboard');
-  assert.equal(getNeighbors(slug).next.slug, '58-conductor-never-codes');
+  assert.equal(getNeighbors(slug).prev.slug, '16-hooks-subagents');
+  assert.equal(getNeighbors(slug).next.slug, '37-context-files');
   const part = PARTS.find(item => item.slugs.includes(slug));
   assert.equal(part.key, 'IV', 'the chapter hero shows the Part IV pill');
   assert.equal(part.slugs[part.slugs.indexOf(slug) - 1], '16-hooks-subagents', 'it follows the hooks chapter it is the sequel to');
@@ -176,8 +176,8 @@ test('chapter 57 is wired: neighbours, Part IV beside Chapter 16, Claude beside 
 
 test('chapter 58 is wired: neighbours, Part V and Building Products after Chapter 53, the dated evidence callout, the playbook link, figures and glossary keys', () => {
   const slug = '58-conductor-never-codes';
-  assert.equal(getNeighbors(slug).prev.slug, '57-claude-code-mods');
-  assert.equal(getNeighbors(slug).next, null);
+  assert.equal(getNeighbors(slug).prev.slug, '53-first-real-caller');
+  assert.equal(getNeighbors(slug).next.slug, '10-wild-stuff');
   const part = PARTS.find(item => item.slugs.includes(slug));
   assert.equal(part.key, 'V', 'the chapter hero shows the Part V pill');
   assert.equal(part.slugs[part.slugs.indexOf(slug) - 1], '53-first-real-caller', 'it follows the last build story in Part V');
@@ -298,7 +298,7 @@ test('model chapters register once with matching content, topic and narrative na
     assert.equal(PARTS.filter(part => part.slugs.includes(slug)).length, 1);
     assert.ok(SECTIONS.some(section => section.slugs.includes(slug)));
   }
-  assert.equal(getNeighbors('48-traffic-graph-that-lies').next.slug, additions[0]);
+  assert.equal(getNeighbors('24-tier-list').next.slug, additions[0]);
   assert.equal(getNeighbors(additions[0]).next.slug, additions[1]);
   assert.equal(getNeighbors(additions[1]).prev.slug, additions[0]);
 });
