@@ -166,7 +166,7 @@ test('keyboard selection is absent for no results and recovers after a query cha
 });
 
 // Load the widget's real data factory without React or a DOM. This also works
-// on the Node 20 CI runtime, using the same TypeScript compiler as SEO tests.
+// on Node 20, which package.json engines still allows, using the same TypeScript compiler as SEO tests.
 const paletteSource = readSource('../src/widgets/CommandPalette.tsx');
 const paletteAst = ts.createSourceFile('CommandPalette.tsx', paletteSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 const catalogSource = readSource('../src/lib/search-catalog.ts');

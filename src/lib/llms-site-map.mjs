@@ -1,8 +1,8 @@
 // Helpers for the llms.txt completion step in astro.config.mjs.
 //
 // Plain JavaScript on purpose. Node loads astro.config.mjs directly (Astro tries that
-// first, and tests/search-sections.test.mjs imports it), and Node 20, which the deploy
-// workflow runs, cannot import a .ts file. Keep this file free of TypeScript imports.
+// first, and tests/search-sections.test.mjs imports it), and Node 20, which package.json
+// engines still allows, cannot import a .ts file. Keep this file free of TypeScript imports.
 
 // Astro escapes these five characters when it writes a <title> or an attribute value.
 const BUILT_HTML_ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" };

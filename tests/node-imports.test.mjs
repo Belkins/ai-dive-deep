@@ -4,11 +4,11 @@ import { join, relative } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-// The deploy workflow runs Node 20, which cannot import a TypeScript file. Newer Node strips
-// types by itself, so on a developer machine such an import works and every local check
-// passes, then the deploy fails. A .mjs file is one Node loads directly (the Astro config,
-// the scripts, these tests), so none of them may import a .ts or .tsx file. Read a TypeScript
-// module in a test through tests/helpers/load-ts.mjs; give the config a .mjs helper.
+// package.json still allows Node 20 (engines >=20), which cannot import a TypeScript file.
+// Newer Node strips types by itself, so such an import passes every check on the Node 26
+// the workflows run and breaks on Node 20. A .mjs file is one Node loads directly (the Astro
+// config, the scripts, these tests), so none of them may import a .ts or .tsx file. Read a
+// TypeScript module in a test through tests/helpers/load-ts.mjs; give the config a .mjs helper.
 const repo = fileURLToPath(new URL('..', import.meta.url));
 const SKIP = new Set(['node_modules', 'dist', '.git', '.astro', '.claude', '.vercel']);
 const TS_IMPORT = /(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s+)(['"])([^'"\n]+\.tsx?)\1/g;
