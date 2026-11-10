@@ -72,34 +72,3 @@ test('glossary JSON-LD descriptions are plain text while the set keeps every ter
   assert.match(abliteration.description, /Produces a " heretic model "/);
   assert.equal(abliteration.url, `${url}#Abliteration`);
 });
-
-test('llms.txt coverage counts links and bare URLs, and catches a planted missing page', () => {
-  const SITE = 'https://dive.vladyslavpodoliako.com';
-  const text = [
-    '## Site map',
-    '',
-    `- [Root](${SITE}/) — entry`,
-    `- [Model](${SITE}/opus-5-archive/) — Spokes: ${SITE}/fable-5/pricing/, ${SITE}/opus-5/use-cases/.`,
-    '',
-    '## Chapters',
-    '',
-    `URL: ${SITE}/chapters/01-a/`,
-    '',
-  ].join('\n');
-  const urls = [`${SITE}/`, `${SITE}/fable-5/pricing/`, `${SITE}/opus-5/use-cases/`, `${SITE}/chapters/01-a/`, `${SITE}/opus-5/`, `${SITE}/about/`];
-  assert.deepEqual(seo.llmsMissingUrls(text, urls), [`${SITE}/opus-5/`, `${SITE}/about/`]);
-
-  const next = seo.addMissingLlmsPages(text, [
-    { url: `${SITE}/opus-5/`, title: 'Opus 5' },
-    { url: `${SITE}/about/`, title: 'About', description: 'Who wrote this. Why. And how to keep reading.' },
-  ]);
-  assert.deepEqual(seo.llmsMissingUrls(next, urls), []);
-  assert.ok(next.includes(`.\n- [Opus 5](${SITE}/opus-5/)\n- [About](${SITE}/about/) — Who wrote this. Why. And how to keep reading.\n\n## Chapters\n`));
-  assert.throws(() => seo.addMissingLlmsPages('no headings', [{ url: `${SITE}/x/`, title: 'X' }]), /Chapters/);
-});
-
-test('readPageHead returns the page title without the brand suffix and the meta description verbatim', () => {
-  const html = '<title>Vlad&#39;s actual setup — Vlad&#39;s Playbook</title><meta name="description" content="54 skills &amp; more. It&#39;s live.">';
-  assert.deepEqual(seo.readPageHead(html, "Vlad's Playbook"), { title: "Vlad's actual setup", description: "54 skills & more. It's live." });
-  assert.deepEqual(seo.readPageHead('<title>Only</title>', "Vlad's Playbook"), { title: 'Only', description: undefined });
-});

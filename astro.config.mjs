@@ -9,8 +9,7 @@ import { readdirSync, readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getRadarArchiveDates, isRadarEditionIndexable } from './src/lib/radar-config.mjs';
-import { addMissingLlmsPages, llmsMissingUrls, readPageHead } from './src/lib/seo.ts';
-import { PUBLISHER } from './src/lib/author.ts';
+import { addMissingLlmsPages, llmsMissingUrls, readPageHead, readSiteName } from './src/lib/llms-site-map.mjs';
 
 // Build a date → freeze-timestamp map from the radar archives so the sitemap can carry
 // truthful per-archive lastmod (review-swarm: build-time new Date() lies on immutable pages).
@@ -58,10 +57,10 @@ function llmsSiteMap() {
             return path !== '/radar' && !path.startsWith('/radar/');
           });
         const text = readFileSync(llmsPath, 'utf8');
-        const pages = llmsMissingUrls(text, urls).map((url) => ({
-          url,
-          ...readPageHead(readFileSync(join(root, new URL(url).pathname, 'index.html'), 'utf8'), PUBLISHER.name),
-        }));
+        const pages = llmsMissingUrls(text, urls).map((url) => {
+          const html = readFileSync(join(root, new URL(url).pathname, 'index.html'), 'utf8');
+          return { url, ...readPageHead(html, readSiteName(html)) };
+        });
         const next = addMissingLlmsPages(text, pages);
         const stillMissing = llmsMissingUrls(next, urls);
         if (stillMissing.length > 0) throw new Error(`llms.txt is missing sitemap pages: ${stillMissing.join(', ')}`);
