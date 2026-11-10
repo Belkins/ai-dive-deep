@@ -49,7 +49,7 @@ const history = CHANGELOG.slice(1, 6).map((e) => ({
         <button
           type="button"
           id="announce-history-toggle"
-          class="shrink-0 inline-flex items-center justify-center h-6 w-6 rounded hover:bg-white/10 transition"
+          class="shrink-0 inline-flex items-center justify-center h-6 w-6 rounded hover:bg-white/10 transition relative before:absolute before:content-[''] before:-inset-y-2 before:-left-2.5 before:-right-1.5"
           style="color: rgb(var(--muted))"
           aria-label="Show update history"
           aria-expanded="false"
@@ -62,7 +62,7 @@ const history = CHANGELOG.slice(1, 6).map((e) => ({
       <button
         type="button"
         id="announce-dismiss"
-        class="shrink-0 inline-flex items-center justify-center h-6 w-6 rounded hover:bg-white/10 transition"
+        class="shrink-0 inline-flex items-center justify-center h-6 w-6 rounded hover:bg-white/10 transition relative before:absolute before:content-[''] before:-inset-y-2 before:-left-1.5 before:-right-2.5"
         style="color: rgb(var(--muted))"
         aria-label="Dismiss this update"
         title="Dismiss"
