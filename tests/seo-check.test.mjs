@@ -305,6 +305,37 @@ test('chapter lastmod must be the git modified date from chapter-dates.json', ()
   }
 });
 
+// A chapter date is the author's local day written as midnight UTC, so it can lead the clock by
+// up to 14 hours; every other lastmod may lead it by 5 minutes. A date further ahead is a wrong
+// clock or a typed date, and search engines distrust a sitemap that carries one. The times are
+// taken from the real clock because the checker reads it.
+test('a lastmod ahead of the clock is refused beyond its allowance', () => {
+  const ahead = (minutes) => new Date(Date.now() + minutes * 60 * 1000).toISOString();
+  const cases = [
+    { label: 'chapter 10 hours ahead', path: '/chapters/01-x/', lastmod: ahead(10 * 60), ok: true },
+    { label: 'chapter 15 hours ahead', path: '/chapters/01-x/', lastmod: ahead(15 * 60), error: /\/chapters\/01-x has future lastmod/ },
+    { label: 'radar 2 minutes ahead', path: '/radar/', lastmod: ahead(2), ok: true },
+    { label: 'radar 10 minutes ahead', path: '/radar/', lastmod: ahead(10), error: /\/radar has future lastmod/ },
+  ];
+  for (const { label, path, lastmod, ok, error } of cases) {
+    const sitemapSet = '<urlset><url><loc>https://dive.vladyslavpodoliako.com/null-safety/</loc></url>'
+      + `<url><loc>https://dive.vladyslavpodoliako.com${path}</loc><lastmod>${lastmod}</lastmod></url></urlset>`;
+    const root = fixture({ sitemapIndex: validIndex, sitemapSet });
+    try {
+      mkdirSync(join(root, 'src/data'), { recursive: true });
+      writeFileSync(join(root, 'src/data/chapter-dates.json'), JSON.stringify({ '01-x': { modified: lastmod.slice(0, 10), published: '2026-05-07' } }));
+      const result = run(root);
+      if (ok) assert.equal(result.status, 0, `${label}: ${result.stderr}`);
+      else {
+        assert.equal(result.status, 1, `${label}: ${result.stdout}`);
+        assert.match(result.stderr, error, label);
+      }
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});
+
 // A sweep commit gives many chapters the same git modified day. Each of those dates is checked
 // against chapter-dates.json, so they are not a build stamp and must not stop a deploy: with
 // 24 of 127 sitemap URLs on one day (10 Nov 2026), 8 more would have tripped the 25% rule.
