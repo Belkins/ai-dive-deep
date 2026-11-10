@@ -8,7 +8,7 @@ import { RADAR_PUBLIC, getRadarArchiveDates, isRadarEditionIndexable } from '@/l
 // /radar — the live board. Re-snapshotted on every ingest run of the private radar-pipeline
 // (deploy-key push of src/data/radar/*), several times a day and on no fixed clock — the
 // board carries its own age readout. Server-rendered; design per the Direction-B build spec.
-// The public/content policy drives noindex, the sitemap, and archive discovery.
+// The public/content policy drives noindex, this page's place in the sitemap, and archive discovery.
 const PREVIEW = !isRadarEditionIndexable(today);
 
 const archives = import.meta.glob('@/data/radar/archive/*.json', { eager: true }) as Record<string, { default: { date: string; items?: unknown[] } }>;

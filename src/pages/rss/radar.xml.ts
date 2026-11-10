@@ -8,7 +8,8 @@ const FEED_URL = `${SITE}/rss/radar.xml`;
 export const GET: APIRoute = async () => {
   const modules = import.meta.glob('@/data/radar/archive/*.json', { eager: true }) as Record<string, { default: any }>;
   const archives = Object.values(modules).map((m) => m.default);
-  // Same eligibility as the sitemap and archive navigation: frozen, indexable editions only.
+  // Same eligibility as the archive navigation: frozen, indexable editions only. (The dated
+  // pages themselves are out of the sitemap; this feed and the hub's links are how they are found.)
   const items = radarFeedItems(archives, getRadarArchiveDates(archives, today.date));
   const xml = renderRss({
     title: "Vlad's Playbook — Radar",

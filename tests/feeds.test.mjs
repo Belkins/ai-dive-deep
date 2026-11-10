@@ -45,7 +45,7 @@ test('radar feed: eligible archive dates only, newest first, capped at 60', () =
   assert.ok(!items.some((i) => i.link.includes('2026-03-14') || i.link.includes('2026-12-31')));
 });
 
-test('radar feed over the real archive matches the sitemap eligibility', () => {
+test('radar feed over the real archive matches the archive eligibility', () => {
   const dir = new URL('../src/data/radar/archive/', import.meta.url);
   const archives = readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => JSON.parse(readFileSync(new URL(f, dir), 'utf8')));
   const today = JSON.parse(readFileSync(new URL('../src/data/radar/today.json', import.meta.url), 'utf8'));
