@@ -8,6 +8,7 @@ import { ClientRouter } from 'astro:transitions';
 import { CHAPTERS, getPart } from '@/lib/chapters';
 import { AUTHOR, PUBLISHER } from '@/lib/author';
 import { createSeoDescription } from '@/lib/seo';
+import { pageTitle } from '@/lib/page-title.mjs';
 import chapterDatesJson from '@/data/chapter-dates.json';
 
 interface Props {
@@ -26,7 +27,8 @@ const chapterCount = CHAPTERS.length;
 const DEFAULT_DESCRIPTION = `${chapterCount} chapters. One operator. A field manual for using AI like an OS, by Vlad Podoliako.`;
 
 const { title, description, ogImage, noNav, noindex, followLinks = false } = Astro.props;
-const fullTitle = title === BRAND || title === FULL ? FULL : `${title} — ${BRAND}`;
+// The brand suffix only where the title stays within 60 characters (src/lib/page-title.mjs).
+const fullTitle = pageTitle(title, BRAND, FULL);
 const desc = createSeoDescription(description, DEFAULT_DESCRIPTION);
 const og = new URL(ogImage ?? '/og-default.png', Astro.site).toString();
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
