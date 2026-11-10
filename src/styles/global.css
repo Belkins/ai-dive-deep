@@ -375,3 +375,37 @@ main :where(p, li, aside.container-prose > div > div) > :where(code, a):not(:whe
 }
 @keyframes pp-table-cell-min { from, to { min-width: 8.5rem; } }
 @keyframes pp-table-cell-min-last { from, to { min-width: 14rem; } }
+
+/* Print. The site opens in the dark theme, and the base print rules above set only <html>
+   to white, so a dark-theme printout had near-white body text on white paper and kept the
+   site chrome. Print always uses the light tokens and black on white, drops the navigation
+   (site header, announcement bar, mobile menu, chapter contents, the footer and its
+   newsletter band, command palette,
+   chapter prev/next cards) and spells out where an external link in chapter text goes. */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: 250 250 247;
+    --fg: 14 15 17;
+    --muted: 86 84 75;
+    --line: 229 227 218;
+    --paper: 242 241 236;
+    --accent: 194 65 12;
+    --accent-2: 4 120 87;
+  }
+  html, body { background: #fff; color: #000; }
+  body > header,
+  #announce-bar,
+  #mobile-menu,
+  .chapter-toc,
+  body > footer,
+  #main-content ~ section,
+  #cc-palette-root,
+  article.chapter-body ~ nav { display: none !important; }
+  .chapter-body table { background: none; }
+  .chapter-body :where(p, li) a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    overflow-wrap: anywhere;
+  }
+}
