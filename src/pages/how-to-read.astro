@@ -106,3 +106,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <CommandPaletteMount />
 </BaseLayout>
+
+<style>
+  /* Paragraph spacing. Only the chapter body styles <p> margins site-wide, so on this page
+     consecutive paragraphs (and a list between them) ran together with a 0 px gap. Page-scoped,
+     and only on elements without a class, so no Tailwind margin utility is overridden. */
+  section > :where(p, ul) + :where(p, ul):not([class]) { margin-top: 1.25rem; }
+</style>
