@@ -21,15 +21,45 @@
   // BaseLayout turns into 'open-palette'), or a pointer, focus or touch on the search button to warm it.
   // The inline script above remembers the first open request; the palette replays it once mounted.
   let loading: Promise<typeof import('@/widgets/command-palette-entry')> | null = null;
-  const load = () => {
-    loading ??= import('@/widgets/command-palette-entry').catch((error) => { loading = null; throw error; });
-    loading.then((entry) => entry.mountCommandPalette()).catch(() => {});
+  // A failed import() stays failed for the life of the document (the module map keeps the failure), so
+  // asking again cannot work. It fails when the first request drops, or when a deploy replaced the hashed
+  // file while this tab stayed open. When the reader asked for the palette and the site answers, load the
+  // page fresh once and open the palette there. Offline, the page being read stays as it is.
+  const RECOVERED_AT = 'cc-palette-recovered-at';
+  let recovering = false;
+  const recover = async () => {
+    if (recovering) return;
+    recovering = true;
+    try {
+      const last = Number(sessionStorage.getItem(RECOVERED_AT) ?? 0);
+      if (Date.now() - last > 60_000) {
+        const response = await fetch(location.href, { method: 'HEAD', cache: 'no-store' });
+        if (response.ok) {
+          sessionStorage.setItem(RECOVERED_AT, String(Date.now()));
+          location.reload();
+          return;
+        }
+      }
+    } catch { /* offline, or storage is blocked: keep the page */ }
+    recovering = false;
+  };
+  const load = (asked: boolean) => {
+    loading ??= import('@/widgets/command-palette-entry');
+    loading.then((entry) => entry.mountCommandPalette()).catch(() => { if (asked) void recover(); });
   };
   const warm = (event: Event) => {
-    if (event.target instanceof Element && event.target.closest('#open-palette-btn')) load();
+    if (event.target instanceof Element && event.target.closest('#open-palette-btn')) load(false);
   };
-  window.addEventListener('open-palette', load);
+  window.addEventListener('open-palette', () => load(true));
   for (const type of ['pointerenter', 'focusin', 'touchstart']) {
     document.addEventListener(type, warm, { capture: true, passive: true });
   }
+  // Right after a recovery reload, open the palette the reader asked for. A second failure does not reload again.
+  try {
+    if (Date.now() - Number(sessionStorage.getItem(RECOVERED_AT) ?? 0) < 15_000) {
+      const root = document.getElementById('cc-palette-root');
+      if (root) root.dataset.openRequested = 'true';
+      load(false);
+    }
+  } catch { /* storage is blocked */ }
 </script>

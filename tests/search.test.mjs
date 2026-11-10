@@ -423,19 +423,26 @@ const ENTRY_IMPORT = /(?<!typeof )import\('@\/widgets\/command-palette-entry'\)/
 const loaderScript = [...mountSource.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)]
   .find(([, attributes]) => !attributes.includes('is:inline'))?.[2];
 
-function loaderHarness(failures = 0) {
+// chunkFails: the palette file cannot be fetched. siteAnswers: what the page's own address returns to the
+// loader's reachability check: 'ok', 'error' (an answer that is not the page) or 'offline'.
+// recoveredMsAgo: how long ago this tab reloaded itself to recover the palette (null = never).
+function loaderHarness({ chunkFails = false, siteAnswers = 'ok', recoveredMsAgo = null } = {}) {
   assert.ok(loaderScript, 'the mount has a bundled loader script');
   assert.doesNotMatch(loaderScript, /^\s*import\s/m, 'the palette is never imported statically');
   assert.equal(loaderScript.match(ENTRY_IMPORT)?.length, 1, 'the palette entry is imported dynamically');
   const calls = { imports: 0, mounts: 0 };
+  const recovery = { heads: [], reloads: 0 };
   const entry = { mountCommandPalette: () => { calls.mounts += 1; } };
-  let failuresLeft = failures;
   class Element extends EventTarget {
     constructor(isSearchButton) { super(); this.isSearchButton = isSearchButton; }
     closest(selector) { return this.isSearchButton && selector === '#open-palette-btn' ? this : null; }
   }
   const window = new EventTarget();
   const document = new EventTarget();
+  const root = { dataset: {} };
+  document.getElementById = (id) => (id === 'cc-palette-root' ? root : null);
+  const store = new Map();
+  if (recoveredMsAgo !== null) store.set('cc-palette-recovered-at', String(Date.now() - recoveredMsAgo));
   const { outputText } = ts.transpileModule(loaderScript.replace(ENTRY_IMPORT, '__importEntry()'), {
     compilerOptions: { target: ts.ScriptTarget.ES2022 },
   });
@@ -443,16 +450,23 @@ function loaderHarness(failures = 0) {
     window, document, Element,
     // An idle or timer route would load the palette without intent; these run it at once so a test sees it.
     requestIdleCallback: (callback) => callback(), setTimeout: (callback) => callback(),
+    sessionStorage: { getItem: (key) => store.get(key) ?? null, setItem: (key, value) => { store.set(key, String(value)); } },
+    location: { href: 'https://dive.example/chapters/01/', reload: () => { recovery.reloads += 1; } },
+    fetch: (url, init) => {
+      recovery.heads.push([url, { ...init }]);
+      return siteAnswers === 'offline' ? Promise.reject(new TypeError('Failed to fetch')) : Promise.resolve({ ok: siteAnswers === 'ok' });
+    },
+    // A browser keeps a failed import() failed for the life of the document, so this fake never recovers either.
     __importEntry: () => {
       calls.imports += 1;
-      return failuresLeft-- > 0 ? Promise.reject(new Error('offline')) : Promise.resolve(entry);
+      return chunkFails ? Promise.reject(new Error('Failed to fetch dynamically imported module')) : Promise.resolve(entry);
     },
   });
   const settle = () => new Promise((resolve) => setImmediate(resolve));
   const fire = (type, isSearchButton) => {
     for (const listener of getEventListeners(document, type)) listener({ type, target: new Element(isSearchButton) });
   };
-  return { calls, window, document, settle, fire };
+  return { calls, recovery, store, root, window, document, settle, fire };
 }
 
 test('the palette code loads on intent only: an open request or the search button, never on page load', async () => {
@@ -474,20 +488,68 @@ test('the palette code loads on intent only: an open request or the search butto
   assert.deepEqual(calls, { imports: 1, mounts: 3 }, 'the code is fetched once; each intent asks the entry to mount');
 });
 
-test('each intent trigger loads the palette on its own, and a failed load is retried on the next intent', async () => {
+test('each intent trigger loads the palette on its own', async () => {
   for (const type of ['pointerenter', 'focusin', 'touchstart']) {
     const { calls, settle, fire } = loaderHarness();
     fire(type, true);
     await settle();
     assert.deepEqual(calls, { imports: 1, mounts: 1 }, type);
   }
-  const { calls, window, settle } = loaderHarness(1);
+});
+
+// A browser keeps a failed import() failed for as long as the document lives, so asking again cannot load
+// the palette. It fails when the first request drops, or when a deploy replaced the hashed file under a tab
+// that stayed open. The way out is a fresh page load, and only when the reader asked for the palette and the
+// site answers: a reader who is offline must keep the page they are reading.
+test('a failed palette load reloads the page once when the reader asked and the site answers', async () => {
+  const { calls, recovery, store, window, settle } = loaderHarness({ chunkFails: true });
   window.dispatchEvent(new Event('open-palette'));
   await settle();
-  assert.deepEqual(calls, { imports: 1, mounts: 0 }, 'an offline first request mounts nothing');
+  assert.deepEqual(calls, { imports: 1, mounts: 0 });
+  assert.deepEqual(recovery.heads, [['https://dive.example/chapters/01/', { method: 'HEAD', cache: 'no-store' }]]);
+  assert.equal(recovery.reloads, 1);
+  assert.ok(store.has('cc-palette-recovered-at'), 'the reload is recorded, so it cannot repeat');
   window.dispatchEvent(new Event('open-palette'));
   await settle();
-  assert.deepEqual(calls, { imports: 2, mounts: 1 }, 'the next request tries again');
+  assert.deepEqual(calls, { imports: 1, mounts: 0 }, 'the failed import is never asked for again');
+  assert.equal(recovery.reloads, 1);
+});
+
+test('a failed palette load never reloads for a warm-up, offline, on an error answer, or twice in a minute', async () => {
+  const warm = loaderHarness({ chunkFails: true });
+  warm.fire('pointerenter', true);
+  await warm.settle();
+  assert.deepEqual([warm.recovery.heads.length, warm.recovery.reloads], [0, 0], 'a hover is not a request');
+
+  for (const siteAnswers of ['offline', 'error']) {
+    const asked = loaderHarness({ chunkFails: true, siteAnswers });
+    asked.window.dispatchEvent(new Event('open-palette'));
+    await asked.settle();
+    assert.deepEqual([asked.recovery.heads.length, asked.recovery.reloads], [1, 0], siteAnswers);
+    assert.equal(asked.store.has('cc-palette-recovered-at'), false, siteAnswers);
+  }
+
+  const again = loaderHarness({ chunkFails: true, recoveredMsAgo: 20_000 });
+  again.window.dispatchEvent(new Event('open-palette'));
+  await again.settle();
+  assert.deepEqual([again.recovery.heads.length, again.recovery.reloads], [0, 0], 'one reload a minute at most');
+});
+
+test('right after a recovery reload the palette opens by itself, and only then', async () => {
+  const fresh = loaderHarness({ recoveredMsAgo: 2_000 });
+  await fresh.settle();
+  assert.deepEqual(fresh.calls, { imports: 1, mounts: 1 });
+  assert.equal(fresh.root.dataset.openRequested, 'true');
+
+  const later = loaderHarness({ recoveredMsAgo: 120_000 });
+  await later.settle();
+  assert.deepEqual(later.calls, { imports: 0, mounts: 0 });
+  assert.equal(later.root.dataset.openRequested, undefined);
+
+  const failsAgain = loaderHarness({ chunkFails: true, recoveredMsAgo: 2_000 });
+  await failsAgain.settle();
+  assert.deepEqual(failsAgain.calls, { imports: 1, mounts: 0 });
+  assert.deepEqual([failsAgain.recovery.heads.length, failsAgain.recovery.reloads], [0, 0], 'no second reload');
 });
 
 function keyboardHarness(count) {
