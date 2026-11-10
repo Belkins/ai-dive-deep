@@ -18,6 +18,11 @@ Modes:
 Ledger lives at scripts/numbers-ledger.json. Add new patterns there as new
 factual claims accrete across chapters.
 
+count_claims (hard-fail): counts the repo computes itself, such as the number
+of chapters (files in src/content/chapters/*.mdx), checked on the front-door
+files each entry lists (README.md, the share-image SVGs). Page prose is not
+held to the live count: dated pages legitimately quote older counts.
+
 Escape hatch: <!-- NOSTALENUMBERS --> on a line or in first 30 lines of file.
 """
 
@@ -31,7 +36,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LEDGER = Path(__file__).resolve().parent / 'numbers-ledger.json'
-PROSE_GLOBS = ['src/content/chapters/*.mdx', 'src/pages/*.astro']
+PROSE_GLOBS = [
+    'src/content/chapters/*.mdx',
+    'src/pages/**/*.astro',  # ** also matches src/pages/*.astro
+    'src/lib/*.ts',
+    'src/widgets/*.tsx',
+    'README.md',
+    'public/*.svg',
+]
 ESCAPE = '<!-- NOSTALENUMBERS -->'
 
 
@@ -49,7 +61,7 @@ def save_ledger(data: dict) -> None:
 def iter_prose_files() -> list[Path]:
     out: list[Path] = []
     for g in PROSE_GLOBS:
-        out.extend(sorted(ROOT.glob(g)))
+        out.extend(p for p in sorted(ROOT.glob(g)) if p not in out)
     return out
 
 
@@ -81,6 +93,40 @@ def scan_hard(ledger: dict) -> list[tuple[str, int, str, str, str]]:
                             entry.get('reason', 'deprecated'),
                         )
                     )
+    return fails
+
+
+def scan_counts(ledger: dict) -> list[tuple[str, int, str, str, str]]:
+    """Hard rule for counts the repo can compute (e.g. chapters = files in
+    src/content/chapters/*.mdx). Each count_claims entry names the glob that
+    produces the true number, a regex whose group 1 is the claimed number,
+    and the front-door files it is enforced on. Same tuple shape as scan_hard."""
+    fails: list[tuple[str, int, str, str, str]] = []
+    for entry in ledger.get('count_claims', []):
+        actual = len(list(ROOT.glob(entry['count_glob'])))
+        rx = re.compile(entry['regex'])
+        for rel in entry.get('files', []):
+            f = ROOT / rel
+            if not f.is_file():
+                continue
+            text = f.read_text(encoding='utf-8', errors='ignore')
+            if file_escaped(text):
+                continue
+            for line_no, line in enumerate(text.splitlines(), start=1):
+                if ESCAPE in line:
+                    continue
+                for m in rx.finditer(line):
+                    if int(m.group(1)) != actual:
+                        fails.append(
+                            (
+                                rel,
+                                line_no,
+                                line.strip()[:200],
+                                entry['regex'],
+                                f'{entry.get("label", "count")}: says {m.group(1)}, '
+                                f'{entry["count_glob"]} holds {actual}',
+                            )
+                        )
     return fails
 
 
@@ -150,7 +196,7 @@ def main() -> int:
     ledger = load_ledger()
     today = date.today()
 
-    hard_fails = scan_hard(ledger)
+    hard_fails = scan_hard(ledger) + scan_counts(ledger)
     soft_warns = scan_soft(ledger, today)
 
     # Soft warnings → stderr, never block (unless --strict)
@@ -166,13 +212,14 @@ def main() -> int:
               'after confirming numbers are still accurate)', file=sys.stderr)
 
     if hard_fails:
-        print('Deprecated model IDs / hard-banned strings in prose:')
+        print('Deprecated model IDs / hard-banned strings / wrong counts in prose:')
         for path, line_no, snippet, pattern, reason in hard_fails:
             print(f'  ✗ {path}:{line_no}  /{pattern}/')
             print(f'      reason: {reason}')
             print(f'      line:   {snippet}')
         print()
-        print('Fix: replace the deprecated ID with the current model name, or '
+        print('Fix: replace the deprecated ID with the current model name, set a '
+              'wrong count to the number the folder holds, or '
               'add <!-- NOSTALENUMBERS --> if the historical reference is intentional.')
         return 1
 
@@ -183,7 +230,8 @@ def main() -> int:
     soft_status = f' ({len(soft_warns)} soft warning{"s" if len(soft_warns) != 1 else ""})' if soft_warns else ''
     print(f'✓ stale-numbers OK — '
           f'{len(ledger.get("hard_deprecations", []))} hard patterns, '
-          f'{len(ledger.get("soft_facts", []))} soft facts'
+          f'{len(ledger.get("soft_facts", []))} soft facts, '
+          f'{len(ledger.get("count_claims", []))} count claims'
           f'{soft_status}')
     return 0
 

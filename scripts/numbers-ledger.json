@@ -12,7 +12,22 @@
     {"regex": "\\btext-davinci-\\d+\\b", "reason": "deprecated OpenAI legacy completion model"},
     {"regex": "\\bcode-davinci-\\d+\\b", "reason": "deprecated OpenAI legacy code model"},
     {"regex": "\\bgemini-1\\.5-(pro|flash)(-\\d+)?\\b", "reason": "deprecated Gemini ID; current generation is gemini-3"},
-    {"regex": "\\bgemini-pro-vision\\b", "reason": "deprecated; vision is unified in current Gemini models"}
+    {"regex": "\\bgemini-pro-vision\\b", "reason": "deprecated; vision is unified in current Gemini models"},
+    {"regex": "0\\.83 points, against a stated ±1%", "reason": "AA launch-week Opus 5 gap (July 2026) stated in the present tense; the 2026-08-17 refresh replaced it (issue #8). Keep only as a dated past-tense contrast."}
+  ],
+  "count_claims": [
+    {
+      "label": "chapter count",
+      "count_glob": "src/content/chapters/*.mdx",
+      "regex": "\\b(\\d+)[- ]chapters?\\b",
+      "files": ["README.md", "public/og-default.svg", "public/og-launch.svg"]
+    },
+    {
+      "label": "widget count",
+      "count_glob": "src/widgets/*",
+      "regex": "\\b(\\d+) (?:React/Astro |interactive )?widgets\\b",
+      "files": ["README.md", "public/og-default.svg", "public/og-launch.svg"]
+    }
   ],
   "soft_facts": [
     {
@@ -44,6 +59,11 @@
       "regex": "\\b10K\\+ subs\\b|\\b10,000\\+ subs\\b|\\b10[Kk]\\+ subscribers\\b",
       "label": "vladsnewsletter subscriber count",
       "last_verified": "2026-05-20"
+    },
+    {
+      "regex": "0\\.98 points, against a stated ±1%",
+      "label": "AA top-two gap on the 2026-08-17 board (/opus-5/)",
+      "last_verified": "2026-08-17"
     }
   ]
 }
