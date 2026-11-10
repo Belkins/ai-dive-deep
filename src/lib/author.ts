@@ -46,7 +46,7 @@ export const AUTHOR = {
     'https://crunchbase.com/person/vladislav-podolyako',
     'https://builtin.com/authors/Vladyslav-Podoliako',
     'https://thenextweb.com/author/vladyslav-podoliako',
-    'https://producthunt.com/@belkins',
+    'https://www.producthunt.com/@belkins',
   ],
 } as const;
 

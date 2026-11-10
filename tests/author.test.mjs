@@ -36,7 +36,7 @@ test('the author sameAs keeps every earlier profile and adds the five Vlad confi
     'https://crunchbase.com/person/vladislav-podolyako',
     'https://builtin.com/authors/Vladyslav-Podoliako',
     'https://thenextweb.com/author/vladyslav-podoliako',
-    'https://producthunt.com/@belkins',
+    'https://www.producthunt.com/@belkins',
   ];
   for (const url of expected) assert.ok(AUTHOR.sameAs.includes(url), `sameAs lacks ${url}`);
   assert.equal(AUTHOR.sameAs.length, 12);
