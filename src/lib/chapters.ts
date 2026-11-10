@@ -166,11 +166,17 @@ export const SECTIONS: { key: SectionKey; label: string; description: string; sl
   },
 ];
 
+// The reading order: the six PARTS in order, each part's slugs as listed there. Next and Previous
+// follow it; chapter numbers, the contents lists and the feeds keep number order.
+export const READING_ORDER: ChapterMeta[] = PARTS.flatMap((p) =>
+  p.slugs.map((s) => CHAPTERS.find((c) => c.slug === s)).filter((c): c is ChapterMeta => Boolean(c)),
+);
+
 export function getNeighbors(slug: string) {
-  const idx = CHAPTERS.findIndex((c) => c.slug === slug);
+  const idx = READING_ORDER.findIndex((c) => c.slug === slug);
   if (idx === -1) return { prev: null, next: null };
   return {
-    prev: idx > 0 ? CHAPTERS[idx - 1] : null,
-    next: idx < CHAPTERS.length - 1 ? CHAPTERS[idx + 1] : null,
+    prev: idx > 0 ? READING_ORDER[idx - 1] : null,
+    next: idx < READING_ORDER.length - 1 ? READING_ORDER[idx + 1] : null,
   };
 }
