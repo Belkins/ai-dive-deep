@@ -330,12 +330,19 @@ test('a chapter page must share its own card, and the card must be in dist', () 
   const withImage = (path, twitterPath = path) => html({ route }).replace('</head>',
     `<meta property="og:image" content="https://dive.vladyslavpodoliako.com${path}">`
     + `<meta name="twitter:image" content="https://dive.vladyslavpodoliako.com${twitterPath}"></head>`);
+  // The same address in both tags, written exactly as given (no site origin put in front).
+  const withAddress = (address) => html({ route }).replace('</head>',
+    `<meta property="og:image" content="${address}"><meta name="twitter:image" content="${address}"></head>`);
   const cases = [
     { label: 'own card present', page: withImage('/og/chapters/16-hooks-subagents.png?v=0123abcd'), card: true, status: 0 },
     { label: 'own card missing from dist', page: withImage('/og/chapters/16-hooks-subagents.png?v=0123abcd'), card: false, status: 1, error: /og:image file \/og\/chapters\/16-hooks-subagents\.png is not in dist/ },
     { label: 'site default card', page: withImage('/og-default.png'), card: true, status: 1, error: /expected \/og\/chapters\/16-hooks-subagents\.png/ },
     { label: 'twitter image differs', page: withImage('/og/chapters/16-hooks-subagents.png', '/og-default.png'), card: true, status: 1, error: /og:image and twitter:image differ/ },
     { label: 'no share image', page: html({ route }), card: true, status: 1, error: /expected one og:image and one twitter:image, found 0 and 0/ },
+    // Share previews are fetched by other sites, which cannot resolve a path without a host.
+    { label: 'address without a host', page: withAddress('/og/chapters/16-hooks-subagents.png'), card: true, status: 1, error: /og:image is not an absolute URL: \/og\/chapters\/16-hooks-subagents\.png/ },
+    // A card served from another site can change or vanish without this build noticing.
+    { label: 'card on another site', page: withAddress('https://example.com/og/chapters/16-hooks-subagents.png'), card: true, status: 1, error: /og:image origin https:\/\/example\.com does not match https:\/\/dive\.vladyslavpodoliako\.com/ },
   ];
   for (const { label, page, card, status, error } of cases) {
     const root = fixture({ sitemapIndex: validIndex, sitemapSet: set, pageHtml: page, page: 'chapters/16-hooks-subagents' });
@@ -345,6 +352,29 @@ test('a chapter page must share its own card, and the card must be in dist', () 
         mkdirSync(join(root, 'dist', 'og', 'chapters'), { recursive: true });
         writeFileSync(join(root, 'dist', 'og', 'chapters', '16-hooks-subagents.png'), 'png');
       }
+      const result = run(root);
+      assert.equal(result.status, status, `${label}: ${result.stderr}`);
+      if (error) assert.match(result.stderr, error, label);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});
+
+// Every page that names a share image is checked, not only chapters: if the default card were
+// renamed or deleted, every non-chapter page would share a broken picture.
+test('a page outside the chapters must not share an image that is missing from dist', () => {
+  const page = html().replace('</head>',
+    '<meta property="og:image" content="https://dive.vladyslavpodoliako.com/og-default.png">'
+    + '<meta name="twitter:image" content="https://dive.vladyslavpodoliako.com/og-default.png"></head>');
+  const cases = [
+    { label: 'default card present', present: true, status: 0 },
+    { label: 'default card missing', present: false, status: 1, error: /og:image file \/og-default\.png is not in dist/ },
+  ];
+  for (const { label, present, status, error } of cases) {
+    const root = fixture({ sitemapIndex: validIndex, sitemapSet: validSet, pageHtml: page });
+    try {
+      if (present) writeFileSync(join(root, 'dist', 'og-default.png'), 'png');
       const result = run(root);
       assert.equal(result.status, status, `${label}: ${result.stderr}`);
       if (error) assert.match(result.stderr, error, label);
