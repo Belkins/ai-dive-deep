@@ -226,7 +226,7 @@ export default async function handler(req) {
           textTransform: 'uppercase',
         },
       },
-      'Vlad’s Ultimate AI Dive Deep'
+      'Vlad’s Playbook'
     ),
     h(
       'div',

@@ -54,7 +54,7 @@ curl -s "https://og.vladyslavpodoliako.com/s/eyJDbGF1ZGUgQ29kZSI6IlMifQ==" | gre
 ```
 
 Expected:
-- The PNG shows the dark `#0E0F11` background, "VLAD'S ULTIMATE AI DIVE DEEP" header,
+- The PNG shows the dark `#0E0F11` background, "VLAD'S PLAYBOOK" header,
   6 colored tier rows, "Claude Code" pill on row S, and the footer URL.
 - The share page returns 200 with a working `og:image` meta tag.
 - Visiting the share page in a real browser bounces to the main site (`#tl=...`)

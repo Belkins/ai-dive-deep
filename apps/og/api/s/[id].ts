@@ -59,16 +59,16 @@ export default async function handler(req: Request): Promise<Response> {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>My AI tools tier list — Vlad's Ultimate AI Dive Deep</title>
+<title>My AI tools tier list — Vlad's Playbook</title>
 <meta property="og:type" content="website" />
-<meta property="og:title" content="My AI tools tier list — Vlad's Ultimate AI Dive Deep" />
+<meta property="og:title" content="My AI tools tier list — Vlad's Playbook" />
 <meta property="og:description" content="Operator-usefulness ranking. Drag your own." />
 <meta property="og:image" content="${ogImageEsc}" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:url" content="${targetEsc}" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="My AI tools tier list — Vlad's Ultimate AI Dive Deep" />
+<meta name="twitter:title" content="My AI tools tier list — Vlad's Playbook" />
 <meta name="twitter:description" content="Operator-usefulness ranking. Drag your own." />
 <meta name="twitter:image" content="${ogImageEsc}" />
 <meta http-equiv="refresh" content="0;url=${targetEsc}" />
