@@ -10,6 +10,7 @@ import VideoEmbed from '@/components/VideoEmbed.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import OnTheRadar from '@/components/OnTheRadar.astro';
 import { createChapterSeoDescription } from '@/lib/seo';
+import ogCards from '../../../scripts/og-cards.json';
 
 export async function getStaticPaths() {
   const chapters = await getCollection('chapters');
@@ -20,9 +21,14 @@ const { chapter } = Astro.props as any;
 const { Content, headings } = await render(chapter);
 const data = chapter.data;
 const seoDescription = createChapterSeoDescription(data);
+// The chapter's own share card; ?v= changes when its inputs do, so a platform that cached the old
+// picture fetches the new one after a retitle.
+const cardHash = (ogCards as Record<string, string>)[data.slug];
+if (!cardHash) throw new Error(`No share card for ${data.slug}: run npm run og:cards and commit public/og/chapters and scripts/og-cards.json`);
+const ogImage = `/og/chapters/${data.slug}.png?v=${cardHash.slice(0, 8)}`;
 ---
 
-<BaseLayout title={data.title} description={seoDescription}>
+<BaseLayout title={data.title} description={seoDescription} ogImage={ogImage}>
   <ProgressBar slug={data.slug} />
   <ChapterHero
     number={data.number}

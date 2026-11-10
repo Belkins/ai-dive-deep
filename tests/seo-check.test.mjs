@@ -304,3 +304,33 @@ test('chapter lastmod must be the git modified date from chapter-dates.json', ()
     }
   }
 });
+
+test('a chapter page must share its own card, and the card must be in dist', () => {
+  const route = '/chapters/16-hooks-subagents/';
+  const set = `<urlset><url><loc>https://dive.vladyslavpodoliako.com${route}</loc></url></urlset>`;
+  const withImage = (path, twitterPath = path) => html({ route }).replace('</head>',
+    `<meta property="og:image" content="https://dive.vladyslavpodoliako.com${path}">`
+    + `<meta name="twitter:image" content="https://dive.vladyslavpodoliako.com${twitterPath}"></head>`);
+  const cases = [
+    { label: 'own card present', page: withImage('/og/chapters/16-hooks-subagents.png?v=0123abcd'), card: true, status: 0 },
+    { label: 'own card missing from dist', page: withImage('/og/chapters/16-hooks-subagents.png?v=0123abcd'), card: false, status: 1, error: /og:image file \/og\/chapters\/16-hooks-subagents\.png is not in dist/ },
+    { label: 'site default card', page: withImage('/og-default.png'), card: true, status: 1, error: /expected \/og\/chapters\/16-hooks-subagents\.png/ },
+    { label: 'twitter image differs', page: withImage('/og/chapters/16-hooks-subagents.png', '/og-default.png'), card: true, status: 1, error: /og:image and twitter:image differ/ },
+    { label: 'no share image', page: html({ route }), card: true, status: 1, error: /expected one og:image and one twitter:image, found 0 and 0/ },
+  ];
+  for (const { label, page, card, status, error } of cases) {
+    const root = fixture({ sitemapIndex: validIndex, sitemapSet: set, pageHtml: page, page: 'chapters/16-hooks-subagents' });
+    try {
+      writeFileSync(join(root, 'dist', 'og-default.png'), 'png');
+      if (card) {
+        mkdirSync(join(root, 'dist', 'og', 'chapters'), { recursive: true });
+        writeFileSync(join(root, 'dist', 'og', 'chapters', '16-hooks-subagents.png'), 'png');
+      }
+      const result = run(root);
+      assert.equal(result.status, status, `${label}: ${result.stderr}`);
+      if (error) assert.match(result.stderr, error, label);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});

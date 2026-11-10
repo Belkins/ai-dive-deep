@@ -101,6 +101,33 @@ function routeFor(file) {
   return `/${path.replace(/\.html$/, '')}/`;
 }
 
+// The share image: og:image and twitter:image name the same file on this site, and that file is
+// in dist. A chapter page shares its own card, public/og/chapters/<slug>.png.
+function validateShareImage(file, displayFile, head) {
+  const ogImages = metaContent(head, 'property', 'og:image');
+  const twitterImages = metaContent(head, 'name', 'twitter:image');
+  const chapter = routeFor(file).match(/^\/chapters\/([^/]+)\/$/)?.[1];
+  if (!chapter && ogImages.length === 0 && twitterImages.length === 0) return;
+  if (ogImages.length !== 1 || twitterImages.length !== 1) {
+    fail(displayFile, `expected one og:image and one twitter:image, found ${ogImages.length} and ${twitterImages.length}`);
+    return;
+  }
+  if (ogImages[0] !== twitterImages[0]) fail(displayFile, 'og:image and twitter:image differ');
+  let url;
+  try {
+    url = new URL(ogImages[0]);
+  } catch {
+    fail(displayFile, `og:image is not an absolute URL: ${ogImages[0] || '(empty)'}`);
+    return;
+  }
+  if (url.origin !== EXPECTED_ORIGIN) fail(displayFile, `og:image origin ${url.origin} does not match ${EXPECTED_ORIGIN}`);
+  const path = decodeURIComponent(url.pathname);
+  if (!existsSync(join(DIST_DIR, ...path.split('/').filter(Boolean)))) fail(displayFile, `og:image file ${path} is not in ${DIST_DIR}/`);
+  if (chapter && path !== `/og/chapters/${chapter}.png`) {
+    fail(displayFile, `chapter share image is ${path}, expected /og/chapters/${chapter}.png (run npm run og:cards)`);
+  }
+}
+
 function validateHtml(file) {
   const displayFile = relative('.', file);
   const html = readFileSync(file, 'utf8');
@@ -149,6 +176,8 @@ function validateHtml(file) {
   ) {
     fail(displayFile, 'meta, Open Graph, and Twitter descriptions do not match');
   }
+
+  validateShareImage(file, displayFile, head);
 
   const canonicalTags = [...head.matchAll(/<link\b[^>]*>/gi)]
     .map(([tag]) => attributes(tag))
