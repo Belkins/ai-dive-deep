@@ -9,6 +9,9 @@
   --muted: 170 167 154;
   --line: 38 37 31;
   --accent: 255 107 44;
+  /* Text and icons on an accent fill. White on the dark-theme flame is
+     2.84:1; ink (--bg) on it is 6.75:1. */
+  --on-accent: 14 15 17;
   --accent-2: 34 211 160;
   --paper: 22 23 27;
 }
@@ -25,6 +28,8 @@
      wherever they do text duty (eyebrows, receipt values, implication
      numerals). Same hues, darkened to clear 4.5:1 on --bg and --paper. */
   --accent: 194 65 12;
+  /* White on the darker light-theme flame is 5.18:1. */
+  --on-accent: 255 255 255;
   --accent-2: 4 120 87;
 }
 
@@ -187,7 +192,7 @@ pre code {
   font-weight: 500;
   transition: background-color 150ms;
   background: rgb(var(--accent));
-  color: white;
+  color: rgb(var(--on-accent));
   text-decoration: none;
 }
 .btn-flame:hover { background: rgb(var(--accent) / 0.9); }
@@ -226,7 +231,7 @@ textarea:focus-visible {
   height: auto;
   padding: 0.5rem 0.75rem;
   background: rgb(var(--accent));
-  color: white;
+  color: rgb(var(--on-accent));
   border-radius: 0.25rem;
   text-decoration: none;
   font-weight: 500;

@@ -71,7 +71,7 @@ the machine register (monospace, one hot accent, terminal-green for system state
 
 #### Semantic tokens (the live system)
 
-All real color flows through **7 CSS custom properties**, defined as space-separated RGB
+All real color flows through **8 CSS custom properties**, defined as space-separated RGB
 triplets so they compose with alpha: `rgb(var(--token) / 0.5)`. **Dark = `:root`. Light =
 `[data-theme='light']`.**
 
@@ -83,10 +83,18 @@ triplets so they compose with alpha: `rgb(var(--token) / 0.5)`. **Dark = `:root`
 | `--line` | Hairline borders / fills | `38 37 31` | `#26251F` | `229 227 218` | `#E5E3DA` |
 | `--paper` | Elevated surface (cards) | `22 23 27` | `#16171B` | `242 241 236` | `#F2F1EC` |
 | `--accent` | **Flame** — human intent | `255 107 44` | `#FF6B2C` | *(inherits)* | `#FF6B2C` |
+| `--on-accent` | Text / icons **on** an accent fill | `14 15 17` | `#0E0F11` | `255 255 255` | `#FFFFFF` |
 | `--accent-2` | **Terminal** — system state | `34 211 160` | `#22D3A0` | *(inherits)* | `#22D3A0` |
 
 > `--accent` / `--accent-2` are **theme-invariant** by design — they are not re-declared in
 > light mode. `::selection` = `rgb(var(--accent) / 0.25)`.
+
+> **`--on-accent` (added 2026-11-10).** Anything that sits *on* a flame fill — `.btn-flame`,
+> `.nl-btn`, `.skip-link`, the `NEW` chip, an active tab or pill — takes
+> `rgb(var(--on-accent))` (or `text-on-accent`), never a literal `#fff` / `white`. White on the
+> dark-theme flame `#FF6B2C` measures **2.84:1** (an AA failure); ink `#0E0F11` on it measures
+> **6.75:1**. In light mode the fill is the darker `#C2410C`, so the token flips back to white
+> (**5.18:1**). The fill itself never changes.
 
 **Canonical alpha ladder** (how the 7 vars actually flex):
 
@@ -363,6 +371,7 @@ promotions from the [drift backlog](#10-drift--standardization-backlog).
   --paper: 22 23 27;     /* #16171B */
   /* accents (theme-invariant) */
   --accent: 255 107 44;  /* #FF6B2C flame — human intent */
+  --on-accent: 14 15 17; /* #0E0F11 text on a flame fill — 6.75:1 */
   --accent-2: 34 211 160;/* #22D3A0 terminal — system state */
 
   /* ── RECOMMENDED ADDITIONS ─────────────────────────── */
@@ -371,8 +380,6 @@ promotions from the [drift backlog](#10-drift--standardization-backlog).
   /* --warning: 255 170 0;   #FFAA00 */
   /* --error:   239 68 68;   #EF4444 */
   /* --info:    139 92 246;  #8B5CF6 */
-  /* on-accent text (replace literal #fff — D-7) */
-  /* --on-accent: 255 255 255; */
 }
 
 [data-theme="light"] {
@@ -383,6 +390,7 @@ promotions from the [drift backlog](#10-drift--standardization-backlog).
   --line: 229 227 218;   /* #E5E3DA */
   --paper: 242 241 236;  /* #F2F1EC */
   --accent: 194 65 12;   /* #C2410C — flame, darkened for light */
+  --on-accent: 255 255 255; /* #FFFFFF on #C2410C — 5.18:1 */
   --accent-2: 4 120 87;  /* #047857 — terminal, darkened for light */
 }
 ```
@@ -406,6 +414,7 @@ muted:     'rgb(var(--muted) / <alpha-value>)',
 line:      'rgb(var(--line) / <alpha-value>)',
 paper:     'rgb(var(--paper) / <alpha-value>)',
 accent:    'rgb(var(--accent) / <alpha-value>)',
+'on-accent':'rgb(var(--on-accent) / <alpha-value>)',
 'accent-2':'rgb(var(--accent-2) / <alpha-value>)',
 // ink/flame/terminal retained for now — see H2 (delete-or-adopt)
 ```
@@ -458,10 +467,10 @@ Defined in `global.css`. **Reuse these before reaching for raw Tailwind.** All s
 |-------|--------|-------|
 | `.btn` | inverted: `bg --fg / color --bg`, `padding .625rem 1rem`, `radius .375rem`, `font-weight 500` | hover `--fg / 0.9` |
 | `.btn-ghost` | `1px --line` outline, `color --fg`, transparent | hover bg `--line / 0.4` |
-| `.btn-flame` | `bg --accent / color #fff` (the one accent CTA) | hover `--accent / 0.9` |
+| `.btn-flame` | `bg --accent / color --on-accent` (the one accent CTA) | hover `--accent / 0.9` |
 
 All: `inline-flex items-center gap-2`, 150ms `background-color`, flame `:focus-visible` ring.
-> **Drift D-7:** `.btn-flame` hard-codes `color: white` — promote to `--on-accent`.
+> **Drift D-7 — resolved 2026-11-10:** `.btn-flame` now takes `--on-accent` instead of `color: white`.
 
 ### Surfaces & labels
 
@@ -719,7 +728,7 @@ Parsed from the live code. The system is coherent at the *token* level but has d
 ### LOW
 - [ ] **L1.** Remove the dead `darkMode` selector `[data-theme="dark"]` (no matching CSS block) or add the block.
 - [ ] **L2.** De-dupe `.toc-link` (defined in both `SectionNav.astro` and `resources.astro`).
-- [ ] **L3.** Replace literal `#fff`/`white` on-accent text with `--on-accent` (`.btn-flame`, `.nl-btn`, `.skip-link`).
+- [x] **L3. ✅ Shipped** (`global.css`). `--on-accent` replaces literal `#fff`/`white` on-accent text in `.btn-flame`, `.nl-btn`, `.skip-link`, `.tile-new`, the tier-list tabs and pills, and the `vault-starter` / `claude-md-rules` labels. Widgets that still set `color: 'white'` on an accent fill migrate as they are touched.
 - [ ] **L4.** Normalize the lone `duration-100` (progress bar) — or document a `fast` tier.
 - [ ] **L5.** Remove the empty `typography: () => ({})` stub or configure `prose`.
 - [ ] **L6.** Decide on `lucide-react` — delete the dead dependency, or adopt it with the 24/`currentColor`/stroke-2 conventions.

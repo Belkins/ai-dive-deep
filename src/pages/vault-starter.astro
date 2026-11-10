@@ -199,7 +199,7 @@ const avoid = [
         <div class="rounded-md p-4" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
           <div class="flex items-baseline justify-between gap-2 mb-1">
             <strong class="text-sm">{p.name}</strong>
-            {p.critical && <span class="text-[10px] font-mono px-1.5 py-0.5 rounded" style="background: rgb(var(--accent)); color: white;">CRITICAL</span>}
+            {p.critical && <span class="text-[10px] font-mono px-1.5 py-0.5 rounded" style="background: rgb(var(--accent)); color: rgb(var(--on-accent));">CRITICAL</span>}
           </div>
           <p class="text-xs leading-relaxed m-0" style="color: rgb(var(--fg) / 0.85)">{p.why}</p>
         </div>

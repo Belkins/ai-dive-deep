@@ -66,6 +66,7 @@ export default {
         line: 'rgb(var(--line) / <alpha-value>)',
         paper: 'rgb(var(--paper) / <alpha-value>)',
         accent: 'rgb(var(--accent) / <alpha-value>)',
+        'on-accent': 'rgb(var(--on-accent) / <alpha-value>)',
         'accent-2': 'rgb(var(--accent-2) / <alpha-value>)',
       },
       fontFamily: {

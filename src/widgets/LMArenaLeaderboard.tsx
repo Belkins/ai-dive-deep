@@ -42,7 +42,7 @@ export default function LMArenaLeaderboard() {
     .lmb-tabs{display:flex;flex-wrap:wrap;gap:6px;padding:14px 20px;border-bottom:1px solid rgb(var(--line))}
     .lmb-tab{font:600 12px/1 var(--font-sans,inherit);letter-spacing:.04em;padding:7px 12px;border-radius:999px;border:1px solid rgb(var(--line));background:transparent;color:rgb(var(--muted));cursor:pointer;white-space:nowrap;transition:all .12s}
     .lmb-tab:hover{color:rgb(var(--fg));border-color:rgb(var(--muted) / .5)}
-    .lmb-tab[data-on="1"]{background:rgb(var(--accent));border-color:rgb(var(--accent));color:#fff}
+    .lmb-tab[data-on="1"]{background:rgb(var(--accent));border-color:rgb(var(--accent));color:rgb(var(--on-accent))}
     .lmb-row{display:grid;grid-template-columns:42px 132px minmax(0,1fr) 110px 72px;align-items:center;gap:12px;padding:9px 24px;border-bottom:1px solid rgb(var(--line) / .5)}
     .lmb-row:last-child{border-bottom:0}
     .lmb-rk{font:500 17px/1 var(--font-display,Georgia,serif);color:rgb(var(--fg))}
