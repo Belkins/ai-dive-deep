@@ -79,7 +79,32 @@ def arg_value(flag: str) -> str | None:
     return None
 
 
+KNOWN_FLAGS = ("--dry-run", "--full", "--manifest", "--previous")
+VALUE_FLAGS = ("--manifest", "--previous")
+
+
+def unknown_arguments(args: list[str]) -> list[str]:
+    """Arguments this script does not know. A typo must never fall through to a real send."""
+    unknown, skip = [], False
+    for a in args:
+        if skip:
+            skip = False
+        elif a in VALUE_FLAGS:
+            skip = True
+        elif a not in KNOWN_FLAGS:
+            unknown.append(a)
+    return unknown
+
+
 def main() -> int:
+    args = sys.argv[1:]
+    if "-h" in args or "--help" in args:
+        print(__doc__)
+        return 0
+    unknown = unknown_arguments(args)
+    if unknown:
+        print(f"FAIL: unknown argument {unknown[0]!r}; nothing was sent. See --help.")
+        return 2
     dry_run = "--dry-run" in sys.argv
     full = "--full" in sys.argv
 

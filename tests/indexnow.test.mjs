@@ -100,3 +100,20 @@ test('the page hash ignores build-clock times inside a widget, not dates in the 
   const prose = (when) => page(['Tue, Nov 10, 07:30 AM'], `<p>It was ${when}.</p>`);
   assert.notEqual(pageHash(prose('Tue, Nov 10, 9:14 AM')), pageHash(prose('Wed, Nov 11, 9:14 AM')));
 });
+
+// A typo or --help must never fall through to a real send: the script used to
+// ignore arguments it did not know, so a --help run sent every live URL.
+test('an unknown argument stops the run before anything is sent', () => {
+  const r = run({ next: { ...BASE, '/radar/': 'b2b2' }, previous: BASE, extra: ['--bogus'] });
+  assert.equal(r.status, 2, r.out);
+  assert.match(r.out, /unknown argument '--bogus'; nothing was sent/);
+  assert.deepEqual(r.submitted, []);
+});
+
+test('--help prints the usage and sends nothing', () => {
+  const r = run({ next: { ...BASE, '/radar/': 'b2b2' }, previous: BASE, extra: ['--help'] });
+  assert.equal(r.status, 0, r.out);
+  assert.match(r.out, /Usage:/);
+  assert.doesNotMatch(r.out, /manifest: \d+ pages/);
+  assert.deepEqual(r.submitted, []);
+});
