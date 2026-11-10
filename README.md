@@ -2,7 +2,7 @@
 
 # Vlad's Playbook
 
-### The Ultimate AI Dive Deep
+### A field manual
 
 **A 58-chapter operator field manual where every artifact is live, clickable, and forwardable — and the repo runs the discipline the book teaches.**
 

@@ -13,7 +13,7 @@ export const GET: APIRoute = async () => {
   const sorted = chapters.sort((a, b) => a.data.number - b.data.number);
 
   const lines: string[] = [];
-  lines.push("# Vlad's Playbook — The Ultimate AI Dive Deep");
+  lines.push("# Vlad's Playbook — A field manual");
   lines.push('');
   lines.push(`> A ${sorted.length}-chapter operator field manual for using AI tools in production.`);
   lines.push("> By Vlad Podoliako — CEO Belkins (B2B email outreach, $30M+ ARR); founder of Folderly and LinguaLive.");
