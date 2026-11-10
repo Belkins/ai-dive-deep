@@ -305,6 +305,25 @@ test('chapter lastmod must be the git modified date from chapter-dates.json', ()
   }
 });
 
+// A sweep commit gives many chapters the same git modified day. Each of those dates is checked
+// against chapter-dates.json, so they are not a build stamp and must not stop a deploy: with
+// 24 of 127 sitemap URLs on one day (10 Nov 2026), 8 more would have tripped the 25% rule.
+test('chapters that share one git modified date do not trip the blanket-timestamp rule', () => {
+  const slugs = ['01-a', '02-b', '03-c', '04-d', '05-e', '06-f'];
+  const urls = slugs.map((slug) => `<url><loc>https://dive.vladyslavpodoliako.com/chapters/${slug}/</loc><lastmod>2026-07-10T00:00:00.000Z</lastmod></url>`);
+  const sitemapSet = `<urlset><url><loc>https://dive.vladyslavpodoliako.com/null-safety/</loc></url>${urls.join('')}</urlset>`;
+  const root = fixture({ sitemapIndex: validIndex, sitemapSet });
+  try {
+    mkdirSync(join(root, 'src/data'), { recursive: true });
+    writeFileSync(join(root, 'src/data/chapter-dates.json'), JSON.stringify(Object.fromEntries(slugs.map((slug) => [slug, { modified: '2026-07-10', published: '2026-05-07' }]))));
+    const result = run(root);
+    assert.equal(result.status, 0, result.stderr);
+    assert.doesNotMatch(result.stderr, /possible blanket build timestamp/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('a chapter page must share its own card, and the card must be in dist', () => {
   const route = '/chapters/16-hooks-subagents/';
   const set = `<urlset><url><loc>https://dive.vladyslavpodoliako.com${route}</loc></url></urlset>`;

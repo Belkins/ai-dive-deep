@@ -333,7 +333,10 @@ function validateSitemaps() {
       if (/^\/radar\/\d{4}-\d{2}-\d{2}$/.test(path) && !lastmod.startsWith(path.slice('/radar/'.length))) {
         fail(relative('.', file), `${path} lastmod does not match its archive date`);
       }
-      timestampCounts.set(lastmod, (timestampCounts.get(lastmod) ?? 0) + 1);
+      // A chapter date that matched its git record above cannot be a build stamp, and a sweep
+      // commit rightly gives many chapters one day, so only unverified dates are counted.
+      const verifiedChapterDate = chapterModified !== undefined && lastmod.slice(0, 10) === chapterModified;
+      if (!verifiedChapterDate) timestampCounts.set(lastmod, (timestampCounts.get(lastmod) ?? 0) + 1);
     }
   }
 
