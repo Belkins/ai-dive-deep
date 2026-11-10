@@ -4,11 +4,11 @@
 
 ### The Ultimate AI Dive Deep
 
-**A 48-chapter operator field manual where every artifact is live, clickable, and forwardable — and the repo runs the discipline the book teaches.**
+**A 58-chapter operator field manual where every artifact is live, clickable, and forwardable — and the repo runs the discipline the book teaches.**
 
 ### → [**Read it: dive.vladyslavpodoliako.com**](https://dive.vladyslavpodoliako.com) ←
 
-[![Edition](https://img.shields.io/badge/edition-13-FF6B2C?style=flat-square)](https://dive.vladyslavpodoliako.com/changelog) &nbsp;
+[![Edition](https://img.shields.io/badge/edition-20.2-FF6B2C?style=flat-square)](https://dive.vladyslavpodoliako.com/changelog/) &nbsp;
 [![Live](https://img.shields.io/badge/site-live-22D3A0?style=flat-square)](https://dive.vladyslavpodoliako.com) &nbsp;
 [![License: code MIT, content CC BY-NC-SA 4.0](https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY--NC--SA-71717A?style=flat-square)](./LICENSE)
 
@@ -29,7 +29,7 @@ commit, with real interactive case studies embedded and clickable inside it,
 and a radar page that re-publishes itself every hour without a human in the
 loop.
 
-→ Read the thesis + click the embeds: [dive.vladyslavpodoliako.com/html-first](https://dive.vladyslavpodoliako.com/html-first)
+→ Read the thesis + click the embeds: [dive.vladyslavpodoliako.com/html-first](https://dive.vladyslavpodoliako.com/html-first/)
 
 ---
 
@@ -39,20 +39,20 @@ The repo is how it's built. The site is what it IS.
 
 | Surface | What's there | Live link |
 |---|---|---|
-| **All 48 chapters** | The whole book, MDX-rendered, with TL;DRs, glossary tooltips, and the receipts behind every claim | [`/sections`](https://dive.vladyslavpodoliako.com/sections) |
-| **Radar** | A self-updating index of what's moving through the AI ecosystem, ranked by lead time — recomputed hourly by a cron pipeline, receipts on every row | [`/radar`](https://dive.vladyslavpodoliako.com/radar) |
-| **Agent workflow** | The queue that feeds the swarm: boards, issue discipline, three slash commands, six path-routed review agents — the system this very repo runs on | [`/agent-workflow`](https://dive.vladyslavpodoliako.com/agent-workflow) |
-| **Fleet paint** | Six agents, six identical black windows — statusline, OSC escape codes, and a watcher that colors every terminal by project | [`/terminal-setup`](https://dive.vladyslavpodoliako.com/terminal-setup) |
-| **Tier list** | Five readings of the same models: the Arena crowd boards (hand-verified snapshot, cross-checked against a community mirror), Artificial Analysis with $/task economics + its Agentic Index, the labs' launch decks discounted on arrival, Arena's Agent board, and the operator ranking you can drag and share | [`/tier-list`](https://dive.vladyslavpodoliako.com/tier-list) |
-| **Model files** | Opus 5 (the effort dial, the hierarchy question) and Fable 5 / Mythos 5 (a hub + 9 spokes, the system card read honestly) | [`/opus-5`](https://dive.vladyslavpodoliako.com/opus-5) · [`/fable-5`](https://dive.vladyslavpodoliako.com/fable-5) |
-| **HTML-ization** | The flagship — thesis + embedded live artifacts (AFC pitch deck, AFC robot stable, sanitized client deliverability audit) | [`/html-first`](https://dive.vladyslavpodoliako.com/html-first) |
-| **CAD-as-code** | Claude designs a 3D-printable museum frame as 267 lines of Python — STL + STEP as build artifacts, zero grams printed until the calipers agree | [`/cad-as-code`](https://dive.vladyslavpodoliako.com/cad-as-code) |
-| **Music is math** | How AI actually writes a song, and where the same recipe conquered proteins, robots and the weather — with the five claims the first draft got wrong kept on the page | [`/music-is-math`](https://dive.vladyslavpodoliako.com/music-is-math) |
-| **Learn** | New to any of this? The official free courses in the right order, then the book | [`/learn`](https://dive.vladyslavpodoliako.com/learn) |
-| **Cheat sheet** | Slash commands, settings keys, hook JSON shape, permission syntax, model routing — printable | [`/cheat-sheet`](https://dive.vladyslavpodoliako.com/cheat-sheet) |
-| **Glossary** | 89 terms, A–Z, linked inline throughout the chapters | [`/glossary`](https://dive.vladyslavpodoliako.com/glossary) |
-| **Resources** | Copy-paste templates: CLAUDE.md skeletons, .mcp.json, hooks, SKILL.md, subagent .md, reusable prompts | [`/resources`](https://dive.vladyslavpodoliako.com/resources) |
-| **Research notes** | 13 dated external signals that shift what an operator does Monday — sourced, signal-vs-receipt discipline | [`/research-notes`](https://dive.vladyslavpodoliako.com/research-notes) |
+| **All 58 chapters** | The whole book, MDX-rendered, with TL;DRs, glossary tooltips, and the receipts behind every claim | [`/sections`](https://dive.vladyslavpodoliako.com/sections/) |
+| **Radar** | A self-updating index of what's moving through the AI ecosystem, ranked by lead time — recomputed hourly by a cron pipeline, receipts on every row | [`/radar`](https://dive.vladyslavpodoliako.com/radar/) |
+| **Agent workflow** | The queue that feeds the swarm: boards, issue discipline, three slash commands, six path-routed review agents — the system this very repo runs on | [`/agent-workflow`](https://dive.vladyslavpodoliako.com/agent-workflow/) |
+| **Fleet paint** | Six agents, six identical black windows — statusline, OSC escape codes, and a watcher that colors every terminal by project | [`/terminal-setup`](https://dive.vladyslavpodoliako.com/terminal-setup/) |
+| **Tier list** | Five readings of the same models: the Arena crowd boards (hand-verified snapshot, cross-checked against a community mirror), Artificial Analysis with $/task economics + its Agentic Index, the labs' launch decks discounted on arrival, Arena's Agent board, and the operator ranking you can drag and share | [`/tier-list`](https://dive.vladyslavpodoliako.com/tier-list/) |
+| **Model files** | Opus 5 (the effort dial, the hierarchy question) and Fable 5 / Mythos 5 (a hub + 9 spokes, the system card read honestly) | [`/opus-5`](https://dive.vladyslavpodoliako.com/opus-5/) · [`/fable-5`](https://dive.vladyslavpodoliako.com/fable-5/) |
+| **HTML-ization** | The flagship — thesis + embedded live artifacts (AFC pitch deck, AFC robot stable, sanitized client deliverability audit) | [`/html-first`](https://dive.vladyslavpodoliako.com/html-first/) |
+| **CAD-as-code** | Claude designs a 3D-printable museum frame as 267 lines of Python — STL + STEP as build artifacts, zero grams printed until the calipers agree | [`/cad-as-code`](https://dive.vladyslavpodoliako.com/cad-as-code/) |
+| **Music is math** | How AI actually writes a song, and where the same recipe conquered proteins, robots and the weather — with the five claims the first draft got wrong kept on the page | [`/music-is-math`](https://dive.vladyslavpodoliako.com/music-is-math/) |
+| **Learn** | New to any of this? The official free courses in the right order, then the book | [`/learn`](https://dive.vladyslavpodoliako.com/learn/) |
+| **Cheat sheet** | Slash commands, settings keys, hook JSON shape, permission syntax, model routing — printable | [`/cheat-sheet`](https://dive.vladyslavpodoliako.com/cheat-sheet/) |
+| **Glossary** | 105 terms, A–Z, linked inline throughout the chapters | [`/glossary`](https://dive.vladyslavpodoliako.com/glossary/) |
+| **Resources** | Copy-paste templates: CLAUDE.md skeletons, .mcp.json, hooks, SKILL.md, subagent .md, reusable prompts | [`/resources`](https://dive.vladyslavpodoliako.com/resources/) |
+| **Research notes** | 13 dated external signals that shift what an operator does Monday — sourced, signal-vs-receipt discipline | [`/research-notes`](https://dive.vladyslavpodoliako.com/research-notes/) |
 
 Press **⌘K** anywhere on the site — search every chapter, page, section
 anchor, glossary term, and research note from one box. The changelog drives a
@@ -73,7 +73,7 @@ operating discipline the chapters describe:
   path-routed review fleet before its PR opens
   ([docs/workflow/](docs/workflow/), config in
   [.claude/workflow-kit.json](.claude/workflow-kit.json)). The system itself is
-  documented on [`/agent-workflow`](https://dive.vladyslavpodoliako.com/agent-workflow).
+  documented on [`/agent-workflow`](https://dive.vladyslavpodoliako.com/agent-workflow/).
 - **Prebuild guards fail the build on dishonesty**: stale numbers against a
   ledger, broken internal links, glossary drift, nested anchors, template-literal
   breakage — see `scripts/check-*.py` and the `prebuild` chain in `package.json`.
@@ -89,12 +89,12 @@ operating discipline the chapters describe:
 
 ## What's in this repo (the receipts)
 
-- **48 chapters** in `src/content/chapters/*.mdx`
-- **31 React/Astro widgets** in `src/widgets/` (Arena leaderboard, AA economics panel, sortable tier list, command palette, token-burn calculator, swarm visualizer, tokenizer lab, …)
+- **58 chapters** in `src/content/chapters/*.mdx`
+- **32 React/Astro widgets** in `src/widgets/` (Arena leaderboard, AA economics panel, sortable tier list, command palette, token-burn calculator, swarm visualizer, tokenizer lab, …)
 - **50+ standalone pages** in `src/pages/` — the surfaces above plus the journey, day zero, questions, showcase, vault starter, weekend builds, swarms, and more
-- **89 glossary terms** in `src/lib/glossary.ts` · **13 dated research notes** in `src/lib/research-notes.ts`
+- **105 glossary terms** in `src/lib/glossary.ts` · **13 dated research notes** in `src/lib/research-notes.ts`
 - **4 embedded interactive artifacts** in `public/artifacts/` — single-file, self-contained, sandboxed-iframe-embedded
-- **35 shipped editions** in `src/lib/changelog.ts`, each with receipts
+- **49 shipped editions** in `src/lib/changelog.ts`, each with receipts
 
 ---
 
