@@ -96,7 +96,7 @@ export default function StagesFlow() {
                       style={{
                         width: 36, height: 36,
                         background: isSelected ? s.color : 'rgb(var(--bg))',
-                        color: isSelected ? 'white' : 'rgb(var(--fg))',
+                        color: isSelected ? '#0E0F11' : 'rgb(var(--fg))',
                         border: '2px solid ' + s.color,
                         fontWeight: 600,
                       }}

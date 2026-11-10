@@ -70,7 +70,7 @@ const TIER_COLORS: Record<Tier, string> = {
   S: '#FF6B2C', A: '#FF8E54', B: '#FFB48C', C: '#8C897C', D: '#56544B', E: '#3A3933', F: '#26251F',
 };
 const TIER_FG: Record<Tier, string> = {
-  S: 'white', A: 'white', B: '#0E0F11', C: 'white', D: 'white', E: 'white', F: 'white',
+  S: '#0E0F11', A: '#0E0F11', B: '#0E0F11', C: '#0E0F11', D: 'white', E: 'white', F: 'white',
 };
 
 export default function ConnectorMap() {
