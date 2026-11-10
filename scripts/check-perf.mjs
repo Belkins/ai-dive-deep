@@ -14,16 +14,16 @@
 // Chrome is driven over the raw DevTools protocol (no new dependency):
 // CHROME_BIN, else Playwright's chrome-headless-shell, else Google Chrome.
 //
-// Measured on 2026-11-10 on the guards-counts lane build (base b4ba92e plus
-// this lane's commits), this Mac with other lanes building, two full runs of
-// 3 loads each:
-//   /                               LCP median 1144, 1128 ms   CLS 0.062
-//   /chapters/16-hooks-subagents/   LCP median 1124, 1128 ms   CLS 0.05
-//   /library/                       LCP median 1144, 1112 ms   CLS 0.116
+// Measured on 2026-11-10 on main (23f9b2e plus the library filter fix), this
+// Mac idle, two full runs of 3 loads each, text files gzipped (see serve):
+//   /                               LCP median 676, 684 ms   CLS max 0.015, 0.001
+//   /chapters/16-hooks-subagents/   LCP median 692, 700 ms   CLS max 0.001, 0.004
+//   /library/                       LCP median 692, 692 ms   CLS max 0.001, 0.001
 //   lowest contrast: light theme .text-accent 4.58:1 (chapter "Next" link);
-//   dark theme lowest 6.3:1. CLS on / and /library/ is over budget today, so
-//   the guard is red until the layout-shift fixes land. The main session
-//   tightens the budgets after the other lanes land.
+//   dark theme lowest 6.3:1.
+// Layout shift before these fixes, same pages, same day: 0.062, 0.05 and 0.116
+// on the build before the fonts and announcement-bar changes; /library/ still
+// 0.06 until its filter form kept its place while the script loads.
 //
 // Usage: node scripts/check-perf.mjs [distDir]   (default: dist)
 
@@ -32,9 +32,10 @@ import { createServer } from 'node:http';
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { extname, join, normalize } from 'node:path';
+import { gzipSync } from 'node:zlib';
 
 // BUDGETS — measured medians on this build (see header) plus headroom.
-const LCP_BUDGET_MS = 2000; // measured medians 1112-1144 ms, ~75% headroom
+const LCP_BUDGET_MS = 1200; // measured medians 676-700 ms, ~75% headroom
 const CLS_BUDGET = 0.05; // fixed by the brief, not measured
 const MIN_CONTRAST = 4.5; // WCAG AA body text
 
@@ -83,14 +84,22 @@ function findChrome() {
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ico': 'image/x-icon', '.xml': 'application/xml', '.txt': 'text/plain' };
 
+// The live host (GitHub Pages) gzips text files, so this server does too. Sent uncompressed, the HTML and
+// CSS shared the throttled line with the two preloaded fonts, and the home page's largest paint read
+// 1664 ms here where it reads 676 ms gzipped (same build apart from the library fix, 2026-11-10).
+const GZIPPED = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.xml', '.txt']);
+
 function serve(root) {
   const server = createServer((req, res) => {
     let p = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '');
     let file = join(root, p);
     if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
     if (!existsSync(file)) { res.writeHead(404); res.end('not found'); return; }
-    res.writeHead(200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' });
-    res.end(readFileSync(file));
+    const ext = extname(file);
+    const body = readFileSync(file);
+    const gzip = GZIPPED.has(ext) && /\bgzip\b/.test(String(req.headers['accept-encoding'] ?? ''));
+    res.writeHead(200, { 'Content-Type': TYPES[ext] ?? 'application/octet-stream', ...(gzip ? { 'Content-Encoding': 'gzip', Vary: 'Accept-Encoding' } : {}) });
+    res.end(gzip ? gzipSync(body) : body);
   });
   return new Promise((ok) => server.listen(0, '127.0.0.1', () => ok(server)));
 }
