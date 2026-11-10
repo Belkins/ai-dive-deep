@@ -92,7 +92,7 @@ export default defineConfig({
         rehypeAutolinkHeadings,
         {
           behavior: 'append',
-          properties: { className: ['anchor'], 'aria-label': 'Anchor link' },
+          properties: { className: ['anchor'], ariaHidden: 'true', tabIndex: -1 },
           content: { type: 'text', value: '#' },
         },
       ],
