@@ -154,6 +154,11 @@ const mobileNav = [
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && document.getElementById('mobile-menu-btn')?.getAttribute('aria-expanded') === 'true') closeMenu(true);
   });
+  // The open panel covers the page, so focus that leaves the header closes it rather than landing on hidden content.
+  document.addEventListener('focusout', event => {
+    const next = event.relatedTarget instanceof Element ? event.relatedTarget : null;
+    if (next && !next.closest('header') && document.getElementById('mobile-menu-btn')?.getAttribute('aria-expanded') === 'true') closeMenu();
+  });
 
   const decorateReadState = () => {
     try {
