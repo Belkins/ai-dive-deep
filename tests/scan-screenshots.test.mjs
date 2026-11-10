@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
@@ -26,13 +26,17 @@ const runScan = (dir) => {
 
 test('a GIF keeps its id and file; its videos and poster are paired, not new ids', () => {
   const dir = mkdtempSync(join(tmpdir(), 'screens-'));
-  for (const f of ['a.png', 'b.gif', 'b.webm', 'b.mp4', 'b.poster.webp', 'c.gif', 'd.gif', 'd.mp4']) writeFileSync(join(dir, f), '');
-  const { files, videos } = runScan(dir);
-  assert.deepEqual(files, { a: 'a.png', b: 'b.gif', c: 'c.gif', d: 'd.gif' });
-  assert.deepEqual(videos, {
-    b: { sources: ['b.webm', 'b.mp4'], poster: 'b.poster.webp' },
-    d: { sources: ['d.mp4'], poster: null },
-  });
+  try {
+    for (const f of ['a.png', 'b.gif', 'b.webm', 'b.mp4', 'b.poster.webp', 'c.gif', 'd.gif', 'd.mp4']) writeFileSync(join(dir, f), '');
+    const { files, videos } = runScan(dir);
+    assert.deepEqual(files, { a: 'a.png', b: 'b.gif', c: 'c.gif', d: 'd.gif' });
+    assert.deepEqual(videos, {
+      b: { sources: ['b.webm', 'b.mp4'], poster: 'b.poster.webp' },
+      d: { sources: ['d.mp4'], poster: null },
+    });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test('the committed map keeps both GIF ids on their GIFs and lists their videos', () => {
