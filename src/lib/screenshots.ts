@@ -139,3 +139,21 @@ export const SCREENSHOTS: Record<string, string> = {
 };
 
 export const SCREENSHOT_COUNT = 133;
+
+// GIF id -> video files that replace it on the page (the GIF stays for old links)
+export const VIDEOS: Record<string, { sources: string[]; poster: string | null }> = {
+  "42-codex-on-a-loop-3": {
+    "sources": [
+      "42-codex-on-a-loop-3.webm",
+      "42-codex-on-a-loop-3.mp4"
+    ],
+    "poster": "42-codex-on-a-loop-3.poster.webp"
+  },
+  "dynamic-workflows-slider": {
+    "sources": [
+      "dynamic-workflows-slider.webm",
+      "dynamic-workflows-slider.mp4"
+    ],
+    "poster": "dynamic-workflows-slider.poster.webp"
+  }
+};

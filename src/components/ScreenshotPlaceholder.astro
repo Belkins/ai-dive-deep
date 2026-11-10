@@ -1,5 +1,5 @@
 ---
-import { SCREENSHOTS } from '@/lib/screenshots';
+import { SCREENSHOTS, VIDEOS } from '@/lib/screenshots';
 import { splitCodeSpans, stripCodeMarks } from '@/lib/caption-code';
 
 interface Props {
@@ -12,6 +12,8 @@ const { caption, note, ratio = '16/9', id } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const realFile = id ? SCREENSHOTS[id] : undefined;
 const hasReal = !!realFile;
+// An animated GIF with a video version renders as a muted, looping video instead.
+const video = hasReal && id ? VIDEOS[id] : undefined;
 // A real screenshot is a figure card whose caption sits beside the link, not inside it,
 // so the outer wrapper is a plain div there; the placeholder card keeps the figure.
 const Outer = hasReal ? 'div' : 'figure';
@@ -22,6 +24,24 @@ const Outer = hasReal ? 'div' : 'figure';
       class="shot-card rounded-xl overflow-hidden"
       style="border: 1px solid rgb(var(--line));"
     >
+    {video ? (
+      <video
+        class="shot-video"
+        muted
+        loop
+        playsinline
+        controls
+        preload="none"
+        poster={video.poster ? `${base}/screens/${video.poster}` : undefined}
+        aria-label={stripCodeMarks(caption)}
+        style={`width: 100%; height: auto; aspect-ratio: ${ratio}; object-fit: cover; display: block; background: rgb(var(--paper));`}
+      >
+        {video.sources.map((src) => (
+          <source src={`${base}/screens/${src}`} type={src.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />
+        ))}
+        <a href={`${base}/screens/${realFile}`}>{stripCodeMarks(caption)}</a>
+      </video>
+    ) : (
     <a
       href={`${base}/screens/${realFile}`}
       target="_blank"
@@ -37,6 +57,7 @@ const Outer = hasReal ? 'div' : 'figure';
       />
       <span class="sr-only">(opens full size in a new tab)</span>
     </a>
+    )}
       <figcaption class="px-4 py-3 text-sm" style="background: rgb(var(--paper)); color: rgb(var(--muted));">
         {splitCodeSpans(caption).map((p) => (p.code ? <code>{p.text}</code> : p.text))}
         {note && <span class="block mt-1 text-xs">{splitCodeSpans(note).map((p) => (p.code ? <code>{p.text}</code> : p.text))}</span>}
@@ -74,3 +95,17 @@ const Outer = hasReal ? 'div' : 'figure';
   }
   .shot-link:focus-visible { outline: none; }
 </style>
+
+<script>
+  // Videos never autoplay for readers who ask for reduced motion; for everyone else
+  // they start once a quarter of the frame is on screen (preload="none" until then).
+  const motionOk = window.matchMedia('(prefers-reduced-motion: no-preference)');
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting || !motionOk.matches) continue;
+      (e.target as HTMLVideoElement).play().catch(() => {});
+      io.unobserve(e.target);
+    }
+  }, { threshold: 0.25 });
+  document.querySelectorAll('video.shot-video').forEach((v) => io.observe(v));
+</script>
