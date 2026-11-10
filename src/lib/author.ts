@@ -7,7 +7,8 @@ export const AUTHOR = {
   '@type': 'Person',
   '@id': 'https://dive.vladyslavpodoliako.com/about/#vlad',
   name: 'Vlad Podoliako',
-  url: 'https://dive.vladyslavpodoliako.com',
+  alternateName: 'Vladyslav Podoliako',
+  url: 'https://dive.vladyslavpodoliako.com/about/',
   jobTitle: 'CEO, Belkins',
   worksFor: {
     '@type': 'Organization',
@@ -36,6 +37,8 @@ export const AUTHOR = {
     'https://www.youtube.com/@stbelkins',
     'https://t.me/belkinsmain',
     'https://vladyslavpodoliako.com',
+    // The personal site's Person node, so both sites describe one entity.
+    'https://vladyslavpodoliako.com/#person',
     'https://www.vladsnewsletter.com',
   ],
 } as const;
