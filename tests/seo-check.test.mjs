@@ -276,3 +276,31 @@ test('rendered incoming invoice links must identify the draft, including absolut
     }
   }
 });
+
+// Chapter lastmod (decided 10 Nov 2026): a chapter carries exactly its git modified date
+// from src/data/chapter-dates.json, never a build time; other non-Radar pages carry none.
+test('chapter lastmod must be the git modified date from chapter-dates.json', () => {
+  const chapter = (lastmod) => `<url><loc>https://dive.vladyslavpodoliako.com/chapters/01-x/</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`;
+  const set = (...urls) => `<urlset><url><loc>https://dive.vladyslavpodoliako.com/null-safety/</loc></url>${urls.join('')}</urlset>`;
+  const cases = [
+    { sitemapSet: set(chapter('2026-05-13T00:00:00.000Z')), ok: true },
+    { sitemapSet: set(chapter('2026-05-14T00:00:00.000Z')), error: /lastmod 2026-05-14T00:00:00\.000Z does not match its git modified date 2026-05-13/ },
+    { sitemapSet: set(chapter()), error: /\/chapters\/01-x is missing its authoritative lastmod/ },
+    { sitemapSet: set(chapter('2026-05-13T00:00:00.000Z')).replace('/null-safety/</loc>', '/null-safety/</loc><lastmod>2026-05-13T00:00:00.000Z</lastmod>'), error: /\/null-safety has a non-authoritative lastmod/ },
+  ];
+  for (const { sitemapSet, ok, error } of cases) {
+    const root = fixture({ sitemapIndex: validIndex, sitemapSet });
+    try {
+      mkdirSync(join(root, 'src/data'), { recursive: true });
+      writeFileSync(join(root, 'src/data/chapter-dates.json'), JSON.stringify({ '01-x': { modified: '2026-05-13', published: '2026-05-07' } }));
+      const result = run(root);
+      if (ok) assert.equal(result.status, 0, result.stderr);
+      else {
+        assert.equal(result.status, 1, result.stdout);
+        assert.match(result.stderr, error);
+      }
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});

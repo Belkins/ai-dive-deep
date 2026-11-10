@@ -255,6 +255,10 @@ function validateSitemaps() {
   const timestampCounts = new Map();
   let urlCount = 0;
   const now = Date.now();
+  // Chapter lastmod is authoritative only when it is the git modified date in
+  // src/data/chapter-dates.json (written by scripts/gen-chapter-dates.py).
+  let chapterDates = {};
+  try { chapterDates = JSON.parse(readFileSync('src/data/chapter-dates.json', 'utf8')); } catch { /* none */ }
 
   for (const file of sitemapFiles) {
     const xml = readFileSync(file, 'utf8');
@@ -282,13 +286,20 @@ function validateSitemaps() {
 
       const isRadar = path === '/radar' || /^\/radar\/\d{4}-\d{2}-\d{2}$/.test(path);
       if (path === '/the-bill') fail(relative('.', file), 'unfinished invoice draft must stay out of the sitemap');
-      if (!isRadar && lastmod) fail(relative('.', file), `${path} has a non-authoritative lastmod`);
-      if (isRadar && !lastmod) fail(relative('.', file), `${path} is missing its authoritative lastmod`);
+      const chapterModified = path.startsWith('/chapters/') ? chapterDates[path.slice('/chapters/'.length)]?.modified : undefined;
+      const authoritative = isRadar || chapterModified !== undefined;
+      if (chapterModified !== undefined && lastmod && lastmod.slice(0, 10) !== chapterModified) {
+        fail(relative('.', file), `${path} lastmod ${lastmod} does not match its git modified date ${chapterModified}`);
+      }
+      if (!authoritative && lastmod) fail(relative('.', file), `${path} has a non-authoritative lastmod`);
+      if (authoritative && !lastmod) fail(relative('.', file), `${path} is missing its authoritative lastmod`);
       if (!lastmod) continue;
 
       const timestamp = Date.parse(lastmod);
+      // A chapter date is the author's local day, so it may lead UTC by up to 14 hours.
+      const futureSlack = chapterModified !== undefined ? 14 * 60 * 60 * 1000 : 5 * 60 * 1000;
       if (!Number.isFinite(timestamp)) fail(relative('.', file), `${path} has invalid lastmod ${lastmod}`);
-      else if (timestamp > now + 5 * 60 * 1000) fail(relative('.', file), `${path} has future lastmod ${lastmod}`);
+      else if (timestamp > now + futureSlack) fail(relative('.', file), `${path} has future lastmod ${lastmod}`);
 
       if (/^\/radar\/\d{4}-\d{2}-\d{2}$/.test(path) && !lastmod.startsWith(path.slice('/radar/'.length))) {
         fail(relative('.', file), `${path} lastmod does not match its archive date`);

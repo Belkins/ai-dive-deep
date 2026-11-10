@@ -33,6 +33,14 @@ try {
 } catch { /* archives optional */ }
 const radarArchiveDates = new Set(getRadarArchiveDates(radarArchives, radarCurrent?.date ?? ''));
 
+// Chapter lastmod comes from the git-derived modified date that prebuild writes
+// (scripts/gen-chapter-dates.py). Hub pages get none: their content comes from data
+// files, so a page-file date would be wrong. Build time is never a date source.
+let chapterDates = {};
+try {
+  chapterDates = JSON.parse(readFileSync('src/data/chapter-dates.json', 'utf8'));
+} catch { /* dates optional */ }
+
 // Choose deploy target via env: DEPLOY_TARGET=vercel | gh-pages (default)
 // gh-pages now serves from custom domain dive.vladyslavpodoliako.com (root path).
 const target = process.env.DEPLOY_TARGET || 'gh-pages';
@@ -100,7 +108,8 @@ export default defineConfig({
           return { ...withoutLastmod, changefreq: 'daily', priority: 1.0 };
         }
         if (path.startsWith('/chapters/')) {
-          return { ...withoutLastmod, changefreq: 'weekly', priority: 0.9 };
+          const modified = chapterDates[path.slice('/chapters/'.length)]?.modified;
+          return { ...withoutLastmod, changefreq: 'weekly', priority: 0.9, ...(modified ? { lastmod: modified } : {}) };
         }
         // /radar: hourly-changing live board; dated archives carry their true freeze time.
         if (path === '/radar') {
