@@ -523,7 +523,7 @@ Reusable presentational components in `src/components/`. Props verified from sou
 
 | Component | Anatomy |
 |-----------|---------|
-| **ChapterHero** | `header.pt-16 md:pt-24`, `flex items-baseline gap-6`: `.chapter-num` + eyebrow `"Chapter N · M min read"` (`tracking-[0.2em]`) + part link (`text-[10px]` accent). `h1.mt-6.max-w-[20ch]`, subtitle `text-lg md:text-xl max-w-[42ch]` muted, optional `.pill` row. |
+| **ChapterHero** | `header.pt-16 md:pt-24`, `flex items-baseline gap-6`: `.chapter-num` + eyebrow `"Chapter N · M min read"` (`tracking-[0.2em]`) + part link (`text-[11px]` accent, part label `font-medium`, no opacity). `h1.mt-6.max-w-[20ch]`, subtitle `text-lg md:text-xl max-w-[42ch]` muted, optional `.pill` row. |
 | **ChapterFooter** | prev/next `grid gap-4 sm:grid-cols-2` of `.card hover:border-flame`; eyebrows `text-xs tracking-wider` (prev=muted, next=accent); part-crossing tagline; feedback mailto line. |
 | **ProgressBar** | `fixed top-14 h-0.5 z-30`, bar `bg --accent`, width = scroll %, `duration-100`. Persists `cc-progress` to localStorage (drives read-state). |
 | **SectionNav** | `<details>` drawer (`<lg`) + sticky desktop rail (`.toc-link`, left-border, IO active = accent-2). Host: `lg:grid-cols-[240px_1fr] gap-10`, sections get `data-section-target` + `id`. |
@@ -683,6 +683,10 @@ A11y is a **foundation, not a layer** — preserve all of it on anything new:
 - **Print:** full `@media print` stylesheet (force light, hide chrome/iframes, avoid breaks).
 - **Color:** `--fg` on `--bg` and `--accent`/`--accent-2` clear AA on the dark surface; verify any
   new tint passes contrast before shipping (esp. muted-on-paper).
+- **Never dim text below `--muted` with `opacity`.** `--muted` is the floor for readable text.
+  An `opacity: 0.7` on a label multiplies into its colour: accent at 70% measured 3.8:1 (dark) /
+  3.04:1 (light) on `--bg`, and an active pill's sublabel 2.07:1 on the flame. To step a label
+  down, use `--muted` and a smaller size or lighter weight; on an accent fill use `--on-accent`.
 
 ---
 

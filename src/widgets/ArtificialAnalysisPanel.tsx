@@ -83,7 +83,8 @@ export default function ArtificialAnalysisPanel() {
     .aap-pill{font:600 12px/1 var(--font-sans,inherit);letter-spacing:.02em;padding:7px 12px;border-radius:999px;border:1px solid rgb(var(--line));background:transparent;color:rgb(var(--muted));cursor:pointer;white-space:nowrap;transition:all .12s}
     .aap-pill:hover{color:rgb(var(--fg));border-color:rgb(var(--muted) / .5)}
     .aap-pill[data-on="1"]{background:rgb(var(--accent));border-color:rgb(var(--accent));color:rgb(var(--on-accent))}
-    .aap-pill small{font-weight:400;opacity:.7;margin-left:5px}
+    .aap-pill small{font-weight:400;margin-left:5px;color:rgb(var(--muted))}
+    .aap-pill[data-on="1"] small{color:rgb(var(--on-accent))}
     .aap-row,.aap-colh{grid-template-columns:34px minmax(120px,1.3fr) 1fr 58px 70px 56px}
     .aap-row{display:grid;align-items:center;gap:12px;padding:9px 24px;border-bottom:1px solid rgb(var(--line) / .5)}
     .aap-row:last-child{border-bottom:0}

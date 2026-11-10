@@ -19,10 +19,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <div>
       <div class="text-xs uppercase tracking-[0.2em] text-muted">Chapter {number} · {readingMinutes} min read</div>
       {part && (
-        <a href={`${base}/journey/#part-${part.key.toLowerCase()}`} class="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider mt-1 no-underline text-accent">
-          <span>{part.label}</span>
+        <a href={`${base}/journey/#part-${part.key.toLowerCase()}`} class="inline-flex items-center gap-1 text-[11px] uppercase tracking-wider mt-1 no-underline text-accent">
+          <span class="font-medium">{part.label}</span>
           <span style="opacity: 0.6">·</span>
-          <span style="opacity: 0.7">see the journey →</span>
+          <span>see the journey →</span>
         </a>
       )}
     </div>
