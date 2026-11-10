@@ -9,7 +9,7 @@ const HTML_ENTITIES: Record<string, string> = {
   quot: '"',
 };
 
-function decodeHtmlEntities(value: string): string {
+export function decodeHtmlEntities(value: string): string {
   return value.replace(/&(#(?:x[\da-f]+|\d+)|[a-z]+);/gi, (entity, key: string) => {
     if (key.startsWith('#')) {
       const hex = key[1]?.toLowerCase() === 'x';
@@ -132,4 +132,42 @@ export function createDefinedTermSet(name: string, url: string, entries: Defined
       url: `${url}#${encodeURIComponent(e.term)}`,
     })),
   };
+}
+
+export interface LlmsPage {
+  url: string;
+  title: string;
+  description?: string;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// A page counts as listed in llms.txt when its absolute URL appears as a link
+// target or as a bare URL, ending where a URL ends (so /opus-5/use-cases/ does
+// not count for /opus-5/).
+export function llmsMissingUrls(llmsText: string, urls: string[]): string[] {
+  return urls.filter((url) => !new RegExp(`${escapeRegExp(url)}(?=$|[\\s),.;:#\\]])`, 'm').test(llmsText));
+}
+
+// Adds one "- [title](url) — description" line per page to the end of the
+// llms.txt site map, in the format of the hand-written lines above it.
+export function addMissingLlmsPages(llmsText: string, pages: LlmsPage[], nextHeading = '## Chapters'): string {
+  if (pages.length === 0) return llmsText;
+  const marker = `\n\n${nextHeading}\n`;
+  const at = llmsText.indexOf(marker);
+  if (at === -1) throw new Error(`llms.txt has no "${nextHeading}" heading to insert the site map lines before`);
+  const lines = pages.map((page) => `- [${page.title}](${page.url})${page.description ? ` — ${page.description}` : ''}`);
+  return `${llmsText.slice(0, at)}\n${lines.join('\n')}${llmsText.slice(at)}`;
+}
+
+// Reads a built page's own title (without the brand suffix) and meta description.
+export function readPageHead(html: string, brand: string): { title: string; description?: string } {
+  const rawTitle = decodeHtmlEntities(html.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? '').trim();
+  const suffix = ` — ${brand}`;
+  const title = rawTitle.endsWith(suffix) ? rawTitle.slice(0, -suffix.length) : rawTitle;
+  const rawDescription = html.match(/<meta name="description" content="([^"]*)"/)?.[1];
+  const description = rawDescription === undefined ? undefined : decodeHtmlEntities(rawDescription).trim() || undefined;
+  return { title, description };
 }

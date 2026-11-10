@@ -28,6 +28,8 @@ export const GET: APIRoute = async () => {
   lines.push('Quote freely. Link the chapter URL, not the homepage.');
   lines.push(`Machine-readable index with TL;DR + pull-quote per chapter: ${SITE}/chapters.json`);
   lines.push('');
+  // Any non-radar sitemap page missing from this list is appended at build time by
+  // llmsSiteMap() in astro.config.mjs, with its own title and meta description.
   lines.push('## Site map');
   lines.push('');
   lines.push(`- [Root](${SITE}/) — the field manual entry point`);

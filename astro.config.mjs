@@ -5,8 +5,12 @@ import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { getRadarArchiveDates, isRadarEditionIndexable } from './src/lib/radar-config.mjs';
+import { addMissingLlmsPages, llmsMissingUrls, readPageHead } from './src/lib/seo.ts';
+import { PUBLISHER } from './src/lib/author.ts';
 
 // Build a date → freeze-timestamp map from the radar archives so the sitemap can carry
 // truthful per-archive lastmod (review-swarm: build-time new Date() lies on immutable pages).
@@ -34,6 +38,38 @@ const radarArchiveDates = new Set(getRadarArchiveDates(radarArchives, radarCurre
 // gh-pages now serves from custom domain dive.vladyslavpodoliako.com (root path).
 const target = process.env.DEPLOY_TARGET || 'gh-pages';
 const isVercel = target === 'vercel';
+
+// llms.txt lists every non-radar page the sitemap lists. Runs after @astrojs/sitemap
+// has written dist/sitemap-0.xml, so both read the same page set; a page missing from
+// the hand-written site map is appended with its own built title and meta description.
+function llmsSiteMap() {
+  return {
+    name: 'llms-site-map',
+    hooks: {
+      'astro:build:done': ({ dir }) => {
+        const root = fileURLToPath(dir);
+        const llmsPath = join(root, 'llms.txt');
+        // Test fixtures build a reduced page set with no llms.txt or sitemap: nothing to complete.
+        if (!existsSync(llmsPath) || !existsSync(join(root, 'sitemap-0.xml'))) return;
+        const urls = [...readFileSync(join(root, 'sitemap-0.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)]
+          .map((m) => m[1])
+          .filter((url) => {
+            const path = new URL(url).pathname;
+            return path !== '/radar' && !path.startsWith('/radar/');
+          });
+        const text = readFileSync(llmsPath, 'utf8');
+        const pages = llmsMissingUrls(text, urls).map((url) => ({
+          url,
+          ...readPageHead(readFileSync(join(root, new URL(url).pathname, 'index.html'), 'utf8'), PUBLISHER.name),
+        }));
+        const next = addMissingLlmsPages(text, pages);
+        const stillMissing = llmsMissingUrls(next, urls);
+        if (stillMissing.length > 0) throw new Error(`llms.txt is missing sitemap pages: ${stillMissing.join(', ')}`);
+        writeFileSync(llmsPath, next);
+      },
+    },
+  };
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -84,6 +120,7 @@ export default defineConfig({
       },
     }),
     tailwind({ applyBaseStyles: false }),
+    llmsSiteMap(),
   ],
   markdown: {
     rehypePlugins: [
