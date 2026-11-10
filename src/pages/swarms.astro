@@ -154,11 +154,11 @@ const patterns = [
           </div>
           <div class="grid sm:grid-cols-2 gap-4">
             {skillShelf.map((s) => (
-              <div class="card" style="background: rgba(var(--fg) / 0.02)">
+              <div class="card min-w-0" style="background: rgba(var(--fg) / 0.02)">
                 <div class="text-[0.65rem] uppercase tracking-[0.22em] mb-1.5" style="color: rgb(var(--accent))">{s.shape}</div>
                 <div class="font-display text-base leading-tight mb-2" style="color: rgb(var(--fg))">{s.name}</div>
                 <p class="m-0 text-sm leading-relaxed mb-2" style="color: rgb(var(--muted))">{s.use}</p>
-                <code class="text-[0.7rem]" style="color: rgb(var(--accent))">{s.file}</code>
+                <code class="text-[0.7rem] [overflow-wrap:anywhere]" style="color: rgb(var(--accent))">{s.file}</code>
               </div>
             ))}
           </div>

@@ -338,9 +338,9 @@ const catColor: Record<string, string> = {
 
     <div class="mt-6 grid gap-4 md:grid-cols-2">
       {connectorDeepDives.map((c) => (
-        <article class="card" style="background: rgb(var(--paper));">
-          <div class="flex items-start justify-between gap-3 mb-2">
-            <h3 class="m-0 font-display text-xl" style="color: rgb(var(--fg))">{c.name}</h3>
+        <article class="card min-w-0" style="background: rgb(var(--paper));">
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-2">
+            <h3 class="m-0 min-w-0 font-display text-xl" style="color: rgb(var(--fg))">{c.name}</h3>
             <div class="flex items-center gap-1.5 flex-shrink-0">
               <span class="text-[10px] font-mono px-1.5 py-0.5 rounded" style={`background: ${tierColor[c.tier]}; color: ${c.tier === 'B' ? '#0E0F11' : 'white'};`}>{c.tier}</span>
               <span class="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded" style={`color: ${modeColor[c.mode]}; border: 1px solid ${modeColor[c.mode]};`}>{c.mode}</span>

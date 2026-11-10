@@ -34,7 +34,7 @@ const latest = CHANGELOG[0];
             {entry.shipped.map((item) => (
               <li class="flex items-start gap-3 text-sm leading-relaxed m-0" style="color: rgb(var(--fg) / 0.9)">
                 <span class="flex-shrink-0 mt-1.5" style="color: rgb(var(--accent-2))">›</span>
-                <span>{item}</span>
+                <span class="min-w-0 [overflow-wrap:anywhere]">{item}</span>
               </li>
             ))}
           </ul>

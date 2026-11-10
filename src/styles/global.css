@@ -334,3 +334,11 @@ h4:hover .anchor { opacity: 0.6; }
   pre, blockquote, .card { break-inside: avoid; }
   h1, h2, h3 { break-after: avoid; color: black !important; }
 }
+
+/* ==== phone-print lane (phones, tables, print) — every rule of this lane lives in this one block ==== */
+
+/* Sideways scroll on 390 px phones: long inline code paths and bare URLs inside running
+   text may break anywhere. Table cells are left out on purpose: overflow-wrap there lowers
+   a column's min-content width and squeezes table rows taller. The third parent is the
+   running text of a Callout, whose slot has no <p> (the /opus-5/use-cases/ overflow). */
+main :where(p, li, aside.container-prose > div > div) > :where(code, a):not(:where(td, th) *) { overflow-wrap: anywhere; }
