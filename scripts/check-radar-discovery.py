@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Check Radar's rendered edition graph, robots policy, and sitemap membership."""
+"""Check Radar's rendered edition graph, robots policy, and sitemap membership.
+
+The live board is in the sitemap when indexable; dated archives are never in it,
+yet stay indexable and reachable by links from /radar/ (decided 10 Nov 2026)."""
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
@@ -88,8 +91,12 @@ def check(root):
             if route == '/radar/' or route and ARCHIVE_ROUTE.fullmatch(route):
                 sitemap.add(route)
     indexable = {route for route, page in pages.items() if not page.noindex}
+    # Dated archives stay indexable and linked but out of the sitemap (decided 10 Nov 2026).
+    for route in sorted(route for route in sitemap if ARCHIVE_ROUTE.fullmatch(route)):
+        failures.append(f'{route}: dated archive page is in the sitemap')
     for route in sorted(indexable - sitemap):
-        failures.append(f'{route}: indexable page missing from sitemap')
+        if not ARCHIVE_ROUTE.fullmatch(route):
+            failures.append(f'{route}: indexable page missing from sitemap')
     for route in sorted(sitemap - indexable):
         failures.append(f'{route}: sitemap includes a missing or noindex page')
 

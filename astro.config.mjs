@@ -5,33 +5,20 @@ import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { readdirSync, readFileSync, existsSync, writeFileSync } from 'node:fs';
+import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getRadarArchiveDates, isRadarEditionIndexable } from './src/lib/radar-config.mjs';
+import { isRadarEditionIndexable } from './src/lib/radar-config.mjs';
 import { addMissingLlmsPages, llmsMissingUrls, readPageHead, readSiteName } from './src/lib/llms-site-map.mjs';
 
-// Build a date → freeze-timestamp map from the radar archives so the sitemap can carry
-// truthful per-archive lastmod (review-swarm: build-time new Date() lies on immutable pages).
-const radarLastmod = {};
-const radarArchives = [];
+// The live Radar edition decides whether /radar is in the sitemap and gives its truthful
+// lastmod (review-swarm: build-time new Date() lies). Dated archives are not in the sitemap.
 let radarCurrent;
 let radarCurrentLastmod;
 try {
-  const dir = 'src/data/radar/archive';
-  if (existsSync(dir)) {
-    for (const f of readdirSync(dir)) {
-      if (f.endsWith('.json')) {
-        const j = JSON.parse(readFileSync(`${dir}/${f}`, 'utf8'));
-        radarArchives.push(j);
-        if (j.date && j.generated) radarLastmod[j.date] = j.generated;
-      }
-    }
-  }
   radarCurrent = JSON.parse(readFileSync('src/data/radar/today.json', 'utf8'));
   if (radarCurrent.generated) radarCurrentLastmod = radarCurrent.generated;
-} catch { /* archives optional */ }
-const radarArchiveDates = new Set(getRadarArchiveDates(radarArchives, radarCurrent?.date ?? ''));
+} catch { /* radar optional */ }
 
 // Chapter lastmod comes from the git-derived modified date that prebuild writes
 // (scripts/gen-chapter-dates.py). Hub pages get none: their content comes from data
@@ -92,11 +79,13 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap({
-      // Radar uses the same eligibility as page robots and archive navigation.
+      // The live Radar board uses the same eligibility as its page robots. The dated
+      // archive pages stay built, linked and indexable for readers but are left out of
+      // the sitemap (Vlad's decision, 10 Nov 2026), so IndexNow skips them too.
       filter: (page) => {
         const path = new URL(page).pathname.replace(/\/$/, '');
         if (path === '/radar') return isRadarEditionIndexable(radarCurrent);
-        if (path.startsWith('/radar/')) return radarArchiveDates.has(path.slice('/radar/'.length));
+        if (path.startsWith('/radar/')) return false;
         return !page.includes('/the-bill');
       },
       // Reader-invisible crawl signals only. Default daily/0.7; the homepage and
@@ -111,7 +100,7 @@ export default defineConfig({
           const modified = chapterDates[path.slice('/chapters/'.length)]?.modified;
           return { ...withoutLastmod, changefreq: 'weekly', priority: 0.9, ...(modified ? { lastmod: modified } : {}) };
         }
-        // /radar: hourly-changing live board; dated archives carry their true freeze time.
+        // /radar: hourly-changing live board.
         if (path === '/radar') {
           return {
             ...withoutLastmod,
@@ -119,10 +108,6 @@ export default defineConfig({
             priority: 0.8,
             ...(radarCurrentLastmod ? { lastmod: radarCurrentLastmod } : {}),
           };
-        }
-        const radarDate = path.startsWith('/radar/') ? path.slice('/radar/'.length) : null;
-        if (radarDate && radarLastmod[radarDate]) {
-          return { ...withoutLastmod, changefreq: 'never', priority: 0.6, lastmod: radarLastmod[radarDate] };
         }
         return { ...withoutLastmod, changefreq: 'monthly', priority: 0.7 };
       },

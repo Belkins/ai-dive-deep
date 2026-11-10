@@ -64,7 +64,7 @@ test('older/newer neighbors bridge thin editions and date gaps while preserving 
 });
 
 function graphFixture(root, {
-  oldNavigation = false, noindexDate, extraLink, sitemapExtra,
+  oldNavigation = false, noindexDate, extraLink, sitemapExtra, hubInSitemap = true,
   hubRobots = '', hubNoindex = false, nofollowLinks = false, siteUrl = defaultOrigin,
 } = {}) {
   const dates = frozen.filter(entry => entry.items.length === 12).map(entry => entry.date).reverse();
@@ -84,7 +84,8 @@ function graphFixture(root, {
     const robots = route === '/radar/' ? hubRobots : current === noindexDate ? '<meta name="robots" content="noindex, nofollow">' : '';
     write(root, `dist${route}index.html`, `<html><head>${robots}</head><body>${links}${extraLink || ''}</body></html>`);
   }
-  write(root, 'dist/sitemap-0.xml', `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...routes.filter(route => route !== '/radar/' || !hubNoindex), ...(sitemapExtra ? [sitemapExtra] : [])].map(route => `<url><loc>${origin}${route}</loc></url>`).join('')}</urlset>`);
+  // Only the live board is in the sitemap; dated archives stay out of it (decided 10 Nov 2026).
+  write(root, 'dist/sitemap-0.xml', `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...(hubInSitemap && !hubNoindex ? ['/radar/'] : []), ...(sitemapExtra ? [sitemapExtra] : [])].map(route => `<url><loc>${origin}${route}</loc></url>`).join('')}</urlset>`);
 }
 
 test('rendered graph regression reproduces the latest-seven orphan bug beyond eight frozen editions', () => {
@@ -111,6 +112,26 @@ test('rendered guard rejects noindex destinations, live-day links, and sitemap/r
     assert.match(result.stdout, /links to ineligible edition \/radar\/2026-08-08\//);
     assert.match(result.stdout, /links to missing edition \/radar\/2026-09-05\//);
     assert.match(result.stdout, /sitemap includes a missing or noindex page/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('dated archives stay out of the sitemap while the indexable live board stays in it', () => {
+  const root = mkdtempSync(join(tmpdir(), 'dive-radar-sitemap-'));
+  try {
+    graphFixture(root);
+    const decided = runChecker(root);
+    assert.equal(decided.status, 0, decided.stdout + decided.stderr);
+    assert.match(decided.stdout, /13 indexable archives, 13 reachable, 0 failures/);
+
+    graphFixture(root, { sitemapExtra: `/radar/${date(10)}/` });
+    const archiveBack = runChecker(root);
+    assert.equal(archiveBack.status, 1, archiveBack.stdout);
+    assert.match(archiveBack.stdout, /\/radar\/2026-08-10\/: dated archive page is in the sitemap/);
+
+    graphFixture(root, { hubInSitemap: false });
+    const hubDropped = runChecker(root);
+    assert.equal(hubDropped.status, 1, hubDropped.stdout);
+    assert.match(hubDropped.stdout, /\/radar\/: indexable page missing from sitemap/);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
@@ -228,7 +249,8 @@ for (const options of [
       assert.equal(noindex(html(date(9))), true, '11-item frozen edition is noindex');
       assert.equal(noindex(html(date(10))), !options.isPublic, '12-item frozen edition follows public policy');
       assert.equal(sitemap.includes(`/radar/${date(9)}/`), false);
-      assert.equal(sitemap.includes(`/radar/${date(10)}/`), options.isPublic);
+      assert.equal(sitemap.includes(`/radar/${date(10)}/`), false, 'dated archives stay out of the sitemap even when indexable');
+      assert.equal(sitemap.includes('/radar/</loc>'), options.isPublic && options.liveCount >= 12, 'the live board is in the sitemap exactly when indexable');
       for (const excluded of [liveDate, '2026-09-06']) {
         assert.equal(existsSync(join(root, `dist/radar/${excluded}/index.html`)), false);
         assert.equal(sitemap.includes(`/radar/${excluded}/`), false);
