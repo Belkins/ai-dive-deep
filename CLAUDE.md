@@ -4,6 +4,7 @@
 Most code here is written by AI and reviewed by humans. Optimise every change for reviewability and zero wasted CI quota.
 
 - **Run verification locally and push directly to `main`.** Do not open pull requests just to run GitHub Actions CI. Before pushing to `main`, run `npm run check`, `node --test tests/*.test.mjs`, and `npm run build` locally. Only use a feature branch (`<type>/<issue>-<short-description>`) when explicitly running `/pick` or when a preview branch is requested.
+- **Run those checks on the Node major the workflows pin** (`node-version` in `.github/workflows/deploy.yml`). When your local Node differs, run them through `npx -y -p node@<major> -c "npm run check && node --test tests/*.test.mjs && npm run build"`, because on 10 Nov 2026 they passed on a newer local Node and the deploy failed on the workflow's Node.
 - **Use Conventional Commits** (`feat:`, `fix:`, `docs:`, `chore:`) and include `Closes #n` when resolving a tracked GitHub issue.
 - **One concern per commit.** Split unrelated work rather than bundling unrelated changes.
 - **No drive-by changes.** Reformatting or renaming outside the stated scope makes review harder —
