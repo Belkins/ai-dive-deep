@@ -23,6 +23,7 @@
     "check:sops": "python3 scripts/check-sop-parity.py",
     "check:motion": "node scripts/check-reduced-motion.mjs",
     "indexnow:manifest": "node scripts/indexnow-manifest.mjs",
+    "check:perf": "node scripts/check-perf.mjs",
     "test:seo": "node --test tests/seo.test.mjs tests/seo-check.test.mjs",
     "search:jev": "node scripts/jev-search.mjs",
     "dev": "astro dev",
