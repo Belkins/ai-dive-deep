@@ -87,6 +87,13 @@ const history = CHANGELOG.slice(1, 6).map((e) => ({
     )}
   </div>
 )}
+{show && (
+  <script is:inline>
+    // First-paint reveal: runs while the HTML parses, before <main> paints, so the
+    // bar never pushes the page down after first paint (a deferred module did, CLS 0.046).
+    (function(){var b=document.getElementById('announce-bar');if(!b)return;var d='';try{d=localStorage.getItem('cc-announce-dismissed')||''}catch(e){}if(d!==b.dataset.announceKey)b.classList.remove('hidden')})()
+  </script>
+)}
 
 <style>
   .announce-ping { animation: announce-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
@@ -97,6 +104,9 @@ const history = CHANGELOG.slice(1, 6).map((e) => ({
 <script>
   // Show the bar unless this exact edition was already dismissed. Done in JS so
   // the static HTML never flashes a stale (already-dismissed) bar before hydration.
+  // The first paint is handled by the inline script after the bar; on a first
+  // load the reveal below is a no-op. It stays for view-transition navigations:
+  // Astro does not re-run an inline script whose text already ran.
   // Re-runs on every view-transition nav (astro:page-load fires on first load
   // too); idempotent via a data flag so we never double-bind the dismiss click.
   const STORAGE = 'cc-announce-dismissed';
