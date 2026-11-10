@@ -5,10 +5,10 @@ interface Props {
 }
 const { youtubeId, title } = Astro.props;
 ---
-<div class="container-prose my-10">
+<div class="container-prose my-10" data-video-embed>
   <div class="rounded-xl overflow-hidden" style="border: 1px solid rgb(var(--line))">
     <div class="px-5 py-3 flex items-center gap-3 text-sm" style="background: rgb(var(--paper));">
-      <span class="inline-flex items-center justify-center h-7 w-7 rounded-full" style="background: rgb(var(--accent)); color: white;">
+      <span class="inline-flex items-center justify-center h-7 w-7 rounded-full" style="background: rgb(var(--accent)); color: rgb(var(--on-accent, 14 15 17));">
         <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </span>
       <div>
@@ -17,14 +17,46 @@ const { youtubeId, title } = Astro.props;
       </div>
     </div>
     <div style="aspect-ratio: 16/9; background: black;">
-      <iframe
-        src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
-        title={title}
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        style="width: 100%; height: 100%; border: 0;"
-      ></iframe>
+      <!-- A poster until the reader asks for the video: the YouTube player weighs about 1 MB. -->
+      <button
+        type="button"
+        class="video-poster"
+        data-video-play
+        data-youtube-id={youtubeId}
+        data-title={title}
+        aria-label={`Play video: ${title}`}
+      >
+        <img src={`https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`} alt="" width="480" height="360" loading="lazy" decoding="async" />
+        <span class="video-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+      </button>
     </div>
   </div>
 </div>
+
+<style>
+  .video-poster { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: black; cursor: pointer; }
+  .video-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; justify-content: center; width: 4rem; height: 4rem; border-radius: 9999px; background: rgb(var(--accent)); color: rgb(var(--on-accent, 14 15 17)); transition: background-color 150ms; }
+  .video-poster:hover .video-play { background: rgb(var(--accent) / 0.9); }
+  /* The card clips overflow, so the global focus ring is drawn inside the poster. */
+  .video-poster:focus-visible { outline-offset: -4px; }
+  @media print { .video-poster { display: none; } }
+</style>
+
+<script>
+  // One delegated listener: it survives Astro's page swaps and covers every embed on the page.
+  document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[data-video-play]') : null;
+    if (!button) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(button.dataset.youtubeId || '')}?autoplay=1`;
+    iframe.title = button.dataset.title || '';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    iframe.style.cssText = 'width: 100%; height: 100%; border: 0;';
+    button.replaceWith(iframe);
+    iframe.focus();
+  });
+</script>
