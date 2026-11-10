@@ -17,6 +17,18 @@ test('the licence module states code MIT and content CC BY-NC-SA 4.0', () => {
   assert.equal(LICENSE.LICENSE_STATEMENT, 'code MIT, content CC BY-NC-SA 4.0');
 });
 
+// The README is where a reader of the repository meets the licence: the badge, the two bullets
+// of its License section and the line that names the two licence files. Each is written out
+// here, so a README that names another licence in any of the four places fails.
+test('the README states code MIT and content CC BY-NC-SA 4.0 in its badge and its License section', () => {
+  const readme = read('README.md');
+  assert.ok(readme.includes('[![License: code MIT, content CC BY-NC-SA 4.0]('), 'the badge text');
+  assert.ok(readme.includes('\n- **Code** — MIT. '), 'the Code bullet');
+  assert.ok(readme.includes('\n- **Content** — CC BY-NC-SA 4.0. '), 'the Content bullet');
+  assert.ok(readme.includes('See [`LICENSE`](./LICENSE) (code, MIT) and [`LICENSE-CONTENT`](./LICENSE-CONTENT) (content, CC BY-NC-SA 4.0).'),
+    'the line that names the two licence files');
+});
+
 // Every place that states a licence in data reads the one module, so the
 // statements cannot disagree again (the Dataset once named llms.txt as its licence).
 test('every licence statement in the site data reads the licence module', () => {
