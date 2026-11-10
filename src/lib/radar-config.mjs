@@ -2,7 +2,9 @@
 // AND astro.config.mjs so noindex, the eyebrow, sitemap inclusion, and IndexNow flip
 // together atomically — no two-file drift (review-swarm MINOR finding).
 //   false → dark: noindex, "private preview" eyebrow, excluded from sitemap (so IndexNow skips it)
-//   true  → public: indexable, "live" eyebrow, in sitemap with truthful lastmod, pinged
+//   true  → public: indexable, "live" eyebrow; the live board (/radar) is in the sitemap with a
+//           truthful lastmod and pinged. Dated archives (/radar/<date>/) stay built, linked and
+//           indexable, but out of the sitemap and never pinged (owner decision, 10 Nov 2026).
 export const RADAR_PUBLIC = true;
 
 // A day with too few items is genuinely thin — fail closed: that archive ships noindex
