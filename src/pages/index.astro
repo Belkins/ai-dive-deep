@@ -371,7 +371,9 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
   <CommandPaletteMount />
 </BaseLayout>
 
-<style>
+<style is:global>
+  /* One shared block for the page: a scoped block would stamp its marker on every element here
+     (793 of them), so these rules are global and every selector starts at .home-part or .home-more. */
   /* The six parts as disclosures: same rule line and rhythm as the learning paths. */
   .home-part { border-top: 1px solid rgb(var(--line)); }
   .home-parts > li:last-child .home-part { border-bottom: 1px solid rgb(var(--line)); }
