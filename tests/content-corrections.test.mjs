@@ -811,3 +811,75 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
     assert.ok(named && (read[3] === named || read[3].startsWith(`${named} `)), `"${named}" reads ${read[1]}('${read[3]}')`);
   }
 });
+
+test('the CI recipe and the mode picker pair an allow-list with dontAsk, not with skip-permissions', () => {
+  // Allow rules have no effect under skip-permissions, so a recipe that pairs the two runs anything.
+  const ci = chapter('18-headless-ci');
+  const recipe = ci.match(/--allowed-tools "Bash\(npm test\*\),Bash\(npm run build\*\),Read,Grep,Edit\(src\/\*\*\)" \\\n {2}(--\S+(?: \S+)?)\n/);
+  assert.ok(recipe, 'the CI recipe keeps its allow-list line');
+  assert.equal(recipe[1], '--permission-mode dontAsk');
+  assert.match(ci, /`--dangerously-skip-permissions` skips the prompts and ignores the allow-list\./);
+  assert.doesNotMatch(ci, /already constrained what's possible via the allow-list/);
+  const picker = source('src/widgets/ModePicker.tsx');
+  assert.match(picker, /--allowed-tools "Bash\(pytest\*\),Edit\(src\/\*\*\)" --permission-mode dontAsk'/);
+  for (const [, command] of picker.matchAll(/command: '([^']*)'/g)) {
+    assert.ok(!(command.includes('--allowed-tools') && command.includes('--dangerously-skip-permissions')), command);
+  }
+});
+
+test('the permission simulator gives an allow-list no credit while skip-permissions is on', () => {
+  const simulator = source('src/widgets/PermissionSimulator.tsx');
+  const code = compile(simulator.slice(simulator.indexOf('function computeRisks(')));
+  const risks = (env, ...on) => Object.fromEntries(
+    runInNewContext(`${code}; computeRisks(${JSON.stringify(env)}, new Set(${JSON.stringify(on)}))`).map((row) => [row.label, row.risk]),
+  );
+  // In CI, skip-permissions ignores the allow-list: neither row may read as safe.
+  assert.equal(risks('ci', 'skipPerms', 'allowList')['Filesystem (mutating)'], 'yellow');
+  assert.equal(risks('ci', 'skipPerms', 'allowList')['Production credentials'], 'yellow');
+  // The allow-list earns its green only with the permission gate on.
+  assert.equal(risks('ci', 'allowList')['Filesystem (mutating)'], 'green');
+  assert.equal(risks('ci', 'allowList')['Production credentials'], 'green');
+  // On a laptop an allow-list alone does not soften skip-permissions; a deny rule still does.
+  assert.equal(risks('laptop', 'skipPerms', 'allowList')['Filesystem (mutating)'], 'red');
+  assert.equal(risks('laptop', 'skipPerms', 'denyEnv')['Filesystem (mutating)'], 'yellow');
+});
+
+test('MCP config blocks use the hosted GitHub, Stripe, Gong and Ahrefs servers and DBHub, not packages npm lacks', () => {
+  const pages = {
+    'claude-code-mcp.astro': source('src/pages/claude-code-mcp.astro'),
+    'cowork-setup.astro': source('src/pages/cowork-setup.astro'),
+    'snippets.ts': source('src/lib/snippets.ts'),
+    'chapter 12': chapter('12-connectors-mcp'),
+  };
+  const count = (text, needle) => text.split(needle).length - 1;
+  // GitHub archived its npm server, which never read the token it was given: five blocks use the hosted one.
+  const hostedGithub = { 'claude-code-mcp.astro': 2, 'cowork-setup.astro': 1, 'snippets.ts': 1, 'chapter 12': 1 };
+  for (const [name, text] of Object.entries(pages)) {
+    assert.equal(count(text, '@modelcontextprotocol/server-github'), 0, name);
+    assert.equal(count(text, 'https://api.githubcopilot.com/mcp/'), hostedGithub[name], name);
+    assert.equal(count(text, 'GITHUB_ALLOWED_REPOS'), 0, name);
+  }
+  // Packages that answer 404 on npm give way to the vendors' hosted servers.
+  for (const name of ['claude-code-mcp.astro', 'cowork-setup.astro']) {
+    assert.equal(count(pages[name], '@stripe/mcp-server'), 0, name);
+    assert.equal(count(pages[name], '"url": "https://mcp.stripe.com"'), 1, name);
+  }
+  const cowork = pages['cowork-setup.astro'];
+  assert.equal(count(cowork, '@gong/mcp-server'), 0);
+  assert.equal(count(cowork, '"url": "https://mcp.gong.io/mcp"'), 1);
+  assert.equal(count(cowork, '@ahrefs/mcp-server'), 0);
+  assert.equal(count(cowork, '"url": "https://api.ahrefs.com/mcp/mcp"'), 1);
+  // A setting the HubSpot server never reads looked like a safety limit.
+  assert.equal(count(cowork, 'HUBSPOT_ALLOWED_OPERATIONS'), 0);
+  // The archived Postgres server gives way to the one the Claude Code docs use.
+  assert.equal(count(pages['snippets.ts'], '@modelcontextprotocol/server-postgres'), 0);
+  assert.match(pages['snippets.ts'], /"@bytebase\/dbhub",\s+"--dsn",\s+"postgresql:\/\/user:pass@localhost\/db"/);
+});
+
+test('the chapter 12 quickstart sets the package type before it runs server.ts', () => {
+  // As first written the run exited 1: tsx loaded server.ts as CommonJS and the SDK import failed.
+  assert.match(
+    chapter('12-connectors-mcp'),
+    /npm init -y\nnpm pkg set type=module\nnpm i @modelcontextprotocol\/sdk zod\nnpm i -D typescript tsx\nnpx tsx server\.ts/,
+  );
+});
