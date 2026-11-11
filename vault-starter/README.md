@@ -5,7 +5,7 @@ install the 8 plugins below, run for two weeks. By month three the graph
 fires like a brain.
 
 Companion to the chapter [The Vault — Obsidian as Working Memory](https://belkins.github.io/ai-dive-deep/chapters/04-the-vault) in
-*Ultimate AI Dive Deep* by Vlad Podoliako.
+*Vlad's Playbook* by Vlad Podoliako.
 
 ## What's inside
 
@@ -65,6 +65,6 @@ Companion to the chapter [The Vault — Obsidian as Working Memory](https://belk
 ## License & credits
 
 Vault structure: CC BY-NC-SA 4.0. Use, adapt, credit, no commercial resale.
-Built alongside the *Ultimate AI Dive Deep* book by Vlad Podoliako.
+Built alongside *Vlad's Playbook* by Vlad Podoliako.
 
 For the full guide: https://belkins.github.io/ai-dive-deep/vault-starter

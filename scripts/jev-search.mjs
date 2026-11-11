@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Local-only Jev consumer for the public AI Dive Deep search catalog.
+ * Local-only Jev consumer for the public search catalog of Vlad's Playbook.
  *
  * Ranking and href ownership stay local. The installed shared CLI receives
  * only the bounded query and ranked { id, title, summary } candidates.

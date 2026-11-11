@@ -1,6 +1,6 @@
 # Local intent search
 
-AI Dive Deep keeps its public search catalog and ranking deterministic. The local operator command can prepare a bounded candidate set for the installed Jev search helper when a query benefits from an intent check:
+Vlad's Playbook keeps its public search catalog and ranking deterministic. The local operator command can prepare a bounded candidate set for the installed Jev search helper when a query benefits from an intent check:
 
 ~~~sh
 node scripts/jev-search.mjs --query "permissions sandbox"
