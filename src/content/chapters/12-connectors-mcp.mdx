@@ -102,9 +102,9 @@ This is the developer path. Configuration lives in a file you commit to the repo
                "/Users/vlad/Vlad-Brain"]
     },
     "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": { "GITHUB_TOKEN": "ghp_***" }
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer ghp_***" }
     }
   }
 }
@@ -167,6 +167,7 @@ Setup and run:
 
 ```bash
 npm init -y
+npm pkg set type=module
 npm i @modelcontextprotocol/sdk zod
 npm i -D typescript tsx
 npx tsx server.ts   # run it

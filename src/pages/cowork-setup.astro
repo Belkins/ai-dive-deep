@@ -90,8 +90,7 @@ const connectorDeepDives = [
       "command": "npx",
       "args": ["-y", "@hubspot/mcp-server"],
       "env": {
-        "HUBSPOT_ACCESS_TOKEN": "pat-na1-***",
-        "HUBSPOT_ALLOWED_OPERATIONS": "deals.read,contacts.read,notes.write,tasks.write"
+        "HUBSPOT_ACCESS_TOKEN": "pat-na1-***"
       }
     }
   }
@@ -109,12 +108,8 @@ const connectorDeepDives = [
     config: `{
   "mcpServers": {
     "stripe": {
-      "command": "npx",
-      "args": ["-y", "@stripe/mcp-server"],
-      "env": {
-        "STRIPE_API_KEY": "rk_live_***",
-        "STRIPE_MODE": "read-only"
-      }
+      "type": "http",
+      "url": "https://mcp.stripe.com"
     }
   }
 }`,
@@ -131,11 +126,10 @@ const connectorDeepDives = [
     config: `{
   "mcpServers": {
     "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_TOKEN": "github_pat_***",
-        "GITHUB_ALLOWED_REPOS": "Belkins/linkagent,Belkins/folderly"
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer github_pat_***"
       }
     }
   }
@@ -198,13 +192,8 @@ const connectorDeepDives = [
     config: `{
   "mcpServers": {
     "gong": {
-      "command": "npx",
-      "args": ["-y", "@gong/mcp-server"],
-      "env": {
-        "GONG_ACCESS_KEY": "***",
-        "GONG_ACCESS_KEY_SECRET": "***",
-        "GONG_ALLOWED_OPERATIONS": "calls.read,transcripts.read"
-      }
+      "type": "http",
+      "url": "https://mcp.gong.io/mcp"
     }
   }
 }`,
@@ -221,12 +210,8 @@ const connectorDeepDives = [
     config: `{
   "mcpServers": {
     "ahrefs": {
-      "command": "npx",
-      "args": ["-y", "@ahrefs/mcp-server"],
-      "env": {
-        "AHREFS_API_TOKEN": "***",
-        "AHREFS_DEFAULT_TARGET": "vladsnewsletter.com"
-      }
+      "type": "http",
+      "url": "https://api.ahrefs.com/mcp/mcp"
     }
   }
 }`,

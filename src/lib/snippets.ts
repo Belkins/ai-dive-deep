@@ -41,15 +41,16 @@ export const MCP_JSON_EXAMPLE = `{
       ]
     },
     "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": { "GITHUB_TOKEN": "ghp_***" }
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer ghp_***" }
     },
     "postgres": {
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-postgres",
+        "@bytebase/dbhub",
+        "--dsn",
         "postgresql://user:pass@localhost/db"
       ]
     }
