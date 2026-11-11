@@ -33,8 +33,8 @@
     {
       "source": "public/og-default.svg",
       "render": "public/og-default.png",
-      "command": "rsvg-convert public/og-default.svg -o public/og-default.png",
-      "source_sha256": "9d39636749be87e8b690ca62e8b6609e71cbc51f5892b712f579a5573641d849"
+      "command": "node scripts/build-og-default.mjs --playwright <playwright-core folder>",
+      "source_sha256": "3a5c335edc91ef5916d42ce53a396e7b9da52c48cf9b048deb47ac131b27de5e"
     }
   ],
   "soft_facts": [

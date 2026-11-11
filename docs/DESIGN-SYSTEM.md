@@ -558,7 +558,7 @@ Sticky header: `sticky top-0 z-40 backdrop-blur border-b`, `bg --bg / 0.78`, `h-
 - **Wordmark** "Vlad's Playbook" (`font-display text-lg`) + edition pill (`xl:` only).
 - **Desktop tabs:** progressive — `lg` shows 5 (Start here, Learn, Journey, Questions, Setup),
   `xl` adds 2 (Resources, Tier list). Each: `whitespace-nowrap text-sm px-2.5 py-2 rounded
-  hover:bg-white/5`. "Start here" = accent, "Learn" = accent-2, rest = `--fg/0.85`.
+  hover:bg-white/5`, all in one colour, `--fg/0.85` (mint stays for system state, rule 4).
   ⚠ **Hard ~7-tab budget** capped by the 1152px container — new tabs must use `whitespace-nowrap`
   + a breakpoint, or they wrap.
 - **Read-counter** (`font-mono`, accent-2 outline, hidden until ≥1 chapter read).

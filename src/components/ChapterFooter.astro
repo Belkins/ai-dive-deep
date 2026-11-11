@@ -1,5 +1,8 @@
 ---
 import { getNeighbors, getPart, PARTS, CHAPTERS } from '@/lib/chapters';
+import { AUTHOR, PUBLISHER } from '@/lib/author';
+import { CONTENT_LICENSE_NAME, CONTENT_LICENSE_URL } from '@/lib/license';
+import chapterDatesJson from '@/data/chapter-dates.json';
 interface Props { slug: string; }
 const { slug } = Astro.props;
 const { prev, next } = getNeighbors(slug);
@@ -27,7 +30,52 @@ const fbBody = encodeURIComponent(
   `\n`
 );
 const fbHref = `mailto:v@vladyslavpodoliako.com?subject=${fbSubject}&body=${fbBody}`;
+
+// Cite and share: every value comes from the repo's data (author.ts, chapters.ts,
+// chapter-dates.json, license.ts). A chapter with no published date leaves the year out.
+const published = (chapterDatesJson as Record<string, { published?: string }>)[slug]?.published;
+const year = published ? published.slice(0, 4) : null;
+const citation = `${AUTHOR.name}. \u201c${chTitle}.\u201d ${PUBLISHER.name}, chapter ${thisChapter?.number ?? ''}${year ? `, ${year}` : ''}. ${chUrl}`;
+// On screen the address may break only after a slash (a <wbr> each, every segment kept whole, so never
+// at a hyphen either); the copied citation is unchanged.
+const citationLead = citation.slice(0, citation.length - chUrl.length);
+const urlSegments = chUrl.replace(/^https:\/\//, '').split('/').filter(Boolean);
+const enc = encodeURIComponent;
+const shareLinks = [
+  { name: 'X', href: `https://x.com/intent/post?text=${enc(chTitle)}&url=${enc(chUrl)}` },
+  { name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(chUrl)}` },
+  { name: 'Email', href: `mailto:?subject=${enc(chTitle)}&body=${enc(chUrl)}` },
+];
 ---
+<section id="cite-share" class="container-prose mt-4" aria-labelledby="cite-share-title">
+  <div class="border-t pt-10" style="border-color: rgb(var(--line))">
+    <h2 id="cite-share-title" style="font-size: 1.5rem; margin: 0 0 1rem;">Cite this chapter</h2>
+    <p data-cite-text class="m-0 p-5 rounded-xl leading-relaxed" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line)); color: rgb(var(--fg) / 0.85); overflow-wrap: anywhere;">{citationLead}<span data-cite-url>https://{urlSegments.map((s) => <><span class="whitespace-nowrap">{s}/</span><wbr /></>)}</span></p>
+    <p class="text-sm mt-3 mb-0" style="color: rgb(var(--muted))">
+      Licensed <a href={CONTENT_LICENSE_URL} class="link-inline" rel="license">{CONTENT_LICENSE_NAME}</a>
+    </p>
+    <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+      <div class="flex flex-wrap gap-3">
+        <button type="button" class="btn-ghost text-sm min-h-[44px]" data-cite-copy={citation} data-label="Copy citation"><span class="grid" style="justify-items: center"><span data-cite-label style="grid-area: 1 / 1">Copy citation</span><span aria-hidden="true" style="grid-area: 1 / 1; visibility: hidden">Copy citation</span><span aria-hidden="true" style="grid-area: 1 / 1; visibility: hidden">Copy failed</span></span></button>
+        <button type="button" class="btn-ghost text-sm min-h-[44px]" data-cite-copy={chUrl} data-cite-select="[data-cite-url]" data-label="Copy link"><span class="grid" style="justify-items: center"><span data-cite-label style="grid-area: 1 / 1">Copy link</span><span aria-hidden="true" style="grid-area: 1 / 1; visibility: hidden">Copy link</span><span aria-hidden="true" style="grid-area: 1 / 1; visibility: hidden">Copy failed</span></span></button>
+      </div>
+      <div class="flex flex-wrap items-center gap-1">
+        <span class="eyebrow mr-2" id="cite-share-label">Share</span>
+        <ul class="m-0 p-0 flex flex-wrap gap-1 list-none" aria-labelledby="cite-share-label">
+          {shareLinks.map((l) => (
+            <li>
+              <a href={l.href} class="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-3 rounded-md text-sm no-underline hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)" {...(l.name === 'Email' ? {} : { target: '_blank', rel: 'noopener noreferrer' })}>
+                <span class="sr-only">Share on </span>{l.name}{l.name !== 'Email' && <span class="sr-only"> (opens in a new tab)</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <p data-cite-status role="status" aria-live="polite" class="text-sm mt-3 mb-0 min-h-[1.25rem]" style="color: rgb(var(--muted))"></p>
+  </div>
+</section>
+
 <nav class="container-prose mt-16 mb-8 grid gap-4 sm:grid-cols-2">
   {prev ? (
     <a href={`${base}/chapters/${prev.slug}/`} class="card hover:border-flame transition-colors no-underline text-fg">
@@ -64,3 +112,30 @@ const fbHref = `mailto:v@vladyslavpodoliako.com?subject=${fbSubject}&body=${fbBo
     Email Vlad with feedback on this chapter →
   </a>
 </div>
+
+<script>
+  import { copyMessage, copyText, COPY_FAILURE_MS } from '@/lib/copy-feedback';
+  // One delegated listener survives Astro's page swaps; the block's buttons carry their own text.
+  document.addEventListener('click', async (event) => {
+    const btn = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[data-cite-copy]') : null;
+    if (!btn) return;
+    const block = btn.closest('#cite-share');
+    const status = block?.querySelector<HTMLElement>('[data-cite-status]');
+    const result = await copyText(btn.dataset.citeCopy ?? '');
+    // The label sits over hidden copies of its own label and 'Copy failed', so no state changes the button's width or the row.
+    const label = btn.querySelector<HTMLElement>('[data-cite-label]') ?? btn;
+    label.textContent = result === 'copied' ? 'Copied' : 'Copy failed';
+    if (status) status.textContent = copyMessage(result);
+    if (result === 'failed') {
+      // Select what the button copies (the citation, or the address inside it) so the reader can copy it by hand.
+      const text = block?.querySelector(btn.dataset.citeSelect ?? '[data-cite-text]');
+      const selection = window.getSelection();
+      if (text && selection) { const range = document.createRange(); range.selectNodeContents(text); selection.removeAllRanges(); selection.addRange(range); }
+    }
+    window.clearTimeout(Number(btn.dataset.timer));
+    btn.dataset.timer = String(window.setTimeout(() => {
+      label.textContent = btn.dataset.label ?? '';
+      if (status) status.textContent = '';
+    }, result === 'copied' ? 2000 : COPY_FAILURE_MS));
+  });
+</script>

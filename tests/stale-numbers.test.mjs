@@ -79,7 +79,7 @@ test('a share-image SVG edited after its PNG was rendered fails and names the PN
   const r = run({ 'public/og-default.svg': '<text>3 chapters · 2 widgets</text>\n' });
   assert.equal(r.status, 1, r.out);
   assert.match(r.out, /public\/og-default\.png is the image pages share/);
-  assert.match(r.out, /rsvg-convert public\/og-default\.svg -o public\/og-default\.png/);
+  assert.match(r.out, /node scripts\/build-og-default\.mjs --playwright <playwright-core folder>/);
   assert.match(r.out, /"source_sha256": "[0-9a-f]{64}"/);
 });
 
