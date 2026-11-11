@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { CHAPTERS } from '@/lib/chapters';
+import { CHAPTERS, PARTS } from '@/lib/chapters';
 import HeroIntro from '@/widgets/HeroIntro.tsx';
 import ResumeReading from '@/widgets/ResumeReading.tsx';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
@@ -10,6 +10,9 @@ import { CHANGELOG } from '@/lib/changelog';
 import { SETUP_STATS } from '@/lib/setup';
 import LearningPaths from '@/components/LearningPaths.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// The one front door: the hero's primary button and the header's "Start here" both lead here.
+const START_HREF = '/day-zero/';
+const bySlug = Object.fromEntries(CHAPTERS.map((c) => [c.slug, c]));
 const ed = CHANGELOG[0];
 const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
@@ -36,8 +39,8 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
     </div>
 
     <div class="mt-7 flex flex-wrap gap-3">
-      <a href={`${base}/library/`} class="btn-ghost">Explore the library →</a>
-      <a href={`${base}/workflow-planner/`} class="btn-ghost">Plan a workflow →</a>
+      <a href={`${base}${START_HREF}`} class="btn-flame min-h-[44px]">Start here →</a>
+      <a href={`${base}/library/`} class="btn-ghost min-h-[44px]">Explore the library →</a>
     </div>
 
     <ResumeReading client:load />
@@ -71,30 +74,46 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
     />
   </section>
 
-  <section class="container-wide pt-16 pb-8">
+  <section id="chapters" class="container-wide pt-16 pb-8">
     <div class="flex items-baseline justify-between mb-8 flex-wrap gap-3">
       <h2 class="m-0 font-display text-3xl md:text-4xl">{CHAPTERS.length} Chapters</h2>
       <p class="text-sm" style="color: rgb(var(--muted))">Read straight or jump where you need it. Each chapter stands alone.</p>
     </div>
 
-    <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 list-none p-0 m-0">
-      {CHAPTERS.map((c) => (
+    <ol class="home-parts list-none p-0 m-0">
+      {PARTS.map((part, i) => (
         <li class="m-0">
-          <a
-            href={`${base}/chapters/${c.slug}/`}
-            data-chapter-slug={c.slug}
-            class="chapter-card block card hover:border-flame transition-colors no-underline h-full relative"
-            style="color: rgb(var(--fg))"
-          >
-            <div class="flex items-baseline gap-3">
-              <span class="font-display text-2xl tabular-nums" style="color: rgb(var(--accent))">{String(c.number).padStart(2, '0')}</span>
-              <span class="font-display text-lg leading-tight">{c.title}</span>
-            </div>
-            <p class="mt-2 text-sm leading-snug" style="color: rgb(var(--muted))">{c.subtitle}</p>
-            <span class="read-check" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </a>
+          <details class="home-part" open={i === 0}>
+            <summary>
+              <span class="home-part-text">
+                <span class="font-display text-xl md:text-2xl" style="color: rgb(var(--fg))">{part.label}</span>
+                <span class="block mt-1 text-sm" style="color: rgb(var(--muted))">{part.tagline}</span>
+              </span>
+              <span class="home-part-count font-mono text-xs" style="color: rgb(var(--muted))">{part.slugs.length} chapters</span>
+              <svg class="home-part-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 list-none p-0 m-0 pb-8">
+              {part.slugs.map((slug) => bySlug[slug]).filter(Boolean).map((c) => (
+                <li class="m-0">
+                  <a
+                    href={`${base}/chapters/${c.slug}/`}
+                    data-chapter-slug={c.slug}
+                    class="chapter-card block card hover:border-flame transition-colors no-underline h-full relative"
+                    style="color: rgb(var(--fg))"
+                  >
+                    <div class="flex items-baseline gap-3">
+                      <span class="font-display text-2xl tabular-nums shrink-0" style="color: rgb(var(--accent))">{String(c.number).padStart(2, '0')}</span>
+                      <span class="font-display text-lg leading-tight">{c.title}</span>
+                    </div>
+                    <p class="mt-2 text-sm leading-snug" style="color: rgb(var(--muted))">{c.subtitle}</p>
+                    <span class="read-check" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </details>
         </li>
       ))}
     </ol>
@@ -132,11 +151,6 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
         <h3 class="m-0 font-display text-2xl">Radar — what's moving in AI, ranked by lead time</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A self-updating index of what's travelling through the AI ecosystem, ranked by where it sits on the gradient — papers to repos to community to analysis. The receipts are on every row. See it before the crowd does.</p>
       </a>
-      <a href={`${base}/learn/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New here? Start here</div>
-        <h3 class="m-0 font-display text-2xl">Learn the basics first</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">New to AI, Claude, Claude Code, or Cowork? The official free courses in the right order, a five-word primer, and the learning ladder — then the book.</p>
-      </a>
       <a href={`${base}/agent-workflow/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
         <TileEyebrow added="2026-08-17" category="Method" />
         <h3 class="m-0 font-display text-2xl">Agent workflow</h3>
@@ -147,202 +161,267 @@ const edWhen = new Date(ed.date + 'T00:00:00Z').toLocaleDateString('en-US', { mo
         <h3 class="m-0 font-display text-2xl">Fleet paint</h3>
         <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Six agents, six identical black windows — until you paint them. Statusline, OSC escape codes, and a watcher that colors every terminal by project. The full setup, built by Claude Code, with the gotchas that cost a day.</p>
       </a>
-      <a href={`${base}/cad-as-code/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-08-03" category="Hardware" />
-        <h3 class="m-0 font-display text-2xl">CAD-as-code</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Claude designed a 3D-printable museum frame for the bird station's 13.3" e-ink panel — eight parts as STL + STEP, emitted by 267 lines of Python whose dimensions were read off the vendor's drawing. The six mechanical decisions, the self-QA harness, and the honest part: zero grams printed until the calipers agree.</p>
-      </a>
-      <a href={`${base}/opus-5/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-07-27" category="Model file" />
-        <h3 class="m-0 font-display text-2xl">Opus 5 — the frontier stopped being the expensive one</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">On the independent Intelligence Index, the top model is no longer the priciest per task — Opus 5 took first place below the cost of the model beneath it. (Anthropic still points to Fable 5 for highest available capability.) The effort dial, the hierarchy question, and <span style="color: rgb(var(--accent))">seven jobs with the setting for each</span> — including one where turning the dial up makes it worse.</p>
-      </a>
-      <a href={`${base}/fable-5/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-09" category="Model file" />
-        <h3 class="m-0 font-display text-2xl">Fable 5 — the withheld model, buyable</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Anthropic shipped the model it said it wouldn't — split in two. Pricing, the full benchmark table read honestly, the fallback architecture, and the June 22 clock.</p>
-      </a>
-      <a href={`${base}/music-is-math/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-07-30" category="Foundations" />
-        <h3 class="m-0 font-display text-2xl">Music is math</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">How AI actually writes a song — 44,100 numbers a second become a few hundred symbols, and a transformer finishes the sentence. Then the same recipe goes and writes proteins, drives robot arms, and beats the world's best weather forecast. Includes the three places the story is oversold, and the five claims my own draft got wrong.</p>
-      </a>
-      <a href={`${base}/dynamic-workflows/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-30" category="Dynamic Workflows" />
-        <h3 class="m-0 font-display text-2xl">Opus 4.8 — the swarm that runs itself</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Claude writes a script that plans, fans out hundreds of parallel subagents, and verifies its own work. What it is, the validator loop, how to turn it on, and when not to.</p>
-      </a>
-      <a href={`${base}/good-taste/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-16" category="Showcase" />
-        <h3 class="m-0 font-display text-2xl">Good taste, on tap</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Stop your AI from generating generic slop. A before/after of Leon Lin's public taste-skill (45k★, credited) — and the moon-base and three-design receipts I built with the discipline.</p>
-      </a>
-      {/* [VLAD: h3 + hook below are candidates from the design swarm — confirm/revoice. Links to the new /dreaming page (Ch 44's sibling).] */}
-      <a href={`${base}/dreaming/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-04" category="Memory" />
-        <h3 class="m-0 font-display text-2xl">Dreaming — the loop pointed inward</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A local, propose-only twin of Anthropic's Dreaming: it digests your sessions, surfaces candidate memories that each cite a verbatim quote, and re-verifies every one against the raw transcript — and never writes to memory itself.</p>
-      </a>
-      <a href={`${base}/self-audit/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-09" category="Method" />
-        <h3 class="m-0 font-display text-2xl">The Self-Audit</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The swarm pointed at the agent's own setup. Five auditors, an adversarial red-team, 41 findings — including two refutations that would have broken the system if executed. Your config rots faster than your code.</p>
-      </a>
-      <a href={`${base}/claude-code-pricing/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-10" category="Reference" />
-        <h3 class="m-0 font-display text-2xl">What Claude Code actually costs</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Every plan and API rate, verified — then the receipts: the real monthly bill, the $1,108→$4,312 cache mistake, and the three levers that cut it.</p>
-      </a>
-      <a href={`${base}/claude-code-vs-codex/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-10" category="Comparison" />
-        <h3 class="m-0 font-display text-2xl">Claude Code vs Codex</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Ran both in anger. Verdict per job — including the night shift Codex actually wins.</p>
-      </a>
-      <a href={`${base}/claude-code-hooks/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-10" category="Reference" />
-        <h3 class="m-0 font-display text-2xl">Hooks that can't be talked out of</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Ten real configs with verdicts — what each caught in production, and the three hook ideas that failed expensively.</p>
-      </a>
-      <a href={`${base}/claude-code-mods/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-10-03" category="Reference" />
-        <h3 class="m-0 font-display text-2xl">Claude Code mods</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">What a mod is, how it differs from hooks and skills, six real ones and a first mod you can copy.</p>
-      </a>
-      <a href={`${base}/swarm-build-playbook/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-10-12" category="Playbook" />
-        <h3 class="m-0 font-display text-2xl">The swarm build playbook</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Ten templates from two product builds in one week: the conductor prompt, unit contract, merge lock, deploy watcher and budget card.</p>
-      </a>
-      <a href={`${base}/claude-code-mcp/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-10" category="Setup" />
-        <h3 class="m-0 font-display text-2xl">Claude Code + MCP</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The setup guide grounded in a real roster: the servers worth wiring, what each one costs and earns, and the ones that got cut.</p>
-      </a>
-      <a href={`${base}/ai-agent-examples/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-06-10" category="Examples" />
-        <h3 class="m-0 font-display text-2xl">12 agents that actually ran</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A receipts gallery: the book swarm, the 4 AM watcher, the $0.40/min voice agent — every example with a cost and a failure on record.</p>
-      </a>
-      <a href={`${base}/sovereign-stack/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-20" category="Sovereign Stack" />
-        <h3 class="m-0 font-display text-2xl">Don't get deprecated</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Open-weights LLMs that survive the deprecation calendar — Ollama, the hardware ladder, the heretic question, and the nano-gpt Saturday.</p>
-      </a>
-      <a href={`${base}/html-first/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-19" category="Method" />
-        <h3 class="m-0 font-display text-2xl">HTML-ization</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Stop sending dead files. Every report, pitch, and audit ships as a live interactive artifact — two real ones embedded and clickable.</p>
-      </a>
-      <a href={`${base}/launch/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-20" category="The launch" />
-        <h3 class="m-0 font-display text-2xl">{ed.edition} is public</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The story behind the playbook, three live embedded artifacts, and all {CHAPTERS.length} chapters in one place.</p>
-      </a>
-      <a href={`${base}/launch-week/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-20" category="Live diary" />
-        <h3 class="m-0 font-display text-2xl">Launch week</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The launch as its own experiment in the thesis. Four surfaces, seven days, receipts accruing — honest, even the embarrassing ones.</p>
-      </a>
-      <a href={`${base}/resources/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-07" category="Resources" />
-        <h3 class="m-0 font-display text-2xl">Vault library</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">CLAUDE.md skeletons, .mcp.json examples, hook scripts, SKILL templates, the five reusable prompts. Copy, paste, ship.</p>
-      </a>
-      <a href={`${base}/cheat-sheet/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-07" category="Reference" />
-        <h3 class="m-0 font-display text-2xl">Cheat sheet</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Slash commands, settings, env vars, file paths, keyboard shortcuts. Print it. Tape it next to your monitor.</p>
-      </a>
-      <a href={`${base}/glossary/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-07" category="Vocabulary" />
-        <h3 class="m-0 font-display text-2xl">Glossary</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Fifty-plus terms you'll need, grouped A–Z. Linked inline throughout the book. Hover any underlined term to read it.</p>
-      </a>
-      <a href={`${base}/tier-list/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-07" category="Tier list" />
-        <h3 class="m-0 font-display text-2xl">Rank without mercy</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Drag-and-drop your own tier list across AI tools, connectors, and infra. The Arena leaderboard (formerly LMArena), hand-mirrored 2026-08-17, for reference — eleven boards, each with its own publish date.</p>
-      </a>
-      <a href={`${base}/swarms/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-20" category="Orchestration" />
-        <h3 class="m-0 font-display text-2xl">Swarms</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Multi-agent orchestration — the four-pattern visualizer, ten swarm skills shipped, seven patterns I use, the orchestration prompts to steal. Three real multi-session screenshots.</p>
-      </a>
-      <a href={`${base}/github-playbook/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-20" category="GitHub" />
-        <h3 class="m-0 font-display text-2xl">GitHub for non-developers</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Five non-code uses, eight gh commands you actually need, what you can safely ignore. Six worked examples — Vlad's Playbook, AFC, Karpathy, Simon Willison ×2, profile READMEs.</p>
-      </a>
-      <a href={`${base}/showcase/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-08" category="The stack" />
-        <h3 class="m-0 font-display text-2xl">{SETUP_STATS.skills} skills · {SETUP_STATS.agents} agents · {SETUP_STATS.plugins} plugins</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Vlad's full Claude Code setup. Every skill folder, every custom subagent, every plugin — sanitized and shareable. Freshly pruned by <span style="color: rgb(var(--accent))">the Self-Audit</span>.</p>
-      </a>
-      <a href={`${base}/research-notes/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-        <TileEyebrow added="2026-05-12" category="Research" />
-        <h3 class="m-0 font-display text-2xl">What shifted this week</h3>
-        <p class="mt-2 text-sm" style="color: rgb(var(--muted))">External findings that move what an operator does Monday — model releases, deprecations, benchmark shifts. Dated, sourced, signal-not-receipt discipline.</p>
-      </a>
     </div>
-    <div class="mt-12">
-      <div class="flex items-baseline justify-between mb-6 flex-wrap gap-3">
-        <h2 class="m-0 font-display text-2xl md:text-3xl">More from the shelf</h2>
-        <p class="text-sm" style="color: rgb(var(--muted))">Decisions, setups, and reference — the rest of the Playbook.</p>
-      </div>
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <a href={`${base}/build-vs-buy/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Decision</div>
-          <h3 class="m-0 font-display text-lg leading-tight">Build vs Buy</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Sequencing wedge, cost ladder, and a 5-question matrix for what to make vs buy.</p>
+    <details class="home-more mt-6">
+      <summary><span>All guides and tools</span><svg class="home-part-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4 pt-2">
+        <a href={`${base}/learn/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <div class="text-xs uppercase tracking-wider mb-2" style="color: rgb(var(--accent-2))">New here? Start here</div>
+          <h3 class="m-0 font-display text-2xl">Learn the basics first</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">New to AI, Claude, Claude Code, or Cowork? The official free courses in the right order, a five-word primer, and the learning ladder — then the book.</p>
         </a>
-        <a href={`${base}/cfo-case/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">The case</div>
-          <h3 class="m-0 font-display text-lg leading-tight">For your CFO</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">600 words to defend the spend — Claude as a labor line, not a SaaS line.</p>
+        <a href={`${base}/cad-as-code/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-08-03" category="Hardware" />
+          <h3 class="m-0 font-display text-2xl">CAD-as-code</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Claude designed a 3D-printable museum frame for the bird station's 13.3" e-ink panel — eight parts as STL + STEP, emitted by 267 lines of Python whose dimensions were read off the vendor's drawing. The six mechanical decisions, the self-QA harness, and the honest part: zero grams printed until the calipers agree.</p>
         </a>
-        <a href={`${base}/claude-md-rules/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Rules</div>
-          <h3 class="m-0 font-display text-lg leading-tight">The 12-rule CLAUDE.md</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Karpathy's template at 11% mistakes; the operator overlay gets it to 3%.</p>
+        <a href={`${base}/opus-5/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-07-27" category="Model file" />
+          <h3 class="m-0 font-display text-2xl">Opus 5 — the frontier stopped being the expensive one</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">On the independent Intelligence Index, the top model is no longer the priciest per task — Opus 5 took first place below the cost of the model beneath it. (Anthropic still points to Fable 5 for highest available capability.) The effort dial, the hierarchy question, and <span style="color: rgb(var(--accent))">seven jobs with the setting for each</span> — including one where turning the dial up makes it worse.</p>
         </a>
-        <a href={`${base}/cowork-setup/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Setup</div>
-          <h3 class="m-0 font-display text-lg leading-tight">Cowork setup</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Vlad's Cowork connectors and scheduled tasks — sanitized and cloneable.</p>
+        <a href={`${base}/fable-5/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-09" category="Model file" />
+          <h3 class="m-0 font-display text-2xl">Fable 5 — the withheld model, buyable</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Anthropic shipped the model it said it wouldn't — split in two. Pricing, the full benchmark table read honestly, the fallback architecture, and the June 22 clock.</p>
         </a>
-        <a href={`${base}/vault-starter/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Vault</div>
-          <h3 class="m-0 font-display text-lg leading-tight">Vault starter</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">PARA vs 7 other systems, project-as-entity, and a working vault to clone.</p>
+        <a href={`${base}/music-is-math/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-07-30" category="Foundations" />
+          <h3 class="m-0 font-display text-2xl">Music is math</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">How AI actually writes a song — 44,100 numbers a second become a few hundred symbols, and a transformer finishes the sentence. Then the same recipe goes and writes proteins, drives robot arms, and beats the world's best weather forecast. Includes the three places the story is oversold, and the five claims my own draft got wrong.</p>
         </a>
-        <a href={`${base}/weekend-builds/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Recipes</div>
-          <h3 class="m-0 font-display text-lg leading-tight">Weekend builds</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Eight Saturday-ship recipes — plus the one that's a trap.</p>
+        <a href={`${base}/dynamic-workflows/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-30" category="Dynamic Workflows" />
+          <h3 class="m-0 font-display text-2xl">Opus 4.8 — the swarm that runs itself</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Claude writes a script that plans, fans out hundreds of parallel subagents, and verifies its own work. What it is, the validator loop, how to turn it on, and when not to.</p>
         </a>
-        <a href={`${base}/starter-skills/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Skills</div>
-          <h3 class="m-0 font-display text-lg leading-tight">Starter skills</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Six drop-in SKILL.md files to paste into ~/.claude and run today.</p>
+        <a href={`${base}/good-taste/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-16" category="Showcase" />
+          <h3 class="m-0 font-display text-2xl">Good taste, on tap</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Stop your AI from generating generic slop. A before/after of Leon Lin's public taste-skill (45k★, credited) — and the moon-base and three-design receipts I built with the discipline.</p>
         </a>
-        <a href={`${base}/thirty-day-plan/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Roadmap</div>
-          <h3 class="m-0 font-display text-lg leading-tight">30-day plan</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">A day-by-day roadmap from clean machine to operator in a month.</p>
+        {/* [VLAD: h3 + hook below are candidates from the design swarm — confirm/revoice. Links to the new /dreaming page (Ch 44's sibling).] */}
+        <a href={`${base}/dreaming/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-04" category="Memory" />
+          <h3 class="m-0 font-display text-2xl">Dreaming — the loop pointed inward</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A local, propose-only twin of Anthropic's Dreaming: it digests your sessions, surfaces candidate memories that each cite a verbatim quote, and re-verifies every one against the raw transcript — and never writes to memory itself.</p>
         </a>
-        <a href={`${base}/sections/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Index</div>
-          <h3 class="m-0 font-display text-lg leading-tight">Sections</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Every chapter grouped by theme — the table of contents, by topic.</p>
+        <a href={`${base}/self-audit/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-09" category="Method" />
+          <h3 class="m-0 font-display text-2xl">The Self-Audit</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The swarm pointed at the agent's own setup. Five auditors, an adversarial red-team, 41 findings — including two refutations that would have broken the system if executed. Your config rots faster than your code.</p>
         </a>
-        <a href={`${base}/about/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
-          <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">About</div>
-          <h3 class="m-0 font-display text-lg leading-tight">About</h3>
-          <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Vlad, the portfolio, and the newsletter behind the Playbook.</p>
+        <a href={`${base}/claude-code-pricing/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-10" category="Reference" />
+          <h3 class="m-0 font-display text-2xl">What Claude Code actually costs</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Every plan and API rate, verified — then the receipts: the real monthly bill, the $1,108→$4,312 cache mistake, and the three levers that cut it.</p>
+        </a>
+        <a href={`${base}/claude-code-vs-codex/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-10" category="Comparison" />
+          <h3 class="m-0 font-display text-2xl">Claude Code vs Codex</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Ran both in anger. Verdict per job — including the night shift Codex actually wins.</p>
+        </a>
+        <a href={`${base}/claude-code-hooks/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-10" category="Reference" />
+          <h3 class="m-0 font-display text-2xl">Hooks that can't be talked out of</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Ten real configs with verdicts — what each caught in production, and the three hook ideas that failed expensively.</p>
+        </a>
+        <a href={`${base}/claude-code-mods/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-10-03" category="Reference" />
+          <h3 class="m-0 font-display text-2xl">Claude Code mods</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">What a mod is, how it differs from hooks and skills, six real ones and a first mod you can copy.</p>
+        </a>
+        <a href={`${base}/swarm-build-playbook/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-10-12" category="Playbook" />
+          <h3 class="m-0 font-display text-2xl">The swarm build playbook</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Ten templates from two product builds in one week: the conductor prompt, unit contract, merge lock, deploy watcher and budget card.</p>
+        </a>
+        <a href={`${base}/claude-code-mcp/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-10" category="Setup" />
+          <h3 class="m-0 font-display text-2xl">Claude Code + MCP</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The setup guide grounded in a real roster: the servers worth wiring, what each one costs and earns, and the ones that got cut.</p>
+        </a>
+        <a href={`${base}/ai-agent-examples/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-06-10" category="Examples" />
+          <h3 class="m-0 font-display text-2xl">12 agents that actually ran</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">A receipts gallery: the book swarm, the 4 AM watcher, the $0.40/min voice agent — every example with a cost and a failure on record.</p>
+        </a>
+        <a href={`${base}/sovereign-stack/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-20" category="Sovereign Stack" />
+          <h3 class="m-0 font-display text-2xl">Don't get deprecated</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Open-weights LLMs that survive the deprecation calendar — Ollama, the hardware ladder, the heretic question, and the nano-gpt Saturday.</p>
+        </a>
+        <a href={`${base}/html-first/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-19" category="Method" />
+          <h3 class="m-0 font-display text-2xl">HTML-ization</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Stop sending dead files. Every report, pitch, and audit ships as a live interactive artifact — two real ones embedded and clickable.</p>
+        </a>
+        <a href={`${base}/launch/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-20" category="The launch" />
+          <h3 class="m-0 font-display text-2xl">{ed.edition} is public</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The story behind the playbook, three live embedded artifacts, and all {CHAPTERS.length} chapters in one place.</p>
+        </a>
+        <a href={`${base}/launch-week/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-20" category="Live diary" />
+          <h3 class="m-0 font-display text-2xl">Launch week</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">The launch as its own experiment in the thesis. Four surfaces, seven days, receipts accruing — honest, even the embarrassing ones.</p>
+        </a>
+        <a href={`${base}/resources/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-07" category="Resources" />
+          <h3 class="m-0 font-display text-2xl">Vault library</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">CLAUDE.md skeletons, .mcp.json examples, hook scripts, SKILL templates, the five reusable prompts. Copy, paste, ship.</p>
+        </a>
+        <a href={`${base}/cheat-sheet/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-07" category="Reference" />
+          <h3 class="m-0 font-display text-2xl">Cheat sheet</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Slash commands, settings, env vars, file paths, keyboard shortcuts. Print it. Tape it next to your monitor.</p>
+        </a>
+        <a href={`${base}/glossary/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-07" category="Vocabulary" />
+          <h3 class="m-0 font-display text-2xl">Glossary</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Fifty-plus terms you'll need, grouped A–Z. Linked inline throughout the book. Hover any underlined term to read it.</p>
+        </a>
+        <a href={`${base}/tier-list/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-07" category="Tier list" />
+          <h3 class="m-0 font-display text-2xl">Rank without mercy</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Drag-and-drop your own tier list across AI tools, connectors, and infra. The Arena leaderboard (formerly LMArena), hand-mirrored 2026-08-17, for reference — eleven boards, each with its own publish date.</p>
+        </a>
+        <a href={`${base}/swarms/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-20" category="Orchestration" />
+          <h3 class="m-0 font-display text-2xl">Swarms</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Multi-agent orchestration — the four-pattern visualizer, ten swarm skills shipped, seven patterns I use, the orchestration prompts to steal. Three real multi-session screenshots.</p>
+        </a>
+        <a href={`${base}/github-playbook/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-20" category="GitHub" />
+          <h3 class="m-0 font-display text-2xl">GitHub for non-developers</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Five non-code uses, eight gh commands you actually need, what you can safely ignore. Six worked examples — Vlad's Playbook, AFC, Karpathy, Simon Willison ×2, profile READMEs.</p>
+        </a>
+        <a href={`${base}/showcase/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-08" category="The stack" />
+          <h3 class="m-0 font-display text-2xl">{SETUP_STATS.skills} skills · {SETUP_STATS.agents} agents · {SETUP_STATS.plugins} plugins</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Vlad's full Claude Code setup. Every skill folder, every custom subagent, every plugin — sanitized and shareable. Freshly pruned by <span style="color: rgb(var(--accent))">the Self-Audit</span>.</p>
+        </a>
+        <a href={`${base}/research-notes/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+          <TileEyebrow added="2026-05-12" category="Research" />
+          <h3 class="m-0 font-display text-2xl">What shifted this week</h3>
+          <p class="mt-2 text-sm" style="color: rgb(var(--muted))">External findings that move what an operator does Monday — model releases, deprecations, benchmark shifts. Dated, sourced, signal-not-receipt discipline.</p>
         </a>
       </div>
-    </div>
+      <div class="mt-12">
+        <div class="flex items-baseline justify-between mb-6 flex-wrap gap-3">
+          <h2 class="m-0 font-display text-2xl md:text-3xl">More from the shelf</h2>
+          <p class="text-sm" style="color: rgb(var(--muted))">Decisions, setups, and reference — the rest of the Playbook.</p>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <a href={`${base}/build-vs-buy/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Decision</div>
+            <h3 class="m-0 font-display text-lg leading-tight">Build vs Buy</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Sequencing wedge, cost ladder, and a 5-question matrix for what to make vs buy.</p>
+          </a>
+          <a href={`${base}/cfo-case/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">The case</div>
+            <h3 class="m-0 font-display text-lg leading-tight">For your CFO</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">600 words to defend the spend — Claude as a labor line, not a SaaS line.</p>
+          </a>
+          <a href={`${base}/claude-md-rules/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Rules</div>
+            <h3 class="m-0 font-display text-lg leading-tight">The 12-rule CLAUDE.md</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Karpathy's template at 11% mistakes; the operator overlay gets it to 3%.</p>
+          </a>
+          <a href={`${base}/cowork-setup/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Setup</div>
+            <h3 class="m-0 font-display text-lg leading-tight">Cowork setup</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Vlad's Cowork connectors and scheduled tasks — sanitized and cloneable.</p>
+          </a>
+          <a href={`${base}/vault-starter/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Vault</div>
+            <h3 class="m-0 font-display text-lg leading-tight">Vault starter</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">PARA vs 7 other systems, project-as-entity, and a working vault to clone.</p>
+          </a>
+          <a href={`${base}/weekend-builds/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Recipes</div>
+            <h3 class="m-0 font-display text-lg leading-tight">Weekend builds</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Eight Saturday-ship recipes — plus the one that's a trap.</p>
+          </a>
+          <a href={`${base}/starter-skills/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Skills</div>
+            <h3 class="m-0 font-display text-lg leading-tight">Starter skills</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Six drop-in SKILL.md files to paste into ~/.claude and run today.</p>
+          </a>
+          <a href={`${base}/thirty-day-plan/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Roadmap</div>
+            <h3 class="m-0 font-display text-lg leading-tight">30-day plan</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">A day-by-day roadmap from clean machine to operator in a month.</p>
+          </a>
+          <a href={`${base}/sections/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">Index</div>
+            <h3 class="m-0 font-display text-lg leading-tight">Sections</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Every chapter grouped by theme — the table of contents, by topic.</p>
+          </a>
+          <a href={`${base}/about/`} class="card hover:border-flame no-underline" style="color: rgb(var(--fg))">
+            <div class="text-[0.65rem] uppercase tracking-[0.18em] mb-1.5" style="color: rgb(var(--accent))">About</div>
+            <h3 class="m-0 font-display text-lg leading-tight">About</h3>
+            <p class="mt-1.5 text-sm leading-snug" style="color: rgb(var(--muted))">Vlad, the portfolio, and the newsletter behind the Playbook.</p>
+          </a>
+        </div>
+      </div>
+    </details>
   </section>
 
   <CommandPaletteMount />
 </BaseLayout>
+
+<style>
+  /* The six parts as disclosures: same rule line and rhythm as the learning paths. */
+  .home-part { border-top: 1px solid rgb(var(--line)); }
+  .home-parts > li:last-child .home-part { border-bottom: 1px solid rgb(var(--line)); }
+  .home-part > summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 44px;
+    /* Inline padding with a matching negative margin keeps the text on the column edge
+       while giving the focus ring room on the left and right. */
+    padding: 1.5rem 0.5rem;
+    margin-inline: -0.5rem;
+    cursor: pointer;
+  }
+  /* Room under an open part's row so its cards do not paint over the focus ring. */
+  .home-part[open] > summary { margin-bottom: 0.75rem; }
+  .home-part > summary::-webkit-details-marker { display: none; }
+  .home-part > summary:focus-visible { outline: 2px solid rgb(var(--accent)); outline-offset: 2px; border-radius: 4px; }
+  .home-part > summary:hover .font-display { color: rgb(var(--accent)) !important; }
+  .home-part-text { flex: 1; min-width: 0; }
+  .home-part-count { white-space: nowrap; }
+  .home-part-chevron { width: 1.25rem; height: 1.25rem; flex-shrink: 0; color: rgb(var(--muted)); }
+  .home-part[open] .home-part-chevron { transform: rotate(180deg); }
+  @media (prefers-reduced-motion: no-preference) {
+    .home-part-chevron { transition: transform 150ms; }
+    .home-part > summary .font-display { transition: color 150ms; }
+  }
+  @media (max-width: 639px) {
+    .home-part-count { display: none; }
+  }
+  .home-more > summary {
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.625rem 1rem;
+    border: 1px solid rgb(var(--line));
+    border-radius: 0.375rem;
+    font-weight: 500;
+    color: rgb(var(--fg));
+    cursor: pointer;
+  }
+  .home-more > summary::-webkit-details-marker { display: none; }
+  .home-more > summary:hover { background: rgb(var(--line) / 0.4); }
+  .home-more > summary:focus-visible { outline: 2px solid rgb(var(--accent)); outline-offset: 2px; border-radius: 4px; }
+  .home-more[open] > summary .home-part-chevron { transform: rotate(180deg); }
+  .home-more[open] > summary { margin-bottom: 1.5rem; }
+  @media (prefers-reduced-motion: no-preference) {
+    .home-more > summary { transition: background-color 150ms; }
+  }
+</style>
