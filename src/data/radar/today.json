@@ -1,14 +1,14 @@
 {
-  "date": "2026-11-10",
-  "generated": "2026-11-10T23:37:32.051Z",
+  "date": "2026-11-11",
+  "generated": "2026-11-11T01:16:59.696Z",
   "count": 40,
   "stats": {
     "relevance": {
-      "demoted": 19
+      "demoted": 20
     },
     "feedsTotal": 78,
     "feedsLive": 67,
-    "itemsTracked": 16486,
+    "itemsTracked": 16510,
     "travellingFires": 21,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
@@ -16,36 +16,36 @@
     "byStage": {
       "Papers": 0,
       "Repos": 0,
-      "Community": 39,
-      "Analysis": 1
+      "Community": 38,
+      "Analysis": 2
     },
     "byTier": {
-      "Live Signal": 39,
-      "AI Firehose": 1
+      "AI Firehose": 2,
+      "Live Signal": 38
     },
     "flow": {
       "Papers": 370,
       "Repos": 11,
       "Community": 267,
-      "Analysis": 39
+      "Analysis": 28
     },
     "newToday": 40,
-    "heatingNow": 6,
+    "heatingNow": 5,
     "travelledNow": 0,
     "medianLeadHours": 104,
-    "freshestHours": 0.3,
-    "oldestSurvivorHours": 23.7,
+    "freshestHours": -22.7,
+    "oldestSurvivorHours": 25.3,
     "topDomains": [
       {
         "domain": "github.com",
-        "count": 9
+        "count": 10
       },
       {
         "domain": "lesswrong.com",
-        "count": 2
+        "count": 6
       },
       {
-        "domain": "vulncheck.com",
+        "domain": "openai.com",
         "count": 1
       }
     ]
@@ -110,6 +110,213 @@
   "items": [
     {
       "rank": 1,
+      "title": "Gilbert + Tobin rethinks the business of law with AI",
+      "url": "https://openai.com/index/gilbert-tobin-sam-nickless",
+      "domain": "openai.com",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Analysis",
+      "firstSource": "OpenAI News",
+      "sources": [
+        "OpenAI News"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": -22.7,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": false
+    },
+    {
+      "rank": 2,
+      "title": "Do verifiable metrics overestimate RSI?",
+      "url": "https://www.lesswrong.com/posts/7znBtiPuQybFLxjmj/do-verifiable-metrics-overestimate-rsi",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [
+        "25-evals-or-hope"
+      ],
+      "demoted": false
+    },
+    {
+      "rank": 3,
+      "title": "Characterizing secondary structure representation in ESM-2",
+      "url": "https://www.lesswrong.com/posts/BoBYFAbo9j8hJyKyn/characterizing-secondary-structure-representation-in-esm-2",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.4,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "research_paper",
+      "demoted": false
+    },
+    {
+      "rank": 4,
+      "title": "What Can AI Welfare Buy Without Consciousness?",
+      "url": "https://www.lesswrong.com/posts/D3WYRopEnodnM5CzF/what-can-ai-welfare-buy-without-consciousness",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.5,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "policy_or_safety",
+      "demoted": false
+    },
+    {
+      "rank": 5,
+      "title": "Show HN: Mimzie, an agent-neutral alternative to the Claude Suite/Claude Cowork",
+      "url": "https://mimzie.com/",
+      "domain": "mimzie.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.8,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "tooling_or_framework",
+      "demoted": false
+    },
+    {
+      "rank": 6,
+      "title": "Delaying Internal Deployments Until After X Days of Safety Testing",
+      "url": "https://www.lesswrong.com/posts/XNLhpWgzhF8GYZ4Er/delaying-internal-deployments-until-after-x-days-of-safety",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong",
+        "Alignment Forum"
+      ],
+      "nSources": 2,
+      "nFam": 1,
+      "ageHours": 1,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "policy_or_safety",
+      "demoted": false
+    },
+    {
+      "rank": 7,
+      "title": "Show HN: PeepNote – Local desktop notes for saving and reusing LLM responses",
+      "url": "https://github.com/OddlyGoods/peep-note",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "tooling_or_framework",
+      "demoted": false
+    },
+    {
+      "rank": 8,
+      "title": "Show HN: Socialize/Presence multiplayer interaction on blog posts",
+      "url": "https://namar0x0309.com/blog/2026/05/the-kind-of-ai-adoption-i-actually-believe-in",
+      "domain": "namar0x0309.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.9,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": false
+    },
+    {
+      "rank": 9,
+      "title": "Show HN: Codemm – your coding agent writes exercises, a sandbox rejects bad ones",
+      "url": "https://github.com/iignaite/Codemm",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.1,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "tooling_or_framework",
+      "demoted": false
+    },
+    {
+      "rank": 10,
       "title": "Show HN: Warmctl – Fast cold starts for vLLM inference",
       "url": "https://github.com/TensorRails/warmctl",
       "domain": "github.com",
@@ -122,7 +329,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.2,
+      "ageHours": 2.8,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -132,7 +339,7 @@
       "demoted": false
     },
     {
-      "rank": 2,
+      "rank": 11,
       "title": "After 7 Months, Glasswing Overwelms Maintainers with Underwhelming Findings",
       "url": "https://www.vulncheck.com/blog/anthropic-glasswing-november-update",
       "domain": "vulncheck.com",
@@ -145,7 +352,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.3,
+      "ageHours": 3,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -154,7 +361,7 @@
       "demoted": false
     },
     {
-      "rank": 3,
+      "rank": 12,
       "title": "Show HN: Movement breaks that only show up while Claude Code is working",
       "url": "https://github.com/mamrezme/30yr-uptime",
       "domain": "github.com",
@@ -167,7 +374,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.3,
+      "ageHours": 3,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -176,7 +383,7 @@
       "demoted": false
     },
     {
-      "rank": 4,
+      "rank": 13,
       "title": "Show HN: Tabichat chat demo, LLMs (with thinking) remain in their Pi harnesses",
       "url": "https://tabichat.dev/demo.html",
       "domain": "tabichat.dev",
@@ -189,7 +396,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.5,
+      "ageHours": 3.1,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -199,7 +406,7 @@
       "demoted": false
     },
     {
-      "rank": 5,
+      "rank": 14,
       "title": "Show HN: SketchUp compatible modeler with AI capabilities",
       "url": "https://pushform.io/",
       "domain": "pushform.io",
@@ -212,7 +419,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.5,
+      "ageHours": 3.1,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -222,7 +429,33 @@
       "demoted": false
     },
     {
-      "rank": 6,
+      "rank": 15,
+      "title": "Locating the source of a mysterious beep with Claude",
+      "url": "https://simonwillison.net/2026/Nov/9/mysterious-beeps",
+      "domain": "simonwillison.net",
+      "tier": 1,
+      "tierLabel": "AI Firehose",
+      "stage": "Analysis",
+      "firstSource": "Simon Willison",
+      "sources": [
+        "Simon Willison",
+        "Hacker News front",
+        "HN 200+ points",
+        "Hacker News best"
+      ],
+      "nSources": 4,
+      "nFam": 2,
+      "ageHours": 25.3,
+      "firstSeen": "2026-11-10T01:45:22.541Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "operator_practice",
+      "demoted": false
+    },
+    {
+      "rank": 16,
       "title": "The Manifund team scores AI safety milestones",
       "url": "https://www.lesswrong.com/posts/WfA3ffjEgQt4wx3xL/the-manifund-team-scores-ai-safety-milestones",
       "domain": "lesswrong.com",
@@ -235,7 +468,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.9,
+      "ageHours": 3.6,
       "firstSeen": "2026-11-10T22:15:32.657Z",
       "heating": false,
       "travelled": false,
@@ -245,7 +478,7 @@
       "demoted": false
     },
     {
-      "rank": 7,
+      "rank": 17,
       "title": "Show HN: CodeLens AI-Augmented Code Review Tool",
       "url": "https://github.com/blong8334/codeLens",
       "domain": "github.com",
@@ -258,7 +491,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2,
+      "ageHours": 3.7,
       "firstSeen": "2026-11-10T22:15:32.657Z",
       "heating": false,
       "travelled": false,
@@ -268,7 +501,7 @@
       "demoted": false
     },
     {
-      "rank": 8,
+      "rank": 18,
       "title": "Show HN: AI agents that barter your stuff for things you want",
       "url": "https://barterpilot.com/",
       "domain": "barterpilot.com",
@@ -281,7 +514,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2,
+      "ageHours": 3.7,
       "firstSeen": "2026-11-10T22:15:32.657Z",
       "heating": false,
       "travelled": false,
@@ -291,7 +524,7 @@
       "demoted": false
     },
     {
-      "rank": 9,
+      "rank": 19,
       "title": "Show HN: Notebook AI – local-first meeting notes for Mac",
       "url": "https://github.com/sridharchaildn/notebook-ai",
       "domain": "github.com",
@@ -304,7 +537,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
+      "ageHours": 3.8,
       "firstSeen": "2026-11-10T22:15:32.657Z",
       "heating": false,
       "travelled": false,
@@ -314,7 +547,7 @@
       "demoted": false
     },
     {
-      "rank": 10,
+      "rank": 20,
       "title": "Apple has new Mac app coming to make running local AI models easy",
       "url": "https://9to5mac.com/2026/11/10/apple-has-new-mac-app-coming-to-make-running-local-ai-models-easy",
       "domain": "9to5mac.com",
@@ -327,7 +560,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.2,
+      "ageHours": 3.9,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -337,260 +570,7 @@
       "demoted": false
     },
     {
-      "rank": 11,
-      "title": "Show HN: Tellable – For students: offline TTS that highlights every word in PDFs",
-      "url": "https://apps.apple.com/us/app/tellable-offline-read-aloud/id6822751387",
-      "domain": "apps.apple.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.3,
-      "firstSeen": "2026-11-10T22:15:32.657Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": false
-    },
-    {
-      "rank": 12,
-      "title": "Show HN: Aisync, advisory file claims so two AI agents don't edit one repo",
-      "url": "https://github.com/MaxonT/aisync",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.4,
-      "firstSeen": "2026-11-10T22:15:32.657Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "tooling_or_framework",
-      "demoted": false
-    },
-    {
-      "rank": 13,
-      "title": "Locating the source of a mysterious beep with Claude",
-      "url": "https://simonwillison.net/2026/Nov/9/mysterious-beeps",
-      "domain": "simonwillison.net",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Analysis",
-      "firstSource": "Simon Willison",
-      "sources": [
-        "Simon Willison",
-        "Hacker News front",
-        "HN 200+ points"
-      ],
-      "nSources": 3,
-      "nFam": 2,
-      "ageHours": 23.7,
-      "firstSeen": "2026-11-10T01:45:22.541Z",
-      "heating": true,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "operator_practice",
-      "demoted": false
-    },
-    {
-      "rank": 14,
-      "title": "Show HN: Cloakroom – Keeps secrets away from agents",
-      "url": "https://github.com/shanjeevrajendran/cloakroom",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [
-        "09-dont-get-owned"
-      ],
-      "topic": "tooling_or_framework",
-      "demoted": false
-    },
-    {
-      "rank": 15,
-      "title": "Show HN: why use many tools when one do trick",
-      "url": "https://docktopus.app/",
-      "domain": "docktopus.app",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.1,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "tooling_or_framework",
-      "demoted": false
-    },
-    {
-      "rank": 16,
-      "title": "Show HN: Graphon Labs now leads 7 benchmarks on Memory and raised $35M Series-A",
-      "url": "https://www.graphonlabs.ai/",
-      "domain": "graphonlabs.ai",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.3,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "business_or_market",
-      "demoted": false
-    },
-    {
-      "rank": 17,
-      "title": "Show HN: Zeus – Claude Code for AI voice agents",
-      "url": "https://thunderphone.com/blog/introducing-zeus",
-      "domain": "thunderphone.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.3,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "tooling_or_framework",
-      "demoted": false
-    },
-    {
-      "rank": 18,
-      "title": "We don’t understand whether GDM intentionally trains on CoT",
-      "url": "https://www.lesswrong.com/posts/JRYKFspYzCo97GqPN/we-don-t-understand-whether-gdm-intentionally-trains-on-cot",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.4,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": false
-    },
-    {
-      "rank": 19,
-      "title": "Show HN: Incremental Delta-Bar-Delta (Sutton's 1992 Rule) in Rust",
-      "url": "https://github.com/minikin/idbd",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.5,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "tooling_or_framework",
-      "demoted": false
-    },
-    {
-      "rank": 20,
-      "title": "Show HN: Dizata, Social Modelling and Reference Site",
-      "url": "https://dizata.com/d",
-      "domain": "dizata.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.6,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": false
-    },
-    {
       "rank": 21,
-      "title": "Searching for pedagogical materials on memory models",
-      "url": "https://lobste.rs/s/odnnzh/searching_for_pedagogical_materials_on",
-      "domain": "lobste.rs",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.8,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": false
-    },
-    {
-      "rank": 22,
       "title": "Large-Scale Measurement and Real-World Mitigation of Web Browser Fingerprinting in the Wild",
       "url": "https://fingerprinting.study/",
       "domain": "fingerprinting.study",
@@ -604,7 +584,7 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 4.6,
+      "ageHours": 6.2,
       "firstSeen": "2026-11-10T20:52:59.974Z",
       "heating": true,
       "travelled": false,
@@ -613,7 +593,139 @@
       "demoted": true
     },
     {
+      "rank": 22,
+      "title": "Show HN: FilmCraft – Free open-source video editor in Rust, like Premiere",
+      "url": "https://filmcraft.tech/",
+      "domain": "filmcraft.tech",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.1,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
       "rank": 23,
+      "title": "San Francisco Rationalist Dinner",
+      "url": "https://www.lesswrong.com/events/m96X8qoe5bpwCMDKk/san-francisco-rationalist-dinner-2",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.2,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 24,
+      "title": "Show HN: PDFMeasure – Measure PDF files in the browser",
+      "url": "https://pdfmeasure.com/",
+      "domain": "pdfmeasure.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.2,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 25,
+      "title": "30 years of Internet transfers with curl",
+      "url": "https://daniel.haxx.se/blog/2026/11/11/30-years-of-internet-transfers-with-curl",
+      "domain": "daniel.haxx.se",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.6,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 26,
+      "title": "The DRAM interface and the PHY (why a DDR3+ interface must be tuned at boot)",
+      "url": "https://github.com/enjoy-digital/litedram/blob/master/doc/manual/03_dram_interface.md",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.6,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 27,
+      "title": "Show HN: A map of skate parks and spots",
+      "url": "https://nollie.city/spots/LDN-5",
+      "domain": "nollie.city",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.8,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 28,
       "title": "What is Functional Programming?",
       "url": "https://www.youtube.com/watch?v=bQlH49krwbk",
       "domain": "youtube.com",
@@ -626,7 +738,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.3,
+      "ageHours": 1.9,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -635,7 +747,7 @@
       "demoted": true
     },
     {
-      "rank": 24,
+      "rank": 29,
       "title": "Synaptics patent claims stop work on DisplayLink drivers",
       "url": "https://lwn.net/SubscriberLink/1102549/acbc92e00cee3a3f",
       "domain": "lwn.net",
@@ -650,7 +762,7 @@
       ],
       "nSources": 3,
       "nFam": 2,
-      "ageHours": 6.7,
+      "ageHours": 8.3,
       "firstSeen": "2026-11-10T18:03:26.035Z",
       "heating": true,
       "travelled": false,
@@ -659,7 +771,7 @@
       "demoted": true
     },
     {
-      "rank": 25,
+      "rank": 30,
       "title": "Rendering in batches with glimmer and Datastar",
       "url": "https://yogthos.net/posts/2026-11-10-glimmer-datastar.html",
       "domain": "yogthos.net",
@@ -672,7 +784,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.7,
+      "ageHours": 2.4,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -681,7 +793,73 @@
       "demoted": true
     },
     {
-      "rank": 26,
+      "rank": 31,
+      "title": "Show HN: Python tool using torus math to audit duplex DNA against NCBI",
+      "url": "https://github.com/Dr-Logvinovich/codon-torus-syntax/blob/main/README.md",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.4,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 32,
+      "title": "Show HN: Python suite for spectral geometry analysis of 1.5M+ MPCORB orbits",
+      "url": "https://github.com/Dr-Logvinovich/IT3-Solar-System-Quantum-Architecture/blob/main/README.md",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.5,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 33,
+      "title": "Go Turns 17",
+      "url": "https://go.dev/blog/17years",
+      "domain": "go.dev",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.5,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 34,
       "title": ".name Grandfathered",
       "url": "https://neil.fraser.name/news/2026/11/10",
       "domain": "neil.fraser.name",
@@ -697,7 +875,7 @@
       ],
       "nSources": 4,
       "nFam": 2,
-      "ageHours": 7,
+      "ageHours": 8.7,
       "firstSeen": "2026-11-10T16:56:45.724Z",
       "heating": true,
       "travelled": false,
@@ -706,7 +884,7 @@
       "demoted": true
     },
     {
-      "rank": 27,
+      "rank": 35,
       "title": "Show HN: A Git friendly open API client",
       "url": "https://github.com/awake-client/awake",
       "domain": "github.com",
@@ -719,7 +897,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.2,
+      "ageHours": 2.9,
       "firstSeen": "2026-11-10T23:37:28.305Z",
       "heating": false,
       "travelled": false,
@@ -728,7 +906,29 @@
       "demoted": true
     },
     {
-      "rank": 28,
+      "rank": 36,
+      "title": "$30M Raised to Redo the CPU",
+      "url": "https://tendrils.co/blog/2026-11-10/30m-raised",
+      "domain": "tendrils.co",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3,
+      "firstSeen": "2026-11-11T01:16:52.464Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 37,
       "title": ".NET 11",
       "url": "https://devblogs.microsoft.com/dotnet/announcing-dotnet-11",
       "domain": "devblogs.microsoft.com",
@@ -742,7 +942,7 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 7.6,
+      "ageHours": 9.3,
       "firstSeen": "2026-11-10T16:56:45.724Z",
       "heating": true,
       "travelled": false,
@@ -751,7 +951,7 @@
       "demoted": true
     },
     {
-      "rank": 29,
+      "rank": 38,
       "title": "Finding a vulnerability in Star Wars Episode I: Racer",
       "url": "https://synacktiv.com/en/publications/star-wars-episode-i-racer",
       "domain": "synacktiv.com",
@@ -764,7 +964,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.7,
+      "ageHours": 3.3,
       "firstSeen": "2026-11-10T22:15:32.657Z",
       "heating": false,
       "travelled": false,
@@ -773,7 +973,7 @@
       "demoted": true
     },
     {
-      "rank": 30,
+      "rank": 39,
       "title": "rVPN – stealth VPN with end-to-end encryption",
       "url": "https://rvpn.org/",
       "domain": "rvpn.org",
@@ -786,7 +986,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.9,
+      "ageHours": 3.6,
       "firstSeen": "2026-11-10T22:15:32.657Z",
       "heating": false,
       "travelled": false,
@@ -795,7 +995,7 @@
       "demoted": true
     },
     {
-      "rank": 31,
+      "rank": 40,
       "title": "Show HN: Tinctile – hex grid color puzzle that you solve using counts",
       "url": "https://crossnum.com/tinctile",
       "domain": "crossnum.com",
@@ -808,208 +1008,8 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
+      "ageHours": 3.7,
       "firstSeen": "2026-11-10T22:15:32.657Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 32,
-      "title": "Six Math Essentials by Terence Tao",
-      "url": "https://teorth.github.io/tao-web/six-math-essentials.html",
-      "domain": "teorth.github.io",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.6,
-      "firstSeen": "2026-11-10T22:15:32.657Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 33,
-      "title": "Sherman Anti-Trust Act (1890",
-      "url": "https://www.archives.gov/milestone-documents/sherman-anti-trust-act",
-      "domain": "archives.gov",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.7,
-      "firstSeen": "2026-11-10T22:15:32.657Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 34,
-      "title": "Show HN: Sprites. A Calm, streak free habit tracker",
-      "url": "https://play.google.com/store/apps/details?id=net.retcurve.sprites&hl=en_US",
-      "domain": "play.google.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.8,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 35,
-      "title": "Show HN: A clean-room Red Alert 2: Yuri's Revenge engine remake (Rust,wgpu,WASM)",
-      "url": "https://github.com/egeozcan/glasnost",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.6,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 36,
-      "title": "Show HN: I pasted 16 form generators' output into a blank page – none send",
-      "url": "https://formgong.com/en/tools/html-form-generator",
-      "domain": "formgong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.6,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 37,
-      "title": "Toyota brand Scion is back and it's going to sell a kei truck in America",
-      "url": "https://www.theautopian.com/scion-is-back-and-its-going-to-sell-a-freaking-kei-truck-in-america",
-      "domain": "theautopian.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front",
-        "HN 200+ points"
-      ],
-      "nSources": 2,
-      "nFam": 1,
-      "ageHours": 3.8,
-      "firstSeen": "2026-11-10T22:15:32.657Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 38,
-      "title": "The Hardest Tarball?",
-      "url": "https://stoppels.ch/2026/11/07/the-hardest-tarball.html",
-      "domain": "stoppels.ch",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front",
-        "Lobsters"
-      ],
-      "nSources": 2,
-      "nFam": 2,
-      "ageHours": 9.8,
-      "firstSeen": "2026-11-10T16:56:45.724Z",
-      "heating": true,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 39,
-      "title": "Show HN: BuildBakery, cloud builds for iOS, Android, desktop from a YAML recipe",
-      "url": "https://buildbakery.com/",
-      "domain": "buildbakery.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.9,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 40,
-      "title": "Memory Safety Bugs in Rust Standard Library",
-      "url": "https://forge-blog.github.io/posts/rust-std-memory-safety",
-      "domain": "forge-blog.github.io",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.9,
-      "firstSeen": "2026-11-10T20:52:59.974Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
