@@ -1,0 +1,52 @@
+name: Package check (weekly — do the packages and servers the book names still exist?)
+
+# Report-only. scripts/check-config-packages.mjs asks the npm registry about every package a
+# config block or figure tells a reader to run, and pings every hosted server address. It
+# changes no page, opens no issue and posts nowhere: the job summary and the JSON artifact
+# are the whole report, and a red run is the signal. Kept out of the deploy workflow on
+# purpose, so a registry or vendor outage can never block a deploy; network trouble is
+# reported as "unknown" and never turns the run red.
+#
+# Safe to run late or twice: it only reads, and each run's artifact name carries its own
+# run id and attempt.
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: package-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '26'
+      # The script uses only Node built-ins, so no npm ci.
+      # Exit 0 = nothing broken, 1 = something missing, deprecated, archived or gone
+      # (fails the run), 2 = the check itself could not run (fails the run too).
+      - name: Check packages and server addresses
+        run: |
+          set +e
+          node scripts/check-config-packages.mjs --json package-check-report.json > package-check-summary.md
+          status=$?
+          set -e
+          cat package-check-summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -eq 2 ]; then echo "::error::the package check could not run (exit 2); see the log above"; fi
+          exit "$status"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-check-${{ github.run_id }}-${{ github.run_attempt }}
+          path: package-check-report.json
+          if-no-files-found: warn
+          retention-days: 30
