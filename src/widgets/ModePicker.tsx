@@ -114,7 +114,7 @@ function decide(cost: Cost, steps: Steps, awake: Awake) {
       mode: 'Auto (allow-list)',
       color: '#22D3A0',
       why: 'High-volume batch work in a safe environment. Use a tight --allowed-tools allow-list — bypass interactive gates, keep the cage tight.',
-      command: 'claude --allowed-tools "Bash(pytest*),Edit(src/**)" --dangerously-skip-permissions',
+      command: 'claude --allowed-tools "Bash(pytest*),Edit(src/**)" --permission-mode dontAsk',
     };
   }
   if (steps === 'mid' || cost === 'medium') {

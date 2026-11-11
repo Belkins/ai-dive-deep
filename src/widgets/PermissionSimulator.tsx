@@ -120,10 +120,10 @@ function computeRisks(env: Env, active: Set<string>): Surface[] {
   // Filesystem
   let fs: Risk = 'green', fsNote = 'Approval gates protect every Edit and Write.';
   if (env === 'laptop' && skip) { fs = 'red'; fsNote = 'Agent can rewrite anything in your home dir without asking.'; }
-  if (env === 'laptop' && skip && (allowList || denyEnv)) { fs = 'yellow'; fsNote = 'Allow-list/deny scopes some surface, but anything not denied is open.'; }
+  if (env === 'laptop' && skip && denyEnv) { fs = 'yellow'; fsNote = 'Deny rules still block; the allow-list does nothing under skip-permissions. Anything not denied is open.'; }
   if (env === 'sandbox' && skip) { fs = 'green'; fsNote = 'Container is the cage. Worst case: rebuild the container.'; }
-  if (env === 'ci' && skip && allowList) { fs = 'green'; fsNote = 'Tight allow-list inside ephemeral runner. Standard prod pattern.'; }
-  if (env === 'ci' && skip && !allowList) { fs = 'yellow'; fsNote = 'Skip + no allow-list in CI is sloppy but bounded — runner dies in minutes.'; }
+  if (env === 'ci' && !skip && allowList) { fs = 'green'; fsNote = 'Tight allow-list inside ephemeral runner. Standard prod pattern.'; }
+  if (env === 'ci' && skip) { fs = 'yellow'; fsNote = 'Skip-permissions in CI ignores the allow-list — sloppy but bounded, runner dies in minutes.'; }
   out.push({ label: 'Filesystem (mutating)', risk: fs, note: fsNote });
 
   // .env files
@@ -157,7 +157,7 @@ function computeRisks(env: Env, active: Set<string>): Surface[] {
     creds = skip ? 'red' : 'yellow';
     credsNote = skip ? 'Skip-permissions on a machine with prod creds = the worst-case combo.' : 'Approval gates help, but the creds are still sitting on disk.';
   }
-  if (env === 'ci') { creds = allowList ? 'green' : 'yellow'; credsNote = allowList ? 'Allow-list keeps the agent from touching anything outside its lane.' : 'Wide tool surface in CI with prod creds = audit risk.'; }
+  if (env === 'ci') { creds = allowList && !skip ? 'green' : 'yellow'; credsNote = allowList && !skip ? 'Allow-list keeps the agent from touching anything outside its lane.' : 'Wide tool surface in CI with prod creds = audit risk.'; }
   out.push({ label: 'Production credentials', risk: creds, note: credsNote });
 
   return out;

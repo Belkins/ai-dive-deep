@@ -111,10 +111,10 @@ In an interactive session, Claude asks before running tools. In CI, there's no o
 ```bash
 claude --print "..." \
   --allowed-tools "Bash(npm test*),Bash(npm run build*),Read,Grep,Edit(src/**)" \
-  --dangerously-skip-permissions
+  --permission-mode dontAsk
 ```
 
-`--allowed-tools` scopes what can run. `--dangerously-skip-permissions` skips the interactive prompt that would otherwise hang the job. The flag name is intentionally scary, and it should be — you only use it when you've already constrained what's possible via the allow-list, or when you're inside an ephemeral container that gets blown away the second the job ends.
+`--allowed-tools` scopes what can run. `--permission-mode dontAsk` denies anything else that would need approval. `--dangerously-skip-permissions` skips the prompts and ignores the allow-list. The flag name is intentionally scary, and it should be — you only use it when you're inside an ephemeral container that gets blown away the second the job ends.
 
 Rule of thumb: if your CI runner is a container that exits in 5 minutes, `--dangerously-skip-permissions` is fine. If it's a long-lived VM with access to production secrets, lock down `--allowed-tools` until it screams. See [Chapter 15](/chapters/15-permissions/) for the full permissions story.
 
