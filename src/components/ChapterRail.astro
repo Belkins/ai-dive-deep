@@ -1,0 +1,282 @@
+---
+// Desktop contents rail: the chapter's own H2 sections in the empty left margin, sticky while
+// the reader scrolls, with the section being read marked. It lists the same headings as the
+// "On this page" box (ChapterToc) and replaces that box from 1280 px up, where the margin has
+// room for it (260 px a side at 1280, 340 px at 1440). Below 1280 px it is not displayed and
+// the page is unchanged. It sits inside article.chapter-body (absolutely placed in the margin),
+// so it is in the first paint, never narrows the 760 px reading column and stops with the article.
+// Active-section tracking reads getBoundingClientRect().top on a rAF-throttled scroll listener,
+// the same method as ChapterToc (see its note on IntersectionObserver near the sticky header).
+//
+// Above the list the rail places the reader in the book: the chapter's part (linked to its place
+// on the journey page, as the chapter hero does) and its position inside that part, both read from
+// src/lib/chapters.ts. The list sits on a reading track: one hairline down the sections that fills
+// in terminal green to the reader's position, through the current section in proportion to how
+// much of it is behind the reader, so where you are and how far you are read as one line. Above it
+// (so a long list that scrolls inside the rail never hides it) a mono read-out gives the share of the chapter read (the same calculation as the top progress
+// bar) and the minutes left, from the chapter's own readingMinutes.
+import { PARTS } from '@/lib/chapters';
+interface Heading { depth: number; slug: string; text: string }
+interface Props { headings: Heading[]; slug: string; readingMinutes: number }
+const { headings, slug, readingMinutes } = Astro.props;
+const items = (headings ?? []).filter((h) => h.depth === 2);
+const part = PARTS.find((p) => p.slugs.includes(slug));
+const position = part ? part.slugs.indexOf(slug) + 1 : 0;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+{items.length >= 3 && (
+  <aside class="chapter-rail" data-chapter-rail>
+    <nav class="chapter-rail-nav" aria-label="On this page" data-reading-minutes={readingMinutes}>
+      {part && (
+        <div class="chapter-rail-place">
+          <a href={`${base}/journey/#part-${part.key.toLowerCase()}`} class="eyebrow chapter-rail-part no-underline" data-rail-part>{part.label}</a>
+          <div class="chapter-rail-position" data-rail-position>{position} of {part.slugs.length} in this part</div>
+        </div>
+      )}
+      <div class="chapter-rail-progress" data-rail-progress>{readingMinutes} min read</div>
+      <div class="eyebrow chapter-rail-title">On this page</div>
+      <div class="chapter-rail-scroll" data-rail-scroll>
+      <div class="chapter-rail-track">
+      <span class="chapter-rail-fill" aria-hidden="true" data-rail-fill></span>
+      <ol class="chapter-rail-list">
+        {items.map((s, i) => (
+          <li>
+            <a href={`#${s.slug}`} data-rail-link={s.slug} class="chapter-rail-link no-underline">
+              <span class="chapter-rail-num">{String(i + 1).padStart(2, '0')}</span>
+              <span>{s.text.replace(/\s*#+\s*$/, '')}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      </div>
+      </div>
+    </nav>
+  </aside>
+)}
+
+<style>
+  .chapter-rail { display: none; }
+  @media (min-width: 1280px) {
+    .chapter-rail {
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: calc(100% + 1.5rem);
+      width: 13.5rem;
+    }
+    /* The rail carries the same list, so the in-column box steps aside on desktop. */
+    :global(nav:has(> details.chapter-toc)) { display: none; }
+  }
+  @media (min-width: 1440px) {
+    .chapter-rail { right: calc(100% + 2.5rem); width: 15rem; }
+  }
+  .chapter-rail-nav {
+    position: sticky;
+    top: 6rem;
+    max-height: calc(100vh - 8rem);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.25rem;
+  }
+  .chapter-rail-place, .chapter-rail-progress, .chapter-rail-title { flex: none; }
+  /* On a long chapter (chapter 15: 14 sections) the list is taller than the window allows.
+     The part, position and read-out stay put above it and only the list scrolls. While rows
+     sit above or below the visible part of the list, its edge fades out (a mask built from the
+     page colour token; the script sets data-fade-top / data-fade-bottom), so a row cut at the
+     edge reads as "more below", not as the end of the list. The fade is a static switch, no
+     animation. scroll-padding keeps a keyboard-focused link clear of the fade. */
+  .chapter-rail-scroll {
+    flex: 1 1 auto;
+    min-height: 6rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-padding-block: 2rem 3rem;
+  }
+  .chapter-rail-scroll[data-fade-top='true'],
+  .chapter-rail-scroll[data-fade-bottom='true'] {
+    --rail-fade-top: 0rem;
+    --rail-fade-bottom: 0rem;
+    -webkit-mask-image: linear-gradient(to bottom, rgb(var(--bg) / 0), rgb(var(--bg)) var(--rail-fade-top), rgb(var(--bg)) calc(100% - var(--rail-fade-bottom)), rgb(var(--bg) / 0));
+    mask-image: linear-gradient(to bottom, rgb(var(--bg) / 0), rgb(var(--bg)) var(--rail-fade-top), rgb(var(--bg)) calc(100% - var(--rail-fade-bottom)), rgb(var(--bg) / 0));
+  }
+  .chapter-rail-scroll[data-fade-top='true'] { --rail-fade-top: 2rem; }
+  .chapter-rail-scroll[data-fade-bottom='true'] { --rail-fade-bottom: 3rem; }
+  .chapter-rail-title { margin: 0 0 0.75rem 0.75rem; }
+  .chapter-rail-place { margin: 0 0 0.25rem 0.75rem; }
+  .chapter-rail-part { display: inline-block; color: rgb(var(--accent)); line-height: 1.6; }
+  .chapter-rail-part:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .chapter-rail-position {
+    margin-top: 0.25rem;
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: rgb(var(--muted));
+  }
+  .chapter-rail-track { position: relative; }
+  .chapter-rail-list { list-style: none; margin: 0; padding: 0; }
+  .chapter-rail-track::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: rgb(var(--line));
+  }
+  .chapter-rail-list li { margin: 0; }
+  .chapter-rail-fill {
+    position: absolute;
+    left: 0; top: 0;
+    width: 2px;
+    height: 0;
+    background: rgb(var(--accent-2));
+    pointer-events: none;
+    z-index: 1;
+  }
+  .chapter-rail-progress {
+    margin: 0 0 1.5rem 0.75rem;
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: rgb(var(--muted));
+  }
+  .chapter-rail-link {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.4375rem 0.5rem 0.4375rem 0.75rem;
+    border-left: 2px solid transparent;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: rgb(var(--fg) / 0.75);
+    border-radius: 0 0.25rem 0.25rem 0;
+  }
+  .chapter-rail-num {
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    font-size: 0.7rem;
+    line-height: 1.45rem;
+    color: rgb(var(--muted));
+  }
+  .chapter-rail-link:hover {
+    color: rgb(var(--fg));
+    background: rgb(var(--accent-2) / 0.04);
+  }
+  .chapter-rail-link[data-active='true'] {
+    color: rgb(var(--accent-2));
+    background: rgb(var(--accent-2) / 0.08);
+    font-weight: 500;
+  }
+  .chapter-rail-link:focus-visible, .chapter-rail-part:focus-visible { outline-offset: -2px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .chapter-rail-link { transition: color 150ms, background-color 150ms, border-color 150ms; }
+  }
+  @media print { .chapter-rail { display: none !important; } }
+</style>
+
+<script>
+  import { calculateReadingProgress } from '@/lib/reading-progress';
+  let disposeRail: (() => void) | null = null;
+  function cleanupRail() {
+    disposeRail?.();
+    disposeRail = null;
+  }
+  function initRail() {
+    cleanupRail();
+    const nav = document.querySelector<HTMLElement>('[data-chapter-rail] nav');
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-chapter-rail] a[data-rail-link]'));
+    if (!nav || !links.length) return;
+    const heads = links
+      .map((a) => document.getElementById(a.dataset.railLink || ''))
+      .filter((el): el is HTMLElement => !!el);
+    if (!heads.length) return;
+    const fill = nav.querySelector<HTMLElement>('[data-rail-fill]');
+    const readout = nav.querySelector<HTMLElement>('[data-rail-progress]');
+    const article = nav.closest<HTMLElement>('article');
+    const minutes = Number(nav.dataset.readingMinutes) || 0;
+    const scroller = nav.querySelector<HTMLElement>('[data-rail-scroll]') || nav;
+    // Fade an edge of the list only while rows sit past it (see the CSS note).
+    const edges = () => {
+      const more = scroller.scrollHeight - scroller.clientHeight;
+      scroller.dataset.fadeTop = String(more > 1 && scroller.scrollTop > 1);
+      scroller.dataset.fadeBottom = String(more > 1 && scroller.scrollTop < more - 1);
+    };
+    let frame: number | null = null;
+    let lastId = '';
+    let lastText = '';
+    const track = () => {
+      if (!fill || !article) return;
+      const line = Math.max(130, window.innerHeight * 0.35);
+      const tops = heads.map((h) => h.getBoundingClientRect().top);
+      const end = article.getBoundingClientRect().bottom;
+      let i = -1;
+      for (let k = 0; k < tops.length; k++) { if (tops[k] <= line) i = k; else break; }
+      let px = 0;
+      if (i >= 0) {
+        const start = tops[i];
+        const stop = i + 1 < tops.length ? tops[i + 1] : end - window.innerHeight + line;
+        const f = stop > start ? Math.min(1, Math.max(0, (line - start) / (stop - start))) : 1;
+        const link = links[i];
+        px = link.offsetTop + f * link.offsetHeight;
+      }
+      fill.style.height = `${Math.round(px)}px`;
+      if (readout) {
+        const rect = article.getBoundingClientRect();
+        const pct = Math.round(calculateReadingProgress(rect.top, rect.height, window.innerHeight));
+        const left = Math.ceil(minutes * (1 - pct / 100));
+        const text = left > 0 ? `${pct}% read · about ${left} min left` : `${pct}% read`;
+        if (text !== lastText) { readout.textContent = text; lastText = text; }
+      }
+    };
+    const update = () => {
+      frame = null;
+      if (nav.offsetParent === null) return; // rail not displayed at this width
+      track();
+      edges();
+      // A section is the one being read once its heading is in the top third of the window
+      // (never less than the 130 px the in-column box uses, just under the sticky header).
+      const line = Math.max(130, window.innerHeight * 0.35);
+      let activeId = heads[0].id;
+      for (const h of heads) {
+        if (h.getBoundingClientRect().top <= line) activeId = h.id;
+        else break;
+      }
+      if (activeId === lastId) return;
+      lastId = activeId;
+      for (const a of links) {
+        const on = a.dataset.railLink === activeId;
+        if (on) {
+          a.setAttribute('data-active', 'true');
+          a.setAttribute('aria-current', 'location');
+          // keep the marked section inside a list that scrolls on its own, clear of the faded
+          // edges (never scrolls the page)
+          const top = a.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+          const bottom = top + a.offsetHeight;
+          const clearTop = scroller.scrollTop > 1 ? 32 : 0;
+          if (top < scroller.scrollTop + clearTop || bottom > scroller.scrollTop + scroller.clientHeight - 48) {
+            scroller.scrollTop = Math.max(0, top - scroller.clientHeight / 3);
+            edges();
+          }
+        } else {
+          a.removeAttribute('data-active');
+          a.removeAttribute('aria-current');
+        }
+      }
+    };
+    const schedule = () => { if (frame === null) frame = requestAnimationFrame(update); };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    scroller.addEventListener('scroll', edges, { passive: true });
+    disposeRail = () => {
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      scroller.removeEventListener('scroll', edges);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
+    update();
+  }
+  document.addEventListener('astro:page-load', initRail);
+  document.addEventListener('astro:before-swap', cleanupRail);
+  // This script ships as its own module file, which can run after the first astro:page-load has
+  // fired (a dark-theme shot showed the rail unmarked after scrolling); start it now as well.
+  // initRail tears down any earlier run first, so the second call on page-load is harmless.
+  initRail();
+</script>

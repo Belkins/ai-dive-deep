@@ -1,0 +1,128 @@
+---
+// A chapter code block with a copy button. The chapter page maps MDX's `pre` to this component,
+// so every fenced code block (Shiki output) arrives here with its own attributes and highlighted
+// lines; widgets that render their own <pre> are not touched. The button sits in a bar above the
+// code, never over it, in the look of the Resources page's CopyBlock (paper bar, mono 11px, ink
+// pill), with a 44 px tap target. The frame is in the server HTML, so nothing shifts when the
+// script arrives. One delegated click listener copies the block's text, flips the pill to
+// "Copied", announces the result through the shared live region, and on a refused clipboard
+// shows the shared failure message and selects the code so it can be copied by hand.
+//
+// The bar also names the block's language where the fence declares one (Shiki's data-language);
+// a bare fence (plaintext) or a declared `text` block shows no label.
+const props = Astro.props as Record<string, unknown>;
+const declared = typeof props['data-language'] === 'string' ? (props['data-language'] as string) : '';
+const lang = declared && declared !== 'plaintext' && declared !== 'text' ? declared : '';
+---
+<div class="code-frame" data-code-frame>
+  <div class="code-frame-bar">
+    {lang && <span class="code-frame-lang" data-code-lang>{lang}</span>}
+    <span class="code-frame-status" data-copy-status></span>
+    <button type="button" class="code-copy" data-copy-code>
+      <span class="code-copy-pill" data-copy-label>Copy</span><span class="sr-only"> code</span>
+    </button>
+  </div>
+  <pre {...props}><slot /></pre>
+</div>
+
+<style>
+  .code-frame {
+    margin: 1.5rem 0;
+    border: 1px solid rgb(var(--line));
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: rgb(var(--paper));
+  }
+  .code-frame :global(pre) { margin: 0; border: 0; border-radius: 0; }
+  .code-frame-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.25rem 0 1rem;
+    border-bottom: 1px solid rgb(var(--line));
+  }
+  .code-frame-lang {
+    flex: 1 1 auto;
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    color: rgb(var(--muted));
+  }
+  .code-frame-bar:has(.code-frame-status:not(:empty)) .code-frame-lang { display: none; }
+  .code-frame-status {
+    flex: 1 1 auto;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: rgb(var(--fg));
+  }
+  .code-frame-status:empty { display: none; }
+  .code-copy {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+  .code-copy:focus-visible { outline-offset: -4px; }
+  .code-copy-pill {
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    background: rgb(var(--fg));
+    color: rgb(var(--bg));
+  }
+  .code-copy:hover .code-copy-pill { background: rgb(var(--fg) / 0.9); }
+  .code-copy[data-state='copied'] .code-copy-pill { background: rgb(var(--accent-2)); color: rgb(var(--bg)); }
+  @media (prefers-reduced-motion: no-preference) {
+    .code-copy-pill { transition: background-color 150ms; }
+  }
+  @media print { .code-frame-bar { display: none; } .code-frame { border: 0; } }
+</style>
+
+<script>
+  import { copyText, copyMessage, copyLiveRegion, COPY_FAILURE_MESSAGE, COPY_FAILURE_MS } from '@/lib/copy-feedback';
+
+  const timers = new WeakMap<HTMLElement, number>();
+  document.addEventListener('click', async (event) => {
+    const button = (event.target as Element | null)?.closest<HTMLButtonElement>('[data-copy-code]');
+    if (!button) return;
+    const frame = button.closest<HTMLElement>('[data-code-frame]');
+    const code = frame?.querySelector('pre code') ?? frame?.querySelector('pre');
+    const label = button.querySelector<HTMLElement>('[data-copy-label]');
+    const status = frame?.querySelector<HTMLElement>('[data-copy-status]');
+    if (!frame || !code || !label) return;
+    const result = await copyText(code.textContent ?? '');
+    const region = copyLiveRegion();
+    region.textContent = '';
+    requestAnimationFrame(() => { region.textContent = copyMessage(result); });
+    window.clearTimeout(timers.get(frame));
+    if (result === 'copied') {
+      button.dataset.state = 'copied';
+      label.textContent = 'Copied';
+      if (status) status.textContent = '';
+    } else {
+      button.dataset.state = 'failed';
+      label.textContent = 'Copy';
+      if (status) status.textContent = COPY_FAILURE_MESSAGE;
+      const range = document.createRange();
+      range.selectNodeContents(code);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+    timers.set(frame, window.setTimeout(() => {
+      delete button.dataset.state;
+      label.textContent = 'Copy';
+      if (status) status.textContent = '';
+      region.textContent = '';
+    }, result === 'copied' ? 1500 : COPY_FAILURE_MS));
+  });
+</script>

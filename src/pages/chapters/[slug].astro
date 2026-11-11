@@ -4,6 +4,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import ChapterHero from '@/components/ChapterHero.astro';
 import TLDR from '@/components/TLDR.astro';
 import ChapterToc from '@/components/ChapterToc.astro';
+import ChapterRail from '@/components/ChapterRail.astro';
+import CodeFrame from '@/components/CodeFrame.astro';
 import ChapterFooter from '@/components/ChapterFooter.astro';
 import ProgressBar from '@/components/ProgressBar.astro';
 import ChapterNavigator from '@/components/ChapterNavigator.astro';
@@ -48,8 +50,9 @@ const ogImage = `/og/chapters/${data.slug}.png?v=${cardHash.slice(0, 8)}`;
 
   <ChapterToc headings={headings} concepts={data.keyConcepts ?? []} />
 
-  <article class="chapter-body container-prose pt-6 pb-12">
-    <Content />
+  <article class="chapter-body container-prose relative pt-6 pb-12">
+    <ChapterRail headings={headings} slug={data.slug} readingMinutes={data.readingMinutes} />
+    <Content components={{ pre: CodeFrame }} />
   </article>
 
   <OnTheRadar slug={data.slug} />
