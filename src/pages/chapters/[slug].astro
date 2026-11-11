@@ -6,6 +6,7 @@ import TLDR from '@/components/TLDR.astro';
 import ChapterToc from '@/components/ChapterToc.astro';
 import ChapterFooter from '@/components/ChapterFooter.astro';
 import ProgressBar from '@/components/ProgressBar.astro';
+import ChapterNavigator from '@/components/ChapterNavigator.astro';
 import VideoEmbed from '@/components/VideoEmbed.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import OnTheRadar from '@/components/OnTheRadar.astro';
@@ -21,6 +22,8 @@ const { chapter } = Astro.props as any;
 const { Content, headings } = await render(chapter);
 const data = chapter.data;
 const seoDescription = createChapterSeoDescription(data);
+// ChapterToc renders only with three or more H2s; then it also carries the key concepts on phones.
+const hasToc = headings.filter((h: { depth: number }) => h.depth === 2).length >= 3;
 // The chapter's own share card; ?v= changes when its inputs do, so a platform that cached the old
 // picture fetches the new one after a retitle.
 const cardHash = (ogCards as Record<string, string>)[data.slug];
@@ -30,6 +33,7 @@ const ogImage = `/og/chapters/${data.slug}.png?v=${cardHash.slice(0, 8)}`;
 
 <BaseLayout title={data.title} description={seoDescription} ogImage={ogImage}>
   <ProgressBar slug={data.slug} />
+  <ChapterNavigator slot="header-chapter" slug={data.slug} number={data.number} headings={headings} />
   <ChapterHero
     number={data.number}
     slug={data.slug}
@@ -37,11 +41,12 @@ const ogImage = `/og/chapters/${data.slug}.png?v=${cardHash.slice(0, 8)}`;
     subtitle={data.subtitle}
     readingMinutes={data.readingMinutes}
     keyConcepts={data.keyConcepts}
+    conceptsInToc={hasToc}
   />
 
   <TLDR text={data.tldr} />
 
-  <ChapterToc headings={headings} />
+  <ChapterToc headings={headings} concepts={data.keyConcepts ?? []} />
 
   <article class="chapter-body container-prose pt-6 pb-12">
     <Content />

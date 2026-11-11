@@ -4,18 +4,30 @@
 // Active-section tracking uses a rAF-throttled scroll listener reading
 // getBoundingClientRect().top — NOT IntersectionObserver, which fires too coarsely
 // near the sticky header on this site (see memory: scrollspy-scroll-listener-not-io).
+// Below 1024 px the box starts closed, a one-line bar, so the chapter's first paragraph
+// reaches the first phone screen; from 1024 px it opens as before (the inline script
+// below the box). On phones the chapter's key concepts sit at the top of the open box.
 interface Heading { depth: number; slug: string; text: string }
-interface Props { headings: Heading[] }
-const { headings } = Astro.props;
+interface Props { headings: Heading[]; concepts?: string[] }
+const { headings, concepts = [] } = Astro.props;
 const items = (headings ?? []).filter((h) => h.depth === 2);
 ---
 {items.length >= 3 && (
   <nav class="container-prose mt-6 mb-2" aria-label="On this page">
-    <details class="chapter-toc rounded-lg border" open style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
-      <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between select-none">
+    <details class="chapter-toc rounded-lg border" style="border-color: rgb(var(--line)); background: rgb(var(--paper))">
+      <summary class="cursor-pointer list-none px-4 py-3 min-h-[48px] flex items-center justify-between gap-3 select-none">
         <span class="text-xs uppercase tracking-[0.2em]" style="color: rgb(var(--muted))">On this page</span>
-        <span class="text-xs" style="color: rgb(var(--muted))">{items.length} sections</span>
+        <span class="flex items-center gap-2 text-xs" style="color: rgb(var(--muted))">
+          {items.length} sections
+          <svg class="toc-chevron h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </span>
       </summary>
+      {concepts.length > 0 && (
+        <div class="md:hidden px-4 pb-3 flex flex-wrap gap-2 items-center">
+          <span class="sr-only">Key concepts:</span>
+          {concepts.map((c) => <span class="pill">{c}</span>)}
+        </div>
+      )}
       <ol class="px-2 pb-3 mt-0 mb-0 list-none space-y-0.5 text-sm">
         {items.map((s, i) => (
           <li>
@@ -31,6 +43,9 @@ const items = (headings ?? []).filter((h) => h.depth === 2);
         ))}
       </ol>
     </details>
+    <script is:inline>
+      document.querySelectorAll('details.chapter-toc').forEach(function (d) { if (window.matchMedia('(min-width: 1024px)').matches) d.open = true; });
+    </script>
   </nav>
 )}
 
@@ -41,6 +56,12 @@ const items = (headings ?? []).filter((h) => h.depth === 2);
     color: rgb(var(--accent-2));
     background: rgb(var(--accent-2) / 0.1);
     font-weight: 500;
+  }
+  .chapter-toc summary::-webkit-details-marker { display: none; }
+  .chapter-toc summary:focus-visible { outline: 2px solid rgb(var(--accent)); outline-offset: 2px; border-radius: 0.5rem; }
+  .chapter-toc[open] .toc-chevron { transform: rotate(180deg); }
+  @media (prefers-reduced-motion: no-preference) {
+    .toc-chevron { transition: transform 150ms ease-out; }
   }
   :global(.chapter-body h2[id]) { scroll-margin-top: 6rem; }
 </style>

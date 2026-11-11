@@ -1,5 +1,8 @@
 ---
 import { getPart } from '@/lib/chapters';
+import { AUTHOR } from '@/lib/author';
+import chapterDatesJson from '@/data/chapter-dates.json';
+import Breadcrumb from '@/components/Breadcrumb.astro';
 interface Props {
   number: number;
   slug: string;
@@ -7,30 +10,42 @@ interface Props {
   subtitle: string;
   readingMinutes: number;
   keyConcepts?: string[];
+  /** The chapter's contents list holds the key concepts on phones, so the hero shows them from md up only. */
+  conceptsInToc?: boolean;
 }
-const { number, slug, title, subtitle, readingMinutes, keyConcepts = [] } = Astro.props;
+const { number, slug, title, subtitle, readingMinutes, keyConcepts = [], conceptsInToc = false } = Astro.props;
 const padded = String(number).padStart(2, '0');
 const part = getPart(slug);
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const crumbs = [{ label: "Vlad's Playbook", href: '/' }];
+if (part) crumbs.push({ label: part.label, href: `/journey/#part-${part.key.toLowerCase()}` });
+// Dates from the repo's git-derived file (scripts/gen-chapter-dates.py); a chapter with no entry shows no date.
+const dates = (chapterDatesJson as Record<string, { published?: string; modified?: string }>)[slug];
+// A fixed month table, so every month reads as three letters whatever ICU the build machine has
+// (current ICU writes 'Sept' for en-GB). iso is YYYY-MM-DD from chapter-dates.json.
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const fmt = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return `${d} ${MONTHS[m - 1]} ${y}`;
+};
+const published = dates?.published;
+const updated = dates?.modified && dates.modified !== published ? dates.modified : undefined;
 ---
-<header class="container-prose pt-16 md:pt-24 pb-10">
-  <div class="flex items-baseline gap-6">
+<header class="container-prose pt-10 md:pt-14 pb-10">
+  <Breadcrumb items={crumbs} />
+  <div class="mt-6 flex items-baseline gap-6">
     <div class="chapter-num">{padded}</div>
     <div>
       <div class="text-xs uppercase tracking-[0.2em] text-muted">Chapter {number} · {readingMinutes} min read</div>
-      {part && (
-        <a href={`${base}/journey/#part-${part.key.toLowerCase()}`} class="inline-flex items-center gap-1 text-[11px] uppercase tracking-wider mt-1 no-underline text-accent">
-          <span class="font-medium">{part.label}</span>
-          <span style="opacity: 0.6">·</span>
-          <span>see the journey →</span>
-        </a>
-      )}
+      <p data-byline class="mt-1.5 mb-0 text-xs leading-5 text-muted">
+        <span>By {AUTHOR.name}</span>{published && <> · <time datetime={published}>{fmt(published)}</time></>}
+        {updated && <><br class="md:hidden" /><span class="hidden md:inline"> · </span><span>Updated <time datetime={updated}>{fmt(updated)}</time></span></>}
+      </p>
     </div>
   </div>
   <h1 class="mt-6 max-w-[20ch]">{title}</h1>
   <p class="mt-3 text-lg md:text-xl max-w-[42ch] text-muted">{subtitle}</p>
   {keyConcepts.length > 0 && (
-    <div class="mt-6 flex flex-wrap gap-2 items-center">
+    <div class:list={['mt-6 flex-wrap gap-2 items-center', conceptsInToc ? 'hidden md:flex' : 'flex']}>
       {keyConcepts.map((c) => <span class="pill">{c}</span>)}
     </div>
   )}

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
+import Breadcrumb from '@/components/Breadcrumb.astro';
 import WorkflowPlanner from '@/widgets/WorkflowPlanner';
 import '@/styles/workflow-planner.css';
 
@@ -12,7 +13,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 >
   <article class="workflow-planner-page">
     <header class="container-wide wp-page-header wp-no-print">
-      <p class="wp-kicker">Vlad's Playbook / Planning tools</p>
+      <Breadcrumb class="wp-kicker" items={[{ label: "Vlad's Playbook", href: '/' }, { label: 'Planning tools' }]} />
       <h1>AI Workflow Planner</h1>
       <p class="wp-intro">Define the job, the evidence, and the point where a human must say yes.</p>
       <p class="wp-limits">A deterministic specification builder, not generative AI or an execution engine. No model is called, no workflow runs, and no acceptance test is performed.</p>

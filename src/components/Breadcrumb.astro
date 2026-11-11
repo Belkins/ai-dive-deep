@@ -1,0 +1,33 @@
+---
+// One visible breadcrumb for chapters and tool pages. Items are where the page sits, ending with the
+// level above the page (the page's own H1 names the page, so it is not repeated here). An item with
+// no href is a grouping that has no page of its own and shows as text.
+interface Crumb { label: string; href?: string }
+interface Props { items: Crumb[]; class?: string }
+const { items, class: className = '' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<nav aria-label="Breadcrumb" class:list={['crumbs', className]}>
+  <ol>
+    {items.map((c, i) => (
+      <li>
+        {i > 0 && <span class="crumbs-sep" aria-hidden="true">/</span>}
+        {c.href ? <a href={`${base}${c.href}`}>{c.label}</a> : <span class="crumbs-text">{c.label}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; margin: 0; padding: 0; list-style: none; font-size: 0.8125rem; line-height: 1.25rem; }
+  .crumbs li { display: inline-flex; align-items: center; min-width: 0; }
+  .crumbs-sep { padding: 0 0.5rem; color: rgb(var(--muted)); }
+  .crumbs-text { color: rgb(var(--muted)); }
+  /* The link keeps a 44 px tall hit area on phones without making the row taller: the padding
+     grows the box, the negative margin gives the same space back to the layout. */
+  .crumbs a {
+    display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px;
+    color: rgb(var(--accent)); text-decoration: none; text-underline-offset: 3px;
+  }
+  .crumbs a:hover { text-decoration-line: underline; }
+</style>

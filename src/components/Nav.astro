@@ -59,10 +59,14 @@ const mobileNav = [
 ---
 <header class="sticky top-0 z-40 backdrop-blur border-b" style="border-color: rgb(var(--line)); background: rgb(var(--bg) / 0.78);">
   <nav class="container-wide flex items-center justify-between h-14">
-    <a href={`${base}/`} class="flex items-center gap-2 group shrink-0" style="color: rgb(var(--fg))">
-      <span class="font-display text-lg tracking-tight font-medium whitespace-nowrap">Vlad's Playbook</span>
-      <span class="hidden xl:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">{edition}</span>
-    </a>
+    <div class="relative flex items-center self-stretch shrink-0">
+      <a href={`${base}/`} data-wordmark class="flex items-center gap-2 group shrink-0" style="color: rgb(var(--fg))">
+        <span class="font-display text-lg tracking-tight font-medium whitespace-nowrap">Vlad's Playbook</span>
+        <span class="hidden xl:inline text-xs px-1.5 py-0.5 rounded" style="background: rgb(var(--line)); color: rgb(var(--muted))">{edition}</span>
+      </a>
+      <!-- A chapter page puts its phone navigator here (ChapterNavigator, through BaseLayout). -->
+      <slot name="chapter" />
+    </div>
     <div class="flex items-center gap-0.5 sm:gap-1.5 min-w-0">
       <a href={`${base}/day-zero/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Start here</a>
       <a href={`${base}/library/`} class="hidden lg:inline-flex whitespace-nowrap text-sm px-2.5 py-2 rounded hover:bg-white/5 transition" style="color: rgb(var(--fg) / 0.85)">Library</a>
