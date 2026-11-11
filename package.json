@@ -14,6 +14,7 @@
     "lint:sections": "python3 scripts/check-section-ids.py",
     "lint:changelog": "python3 scripts/check-changelog.py",
     "lint:external": "python3 scripts/check-external-links.py",
+    "check:packages": "node scripts/check-config-packages.mjs",
     "check:seo": "node scripts/check-seo.mjs",
     "check:rendered-links": "node scripts/check-rendered-links.mjs",
     "check:targets": "python3 scripts/check-rendered-targets.py",

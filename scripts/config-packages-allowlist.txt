@@ -1,0 +1,10 @@
+# Placeholders for scripts/check-config-packages.mjs (npm run check:packages).
+#
+# One entry per line: the package name or server address exactly as the report prints it,
+# then "#" and one line saying why it is not a real package or address (a teaching name in
+# an example, say). Lines starting with "#" are comments.
+#
+#   @acme/mcp-server  # teaching name in the chapter 12 example, never meant to resolve
+#
+# An entry that no longer occurs in any scanned source fails the check: remove it then.
+# Never add a real package here to silence a 404; fix the page or file the finding.
