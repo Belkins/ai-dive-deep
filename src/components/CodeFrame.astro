@@ -90,6 +90,12 @@ const lang = declared && declared !== 'plaintext' && declared !== 'text' ? decla
 <script>
   import { copyText, copyMessage, copyLiveRegion, COPY_FAILURE_MESSAGE, COPY_FAILURE_MS } from '@/lib/copy-feedback';
 
+  // The live region is on the page before the first copy, so a screen reader has registered it by the
+  // time its text changes. The router swaps the body on a navigation, so each page gets its own.
+  const ensureCopyRegion = () => { if (document.querySelector('[data-code-frame]')) copyLiveRegion(); };
+  ensureCopyRegion();
+  document.addEventListener('astro:page-load', ensureCopyRegion);
+
   const timers = new WeakMap<HTMLElement, number>();
   document.addEventListener('click', async (event) => {
     const button = (event.target as Element | null)?.closest<HTMLButtonElement>('[data-copy-code]');
