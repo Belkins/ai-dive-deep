@@ -102,6 +102,13 @@ const hasContents = items.length >= 3;
     .chnav { max-width: calc(100vw - 3rem - 6.25rem); }
     :global(header[data-chnav="on"] [data-theme-toggle]) { display: none; }
   }
+  /* 640 to 719 px: the header shows "Start here" from 640 px, and for a reader with chapters read the
+     progress pill pushes that link against the next-chapter arrow, where their tap areas overlap. A reader
+     inside a chapter is past the start, so the link steps out while the navigator shows (it is back at the
+     chapter title, and the full menu lists it). */
+  @media (min-width: 640px) and (max-width: 719px) {
+    :global(header[data-chnav="on"] [data-start-link]) { display: none; }
+  }
   /* Fixed, so it spans the header and not the wordmark slot; the header's backdrop filter makes the header
      its containing block, and in the reading state the header sits at the top of the viewport either way. */
   .chnav-panel { position: fixed; left: 0; right: 0; top: 3.5rem; padding-bottom: 1rem; }
