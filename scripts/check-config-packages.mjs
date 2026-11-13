@@ -25,8 +25,10 @@
 //   package  missing (registry 404) | deprecated (latest version's `deprecated` field) |
 //            archived (registry names a GitHub repository whose public API says archived;
 //            best effort, never a failure when GitHub rate-limits) | fine
-//   address  gone (DNS name not found, 404, 410) | alive (2xx, 3xx, 401, 403, 405)
-//   Network trouble (timeout, 429, 5xx, other errors) is `unknown`, listed apart, never broken.
+//   address  gone (DNS name not found, 404, 410) | alive (2xx, 3xx, and any other 4xx: a
+//            server that refuses a bare GET with 400, 401, 403 or 405 still exists)
+//   Network trouble (timeout, 408, 425, 429, 5xx, other errors) is `unknown`, listed apart,
+//   never broken.
 //
 // Allowlist: scripts/config-packages-allowlist.txt, one `name  # reason` per line, for
 // teaching placeholders. An entry that no longer occurs in the sources fails the check.
@@ -451,8 +453,10 @@ export async function classifyAddress(url, { fetchImpl = fetch } = {}) {
   const s = res.status;
   try { await res.body?.cancel?.(); } catch { /* nothing to drain */ }
   if (s === 404 || s === 410) return { status: 'gone', http: s, reason: `server answered ${s}` };
-  if ((s >= 200 && s < 400) || s === 401 || s === 403 || s === 405) {
-    return { status: 'alive', http: s, reason: s >= 400 ? `server answered ${s} (asks for sign-in or another method)` : `server answered ${s}` };
+  // A server that refuses the request (400, 401, 403, 405, 415) still exists: a bare GET is
+  // not how an MCP client talks to it. Only "try later" answers and server errors stay unknown.
+  if (s < 500 && s !== 408 && s !== 425 && s !== 429) {
+    return { status: 'alive', http: s, reason: s >= 400 ? `server answered ${s} (it exists; it wants a sign-in or another kind of request)` : `server answered ${s}` };
   }
   return { status: 'unknown', http: s, reason: `server answered ${s}` };
 }

@@ -195,16 +195,18 @@ test('a package whose GitHub repository is archived is archived', async () => {
   assert.equal(zod.status, 'archived');
 });
 
-test('a server address is gone on DNS failure, 404 or 410; alive on 2xx, 3xx, 401, 403, 405; unknown on network trouble', async () => {
+test('a server address is gone on DNS failure, 404 or 410; alive on 2xx, 3xx and a 4xx that only refuses the request; unknown on network trouble', async () => {
   const timeout = Object.assign(new Error('The operation was aborted due to timeout'), { name: 'TimeoutError' });
   const { impl } = stubNetwork({
     hosts: { 'ok.test': 200, 'moved.test': 301, 'signin.test': 401, 'forbidden.test': 403, 'method.test': 405,
-      'gone404.test': 404, 'gone410.test': 410, 'busy.test': 429, 'down.test': 503, 'slow.test': timeout },
+      // A hosted MCP endpoint answers a bare GET with 400 or 415: it exists, it wants a POST.
+      'badrequest.test': 400, 'mediatype.test': 415,
+      'gone404.test': 404, 'gone410.test': 410, 'busy.test': 429, 'early.test': 425, 'waited.test': 408, 'down.test': 503, 'slow.test': timeout },
   });
   const status = async (host) => (await classifyAddress(`https://${host}/mcp`, { fetchImpl: impl })).status;
-  for (const host of ['ok.test', 'moved.test', 'signin.test', 'forbidden.test', 'method.test']) assert.equal(await status(host), 'alive', host);
+  for (const host of ['ok.test', 'moved.test', 'signin.test', 'forbidden.test', 'method.test', 'badrequest.test', 'mediatype.test']) assert.equal(await status(host), 'alive', host);
   for (const host of ['gone404.test', 'gone410.test', 'no-such-name.test']) assert.equal(await status(host), 'gone', host);
-  for (const host of ['busy.test', 'down.test', 'slow.test']) assert.equal(await status(host), 'unknown', host);
+  for (const host of ['busy.test', 'early.test', 'waited.test', 'down.test', 'slow.test']) assert.equal(await status(host), 'unknown', host);
 });
 
 test('registry trouble (429, 5xx, timeout) is unknown, not missing', async () => {
