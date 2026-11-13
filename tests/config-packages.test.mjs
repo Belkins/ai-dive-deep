@@ -115,27 +115,32 @@ test('hosted server addresses in config blocks and claude mcp add commands are f
 // Fixtures recorded from the real registry on 11 Nov 2026 with this script's own request
 // (GET /<name>/latest): @stripe/mcp-server (404), @modelcontextprotocol/server-slack
 // (deprecated), zod (healthy). github-repo-archived.json is the real API answer for
-// modelcontextprotocol/servers-archived, trimmed to five fields.
+// modelcontextprotocol/servers-archived, trimmed to five fields; github-repo-live.json is the
+// same five fields of the real answer for colinhacks/zod, recorded on 13 Nov 2026.
 
 const fixture = (name) => readFileSync(new URL(`./fixtures/npm-registry/${name}`, import.meta.url), 'utf8');
 const REGISTRY_DOCS = {
   '/@modelcontextprotocol%2Fserver-slack/latest': fixture('deprecated-latest.json'),
   '/zod/latest': fixture('healthy-latest.json'),
+  // Made up, not recorded: a package document with no `latest` tag (the registry rarely holds one).
+  '/no-latest-tag': '{"name":"no-latest-tag","dist-tags":{},"versions":{}}',
 };
 
 /**
  * A stand-in for the network that refuses what the real services refuse: an unknown
  * package gets the registry's real 404 body, unauthenticated GitHub answers 403 unless a
  * repository is given, and an unknown host fails DNS. Every request must carry a generic
- * User-Agent.
+ * User-Agent. `sent` keeps each request's host and its Authorization header, if any.
  */
 function stubNetwork({ github = {}, hosts = {} } = {}) {
   const calls = [];
   const agents = [];
+  const sent = [];
   const impl = async (url, init) => {
     calls.push(url);
     agents.push(init?.headers?.['User-Agent'] ?? '');
     const u = new URL(url);
+    sent.push({ host: u.hostname, authorization: init?.headers?.Authorization ?? null });
     if (u.hostname === 'registry.npmjs.org') {
       const body = REGISTRY_DOCS[u.pathname];
       return body ? new Response(body, { status: 200 }) : new Response(fixture('missing-404.json'), { status: 404 });
@@ -152,9 +157,10 @@ function stubNetwork({ github = {}, hosts = {} } = {}) {
     }
     throw new TypeError('fetch failed', { cause: Object.assign(new Error('getaddrinfo ENOTFOUND'), { code: 'ENOTFOUND' }) });
   };
-  return { impl, calls, agents };
+  return { impl, calls, agents, sent };
 }
 const noPause = async () => {};
+const netError = (code) => new TypeError('fetch failed', { cause: Object.assign(new Error(code), { code }) });
 
 test('every request carries a generic User-Agent, with no person, address or project in it', async () => {
   const { impl, agents } = stubNetwork({ hosts: { 'ok.test': 200 } });
@@ -195,18 +201,49 @@ test('a package whose GitHub repository is archived is archived', async () => {
   assert.equal(zod.status, 'archived');
 });
 
+test('a package whose GitHub repository is live is fine, and the archived check says it ran', async () => {
+  // The everyday answer for a healthy package: without this, "every repository is archived" passes.
+  const { impl } = stubNetwork({ github: { 'colinhacks/zod': fixture('github-repo-live.json') } });
+  const zod = await classifyPackage('zod', { fetchImpl: impl, pause: noPause });
+  assert.equal(zod.status, 'fine');
+  assert.equal(zod.archivedCheck, 'not archived');
+});
+
+test('a package that exists but has no latest version is unknown, not missing', async () => {
+  const { impl } = stubNetwork();
+  const v = await classifyPackage('no-latest-tag', { fetchImpl: impl, pause: noPause });
+  assert.equal(v.status, 'unknown');
+  assert.match(v.reason, /no latest version/);
+});
+
+test('the GitHub token signs the archived check and reaches no other host', async (t) => {
+  const page = '<code>npm i zod</code>\n<code>npx -y @stripe/mcp-server</code>\n{ "mcpServers": { "x": { "type": "http", "url": "https://ok.test/mcp" } } }';
+  const root = siteRoot(t, { 'src/pages/a.astro': page });
+  const live = { github: { 'colinhacks/zod': fixture('github-repo-live.json') }, hosts: { 'ok.test': 200 } };
+  const signed = stubNetwork(live);
+  await run({ root, fetchImpl: signed.impl, pause: noPause, githubToken: 'test-token' });
+  assert.deepEqual([...new Set(signed.sent.map((c) => c.host))].sort(), ['api.github.com', 'ok.test', 'registry.npmjs.org']);
+  assert.deepEqual(signed.sent.filter((c) => c.authorization), [{ host: 'api.github.com', authorization: 'Bearer test-token' }]);
+  // Without a token no request is signed.
+  const anonymous = stubNetwork(live);
+  await run({ root, fetchImpl: anonymous.impl, pause: noPause });
+  assert.deepEqual(anonymous.sent.filter((c) => c.authorization), []);
+});
+
 test('a server address is gone on DNS failure, 404 or 410; alive on 2xx, 3xx and a 4xx that only refuses the request; unknown on network trouble', async () => {
   const timeout = Object.assign(new Error('The operation was aborted due to timeout'), { name: 'TimeoutError' });
   const { impl } = stubNetwork({
     hosts: { 'ok.test': 200, 'moved.test': 301, 'signin.test': 401, 'forbidden.test': 403, 'method.test': 405,
       // A hosted MCP endpoint answers a bare GET with 400 or 415: it exists, it wants a POST.
       'badrequest.test': 400, 'mediatype.test': 415,
-      'gone404.test': 404, 'gone410.test': 410, 'busy.test': 429, 'early.test': 425, 'waited.test': 408, 'down.test': 503, 'slow.test': timeout },
+      'gone404.test': 404, 'gone410.test': 410, 'busy.test': 429, 'early.test': 425, 'waited.test': 408, 'down.test': 503, 'slow.test': timeout,
+      // Only "no such name" means gone: a resolver that asks to retry, or a refused connection, is trouble on the way.
+      'dnsretry.test': netError('EAI_AGAIN'), 'refused.test': netError('ECONNREFUSED') },
   });
   const status = async (host) => (await classifyAddress(`https://${host}/mcp`, { fetchImpl: impl })).status;
   for (const host of ['ok.test', 'moved.test', 'signin.test', 'forbidden.test', 'method.test', 'badrequest.test', 'mediatype.test']) assert.equal(await status(host), 'alive', host);
   for (const host of ['gone404.test', 'gone410.test', 'no-such-name.test']) assert.equal(await status(host), 'gone', host);
-  for (const host of ['busy.test', 'early.test', 'waited.test', 'down.test', 'slow.test']) assert.equal(await status(host), 'unknown', host);
+  for (const host of ['busy.test', 'early.test', 'waited.test', 'down.test', 'slow.test', 'dnsretry.test', 'refused.test']) assert.equal(await status(host), 'unknown', host);
 });
 
 test('registry trouble (429, 5xx, timeout) is unknown, not missing', async () => {
@@ -247,13 +284,39 @@ test('the run exits 1 on a missing package and lists it with file and line', asy
   assert.equal(report.scanned.perType['.astro'].packages, 1);
 });
 
-test('network trouble alone leaves the run green and lists the unknowns apart', async (t) => {
-  const root = siteRoot(t, { 'src/pages/a.astro': '<code>npx -y zod</code>' });
-  const down = async () => new Response('', { status: 503 });
-  const { code, report } = await run({ root, fetchImpl: down, pause: noPause });
+test('one-off network trouble leaves the run green and lists the unknowns apart', async (t) => {
+  const root = siteRoot(t, { 'src/pages/a.astro': '<code>npm i zod left-pad</code>' });
+  const net = stubNetwork();
+  // The registry answers for zod and is down for left-pad.
+  const flaky = async (url, init) => (url.includes('/left-pad') ? new Response('', { status: 503 }) : net.impl(url, init));
+  const { code, report, summary } = await run({ root, fetchImpl: flaky, pause: noPause });
   assert.equal(code, 0);
   assert.equal(report.broken.length, 0);
-  assert.deepEqual(report.unknown.map((u) => u.name), ['zod']);
+  assert.deepEqual(report.unknown.map((u) => u.name), ['left-pad']);
+  assert.match(summary, /### Unknown: network trouble, not counted as broken \(1\)/);
+});
+
+test('a registry that answers for no package exits 2: nothing was checked', async (t) => {
+  // A blocked client or an outage must not read as a clean week.
+  const root = siteRoot(t, { 'src/pages/a.astro': '<code>npm i zod left-pad</code>' });
+  const down = async () => new Response('', { status: 503 });
+  const { code, report, summary } = await run({ root, fetchImpl: down, pause: noPause });
+  assert.equal(code, 2);
+  assert.equal(report.broken.length, 0);
+  assert.match(report.problems.join('\n'), /answered for none of the 2 packages/);
+  assert.match(summary, /\*\*Could not run:\*\*/);
+  assert.doesNotMatch(summary, /Nothing broken\./);
+});
+
+test('an archived check GitHub did not answer is listed in the summary, not passed over', async (t) => {
+  const root = siteRoot(t, { 'src/pages/a.astro': '<code>npm i zod</code>' });
+  const limited = await run({ root, fetchImpl: stubNetwork().impl, pause: noPause });
+  assert.equal(limited.code, 0);
+  assert.equal(limited.report.counts.archivedCheckSkipped, 1);
+  assert.match(limited.summary, /### Archived check skipped \(1\)\n[^\n]+\n- `zod` \(colinhacks\/zod\): GitHub answered 403 \(rate limit\)/);
+  const answered = await run({ root, fetchImpl: stubNetwork({ github: { 'colinhacks/zod': fixture('github-repo-live.json') } }).impl, pause: noPause });
+  assert.equal(answered.report.counts.archivedCheckSkipped, 0);
+  assert.doesNotMatch(answered.summary, /Archived check skipped/);
 });
 
 test('an allowlisted teaching name passes, and an allowlist entry no longer in the sources fails the run', async (t) => {
@@ -288,12 +351,20 @@ test('the weekly workflow only reads, and the check stays out of prebuild, build
   const wf = parse(readFileSync(new URL('../.github/workflows/package-check.yml', import.meta.url), 'utf8'));
   assert.ok(wf.on.schedule?.[0]?.cron, 'no weekly cron');
   assert.ok('workflow_dispatch' in wf.on);
-  assert.deepEqual(wf.permissions, { contents: 'read' });
+  // The top level and every job: nothing but read. A job's own permissions block replaces the top one.
+  const grants = [wf.permissions, ...Object.values(wf.jobs).map((job) => job.permissions).filter((p) => p !== undefined)];
+  for (const grant of grants) assert.deepEqual(grant, { contents: 'read' });
   const steps = wf.jobs.check.steps;
   assert.ok(steps.some((s) => s.uses === 'actions/checkout@v5'));
   assert.equal(steps.find((s) => s.uses?.startsWith('actions/setup-node@'))?.with?.['node-version'], '26');
   assert.ok(steps.some((s) => /check-config-packages\.mjs/.test(s.run ?? '') && /GITHUB_STEP_SUMMARY/.test(s.run)));
-  assert.ok(!JSON.stringify(wf).match(/issues: write|gh issue|curl|slack/i), 'the workflow posts somewhere');
+  const commands = Object.values(wf.jobs).flatMap((job) => job.steps).map((s) => s.run ?? '').join('\n');
+  assert.doesNotMatch(commands, /\bgh (?:issue|pr|api|release)\b|\bcurl\b|\bwget\b|slack/i, 'the workflow posts somewhere');
+  // The run's own token reaches the check step alone, and no stored secret is read.
+  const text = readFileSync(new URL('../.github/workflows/package-check.yml', import.meta.url), 'utf8');
+  assert.equal(text.split('github.token').length - 1, 1);
+  assert.doesNotMatch(text, /secrets\./);
+  assert.equal(steps.find((s) => /check-config-packages\.mjs/.test(s.run ?? '')).env.GITHUB_TOKEN, '${{ github.token }}');
 
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   for (const script of ['prebuild', 'predev', 'build', 'postbuild']) {

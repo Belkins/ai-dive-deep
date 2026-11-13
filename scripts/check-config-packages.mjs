@@ -28,17 +28,26 @@
 //   address  gone (DNS name not found, 404, 410) | alive (2xx, 3xx, and any other 4xx: a
 //            server that refuses a bare GET with 400, 401, 403 or 405 still exists)
 //   Network trouble (timeout, 408, 425, 429, 5xx, other errors) is `unknown`, listed apart,
-//   never broken.
+//   never broken. A run in which the registry answers for no package at all checked nothing,
+//   and exits 2. An archived check GitHub did not answer is listed in the summary, so a
+//   skipped check is never read as a passed one.
+//
+// Not covered: PyPI (`pip install`), container images (`docker run`) and Homebrew, since npm
+// is the one registry this script asks; and a runner written with its path
+// (`/usr/local/bin/npx tsx`), which is not read as a command.
 //
 // Allowlist: scripts/config-packages-allowlist.txt, one `name  # reason` per line, for
 // teaching placeholders. An entry that no longer occurs in the sources fails the check.
 //
 // Exit: 0 nothing broken (unknowns allowed) · 1 something missing, deprecated, archived,
-// gone, or a stale allowlist entry · 2 the check could not run (no candidates found,
-// malformed allowlist, crash).
+// gone, or a stale allowlist entry · 2 the check could not run (no candidates found, the
+// registry answered for no package, malformed allowlist, crash).
 //
 // Usage: node scripts/check-config-packages.mjs [--json report.json] [--root DIR] [--offline]
 //   The readable summary (Markdown) goes to stdout. --offline extracts only (no network).
+//   With GITHUB_TOKEN in the environment the archived check signs its requests to
+//   api.github.com, and to no other host: anonymous calls from shared runner addresses are
+//   rate-limited.
 
 import { readFileSync, readdirSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import { join, extname, resolve } from 'node:path';
@@ -351,11 +360,11 @@ export function parseAllowlist(text) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function get(fetchImpl, url, accept) {
+async function get(fetchImpl, url, accept, extraHeaders = {}) {
   return fetchImpl(url, {
     method: 'GET',
     redirect: 'manual',
-    headers: { 'User-Agent': USER_AGENT, Accept: accept },
+    headers: { 'User-Agent': USER_AGENT, Accept: accept, ...extraHeaders },
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
 }
@@ -379,7 +388,7 @@ export function githubRepo(repository) {
  * Ask the registry about one package; best-effort archived check on GitHub.
  * status: missing | deprecated | archived | fine | unknown
  */
-export async function classifyPackage(name, { fetchImpl = fetch, githubCache = new Map(), pause = sleep } = {}) {
+export async function classifyPackage(name, { fetchImpl = fetch, githubCache = new Map(), pause = sleep, githubToken = '' } = {}) {
   const enc = name.replace('/', '%2F');
   let res;
   try {
@@ -419,7 +428,9 @@ export async function classifyPackage(name, { fetchImpl = fetch, githubCache = n
     await pause(SPACING_MS);
     let verdict;
     try {
-      const gh = await get(fetchImpl, `${GITHUB_API}${repo}`, 'application/vnd.github+json');
+      // The token goes to api.github.com alone: the address is built here and redirects are not followed.
+      const auth = githubToken ? { Authorization: `Bearer ${githubToken}` } : {};
+      const gh = await get(fetchImpl, `${GITHUB_API}${repo}`, 'application/vnd.github+json', auth);
       if (gh.ok) {
         const body = await gh.json();
         verdict = body.archived === true ? 'archived' : 'not archived';
@@ -466,7 +477,7 @@ export async function classifyAddress(url, { fetchImpl = fetch } = {}) {
 const BROKEN = new Set(['missing', 'deprecated', 'archived', 'gone']);
 
 /** Run the whole check. Returns { code, report, summary }. Never throws for network trouble. */
-export async function run({ root, fetchImpl = fetch, offline = false, pause = sleep, now = new Date() } = {}) {
+export async function run({ root, fetchImpl = fetch, offline = false, pause = sleep, now = new Date(), githubToken = '' } = {}) {
   const { files, candidates, perType } = scan(root);
   const allowPath = join(root, ALLOWLIST);
   const allow = existsSync(allowPath) ? parseAllowlist(readFileSync(allowPath, 'utf8')) : new Map();
@@ -492,7 +503,7 @@ export async function run({ root, fetchImpl = fetch, offline = false, pause = sl
       continue;
     }
     const verdict = item.kind === 'package'
-      ? await classifyPackage(item.name, { fetchImpl, githubCache, pause })
+      ? await classifyPackage(item.name, { fetchImpl, githubCache, pause, githubToken })
       : await classifyAddress(item.name, { fetchImpl });
     Object.assign(item, verdict);
     await pause(SPACING_MS);
@@ -501,11 +512,19 @@ export async function run({ root, fetchImpl = fetch, offline = false, pause = sl
   const packageCount = items.filter((i) => i.kind === 'package').length;
   const broken = items.filter((i) => BROKEN.has(i.status));
   const unknown = items.filter((i) => i.status === 'unknown');
+  const archivedSkipped = items.filter((i) => typeof i.archivedCheck === 'string' && i.archivedCheck.startsWith('skipped'));
   let code = broken.length || staleAllowlist.length ? 1 : 0;
   const problems = [];
   if (packageCount === 0) {
     code = 2;
     problems.push('the scan found no package at all: the scanned folders or the extractor broke');
+  }
+  // One-off network trouble stays green. A registry that answers for nothing means nothing was
+  // checked, and a green run would hide that week after week.
+  const asked = items.filter((i) => i.kind === 'package' && i.status !== 'allowlisted' && i.status !== 'not checked');
+  if (asked.length && asked.every((i) => i.status === 'unknown')) {
+    code = 2;
+    problems.push(`the npm registry answered for none of the ${asked.length} packages asked about (an outage, or the registry refuses this client), so nothing was checked`);
   }
   const report = {
     checkedAt: now.toISOString(),
@@ -516,6 +535,7 @@ export async function run({ root, fetchImpl = fetch, offline = false, pause = sl
       uniqueAddresses: items.length - packageCount,
       broken: broken.length,
       unknown: unknown.length,
+      archivedCheckSkipped: archivedSkipped.length,
       allowlisted: items.filter((i) => i.status === 'allowlisted').length,
     },
     exitCode: code,
@@ -561,12 +581,19 @@ export function summarize(report) {
     L.push(`### Unknown: network trouble, not counted as broken (${report.unknown.length})`);
     for (const u of report.unknown) L.push(`- \`${u.name}\` (${u.kind}): ${u.reason}`);
   }
+  const skipped = report.items.filter((i) => typeof i.archivedCheck === 'string' && i.archivedCheck.startsWith('skipped'));
+  if (skipped.length) {
+    L.push('');
+    L.push(`### Archived check skipped (${skipped.length})`);
+    L.push('These packages answered on npm. GitHub did not answer for their repositories, so this run does not know whether they are archived.');
+    for (const a of skipped) L.push(`- \`${a.name}\` (${a.repository}): ${a.archivedCheck.replace(/^skipped: /, '')}`);
+  }
   L.push('');
   return L.join('\n');
 }
 
 async function main(argv) {
-  const opt = { root: resolve(fileURLToPath(new URL('..', import.meta.url))), json: null, offline: false };
+  const opt = { root: resolve(fileURLToPath(new URL('..', import.meta.url))), json: null, offline: false, githubToken: process.env.GITHUB_TOKEN || '' };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--json') opt.json = argv[++i];
     else if (argv[i] === '--root') opt.root = resolve(argv[++i]);
