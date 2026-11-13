@@ -132,6 +132,12 @@ const hasContents = items.length >= 3;
 
     const setPanel = (open: boolean, restoreFocus = false) => {
       if (!toggle || !panel) return;
+      if (open) {
+        // The full menu closes first. Its button's click also reaches the document listener below, which
+        // closes this panel, so the panel opens only once that click has run.
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        if (menuBtn?.getAttribute('aria-expanded') === 'true') menuBtn.click();
+      }
       panel.hidden = !open;
       toggle.setAttribute('aria-expanded', String(open));
       if (open) {
@@ -143,8 +149,6 @@ const hasContents = items.length >= 3;
           if (h && h.getBoundingClientRect().top <= 130) active = a; else if (h) break;
         }
         links.forEach((a) => (a === active ? a.setAttribute('aria-current', 'location') : a.removeAttribute('aria-current')));
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        if (menuBtn?.getAttribute('aria-expanded') === 'true') menuBtn.click();
       } else if (restoreFocus) toggle.focus();
     };
 
