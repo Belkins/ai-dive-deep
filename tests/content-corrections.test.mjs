@@ -815,16 +815,56 @@ test('pricing page keeps vendor prices in PRICES and no superseded model reads a
 test('the CI recipe and the mode picker pair an allow-list with dontAsk, not with skip-permissions', () => {
   // Allow rules have no effect under skip-permissions, so a recipe that pairs the two runs anything.
   const ci = chapter('18-headless-ci');
-  const recipe = ci.match(/--allowed-tools "Bash\(npm test\*\),Bash\(npm run build\*\),Read,Grep,Edit\(src\/\*\*\)" \\\n {2}(--\S+(?: \S+)?)\n/);
+  // The whole fenced block, so the flag cannot come back on another of its lines.
+  const recipe = [...ci.matchAll(/```bash\n([\s\S]*?)\n```/g)].map((block) => block[1])
+    .find((block) => block.includes('--allowed-tools "Bash(npm test*),Bash(npm run build*),Read,Grep,Edit(src/**)"'));
   assert.ok(recipe, 'the CI recipe keeps its allow-list line');
-  assert.equal(recipe[1], '--permission-mode dontAsk');
+  assert.match(recipe, /\\\n {2}--permission-mode dontAsk$/);
+  assert.doesNotMatch(recipe, /--dangerously-skip-permissions/);
   assert.match(ci, /`--dangerously-skip-permissions` skips the prompts and ignores the allow-list\./);
   assert.doesNotMatch(ci, /already constrained what's possible via the allow-list/);
   const picker = source('src/widgets/ModePicker.tsx');
   assert.match(picker, /--allowed-tools "Bash\(pytest\*\),Edit\(src\/\*\*\)" --permission-mode dontAsk'/);
-  for (const [, command] of picker.matchAll(/command: '([^']*)'/g)) {
-    assert.ok(!(command.includes('--allowed-tools') && command.includes('--dangerously-skip-permissions')), command);
+});
+
+// Every command a reader can copy: the fenced blocks of chapters and the starter vault, and each line of
+// the widgets, snippets, pages and components. A line that ends in a backslash is joined to the next, as a
+// shell joins it. A flag counts where it stands as a word of its own, which leaves out prose that names it
+// inside code marks.
+const COPYABLE = [
+  ['src/content/chapters', /\.mdx?$/], ['src/widgets', /\.tsx?$/], ['src/lib', /\.tsx?$/],
+  ['src/pages', /\.(?:astro|mdx?|tsx?)$/], ['src/components', /\.(?:astro|tsx?)$/], ['vault-starter', /\.md$/],
+];
+const filesUnder = (dir) => readdirSync(new URL(`../${dir}/`, import.meta.url)).flatMap((name) => {
+  const path = `${dir}/${name}`;
+  return statSync(new URL(`../${path}`, import.meta.url)).isDirectory() ? filesUnder(path) : [path];
+});
+const joinedLines = (text) => text.replace(/\\{1,2}\n[ \t]*/g, ' ').split('\n');
+const copyableCommands = (file) => (/\.mdx?$/.test(file)
+  ? [...source(file).matchAll(/```[^\n]*\n([\s\S]*?)\n```/g)].flatMap((block) => joinedLines(block[1]))
+  : joinedLines(source(file)));
+const pairsAllowListWithSkip = (command) => /(?<=\s)--dangerously-skip-permissions\b/.test(command) && /(?<=\s)--allowed-?[Tt]ools\b/.test(command);
+
+test('no command a reader can copy pairs an allow-list with skip-permissions, but for the one the author has yet to decide', () => {
+  // The detector reads a command written over several lines, and tells the two endings apart.
+  assert.deepEqual(joinedLines('claude -p "x" \\\n  --allowed-tools "Read" \\\n  --dangerously-skip-permissions\nsleep 5').map(pairsAllowListWithSkip), [true, false]);
+  assert.equal(pairsAllowListWithSkip('claude -p "x" --allowed-tools "Read" --permission-mode dontAsk'), false);
+  assert.equal(pairsAllowListWithSkip('Use <code>--allowed-tools</code>, never <code>--dangerously-skip-permissions</code>.'), false);
+  const found = [];
+  let lines = 0;
+  for (const [dir, ext] of COPYABLE) {
+    for (const file of filesUnder(dir).filter((path) => ext.test(path))) {
+      for (const command of copyableCommands(file)) {
+        lines += 1;
+        if (pairsAllowListWithSkip(command)) found.push([file, command.trim().replace(/\s+/g, ' ').slice(0, 44)]);
+      }
+    }
   }
+  assert.ok(lines > 10000, `the sweep read only ${lines} lines: the folders or the extensions moved`);
+  // Chapter 18 prints its 24/7 monitor loop as the author's own running command, so changing it is the
+  // author's call. It is named here so that a second pairing anywhere fails this test, and so that this
+  // line fails, and goes, the day that loop is corrected.
+  assert.deepEqual(found, [['src/content/chapters/18-headless-ci.mdx', 'claude --print "Read latest Sentry issues. F']]);
 });
 
 test('the permission simulator gives an allow-list no credit while skip-permissions is on', () => {
@@ -852,23 +892,28 @@ test('MCP config blocks use the hosted GitHub, Stripe, Gong and Ahrefs servers a
     'chapter 12': chapter('12-connectors-mcp'),
   };
   const count = (text, needle) => text.split(needle).length - 1;
-  // GitHub archived its npm server, which never read the token it was given: five blocks use the hosted one.
+  // A hosted entry is its transport line and its address together: an address with no "type": "http" above it
+  // is not an entry Claude Code is told how to reach.
+  const hosted = (text, url) => count(text, new RegExp(`"type": "http",\\s+"url": "${url.replace(/[.\/]/g, '\\$&')}"`));
+  // GitHub archived its npm server, which never read the token it was given: five blocks use the hosted one,
+  // each with the token in its Authorization header.
   const hostedGithub = { 'claude-code-mcp.astro': 2, 'cowork-setup.astro': 1, 'snippets.ts': 1, 'chapter 12': 1 };
   for (const [name, text] of Object.entries(pages)) {
     assert.equal(count(text, '@modelcontextprotocol/server-github'), 0, name);
     assert.equal(count(text, 'https://api.githubcopilot.com/mcp/'), hostedGithub[name], name);
+    assert.equal(count(text, /"type": "http",\s+"url": "https:\/\/api\.githubcopilot\.com\/mcp\/",\s+"headers": \{\s*"Authorization": "Bearer (?:github_pat|ghp)_\*\*\*"/), hostedGithub[name], name);
     assert.equal(count(text, 'GITHUB_ALLOWED_REPOS'), 0, name);
   }
   // Packages that answer 404 on npm give way to the vendors' hosted servers.
   for (const name of ['claude-code-mcp.astro', 'cowork-setup.astro']) {
     assert.equal(count(pages[name], '@stripe/mcp-server'), 0, name);
-    assert.equal(count(pages[name], '"url": "https://mcp.stripe.com"'), 1, name);
+    assert.equal(hosted(pages[name], 'https://mcp.stripe.com'), 1, name);
   }
   const cowork = pages['cowork-setup.astro'];
   assert.equal(count(cowork, '@gong/mcp-server'), 0);
-  assert.equal(count(cowork, '"url": "https://mcp.gong.io/mcp"'), 1);
+  assert.equal(hosted(cowork, 'https://mcp.gong.io/mcp'), 1);
   assert.equal(count(cowork, '@ahrefs/mcp-server'), 0);
-  assert.equal(count(cowork, '"url": "https://api.ahrefs.com/mcp/mcp"'), 1);
+  assert.equal(hosted(cowork, 'https://api.ahrefs.com/mcp/mcp'), 1);
   // A setting the HubSpot server never reads looked like a safety limit.
   assert.equal(count(cowork, 'HUBSPOT_ALLOWED_OPERATIONS'), 0);
   // The archived Postgres server gives way to the one the Claude Code docs use.
