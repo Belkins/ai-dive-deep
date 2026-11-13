@@ -85,6 +85,11 @@ const lang = declared && declared !== 'plaintext' && declared !== 'text' ? decla
     .code-copy-pill { transition: background-color 150ms; }
   }
   @media print { .code-frame-bar { display: none; } .code-frame { border: 0; } }
+  /* With scripting off the button could do nothing, so it steps out, and a bar it leaves empty goes with it. */
+  @media (scripting: none) {
+    .code-copy { display: none; }
+    .code-frame-bar:not(:has(.code-frame-lang)) { display: none; }
+  }
 </style>
 
 <script>

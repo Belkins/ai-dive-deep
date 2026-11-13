@@ -55,7 +55,7 @@ const shareLinks = [
       Licensed <a href={CONTENT_LICENSE_URL} class="link-inline" rel="license">{CONTENT_LICENSE_NAME}</a>
     </p>
     <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
-      <div class="flex flex-wrap gap-3">
+      <div class="flex flex-wrap gap-3" data-cite-buttons>
         <button type="button" class="btn-ghost text-sm min-h-[44px]" data-cite-copy={citation} data-label="Copy citation"><span class="grid" style="justify-items: center"><span data-cite-label style="grid-area: 1 / 1">Copy citation</span><span aria-hidden="true" style="grid-area: 1 / 1; visibility: hidden">Copy citation</span><span aria-hidden="true" style="grid-area: 1 / 1; visibility: hidden">Copy failed</span></span></button>
         <button type="button" class="btn-ghost text-sm min-h-[44px]" data-cite-copy={chUrl} data-cite-select="[data-cite-url]" data-label="Copy link"><span class="grid" style="justify-items: center"><span data-cite-label style="grid-area: 1 / 1">Copy link</span><span aria-hidden="true" style="grid-area: 1 / 1; visibility: hidden">Copy link</span><span aria-hidden="true" style="grid-area: 1 / 1; visibility: hidden">Copy failed</span></span></button>
       </div>
@@ -112,6 +112,12 @@ const shareLinks = [
     Email Vlad with feedback on this chapter →
   </a>
 </div>
+
+<style is:global>
+  /* With scripting off the two copy buttons could do nothing; the citation stays on the page to select.
+     Global on purpose: one rule on a name used nowhere else, where a scoped block would stamp every element here. */
+  @media (scripting: none) { [data-cite-buttons] { display: none; } }
+</style>
 
 <script>
   import { copyMessage, copyText, COPY_FAILURE_MS } from '@/lib/copy-feedback';
