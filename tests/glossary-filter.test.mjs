@@ -115,6 +115,8 @@ test('matching ignores case and accents, keeps version numbers whole, and takes 
   const p = page();
   p.type('RESUME');
   assert.deepEqual(p.shown(), ['Cron']);
+  p.type('Résumé');
+  assert.deepEqual(p.shown(), ['Cron'], 'an accented query matches the same terms');
   p.type('5.5');
   assert.deepEqual(p.shown(), ['MCP']);
   p.type('terminal claude');
