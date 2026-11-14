@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import { glossary } from '@/lib/glossary';
 import CommandPaletteMount from '@/components/CommandPaletteMount.astro';
 import SectionNav from '@/components/SectionNav.astro';
+import GlossaryFilter from '@/components/GlossaryFilter.astro';
 import { createDefinedTermSet } from '@/lib/seo';
 import { PUBLISHER } from '@/lib/author';
 const entries = Object.values(glossary).sort((a, b) =>
@@ -32,15 +33,16 @@ const definedTermSetJsonLd = createDefinedTermSet(`Glossary — ${PUBLISHER.name
     <h1>Vocabulary you'll need.</h1>
     <p class="mt-3 text-lg" style="color: rgb(var(--muted))">{entries.length} terms. Linked from inside the chapters. Search Cmd-K from anywhere.</p>
     <p class="mt-2 text-sm" style="color: rgb(var(--muted))">Jump by letter — sidebar tracks where you are.</p>
+    <div class="mt-10 max-w-xl"><GlossaryFilter /></div>
   </section>
 
   <section class="container-wide pb-24">
     <div class="lg:grid lg:grid-cols-[200px_1fr] lg:gap-10">
       <SectionNav items={navItems} title="A–Z" />
       <div class="max-w-3xl">
-        <dl class="space-y-10">
+        <dl id="glossary-list" class="space-y-10">
           {groups.map((g) => (
-            <div>
+            <div data-letter={`letter-${g.letter === '#' ? 'num' : g.letter}`}>
               <h2
                 id={`letter-${g.letter === '#' ? 'num' : g.letter}`}
                 data-section-target
@@ -49,7 +51,7 @@ const definedTermSetJsonLd = createDefinedTermSet(`Glossary — ${PUBLISHER.name
               >{g.letter}</h2>
               <div class="space-y-6">
                 {g.items.map((e) => (
-                  <div id={e.term} class="rounded-lg p-5 scroll-mt-24" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+                  <div id={e.term} data-term class="rounded-lg p-5 scroll-mt-24" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
                     <dt class="font-display text-2xl">{e.term}</dt>
                     <dd class="mt-2 leading-relaxed" set:html={e.definition} />
                     {e.related && e.related.length > 0 && (
@@ -66,6 +68,10 @@ const definedTermSetJsonLd = createDefinedTermSet(`Glossary — ${PUBLISHER.name
             </div>
           ))}
         </dl>
+        <div id="glossary-empty" hidden class="rounded-lg p-6" style="background: rgb(var(--paper)); border: 1px solid rgb(var(--line));">
+          <p class="m-0">No term matches “<span data-query></span>”.</p>
+          <button type="button" id="glossary-clear" class="btn-ghost mt-4 min-h-[44px]">Clear filter</button>
+        </div>
       </div>
     </div>
   </section>

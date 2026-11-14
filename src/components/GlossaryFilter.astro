@@ -1,0 +1,65 @@
+---
+// Filter box for /glossary/. Typing keeps the terms whose name or definition holds every typed word (after the
+// same normalizing as Cmd-K: case, accents, '5.5'), hides letter groups and A-Z links left empty, and says how
+// many match in a polite live region. Esc clears. A link to a term the filter hid clears it first, so the jump
+// lands. The page places the box under its intro, above the list.
+---
+<div data-glossary-filter class="gl-filter">
+  <label for="glossary-q" class="text-xs uppercase tracking-[0.2em] text-muted">Filter terms</label>
+  <p id="glossary-count" role="status" aria-live="polite" class="m-0 text-xs text-muted"></p>
+  <input id="glossary-q" type="search" autocomplete="off" spellcheck="false" maxlength="80" aria-controls="glossary-list" />
+</div>
+<noscript><style>[data-glossary-filter] { display: none; }</style></noscript>
+
+<style>
+  /* Label and count share the first row, the box spans the row under them. */
+  .gl-filter { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 0.5rem 1rem; }
+  .gl-filter input {
+    grid-column: 1 / -1;
+    width: 100%; min-width: 0; min-height: 44px; padding: 0.625rem 0.75rem;
+    border: 1px solid rgb(var(--muted) / 0.6); border-radius: 6px;
+    background: rgb(var(--paper)); color: rgb(var(--fg)); font: inherit;
+  }
+  .gl-filter input:focus-visible { outline: 2px solid rgb(var(--accent-2)); outline-offset: 3px; }
+</style>
+
+<script>
+  import { normalizeSearchText as norm } from '@/lib/search';
+  // Kept small (under 1 KB): the page's elements are new after each client navigation, so only the two
+  // listeners on document and window are global, bound once, and they call the current page's clear.
+  let clear = () => {};
+  const reveal = (id: string) => { if (document.getElementById(id)?.closest('[hidden]')) clear(); };
+  document.addEventListener('click', (e) => {
+    const href = (e.target as Element).closest?.('a[href^="#"]')?.getAttribute('href');
+    if (href) reveal(decodeURIComponent(href.slice(1)));
+  }, true);
+  window.addEventListener('hashchange', () => reveal(decodeURIComponent(location.hash.slice(1))));
+  document.addEventListener('astro:page-load', () => {
+    clear = () => {};
+    const $ = (id: string) => document.getElementById(id)!;
+    const input = $('glossary-q') as HTMLInputElement | null;
+    if (!input) return;
+    const count = $('glossary-count');
+    const empty = $('glossary-empty');
+    const entries = Array.from(document.querySelectorAll<HTMLElement>('[data-term]'), (el) =>
+      [el, norm(`${el.querySelector('dt')!.textContent} ${el.querySelector('dd')!.textContent}`)] as const);
+    const apply = () => {
+      const words = norm(input.value).split(' ').filter(Boolean);
+      let shown = 0;
+      for (const [el, text] of entries) if (!(el.hidden = !words.every((w) => text.includes(w)))) shown++;
+      document.querySelectorAll<HTMLElement>('[data-letter]').forEach((g) => {
+        const off = !g.querySelector('[data-term]:not([hidden])');
+        g.hidden = off;
+        document.querySelectorAll(`[data-toc-link="${g.dataset.letter}"]`).forEach((a) => { a.parentElement!.hidden = off; });
+      });
+      count.textContent = words.length ? `Showing ${shown} of ${entries.length} terms` : '';
+      empty.hidden = shown > 0;
+      empty.querySelector('[data-query]')!.textContent = input.value.trim();
+    };
+    clear = () => { input.value = ''; apply(); };
+    input.addEventListener('input', apply);
+    input.addEventListener('keydown', (e) => { if (e.key == 'Escape' && input.value) { e.preventDefault(); clear(); } });
+    $('glossary-clear').addEventListener('click', () => { clear(); input.focus(); });
+    if (input.value) apply();
+  });
+</script>
