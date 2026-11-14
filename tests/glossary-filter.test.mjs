@@ -181,3 +181,18 @@ test('the filter markup gives the box a real label and announces the count polit
   assert.match(source, /<input id="glossary-q" type="search"/);
   assert.match(source, /id="glossary-count" role="status" aria-live="polite"/);
 });
+
+test('the filter sits under the page intro, above the list, at most 576 px wide', () => {
+  // The owner's pick: the box sits on top, under the intro, before the A-Z links and the list, 576 px wide
+  // at most. Tailwind's max-w-xl is 36rem, 36 x 16 = 576 px; no other max-w class may hold that width.
+  const page = read('../src/pages/glossary.astro');
+  const intro = page.slice(page.indexOf('<h1>'), page.indexOf('</section>'));
+  const wrap = intro.match(/<div class="([^"]+)"><GlossaryFilter \/><\/div>/);
+  assert.ok(wrap, 'the filter left the page intro');
+  const REM = { 'max-w-lg': 32, 'max-w-xl': 36, 'max-w-2xl': 42, 'max-w-3xl': 48 };
+  const widths = wrap[1].split(/\s+/).filter((c) => c in REM).map((c) => REM[c] * 16);
+  assert.deepEqual(widths, [576]);
+  assert.equal(page.match(/<GlossaryFilter\b/g).length, 1, 'one filter on the page');
+  assert.ok(page.indexOf('<GlossaryFilter') < page.indexOf('<SectionNav'), 'the filter comes before the A-Z links');
+  assert.ok(page.indexOf('<GlossaryFilter') < page.indexOf('<dl id="glossary-list"'), 'the filter comes before the list');
+});
