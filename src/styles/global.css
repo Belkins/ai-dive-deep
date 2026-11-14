@@ -103,12 +103,23 @@ pre {
   font-size: 0.86em;
 }
 
+/* Inline code in the flame accent in the light theme (a link, or a widget result such as the
+   chapter 07 cron builder's expression) was 4.38:1 on the code tint; on --paper it clears 4.5:1. */
+[data-theme='light'] :is(a code, code[style*='--accent']) { background: rgb(var(--paper)); }
+
 pre code {
   background: transparent;
   padding: 0;
   border-radius: 0;
   font-size: 1em;
 }
+
+/* Code colours in the light theme (src/lib/code-colours.mjs). With two Shiki themes the dark
+   colour is inline and the light one waits in --shiki-light; the light site theme applies it,
+   on the page colour, where the lightest token clears 4.5:1. */
+[data-theme='light'] .astro-code-themes,
+[data-theme='light'] .astro-code-themes span { color: var(--shiki-light) !important; }
+[data-theme='light'] pre.astro-code-themes { background: rgb(var(--bg)) !important; }
 
 .chapter-body ul, .chapter-body ol { margin-top: 1.25rem; margin-bottom: 1.25rem; padding-left: 1.5rem; line-height: 1.75; }
 .chapter-body ul { list-style: disc; }

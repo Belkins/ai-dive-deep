@@ -9,6 +9,7 @@ import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isRadarEditionIndexable } from './src/lib/radar-config.mjs';
+import { shikiConfig } from './src/lib/code-colours.mjs';
 import { addMissingLlmsPages, llmsMissingUrls, readPageHead, readSiteName } from './src/lib/llms-site-map.mjs';
 
 // The live Radar edition decides whether /radar is in the sitemap and gives its truthful
@@ -127,10 +128,8 @@ export default defineConfig({
         },
       ],
     ],
-    shikiConfig: {
-      theme: 'github-dark-dimmed',
-      wrap: true,
-    },
+    // Code colours in both site themes: src/lib/code-colours.mjs.
+    shikiConfig: shikiConfig(),
   },
   vite: {
     ssr: { noExternal: ['lucide-react'] },
