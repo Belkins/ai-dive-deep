@@ -51,7 +51,7 @@ function page() {
   img.alt = 'The honest scorecard';
   link.append(img);
   doc.body.append(link);
-  installLightbox(doc, 'dark');
+  installLightbox(doc);
   const dialog = () => doc.body.children.find((c) => c.tagName === 'DIALOG');
   return { doc, link, img, dialog };
 }
@@ -67,7 +67,6 @@ test('a plain click on a figure opens it in the page with the same file and its 
   assert.equal(picture.alt, 'The honest scorecard');
   assert.equal(d.querySelector('figcaption').textContent, 'The honest scorecard');
   assert.equal(d.attrs['aria-label'], 'The honest scorecard');
-  assert.equal(d.dataset.backdrop, 'dark');
   assert.ok(link);
 });
 
@@ -148,4 +147,21 @@ test('the page behind cannot scroll while a figure is open, and motion waits for
   const motion = component.slice(component.indexOf('@media (prefers-reduced-motion: no-preference)'));
   assert.match(motion, /\.shot-dialog\[open\] \{ animation: shot-fade/);
   assert.equal(component.match(/animation:/g).length, 1, 'no animation outside the reduced-motion query');
+});
+
+test('the open figure sits on the dark backdrop in both themes', () => {
+  // The owner's pick: a dark backdrop whatever the reader's theme, because the figures are drawn dark. The
+  // dialog's own rule declares the site's dark tokens (the :root values), so a light page cannot reach it.
+  const bodies = [];
+  for (let at = component.indexOf('.shot-dialog {'); at !== -1; at = component.indexOf('.shot-dialog {', at + 1)) {
+    bodies.push(component.slice(at, component.indexOf('}', at)));
+  }
+  const own = bodies.join('\n');
+  assert.match(own, /background: rgb\(var\(--bg\)\);/);
+  assert.match(own, /color-scheme: dark;/);
+  for (const token of ['--bg: 14 15 17;', '--fg: 250 250 247;', '--muted: 170 167 154;', '--line: 38 37 31;', '--paper: 22 23 27;']) {
+    assert.ok(own.includes(token), `the dialog lost the dark token ${token}`);
+  }
+  assert.doesNotMatch(component, /\[data-theme[^\]]*\][^{]*\.shot-dialog|prefers-color-scheme/, 'no theme rule may repaint the dialog');
+  assert.doesNotMatch(component, /data-backdrop/, 'one backdrop, no switch');
 });
