@@ -124,7 +124,7 @@ This is the developer path. Configuration lives in a file you commit to the repo
 
 **OAuth.** Most hosted SaaS connectors — Slack, HubSpot, Google Calendar, Stripe. You click through a consent screen, the connector receives a token, tokens auto-refresh. This is the cleanest pattern. If a vendor offers OAuth, take it.
 
-**API key in env var.** Common for self-hosted servers and developer-tool connectors — GitHub, OpenAI, ElevenLabs, Stripe in dev mode. Put the key in a local `.env` file or in the `env` block of `.mcp.json` for that server only. Never commit raw keys. If you absolutely must reference them in `.mcp.json`, use environment variable interpolation and keep the actual values in `.env`.
+**API key in env var.** Common for self-hosted servers and developer-tool connectors — OpenAI, ElevenLabs, Stripe in dev mode. Put the key in a local `.env` file or in the `env` block of `.mcp.json` for that server only. Never commit raw keys. If you absolutely must reference them in `.mcp.json`, use environment variable interpolation and keep the actual values in `.env`. A hosted server such as GitHub’s takes the key in an Authorization header instead, as in the block above.
 
 **No auth.** Local servers like filesystem, sqlite, or anything that runs entirely on your machine. Just declare the path or DB file. The trust boundary is your laptop.
 
