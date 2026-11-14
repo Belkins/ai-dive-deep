@@ -196,3 +196,26 @@ test('the filter sits under the page intro, above the list, at most 576 px wide'
   assert.ok(page.indexOf('<GlossaryFilter') < page.indexOf('<SectionNav'), 'the filter comes before the A-Z links');
   assert.ok(page.indexOf('<GlossaryFilter') < page.indexOf('<dl id="glossary-list"'), 'the filter comes before the list');
 });
+
+test('the filter box edge reads at 3:1 against the page and the box in both themes', () => {
+  // A form control's edge needs 3:1 (WCAG 1.4.11). The edge is --muted at an alpha over the box's own --paper
+  // fill and next to the page's --bg; at 0.6 it was 2.73:1 in the light theme.
+  const css = read('../src/styles/global.css');
+  const tokens = (sel) => {
+    const at = css.indexOf(`${sel} {`);
+    return Object.fromEntries([...css.slice(at, css.indexOf('}', at)).matchAll(/--([a-z0-9-]+):\s*(\d+ \d+ \d+);/g)].map((m) => [m[1], m[2].split(' ').map(Number)]));
+  };
+  const dark = tokens(':root');
+  const light = { ...dark, ...tokens("[data-theme='light']") };
+  const lum = (c) => { const v = c.map((x) => x / 255).map((x) => (x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4)); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+  const ratio = (a, b) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
+  const [, token, alpha] = source.match(/\.gl-filter input \{[^}]*border: 1px solid rgb\(var\(--([a-z0-9-]+)\) \/ ([\d.]+)\);/);
+  assert.match(source, /\.gl-filter input \{[^}]*background: rgb\(var\(--paper\)\);/);
+  for (const [name, t] of [['light', light], ['dark', dark]]) {
+    for (const ground of ['paper', 'bg']) {
+      const edge = t[token].map((v, i) => v * Number(alpha) + t[ground][i] * (1 - Number(alpha)));
+      const got = ratio(edge, t[ground]);
+      assert.ok(got >= 3, `${name}: the edge on --${ground} is ${got.toFixed(2)}:1`);
+    }
+  }
+});
