@@ -83,7 +83,7 @@ Plan mode is the most underused feature in CC. Most engineers go straight from I
 
 No prompts. No approvals. The agent runs every tool call without asking. There are three flavors, and the difference between them is the difference between a controlled workshop and a kitchen fire.
 
-- `--dangerously-skip-permissions` — the nuclear option. Skips ALL gating across all tools. Reserved for sandboxed environments where the worst case is "rebuild the container."
+- `--dangerously-skip-permissions` — the nuclear option. Skips nearly all gating across all tools. Deny rules still block. Reserved for sandboxed environments where the worst case is "rebuild the container."
 - `--allowed-tools` allow-list — narrower. You specify exact tool patterns that auto-approve (`Bash(pytest*)`, `Edit(src/**)`), and anything outside the list still gates. This is the version most pros actually use.
 - Settings-level always-allow patterns — quietly auto-approves specific patterns you've graduated to trust over time, written into `~/.claude/settings.json` or per-repo equivalents. Same effect as the allow-list, but persistent.
 

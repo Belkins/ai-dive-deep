@@ -209,7 +209,7 @@ export const QUESTIONS: Q[] = [
   {
     q: "What's --dangerously-skip-permissions and when can I use it?",
     short: "On a sandbox, not on your laptop. Ever.",
-    answer: "It disables every approval gate. Use it only inside a Docker container, devcontainer, GitHub Codespace, or any disposable environment where the worst case is 'rebuild the container.' On your main machine with prod credentials sitting in .env, it's the kind of move that ends weekends.",
+    answer: "It disables nearly every approval gate. Deny rules still block. Use it only inside a Docker container, devcontainer, GitHub Codespace, or any disposable environment where the worst case is 'rebuild the container.' On your main machine with prod credentials sitting in .env, it's the kind of move that ends weekends.",
     chapters: [
       { slug: '15-permissions', label: 'Ch 15 — Permissions and sandboxes' },
       { slug: '21-three-modes', label: 'Ch 21 — Interactive / Plan / Auto' },

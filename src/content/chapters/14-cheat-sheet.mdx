@@ -42,7 +42,7 @@ A few field notes:
 - `--resume` shows a session picker; `--continue` jumps straight back into the last one. Different muscle memory, different use cases.
 - `--model` accepts model aliases (`sonnet`, `opus`, `haiku`) or full model IDs. Aliases are safer — they auto-track the current generation.
 - `DISABLE_AUTOUPDATER=1` matters in CI containers and locked-down sandboxes where the updater wastes seconds or fails outright.
-- `--dangerously-skip-permissions` exists. It bypasses every approval prompt. We cover when (and when not) to use it in [Chapter 15](/chapters/15-permissions/).
+- `--dangerously-skip-permissions` exists. It bypasses nearly every approval prompt. Deny rules still block. We cover when (and when not) to use it in [Chapter 15](/chapters/15-permissions/).
 
 ---
 
