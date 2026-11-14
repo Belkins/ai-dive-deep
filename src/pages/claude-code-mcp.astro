@@ -85,7 +85,7 @@ const configs = [
     }
   }
 }`,
-    gotcha: 'Use a restricted key (rk_live_*) with read-only scopes — never a secret key (sk_live_*). A full secret key gives the agent refund and payout authority; one bad call against sk_live_* is a real-money incident.',
+    gotcha: 'Sign in through /mcp and grant only the permissions the job needs — never a secret key (sk_live_*). From December, Stripe MCP refuses secret keys and restricted keys (rk_live_*) without the Agent tag. One bad write call against live mode is a real-money incident.',
     notWire: 'Charges, refunds, payouts — keep them in a separate human-only surface. The agent reads; humans transact.',
   },
   {

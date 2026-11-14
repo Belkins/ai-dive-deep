@@ -113,7 +113,7 @@ const connectorDeepDives = [
     }
   }
 }`,
-    gotcha: 'Use a restricted key (rk_live_*) with read-only resource scopes — never a secret key (sk_live_*). Stripe MCP blocks webhook and event endpoints by default, but a full secret key gives the agent refund + payout authority. One bad agent call against a sk_live_* key is a real-money incident.',
+    gotcha: 'Sign in through /mcp and grant only the permissions the job needs — never a secret key (sk_live_*). From December, Stripe MCP refuses secret keys and restricted keys (rk_live_*) without the Agent tag. Stripe asks a human to confirm refunds, but the hosted server can create webhook endpoints and write to much of the API. One bad agent call against live mode is a real-money incident.',
     notWire: 'Always. Charges, refunds, payouts — keep them in a separate human-only surface. The agent reads; humans transact.',
     crossLink: 'Ch 12 (Billing and finance), feedback_stripe_mcp_capability_matrix.md for what MCP exposes vs. blocks.',
   },
