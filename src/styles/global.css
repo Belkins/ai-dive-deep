@@ -13,6 +13,9 @@
      2.84:1; ink (--bg) on it is 6.75:1. */
   --on-accent: 14 15 17;
   --accent-2: 34 211 160;
+  /* --accent-2 as text on its own 10% tint (the current section in a chapter's
+     contents box). Dark: the same as --accent-2. */
+  --accent-2-strong: 34 211 160;
   --paper: 22 23 27;
 }
 
@@ -31,6 +34,9 @@
   /* White on the darker light-theme flame is 5.18:1. */
   --on-accent: 255 255 255;
   --accent-2: 4 120 87;
+  /* Same hue, a step darker: on the 10% tint over --paper --accent-2 is
+     4.24:1, this is 4.57:1. */
+  --accent-2-strong: 4 114 83;
 }
 
 html {
