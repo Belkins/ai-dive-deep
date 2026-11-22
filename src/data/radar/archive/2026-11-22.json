@@ -1,14 +1,14 @@
 {
   "date": "2026-11-22",
-  "generated": "2026-11-22T17:21:32.793Z",
+  "generated": "2026-11-22T17:34:26.705Z",
   "count": 40,
   "stats": {
     "relevance": {
-      "demoted": 28
+      "demoted": 29
     },
     "feedsTotal": 78,
     "feedsLive": 67,
-    "itemsTracked": 16018,
+    "itemsTracked": 16031,
     "travellingFires": 14,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
@@ -20,21 +20,21 @@
       "Analysis": 1
     },
     "byTier": {
-      "AI Firehose": 1,
-      "Live Signal": 39
+      "Live Signal": 39,
+      "AI Firehose": 1
     },
     "flow": {
       "Papers": 5,
       "Repos": 0,
-      "Community": 197,
+      "Community": 210,
       "Analysis": 21
     },
     "newToday": 40,
     "heatingNow": 1,
     "travelledNow": 0,
     "medianLeadHours": 65,
-    "freshestHours": 1.2,
-    "oldestSurvivorHours": 17.4,
+    "freshestHours": 0.5,
+    "oldestSurvivorHours": 17.6,
     "topDomains": [
       {
         "domain": "github.com",
@@ -45,7 +45,7 @@
         "count": 2
       },
       {
-        "domain": "simonwillison.net",
+        "domain": "openai.com",
         "count": 1
       }
     ]
@@ -110,6 +110,52 @@
   "items": [
     {
       "rank": 1,
+      "title": "Perplexity and Intelligence",
+      "url": "https://openai.com/index/perplexity-and-intelligence",
+      "domain": "openai.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.5,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "research_paper",
+      "demoted": false
+    },
+    {
+      "rank": 2,
+      "title": "Show HN: Type prompts directly in terminal shell to kickoff Claude and codex",
+      "url": "https://github.com/mquan/llmao",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.5,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "tooling_or_framework",
+      "demoted": false
+    },
+    {
+      "rank": 3,
       "title": "Muru",
       "url": "https://simonwillison.net/2026/Nov/21/muru",
       "domain": "simonwillison.net",
@@ -123,7 +169,7 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 17.4,
+      "ageHours": 17.6,
       "firstSeen": "2026-11-22T01:21:34.472Z",
       "heating": true,
       "travelled": false,
@@ -132,7 +178,55 @@
       "demoted": false
     },
     {
-      "rank": 2,
+      "rank": 4,
+      "title": "Amendability and \"Solving Alignment\"",
+      "url": "https://www.lesswrong.com/posts/3qi53Zmyoaz83CJ3n/amendability-and-solving-alignment",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "policy_or_safety",
+      "demoted": false
+    },
+    {
+      "rank": 5,
+      "title": "Show HN: Podcast MCP",
+      "url": "https://www.listennotes.com/api/mcp",
+      "domain": "listennotes.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.1,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [
+        "12-connectors-mcp"
+      ],
+      "topic": "tooling_or_framework",
+      "demoted": false
+    },
+    {
+      "rank": 6,
       "title": "Show HN: I distilled the brain of the 20Q handheld game into a website",
       "url": "https://20q.jordanscales.com/?r=1565-20",
       "domain": "20q.jordanscales.com",
@@ -145,7 +239,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.2,
+      "ageHours": 1.4,
       "firstSeen": "2026-11-22T16:34:09.671Z",
       "heating": false,
       "travelled": false,
@@ -155,7 +249,7 @@
       "demoted": false
     },
     {
-      "rank": 3,
+      "rank": 7,
       "title": "Minds I can't read: Simple, irreducible, and instrumental opacity",
       "url": "https://www.lesswrong.com/posts/3znHBDGQWBjhWEKcQ/minds-i-can-t-read-simple-irreducible-and-instrumental",
       "domain": "lesswrong.com",
@@ -168,7 +262,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.8,
+      "ageHours": 2,
       "firstSeen": "2026-11-22T16:34:09.671Z",
       "heating": false,
       "travelled": false,
@@ -178,7 +272,7 @@
       "demoted": false
     },
     {
-      "rank": 4,
+      "rank": 8,
       "title": "Show HN: Relaticle, an open-source CRM that Claude and ChatGPT can work in",
       "url": "https://github.com/relaticle/relaticle",
       "domain": "github.com",
@@ -191,7 +285,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.4,
+      "ageHours": 2.6,
       "firstSeen": "2026-11-22T15:34:44.360Z",
       "heating": false,
       "travelled": false,
@@ -201,7 +295,7 @@
       "demoted": false
     },
     {
-      "rank": 5,
+      "rank": 9,
       "title": "Show HN: Oyma – Local-first notes with meeting transcription",
       "url": "https://www.getoyma.com/",
       "domain": "getoyma.com",
@@ -214,7 +308,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.1,
+      "ageHours": 3.3,
       "firstSeen": "2026-11-22T14:34:24.013Z",
       "heating": false,
       "travelled": false,
@@ -223,7 +317,7 @@
       "demoted": false
     },
     {
-      "rank": 6,
+      "rank": 10,
       "title": "Show HN: I built a game where you are an LLM's subagent",
       "url": "https://github.com/gulivan/worker755",
       "domain": "github.com",
@@ -237,7 +331,7 @@
       ],
       "nSources": 2,
       "nFam": 1,
-      "ageHours": 3.4,
+      "ageHours": 3.6,
       "firstSeen": "2026-11-22T14:34:24.013Z",
       "heating": false,
       "travelled": false,
@@ -247,7 +341,7 @@
       "demoted": false
     },
     {
-      "rank": 7,
+      "rank": 11,
       "title": "Show HN: Loom – Memory that follows the code you edit",
       "url": "https://github.com/ClickHouse/loom",
       "domain": "github.com",
@@ -260,112 +354,19 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.1,
+      "ageHours": 4.3,
       "firstSeen": "2026-11-22T13:34:11.540Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
       "chapters": [],
-      "demoted": false
-    },
-    {
-      "rank": 8,
-      "title": "Condensation: Motivation and Definitions",
-      "url": "https://www.lesswrong.com/posts/nGZn2Sd7EiC77kkPG/condensation-motivation-and-definitions",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.7,
-      "firstSeen": "2026-11-22T13:34:11.540Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": false
-    },
-    {
-      "rank": 9,
-      "title": "Show HN: NestDaddy Memory, one memory shared by ChatGPT, Claude and Cursor",
-      "url": "https://nestdaddy.com/memory",
-      "domain": "nestdaddy.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.7,
-      "firstSeen": "2026-11-22T13:34:11.540Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "tooling_or_framework",
-      "demoted": false
-    },
-    {
-      "rank": 10,
-      "title": "Show HN: Grassline, a simple alternative to Paseo for talking to agents remotely",
-      "url": "https://github.com/andunieee/grassline/blob/master/README.md",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.1,
-      "firstSeen": "2026-11-22T12:34:30.204Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "tooling_or_framework",
-      "demoted": false
-    },
-    {
-      "rank": 11,
-      "title": "Show HN: Codeint – Measure duplication and complexity drift in AI-written code",
-      "url": "https://github.com/avidianity/codeint",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.4,
-      "firstSeen": "2026-11-22T12:34:30.204Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [
-        "25-evals-or-hope"
-      ],
-      "topic": "tooling_or_framework",
       "demoted": false
     },
     {
       "rank": 12,
-      "title": "Show HN: SettledByAI, a neutral second opinion for everyday disputes",
-      "url": "https://settledbyai.com/",
-      "domain": "settledbyai.com",
+      "title": "Show HN: TEB RUN – a pseudo-3D arcade racer in TypeScript and Canvas, no engine",
+      "url": "https://tebrun.io/",
+      "domain": "tebrun.io",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -375,17 +376,126 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5.4,
-      "firstSeen": "2026-11-22T12:34:30.204Z",
+      "ageHours": 0.5,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
       "chapters": [],
-      "topic": "tooling_or_framework",
-      "demoted": false
+      "demoted": true
     },
     {
       "rank": 13,
+      "title": "Show HN: A local-only expense tracker in one HTML file (no server, no network)",
+      "url": "https://wydatki-app.github.io/wydatki",
+      "domain": "wydatki-app.github.io",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.8,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 14,
+      "title": "Falsehoods Programmers Believe About ATProto",
+      "url": "https://reiver.link/atproto/falsehoods-programmers-believe",
+      "domain": "reiver.link",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 15,
+      "title": "Show HN: A Native GTK4/Libadwaita PDF Editor for Linux (AcroForms, PAdES, OCR)",
+      "url": "https://github.com/word-sys/word-sys-pdf-editor",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.1,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 16,
+      "title": "Show HN: TripleClick – 220-line Mac menu bar app for trackpad middle click",
+      "url": "https://github.com/wilu222/tripleclick",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.1,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 17,
+      "title": "Show HN: I built a risk map of the Army's planned lead azide detonation in Iowa",
+      "url": "https://getlucera.com/iowa-lead-detonation",
+      "domain": "getlucera.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.2,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 18,
       "title": "Norway to extend proposed under-16 social media ban to games and messaging apps",
       "url": "https://www.euronews.com/2026/10/19/norway-to-extend-proposed-under-16-social-media-ban-to-online-games-and-messaging-apps",
       "domain": "euronews.com",
@@ -398,7 +508,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.5,
+      "ageHours": 1.7,
       "firstSeen": "2026-11-22T16:34:09.671Z",
       "heating": false,
       "travelled": false,
@@ -407,7 +517,7 @@
       "demoted": true
     },
     {
-      "rank": 14,
+      "rank": 19,
       "title": "Show HN: Fly through your LinkedIn network in a 3D galaxy",
       "url": "https://thisiscoco.app/atlas",
       "domain": "thisiscoco.app",
@@ -420,7 +530,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.5,
+      "ageHours": 1.7,
       "firstSeen": "2026-11-22T16:34:09.671Z",
       "heating": false,
       "travelled": false,
@@ -429,32 +539,10 @@
       "demoted": true
     },
     {
-      "rank": 15,
-      "title": "Show HN: Discord:Client – A Discord API Library for Perl",
-      "url": "https://github.com/viasnake/Discord-Client",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.6,
-      "firstSeen": "2026-11-22T16:34:09.671Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 16,
-      "title": "Europe weakens chemical rules as science links them to 'lifestyle diseases'",
-      "url": "https://www.lemonde.fr/en/opinion/article/2026/11/22/as-science-increasingly-shows-the-role-chemical-substances-play-in-lifestyle-diseases-europe-weakens-its-regulations_6786595_23.html",
-      "domain": "lemonde.fr",
+      "rank": 20,
+      "title": "Ask HN: Are the trades a safe career transition?",
+      "url": "https://news.ycombinator.com/item?id=50600771",
+      "domain": "news.ycombinator.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -464,8 +552,8 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.6,
-      "firstSeen": "2026-11-22T16:34:09.671Z",
+      "ageHours": 1.7,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
@@ -473,9 +561,9 @@
       "demoted": true
     },
     {
-      "rank": 17,
-      "title": "Show HN: RayClay – an open source C app framework for desktop, mobile, and web",
-      "url": "https://github.com/impizulu/rayclay",
+      "rank": 21,
+      "title": "Show HN: Discord:Client – A Discord API Library for Perl",
+      "url": "https://github.com/viasnake/Discord-Client",
       "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -495,7 +583,73 @@
       "demoted": true
     },
     {
-      "rank": 18,
+      "rank": 22,
+      "title": "Europe weakens chemical rules as science links them to 'lifestyle diseases'",
+      "url": "https://www.lemonde.fr/en/opinion/article/2026/11/22/as-science-increasingly-shows-the-role-chemical-substances-play-in-lifestyle-diseases-europe-weakens-its-regulations_6786595_23.html",
+      "domain": "lemonde.fr",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.9,
+      "firstSeen": "2026-11-22T16:34:09.671Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 23,
+      "title": "I joined the NTP Pool, but not with my Stratum 1 Pi",
+      "url": "https://www.jeffgeerling.com/blog/2026/i-joined-the-ntp-pool",
+      "domain": "jeffgeerling.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2,
+      "firstSeen": "2026-11-22T17:34:23.729Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 24,
+      "title": "Show HN: RayClay – an open source C app framework for desktop, mobile, and web",
+      "url": "https://github.com/impizulu/rayclay",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.2,
+      "firstSeen": "2026-11-22T16:34:09.671Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 25,
       "title": "Open Social Web Alliance",
       "url": "https://osw-alliance.net/en",
       "domain": "osw-alliance.net",
@@ -508,7 +662,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2,
+      "ageHours": 2.2,
       "firstSeen": "2026-11-22T16:34:09.671Z",
       "heating": false,
       "travelled": false,
@@ -517,7 +671,7 @@
       "demoted": true
     },
     {
-      "rank": 19,
+      "rank": 26,
       "title": "Backblaze customers worried of personal data sale/sharing after policy update",
       "url": "https://www.neowin.net/news/backblaze-customers-worried-of-personal-data-salesharing-after-policy-update",
       "domain": "neowin.net",
@@ -530,7 +684,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
+      "ageHours": 2.3,
       "firstSeen": "2026-11-22T16:34:09.671Z",
       "heating": false,
       "travelled": false,
@@ -539,32 +693,10 @@
       "demoted": true
     },
     {
-      "rank": 20,
+      "rank": 27,
       "title": "Show HN: CurlGo – a 5 MB native API client for macOS and Windows",
       "url": "https://curlgo.echovic.com/en",
       "domain": "curlgo.echovic.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.1,
-      "firstSeen": "2026-11-22T15:34:44.360Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 21,
-      "title": "Show HN: Autostrum – Play along with guitar tabs at your own tempo",
-      "url": "https://www.autostrum.com/",
-      "domain": "autostrum.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -583,60 +715,16 @@
       "demoted": true
     },
     {
-      "rank": 22,
-      "title": "Show HN: SocketSweep – WizTree-style fast Android storage analyzer over ADB",
-      "url": "https://github.com/VishnuSrivatsava/SocketSweep",
-      "domain": "github.com",
+      "rank": 28,
+      "title": "Show HN: Autostrum – Play along with guitar tabs at your own tempo",
+      "url": "https://www.autostrum.com/",
+      "domain": "autostrum.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
       "firstSource": "Show HN",
       "sources": [
         "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-11-22T15:34:44.360Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 23,
-      "title": "Show HN: Elephant Walk – Local KVM for macOS, Windows, Linux (Wayland), Android",
-      "url": "https://ew.4ier.icu/en",
-      "domain": "ew.4ier.icu",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 2.5,
-      "firstSeen": "2026-11-22T15:34:44.360Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 24,
-      "title": "What If Netscape Did SSL the HTTP Way?",
-      "url": "https://owl.billpg.com/what-if-netscape-did-ssl-the-http-way",
-      "domain": "owl.billpg.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
       ],
       "nSources": 1,
       "nFam": 1,
@@ -649,9 +737,9 @@
       "demoted": true
     },
     {
-      "rank": 25,
-      "title": "Show HN: Charity-compliance – is this Canadian charity ready to file its T3010?",
-      "url": "https://github.com/jasveerai88/charity-compliance",
+      "rank": 29,
+      "title": "Show HN: SocketSweep – WizTree-style fast Android storage analyzer over ADB",
+      "url": "https://github.com/VishnuSrivatsava/SocketSweep",
       "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -671,7 +759,73 @@
       "demoted": true
     },
     {
-      "rank": 26,
+      "rank": 30,
+      "title": "Show HN: Elephant Walk – Local KVM for macOS, Windows, Linux (Wayland), Android",
+      "url": "https://ew.4ier.icu/en",
+      "domain": "ew.4ier.icu",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.7,
+      "firstSeen": "2026-11-22T15:34:44.360Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 31,
+      "title": "What If Netscape Did SSL the HTTP Way?",
+      "url": "https://owl.billpg.com/what-if-netscape-did-ssl-the-http-way",
+      "domain": "owl.billpg.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.8,
+      "firstSeen": "2026-11-22T15:34:44.360Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 32,
+      "title": "Show HN: Charity-compliance – is this Canadian charity ready to file its T3010?",
+      "url": "https://github.com/jasveerai88/charity-compliance",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.9,
+      "firstSeen": "2026-11-22T15:34:44.360Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 33,
       "title": "Show HN: Image Squeeze – compress images to a target size, no upload",
       "url": "https://tools.stellartechlabs.xyz/",
       "domain": "tools.stellartechlabs.xyz",
@@ -684,7 +838,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.8,
+      "ageHours": 3,
       "firstSeen": "2026-11-22T15:34:44.360Z",
       "heating": false,
       "travelled": false,
@@ -693,7 +847,7 @@
       "demoted": true
     },
     {
-      "rank": 27,
+      "rank": 34,
       "title": "Show HN: Witnis – blast radius that follows inheritance where grep stops",
       "url": "https://github.com/L00PLeGeNd/Witnis",
       "domain": "github.com",
@@ -706,7 +860,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.8,
+      "ageHours": 3,
       "firstSeen": "2026-11-22T15:34:44.360Z",
       "heating": false,
       "travelled": false,
@@ -715,7 +869,7 @@
       "demoted": true
     },
     {
-      "rank": 28,
+      "rank": 35,
       "title": "Show HN: Umbera-core – hybrid X25519 and ML-KEM sealed sender in Rust",
       "url": "https://github.com/UmberaAPP/UMBERA",
       "domain": "github.com",
@@ -728,7 +882,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.3,
+      "ageHours": 3.6,
       "firstSeen": "2026-11-22T14:34:24.013Z",
       "heating": false,
       "travelled": false,
@@ -737,7 +891,7 @@
       "demoted": true
     },
     {
-      "rank": 29,
+      "rank": 36,
       "title": "Show HN: ReallySimpleDocs – Modern, AI-ready documentation site with Astro",
       "url": "https://github.com/hunvreus/reallysimpledocs",
       "domain": "github.com",
@@ -750,7 +904,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.4,
+      "ageHours": 3.6,
       "firstSeen": "2026-11-22T14:34:24.013Z",
       "heating": false,
       "travelled": false,
@@ -759,7 +913,7 @@
       "demoted": true
     },
     {
-      "rank": 30,
+      "rank": 37,
       "title": "U.N. Climate Talks Collapse in a Bitter Clash over Fossil Fuels",
       "url": "https://www.nytimes.com/2026/11/22/climate/cop31-climate-summit-ends-climate.html",
       "domain": "nytimes.com",
@@ -772,7 +926,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.7,
+      "ageHours": 4,
       "firstSeen": "2026-11-22T15:34:44.360Z",
       "heating": false,
       "travelled": false,
@@ -781,7 +935,7 @@
       "demoted": true
     },
     {
-      "rank": 31,
+      "rank": 38,
       "title": "Show HN: Rmux – A lightweight GPU rendered terminal workspace",
       "url": "https://rmux.app/",
       "domain": "rmux.app",
@@ -794,7 +948,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.8,
+      "ageHours": 4,
       "firstSeen": "2026-11-22T14:34:24.013Z",
       "heating": false,
       "travelled": false,
@@ -803,32 +957,10 @@
       "demoted": true
     },
     {
-      "rank": 32,
+      "rank": 39,
       "title": "Show HN: I built an app that turns typing practice into language practice",
       "url": "https://typingg.app/",
       "domain": "typingg.app",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4,
-      "firstSeen": "2026-11-22T13:34:11.540Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 33,
-      "title": "Show HN: Cordium – FOSS sandbox platform on Kubernetes to eliminate credentials",
-      "url": "https://github.com/octelium/cordium",
-      "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -847,32 +979,10 @@
       "demoted": true
     },
     {
-      "rank": 34,
-      "title": "Prisons get OK to jam contraband phones",
-      "url": "https://arstechnica.com/tech-policy/2026/11/prisons-get-ok-to-jam-contraband-phones-ctia-says-nearby-phones-will-be-jammed-too",
-      "domain": "arstechnica.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.3,
-      "firstSeen": "2026-11-22T14:34:24.013Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 35,
-      "title": "Show HN: Retro 3D library, a small game",
-      "url": "https://engineersneedart.com/gunport",
-      "domain": "engineersneedart.com",
+      "rank": 40,
+      "title": "Show HN: Cordium – FOSS sandbox platform on Kubernetes to eliminate credentials",
+      "url": "https://github.com/octelium/cordium",
+      "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -884,116 +994,6 @@
       "nFam": 1,
       "ageHours": 4.4,
       "firstSeen": "2026-11-22T13:34:11.540Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 36,
-      "title": "Fixing Google’s Feedburner problem, and caching that half works",
-      "url": "https://joshua.hu/fixing-google-feedburner-cache-problem-atom-rss",
-      "domain": "joshua.hu",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.8,
-      "firstSeen": "2026-11-22T12:34:30.204Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 37,
-      "title": "Show HN: Marketing Can Ship to Production",
-      "url": "https://appos.build/kitewell",
-      "domain": "appos.build",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.9,
-      "firstSeen": "2026-11-22T12:34:30.204Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 38,
-      "title": "Show HN: A free website check that starts from what your buyers search",
-      "url": "https://meetadmiral.com/website-seo-checker",
-      "domain": "meetadmiral.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.3,
-      "firstSeen": "2026-11-22T12:34:30.204Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 39,
-      "title": "Show HN: Multiplayer paper planes with simulated aerodynamics in WebGL",
-      "url": "https://github.com/michidk/paperfold",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.4,
-      "firstSeen": "2026-11-22T12:34:30.204Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 40,
-      "title": "Show HN: Dawdle, compete with friends and family in a daily 5 minute word puzzle",
-      "url": "https://playdawdle.com/",
-      "domain": "playdawdle.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.4,
-      "firstSeen": "2026-11-22T12:34:30.204Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
