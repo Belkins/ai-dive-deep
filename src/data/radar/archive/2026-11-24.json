@@ -1,14 +1,14 @@
 {
   "date": "2026-11-24",
-  "generated": "2026-11-24T06:22:04.239Z",
+  "generated": "2026-11-24T06:32:54.297Z",
   "count": 40,
   "stats": {
     "relevance": {
-      "demoted": 20
+      "demoted": 22
     },
     "feedsTotal": 78,
     "feedsLive": 67,
-    "itemsTracked": 16058,
+    "itemsTracked": 16066,
     "travellingFires": 14,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
@@ -16,12 +16,11 @@
     "byStage": {
       "Papers": 0,
       "Repos": 0,
-      "Community": 39,
-      "Analysis": 1
+      "Community": 40,
+      "Analysis": 0
     },
     "byTier": {
-      "Live Signal": 39,
-      "AI Firehose": 1
+      "Live Signal": 40
     },
     "flow": {
       "Papers": 8,
@@ -33,16 +32,16 @@
     "heatingNow": 0,
     "travelledNow": 0,
     "medianLeadHours": 65,
-    "freshestHours": 0.8,
-    "oldestSurvivorHours": 5.8,
+    "freshestHours": 0,
+    "oldestSurvivorHours": 5.1,
     "topDomains": [
       {
         "domain": "lesswrong.com",
-        "count": 12
+        "count": 14
       },
       {
         "domain": "github.com",
-        "count": 5
+        "count": 6
       },
       {
         "domain": "qsantos.fr",
@@ -110,6 +109,50 @@
   "items": [
     {
       "rank": 1,
+      "title": "2035 came early",
+      "url": "https://fzakaria.com/2026/11/23/2035-came-early",
+      "domain": "fzakaria.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Lobsters",
+      "sources": [
+        "Lobsters"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0,
+      "firstSeen": "2026-11-24T06:32:28.963Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": false
+    },
+    {
+      "rank": 2,
+      "title": "Misguided power-seeking",
+      "url": "https://www.lesswrong.com/posts/ubceFEqT6bQWKyAWb/misguided-power-seeking",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 0.8,
+      "firstSeen": "2026-11-24T06:32:28.963Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": false
+    },
+    {
+      "rank": 3,
       "title": "Show HN: Genesis Map – Visualize your agent's changes. See where they can break",
       "url": "https://github.com/GenesisAgentInfra/genesis",
       "domain": "github.com",
@@ -122,7 +165,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.3,
+      "ageHours": 1.5,
       "firstSeen": "2026-11-24T05:34:44.033Z",
       "heating": false,
       "travelled": false,
@@ -132,32 +175,9 @@
       "demoted": false
     },
     {
-      "rank": 2,
+      "rank": 4,
       "title": "If it's not safe for the public, it's not safe for AI R&D",
       "url": "https://www.lesswrong.com/posts/Jtqux7K7N2sczpmQH/if-it-s-not-safe-for-the-public-it-s-not-safe-for-ai-r-and-d",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.4,
-      "firstSeen": "2026-11-24T05:34:44.033Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "policy_or_safety",
-      "demoted": false
-    },
-    {
-      "rank": 3,
-      "title": "California politics seems like a real hope for an AI slowdown",
-      "url": "https://www.lesswrong.com/posts/WgGdtPEjNniPAReWW/california-politics-seems-like-a-real-hope-for-an-ai",
       "domain": "lesswrong.com",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -178,7 +198,30 @@
       "demoted": false
     },
     {
-      "rank": 4,
+      "rank": 5,
+      "title": "California politics seems like a real hope for an AI slowdown",
+      "url": "https://www.lesswrong.com/posts/WgGdtPEjNniPAReWW/california-politics-seems-like-a-real-hope-for-an-ai",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.7,
+      "firstSeen": "2026-11-24T05:34:44.033Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "policy_or_safety",
+      "demoted": false
+    },
+    {
+      "rank": 6,
       "title": "Two Kinds of Test-Time Scaling",
       "url": "https://www.lesswrong.com/posts/AebihZrTgg5tPdSd7/two-kinds-of-test-time-scaling-1",
       "domain": "lesswrong.com",
@@ -191,7 +234,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.9,
+      "ageHours": 2.1,
       "firstSeen": "2026-11-24T04:34:38.244Z",
       "heating": false,
       "travelled": false,
@@ -201,7 +244,7 @@
       "demoted": false
     },
     {
-      "rank": 5,
+      "rank": 7,
       "title": "Show HN: Benchline, 61 free dev tools that are also MCP tools",
       "url": "https://benchline.fabwaseem.com/",
       "domain": "benchline.fabwaseem.com",
@@ -214,7 +257,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.9,
+      "ageHours": 2.1,
       "firstSeen": "2026-11-24T05:34:44.033Z",
       "heating": false,
       "travelled": false,
@@ -226,7 +269,7 @@
       "demoted": false
     },
     {
-      "rank": 6,
+      "rank": 8,
       "title": "Show HN: SlashObserve – an observability workspace for humans and agents",
       "url": "https://slashobserve.com/",
       "domain": "slashobserve.com",
@@ -239,7 +282,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
+      "ageHours": 2.3,
       "firstSeen": "2026-11-24T04:34:38.244Z",
       "heating": false,
       "travelled": false,
@@ -249,7 +292,7 @@
       "demoted": false
     },
     {
-      "rank": 7,
+      "rank": 9,
       "title": "Most methods of measuring eval awareness overestimate it",
       "url": "https://www.lesswrong.com/posts/7Zvs6w7BzLFYoGzDH/most-methods-of-measuring-eval-awareness-overestimate-it",
       "domain": "lesswrong.com",
@@ -262,7 +305,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.7,
+      "ageHours": 2.9,
       "firstSeen": "2026-11-24T04:34:38.244Z",
       "heating": false,
       "travelled": false,
@@ -273,7 +316,7 @@
       "demoted": false
     },
     {
-      "rank": 8,
+      "rank": 10,
       "title": "Show HN: Juncts, one DM inbox for five apps that Claude and ChatGPT can work in",
       "url": "https://juncts.com/app?demo=1",
       "domain": "juncts.com",
@@ -287,7 +330,7 @@
       ],
       "nSources": 2,
       "nFam": 1,
-      "ageHours": 3.1,
+      "ageHours": 3.3,
       "firstSeen": "2026-11-24T03:35:03.241Z",
       "heating": false,
       "travelled": false,
@@ -297,7 +340,7 @@
       "demoted": false
     },
     {
-      "rank": 9,
+      "rank": 11,
       "title": "Zero data retention with Enterprise Frontier Safeguards is now in beta",
       "url": "https://claude.com/resources/articles/zero-data-retention-with-enterprise-frontier-safeguards",
       "domain": "claude.com",
@@ -310,7 +353,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.1,
+      "ageHours": 3.3,
       "firstSeen": "2026-11-24T04:34:38.244Z",
       "heating": false,
       "travelled": false,
@@ -319,7 +362,7 @@
       "demoted": false
     },
     {
-      "rank": 10,
+      "rank": 12,
       "title": "Show HN: FireVoice, free open-source voice studio on your own GPU",
       "url": "https://firevoice.fabwaseem.com/",
       "domain": "firevoice.fabwaseem.com",
@@ -332,7 +375,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.4,
+      "ageHours": 3.6,
       "firstSeen": "2026-11-24T03:35:03.241Z",
       "heating": false,
       "travelled": false,
@@ -342,7 +385,7 @@
       "demoted": false
     },
     {
-      "rank": 11,
+      "rank": 13,
       "title": "Declare is a UI language for you and your AI",
       "url": "https://davidtemkin.github.io/declarelang",
       "domain": "davidtemkin.github.io",
@@ -355,7 +398,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.8,
+      "ageHours": 3.9,
       "firstSeen": "2026-11-24T05:34:44.033Z",
       "heating": false,
       "travelled": false,
@@ -365,7 +408,7 @@
       "demoted": false
     },
     {
-      "rank": 12,
+      "rank": 14,
       "title": "Comparing AI R&D compute caps and deployment lags",
       "url": "https://www.lesswrong.com/posts/e758PJCpwAwyodvEj/comparing-ai-r-and-d-compute-caps-and-deployment-lags",
       "domain": "lesswrong.com",
@@ -379,7 +422,7 @@
       ],
       "nSources": 2,
       "nFam": 1,
-      "ageHours": 4,
+      "ageHours": 4.2,
       "firstSeen": "2026-11-24T02:35:44.078Z",
       "heating": false,
       "travelled": false,
@@ -388,7 +431,7 @@
       "demoted": false
     },
     {
-      "rank": 13,
+      "rank": 15,
       "title": "AI Usage Transparency",
       "url": "https://www.lesswrong.com/posts/ykgDvkPebaTckzeJy/ai-usage-transparency",
       "domain": "lesswrong.com",
@@ -401,7 +444,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4,
+      "ageHours": 4.2,
       "firstSeen": "2026-11-24T02:35:44.078Z",
       "heating": false,
       "travelled": false,
@@ -411,7 +454,7 @@
       "demoted": false
     },
     {
-      "rank": 14,
+      "rank": 16,
       "title": "Show HN: Agent-first-browse – Web automation with delta snapshots and LangGraph",
       "url": "https://github.com/SandeepAi369/Agent-first-browse",
       "domain": "github.com",
@@ -424,7 +467,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.3,
+      "ageHours": 4.4,
       "firstSeen": "2026-11-24T02:35:44.078Z",
       "heating": false,
       "travelled": false,
@@ -434,7 +477,7 @@
       "demoted": false
     },
     {
-      "rank": 15,
+      "rank": 17,
       "title": "Mikoshi: Open infrastructure for agent swarm alignment research",
       "url": "https://www.lesswrong.com/posts/gsXkRoEKRnJyaFYEP/mikoshi-open-infrastructure-for-agent-swarm-alignment",
       "domain": "lesswrong.com",
@@ -447,7 +490,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.7,
+      "ageHours": 4.9,
       "firstSeen": "2026-11-24T02:35:44.078Z",
       "heating": false,
       "travelled": false,
@@ -457,7 +500,7 @@
       "demoted": false
     },
     {
-      "rank": 16,
+      "rank": 18,
       "title": "Show HN: Merget – Merge queue using code graphs to order and resolve GitHub PRs",
       "url": "https://merget.ai/",
       "domain": "merget.ai",
@@ -470,88 +513,41 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.8,
+      "ageHours": 5,
       "firstSeen": "2026-11-24T01:37:12.551Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
       "chapters": [],
-      "demoted": false
-    },
-    {
-      "rank": 17,
-      "title": "Show HN: Outloud Reader – photograph a page and listen to it phrase by phrase",
-      "url": "https://outloudreader.app/",
-      "domain": "outloudreader.app",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.1,
-      "firstSeen": "2026-11-24T02:35:44.078Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": false
-    },
-    {
-      "rank": 18,
-      "title": "Show HN: Lightweight Agentic CMS on Cloudflare – API, MCP, CLI, Web",
-      "url": "https://docs.microfeed.org/",
-      "domain": "docs.microfeed.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.3,
-      "firstSeen": "2026-11-24T01:37:12.551Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [
-        "12-connectors-mcp"
-      ],
-      "topic": "tooling_or_framework",
       "demoted": false
     },
     {
       "rank": 19,
-      "title": "[AINews] Jensen Is Back! and OpenAI Shows Its Pretraining Curve, joined by Microsoft",
-      "url": "https://latent.space/p/ainews-jensen-is-back-and-openai-shows-its-pretraining-curve-joined-by-microsoft",
-      "domain": "latent.space",
-      "tier": 1,
-      "tierLabel": "AI Firehose",
-      "stage": "Analysis",
-      "firstSource": "Latent Space",
+      "title": "Lightcone Co-Conspirators The Universe Should Give Me",
+      "url": "https://www.lesswrong.com/posts/8zwoPn9ubC267NiCx/lightcone-co-conspirators-the-universe-should-give-me",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
       "sources": [
-        "Latent Space"
+        "LessWrong"
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
-      "firstSeen": "2026-11-24T04:24:29.582Z",
+      "ageHours": 0.6,
+      "firstSeen": "2026-11-24T06:32:28.963Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
       "chapters": [],
-      "demoted": false
+      "demoted": true
     },
     {
       "rank": 20,
-      "title": "Show HN: Gal – local-first agent runtime with per-call permissions and rollback",
-      "url": "https://agent-home.ai/index.html",
-      "domain": "agent-home.ai",
+      "title": "Show HN: Everything Is Outdated (Game)",
+      "url": "https://everythingisoutdated.dev/",
+      "domain": "everythingisoutdated.dev",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -561,16 +557,13 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5.8,
-      "firstSeen": "2026-11-24T01:37:12.551Z",
+      "ageHours": 0.8,
+      "firstSeen": "2026-11-24T06:32:28.963Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
-      "chapters": [
-        "09-dont-get-owned"
-      ],
-      "topic": "tooling_or_framework",
-      "demoted": false
+      "chapters": [],
+      "demoted": true
     },
     {
       "rank": 21,
@@ -586,7 +579,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.8,
+      "ageHours": 1,
       "firstSeen": "2026-11-24T05:34:44.033Z",
       "heating": false,
       "travelled": false,
@@ -596,6 +589,28 @@
     },
     {
       "rank": 22,
+      "title": "Show HN: DossierQL, a Game for Learning GraphQL",
+      "url": "https://virissimo.info/dossierql",
+      "domain": "virissimo.info",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.1,
+      "firstSeen": "2026-11-24T06:32:28.963Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 23,
       "title": "Memo: Firebell",
       "url": "https://www.lesswrong.com/posts/zzGf853ZbsuZ5tpEs/memo-firebell",
       "domain": "lesswrong.com",
@@ -608,7 +623,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.4,
+      "ageHours": 1.5,
       "firstSeen": "2026-11-24T05:34:44.033Z",
       "heating": false,
       "travelled": false,
@@ -617,7 +632,7 @@
       "demoted": true
     },
     {
-      "rank": 23,
+      "rank": 24,
       "title": "The Pythagorean Theorem as a “whole,” with its own character",
       "url": "https://www.lesswrong.com/posts/yCrcj28HdLt4yxT48/the-pythagorean-theorem-as-a-whole-with-its-own-character",
       "domain": "lesswrong.com",
@@ -630,7 +645,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.4,
+      "ageHours": 1.6,
       "firstSeen": "2026-11-24T05:34:44.033Z",
       "heating": false,
       "travelled": false,
@@ -639,7 +654,7 @@
       "demoted": true
     },
     {
-      "rank": 24,
+      "rank": 25,
       "title": "2026 Petrov Day house party retrospective",
       "url": "https://www.lesswrong.com/posts/nQFsZfPAPPP2mcRTw/2026-petrov-day-house-party-retrospective",
       "domain": "lesswrong.com",
@@ -652,7 +667,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.4,
+      "ageHours": 1.6,
       "firstSeen": "2026-11-24T05:34:44.033Z",
       "heating": false,
       "travelled": false,
@@ -661,7 +676,29 @@
       "demoted": true
     },
     {
-      "rank": 25,
+      "rank": 26,
+      "title": "Online Backrooms",
+      "url": "https://onlinebackrooms.com/",
+      "domain": "onlinebackrooms.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.8,
+      "firstSeen": "2026-11-24T06:32:28.963Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 27,
       "title": "Drone Maps of Salvage Yards",
       "url": "https://salvageyarddrone.wordpress.com/",
       "domain": "salvageyarddrone.wordpress.com",
@@ -674,7 +711,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.4,
+      "ageHours": 2.5,
       "firstSeen": "2026-11-24T04:34:38.244Z",
       "heating": false,
       "travelled": false,
@@ -683,7 +720,7 @@
       "demoted": true
     },
     {
-      "rank": 26,
+      "rank": 28,
       "title": "Show HN: Synth Patch Hero",
       "url": "https://swarkentin.github.io/synth-patch-hero",
       "domain": "swarkentin.github.io",
@@ -696,51 +733,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3,
-      "firstSeen": "2026-11-24T03:35:03.241Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 27,
-      "title": "Hacking radiators for fun and no profit",
-      "url": "https://qsantos.fr/2026/11/20/hacking-radiators-for-fun-and-no-profit",
-      "domain": "qsantos.fr",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.4,
-      "firstSeen": "2026-11-24T04:34:38.244Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 28,
-      "title": "Show HN: Graticule, turn oscilloscope screenshots into CSV data and plots",
-      "url": "https://github.com/SunSinD/Graticule",
-      "domain": "github.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.4,
+      "ageHours": 3.1,
       "firstSeen": "2026-11-24T03:35:03.241Z",
       "heating": false,
       "travelled": false,
@@ -750,52 +743,8 @@
     },
     {
       "rank": 29,
-      "title": "Show HN: A narrated map tour of the events leading up to the Texas Revolution",
-      "url": "https://whistlestop.guide/features/texas-revolution",
-      "domain": "whistlestop.guide",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.4,
-      "firstSeen": "2026-11-24T03:35:03.241Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 30,
-      "title": "$5,000 and other good things I got from FLF's Epistack contest",
-      "url": "https://www.lesswrong.com/posts/92NoKHCxP5HHv7mzv/usd5-000-and-other-good-things-i-got-from-flf-s-epistack",
-      "domain": "lesswrong.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "LessWrong",
-      "sources": [
-        "LessWrong"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 3.5,
-      "firstSeen": "2026-11-24T03:35:03.241Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 31,
-      "title": "Making a dumb TV just smart enough",
-      "url": "https://qsantos.fr/2026/11/19/making-a-dumb-tv-just-smart-enough",
+      "title": "Hacking radiators for fun and no profit",
+      "url": "https://qsantos.fr/2026/11/20/hacking-radiators-for-fun-and-no-profit",
       "domain": "qsantos.fr",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -815,16 +764,60 @@
       "demoted": true
     },
     {
-      "rank": 32,
-      "title": "Show HN: I stole a math joke from Xkcd and made art with it",
-      "url": "https://joshhoegen.com/pages/meandian",
-      "domain": "joshhoegen.com",
+      "rank": 30,
+      "title": "Show HN: Graticule, turn oscilloscope screenshots into CSV data and plots",
+      "url": "https://github.com/SunSinD/Graticule",
+      "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
       "firstSource": "Show HN",
       "sources": [
         "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.6,
+      "firstSeen": "2026-11-24T03:35:03.241Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 31,
+      "title": "Show HN: A narrated map tour of the events leading up to the Texas Revolution",
+      "url": "https://whistlestop.guide/features/texas-revolution",
+      "domain": "whistlestop.guide",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.6,
+      "firstSeen": "2026-11-24T03:35:03.241Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 32,
+      "title": "$5,000 and other good things I got from FLF's Epistack contest",
+      "url": "https://www.lesswrong.com/posts/92NoKHCxP5HHv7mzv/usd5-000-and-other-good-things-i-got-from-flf-s-epistack",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
       ],
       "nSources": 1,
       "nFam": 1,
@@ -838,6 +831,72 @@
     },
     {
       "rank": 33,
+      "title": "Making a dumb TV just smart enough",
+      "url": "https://qsantos.fr/2026/11/19/making-a-dumb-tv-just-smart-enough",
+      "domain": "qsantos.fr",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.8,
+      "firstSeen": "2026-11-24T04:34:38.244Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 34,
+      "title": "Show HN: I stole a math joke from Xkcd and made art with it",
+      "url": "https://joshhoegen.com/pages/meandian",
+      "domain": "joshhoegen.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 3.9,
+      "firstSeen": "2026-11-24T03:35:03.241Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 35,
+      "title": "Rune: Rust VM for Emacs",
+      "url": "https://github.com/CeleritasCelery/rune",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Hacker News front",
+      "sources": [
+        "Hacker News front"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 4,
+      "firstSeen": "2026-11-24T06:32:28.963Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 36,
       "title": "New York Bans Subscription and Post-Purchase Fees on Cars",
       "url": "https://www.governor.ny.gov/news/money-your-pockets-governor-hochul-signs-bill-restricting-exploitative-vehicle-subscription",
       "domain": "governor.ny.gov",
@@ -850,7 +909,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.9,
+      "ageHours": 4.1,
       "firstSeen": "2026-11-24T04:34:38.244Z",
       "heating": false,
       "travelled": false,
@@ -859,7 +918,7 @@
       "demoted": true
     },
     {
-      "rank": 34,
+      "rank": 37,
       "title": "New York Bans Subscription and Post-Purchase Fees on Cars",
       "url": "https://wgna.com/car-bill-extra-fees",
       "domain": "wgna.com",
@@ -872,7 +931,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.9,
+      "ageHours": 4.1,
       "firstSeen": "2026-11-24T04:34:38.244Z",
       "heating": false,
       "travelled": false,
@@ -881,7 +940,7 @@
       "demoted": true
     },
     {
-      "rank": 35,
+      "rank": 38,
       "title": "What VP != VNP Means (In 3 Minutes)",
       "url": "https://www.friedgil.com/vpvnp",
       "domain": "friedgil.com",
@@ -894,7 +953,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.2,
+      "ageHours": 4.4,
       "firstSeen": "2026-11-24T02:35:44.078Z",
       "heating": false,
       "travelled": false,
@@ -903,7 +962,7 @@
       "demoted": true
     },
     {
-      "rank": 36,
+      "rank": 39,
       "title": "Show HN: UpNext – Game backlog decider. Play what you own",
       "url": "https://github.com/zytocc/upnext",
       "domain": "github.com",
@@ -916,7 +975,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.4,
+      "ageHours": 4.6,
       "firstSeen": "2026-11-24T02:35:44.078Z",
       "heating": false,
       "travelled": false,
@@ -925,7 +984,7 @@
       "demoted": true
     },
     {
-      "rank": 37,
+      "rank": 40,
       "title": "Show HN: Phosphor95 Gnome Theme",
       "url": "https://github.com/Websites-On-Computers/phosphor95",
       "domain": "github.com",
@@ -938,73 +997,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 5,
-      "firstSeen": "2026-11-24T01:37:12.551Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 38,
-      "title": "Show HN: CompMD – Markdown with components that still reads as Markdown",
-      "url": "https://compmd.dev/blog/first-packs",
-      "domain": "compmd.dev",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5,
-      "firstSeen": "2026-11-24T01:37:12.551Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 39,
-      "title": "Alcohol use reduces efficacy of immunotherapy by disrupting antitumor immunity",
-      "url": "https://www.science.org/doi/10.1126/scisignal.aef1375",
-      "domain": "science.org",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.5,
-      "firstSeen": "2026-11-24T01:37:12.551Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 40,
-      "title": "the algebra of dependent types (2025)",
-      "url": "https://dotat.at/@/2025-05-28-types.html",
-      "domain": "dotat.at",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Lobsters",
-      "sources": [
-        "Lobsters"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 5.5,
+      "ageHours": 5.1,
       "firstSeen": "2026-11-24T01:37:12.551Z",
       "heating": false,
       "travelled": false,
