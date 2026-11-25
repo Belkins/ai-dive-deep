@@ -1,22 +1,22 @@
 {
   "date": "2026-11-25",
-  "generated": "2026-11-25T09:24:08.415Z",
+  "generated": "2026-11-25T09:35:23.611Z",
   "count": 40,
   "stats": {
     "relevance": {
-      "demoted": 22
+      "demoted": 20
     },
     "feedsTotal": 78,
-    "feedsLive": 67,
-    "itemsTracked": 16801,
-    "travellingFires": 13,
+    "feedsLive": 65,
+    "itemsTracked": 16804,
+    "travellingFires": 14,
     "sinceFirstSeen": "2026-06-12T22:36:02.122Z"
   },
   "summary": {
     "byStage": {
-      "Papers": 0,
+      "Papers": 1,
       "Repos": 0,
-      "Community": 38,
+      "Community": 37,
       "Analysis": 2
     },
     "byTier": {
@@ -26,15 +26,15 @@
     "flow": {
       "Papers": 306,
       "Repos": 1,
-      "Community": 331,
+      "Community": 322,
       "Analysis": 27
     },
     "newToday": 40,
-    "heatingNow": 4,
+    "heatingNow": 5,
     "travelledNow": 0,
     "medianLeadHours": 52.5,
-    "freshestHours": 0.9,
-    "oldestSurvivorHours": 20.4,
+    "freshestHours": 0.7,
+    "oldestSurvivorHours": 20.6,
     "topDomains": [
       {
         "domain": "lesswrong.com",
@@ -42,15 +42,26 @@
       },
       {
         "domain": "github.com",
-        "count": 7
+        "count": 8
       },
       {
-        "domain": "marginalia.nu",
+        "domain": "arxiv.org",
         "count": 1
       }
     ]
   },
   "fires": [
+    {
+      "title": "The Industrialization of Noise: Why Automated Proof-Solving is the Same Old Dead End",
+      "url": "https://arxiv.org/abs/2611.31286",
+      "domain": "arxiv.org",
+      "fromSource": "arXiv cs.AI",
+      "fromStage": "Papers",
+      "toSource": "Hacker News front",
+      "toStage": "Community",
+      "leadHours": 4,
+      "ts": "2026-11-25T09:35:14.337Z"
+    },
     {
       "title": "Perplexity and Intelligence",
       "url": "https://openai.com/index/perplexity-and-intelligence",
@@ -94,22 +105,35 @@
       "toStage": "Community",
       "leadHours": 2858.2,
       "ts": "2026-11-08T06:14:13.139Z"
-    },
-    {
-      "title": "Memorilla: Latent Semantic Memory for LLMs",
-      "url": "https://arxiv.org/abs/2610.21375",
-      "domain": "arxiv.org",
-      "fromSource": "arXiv cs.AI",
-      "fromStage": "Papers",
-      "toSource": "Hacker News front",
-      "toStage": "Community",
-      "leadHours": 518.6,
-      "ts": "2026-11-06T20:58:15.514Z"
     }
   ],
   "items": [
     {
       "rank": 1,
+      "title": "The Industrialization of Noise: Why Automated Proof-Solving is the Same Old Dead End",
+      "url": "https://arxiv.org/abs/2611.31286",
+      "domain": "arxiv.org",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Papers",
+      "firstSource": "arXiv cs.AI",
+      "sources": [
+        "arXiv cs.AI",
+        "Hacker News front"
+      ],
+      "nSources": 2,
+      "nFam": 2,
+      "ageHours": 4.6,
+      "firstSeen": "2026-11-25T05:34:56.556Z",
+      "heating": true,
+      "travelled": false,
+      "leadHours": 4,
+      "chapters": [],
+      "topic": "research_paper",
+      "demoted": false
+    },
+    {
+      "rank": 2,
       "title": "Marginalia Search, Money, C++, Rust, AI, Stuff",
       "url": "https://www.marginalia.nu/log/a_141_marginalia_update",
       "domain": "marginalia.nu",
@@ -123,7 +147,7 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 5.6,
+      "ageHours": 5.8,
       "firstSeen": "2026-11-25T04:34:12.484Z",
       "heating": true,
       "travelled": false,
@@ -132,7 +156,7 @@
       "demoted": false
     },
     {
-      "rank": 2,
+      "rank": 3,
       "title": "GPT 6.2 Astra Solves a Historical Mystery",
       "url": "https://simonwillison.net/2026/Nov/24/astra-historical-mystery",
       "domain": "simonwillison.net",
@@ -146,7 +170,7 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 16.5,
+      "ageHours": 16.7,
       "firstSeen": "2026-11-24T19:21:38.994Z",
       "heating": true,
       "travelled": false,
@@ -155,7 +179,7 @@
       "demoted": false
     },
     {
-      "rank": 3,
+      "rank": 4,
       "title": "How the AI Village Agents Learned to Tag Each Other",
       "url": "https://www.lesswrong.com/posts/TqkNFhoRKw2tbK6je/how-the-ai-village-agents-learned-to-tag-each-other",
       "domain": "lesswrong.com",
@@ -168,7 +192,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 0.9,
+      "ageHours": 1.1,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -177,7 +201,30 @@
       "demoted": false
     },
     {
-      "rank": 4,
+      "rank": 5,
+      "title": "Show HN: Production Grammar-Guided Decoding in vLLM with Xgrammar Benchmarks",
+      "url": "https://github.com/grfdsasdvef/vllm-constrained-decoding-cookbook",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.3,
+      "firstSeen": "2026-11-25T09:35:14.337Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "tooling_or_framework",
+      "demoted": false
+    },
+    {
+      "rank": 6,
       "title": "Show HN: AdaptOrch reviews the explanation. You review the change",
       "url": "https://adaptorch.com/",
       "domain": "adaptorch.com",
@@ -190,7 +237,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.2,
+      "ageHours": 1.4,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -200,7 +247,7 @@
       "demoted": false
     },
     {
-      "rank": 5,
+      "rank": 7,
       "title": "GPT-6 models demonstrate intrinsic protein-design capabilities",
       "url": "https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities",
       "domain": "openai.com",
@@ -214,7 +261,7 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 20.4,
+      "ageHours": 20.6,
       "firstSeen": "2026-11-24T22:22:00.172Z",
       "heating": true,
       "travelled": false,
@@ -223,7 +270,7 @@
       "demoted": false
     },
     {
-      "rank": 6,
+      "rank": 8,
       "title": "Effective Giving in Politics: Spending Better for AI Safety",
       "url": "https://www.lesswrong.com/posts/eBfuqL3YQfeM6cBEs/effective-giving-in-politics-spending-better-for-ai-safety",
       "domain": "lesswrong.com",
@@ -236,7 +283,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.8,
+      "ageHours": 2,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -246,33 +293,10 @@
       "demoted": false
     },
     {
-      "rank": 7,
+      "rank": 9,
       "title": "Show HN: Lightscale AI – A language for LLMs to write business software",
       "url": "https://lightscale.ai/",
       "domain": "lightscale.ai",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 1.8,
-      "firstSeen": "2026-11-25T08:36:08.706Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "topic": "tooling_or_framework",
-      "demoted": false
-    },
-    {
-      "rank": 8,
-      "title": "Show HN: Open-source native AI harness that's trying to do less by default",
-      "url": "https://github.com/usehm/hm",
-      "domain": "github.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
@@ -292,7 +316,30 @@
       "demoted": false
     },
     {
-      "rank": 9,
+      "rank": 10,
+      "title": "Show HN: Open-source native AI harness that's trying to do less by default",
+      "url": "https://github.com/usehm/hm",
+      "domain": "github.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "Show HN",
+      "sources": [
+        "Show HN"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 2.2,
+      "firstSeen": "2026-11-25T08:36:08.706Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "topic": "tooling_or_framework",
+      "demoted": false
+    },
+    {
+      "rank": 11,
       "title": "OpenAudit: Platform for Safety Evaluations of Models, Orgs, and Methods",
       "url": "https://www.lesswrong.com/posts/AZmwgxBFvCjf2t37i/openaudit-platform-for-safety-evaluations-of-models-orgs-and",
       "domain": "lesswrong.com",
@@ -305,7 +352,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.1,
+      "ageHours": 2.3,
       "firstSeen": "2026-11-25T07:34:49.126Z",
       "heating": false,
       "travelled": false,
@@ -317,7 +364,7 @@
       "demoted": false
     },
     {
-      "rank": 10,
+      "rank": 12,
       "title": "Needles, Haystacks, and Numbers Between 0 and 1",
       "url": "https://rustfoundation.org/media/needles-haystacks-and-numbers-between-0-and-1",
       "domain": "rustfoundation.org",
@@ -330,7 +377,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.3,
+      "ageHours": 2.5,
       "firstSeen": "2026-11-25T07:34:49.126Z",
       "heating": false,
       "travelled": false,
@@ -339,7 +386,7 @@
       "demoted": false
     },
     {
-      "rank": 11,
+      "rank": 13,
       "title": "Show HN: FlowSpeak – Local push-to-talk dictation in Go and whisper.cpp Metal",
       "url": "https://smolkapps.com/flowspeak",
       "domain": "smolkapps.com",
@@ -352,7 +399,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.5,
+      "ageHours": 2.7,
       "firstSeen": "2026-11-25T07:34:49.126Z",
       "heating": false,
       "travelled": false,
@@ -362,7 +409,7 @@
       "demoted": false
     },
     {
-      "rank": 12,
+      "rank": 14,
       "title": "Show HN: StegGuard, check prompts and LLM output for hidden characters",
       "url": "https://stegguard.com/",
       "domain": "stegguard.com",
@@ -375,7 +422,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.5,
+      "ageHours": 2.7,
       "firstSeen": "2026-11-25T07:34:49.126Z",
       "heating": false,
       "travelled": false,
@@ -385,7 +432,7 @@
       "demoted": false
     },
     {
-      "rank": 13,
+      "rank": 15,
       "title": "Show HN: Mime – dictation that reads your lips not sound",
       "url": "https://24mjihad.github.io/Mime",
       "domain": "24mjihad.github.io",
@@ -398,7 +445,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.6,
+      "ageHours": 2.7,
       "firstSeen": "2026-11-25T07:34:49.126Z",
       "heating": false,
       "travelled": false,
@@ -408,7 +455,7 @@
       "demoted": false
     },
     {
-      "rank": 14,
+      "rank": 16,
       "title": "Show HN: Sightline – Windows CLI for AI agents to capture UI and map DPI coords",
       "url": "https://github.com/sao-coding/sightline",
       "domain": "github.com",
@@ -421,7 +468,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.3,
+      "ageHours": 3.4,
       "firstSeen": "2026-11-25T06:33:20.549Z",
       "heating": false,
       "travelled": false,
@@ -431,7 +478,7 @@
       "demoted": false
     },
     {
-      "rank": 15,
+      "rank": 17,
       "title": "Hopkins Recent Events in AI Safety and Biosecurity Post-Event Report",
       "url": "https://www.lesswrong.com/posts/kQeP7Cep4sgLdgYML/hopkins-recent-events-in-ai-safety-and-biosecurity-post",
       "domain": "lesswrong.com",
@@ -444,7 +491,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.2,
+      "ageHours": 4.4,
       "firstSeen": "2026-11-25T05:34:56.556Z",
       "heating": false,
       "travelled": false,
@@ -454,7 +501,7 @@
       "demoted": false
     },
     {
-      "rank": 16,
+      "rank": 18,
       "title": "AIs may seek ambient score",
       "url": "https://www.lesswrong.com/posts/GhTL69vuX4BfJARGk/ais-may-seek-ambient-score",
       "domain": "lesswrong.com",
@@ -467,7 +514,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.3,
+      "ageHours": 4.5,
       "firstSeen": "2026-11-25T05:34:56.556Z",
       "heating": false,
       "travelled": false,
@@ -477,7 +524,7 @@
       "demoted": false
     },
     {
-      "rank": 17,
+      "rank": 19,
       "title": "Treasury CIO is too busy vibecoding instead of doing his job #147",
       "url": "https://github.com/samcorcos/legatum/issues/147",
       "domain": "github.com",
@@ -490,7 +537,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.5,
+      "ageHours": 4.6,
       "firstSeen": "2026-11-25T06:33:20.549Z",
       "heating": false,
       "travelled": false,
@@ -499,7 +546,7 @@
       "demoted": false
     },
     {
-      "rank": 18,
+      "rank": 20,
       "title": "Show HN: Simulusion – DreamerV3, IRIS, Genie and other world models in PyTorch",
       "url": "https://github.com/ParamThakkar123/simulusion",
       "domain": "github.com",
@@ -512,7 +559,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.7,
+      "ageHours": 4.9,
       "firstSeen": "2026-11-25T05:34:56.556Z",
       "heating": false,
       "travelled": false,
@@ -521,21 +568,21 @@
       "demoted": false
     },
     {
-      "rank": 19,
-      "title": "Lorxus Does Budget Inkhaven For a Third Time: 11/18~11/24",
-      "url": "https://www.lesswrong.com/posts/sPCgBDttPhyYujDi4/lorxus-does-budget-inkhaven-for-a-third-time-11-18-11-24",
-      "domain": "lesswrong.com",
+      "rank": 21,
+      "title": "Show HN: An interactive family tree of programming languages",
+      "url": "http://www.peopleplotr.com/storytree/guide/programming-languages",
+      "domain": "peopleplotr.com",
       "tier": 0,
       "tierLabel": "Live Signal",
       "stage": "Community",
-      "firstSource": "LessWrong",
+      "firstSource": "Show HN",
       "sources": [
-        "LessWrong"
+        "Show HN"
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.3,
-      "firstSeen": "2026-11-25T08:36:08.706Z",
+      "ageHours": 0.7,
+      "firstSeen": "2026-11-25T09:35:14.337Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
@@ -543,9 +590,9 @@
       "demoted": true
     },
     {
-      "rank": 20,
-      "title": "Against \"If I Don't, Someone Else Will\"",
-      "url": "https://www.lesswrong.com/posts/ZR2XMCAQoYwDtBDgN/against-if-i-don-t-someone-else-will",
+      "rank": 22,
+      "title": "Lorxus Does Budget Inkhaven For a Third Time: 11/18~11/24",
+      "url": "https://www.lesswrong.com/posts/sPCgBDttPhyYujDi4/lorxus-does-budget-inkhaven-for-a-third-time-11-18-11-24",
       "domain": "lesswrong.com",
       "tier": 0,
       "tierLabel": "Live Signal",
@@ -565,7 +612,29 @@
       "demoted": true
     },
     {
-      "rank": 21,
+      "rank": 23,
+      "title": "Against \"If I Don't, Someone Else Will\"",
+      "url": "https://www.lesswrong.com/posts/ZR2XMCAQoYwDtBDgN/against-if-i-don-t-someone-else-will",
+      "domain": "lesswrong.com",
+      "tier": 0,
+      "tierLabel": "Live Signal",
+      "stage": "Community",
+      "firstSource": "LessWrong",
+      "sources": [
+        "LessWrong"
+      ],
+      "nSources": 1,
+      "nFam": 1,
+      "ageHours": 1.6,
+      "firstSeen": "2026-11-25T08:36:08.706Z",
+      "heating": false,
+      "travelled": false,
+      "leadHours": null,
+      "chapters": [],
+      "demoted": true
+    },
+    {
+      "rank": 24,
       "title": "Show HN: Product photo/catalog is an ad studio and storefront",
       "url": "https://whatrunsindia.com/",
       "domain": "whatrunsindia.com",
@@ -578,7 +647,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.7,
+      "ageHours": 1.9,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -587,7 +656,7 @@
       "demoted": true
     },
     {
-      "rank": 22,
+      "rank": 25,
       "title": "Show HN: Syndicate, Zero-install 3D turn-based tactical PvP arena in the browser",
       "url": "https://syndicatearena.app/",
       "domain": "syndicatearena.app",
@@ -600,7 +669,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.7,
+      "ageHours": 1.9,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -609,7 +678,7 @@
       "demoted": true
     },
     {
-      "rank": 23,
+      "rank": 26,
       "title": "Show HN: Weekly playlists of random songs from the streaming catalogues",
       "url": "https://randibri.com/",
       "domain": "randibri.com",
@@ -622,7 +691,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.7,
+      "ageHours": 1.9,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -631,7 +700,7 @@
       "demoted": true
     },
     {
-      "rank": 24,
+      "rank": 27,
       "title": "Show HN: Delete windows/Linux directories with Filters and Exclusions",
       "url": "https://algolassi.online/products/filtereddelete",
       "domain": "algolassi.online",
@@ -644,7 +713,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.7,
+      "ageHours": 1.9,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -653,7 +722,7 @@
       "demoted": true
     },
     {
-      "rank": 25,
+      "rank": 28,
       "title": "How to prove a counterfactual in space pizza court",
       "url": "https://www.lesswrong.com/posts/xaYyNqg24hagyPKgj/how-to-prove-a-counterfactual-in-space-pizza-court",
       "domain": "lesswrong.com",
@@ -666,7 +735,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 1.8,
+      "ageHours": 2,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -675,7 +744,7 @@
       "demoted": true
     },
     {
-      "rank": 26,
+      "rank": 29,
       "title": "Show HN: Checkwash – flag Git diffs that weaken your tests (offline, no LLM)",
       "url": "https://github.com/taipei49314/checkwash",
       "domain": "github.com",
@@ -688,7 +757,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2,
+      "ageHours": 2.2,
       "firstSeen": "2026-11-25T08:36:08.706Z",
       "heating": false,
       "travelled": false,
@@ -697,7 +766,7 @@
       "demoted": true
     },
     {
-      "rank": 27,
+      "rank": 30,
       "title": "Show HN: Termius was asking me for $120 a year, so I built my own SSH client",
       "url": "https://branchbay.dev/branchshell",
       "domain": "branchbay.dev",
@@ -710,7 +779,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 2.8,
+      "ageHours": 3,
       "firstSeen": "2026-11-25T07:34:49.126Z",
       "heating": false,
       "travelled": false,
@@ -719,7 +788,7 @@
       "demoted": true
     },
     {
-      "rank": 28,
+      "rank": 31,
       "title": "Flat/non-higher-order construction of ANF via mutable holes",
       "url": "https://blueberrywren.dev/blog/anf-mutable",
       "domain": "blueberrywren.dev",
@@ -732,7 +801,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.2,
+      "ageHours": 3.4,
       "firstSeen": "2026-11-25T06:33:20.549Z",
       "heating": false,
       "travelled": false,
@@ -741,7 +810,7 @@
       "demoted": true
     },
     {
-      "rank": 29,
+      "rank": 32,
       "title": "A faster algorithm for extracting hexadecimal digits of π",
       "url": "https://www.stylewarning.com/posts/faster-digit-extraction",
       "domain": "stylewarning.com",
@@ -755,7 +824,7 @@
       ],
       "nSources": 2,
       "nFam": 2,
-      "ageHours": 9.5,
+      "ageHours": 9.7,
       "firstSeen": "2026-11-25T01:37:01.579Z",
       "heating": true,
       "travelled": false,
@@ -764,7 +833,7 @@
       "demoted": true
     },
     {
-      "rank": 30,
+      "rank": 33,
       "title": "\"A Republic of LessWrong Letters\"—A Letter to DirectedEvolution",
       "url": "https://www.lesswrong.com/posts/RjydrDjY8sgWy2rav/a-republic-of-lesswrong-letters-a-letter-to",
       "domain": "lesswrong.com",
@@ -777,7 +846,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.6,
+      "ageHours": 3.8,
       "firstSeen": "2026-11-25T06:33:20.549Z",
       "heating": false,
       "travelled": false,
@@ -786,7 +855,7 @@
       "demoted": true
     },
     {
-      "rank": 31,
+      "rank": 34,
       "title": "Show HN: Dupfinder – a lightweight Python tool for finding duplicate files",
       "url": "https://github.com/rronkus/dupfinder",
       "domain": "github.com",
@@ -799,7 +868,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 3.7,
+      "ageHours": 3.9,
       "firstSeen": "2026-11-25T06:33:20.549Z",
       "heating": false,
       "travelled": false,
@@ -808,7 +877,7 @@
       "demoted": true
     },
     {
-      "rank": 32,
+      "rank": 35,
       "title": "Invisible Wave Hits California, Oregon and Canada as Towns Evacuate",
       "url": "https://www.abovethenormnews.com/2026/11/24/king-tides-california",
       "domain": "abovethenormnews.com",
@@ -821,7 +890,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.1,
+      "ageHours": 4.3,
       "firstSeen": "2026-11-25T05:34:56.556Z",
       "heating": false,
       "travelled": false,
@@ -830,7 +899,7 @@
       "demoted": true
     },
     {
-      "rank": 33,
+      "rank": 36,
       "title": "Show HN: Expense Canary, catching duplicate charges and bank fees from Plaid",
       "url": "https://expensecanary.com/",
       "domain": "expensecanary.com",
@@ -843,7 +912,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.1,
+      "ageHours": 4.3,
       "firstSeen": "2026-11-25T05:34:56.556Z",
       "heating": false,
       "travelled": false,
@@ -852,7 +921,7 @@
       "demoted": true
     },
     {
-      "rank": 34,
+      "rank": 37,
       "title": "Show HN: Vibe Linux",
       "url": "https://mkornreich.me/projects/vibe-linux",
       "domain": "mkornreich.me",
@@ -865,7 +934,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.2,
+      "ageHours": 4.4,
       "firstSeen": "2026-11-25T05:34:56.556Z",
       "heating": false,
       "travelled": false,
@@ -874,7 +943,7 @@
       "demoted": true
     },
     {
-      "rank": 35,
+      "rank": 38,
       "title": "Show HN: Edit PDF text in browser RAM with zero uploads (PDFTransform)",
       "url": "https://pdftransform.pages.dev/edit-pdf-text",
       "domain": "pdftransform.pages.dev",
@@ -887,7 +956,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.2,
+      "ageHours": 4.4,
       "firstSeen": "2026-11-25T05:34:56.556Z",
       "heating": false,
       "travelled": false,
@@ -896,7 +965,7 @@
       "demoted": true
     },
     {
-      "rank": 36,
+      "rank": 39,
       "title": "Abolish Lock Poisoning",
       "url": "https://lucumr.pocoo.org/2026/11/25/poisoning",
       "domain": "lucumr.pocoo.org",
@@ -909,7 +978,7 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.2,
+      "ageHours": 4.4,
       "firstSeen": "2026-11-25T05:34:56.556Z",
       "heating": false,
       "travelled": false,
@@ -918,7 +987,7 @@
       "demoted": true
     },
     {
-      "rank": 37,
+      "rank": 40,
       "title": "Show HN: I make open-source flight test stand",
       "url": "https://github.com/crocone/flying-test",
       "domain": "github.com",
@@ -931,76 +1000,8 @@
       ],
       "nSources": 1,
       "nFam": 1,
-      "ageHours": 4.6,
-      "firstSeen": "2026-11-25T05:34:56.556Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 38,
-      "title": "Show HN: U.S. Interstate Weather",
-      "url": "https://www.interstateweather.com/",
-      "domain": "interstateweather.com",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front",
-        "Show HN"
-      ],
-      "nSources": 2,
-      "nFam": 1,
       "ageHours": 4.8,
       "firstSeen": "2026-11-25T05:34:56.556Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 39,
-      "title": "Show HN: Old Nvidia and ATI tech demos, running again in the browser",
-      "url": "https://gpu-demo-gallery.pages.dev/",
-      "domain": "gpu-demo-gallery.pages.dev",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Show HN",
-      "sources": [
-        "Show HN",
-        "Hacker News front"
-      ],
-      "nSources": 2,
-      "nFam": 1,
-      "ageHours": 4.9,
-      "firstSeen": "2026-11-25T04:34:12.484Z",
-      "heating": false,
-      "travelled": false,
-      "leadHours": null,
-      "chapters": [],
-      "demoted": true
-    },
-    {
-      "rank": 40,
-      "title": "Taking over US Treasury subdomains for $3 each",
-      "url": "https://www.intruder.io/research/taking-over-us-treasury-subdomains-for-3-each",
-      "domain": "intruder.io",
-      "tier": 0,
-      "tierLabel": "Live Signal",
-      "stage": "Community",
-      "firstSource": "Hacker News front",
-      "sources": [
-        "Hacker News front"
-      ],
-      "nSources": 1,
-      "nFam": 1,
-      "ageHours": 4.9,
-      "firstSeen": "2026-11-25T06:33:20.549Z",
       "heating": false,
       "travelled": false,
       "leadHours": null,
